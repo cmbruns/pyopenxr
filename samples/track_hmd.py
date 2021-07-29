@@ -1,17 +1,10 @@
 import ctypes
-import os
 
-# TODO: loader submodule
-os.add_dll_directory(os.path.dirname(__file__))
-_openxr_loader = ctypes.cdll.LoadLibrary("openxr_loader.dll")
-print(_openxr_loader)
+import xr
+from xr.library import openxr_loader_library
 
 # TODO: finish initial api call around line 350 of
 # https://github.com/jherico/OpenXR-Samples/blob/master/src/examples/sdl2_gl_single_file_example_c.cpp
-
-# TODO: constants submodule
-XR_MAX_EXTENSION_NAME_SIZE = 128
-
 
 # TODO: structures submodule
 XrStructureType = ctypes.c_int  # Well enum actually
@@ -22,13 +15,13 @@ class XrExtensionProperties(ctypes.Structure):
     _fields_ = [
         ("type", XrStructureType),
         ("next", ctypes.c_void_p),
-        ("extensionName", ctypes.c_char * XR_MAX_EXTENSION_NAME_SIZE),
+        ("extensionName", ctypes.c_char * xr.MAX_EXTENSION_NAME_SIZE),
         ("extensionVersion", ctypes.c_uint32),
     ]
 
 
 # TODO: raw function properties submodule
-fn = _openxr_loader.xrEnumerateInstanceExtensionProperties
+fn = openxr_loader_library.xrEnumerateInstanceExtensionProperties
 fn.restype = ctypes.c_int  # Actually an enum
 property_count_output = ctypes.c_uint32()  # XrResult
 fn.argtypes = [

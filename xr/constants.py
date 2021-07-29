@@ -1,0 +1,6 @@
+
+MAX_EXTENSION_NAME_SIZE = 128
+
+__all__ = [
+    "MAX_EXTENSION_NAME_SIZE",
+]
