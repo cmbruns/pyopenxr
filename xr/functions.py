@@ -16,6 +16,19 @@ class XrExtensionProperties(ctypes.Structure):
     ]
 
 
+# function transformations:
+#  * snake_case_from_camel_case (for function name and parameter names)
+#  * remove_xr_prefix
+#  * ctypes_type_for_c_type
+#  * pytype_for_c_type
+#  * brief docstring
+#  * parameter docstring
+#  * exception docstring
+#  * output_array_parameters
+#  * check result
+#  * string input parameter
+
+
 def enumerate_instance_extension_properties(
     layer_name: str = None
 ) -> ctypes.Array[XrExtensionProperties]:
