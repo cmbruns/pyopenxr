@@ -66,8 +66,8 @@ if (OPENXR_LOADER_SHARED_LIBRARY)
 endif()
 
 if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
-   message(WARNING "Overwriting contents of xr folder")
-   file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/xr/")
+   message(WARNING "Warning: Overwriting contents of source xr package")
+   file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/../xr/")
 endif()
 
 # I think one more blank line looks nice
