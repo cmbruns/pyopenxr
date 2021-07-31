@@ -1,6 +1,7 @@
 project(GeneratePyOpenXr LANGUAGES NONE)
 cmake_minimum_required(VERSION 2.8.12)
 
+option(PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES "Overwrite current source files?" OFF)
 set(PYOPENXR_VERSION_PATCH_INCREMENTAL 1
     CACHE STRING "PyOpenXR incremental patch version (usually 1)")
 
@@ -63,3 +64,11 @@ if (OPENXR_LOADER_SHARED_LIBRARY)
     configure_file("${OPENXR_LOADER_SHARED_LIBRARY}" "${STAGING_DIR}/library" COPYONLY)
     message(STATUS "Copied openxr_loader shared library to ${STAGING_DIR}/library/")
 endif()
+
+if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
+   message(WARNING "Overwriting contents of xr folder")
+   file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/xr/")
+endif()
+
+# I think one more blank line looks nice
+message(STATUS "")

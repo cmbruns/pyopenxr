@@ -1,6 +1,9 @@
+# This script creates an updated version of xr/version.py
+
 import re
 import inspect
 
+# These variables are filled in by cmake's configure_file process
 openxr_header = "@OPENXR_INCLUDE_FILE@"
 pyopenxr_patch = int(@PYOPENXR_VERSION_PATCH_INCREMENTAL@)
 
@@ -14,7 +17,7 @@ version_match = re.search(r"define XR_CURRENT_API_VERSION XR_MAKE_VERSION\((\d+)
 major = int(version_match.group(1))
 minor = int(version_match.group(2))
 patch = int(version_match.group(3))
-patch2 = 100 * patch + pyopenxr_patch
+patch2 = 100 * patch + pyopenxr_patch  # funny way to merge two different patch numbers
 
 print(f"OpenXR version = {major}.{minor}.{patch}")
 
@@ -35,6 +38,18 @@ with open("xr/version.py", "w") as v:
         PYOPENXR_VERSION_PATCH_INCREMENTAL = {pyopenxr_patch}
         PYOPENXR_VERSION = "{major}.{minor}.{patch2}"
 
-        ___version___ = PYOPENXR_VERSION
+        __version__ = PYOPENXR_VERSION
+
+        __all__ = [
+            "XR_VERSION_MAJOR",
+            "XR_VERSION_MINOR",
+            "XR_VERSION_PATCH",
+            "XR_CURRENT_API_VERSION",
+            "PYOPENXR_VERSION_MAJOR",
+            "PYOPENXR_VERSION_MINOR",
+            "PYOPENXR_VERSION_PATCH",
+            "PYOPENXR_VERSION_PATCH_INCREMENTAL",
+            "PYOPENXR_VERSION",
+        ]
         """))
-    v.write("\n")
+    v.write("\n")  # add extra newline because inspect.cleandoc() is too efficient
