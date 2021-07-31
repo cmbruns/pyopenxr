@@ -1,4 +1,4 @@
-/.idea
+.idea/
 *.pyc
 __pycache__/
-/generate/build_cmake
+build_cmake/
