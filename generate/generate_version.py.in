@@ -1,0 +1,40 @@
+import re
+import inspect
+
+openxr_header = "@OPENXR_INCLUDE_FILE@"
+pyopenxr_patch = int(@PYOPENXR_VERSION_PATCH_INCREMENTAL@)
+
+with open(openxr_header) as f:
+    file_string = f.read()
+
+# We expect a line in openxr.h like
+#   "#define XR_CURRENT_API_VERSION XR_MAKE_VERSION(1, 0, 17)"
+version_match = re.search(r"define XR_CURRENT_API_VERSION XR_MAKE_VERSION\((\d+), (\d+), (\d+)\)", file_string)
+
+major = int(version_match.group(1))
+minor = int(version_match.group(2))
+patch = int(version_match.group(3))
+patch2 = 100 * patch + pyopenxr_patch
+
+print(f"OpenXR version = {major}.{minor}.{patch}")
+
+with open("xr/version.py", "w") as v:
+    v.write(inspect.cleandoc(
+        f"""
+        # pyopenxr version is based on openxr version...
+        # except the patch number is 100 * openxr patch number + pyopenxr patch number
+
+        XR_VERSION_MAJOR = {major}
+        XR_VERSION_MINOR = {minor}
+        XR_VERSION_PATCH = {patch}
+        XR_CURRENT_API_VERSION = "{major}.{minor}.{patch}"
+
+        PYOPENXR_VERSION_MAJOR = {major}
+        PYOPENXR_VERSION_MINOR = {minor}
+        PYOPENXR_VERSION_PATCH = {patch2}
+        PYOPENXR_VERSION_PATCH_INCREMENTAL = {pyopenxr_patch}
+        PYOPENXR_VERSION = "{major}.{minor}.{patch2}"
+
+        ___version___ = PYOPENXR_VERSION
+        """))
+    v.write("\n")
