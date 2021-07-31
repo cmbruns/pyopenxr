@@ -2,3 +2,5 @@
 *.pyc
 __pycache__/
 build_cmake/
+/dist
+/src/pyopenxr.egg-info

@@ -1,14 +1,6 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
-[project]
-name = "pyopenxr"
-
-authors = [{name = "Christopher M. Bruns", email = "cmbruns@rotatingpenguin.com"}]
-readme = "README.md"
-classifiers = ["License :: OSI Approved :: Apache Software License"]
-dynamic = ["version", "description"]
-
-[project.urls]
-Home = "https://github.com/cmbruns/pyopenxr"
+requires = [
+    "setuptools>=42",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
