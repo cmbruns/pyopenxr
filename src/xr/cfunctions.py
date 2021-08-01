@@ -9,5 +9,3 @@ fn1.argtypes = [
     ctypes.POINTER(ctypes.c_uint32),  # propertyCountOutput
     ctypes.c_void_p,  # properties  # pointer to array of structs
 ]
-
-

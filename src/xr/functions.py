@@ -30,7 +30,7 @@ class XrExtensionProperties(ctypes.Structure):
 
 
 def enumerate_instance_extension_properties(
-    layer_name: str = None
+    layer_name: str = None,
 ) -> ctypes.Array[XrExtensionProperties]:
     """
     Returns properties of available instance extensions

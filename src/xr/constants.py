@@ -1,4 +1,3 @@
-
 MAX_EXTENSION_NAME_SIZE = 128
 
 # TODO: structures submodule

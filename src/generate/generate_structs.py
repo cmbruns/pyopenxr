@@ -4,7 +4,9 @@ from clang.cindex import Config, CursorKind, Index
 import clang.cindex
 
 
-def generate_ast_elements(file_name, file_string) -> typing.Generator[clang.cindex.Cursor, None, None]:
+def generate_ast_elements(
+    file_name, file_string
+) -> typing.Generator[clang.cindex.Cursor, None, None]:
     index = Index.create()
     tu = index.parse(
         path=file_name,
@@ -39,7 +41,9 @@ def pyvalue_from_cvalue(cvalue: str):
     return cvalue
 
 
-def constant_parser(cursor: clang.cindex.Cursor, lines: typing.List[str]) -> typing.Tuple[str]:
+def constant_parser(
+    cursor: clang.cindex.Cursor, lines: typing.List[str]
+) -> typing.Tuple[str]:
     if cursor.kind == CursorKind.MACRO_DEFINITION:
         if str(cursor.spelling).endswith("_"):  # e.g. "OPENXR_H_" header guard
             return None
@@ -49,13 +53,13 @@ def constant_parser(cursor: clang.cindex.Cursor, lines: typing.List[str]) -> typ
         column = cursor.extent.start.column
         column2 = cursor.extent.end.column
         this_line = lines[line - 1]
-        value = str(this_line[column + len(cursor.spelling) - 1:column2]).strip()
+        value = str(this_line[column + len(cursor.spelling) - 1 : column2]).strip()
         name = pysymbol_from_csymbol(cursor.spelling)
         value = pyvalue_from_cvalue(value)
         if value is None:
             return None
         # TODO: return a constant object, name, value, cursor
-        return f"{name} = {value}",
+        return (f"{name} = {value}",)
 
 
 def main():
