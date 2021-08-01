@@ -1,3 +1,5 @@
+# Warning: this file is auto-generated. Do not edit.
+
 import enum
 
 

@@ -4,6 +4,7 @@
 #  * __all__ section
 #  * docstrings
 
+import inspect
 import re
 from typing import Generator
 
@@ -104,7 +105,12 @@ def generate_enums() -> Generator[CEnum, None, None]:
 def main():
     enums = list(generate_enums())
 
-    print("import enum")
+    print(inspect.cleandoc(
+        """
+        # Warning: this file is auto-generated. Do not edit.
+        
+        import enum
+        """))
     for c_enum in enums:
         print("\n")
         print(f"class {c_enum.pyname}(enum.Enum):")
