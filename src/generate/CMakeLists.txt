@@ -1,6 +1,8 @@
 project(GeneratePyOpenXr LANGUAGES NONE)
 cmake_minimum_required(VERSION 2.8.12)
 
+message(STATUS "This Configure step creates updated version bindings for pyopenxr")
+
 option(PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES "Overwrite current source files?" OFF)
 set(PYOPENXR_VERSION_PATCH_INCREMENTAL 1
     CACHE STRING "PyOpenXR incremental patch version (usually 1)")
@@ -26,8 +28,8 @@ file(MAKE_DIRECTORY "${STAGING_DIR}")
 find_path(OPENXR_INCLUDE_DIR
     NAMES openxr/openxr.h
     HINTS
-        "$ENV{ProgramFiles}/OPENXR"
         "$ENV{ProgramW6432}/OPENXR"
+        "$ENV{ProgramFiles}/OPENXR"
     PATH_SUFFIXES include
     DOC "The file location of the OpenXR C header files"
 )
@@ -46,16 +48,16 @@ execute_process(
 )
 message(STATUS "Generated file ${STAGING_DIR}/version.py")
 
-#############################
-### Copied shared library ###
-#############################
+#########################################
+### Copy openxr_loader shared library ###
+#########################################
 
 find_file(OPENXR_LOADER_SHARED_LIBRARY
     NAMES openxr_loader.dll openxr_loader.so openxr_loader.dylib
     HINTS
         "${OPENXR_INCLUDE_DIR}/.."
-        "$ENV{ProgramFiles}/OPENXR"
         "$ENV{ProgramW6432}/OPENXR"
+        "$ENV{ProgramFiles}/OPENXR"
     PATH_SUFFIXES bin
     DOC "The openxr_loader shared library file"
 )
@@ -65,8 +67,25 @@ if (OPENXR_LOADER_SHARED_LIBRARY)
     message(STATUS "Copied openxr_loader shared library to ${STAGING_DIR}/library/")
 endif()
 
+####################################
+### Find libclang shared library ###
+####################################
+
+find_file(LIBCLANG_SHARED_LIBRARY
+    NAMES libclang.dll libclang.so libclang.dylib
+    HINTS
+        "$ENV{ProgramW6432}/LLVM"
+        "$ENV{ProgramFiles}/LLVM"
+    PATH_SUFFIXES bin
+    DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
+)
+
+######################################
+### Final install into source tree ###
+######################################
+
 if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
-   message(WARNING "Warning: Overwriting contents of source xr package")
+   message(WARNING "Warning: Overwriting contents of source xr package. Are you authoring a new release of pyopenxr?")
    file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/../xr/")
 endif()
 
