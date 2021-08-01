@@ -44,8 +44,10 @@ configure_file(generate_version.py.in
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_version.py"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+    OUTPUT_VARIABLE OPENXR_VERSION
     RESULT_VARIABLE py_result
 )
+message(STATUS "OpenXR Version = ${OPENXR_VERSION}")
 message(STATUS "Generated file ${STAGING_DIR}/version.py")
 
 #########################################
@@ -78,6 +80,35 @@ find_file(LIBCLANG_SHARED_LIBRARY
         "$ENV{ProgramFiles}/LLVM"
     PATH_SUFFIXES bin
     DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
+)
+
+##################################
+### Generate enums source file ###
+##################################
+
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/generate_enums.py"
+    WORKING_DIRECTORY "${STAGING_DIR}"
+    OUTPUT_FILE "${STAGING_DIR}/enums.py"
+)
+message(STATUS "Generated file ${STAGING_DIR}/enums.py")
+
+##########################################
+### Find OpenXR-Registry documentation ###
+##########################################
+
+string(REPLACE "." ";" OPENXR_VERSION_LIST ${OPENXR_VERSION})
+list(GET OPENXR_VERSION_LIST 0 OPENXR_VERSION_MAJOR)
+list(GET OPENXR_VERSION_LIST 1 OPENXR_VERSION_MINOR)
+list(GET OPENXR_VERSION_LIST 2 OPENXR_VERSION_PATCH)
+set(HTML_DIR "specs/${OPENXR_VERSION_MAJOR}.${OPENXR_VERSION_MINOR}/man/html")
+
+find_path(OPENXR_REGISTRY_PATH
+    NAMES "${HTML_DIR}/openxr.html"
+    HINTS
+        "$ENV{USERPROFILE}/Documents/git/OpenXR-Registry"
+        "$ENV{HOME}/git/OpenXR-Registry"
+    DOC "The file location of the OpenXR-Registry source code"
 )
 
 ######################################
