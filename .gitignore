@@ -5,3 +5,4 @@ build_cmake/
 /dist
 /src/pyopenxr.egg-info
 /.tox
+/.coverage

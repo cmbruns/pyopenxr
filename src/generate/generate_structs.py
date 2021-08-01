@@ -12,7 +12,8 @@ def generate_ast_elements(
         path=file_name,
         unsaved_files=((file_name, file_string),),
         args=[
-            "-fparse-all-comments",  # Alas to no avail; these lame openxr headers contain no docstrings.
+            # Alas to no avail; these lame openxr headers contain no docstrings.
+            "-fparse-all-comments",
         ],
         options=clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
     )
@@ -42,24 +43,26 @@ def pyvalue_from_cvalue(cvalue: str):
 
 
 def constant_parser(
-    cursor: clang.cindex.Cursor, lines: typing.List[str]
-) -> typing.Tuple[str]:
+    cursor: clang.cindex.Cursor, lines: list[str]
+) -> typing.Optional[list[str]]:
     if cursor.kind == CursorKind.MACRO_DEFINITION:
         if str(cursor.spelling).endswith("_"):  # e.g. "OPENXR_H_" header guard
             return None
         line = cursor.extent.start.line
         if line != cursor.extent.end.line:
             return None  # Ignore multiline #defines
-        column = cursor.extent.start.column
-        column2 = cursor.extent.end.column
+        val_start = cursor.extent.start.column + len(cursor.spelling) - 1
+        val_end = cursor.extent.end.column
         this_line = lines[line - 1]
-        value = str(this_line[column + len(cursor.spelling) - 1 : column2]).strip()
+        value = str(this_line[val_start: val_end]).strip()
         name = pysymbol_from_csymbol(cursor.spelling)
         value = pyvalue_from_cvalue(value)
         if value is None:
             return None
         # TODO: return a constant object, name, value, cursor
-        return (f"{name} = {value}",)
+        return [
+            f"{name} = {value}",
+        ]
 
 
 def main():
