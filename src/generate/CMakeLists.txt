@@ -93,6 +93,13 @@ execute_process(
 )
 message(STATUS "Generated file ${STAGING_DIR}/enums.py")
 
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/generate_constants.py"
+    WORKING_DIRECTORY "${STAGING_DIR}"
+    OUTPUT_FILE "${STAGING_DIR}/constants.py"
+)
+message(STATUS "Generated file ${STAGING_DIR}/constants.py")
+
 ##########################################
 ### Find OpenXR-Registry documentation ###
 ##########################################

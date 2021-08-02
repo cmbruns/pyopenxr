@@ -3,6 +3,7 @@ import ctypes
 from .library import openxr_loader_library
 from . import cfunctions  # Side effect of defining low-level c signatures
 from .constants import *
+from .enums import *
 
 XrStructureType = ctypes.c_int  # Well enum actually
 
@@ -61,7 +62,7 @@ def enumerate_instance_extension_properties(
 
     # TODO: automatically initialize?
     for p in properties:
-        p.type = XR_TYPE_EXTENSION_PROPERTIES
+        p.type = StructureType.EXTENSION_PROPERTIES.value
 
     result2 = fn(
         layer_name,
