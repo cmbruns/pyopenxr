@@ -38,8 +38,7 @@ set(OPENXR_INCLUDE_FILE "${OPENXR_INCLUDE_DIR}/openxr/openxr.h")
 
 find_package(PythonInterp)
 
-configure_file(generate_version.py.in
-    ${CMAKE_BINARY_DIR}/generate_version.py @ONLY)
+configure_file(generate_version.py ${CMAKE_BINARY_DIR}/ @ONLY)
 
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_version.py"
@@ -86,8 +85,10 @@ find_file(LIBCLANG_SHARED_LIBRARY
 ### Generate enums source file ###
 ##################################
 
+configure_file(generate_enums.py ${CMAKE_BINARY_DIR}/ @ONLY)
+
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/generate_enums.py"
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_enums.py"
     WORKING_DIRECTORY "${STAGING_DIR}"
     OUTPUT_FILE "${STAGING_DIR}/enums.py"
 )
