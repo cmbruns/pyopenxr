@@ -7,10 +7,8 @@ import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 
 # These variables are filled in by cmake's configure_file process
-# TODO: replace with symbolic file path
-OPENXR_HEADER = "C:/Program Files/OPENXR/include/openxr/openxr.h"
-# OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
-clang.cindex.Config.set_library_file("C:/Program Files/LLVM/bin/libclang.dll")
+OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
+clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
 
 
 class Constant(object):

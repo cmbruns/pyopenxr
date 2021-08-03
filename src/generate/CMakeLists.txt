@@ -94,8 +94,10 @@ execute_process(
 )
 message(STATUS "Generated file ${STAGING_DIR}/enums.py")
 
+configure_file(generate_constants.py ${CMAKE_BINARY_DIR}/ @ONLY)
+
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/generate_constants.py"
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_constants.py"
     WORKING_DIRECTORY "${STAGING_DIR}"
     OUTPUT_FILE "${STAGING_DIR}/constants.py"
 )
