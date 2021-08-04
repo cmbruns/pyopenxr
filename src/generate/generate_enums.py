@@ -1,7 +1,6 @@
 # This script creates an updated version of xr/enums.py
 
 # TODO:
-#  * __all__ section
 #  * docstrings
 
 import inspect

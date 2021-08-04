@@ -103,6 +103,15 @@ execute_process(
 )
 message(STATUS "Generated file ${STAGING_DIR}/constants.py")
 
+configure_file(generate_typedefs.py ${CMAKE_BINARY_DIR}/ @ONLY)
+
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_typedefs.py"
+    WORKING_DIRECTORY "${STAGING_DIR}"
+    OUTPUT_FILE "${STAGING_DIR}/typedefs.py"
+)
+message(STATUS "Generated file ${STAGING_DIR}/typedefs.py")
+
 ##########################################
 ### Find OpenXR-Registry documentation ###
 ##########################################
