@@ -20,9 +20,9 @@ clang.cindex.Config.set_library_file("C:/Program Files/LLVM/bin/libclang.dll")
 
 ctypes_imports = {"POINTER", "CFUNCTYPE", "Structure", "c_float", "c_char"}
 
-# TODO: Strip off initial "Xr"
 # TODO: Create fake pointed-to structs
 # TODO: Import enums
+# TODO: Strip const
 
 
 def ctype_from_clang_type(c_type: Type) -> str:
@@ -34,9 +34,9 @@ def ctype_from_clang_type(c_type: Type) -> str:
     elif c_type.kind == TypeKind.CHAR_S:
         return "c_char"
     elif c_type.kind == TypeKind.CONSTANTARRAY:
-        return f"({ctype_from_clang_type(c_type.element_type)} * {c_type.element_count})"
+        return f"({sx(c_type.element_type)} * {c_type.element_count})"
     elif c_type.kind == TypeKind.ELABORATED:
-        return ctype_from_clang_type(c_type.get_named_type())
+        return sx(c_type.get_named_type())
     elif c_type.kind == TypeKind.ENUM:
         return c_type.get_declaration().spelling
     elif c_type.kind == TypeKind.FLOAT:
@@ -45,10 +45,10 @@ def ctype_from_clang_type(c_type: Type) -> str:
         pt = c_type.get_pointee()
         if pt.kind == TypeKind.FUNCTIONPROTO:
             args = [pt.get_result(), *(pt.argument_types())]
-            arg_string = ", ".join([ctype_from_clang_type(a) for a in args])
+            arg_string = ", ".join([sx(a) for a in args])
             return f"CFUNCTYPE({arg_string})"
         else:
-            return f"POINTER({ctype_from_clang_type(pt)})"
+            return f"POINTER({sx(pt)})"
     elif c_type.kind == TypeKind.RECORD:
         return c_type.get_declaration().spelling
     elif c_type.kind == TypeKind.TYPEDEF:
@@ -59,13 +59,24 @@ def ctype_from_clang_type(c_type: Type) -> str:
         assert(False)
 
 
+# Strip off initial "Xr"
+def ss(s: str) -> str:
+    if s.startswith("Xr"):
+        return s[2:]
+    return s
+
+
+def sx(t: Type) -> str:
+    return ss(ctype_from_clang_type(t))
+
+
 class CTypedef(object):
     def __init__(self, cursor):
         self.cursor = cursor
-        self.new_type = cursor.spelling
+        self.new_type = ss(cursor.spelling)
         clang_type = cursor.underlying_typedef_type
         self.c_type = clang_type.spelling
-        self.ctypes_type = ctype_from_clang_type(clang_type)
+        self.ctypes_type = sx(clang_type)
 
 
 def generate_typedefs() -> Generator[CTypedef, None, None]:
