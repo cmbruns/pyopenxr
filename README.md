@@ -9,7 +9,7 @@ This is a work in progress. Stay tuned.
 
 ## Use
 
-Initial smoke test:
+Simple test:
 
 ```python
 import xr
