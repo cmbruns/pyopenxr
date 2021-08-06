@@ -38,15 +38,25 @@ set(OPENXR_INCLUDE_FILE "${OPENXR_INCLUDE_DIR}/openxr/openxr.h")
 
 find_package(PythonInterp)
 
+# Helper files for generate_whatever.py
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/xrg")
+configure_file(xrg/__init__.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
+
+configure_file(print_openxr_version.py ${CMAKE_BINARY_DIR}/ @ONLY)
 configure_file(generate_version.py ${CMAKE_BINARY_DIR}/ @ONLY)
+
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/print_openxr_version.py"
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+    OUTPUT_VARIABLE OPENXR_VERSION
+)
+message(STATUS "OpenXR Version = ${OPENXR_VERSION}")
 
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_version.py"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-    OUTPUT_VARIABLE OPENXR_VERSION
-    RESULT_VARIABLE py_result
+    OUTPUT_FILE ${STAGING_DIR}/version.py
 )
-message(STATUS "OpenXR Version = ${OPENXR_VERSION}")
 message(STATUS "Generated file ${STAGING_DIR}/version.py")
 
 #########################################
