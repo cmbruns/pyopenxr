@@ -6,9 +6,7 @@ from typing import Optional
 import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 
-# These variables are filled in by cmake's configure_file process
-OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
-clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
+from xrg import *
 
 
 class Constant(object):
