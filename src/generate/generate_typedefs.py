@@ -11,7 +11,7 @@ from typing import Generator
 import clang.cindex
 from clang.cindex import CursorKind, Index, Type, TypeKind
 
-from xrg import TypeNameMapper
+from xrg import TypeDefItem, TypeNameMapper, SkippableCodeItemException
 
 # These variables are filled in by cmake's configure_file process
 OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
@@ -115,9 +115,13 @@ def generate_typedefs() -> Generator[CTypedef, None, None]:
         ):
             continue
         if child.kind == CursorKind.TYPEDEF_DECL:
-            t = CTypedef(cursor=child)
-            if t.new_type != t.ctypes_type:  # ignore typedef struct t {} t; etc.
-                yield t
+            try:
+                test = TypeDefItem(child)
+                t = CTypedef(cursor=child)
+                if t.new_type != t.ctypes_type:  # ignore typedef struct t {} t; etc.
+                    yield test
+            except SkippableCodeItemException:
+                pass
         elif child.kind == CursorKind.STRUCT_DECL:
             t = CStruct(cursor=child)
             yield t
