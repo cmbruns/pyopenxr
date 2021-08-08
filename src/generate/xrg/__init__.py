@@ -663,6 +663,12 @@ def generate_code_items(kinds: list[CursorKind] = None) -> Generator[CodeItem, N
             continue
 
 
+def get_header_as_string() -> str:
+    with open(OPENXR_HEADER) as f:
+        file_string = f.read()
+    return file_string
+
+
 def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", clang_type.spelling)
     if m:
@@ -703,6 +709,7 @@ def py_type_name(capi_type: str) -> str:
 
 
 __all__ = [
+    "get_header_as_string",
     "CodeGenerator",
     "CodeItem",
     "EnumItem",

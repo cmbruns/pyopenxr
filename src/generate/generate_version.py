@@ -2,13 +2,15 @@
 
 import re
 import inspect
+import xrg
 
 # These variables are filled in by cmake's configure_file process
-openxr_header = "@OPENXR_INCLUDE_FILE@"
-pyopenxr_patch = int("@PYOPENXR_VERSION_PATCH_INCREMENTAL@")
+try:
+    pyopenxr_patch = int("@PYOPENXR_VERSION_PATCH_INCREMENTAL@")
+except ValueError:
+    pyopenxr_patch = 1
 
-with open(openxr_header) as f:
-    file_string = f.read()
+file_string = xrg.get_header_as_string()
 
 # We expect a line in openxr.h like
 #   "#define XR_CURRENT_API_VERSION XR_MAKE_VERSION(1, 0, 17)"
