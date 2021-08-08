@@ -495,10 +495,4 @@ def py_type_name(capi_type: str) -> str:
 
 __all__ = [
     "CodeGenerator",
-    "CodeItem",
-    "generate_code_items",
-    "generate_cursors",
-    "StructItem",
-    "SkippableCodeItemException",
-    "TypeDefItem",
 ]
