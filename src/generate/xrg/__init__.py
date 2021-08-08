@@ -187,6 +187,9 @@ class VoidType(TypeBase):
 ####################
 
 class CodeItem(ABC):
+    def __init__(self, cursor: clang.cindex.Cursor) -> None:
+        self.cursor = cursor
+
     @staticmethod
     def blank_lines_before() -> int:
         return 1
@@ -212,8 +215,29 @@ class CodeItem(ABC):
         pass
 
 
+class StructFieldItem(CodeItem):
+    def __init__(self, cursor: clang.cindex.Cursor) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.FIELD_DECL
+        self._capi_name = cursor.spelling
+        self.type = parse_type(cursor.type)
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        return f'\n        ("{self.capi_name()}", {self.type.capi_string()}),'
+
+    def py_name(self) -> str:
+        return self.capi_name()
+
+    def py_string(self) -> str:
+        return f'\n        ("{self.py_name()}", {self.type.py_string()}),'
+
+
 class TypeDefItem(CodeItem):
     def __init__(self, cursor: clang.cindex.Cursor):
+        super().__init__(cursor)
         assert cursor.kind == CursorKind.TYPEDEF_DECL
         self._capi_name = cursor.spelling
         self._py_name = py_type_name(self._capi_name)
@@ -361,6 +385,7 @@ class TypeNameMapper(object):
 
 
 __all__ = [
+    "CodeItem",
     "parse_type",
     "TypeDefItem",
     "TypeNameMapper",

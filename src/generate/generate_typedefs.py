@@ -6,12 +6,12 @@
 import inspect
 import os
 import re
-from typing import Generator
+from typing import Generator, Union
 
 import clang.cindex
 from clang.cindex import CursorKind, Index
 
-from xrg import TypeDefItem, TypeNameMapper, SkippableCodeItemException
+from xrg import CodeItem, TypeDefItem, TypeNameMapper, SkippableCodeItemException
 
 # These variables are filled in by CMake during the configure_file process
 # OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
@@ -21,8 +21,6 @@ from xrg import TypeDefItem, TypeNameMapper, SkippableCodeItemException
 OPENXR_HEADER = "C:/Program Files/OPENXR/include/openxr/openxr.h"
 if os.path.isfile("C:/Program Files/LLVM/bin/libclang.dll"):
     clang.cindex.Config.set_library_file("C:/Program Files/LLVM/bin/libclang.dll")
-
-ctypes_imports = {"POINTER", "CFUNCTYPE", "Structure"}
 
 
 type_name_mapper = TypeNameMapper()
@@ -76,28 +74,7 @@ class CStruct(object):
         return 2
 
 
-class CTypedef(object):
-    def __init__(self, cursor):
-        self.cursor = cursor
-        self.new_type = type_name_mapper.api_type_string(cursor.spelling)
-        self.name = self.new_type
-        clang_type = cursor.underlying_typedef_type
-        self.c_type = clang_type.spelling
-        self.ctypes_type = type_name_mapper.api_type(clang_type)
-
-    def __str__(self) -> str:
-        return f"{self.new_type} = {self.ctypes_type}"
-
-    @staticmethod
-    def blank_lines_before():
-        return 1
-
-    @staticmethod
-    def blank_lines_after():
-        return 1
-
-
-def generate_typedefs() -> Generator[CTypedef, None, None]:
+def generate_typedefs() -> Generator[Union[CodeItem, CStruct], None, None]:
     tu = Index.create().parse(
         path=OPENXR_HEADER,
     )
