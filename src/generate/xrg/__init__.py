@@ -9,7 +9,7 @@ This module contains code to help generate the code in pyopenxr.
 
 from abc import ABC, abstractmethod
 import clang.cindex
-from clang.cindex import Cursor, CursorKind, Index, TypeKind
+from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 import os
 import re
 from typing import Generator
@@ -263,6 +263,48 @@ class CodeItem(ABC):
         pass
 
 
+class DefinitionItem(CodeItem):
+    def __init__(self, cursor: Cursor) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.MACRO_DEFINITION
+        self._capi_name = cursor.spelling
+        if self._capi_name.endswith("_"):
+            raise SkippableCodeItemException  # OPENVR_H_
+        tokens = list(cursor.get_tokens())[1:]
+        if len(tokens) > 1:
+            raise SkippableCodeItemException  # We only want simple #define values
+        self.value = tokens[0].spelling
+        if self.value is None:
+            raise SkippableCodeItemException  # #define with no value
+        assert self._capi_name.startswith("XR_")
+        self._py_name = self._capi_name[3:]
+        if self.value.endswith("LL"):
+            self.value = self.value[:-2]
+
+    @staticmethod
+    def blank_lines_before():
+        return 0
+
+    @staticmethod
+    def blank_lines_after():
+        return 0
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        return f"{self.capi_name()} = {self.value}"
+
+    def py_name(self) -> str:
+        return self._py_name
+
+    def py_string(self) -> str:
+        return f"{self.py_name()} = {self.value}"
+
+    def used_ctypes(self) -> set[str]:
+        return set()
+
+
 class StructFieldItem(CodeItem):
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -376,6 +418,49 @@ class TypeDefItem(CodeItem):
         return self.type.used_ctypes()
 
 
+class VariableItem(CodeItem):
+    def __init__(self, cursor: Cursor) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.VAR_DECL
+        self._capi_name = cursor.spelling
+        assert self._capi_name.startswith("XR_")
+        self._py_name = self._capi_name[3:]
+        self.type = None
+        for e in cursor.get_children():
+            if e.kind == CursorKind.TYPE_REF:
+                self.type = parse_type(e.type)
+            elif e.kind == CursorKind.UNEXPOSED_EXPR:
+                value_cursor = list(e.get_children())[0]
+                tokens = list(value_cursor.get_tokens())
+                assert len(tokens) == 1
+                self.value = tokens[0].spelling
+        if self.value.endswith("LL"):
+            self.value = self.value[:-2]
+
+    @staticmethod
+    def blank_lines_before():
+        return 0
+
+    @staticmethod
+    def blank_lines_after():
+        return 0
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        return f"{self.capi_name()} = {self.value}"
+
+    def py_name(self) -> str:
+        return self._py_name
+
+    def py_string(self) -> str:
+        return f"{self.py_name()} = {self.value}"
+
+    def used_ctypes(self) -> set[str]:
+        return set()
+
+
 class CodeGenerator(object):
     def __init__(self, kinds: list[CursorKind] = None):
         self.cursor_kinds = kinds
@@ -431,6 +516,7 @@ def capi_type_name(c_type_name: str) -> str:
 def generate_cursors() -> Generator[Cursor, None, None]:
     tu = Index.create().parse(
         path=OPENXR_HEADER,
+        options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
     )
     tu_file_name = str(tu.cursor.spelling)
     for child in tu.cursor.get_children():
@@ -448,6 +534,10 @@ def generate_code_items(kinds: list[CursorKind] = None) -> Generator[CodeItem, N
                 yield TypeDefItem(cursor)
             elif cursor.kind == CursorKind.STRUCT_DECL:
                 yield StructItem(cursor)
+            elif cursor.kind == CursorKind.MACRO_DEFINITION:
+                yield DefinitionItem(cursor)
+            elif cursor.kind == CursorKind.VAR_DECL:
+                yield VariableItem(cursor)
             else:
                 assert False  # Did we find a new top level clang cursor?
         except SkippableCodeItemException:
