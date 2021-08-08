@@ -5,13 +5,14 @@ This module contains code to help generate the code in pyopenxr.
 """
 
 # TODO:
-#  * docstrings
+#  * generate docstrings
 
 from abc import ABC, abstractmethod
 import clang.cindex
-from clang.cindex import Cursor, CursorKind, TypeKind
+from clang.cindex import Cursor, CursorKind, Index, TypeKind
 import os
 import re
+from typing import Generator
 
 # These variables are filled in by CMake during the configure_file process
 # OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
@@ -23,14 +24,17 @@ OPENXR_HEADER = "C:/Program Files/OPENXR/include/openxr/openxr.h"
 if os.path.isfile("C:/Program Files/LLVM/bin/libclang.dll"):
     clang.cindex.Config.set_library_file("C:/Program Files/LLVM/bin/libclang.dll")
 
-################
+##############
+# Exceptions #
+##############
 
 
 class SkippableCodeItemException(Exception):
     pass
 
+
 ################
-# Type objects #
+# Type classes #
 ################
 
 
@@ -228,7 +232,7 @@ class VoidType(TypeBase):
 
 
 ####################
-# CodeItem objects #
+# CodeItem classes #
 ####################
 
 class CodeItem(ABC):
@@ -360,11 +364,6 @@ class TypeDefItem(CodeItem):
         self.type = parse_type(cursor.underlying_typedef_type)
         if self._capi_name == self.type.capi_string():
             raise SkippableCodeItemException  # Nonsense A = A typedef
-        self.name = self._py_name  # TODO: remove
-
-    # TODO: remove
-    def __str__(self):
-        return self.py_string()
 
     def capi_name(self) -> str:
         return self._capi_name
@@ -382,7 +381,41 @@ class TypeDefItem(CodeItem):
         return self.type.used_ctypes()
 
 
-##########################
+#############
+# functions #
+#############
+
+def capi_type_name(c_type_name: str) -> str:
+    """The low level C-like api uses the exact same names as in C"""
+    s = re.sub(r"\b(?:const|volatile)\s+", "", c_type_name)  # But without const
+    return s
+
+
+def generate_cursors() -> Generator[Cursor, None, None]:
+    tu = Index.create().parse(
+        path=OPENXR_HEADER,
+    )
+    tu_file_name = str(tu.cursor.spelling)
+    for child in tu.cursor.get_children():
+        if not str(child.location.file) == tu_file_name:
+            continue  # Don't leave this file
+        yield child
+
+
+def generate_code_items(kinds: list[CursorKind] = None) -> Generator[CodeItem, None, None]:
+    for cursor in generate_cursors():
+        if kinds is not None and cursor.kind not in kinds:
+            continue
+        try:
+            if cursor.kind == CursorKind.TYPEDEF_DECL:
+                yield TypeDefItem(cursor)
+            elif cursor.kind == CursorKind.STRUCT_DECL:
+                yield StructItem(cursor)
+            else:
+                assert False  # Did we find a new top level clang cursor?
+        except SkippableCodeItemException:
+            continue
+
 
 def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", clang_type.spelling)
@@ -416,12 +449,6 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
         assert False
 
 
-def capi_type_name(c_type_name: str) -> str:
-    """The low level C-like api uses the exact same names as in C"""
-    s = re.sub(r"\b(?:const|volatile)\s+", "", c_type_name)  # But without const
-    return s
-
-
 def py_type_name(capi_type: str) -> str:
     s = capi_type
     if s.startswith("Xr"):
@@ -429,85 +456,11 @@ def py_type_name(capi_type: str) -> str:
     return s
 
 
-# TODO: remove below here
-class TypeNameMapper(object):
-    def __init__(self, use_pyapi=True):
-        # remember names of ctypes types used, for use in import statement
-        self.ctypes_cache = {"POINTER", "CFUNCTYPE", "Structure"}
-        self.use_pyapi = use_pyapi
-
-    def _ctypes_cache(self, ctypes_name: str) -> str:
-        """Remember a ctypes type name in the cache then return it"""
-        self.ctypes_cache.add(ctypes_name)
-        return ctypes_name
-
-    def api_type_string(self, c_type_name: str) -> str:
-        if self.use_pyapi:
-            return self.pyapi_type_name(c_type_name)
-        else:
-            return self.capi_type_name(c_type_name)
-
-    def api_type(self, clang_type: clang.cindex.Type) -> str:
-        """Return API-specific (either pythonic or C-like) type name corresponding to parsed clang type"""
-        return self.api_type_string(self.ctypes_name(clang_type))
-
-    @staticmethod
-    def capi_type_name(c_type_name: str) -> str:
-        """The low level C-like api uses the exact same names as in C"""
-        s = re.sub(r"\b(?:const|volatile)\s+", "", c_type_name)  # But without const
-        return s
-
-    def ctypes_import(self) -> str:
-        """Return import statement for used ctypes types"""
-        return f"from ctypes import {', '.join(sorted(self.ctypes_cache))}"
-
-    def ctypes_name(self, clang_type: clang.cindex.Type) -> str:
-        """Return the ctypes type name corresponding to a parsed clang type."""
-        m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", clang_type.spelling)
-        if m:
-            return self._ctypes_cache(f"c_{m.group(1)}")
-        elif clang_type.kind == TypeKind.CHAR_S:
-            return self._ctypes_cache("c_char")
-        elif clang_type.kind == TypeKind.CONSTANTARRAY:
-            return f"({self.api_type(clang_type.element_type)} * {clang_type.element_count})"
-        elif clang_type.kind == TypeKind.ELABORATED:
-            return self.api_type(clang_type.get_named_type())
-        elif clang_type.kind == TypeKind.ENUM:
-            return self._ctypes_cache("c_uint32")
-        elif clang_type.kind == TypeKind.FLOAT:
-            return self._ctypes_cache("c_float")
-        elif clang_type.kind == TypeKind.POINTER:
-            pt = clang_type.get_pointee()
-            if pt.kind == TypeKind.FUNCTIONPROTO:
-                args = [pt.get_result(), *(pt.argument_types())]
-                arg_string = ", ".join([self.api_type(a) for a in args])
-                return f"CFUNCTYPE({arg_string})"
-            elif pt.kind == TypeKind.VOID:
-                return self._ctypes_cache("c_void_p")
-            else:
-                return f"POINTER({self.api_type(pt)})"
-        elif clang_type.kind == TypeKind.RECORD:
-            return clang_type.get_declaration().spelling
-        elif clang_type.kind == TypeKind.TYPEDEF:
-            return clang_type.spelling
-        elif clang_type.kind == TypeKind.VOID:
-            return "None"
-        else:
-            assert False
-
-    @staticmethod
-    def pyapi_type_name(c_type_name: str) -> str:
-        """Convert raw C symbol name to pythonic name"""
-        s = TypeNameMapper.capi_type_name(c_type_name)
-        s = re.sub(r"\bXr", "", s)
-        return s
-
-
 __all__ = [
     "CodeItem",
-    "parse_type",
+    "generate_code_items",
+    "generate_cursors",
     "StructItem",
-    "TypeDefItem",
-    "TypeNameMapper",
     "SkippableCodeItemException",
+    "TypeDefItem",
 ]
