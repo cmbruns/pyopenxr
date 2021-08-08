@@ -203,6 +203,14 @@ class CodeItem(ABC):
     def py_string(self) -> str:
         pass
 
+    @abstractmethod
+    def py_name(self) -> str:
+        pass
+
+    @abstractmethod
+    def py_string(self) -> str:
+        pass
+
 
 class TypeDefItem(CodeItem):
     def __init__(self, cursor: clang.cindex.Cursor):
@@ -210,6 +218,8 @@ class TypeDefItem(CodeItem):
         self._capi_name = cursor.spelling
         self._py_name = py_type_name(self._capi_name)
         self.type = parse_type(cursor.underlying_typedef_type)
+        if self._capi_name == self.type.capi_string():
+            raise SkippableCodeItemException  # Nonsense A = A typedef
         self.name = self._py_name  # TODO: remove
 
     # TODO: remove

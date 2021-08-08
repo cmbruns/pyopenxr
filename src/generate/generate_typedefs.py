@@ -114,19 +114,15 @@ def generate_typedefs() -> Generator[CTypedef, None, None]:
             CursorKind.VAR_DECL,
         ):
             continue
-        if child.kind == CursorKind.TYPEDEF_DECL:
-            try:
-                test = TypeDefItem(child)
-                t = CTypedef(cursor=child)
-                if t.new_type != t.ctypes_type:  # ignore typedef struct t {} t; etc.
-                    yield test
-            except SkippableCodeItemException:
-                pass
-        elif child.kind == CursorKind.STRUCT_DECL:
-            t = CStruct(cursor=child)
-            yield t
-        else:
-            assert False
+        try:
+            if child.kind == CursorKind.TYPEDEF_DECL:
+                yield TypeDefItem(child)
+            elif child.kind == CursorKind.STRUCT_DECL:
+                yield CStruct(cursor=child)
+            else:
+                assert False
+        except SkippableCodeItemException:
+            continue
 
 
 def main():
