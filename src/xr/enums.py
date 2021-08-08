@@ -1,5 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
+from ctypes import c_int32
 import enum
 
 

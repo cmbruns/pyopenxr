@@ -18,71 +18,65 @@ Duration = c_int64
 
 
 class Instance_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 Instance = POINTER(Instance_T)
 
 
 class Session_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 Session = POINTER(Session_T)
 
 
 class Space_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 Space = POINTER(Space_T)
 
 
 class Action_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 Action = POINTER(Action_T)
 
 
 class Swapchain_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 Swapchain = POINTER(Swapchain_T)
 
 
 class ActionSet_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 ActionSet = POINTER(ActionSet_T)
 
-Result = c_uint32
+Result = c_int32
 
-StructureType = c_uint32
+StructureType = c_int32
 
-FormFactor = c_uint32
+FormFactor = c_int32
 
-ViewConfigurationType = c_uint32
+ViewConfigurationType = c_int32
 
-EnvironmentBlendMode = c_uint32
+EnvironmentBlendMode = c_int32
 
-ReferenceSpaceType = c_uint32
+ReferenceSpaceType = c_int32
 
-ActionType = c_uint32
+ActionType = c_int32
 
-EyeVisibility = c_uint32
+EyeVisibility = c_int32
 
-SessionState = c_uint32
+SessionState = c_int32
 
-ObjectType = c_uint32
+ObjectType = c_int32
 
 InstanceCreateFlags = Flags64
 
@@ -939,7 +933,7 @@ class CompositionLayerEquirectKHR(Structure):
     ]
 
 
-VisibilityMaskTypeKHR = c_uint32
+VisibilityMaskTypeKHR = c_int32
 
 
 class VisibilityMaskKHR(Structure):
@@ -1019,13 +1013,13 @@ class BindingModificationsKHR(Structure):
     ]
 
 
-PerfSettingsDomainEXT = c_uint32
+PerfSettingsDomainEXT = c_int32
 
-PerfSettingsSubDomainEXT = c_uint32
+PerfSettingsSubDomainEXT = c_int32
 
-PerfSettingsLevelEXT = c_uint32
+PerfSettingsLevelEXT = c_int32
 
-PerfSettingsNotificationLevelEXT = c_uint32
+PerfSettingsNotificationLevelEXT = c_int32
 
 
 class EventDataPerfSettingsEXT(Structure):
@@ -1045,8 +1039,7 @@ PFN_xrThermalGetTemperatureTrendEXT = CFUNCTYPE(Result, Session, PerfSettingsDom
 
 
 class DebugUtilsMessengerEXT_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 DebugUtilsMessengerEXT = POINTER(DebugUtilsMessengerEXT_T)
@@ -1157,8 +1150,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
 
 
 class SpatialAnchorMSFT_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 SpatialAnchorMSFT = POINTER(SpatialAnchorMSFT_T)
@@ -1200,7 +1192,7 @@ class CompositionLayerImageLayoutFB(Structure):
     ]
 
 
-BlendFactorFB = c_uint32
+BlendFactorFB = c_int32
 
 
 class CompositionLayerAlphaBlendFB(Structure):
@@ -1235,7 +1227,7 @@ PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result, Session, Path, Path, Ve
 
 PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result, Session, Path, Path, Space, Posef)
 
-SpatialGraphNodeTypeMSFT = c_uint32
+SpatialGraphNodeTypeMSFT = c_int32
 
 
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
@@ -1252,17 +1244,16 @@ PFN_xrCreateSpatialGraphNodeSpaceMSFT = CFUNCTYPE(Result, Session, POINTER(Spati
 
 
 class HandTrackerEXT_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 HandTrackerEXT = POINTER(HandTrackerEXT_T)
 
-HandEXT = c_uint32
+HandEXT = c_int32
 
-HandJointEXT = c_uint32
+HandJointEXT = c_int32
 
-HandJointSetEXT = c_uint32
+HandJointSetEXT = c_int32
 
 
 class SystemHandTrackingPropertiesEXT(Structure):
@@ -1332,7 +1323,7 @@ PFN_xrDestroyHandTrackerEXT = CFUNCTYPE(Result, HandTrackerEXT)
 
 PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result, HandTrackerEXT, POINTER(HandJointsLocateInfoEXT), POINTER(HandJointLocationsEXT))
 
-HandPoseTypeMSFT = c_uint32
+HandPoseTypeMSFT = c_int32
 
 
 class SystemHandTrackingMeshPropertiesMSFT(Structure):
@@ -1534,7 +1525,7 @@ class ViewConfigurationViewFovEPIC(Structure):
     ]
 
 
-ReprojectionModeMSFT = c_uint32
+ReprojectionModeMSFT = c_int32
 
 
 class CompositionLayerReprojectionInfoMSFT(Structure):
@@ -1593,7 +1584,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     ]
 
 
-HandJointsMotionRangeEXT = c_uint32
+HandJointsMotionRangeEXT = c_int32
 
 
 class HandJointsMotionRangeInfoEXT(Structure):
@@ -1605,33 +1596,31 @@ class HandJointsMotionRangeInfoEXT(Structure):
 
 
 class SceneObserverMSFT_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 SceneObserverMSFT = POINTER(SceneObserverMSFT_T)
 
 
 class SceneMSFT_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 SceneMSFT = POINTER(SceneMSFT_T)
 
-SceneComputeFeatureMSFT = c_uint32
+SceneComputeFeatureMSFT = c_int32
 
-SceneComputeConsistencyMSFT = c_uint32
+SceneComputeConsistencyMSFT = c_int32
 
-MeshComputeLodMSFT = c_uint32
+MeshComputeLodMSFT = c_int32
 
-SceneComponentTypeMSFT = c_uint32
+SceneComponentTypeMSFT = c_int32
 
-SceneObjectTypeMSFT = c_uint32
+SceneObjectTypeMSFT = c_int32
 
-ScenePlaneAlignmentTypeMSFT = c_uint32
+ScenePlaneAlignmentTypeMSFT = c_int32
 
-SceneComputeStateMSFT = c_uint32
+SceneComputeStateMSFT = c_int32
 
 
 class UuidMSFT(Structure):
@@ -1947,7 +1936,7 @@ PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result, Session, POINTER(c_float))
 
 PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result, Session, c_float)
 
-ColorSpaceFB = c_uint32
+ColorSpaceFB = c_int32
 
 
 class SystemColorSpacePropertiesFB(Structure):
@@ -1964,8 +1953,7 @@ PFN_xrSetColorSpaceFB = CFUNCTYPE(Result, Session, ColorSpaceFB)
 
 
 class FoveationProfileFB_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 FoveationProfileFB = POINTER(FoveationProfileFB_T)
@@ -2003,9 +1991,9 @@ PFN_xrCreateFoveationProfileFB = CFUNCTYPE(Result, Session, POINTER(FoveationPro
 
 PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result, FoveationProfileFB)
 
-FoveationLevelFB = c_uint32
+FoveationLevelFB = c_int32
 
-FoveationDynamicFB = c_uint32
+FoveationDynamicFB = c_int32
 
 
 class FoveationLevelProfileCreateInfoFB(Structure):
@@ -2055,8 +2043,7 @@ PFN_xrSetEnvironmentDepthEstimationVARJO = CFUNCTYPE(Result, Session, Bool32)
 
 
 class SpatialAnchorStoreConnectionMSFT_T(Structure):
-    _fields_ = [
-    ]
+    pass
 
 
 SpatialAnchorStoreConnectionMSFT = POINTER(SpatialAnchorStoreConnectionMSFT_T)

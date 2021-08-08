@@ -71,8 +71,8 @@ class EnumType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.ENUM
-        self._capi_name = "c_uint32"  # TODO we could use the actual name if we had the enums loaded
-        self._py_name = "c_uint32"
+        self._capi_name = "c_int32"  # TODO we could use the actual name if we had the enums loaded
+        self._py_name = "c_int32"
 
     def capi_string(self) -> str:
         return self._capi_name
@@ -81,7 +81,7 @@ class EnumType(TypeBase):
         return self._py_name
 
     def used_ctypes(self) -> set[str]:
-        return {"c_uint32", }
+        return {"c_int32", }
 
 
 class FunctionPointerType(TypeBase):
@@ -305,6 +305,116 @@ class DefinitionItem(CodeItem):
         return set()
 
 
+class EnumItem(CodeItem):
+    def __init__(self, cursor: Cursor) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.ENUM_DECL
+        self._capi_name = cursor.spelling
+        self._py_name = py_type_name(self._capi_name)
+        self.values = []
+        for v in cursor.get_children():
+            assert v.kind == CursorKind.ENUM_CONSTANT_DECL
+            self.values.append(EnumValueItem(cursor=v, parent=self))
+
+    @staticmethod
+    def blank_lines_before():
+        return 2
+
+    @staticmethod
+    def blank_lines_after():
+        return 1
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        result = f"{self.capi_name()} = c_int32"
+        for v in self.values:
+            result += f"\n{v.capi_string()}"
+        return result
+
+    def py_name(self) -> str:
+        return self._py_name
+
+    def py_string(self) -> str:
+        result = f"class {self.py_name()}(enum.Enum):"
+        value_count = 0
+        for v in self.values:
+            if v.py_name() == "_MAX_ENUM":
+                continue
+            result += v.py_string()
+            value_count += 1
+        if value_count < 1:
+            result += "\n    pass"
+        return result
+
+    def used_ctypes(self) -> set[str]:
+        return {"c_int32", }
+
+
+class EnumValueItem(CodeItem):
+    # Certain enums name their values differently than others
+    _PREFIX_TABLE = {
+        "RESULT_": "",
+        "STRUCTURE_TYPE_": "TYPE_",
+        "PERF_SETTINGS_NOTIFICATION_LEVEL_": "PERF_SETTINGS_NOTIF_LEVEL_",
+    }
+
+    def __init__(self, cursor: Cursor, parent: EnumItem) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.ENUM_CONSTANT_DECL
+        self.parent = parent
+        self._capi_name = cursor.spelling
+        self._py_name = self._make_py_name()
+        self.value = self.cursor.enum_value
+
+    def _make_py_name(self):
+        # Compute pythonic name...
+        n = self._capi_name
+        assert n.startswith("XR_")
+        n = n[3:]  # Strip off initial "XR_"
+        prefix = self.parent.py_name()
+        postfix = ""
+        for postfix1 in ["EXT", "FB", "KHR", "MSFT"]:
+            if prefix.endswith(postfix1):
+                prefix = prefix[:-len(postfix1)]
+                postfix = f"_{postfix1}"
+                break
+        prefix = re.sub(r"(?<!^)(?=[A-Z])", "_", prefix).upper() + "_"  # snake from camel
+        if n == f"{prefix}MAX_ENUM{postfix}":
+            return f"_MAX_ENUM"  # private enum value
+        if prefix in self._PREFIX_TABLE:
+            prefix = self._PREFIX_TABLE[prefix]
+        assert n.startswith(prefix)
+        n = n[len(prefix):]
+        if len(postfix) > 0:
+            n = n[:-len(postfix)]  # It's already in the parent enum name
+        return n
+
+    @staticmethod
+    def blank_lines_before():
+        return 0
+
+    @staticmethod
+    def blank_lines_after():
+        return 0
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        return f"\n{self.capi_name()} = {self.parent.capi_name()}({self.value})"
+
+    def py_name(self) -> str:
+        return self._py_name
+
+    def py_string(self) -> str:
+        return f"\n    {self.py_name()} = {self.value}"
+
+    def used_ctypes(self) -> set[str]:
+        return set()
+
+
 class StructFieldItem(CodeItem):
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -362,6 +472,10 @@ class StructItem(CodeItem):
 
     def capi_string(self) -> str:
         result = f"class {self.capi_name()}(Structure):"
+        if len(self.fields) == 0:
+            # Empty structure
+            result += "\n    pass"
+            return result
         if self.is_recursive:
             result += "\n    pass"
             result += f"\n\n\n{self.capi_name()}._fields_ = ["
@@ -376,7 +490,12 @@ class StructItem(CodeItem):
 
     def py_string(self) -> str:
         result = f"class {self.py_name()}(Structure):"
+        if len(self.fields) == 0:
+            # Empty structure
+            result += "\n    pass"
+            return result
         if self.is_recursive:
+            # Structure containing self-reference must be declared in two stanzas
             result += "\n    pass"
             result += f"\n\n\n{self.py_name()}._fields_ = ["
         else:
@@ -525,21 +644,21 @@ def generate_cursors() -> Generator[Cursor, None, None]:
         yield child
 
 
+_CursorHandlers = {
+    CursorKind.ENUM_DECL: EnumItem,
+    CursorKind.MACRO_DEFINITION: DefinitionItem,
+    CursorKind.TYPEDEF_DECL: TypeDefItem,
+    CursorKind.STRUCT_DECL: StructItem,
+    CursorKind.VAR_DECL: VariableItem,
+}
+
+
 def generate_code_items(kinds: list[CursorKind] = None) -> Generator[CodeItem, None, None]:
     for cursor in generate_cursors():
         if kinds is not None and cursor.kind not in kinds:
             continue
         try:
-            if cursor.kind == CursorKind.TYPEDEF_DECL:
-                yield TypeDefItem(cursor)
-            elif cursor.kind == CursorKind.STRUCT_DECL:
-                yield StructItem(cursor)
-            elif cursor.kind == CursorKind.MACRO_DEFINITION:
-                yield DefinitionItem(cursor)
-            elif cursor.kind == CursorKind.VAR_DECL:
-                yield VariableItem(cursor)
-            else:
-                assert False  # Did we find a new top level clang cursor?
+            yield _CursorHandlers[cursor.kind](cursor)
         except SkippableCodeItemException:
             continue
 
@@ -585,4 +704,6 @@ def py_type_name(capi_type: str) -> str:
 
 __all__ = [
     "CodeGenerator",
+    "CodeItem",
+    "EnumItem",
 ]
