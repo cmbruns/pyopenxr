@@ -10,7 +10,7 @@ from clang.cindex import CursorKind, TypeKind
 import os
 import re
 
-# These variables are filled in by cmake's configure_file process
+# These variables are filled in by CMake during the configure_file process
 # OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
 # if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
 #     clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
@@ -196,11 +196,11 @@ class CodeItem(ABC):
         return 1
 
     @abstractmethod
-    def capi_string(self) -> str:
+    def capi_name(self) -> str:
         pass
 
     @abstractmethod
-    def py_string(self) -> str:
+    def capi_string(self) -> str:
         pass
 
     @abstractmethod
@@ -236,7 +236,6 @@ class TypeDefItem(CodeItem):
         return self._py_name
 
     def py_string(self) -> str:
-        p = self.type.py_string()
         return f"{self.py_name()} = {self.type.py_string()}"
 
 
@@ -280,8 +279,8 @@ def capi_type_name(c_type_name: str) -> str:
     return s
 
 
-def py_type_name(capi_type_name: str) -> str:
-    s = capi_type_name
+def py_type_name(capi_type: str) -> str:
+    s = capi_type
     if s.startswith("Xr"):
         s = s[2:]
     return s

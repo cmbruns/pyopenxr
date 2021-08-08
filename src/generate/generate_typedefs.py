@@ -9,13 +9,13 @@ import re
 from typing import Generator
 
 import clang.cindex
-from clang.cindex import CursorKind, Index, Type, TypeKind
+from clang.cindex import CursorKind, Index
 
 from xrg import TypeDefItem, TypeNameMapper, SkippableCodeItemException
 
-# These variables are filled in by cmake's configure_file process
-OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
-clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
+# These variables are filled in by CMake during the configure_file process
+# OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
+# clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
 
 # TODO: remove hard-coded versions
 OPENXR_HEADER = "C:/Program Files/OPENXR/include/openxr/openxr.h"
@@ -134,7 +134,6 @@ def main():
         """))
     print("")
     print(type_name_mapper.ctypes_import())
-    blanks1 = 0
     blanks2 = 0
     for t in typedefs:
         blanks1 = t.blank_lines_before()
