@@ -4,9 +4,12 @@ File xrg.__init__.py
 This module contains code to help generate the code in pyopenxr.
 """
 
+# TODO:
+#  * docstrings
+
 from abc import ABC, abstractmethod
 import clang.cindex
-from clang.cindex import CursorKind, TypeKind
+from clang.cindex import Cursor, CursorKind, TypeKind
 import os
 import re
 
@@ -43,6 +46,10 @@ class TypeBase(ABC):
     def py_string(self) -> str:
         pass
 
+    @abstractmethod
+    def used_ctypes(self) -> set[str]:
+        pass
+
 
 class ArrayType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
@@ -57,6 +64,9 @@ class ArrayType(TypeBase):
     def py_string(self) -> str:
         return f"({self.element_type.py_string()} * {self.count})"
 
+    def used_ctypes(self) -> set[str]:
+        return self.element_type.used_ctypes()
+
 
 class EnumType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
@@ -70,6 +80,9 @@ class EnumType(TypeBase):
 
     def py_string(self) -> str:
         return self._py_name
+
+    def used_ctypes(self) -> set[str]:
+        return {"c_uint32", }
 
 
 class FunctionPointerType(TypeBase):
@@ -91,6 +104,14 @@ class FunctionPointerType(TypeBase):
     def py_string(self) -> str:
         return self._py_string
 
+    def used_ctypes(self) -> set[str]:
+        result = {"CFUNCTYPE", }
+        result.update(self.result_type.used_ctypes())
+        result.update(self.result_type.used_ctypes())
+        for a in self.arg_types:
+            result.update(a.used_ctypes())
+        return result
+
 
 class PointerType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
@@ -106,6 +127,11 @@ class PointerType(TypeBase):
 
     def py_string(self) -> str:
         return f"POINTER({self.pointee.py_string()})"
+
+    def used_ctypes(self) -> set[str]:
+        result = self.pointee.used_ctypes()
+        result.add("POINTER")
+        return result
 
 
 class PrimitiveType(TypeBase):
@@ -127,6 +153,11 @@ class PrimitiveType(TypeBase):
     def py_string(self) -> str:
         return self._py_name
 
+    def used_ctypes(self) -> set[str]:
+        if self._capi_name.startswith("c_"):
+            return {self._capi_name, }
+        return set()
+
 
 class RecordType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
@@ -140,6 +171,9 @@ class RecordType(TypeBase):
 
     def py_string(self) -> str:
         return self._py_name
+
+    def used_ctypes(self) -> set[str]:
+        return set()
 
 
 class TypedefType(TypeBase):
@@ -155,6 +189,11 @@ class TypedefType(TypeBase):
     def py_string(self) -> str:
         return self._py_name
 
+    def used_ctypes(self) -> set[str]:
+        if self._capi_name.startswith("c_"):
+            return {self._capi_name, }
+        return set()
+
 
 class VoidPointerType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
@@ -169,6 +208,9 @@ class VoidPointerType(TypeBase):
     def py_string(self) -> str:
         return "c_void_p"
 
+    def used_ctypes(self) -> set[str]:
+        return {"c_void_p", }
+
 
 class VoidType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
@@ -181,13 +223,16 @@ class VoidType(TypeBase):
     def py_string(self) -> str:
         return "None"
 
+    def used_ctypes(self) -> set[str]:
+        return {"c_void_p", }
+
 
 ####################
 # CodeItem objects #
 ####################
 
 class CodeItem(ABC):
-    def __init__(self, cursor: clang.cindex.Cursor) -> None:
+    def __init__(self, cursor: Cursor) -> None:
         self.cursor = cursor
 
     @staticmethod
@@ -214,9 +259,13 @@ class CodeItem(ABC):
     def py_string(self) -> str:
         pass
 
+    @abstractmethod
+    def used_ctypes(self) -> set[str]:
+        pass
+
 
 class StructFieldItem(CodeItem):
-    def __init__(self, cursor: clang.cindex.Cursor) -> None:
+    def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
         assert cursor.kind == CursorKind.FIELD_DECL
         self._capi_name = cursor.spelling
@@ -234,9 +283,76 @@ class StructFieldItem(CodeItem):
     def py_string(self) -> str:
         return f'\n        ("{self.py_name()}", {self.type.py_string()}),'
 
+    def used_ctypes(self) -> set[str]:
+        return self.type.used_ctypes()
+
+
+class StructItem(CodeItem):
+    def __init__(self, cursor: Cursor):
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.STRUCT_DECL
+        self.c_name = cursor.spelling
+        self._capi_name = capi_type_name(self.c_name)
+        self._py_name = py_type_name(self._capi_name)
+        self.fields = []
+        for c in cursor.get_children():
+            if c.kind == CursorKind.FIELD_DECL:
+                self.fields.append(StructFieldItem(c))
+            elif c.kind == CursorKind.UNEXPOSED_ATTR:
+                pass  # something about the typedef?
+            else:
+                assert False
+        self.is_recursive = False
+        for f in self.fields:
+            m = re.search(fr"\b{self._capi_name}\b", f.type.capi_string())
+            if m:
+                self.is_recursive = True
+
+    @staticmethod
+    def blank_lines_before():
+        return 2
+
+    @staticmethod
+    def blank_lines_after():
+        return 2
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        result = f"class {self.capi_name()}(Structure):"
+        if self.is_recursive:
+            result += "\n    pass"
+            result += f"\n\n\n{self.capi_name()}._fields_ = ["
+        else:
+            result += "\n    _fields_ = ["
+        result += "".join([f.capi_string() for f in self.fields])
+        result += "\n    ]"
+        return result
+
+    def py_name(self) -> str:
+        return self._py_name
+
+    def py_string(self) -> str:
+        result = f"class {self.py_name()}(Structure):"
+        if self.is_recursive:
+            result += "\n    pass"
+            result += f"\n\n\n{self.py_name()}._fields_ = ["
+        else:
+            result += "\n    _fields_ = ["
+        result += "".join([f.py_string() for f in self.fields])
+        result += "\n    ]"
+        return result
+
+    def used_ctypes(self) -> set[str]:
+        result = {"Structure", }
+        for f in self.fields:
+            result.update(f.used_ctypes())
+        return result
+
 
 class TypeDefItem(CodeItem):
-    def __init__(self, cursor: clang.cindex.Cursor):
+    def __init__(self, cursor: Cursor):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.TYPEDEF_DECL
         self._capi_name = cursor.spelling
@@ -261,6 +377,9 @@ class TypeDefItem(CodeItem):
 
     def py_string(self) -> str:
         return f"{self.py_name()} = {self.type.py_string()}"
+
+    def used_ctypes(self) -> set[str]:
+        return self.type.used_ctypes()
 
 
 ##########################
@@ -387,6 +506,7 @@ class TypeNameMapper(object):
 __all__ = [
     "CodeItem",
     "parse_type",
+    "StructItem",
     "TypeDefItem",
     "TypeNameMapper",
     "SkippableCodeItemException",

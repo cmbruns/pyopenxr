@@ -1,17 +1,13 @@
 # This script creates an updated version of xr/enums.py
 
-# TODO:
-#  * docstrings
-
 import inspect
 import os
-import re
-from typing import Generator, Union
+from typing import Generator
 
 import clang.cindex
 from clang.cindex import CursorKind, Index
 
-from xrg import CodeItem, TypeDefItem, TypeNameMapper, SkippableCodeItemException
+from xrg import *
 
 # These variables are filled in by CMake during the configure_file process
 # OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
@@ -26,55 +22,7 @@ if os.path.isfile("C:/Program Files/LLVM/bin/libclang.dll"):
 type_name_mapper = TypeNameMapper()
 
 
-class CStructField(object):
-    def __init__(self, cursor):
-        self.cursor = cursor
-        self.name = cursor.spelling
-        self.ctypes_type = type_name_mapper.api_type(cursor.type)
-
-    def __str__(self):
-        return f'\n        ("{self.name}", {self.ctypes_type}),'
-
-
-class CStruct(object):
-    def __init__(self, cursor):
-        self.cursor = cursor
-        self.name = type_name_mapper.api_type_string(cursor.spelling)
-        self.fields = []
-        for c in cursor.get_children():
-            if c.kind == CursorKind.FIELD_DECL:
-                self.fields.append(CStructField(c))
-            elif c.kind == CursorKind.UNEXPOSED_ATTR:
-                pass  # something about the typedef?
-            else:
-                assert False
-        self.is_recursive = False
-        for f in self.fields:
-            m = re.search(fr"\b{self.name}\b", f.ctypes_type)
-            if m:
-                self.is_recursive = True
-
-    def __str__(self):
-        result = f"class {self.name}(Structure):"
-        if self.is_recursive:
-            result += "\n    pass"
-            result += f"\n\n\n{self.name}._fields_ = ["
-        else:
-            result += "\n    _fields_ = ["
-        result += "".join([str(p) for p in self.fields])
-        result += "\n    ]"
-        return result
-
-    @staticmethod
-    def blank_lines_before():
-        return 2
-
-    @staticmethod
-    def blank_lines_after():
-        return 2
-
-
-def generate_typedefs() -> Generator[Union[CodeItem, CStruct], None, None]:
+def generate_typedefs() -> Generator[CodeItem, None, None]:
     tu = Index.create().parse(
         path=OPENXR_HEADER,
     )
@@ -95,32 +43,35 @@ def generate_typedefs() -> Generator[Union[CodeItem, CStruct], None, None]:
             if child.kind == CursorKind.TYPEDEF_DECL:
                 yield TypeDefItem(child)
             elif child.kind == CursorKind.STRUCT_DECL:
-                yield CStruct(cursor=child)
+                yield StructItem(child)
             else:
-                assert False
+                assert False  # Did we find a new top level clang cursor?
         except SkippableCodeItemException:
             continue
 
 
 def main():
     typedefs = list(generate_typedefs())
+    ctypes_names = set()
+    for t in typedefs:
+        ctypes_names.update(t.used_ctypes())
 
     print(inspect.cleandoc(
         """
         # Warning: this file is auto-generated. Do not edit.
         """))
     print("")
-    print(type_name_mapper.ctypes_import())
+    print(f"from ctypes import {', '.join(sorted(ctypes_names))}")
     blanks2 = 0
     for t in typedefs:
         blanks1 = t.blank_lines_before()
         for b in range(max(blanks1, blanks2)):
             print("")
-        print(t)
+        print(t.py_string())
         blanks2 = t.blank_lines_after()
     print("\n\n__all__ = [")
     for t in typedefs:
-        print(f'    "{t.name}",')
+        print(f'    "{t.py_name()}",')
     print("]")
 
 
