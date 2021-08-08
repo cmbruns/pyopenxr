@@ -15,14 +15,9 @@ import re
 from typing import Generator
 
 # These variables are filled in by CMake during the configure_file process
-# OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
-# if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
-#     clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
-
-# TODO: remove hard-coded versions
-OPENXR_HEADER = "C:/Program Files/OPENXR/include/openxr/openxr.h"
-if os.path.isfile("C:/Program Files/LLVM/bin/libclang.dll"):
-    clang.cindex.Config.set_library_file("C:/Program Files/LLVM/bin/libclang.dll")
+OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
+if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
+    clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
 
 ##############
 # Exceptions #
@@ -381,6 +376,48 @@ class TypeDefItem(CodeItem):
         return self.type.used_ctypes()
 
 
+class CodeGenerator(object):
+    def __init__(self, kinds: list[CursorKind] = None):
+        self.cursor_kinds = kinds
+        self._items = None
+
+    @property
+    def items(self) -> list[CodeItem]:
+        if self._items is None:  # Populate list just in time
+            self._items = list(generate_code_items(self.cursor_kinds))
+        return self._items
+
+    def print_all_list(self, py=True) -> None:
+        print("\n\n__all__ = [")
+        for t in self.items:
+            if py:
+                print(f'    "{t.py_name()}",')
+            else:
+                print(f'    "{t.capi_name()}",')
+        print("]")
+
+    def print_header(self) -> None:
+        ctypes_names = set()
+        for t in self.items:
+            ctypes_names.update(t.used_ctypes())
+        print("""# Warning: this file is auto-generated. Do not edit.""")
+        print("")
+        if len(ctypes_names) > 0:
+            print(f"from ctypes import {', '.join(sorted(ctypes_names))}")
+
+    def print_items(self, py=True) -> None:
+        blanks2 = 0
+        for t in self.items:
+            blanks1 = t.blank_lines_before()
+            for b in range(max(blanks1, blanks2)):
+                print("")
+            if py:
+                print(t.py_string())
+            else:
+                print(t.capi_string())
+            blanks2 = t.blank_lines_after()
+
+
 #############
 # functions #
 #############
@@ -457,6 +494,7 @@ def py_type_name(capi_type: str) -> str:
 
 
 __all__ = [
+    "CodeGenerator",
     "CodeItem",
     "generate_code_items",
     "generate_cursors",
