@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_float, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
 
 Version = c_uint64
 
@@ -136,9 +136,9 @@ class InstanceCreateInfo(Structure):
         ("createFlags", InstanceCreateFlags),
         ("applicationInfo", ApplicationInfo),
         ("enabledApiLayerCount", c_uint32),
-        ("enabledApiLayerNames", POINTER(POINTER(c_char))),
+        ("enabledApiLayerNames", POINTER(c_char_p)),
         ("enabledExtensionCount", c_uint32),
-        ("enabledExtensionNames", POINTER(POINTER(c_char))),
+        ("enabledExtensionNames", POINTER(c_char_p)),
     ]
 
 
@@ -155,7 +155,7 @@ class EventDataBuffer(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("varying", c_uint8),
+        ("varying", (c_uint8 * 4000)),
     ]
 
 
@@ -767,11 +767,11 @@ class Color4f(Structure):
     ]
 
 
-PFN_xrGetInstanceProcAddr = CFUNCTYPE(Result, Instance, POINTER(c_char), POINTER(PFN_xrVoidFunction))
+PFN_xrGetInstanceProcAddr = CFUNCTYPE(Result, Instance, c_char_p, POINTER(PFN_xrVoidFunction))
 
-PFN_xrEnumerateApiLayerProperties = CFUNCTYPE(Result, c_uint32, c_uint32, POINTER(ApiLayerProperties))
+PFN_xrEnumerateApiLayerProperties = CFUNCTYPE(Result, c_uint32, POINTER(c_uint32), POINTER(ApiLayerProperties))
 
-PFN_xrEnumerateInstanceExtensionProperties = CFUNCTYPE(Result, POINTER(c_char), c_uint32, c_uint32, POINTER(ExtensionProperties))
+PFN_xrEnumerateInstanceExtensionProperties = CFUNCTYPE(Result, c_char_p, c_uint32, POINTER(c_uint32), POINTER(ExtensionProperties))
 
 PFN_xrCreateInstance = CFUNCTYPE(Result, POINTER(InstanceCreateInfo), POINTER(Instance))
 
@@ -789,13 +789,13 @@ PFN_xrGetSystem = CFUNCTYPE(Result, Instance, POINTER(SystemGetInfo), POINTER(Sy
 
 PFN_xrGetSystemProperties = CFUNCTYPE(Result, Instance, SystemId, POINTER(SystemProperties))
 
-PFN_xrEnumerateEnvironmentBlendModes = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, c_uint32, POINTER(EnvironmentBlendMode))
+PFN_xrEnumerateEnvironmentBlendModes = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, POINTER(c_uint32), POINTER(EnvironmentBlendMode))
 
 PFN_xrCreateSession = CFUNCTYPE(Result, Instance, POINTER(SessionCreateInfo), POINTER(Session))
 
 PFN_xrDestroySession = CFUNCTYPE(Result, Session)
 
-PFN_xrEnumerateReferenceSpaces = CFUNCTYPE(Result, Session, c_uint32, c_uint32, POINTER(ReferenceSpaceType))
+PFN_xrEnumerateReferenceSpaces = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(ReferenceSpaceType))
 
 PFN_xrCreateReferenceSpace = CFUNCTYPE(Result, Session, POINTER(ReferenceSpaceCreateInfo), POINTER(Space))
 
@@ -807,21 +807,21 @@ PFN_xrLocateSpace = CFUNCTYPE(Result, Space, Space, Time, POINTER(SpaceLocation)
 
 PFN_xrDestroySpace = CFUNCTYPE(Result, Space)
 
-PFN_xrEnumerateViewConfigurations = CFUNCTYPE(Result, Instance, SystemId, c_uint32, c_uint32, POINTER(ViewConfigurationType))
+PFN_xrEnumerateViewConfigurations = CFUNCTYPE(Result, Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationType))
 
 PFN_xrGetViewConfigurationProperties = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, POINTER(ViewConfigurationProperties))
 
-PFN_xrEnumerateViewConfigurationViews = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, c_uint32, POINTER(ViewConfigurationView))
+PFN_xrEnumerateViewConfigurationViews = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationView))
 
-PFN_xrEnumerateSwapchainFormats = CFUNCTYPE(Result, Session, c_uint32, c_uint32, c_int64)
+PFN_xrEnumerateSwapchainFormats = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(c_int64))
 
 PFN_xrCreateSwapchain = CFUNCTYPE(Result, Session, POINTER(SwapchainCreateInfo), POINTER(Swapchain))
 
 PFN_xrDestroySwapchain = CFUNCTYPE(Result, Swapchain)
 
-PFN_xrEnumerateSwapchainImages = CFUNCTYPE(Result, Swapchain, c_uint32, c_uint32, POINTER(SwapchainImageBaseHeader))
+PFN_xrEnumerateSwapchainImages = CFUNCTYPE(Result, Swapchain, c_uint32, POINTER(c_uint32), POINTER(SwapchainImageBaseHeader))
 
-PFN_xrAcquireSwapchainImage = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainImageAcquireInfo), c_uint32)
+PFN_xrAcquireSwapchainImage = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainImageAcquireInfo), POINTER(c_uint32))
 
 PFN_xrWaitSwapchainImage = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainImageWaitInfo))
 
@@ -839,11 +839,11 @@ PFN_xrBeginFrame = CFUNCTYPE(Result, Session, POINTER(FrameBeginInfo))
 
 PFN_xrEndFrame = CFUNCTYPE(Result, Session, POINTER(FrameEndInfo))
 
-PFN_xrLocateViews = CFUNCTYPE(Result, Session, POINTER(ViewLocateInfo), POINTER(ViewState), c_uint32, c_uint32, POINTER(View))
+PFN_xrLocateViews = CFUNCTYPE(Result, Session, POINTER(ViewLocateInfo), POINTER(ViewState), c_uint32, POINTER(c_uint32), POINTER(View))
 
-PFN_xrStringToPath = CFUNCTYPE(Result, Instance, POINTER(c_char), POINTER(Path))
+PFN_xrStringToPath = CFUNCTYPE(Result, Instance, c_char_p, POINTER(Path))
 
-PFN_xrPathToString = CFUNCTYPE(Result, Instance, Path, c_uint32, c_uint32, POINTER(c_char))
+PFN_xrPathToString = CFUNCTYPE(Result, Instance, Path, c_uint32, POINTER(c_uint32), c_char_p)
 
 PFN_xrCreateActionSet = CFUNCTYPE(Result, Instance, POINTER(ActionSetCreateInfo), POINTER(ActionSet))
 
@@ -869,9 +869,9 @@ PFN_xrGetActionStatePose = CFUNCTYPE(Result, Session, POINTER(ActionStateGetInfo
 
 PFN_xrSyncActions = CFUNCTYPE(Result, Session, POINTER(ActionsSyncInfo))
 
-PFN_xrEnumerateBoundSourcesForAction = CFUNCTYPE(Result, Session, POINTER(BoundSourcesForActionEnumerateInfo), c_uint32, c_uint32, POINTER(Path))
+PFN_xrEnumerateBoundSourcesForAction = CFUNCTYPE(Result, Session, POINTER(BoundSourcesForActionEnumerateInfo), c_uint32, POINTER(c_uint32), POINTER(Path))
 
-PFN_xrGetInputSourceLocalizedName = CFUNCTYPE(Result, Session, POINTER(InputSourceLocalizedNameGetInfo), c_uint32, c_uint32, POINTER(c_char))
+PFN_xrGetInputSourceLocalizedName = CFUNCTYPE(Result, Session, POINTER(InputSourceLocalizedNameGetInfo), c_uint32, POINTER(c_uint32), c_char_p)
 
 PFN_xrApplyHapticFeedback = CFUNCTYPE(Result, Session, POINTER(HapticActionInfo), POINTER(HapticBaseHeader))
 
@@ -945,7 +945,7 @@ class VisibilityMaskKHR(Structure):
         ("vertices", POINTER(Vector2f)),
         ("indexCapacityInput", c_uint32),
         ("indexCountOutput", c_uint32),
-        ("indices", c_uint32),
+        ("indices", POINTER(c_uint32)),
     ]
 
 
@@ -1055,7 +1055,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
         ("next", c_void_p),
         ("objectType", ObjectType),
         ("objectHandle", c_uint64),
-        ("objectName", POINTER(c_char)),
+        ("objectName", c_char_p),
     ]
 
 
@@ -1063,7 +1063,7 @@ class DebugUtilsLabelEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("labelName", POINTER(c_char)),
+        ("labelName", c_char_p),
     ]
 
 
@@ -1071,9 +1071,9 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("messageId", POINTER(c_char)),
-        ("functionName", POINTER(c_char)),
-        ("message", POINTER(c_char)),
+        ("messageId", c_char_p),
+        ("functionName", c_char_p),
+        ("message", c_char_p),
         ("objectCount", c_uint32),
         ("objects", POINTER(DebugUtilsObjectNameInfoEXT)),
         ("sessionLabelCount", c_uint32),
@@ -1235,7 +1235,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("nodeType", SpatialGraphNodeTypeMSFT),
-        ("nodeId", c_uint8),
+        ("nodeId", (c_uint8 * 16)),
         ("pose", Posef),
     ]
 
@@ -1359,7 +1359,7 @@ class HandMeshIndexBufferMSFT(Structure):
         ("indexBufferKey", c_uint32),
         ("indexCapacityInput", c_uint32),
         ("indexCountOutput", c_uint32),
-        ("indices", c_uint32),
+        ("indices", POINTER(c_uint32)),
     ]
 
 
@@ -1509,7 +1509,7 @@ class ControllerModelStateMSFT(Structure):
 
 PFN_xrGetControllerModelKeyMSFT = CFUNCTYPE(Result, Session, Path, POINTER(ControllerModelKeyStateMSFT))
 
-PFN_xrLoadControllerModelMSFT = CFUNCTYPE(Result, Session, ControllerModelKeyMSFT, c_uint32, c_uint32, c_uint8)
+PFN_xrLoadControllerModelMSFT = CFUNCTYPE(Result, Session, ControllerModelKeyMSFT, c_uint32, POINTER(c_uint32), POINTER(c_uint8))
 
 PFN_xrGetControllerModelPropertiesMSFT = CFUNCTYPE(Result, Session, ControllerModelKeyMSFT, POINTER(ControllerModelPropertiesMSFT))
 
@@ -1546,7 +1546,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     ]
 
 
-PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, c_uint32, POINTER(ReprojectionModeMSFT))
+PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, POINTER(c_uint32), POINTER(ReprojectionModeMSFT))
 
 
 class SwapchainStateBaseHeaderFB(Structure):
@@ -1625,7 +1625,7 @@ SceneComputeStateMSFT = c_int32
 
 class UuidMSFT(Structure):
     _fields_ = [
-        ("bytes", c_uint8),
+        ("bytes", (c_uint8 * 16)),
     ]
 
 
@@ -1857,7 +1857,7 @@ class SceneMeshIndicesUint32MSFT(Structure):
         ("next", c_void_p),
         ("indexCapacityInput", c_uint32),
         ("indexCountOutput", c_uint32),
-        ("indices", c_uint32),
+        ("indices", POINTER(c_uint32)),
     ]
 
 
@@ -1867,11 +1867,11 @@ class SceneMeshIndicesUint16MSFT(Structure):
         ("next", c_void_p),
         ("indexCapacityInput", c_uint32),
         ("indexCountOutput", c_uint32),
-        ("indices", c_uint16),
+        ("indices", POINTER(c_uint16)),
     ]
 
 
-PFN_xrEnumerateSceneComputeFeaturesMSFT = CFUNCTYPE(Result, Instance, SystemId, c_uint32, c_uint32, POINTER(SceneComputeFeatureMSFT))
+PFN_xrEnumerateSceneComputeFeaturesMSFT = CFUNCTYPE(Result, Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SceneComputeFeatureMSFT))
 
 PFN_xrCreateSceneObserverMSFT = CFUNCTYPE(Result, Session, POINTER(SceneObserverCreateInfoMSFT), POINTER(SceneObserverMSFT))
 
@@ -1903,7 +1903,7 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
 class DeserializeSceneFragmentMSFT(Structure):
     _fields_ = [
         ("bufferSize", c_uint32),
-        ("buffer", c_uint8),
+        ("buffer", POINTER(c_uint8)),
     ]
 
 
@@ -1918,7 +1918,7 @@ class SceneDeserializeInfoMSFT(Structure):
 
 PFN_xrDeserializeSceneMSFT = CFUNCTYPE(Result, SceneObserverMSFT, POINTER(SceneDeserializeInfoMSFT))
 
-PFN_xrGetSerializedSceneFragmentDataMSFT = CFUNCTYPE(Result, SceneMSFT, POINTER(SerializedSceneFragmentDataGetInfoMSFT), c_uint32, c_uint32, c_uint8)
+PFN_xrGetSerializedSceneFragmentDataMSFT = CFUNCTYPE(Result, SceneMSFT, POINTER(SerializedSceneFragmentDataGetInfoMSFT), c_uint32, POINTER(c_uint32), POINTER(c_uint8))
 
 
 class EventDataDisplayRefreshRateChangedFB(Structure):
@@ -1930,7 +1930,7 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
     ]
 
 
-PFN_xrEnumerateDisplayRefreshRatesFB = CFUNCTYPE(Result, Session, c_uint32, c_uint32, POINTER(c_float))
+PFN_xrEnumerateDisplayRefreshRatesFB = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(c_float))
 
 PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result, Session, POINTER(c_float))
 
@@ -1947,7 +1947,7 @@ class SystemColorSpacePropertiesFB(Structure):
     ]
 
 
-PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result, Session, c_uint32, c_uint32, POINTER(ColorSpaceFB))
+PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(ColorSpaceFB))
 
 PFN_xrSetColorSpaceFB = CFUNCTYPE(Result, Session, ColorSpaceFB)
 
@@ -2079,7 +2079,7 @@ PFN_xrDestroySpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result, SpatialAnchorS
 
 PFN_xrPersistSpatialAnchorMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceInfoMSFT))
 
-PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT, c_uint32, c_uint32, POINTER(SpatialAnchorPersistenceNameMSFT))
+PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT, c_uint32, POINTER(c_uint32), POINTER(SpatialAnchorPersistenceNameMSFT))
 
 PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result, Session, POINTER(SpatialAnchorFromPersistedAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFT))
 

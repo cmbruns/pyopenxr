@@ -8,11 +8,13 @@ This module contains code to help generate the code in pyopenxr.
 #  * generate docstrings
 
 from abc import ABC, abstractmethod
-import clang.cindex
-from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
+import inspect
 import os
 import re
 from typing import Generator
+
+import clang.cindex
+from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 
 # These variables are filled in by CMake during the configure_file process
 OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
@@ -81,7 +83,7 @@ class EnumType(TypeBase):
         return self._py_name
 
     def used_ctypes(self) -> set[str]:
-        return {"c_int32", }
+        return {"c_int", }
 
 
 class FunctionPointerType(TypeBase):
@@ -133,29 +135,19 @@ class PointerType(TypeBase):
         return result
 
 
-class PrimitiveType(TypeBase):
-    def __init__(self, clang_type: clang.cindex.Type):
+class PrimitiveCTypesType(TypeBase):
+    def __init__(self, clang_type: clang.cindex.Type, ctypes_type: str):
         super().__init__(clang_type)
-        self._capi_name = capi_type_name(clang_type.spelling)
-        m = re.match(r"(u?int(?:8|16|32|64))_t", self._capi_name)
-        if clang_type.kind == TypeKind.CHAR_S:
-            self._capi_name = "c_char"
-        elif clang_type.kind == TypeKind.FLOAT:
-            self._capi_name = "c_float"
-        elif m is not None:
-            self._capi_name = f"c_{m.group(1)}"
-        self._py_name = py_type_name(self._capi_name)
+        self.name = ctypes_type
 
     def capi_string(self) -> str:
-        return self._capi_name
+        return self.name
 
     def py_string(self) -> str:
-        return self._py_name
+        return self.name
 
     def used_ctypes(self) -> set[str]:
-        if self._capi_name.startswith("c_"):
-            return {self._capi_name, }
-        return set()
+        return {self.name, }
 
 
 class RecordType(TypeBase):
@@ -179,8 +171,13 @@ class TypedefType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.TYPEDEF
-        self._capi_name = capi_type_name(clang_type.spelling)
+        type_name = clang_type.spelling
+        m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", type_name)
+        if m:
+            type_name = f"c_{m.group(1)}"
+        self._capi_name = capi_type_name(type_name)
         self._py_name = py_type_name(self._capi_name)
+        self.underlying_type = parse_type(clang_type.get_declaration().underlying_typedef_type)
 
     def capi_string(self) -> str:
         return self._capi_name
@@ -191,24 +188,8 @@ class TypedefType(TypeBase):
     def used_ctypes(self) -> set[str]:
         if self._capi_name.startswith("c_"):
             return {self._capi_name, }
-        return set()
-
-
-class VoidPointerType(TypeBase):
-    def __init__(self, clang_type: clang.cindex.Type):
-        super().__init__(clang_type)
-        assert clang_type.kind == TypeKind.POINTER
-        pt = clang_type.get_pointee()
-        assert pt.kind == TypeKind.VOID
-
-    def capi_string(self) -> str:
-        return "c_void_p"
-
-    def py_string(self) -> str:
-        return "c_void_p"
-
-    def used_ctypes(self) -> set[str]:
-        return {"c_void_p", }
+        else:
+            return self.underlying_type.used_ctypes()
 
 
 class VoidType(TypeBase):
@@ -223,7 +204,7 @@ class VoidType(TypeBase):
         return "None"
 
     def used_ctypes(self) -> set[str]:
-        return {"c_void_p", }
+        return set()
 
 
 ####################
@@ -350,6 +331,95 @@ class EnumItem(CodeItem):
 
     def used_ctypes(self) -> set[str]:
         return {"c_int32", }
+
+
+class FunctionItem(CodeItem):
+    def __init__(self, cursor: Cursor) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.FUNCTION_DECL
+        self._capi_name = cursor.spelling
+        self._py_name = self._py_function_name(self._capi_name)
+        self.parameters = []
+        self.return_type = None
+        for c in cursor.get_children():
+            if c.kind == CursorKind.TYPE_REF:
+                assert self.return_type is None
+                self.return_type = parse_type(c.type)
+            elif c.kind == CursorKind.PARM_DECL:
+                self.parameters.append(FunctionParameterItem(c))
+            else:
+                assert False
+
+    @staticmethod
+    def _py_function_name(capi_name: str) -> str:
+        # TODO: snake case
+        s = capi_name
+        if s.startswith("xr"):
+            s = s[2:]
+        return s
+
+    @staticmethod
+    def blank_lines_before():
+        return 2
+
+    @staticmethod
+    def blank_lines_after():
+        return 2
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        return f"def {self.capi_name()}() -> :\n    pass"
+
+    def ctypes_string(self):
+        result = inspect.cleandoc(f"""
+        {self.capi_name()} = openxr_loader_library.{self.capi_name()}
+        {self.capi_name()}.restype = {self.return_type.capi_string()}
+        {self.capi_name()}.argtypes = [
+        """)
+        result += "".join(p.ctypes_string() for p in self.parameters)
+        result += "\n]"
+        return result
+
+    def py_name(self) -> str:
+        return self._py_name
+
+    def py_string(self) -> str:
+        return f"def {self.py_name()}() -> :\n    pass"
+
+    def used_ctypes(self) -> set[str]:
+        result = self.return_type.used_ctypes()
+        for p in self.parameters:
+            result.update(p.used_ctypes())
+        return result
+
+
+class FunctionParameterItem(CodeItem):
+    def __init__(self, cursor: Cursor):
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.PARM_DECL
+        self._capi_name = cursor.spelling
+        self.type = parse_type(cursor.type)
+
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        pass
+
+    def ctypes_string(self) -> str:
+        return f"\n    {self.type.capi_string()},  # {self.capi_name()}"
+
+    def py_name(self) -> str:
+        pass
+
+    def py_string(self) -> str:
+        pass
+
+    def used_ctypes(self) -> set[str]:
+        return self.type.used_ctypes()
 
 
 class EnumValueItem(CodeItem):
@@ -646,6 +716,7 @@ def generate_cursors() -> Generator[Cursor, None, None]:
 
 _CursorHandlers = {
     CursorKind.ENUM_DECL: EnumItem,
+    CursorKind.FUNCTION_DECL: FunctionItem,
     CursorKind.MACRO_DEFINITION: DefinitionItem,
     CursorKind.TYPEDEF_DECL: TypeDefItem,
     CursorKind.STRUCT_DECL: StructItem,
@@ -670,11 +741,8 @@ def get_header_as_string() -> str:
 
 
 def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
-    m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", clang_type.spelling)
-    if m:
-        return PrimitiveType(clang_type)
-    elif clang_type.kind == TypeKind.CHAR_S:
-        return PrimitiveType(clang_type)
+    if clang_type.kind == TypeKind.CHAR_S:
+        return PrimitiveCTypesType(clang_type, "c_char")
     elif clang_type.kind == TypeKind.CONSTANTARRAY:
         return ArrayType(clang_type)
     elif clang_type.kind == TypeKind.ELABORATED:
@@ -682,23 +750,42 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     elif clang_type.kind == TypeKind.ENUM:
         return EnumType(clang_type)
     elif clang_type.kind == TypeKind.FLOAT:
-        return PrimitiveType(clang_type)
+        return PrimitiveCTypesType(clang_type, "c_float")
+    elif clang_type.kind == TypeKind.INT:
+        return PrimitiveCTypesType(clang_type, "c_int")
+    elif clang_type.kind == TypeKind.LONGLONG:
+        return PrimitiveCTypesType(clang_type, "c_longlong")
     elif clang_type.kind == TypeKind.POINTER:
         pt = clang_type.get_pointee()
-        if pt.kind == TypeKind.FUNCTIONPROTO:
+        if pt.kind == TypeKind.CHAR_S:
+            # But this works ONLY if these are always null terminated strings
+            return PrimitiveCTypesType(clang_type, "c_char_p")
+        elif pt.kind == TypeKind.FUNCTIONPROTO:
             return FunctionPointerType(clang_type)
         elif pt.kind == TypeKind.VOID:
-            return VoidPointerType(clang_type)
+            return PrimitiveCTypesType(clang_type, "c_void_p")
         else:
             return PointerType(clang_type)
     elif clang_type.kind == TypeKind.RECORD:
         return RecordType(clang_type)
     elif clang_type.kind == TypeKind.TYPEDEF:
         return TypedefType(clang_type)
+    elif clang_type.kind == TypeKind.UCHAR:
+        return PrimitiveCTypesType(clang_type, "c_uchar")
+    elif clang_type.kind == TypeKind.UINT:
+        return PrimitiveCTypesType(clang_type, "c_uint")
+    elif clang_type.kind == TypeKind.ULONGLONG:
+        return PrimitiveCTypesType(clang_type, "c_ulonglong")
+    elif clang_type.kind == TypeKind.USHORT:
+        return PrimitiveCTypesType(clang_type, "c_ushort")
     elif clang_type.kind == TypeKind.VOID:
         return VoidType(clang_type)
-    else:
-        assert False
+
+    m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", clang_type.spelling)
+    if m:
+        return PrimitiveCTypesType(clang_type, f"c_{m.group(1)}")
+
+    assert False
 
 
 def py_type_name(capi_type: str) -> str:
