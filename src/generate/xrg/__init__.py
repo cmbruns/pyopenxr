@@ -402,7 +402,6 @@ class FunctionParameterItem(CodeItem):
         self._capi_name = cursor.spelling
         self.type = parse_type(cursor.type)
 
-
     def capi_name(self) -> str:
         return self._capi_name
 
@@ -800,4 +799,5 @@ __all__ = [
     "CodeGenerator",
     "CodeItem",
     "EnumItem",
+    "FunctionItem",
 ]
