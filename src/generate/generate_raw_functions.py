@@ -15,10 +15,8 @@ def main():
     functions = xrg.CodeGenerator([
         CursorKind.FUNCTION_DECL,
     ])
-    enums = xrg.CodeGenerator([
-        CursorKind.ENUM_DECL,
-    ])
 
+    functions.ctypes_names.add("c_int")  # because of enum aliases, below
     functions.print_header()
     print("")
 
@@ -37,10 +35,7 @@ def main():
     print("")
 
     # Generate custom enum declarations, not exposed in __all__
-    print("# Enum aliases")
-    for enum in enums.items:
-        assert isinstance(enum, xrg.EnumItem)
-        print(f"{enum.py_name()} = c_int")
+    functions.print_enum_aliases()
 
     print("\n# ctypes Function definitions")
 

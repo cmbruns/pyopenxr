@@ -12,7 +12,7 @@ higher-level pythonic functions in pyopenxr.
 from .library import openxr_loader_library
 from .typedefs import *
 
-# Enum aliases
+# Enum aliases (not exposed in __all__)
 Result = c_int
 StructureType = c_int
 FormFactor = c_int

@@ -655,6 +655,7 @@ class CodeGenerator(object):
     def __init__(self, kinds: list[CursorKind] = None):
         self.cursor_kinds = kinds
         self._items = None
+        self.ctypes_names = set()
 
     @property
     def items(self) -> list[CodeItem]:
@@ -671,14 +672,20 @@ class CodeGenerator(object):
                 print(f'    "{t.capi_name()}",')
         print("]")
 
+    def print_enum_aliases(self) -> None:
+        print("# Enum aliases (not exposed in __all__)")
+        enums = CodeGenerator([CursorKind.ENUM_DECL, ])
+        for enum in enums.items:
+            assert isinstance(enum, EnumItem)
+            print(f"{enum.py_name()} = c_int")
+
     def print_header(self) -> None:
-        ctypes_names = set()
         for t in self.items:
-            ctypes_names.update(t.used_ctypes())
+            self.ctypes_names.update(t.used_ctypes())
         print("""# Warning: this file is auto-generated. Do not edit.""")
         print("")
-        if len(ctypes_names) > 0:
-            print(f"from ctypes import {', '.join(sorted(ctypes_names))}")
+        if len(self.ctypes_names) > 0:
+            print(f"from ctypes import {', '.join(sorted(self.ctypes_names))}")
 
     def print_items(self, py=True) -> None:
         blanks2 = 0

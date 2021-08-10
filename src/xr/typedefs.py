@@ -2,7 +2,7 @@
 
 from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
 
-# Enum aliases
+# Enum aliases (not exposed in __all__)
 Result = c_int
 StructureType = c_int
 FormFactor = c_int
