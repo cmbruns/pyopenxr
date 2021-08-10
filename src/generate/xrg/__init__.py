@@ -16,7 +16,7 @@ from typing import Generator
 import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 
-# These variables are filled in by CMake during the configure_file process
+# These variables are filled in by CMake during the configure step
 OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
 if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
     clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
