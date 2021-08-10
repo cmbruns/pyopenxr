@@ -333,6 +333,69 @@ class EnumItem(CodeItem):
         return {"c_int", }
 
 
+class EnumValueItem(CodeItem):
+    # Certain enums name their values differently than others
+    _PREFIX_TABLE = {
+        "RESULT_": "",
+        "STRUCTURE_TYPE_": "TYPE_",
+        "PERF_SETTINGS_NOTIFICATION_LEVEL_": "PERF_SETTINGS_NOTIF_LEVEL_",
+    }
+
+    def __init__(self, cursor: Cursor, parent: EnumItem) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.ENUM_CONSTANT_DECL
+        self.parent = parent
+        self._capi_name = cursor.spelling
+        self._py_name = self._make_py_name()
+        self.value = self.cursor.enum_value
+
+    def _make_py_name(self):
+        # Compute pythonic name...
+        n = self._capi_name
+        assert n.startswith("XR_")
+        n = n[3:]  # Strip off initial "XR_"
+        prefix = self.parent.py_name()
+        postfix = ""
+        for postfix1 in ["EXT", "FB", "KHR", "MSFT"]:
+            if prefix.endswith(postfix1):
+                prefix = prefix[:-len(postfix1)]
+                postfix = f"_{postfix1}"
+                break
+        prefix = re.sub(r"(?<!^)(?=[A-Z])", "_", prefix).upper() + "_"  # snake from camel
+        if n == f"{prefix}MAX_ENUM{postfix}":
+            return f"_MAX_ENUM"  # private enum value
+        if prefix in self._PREFIX_TABLE:
+            prefix = self._PREFIX_TABLE[prefix]
+        assert n.startswith(prefix)
+        n = n[len(prefix):]
+        if len(postfix) > 0:
+            n = n[:-len(postfix)]  # It's already in the parent enum name
+        return n
+
+    @staticmethod
+    def blank_lines_before():
+        return 0
+
+    @staticmethod
+    def blank_lines_after():
+        return 0
+
+    def capi_name(self) -> str:
+        return self._capi_name
+
+    def capi_string(self) -> str:
+        return f"\n{self.capi_name()} = {self.parent.capi_name()}({self.value})"
+
+    def py_name(self) -> str:
+        return self._py_name
+
+    def py_string(self) -> str:
+        return f"\n    {self.py_name()} = c_int({self.value})"
+
+    def used_ctypes(self) -> set[str]:
+        return {"c_int", }
+
+
 class FunctionItem(CodeItem):
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -418,69 +481,6 @@ class FunctionParameterItem(CodeItem):
 
     def used_ctypes(self) -> set[str]:
         return self.type.used_ctypes()
-
-
-class EnumValueItem(CodeItem):
-    # Certain enums name their values differently than others
-    _PREFIX_TABLE = {
-        "RESULT_": "",
-        "STRUCTURE_TYPE_": "TYPE_",
-        "PERF_SETTINGS_NOTIFICATION_LEVEL_": "PERF_SETTINGS_NOTIF_LEVEL_",
-    }
-
-    def __init__(self, cursor: Cursor, parent: EnumItem) -> None:
-        super().__init__(cursor)
-        assert cursor.kind == CursorKind.ENUM_CONSTANT_DECL
-        self.parent = parent
-        self._capi_name = cursor.spelling
-        self._py_name = self._make_py_name()
-        self.value = self.cursor.enum_value
-
-    def _make_py_name(self):
-        # Compute pythonic name...
-        n = self._capi_name
-        assert n.startswith("XR_")
-        n = n[3:]  # Strip off initial "XR_"
-        prefix = self.parent.py_name()
-        postfix = ""
-        for postfix1 in ["EXT", "FB", "KHR", "MSFT"]:
-            if prefix.endswith(postfix1):
-                prefix = prefix[:-len(postfix1)]
-                postfix = f"_{postfix1}"
-                break
-        prefix = re.sub(r"(?<!^)(?=[A-Z])", "_", prefix).upper() + "_"  # snake from camel
-        if n == f"{prefix}MAX_ENUM{postfix}":
-            return f"_MAX_ENUM"  # private enum value
-        if prefix in self._PREFIX_TABLE:
-            prefix = self._PREFIX_TABLE[prefix]
-        assert n.startswith(prefix)
-        n = n[len(prefix):]
-        if len(postfix) > 0:
-            n = n[:-len(postfix)]  # It's already in the parent enum name
-        return n
-
-    @staticmethod
-    def blank_lines_before():
-        return 0
-
-    @staticmethod
-    def blank_lines_after():
-        return 0
-
-    def capi_name(self) -> str:
-        return self._capi_name
-
-    def capi_string(self) -> str:
-        return f"\n{self.capi_name()} = {self.parent.capi_name()}({self.value})"
-
-    def py_name(self) -> str:
-        return self._py_name
-
-    def py_string(self) -> str:
-        return f"\n    {self.py_name()} = {self.value}"
-
-    def used_ctypes(self) -> set[str]:
-        return set()
 
 
 class StructFieldItem(CodeItem):
@@ -587,6 +587,8 @@ class TypeDefItem(CodeItem):
         self._capi_name = cursor.spelling
         self._py_name = py_type_name(self._capi_name)
         self.type = parse_type(cursor.underlying_typedef_type)
+        if self.type.clang_type.kind == TypeKind.ENUM:
+            raise SkippableCodeItemException  # Keep enum typedefs out of typedefs.py
         if self._capi_name == self.type.capi_string():
             raise SkippableCodeItemException  # Nonsense A = A typedef
 

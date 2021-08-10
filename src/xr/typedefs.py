@@ -2,6 +2,41 @@
 
 from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
 
+# Enum aliases
+Result = c_int
+StructureType = c_int
+FormFactor = c_int
+ViewConfigurationType = c_int
+EnvironmentBlendMode = c_int
+ReferenceSpaceType = c_int
+ActionType = c_int
+EyeVisibility = c_int
+SessionState = c_int
+ObjectType = c_int
+VisibilityMaskTypeKHR = c_int
+PerfSettingsDomainEXT = c_int
+PerfSettingsSubDomainEXT = c_int
+PerfSettingsLevelEXT = c_int
+PerfSettingsNotificationLevelEXT = c_int
+BlendFactorFB = c_int
+SpatialGraphNodeTypeMSFT = c_int
+HandEXT = c_int
+HandJointEXT = c_int
+HandJointSetEXT = c_int
+HandPoseTypeMSFT = c_int
+ReprojectionModeMSFT = c_int
+HandJointsMotionRangeEXT = c_int
+SceneComputeFeatureMSFT = c_int
+SceneComputeConsistencyMSFT = c_int
+MeshComputeLodMSFT = c_int
+SceneComponentTypeMSFT = c_int
+SceneObjectTypeMSFT = c_int
+ScenePlaneAlignmentTypeMSFT = c_int
+SceneComputeStateMSFT = c_int
+ColorSpaceFB = c_int
+FoveationLevelFB = c_int
+FoveationDynamicFB = c_int
+
 Version = c_uint64
 
 Flags64 = c_uint64
@@ -57,26 +92,6 @@ class ActionSet_T(Structure):
 
 
 ActionSet = POINTER(ActionSet_T)
-
-Result = c_int
-
-StructureType = c_int
-
-FormFactor = c_int
-
-ViewConfigurationType = c_int
-
-EnvironmentBlendMode = c_int
-
-ReferenceSpaceType = c_int
-
-ActionType = c_int
-
-EyeVisibility = c_int
-
-SessionState = c_int
-
-ObjectType = c_int
 
 InstanceCreateFlags = Flags64
 
@@ -933,9 +948,6 @@ class CompositionLayerEquirectKHR(Structure):
     ]
 
 
-VisibilityMaskTypeKHR = c_int
-
-
 class VisibilityMaskKHR(Structure):
     _fields_ = [
         ("type", StructureType),
@@ -1011,15 +1023,6 @@ class BindingModificationsKHR(Structure):
         ("binding_modification_count", c_uint32),
         ("binding_modifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
     ]
-
-
-PerfSettingsDomainEXT = c_int
-
-PerfSettingsSubDomainEXT = c_int
-
-PerfSettingsLevelEXT = c_int
-
-PerfSettingsNotificationLevelEXT = c_int
 
 
 class EventDataPerfSettingsEXT(Structure):
@@ -1192,9 +1195,6 @@ class CompositionLayerImageLayoutFB(Structure):
     ]
 
 
-BlendFactorFB = c_int
-
-
 class CompositionLayerAlphaBlendFB(Structure):
     _fields_ = [
         ("type", StructureType),
@@ -1227,8 +1227,6 @@ PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result, Session, Path, Path, Ve
 
 PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result, Session, Path, Path, Space, Posef)
 
-SpatialGraphNodeTypeMSFT = c_int
-
 
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     _fields_ = [
@@ -1248,12 +1246,6 @@ class HandTrackerEXT_T(Structure):
 
 
 HandTrackerEXT = POINTER(HandTrackerEXT_T)
-
-HandEXT = c_int
-
-HandJointEXT = c_int
-
-HandJointSetEXT = c_int
 
 
 class SystemHandTrackingPropertiesEXT(Structure):
@@ -1322,8 +1314,6 @@ PFN_xrCreateHandTrackerEXT = CFUNCTYPE(Result, Session, POINTER(HandTrackerCreat
 PFN_xrDestroyHandTrackerEXT = CFUNCTYPE(Result, HandTrackerEXT)
 
 PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result, HandTrackerEXT, POINTER(HandJointsLocateInfoEXT), POINTER(HandJointLocationsEXT))
-
-HandPoseTypeMSFT = c_int
 
 
 class SystemHandTrackingMeshPropertiesMSFT(Structure):
@@ -1525,9 +1515,6 @@ class ViewConfigurationViewFovEPIC(Structure):
     ]
 
 
-ReprojectionModeMSFT = c_int
-
-
 class CompositionLayerReprojectionInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
@@ -1584,9 +1571,6 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     ]
 
 
-HandJointsMotionRangeEXT = c_int
-
-
 class HandJointsMotionRangeInfoEXT(Structure):
     _fields_ = [
         ("type", StructureType),
@@ -1607,20 +1591,6 @@ class SceneMSFT_T(Structure):
 
 
 SceneMSFT = POINTER(SceneMSFT_T)
-
-SceneComputeFeatureMSFT = c_int
-
-SceneComputeConsistencyMSFT = c_int
-
-MeshComputeLodMSFT = c_int
-
-SceneComponentTypeMSFT = c_int
-
-SceneObjectTypeMSFT = c_int
-
-ScenePlaneAlignmentTypeMSFT = c_int
-
-SceneComputeStateMSFT = c_int
 
 
 class UuidMSFT(Structure):
@@ -1936,8 +1906,6 @@ PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result, Session, POINTER(c_float))
 
 PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result, Session, c_float)
 
-ColorSpaceFB = c_int
-
 
 class SystemColorSpacePropertiesFB(Structure):
     _fields_ = [
@@ -1990,10 +1958,6 @@ class SwapchainStateFoveationFB(Structure):
 PFN_xrCreateFoveationProfileFB = CFUNCTYPE(Result, Session, POINTER(FoveationProfileCreateInfoFB), POINTER(FoveationProfileFB))
 
 PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result, FoveationProfileFB)
-
-FoveationLevelFB = c_int
-
-FoveationDynamicFB = c_int
 
 
 class FoveationLevelProfileCreateInfoFB(Structure):
@@ -2108,16 +2072,6 @@ __all__ = [
     "Swapchain",
     "ActionSet_T",
     "ActionSet",
-    "Result",
-    "StructureType",
-    "FormFactor",
-    "ViewConfigurationType",
-    "EnvironmentBlendMode",
-    "ReferenceSpaceType",
-    "ActionType",
-    "EyeVisibility",
-    "SessionState",
-    "ObjectType",
     "InstanceCreateFlags",
     "SessionCreateFlags",
     "SpaceVelocityFlags",
@@ -2261,7 +2215,6 @@ __all__ = [
     "CompositionLayerDepthInfoKHR",
     "CompositionLayerCylinderKHR",
     "CompositionLayerEquirectKHR",
-    "VisibilityMaskTypeKHR",
     "VisibilityMaskKHR",
     "EventDataVisibilityMaskChangedKHR",
     "PFN_xrGetVisibilityMaskKHR",
@@ -2271,10 +2224,6 @@ __all__ = [
     "CompositionLayerEquirect2KHR",
     "BindingModificationBaseHeaderKHR",
     "BindingModificationsKHR",
-    "PerfSettingsDomainEXT",
-    "PerfSettingsSubDomainEXT",
-    "PerfSettingsLevelEXT",
-    "PerfSettingsNotificationLevelEXT",
     "EventDataPerfSettingsEXT",
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
     "PFN_xrThermalGetTemperatureTrendEXT",
@@ -2309,7 +2258,6 @@ __all__ = [
     "PFN_xrDestroySpatialAnchorMSFT",
     "CompositionLayerImageLayoutFlagsFB",
     "CompositionLayerImageLayoutFB",
-    "BlendFactorFB",
     "CompositionLayerAlphaBlendFB",
     "ViewConfigurationDepthRangeEXT",
     "PFN_xrSetInputDeviceActiveEXT",
@@ -2317,14 +2265,10 @@ __all__ = [
     "PFN_xrSetInputDeviceStateFloatEXT",
     "PFN_xrSetInputDeviceStateVector2fEXT",
     "PFN_xrSetInputDeviceLocationEXT",
-    "SpatialGraphNodeTypeMSFT",
     "SpatialGraphNodeSpaceCreateInfoMSFT",
     "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
     "HandTrackerEXT_T",
     "HandTrackerEXT",
-    "HandEXT",
-    "HandJointEXT",
-    "HandJointSetEXT",
     "SystemHandTrackingPropertiesEXT",
     "HandTrackerCreateInfoEXT",
     "HandJointsLocateInfoEXT",
@@ -2335,7 +2279,6 @@ __all__ = [
     "PFN_xrCreateHandTrackerEXT",
     "PFN_xrDestroyHandTrackerEXT",
     "PFN_xrLocateHandJointsEXT",
-    "HandPoseTypeMSFT",
     "SystemHandTrackingMeshPropertiesMSFT",
     "HandMeshSpaceCreateInfoMSFT",
     "HandMeshUpdateInfoMSFT",
@@ -2363,7 +2306,6 @@ __all__ = [
     "PFN_xrGetControllerModelPropertiesMSFT",
     "PFN_xrGetControllerModelStateMSFT",
     "ViewConfigurationViewFovEPIC",
-    "ReprojectionModeMSFT",
     "CompositionLayerReprojectionInfoMSFT",
     "CompositionLayerReprojectionPlaneOverrideMSFT",
     "PFN_xrEnumerateReprojectionModesMSFT",
@@ -2373,19 +2315,11 @@ __all__ = [
     "CompositionLayerSecureContentFlagsFB",
     "CompositionLayerSecureContentFB",
     "InteractionProfileAnalogThresholdVALVE",
-    "HandJointsMotionRangeEXT",
     "HandJointsMotionRangeInfoEXT",
     "SceneObserverMSFT_T",
     "SceneObserverMSFT",
     "SceneMSFT_T",
     "SceneMSFT",
-    "SceneComputeFeatureMSFT",
-    "SceneComputeConsistencyMSFT",
-    "MeshComputeLodMSFT",
-    "SceneComponentTypeMSFT",
-    "SceneObjectTypeMSFT",
-    "ScenePlaneAlignmentTypeMSFT",
-    "SceneComputeStateMSFT",
     "UuidMSFT",
     "SceneObserverCreateInfoMSFT",
     "SceneCreateInfoMSFT",
@@ -2434,7 +2368,6 @@ __all__ = [
     "PFN_xrEnumerateDisplayRefreshRatesFB",
     "PFN_xrGetDisplayRefreshRateFB",
     "PFN_xrRequestDisplayRefreshRateFB",
-    "ColorSpaceFB",
     "SystemColorSpacePropertiesFB",
     "PFN_xrEnumerateColorSpacesFB",
     "PFN_xrSetColorSpaceFB",
@@ -2447,8 +2380,6 @@ __all__ = [
     "SwapchainStateFoveationFB",
     "PFN_xrCreateFoveationProfileFB",
     "PFN_xrDestroyFoveationProfileFB",
-    "FoveationLevelFB",
-    "FoveationDynamicFB",
     "FoveationLevelProfileCreateInfoFB",
     "ViewLocateFoveatedRenderingVARJO",
     "FoveatedViewConfigurationViewVARJO",

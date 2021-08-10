@@ -1,7 +1,7 @@
 import ctypes
 
 from . import raw_functions  # Side effect of defining low-level c signatures
-from . import enums
+from .enums import *
 from .typedefs import *
 
 
@@ -46,8 +46,7 @@ def enumerate_instance_extension_properties(
 
     # TODO: automatically initialize?
     for p in properties:
-        # TODO: avoid requirement for "enums." below
-        p.type = enums.StructureType.EXTENSION_PROPERTIES.value
+        p.type = StructureType.EXTENSION_PROPERTIES.value
 
     result2 = fn(
         layer_name,
