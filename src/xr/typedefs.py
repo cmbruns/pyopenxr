@@ -58,25 +58,25 @@ class ActionSet_T(Structure):
 
 ActionSet = POINTER(ActionSet_T)
 
-Result = c_int32
+Result = c_int
 
-StructureType = c_int32
+StructureType = c_int
 
-FormFactor = c_int32
+FormFactor = c_int
 
-ViewConfigurationType = c_int32
+ViewConfigurationType = c_int
 
-EnvironmentBlendMode = c_int32
+EnvironmentBlendMode = c_int
 
-ReferenceSpaceType = c_int32
+ReferenceSpaceType = c_int
 
-ActionType = c_int32
+ActionType = c_int
 
-EyeVisibility = c_int32
+EyeVisibility = c_int
 
-SessionState = c_int32
+SessionState = c_int
 
-ObjectType = c_int32
+ObjectType = c_int
 
 InstanceCreateFlags = Flags64
 
@@ -933,7 +933,7 @@ class CompositionLayerEquirectKHR(Structure):
     ]
 
 
-VisibilityMaskTypeKHR = c_int32
+VisibilityMaskTypeKHR = c_int
 
 
 class VisibilityMaskKHR(Structure):
@@ -1013,13 +1013,13 @@ class BindingModificationsKHR(Structure):
     ]
 
 
-PerfSettingsDomainEXT = c_int32
+PerfSettingsDomainEXT = c_int
 
-PerfSettingsSubDomainEXT = c_int32
+PerfSettingsSubDomainEXT = c_int
 
-PerfSettingsLevelEXT = c_int32
+PerfSettingsLevelEXT = c_int
 
-PerfSettingsNotificationLevelEXT = c_int32
+PerfSettingsNotificationLevelEXT = c_int
 
 
 class EventDataPerfSettingsEXT(Structure):
@@ -1192,7 +1192,7 @@ class CompositionLayerImageLayoutFB(Structure):
     ]
 
 
-BlendFactorFB = c_int32
+BlendFactorFB = c_int
 
 
 class CompositionLayerAlphaBlendFB(Structure):
@@ -1227,7 +1227,7 @@ PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result, Session, Path, Path, Ve
 
 PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result, Session, Path, Path, Space, Posef)
 
-SpatialGraphNodeTypeMSFT = c_int32
+SpatialGraphNodeTypeMSFT = c_int
 
 
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
@@ -1249,11 +1249,11 @@ class HandTrackerEXT_T(Structure):
 
 HandTrackerEXT = POINTER(HandTrackerEXT_T)
 
-HandEXT = c_int32
+HandEXT = c_int
 
-HandJointEXT = c_int32
+HandJointEXT = c_int
 
-HandJointSetEXT = c_int32
+HandJointSetEXT = c_int
 
 
 class SystemHandTrackingPropertiesEXT(Structure):
@@ -1323,7 +1323,7 @@ PFN_xrDestroyHandTrackerEXT = CFUNCTYPE(Result, HandTrackerEXT)
 
 PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result, HandTrackerEXT, POINTER(HandJointsLocateInfoEXT), POINTER(HandJointLocationsEXT))
 
-HandPoseTypeMSFT = c_int32
+HandPoseTypeMSFT = c_int
 
 
 class SystemHandTrackingMeshPropertiesMSFT(Structure):
@@ -1525,7 +1525,7 @@ class ViewConfigurationViewFovEPIC(Structure):
     ]
 
 
-ReprojectionModeMSFT = c_int32
+ReprojectionModeMSFT = c_int
 
 
 class CompositionLayerReprojectionInfoMSFT(Structure):
@@ -1584,7 +1584,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     ]
 
 
-HandJointsMotionRangeEXT = c_int32
+HandJointsMotionRangeEXT = c_int
 
 
 class HandJointsMotionRangeInfoEXT(Structure):
@@ -1608,19 +1608,19 @@ class SceneMSFT_T(Structure):
 
 SceneMSFT = POINTER(SceneMSFT_T)
 
-SceneComputeFeatureMSFT = c_int32
+SceneComputeFeatureMSFT = c_int
 
-SceneComputeConsistencyMSFT = c_int32
+SceneComputeConsistencyMSFT = c_int
 
-MeshComputeLodMSFT = c_int32
+MeshComputeLodMSFT = c_int
 
-SceneComponentTypeMSFT = c_int32
+SceneComponentTypeMSFT = c_int
 
-SceneObjectTypeMSFT = c_int32
+SceneObjectTypeMSFT = c_int
 
-ScenePlaneAlignmentTypeMSFT = c_int32
+ScenePlaneAlignmentTypeMSFT = c_int
 
-SceneComputeStateMSFT = c_int32
+SceneComputeStateMSFT = c_int
 
 
 class UuidMSFT(Structure):
@@ -1936,7 +1936,7 @@ PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result, Session, POINTER(c_float))
 
 PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result, Session, c_float)
 
-ColorSpaceFB = c_int32
+ColorSpaceFB = c_int
 
 
 class SystemColorSpacePropertiesFB(Structure):
@@ -1991,9 +1991,9 @@ PFN_xrCreateFoveationProfileFB = CFUNCTYPE(Result, Session, POINTER(FoveationPro
 
 PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result, FoveationProfileFB)
 
-FoveationLevelFB = c_int32
+FoveationLevelFB = c_int
 
-FoveationDynamicFB = c_int32
+FoveationDynamicFB = c_int
 
 
 class FoveationLevelProfileCreateInfoFB(Structure):

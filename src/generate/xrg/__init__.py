@@ -73,8 +73,8 @@ class EnumType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.ENUM
-        self._capi_name = "c_int32"  # TODO we could use the actual name if we had the enums loaded
-        self._py_name = "c_int32"
+        self._capi_name = "c_int"  # TODO we could use the actual name if we had the enums loaded
+        self._py_name = "c_int"
 
     def capi_string(self) -> str:
         return self._capi_name
@@ -309,7 +309,7 @@ class EnumItem(CodeItem):
         return self._capi_name
 
     def capi_string(self) -> str:
-        result = f"{self.capi_name()} = c_int32"
+        result = f"{self.capi_name()} = c_int"
         for v in self.values:
             result += f"\n{v.capi_string()}"
         return result
@@ -330,7 +330,7 @@ class EnumItem(CodeItem):
         return result
 
     def used_ctypes(self) -> set[str]:
-        return {"c_int32", }
+        return {"c_int", }
 
 
 class FunctionItem(CodeItem):
