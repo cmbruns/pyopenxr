@@ -1,48 +1,68 @@
 from typing import Union
+from .enums import Result
 
-
-class XrSuccess(object):
-    """Class representing a successful OpenXR function call result."""
-    def __init__(self, message: str = None):
-        pass
+raise_on_qualified_success = True
 
 
 class XrException(Exception):
     """Base class for all OpenXR exceptions."""
 
+    @staticmethod
+    def is_exception():
+        return True
 
-class XrError(XrException):
-    """OpenXR error exception."""
+
+class XrErrorResult(XrException):
+    """Error during OpenXR function call."""
 
 
-class XrQualifiedSuccess(XrException):
+class XrQualifiedSuccessResult(XrException):
     """An OpenXR function returned a non-error status other than SUCCESS"""
+
+    @staticmethod
+    def is_exception():
+        return raise_on_qualified_success
+
+
+class XrSuccessResult(object):
+    """An OpenXR function call completed successfully."""
+    def __init__(self, _unused: str = None):
+        pass
+
+    @staticmethod
+    def is_exception():
+        return False
 
 
 # TODO: specific exceptions for every result type
 
 
-def check_result(xr_result: int, message: str = None) -> Union[XrException, XrSuccess]:
-    if xr_result < 0:
-        result = XrException
-    elif xr_result > 1:
-        result = XrQualifiedSuccess
+_exception_map = {
+    Result.SUCCESS: XrSuccessResult,
+}
+
+
+def check_result(xr_result_int: int, message: str = None) -> Union[XrException, XrSuccessResult]:
+    xr_result_enum = Result(xr_result_int)
+    if xr_result_enum in _exception_map:
+        xr_result_exception = _exception_map[xr_result_enum]
     else:
-        result = XrSuccess
+        if xr_result_int < 0:
+            xr_result_exception = XrErrorResult
+        elif xr_result_int > 1:
+            xr_result_exception = XrQualifiedSuccessResult
+        else:
+            xr_result_exception = XrSuccessResult
     if message is None:
-        return result()
+        return xr_result_exception()
     else:
-        return result(message)
-
-
-def is_exception(exception: Union[XrException, XrSuccess]) -> bool:
-    return isinstance(exception, XrException)
+        return xr_result_exception(message)
 
 
 __all__ = [
     "check_result",
-    "is_exception",
-    "XrError",
+    "raise_on_qualified_success",
+    "XrErrorResult",
     "XrException",
-    "XrQualifiedSuccess",
+    "XrQualifiedSuccessResult",
 ]

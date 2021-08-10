@@ -390,7 +390,7 @@ class EnumValueItem(CodeItem):
         return self._py_name
 
     def py_string(self) -> str:
-        return f"\n    {self.py_name()} = c_int({self.value})"
+        return f"\n    {self.py_name()} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
         return {"c_int", }

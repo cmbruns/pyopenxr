@@ -2,7 +2,7 @@ import ctypes
 
 from . import raw_functions  # Side effect of defining low-level c signatures
 from .enums import *
-from .exceptions import check_result, is_exception
+from .exceptions import check_result
 from .typedefs import *
 
 
@@ -42,7 +42,7 @@ def enumerate_instance_extension_properties(
     result = check_result(fn(
         layer_name, 0, ctypes.byref(extension_count), None
     ))
-    if is_exception(result):
+    if result.is_exception():
         raise result
 
     properties_type = ExtensionProperties * extension_count.value
@@ -58,7 +58,7 @@ def enumerate_instance_extension_properties(
         ctypes.byref(extension_count),
         properties,  # Don't use byref for arrays...
     ))
-    if is_exception(result):
+    if result.is_exception():
         raise result
 
     return properties
