@@ -375,10 +375,11 @@ class FunctionItem(CodeItem):
     def ctypes_string(self):
         result = inspect.cleandoc(f"""
         {self.capi_name()} = openxr_loader_library.{self.capi_name()}
-        {self.capi_name()}.restype = {self.return_type.capi_string()}
+        {self.capi_name()}.restype = {self.return_type.py_string()}
         {self.capi_name()}.argtypes = [
         """)
-        result += "".join(p.ctypes_string() for p in self.parameters)
+        for p in self.parameters:
+            result += f"\n    {p.type.py_string()},  # {p.py_name()}"
         result += "\n]"
         return result
 
@@ -400,6 +401,7 @@ class FunctionParameterItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.PARM_DECL
         self._capi_name = cursor.spelling
+        self._py_name = re.sub(r"(?<!^)(?=[A-Z])", "_", self._capi_name).lower()  # snake from camel
         self.type = parse_type(cursor.type)
 
     def capi_name(self) -> str:
@@ -408,11 +410,8 @@ class FunctionParameterItem(CodeItem):
     def capi_string(self) -> str:
         pass
 
-    def ctypes_string(self) -> str:
-        return f"\n    {self.type.capi_string()},  # {self.capi_name()}"
-
     def py_name(self) -> str:
-        pass
+        return self._py_name
 
     def py_string(self) -> str:
         pass
@@ -489,6 +488,7 @@ class StructFieldItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.FIELD_DECL
         self._capi_name = cursor.spelling
+        self._py_name = re.sub(r"(?<!^)(?=[A-Z])", "_", self._capi_name).lower()  # snake from camel
         self.type = parse_type(cursor.type)
 
     def capi_name(self) -> str:
@@ -498,7 +498,7 @@ class StructFieldItem(CodeItem):
         return f'\n        ("{self.capi_name()}", {self.type.capi_string()}),'
 
     def py_name(self) -> str:
-        return self.capi_name()
+        return self._py_name
 
     def py_string(self) -> str:
         return f'\n        ("{self.py_name()}", {self.type.py_string()}),'

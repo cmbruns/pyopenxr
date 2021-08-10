@@ -104,6 +104,8 @@ execute_process(
 )
 message(STATUS "Generated file ${STAGING_DIR}/enums.py")
 
+###########
+
 configure_file(generate_constants.py ${CMAKE_BINARY_DIR}/ @ONLY)
 
 execute_process(
@@ -113,6 +115,8 @@ execute_process(
 )
 message(STATUS "Generated file ${STAGING_DIR}/constants.py")
 
+##########
+
 configure_file(generate_typedefs.py ${CMAKE_BINARY_DIR}/ @ONLY)
 
 execute_process(
@@ -121,6 +125,17 @@ execute_process(
     OUTPUT_FILE "${STAGING_DIR}/typedefs.py"
 )
 message(STATUS "Generated file ${STAGING_DIR}/typedefs.py")
+
+##########
+
+configure_file(generate_raw_functions.py ${CMAKE_BINARY_DIR}/ @ONLY)
+
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_raw_functions.py"
+    WORKING_DIRECTORY "${STAGING_DIR}"
+    OUTPUT_FILE "${STAGING_DIR}/raw_functions.py"
+)
+message(STATUS "Generated file ${STAGING_DIR}/raw_functions.py")
 
 ##########################################
 ### Find OpenXR-Registry documentation ###

@@ -1,27 +1,11 @@
 import ctypes
 
-from .library import openxr_loader_library
-from . import cfunctions  # Side effect of defining low-level c signatures
-from .constants import *
-from .enums import *
-
-XrStructureType = ctypes.c_int  # Well enum actually
-
-
-class XrExtensionProperties(ctypes.Structure):
-    _fields_ = [
-        ("type", XrStructureType),
-        ("next", ctypes.c_void_p),
-        ("extension_name", ctypes.c_char * MAX_EXTENSION_NAME_SIZE),
-        ("extension_version", ctypes.c_uint32),
-    ]
+from . import raw_functions  # Side effect of defining low-level c signatures
+from . import enums
+from .typedefs import *
 
 
 # function transformations:
-#  * snake_case_from_camel_case (for function name and parameter names)
-#  * remove_xr_prefix
-#  * ctypes_type_for_c_type
-#  * pytype_for_c_type
 #  * brief docstring
 #  * parameter docstring
 #  * exception docstring
@@ -32,7 +16,7 @@ class XrExtensionProperties(ctypes.Structure):
 
 def enumerate_instance_extension_properties(
     layer_name: str = None,
-) -> ctypes.Array[XrExtensionProperties]:
+) -> ctypes.Array[ExtensionProperties]:
     """
     Returns properties of available instance extensions
 
@@ -53,22 +37,23 @@ def enumerate_instance_extension_properties(
         layer_name = layer_name.encode()
 
     extension_count = ctypes.c_uint32(0)
-    fn = openxr_loader_library.xrEnumerateInstanceExtensionProperties
+    fn = raw_functions.xrEnumerateInstanceExtensionProperties
     result = fn(layer_name, 0, ctypes.byref(extension_count), None)
     # TODO: check results
 
-    properties_type = XrExtensionProperties * extension_count.value
+    properties_type = ExtensionProperties * extension_count.value
     properties = properties_type()
 
     # TODO: automatically initialize?
     for p in properties:
-        p.type = StructureType.EXTENSION_PROPERTIES.value
+        # TODO: avoid requirement for "enums." below
+        p.type = enums.StructureType.EXTENSION_PROPERTIES.value
 
     result2 = fn(
         layer_name,
         extension_count,
         ctypes.byref(extension_count),
-        ctypes.byref(properties),
+        properties,  # Don't use byref for arrays...
     )
     return properties
 

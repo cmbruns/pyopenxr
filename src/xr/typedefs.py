@@ -103,9 +103,9 @@ class ApiLayerProperties(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerName", (c_char * 256)),
-        ("specVersion", Version),
-        ("layerVersion", c_uint32),
+        ("layer_name", (c_char * 256)),
+        ("spec_version", Version),
+        ("layer_version", c_uint32),
         ("description", (c_char * 256)),
     ]
 
@@ -114,18 +114,18 @@ class ExtensionProperties(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("extensionName", (c_char * 128)),
-        ("extensionVersion", c_uint32),
+        ("extension_name", (c_char * 128)),
+        ("extension_version", c_uint32),
     ]
 
 
 class ApplicationInfo(Structure):
     _fields_ = [
-        ("applicationName", (c_char * 128)),
-        ("applicationVersion", c_uint32),
-        ("engineName", (c_char * 128)),
-        ("engineVersion", c_uint32),
-        ("apiVersion", Version),
+        ("application_name", (c_char * 128)),
+        ("application_version", c_uint32),
+        ("engine_name", (c_char * 128)),
+        ("engine_version", c_uint32),
+        ("api_version", Version),
     ]
 
 
@@ -133,12 +133,12 @@ class InstanceCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("createFlags", InstanceCreateFlags),
-        ("applicationInfo", ApplicationInfo),
-        ("enabledApiLayerCount", c_uint32),
-        ("enabledApiLayerNames", POINTER(c_char_p)),
-        ("enabledExtensionCount", c_uint32),
-        ("enabledExtensionNames", POINTER(c_char_p)),
+        ("create_flags", InstanceCreateFlags),
+        ("application_info", ApplicationInfo),
+        ("enabled_api_layer_count", c_uint32),
+        ("enabled_api_layer_names", POINTER(c_char_p)),
+        ("enabled_extension_count", c_uint32),
+        ("enabled_extension_names", POINTER(c_char_p)),
     ]
 
 
@@ -146,8 +146,8 @@ class InstanceProperties(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("runtimeVersion", Version),
-        ("runtimeName", (c_char * 128)),
+        ("runtime_version", Version),
+        ("runtime_name", (c_char * 128)),
     ]
 
 
@@ -163,22 +163,22 @@ class SystemGetInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("formFactor", FormFactor),
+        ("form_factor", FormFactor),
     ]
 
 
 class SystemGraphicsProperties(Structure):
     _fields_ = [
-        ("maxSwapchainImageHeight", c_uint32),
-        ("maxSwapchainImageWidth", c_uint32),
-        ("maxLayerCount", c_uint32),
+        ("max_swapchain_image_height", c_uint32),
+        ("max_swapchain_image_width", c_uint32),
+        ("max_layer_count", c_uint32),
     ]
 
 
 class SystemTrackingProperties(Structure):
     _fields_ = [
-        ("orientationTracking", Bool32),
-        ("positionTracking", Bool32),
+        ("orientation_tracking", Bool32),
+        ("position_tracking", Bool32),
     ]
 
 
@@ -186,11 +186,11 @@ class SystemProperties(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("systemId", SystemId),
-        ("vendorId", c_uint32),
-        ("systemName", (c_char * 256)),
-        ("graphicsProperties", SystemGraphicsProperties),
-        ("trackingProperties", SystemTrackingProperties),
+        ("system_id", SystemId),
+        ("vendor_id", c_uint32),
+        ("system_name", (c_char * 256)),
+        ("graphics_properties", SystemGraphicsProperties),
+        ("tracking_properties", SystemTrackingProperties),
     ]
 
 
@@ -198,8 +198,8 @@ class SessionCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("createFlags", SessionCreateFlags),
-        ("systemId", SystemId),
+        ("create_flags", SessionCreateFlags),
+        ("system_id", SystemId),
     ]
 
 
@@ -215,9 +215,9 @@ class SpaceVelocity(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("velocityFlags", SpaceVelocityFlags),
-        ("linearVelocity", Vector3f),
-        ("angularVelocity", Vector3f),
+        ("velocity_flags", SpaceVelocityFlags),
+        ("linear_velocity", Vector3f),
+        ("angular_velocity", Vector3f),
     ]
 
 
@@ -241,8 +241,8 @@ class ReferenceSpaceCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("referenceSpaceType", ReferenceSpaceType),
-        ("poseInReferenceSpace", Posef),
+        ("reference_space_type", ReferenceSpaceType),
+        ("pose_in_reference_space", Posef),
     ]
 
 
@@ -258,8 +258,8 @@ class ActionSpaceCreateInfo(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("action", Action),
-        ("subactionPath", Path),
-        ("poseInActionSpace", Posef),
+        ("subaction_path", Path),
+        ("pose_in_action_space", Posef),
     ]
 
 
@@ -267,7 +267,7 @@ class SpaceLocation(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("locationFlags", SpaceLocationFlags),
+        ("location_flags", SpaceLocationFlags),
         ("pose", Posef),
     ]
 
@@ -276,8 +276,8 @@ class ViewConfigurationProperties(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationType", ViewConfigurationType),
-        ("fovMutable", Bool32),
+        ("view_configuration_type", ViewConfigurationType),
+        ("fov_mutable", Bool32),
     ]
 
 
@@ -285,12 +285,12 @@ class ViewConfigurationView(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("recommendedImageRectWidth", c_uint32),
-        ("maxImageRectWidth", c_uint32),
-        ("recommendedImageRectHeight", c_uint32),
-        ("maxImageRectHeight", c_uint32),
-        ("recommendedSwapchainSampleCount", c_uint32),
-        ("maxSwapchainSampleCount", c_uint32),
+        ("recommended_image_rect_width", c_uint32),
+        ("max_image_rect_width", c_uint32),
+        ("recommended_image_rect_height", c_uint32),
+        ("max_image_rect_height", c_uint32),
+        ("recommended_swapchain_sample_count", c_uint32),
+        ("max_swapchain_sample_count", c_uint32),
     ]
 
 
@@ -298,15 +298,15 @@ class SwapchainCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("createFlags", SwapchainCreateFlags),
-        ("usageFlags", SwapchainUsageFlags),
+        ("create_flags", SwapchainCreateFlags),
+        ("usage_flags", SwapchainUsageFlags),
         ("format", c_int64),
-        ("sampleCount", c_uint32),
+        ("sample_count", c_uint32),
         ("width", c_uint32),
         ("height", c_uint32),
-        ("faceCount", c_uint32),
-        ("arraySize", c_uint32),
-        ("mipCount", c_uint32),
+        ("face_count", c_uint32),
+        ("array_size", c_uint32),
+        ("mip_count", c_uint32),
     ]
 
 
@@ -343,7 +343,7 @@ class SessionBeginInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("primaryViewConfigurationType", ViewConfigurationType),
+        ("primary_view_configuration_type", ViewConfigurationType),
     ]
 
 
@@ -358,9 +358,9 @@ class FrameState(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("predictedDisplayTime", Time),
-        ("predictedDisplayPeriod", Duration),
-        ("shouldRender", Bool32),
+        ("predicted_display_time", Time),
+        ("predicted_display_period", Duration),
+        ("should_render", Bool32),
     ]
 
 
@@ -375,7 +375,7 @@ class CompositionLayerBaseHeader(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerFlags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlags),
         ("space", Space),
     ]
 
@@ -384,9 +384,9 @@ class FrameEndInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("displayTime", Time),
-        ("environmentBlendMode", EnvironmentBlendMode),
-        ("layerCount", c_uint32),
+        ("display_time", Time),
+        ("environment_blend_mode", EnvironmentBlendMode),
+        ("layer_count", c_uint32),
         ("layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
@@ -395,8 +395,8 @@ class ViewLocateInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationType", ViewConfigurationType),
-        ("displayTime", Time),
+        ("view_configuration_type", ViewConfigurationType),
+        ("display_time", Time),
         ("space", Space),
     ]
 
@@ -405,16 +405,16 @@ class ViewState(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewStateFlags", ViewStateFlags),
+        ("view_state_flags", ViewStateFlags),
     ]
 
 
 class Fovf(Structure):
     _fields_ = [
-        ("angleLeft", c_float),
-        ("angleRight", c_float),
-        ("angleUp", c_float),
-        ("angleDown", c_float),
+        ("angle_left", c_float),
+        ("angle_right", c_float),
+        ("angle_up", c_float),
+        ("angle_down", c_float),
     ]
 
 
@@ -431,8 +431,8 @@ class ActionSetCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("actionSetName", (c_char * 64)),
-        ("localizedActionSetName", (c_char * 128)),
+        ("action_set_name", (c_char * 64)),
+        ("localized_action_set_name", (c_char * 128)),
         ("priority", c_uint32),
     ]
 
@@ -441,11 +441,11 @@ class ActionCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("actionName", (c_char * 64)),
-        ("actionType", ActionType),
-        ("countSubactionPaths", c_uint32),
-        ("subactionPaths", POINTER(Path)),
-        ("localizedActionName", (c_char * 128)),
+        ("action_name", (c_char * 64)),
+        ("action_type", ActionType),
+        ("count_subaction_paths", c_uint32),
+        ("subaction_paths", POINTER(Path)),
+        ("localized_action_name", (c_char * 128)),
     ]
 
 
@@ -460,9 +460,9 @@ class InteractionProfileSuggestedBinding(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("interactionProfile", Path),
-        ("countSuggestedBindings", c_uint32),
-        ("suggestedBindings", POINTER(ActionSuggestedBinding)),
+        ("interaction_profile", Path),
+        ("count_suggested_bindings", c_uint32),
+        ("suggested_bindings", POINTER(ActionSuggestedBinding)),
     ]
 
 
@@ -470,8 +470,8 @@ class SessionActionSetsAttachInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("countActionSets", c_uint32),
-        ("actionSets", POINTER(ActionSet)),
+        ("count_action_sets", c_uint32),
+        ("action_sets", POINTER(ActionSet)),
     ]
 
 
@@ -479,7 +479,7 @@ class InteractionProfileState(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("interactionProfile", Path),
+        ("interaction_profile", Path),
     ]
 
 
@@ -488,7 +488,7 @@ class ActionStateGetInfo(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("action", Action),
-        ("subactionPath", Path),
+        ("subaction_path", Path),
     ]
 
 
@@ -496,10 +496,10 @@ class ActionStateBoolean(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("currentState", Bool32),
-        ("changedSinceLastSync", Bool32),
-        ("lastChangeTime", Time),
-        ("isActive", Bool32),
+        ("current_state", Bool32),
+        ("changed_since_last_sync", Bool32),
+        ("last_change_time", Time),
+        ("is_active", Bool32),
     ]
 
 
@@ -507,10 +507,10 @@ class ActionStateFloat(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("currentState", c_float),
-        ("changedSinceLastSync", Bool32),
-        ("lastChangeTime", Time),
-        ("isActive", Bool32),
+        ("current_state", c_float),
+        ("changed_since_last_sync", Bool32),
+        ("last_change_time", Time),
+        ("is_active", Bool32),
     ]
 
 
@@ -525,10 +525,10 @@ class ActionStateVector2f(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("currentState", Vector2f),
-        ("changedSinceLastSync", Bool32),
-        ("lastChangeTime", Time),
-        ("isActive", Bool32),
+        ("current_state", Vector2f),
+        ("changed_since_last_sync", Bool32),
+        ("last_change_time", Time),
+        ("is_active", Bool32),
     ]
 
 
@@ -536,14 +536,14 @@ class ActionStatePose(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("isActive", Bool32),
+        ("is_active", Bool32),
     ]
 
 
 class ActiveActionSet(Structure):
     _fields_ = [
-        ("actionSet", ActionSet),
-        ("subactionPath", Path),
+        ("action_set", ActionSet),
+        ("subaction_path", Path),
     ]
 
 
@@ -551,8 +551,8 @@ class ActionsSyncInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("countActiveActionSets", c_uint32),
-        ("activeActionSets", POINTER(ActiveActionSet)),
+        ("count_active_action_sets", c_uint32),
+        ("active_action_sets", POINTER(ActiveActionSet)),
     ]
 
 
@@ -568,8 +568,8 @@ class InputSourceLocalizedNameGetInfo(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("sourcePath", Path),
-        ("whichComponents", InputSourceLocalizedNameFlags),
+        ("source_path", Path),
+        ("which_components", InputSourceLocalizedNameFlags),
     ]
 
 
@@ -578,7 +578,7 @@ class HapticActionInfo(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("action", Action),
-        ("subactionPath", Path),
+        ("subaction_path", Path),
     ]
 
 
@@ -633,8 +633,8 @@ class Rect2Di(Structure):
 class SwapchainSubImage(Structure):
     _fields_ = [
         ("swapchain", Swapchain),
-        ("imageRect", Rect2Di),
-        ("imageArrayIndex", c_uint32),
+        ("image_rect", Rect2Di),
+        ("image_array_index", c_uint32),
     ]
 
 
@@ -644,7 +644,7 @@ class CompositionLayerProjectionView(Structure):
         ("next", c_void_p),
         ("pose", Posef),
         ("fov", Fovf),
-        ("subImage", SwapchainSubImage),
+        ("sub_image", SwapchainSubImage),
     ]
 
 
@@ -652,9 +652,9 @@ class CompositionLayerProjection(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerFlags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("viewCount", c_uint32),
+        ("view_count", c_uint32),
         ("views", POINTER(CompositionLayerProjectionView)),
     ]
 
@@ -663,10 +663,10 @@ class CompositionLayerQuad(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerFlags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eyeVisibility", EyeVisibility),
-        ("subImage", SwapchainSubImage),
+        ("eye_visibility", EyeVisibility),
+        ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("size", Extent2Df),
     ]
@@ -683,7 +683,7 @@ class EventDataEventsLost(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("lostEventCount", c_uint32),
+        ("lost_event_count", c_uint32),
     ]
 
 
@@ -691,7 +691,7 @@ class EventDataInstanceLossPending(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("lossTime", Time),
+        ("loss_time", Time),
     ]
 
 
@@ -710,10 +710,10 @@ class EventDataReferenceSpaceChangePending(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("session", Session),
-        ("referenceSpaceType", ReferenceSpaceType),
-        ("changeTime", Time),
-        ("poseValid", Bool32),
-        ("poseInPreviousSpace", Posef),
+        ("reference_space_type", ReferenceSpaceType),
+        ("change_time", Time),
+        ("pose_valid", Bool32),
+        ("pose_in_previous_space", Posef),
     ]
 
 
@@ -882,11 +882,11 @@ class CompositionLayerCubeKHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerFlags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eyeVisibility", EyeVisibility),
+        ("eye_visibility", EyeVisibility),
         ("swapchain", Swapchain),
-        ("imageArrayIndex", c_uint32),
+        ("image_array_index", c_uint32),
         ("orientation", Quaternionf),
     ]
 
@@ -895,11 +895,11 @@ class CompositionLayerDepthInfoKHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("subImage", SwapchainSubImage),
-        ("minDepth", c_float),
-        ("maxDepth", c_float),
-        ("nearZ", c_float),
-        ("farZ", c_float),
+        ("sub_image", SwapchainSubImage),
+        ("min_depth", c_float),
+        ("max_depth", c_float),
+        ("near_z", c_float),
+        ("far_z", c_float),
     ]
 
 
@@ -907,14 +907,14 @@ class CompositionLayerCylinderKHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerFlags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eyeVisibility", EyeVisibility),
-        ("subImage", SwapchainSubImage),
+        ("eye_visibility", EyeVisibility),
+        ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("radius", c_float),
-        ("centralAngle", c_float),
-        ("aspectRatio", c_float),
+        ("central_angle", c_float),
+        ("aspect_ratio", c_float),
     ]
 
 
@@ -922,10 +922,10 @@ class CompositionLayerEquirectKHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerFlags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eyeVisibility", EyeVisibility),
-        ("subImage", SwapchainSubImage),
+        ("eye_visibility", EyeVisibility),
+        ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("radius", c_float),
         ("scale", Vector2f),
@@ -940,11 +940,11 @@ class VisibilityMaskKHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("vertexCapacityInput", c_uint32),
-        ("vertexCountOutput", c_uint32),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
         ("vertices", POINTER(Vector2f)),
-        ("indexCapacityInput", c_uint32),
-        ("indexCountOutput", c_uint32),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
         ("indices", POINTER(c_uint32)),
     ]
 
@@ -954,8 +954,8 @@ class EventDataVisibilityMaskChangedKHR(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("session", Session),
-        ("viewConfigurationType", ViewConfigurationType),
-        ("viewIndex", c_uint32),
+        ("view_configuration_type", ViewConfigurationType),
+        ("view_index", c_uint32),
     ]
 
 
@@ -966,8 +966,8 @@ class CompositionLayerColorScaleBiasKHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("colorScale", Color4f),
-        ("colorBias", Color4f),
+        ("color_scale", Color4f),
+        ("color_bias", Color4f),
     ]
 
 
@@ -985,15 +985,15 @@ class CompositionLayerEquirect2KHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("layerFlags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eyeVisibility", EyeVisibility),
-        ("subImage", SwapchainSubImage),
+        ("eye_visibility", EyeVisibility),
+        ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("radius", c_float),
-        ("centralHorizontalAngle", c_float),
-        ("upperVerticalAngle", c_float),
-        ("lowerVerticalAngle", c_float),
+        ("central_horizontal_angle", c_float),
+        ("upper_vertical_angle", c_float),
+        ("lower_vertical_angle", c_float),
     ]
 
 
@@ -1008,8 +1008,8 @@ class BindingModificationsKHR(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("bindingModificationCount", c_uint32),
-        ("bindingModifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
+        ("binding_modification_count", c_uint32),
+        ("binding_modifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
     ]
 
 
@@ -1027,9 +1027,9 @@ class EventDataPerfSettingsEXT(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("domain", PerfSettingsDomainEXT),
-        ("subDomain", PerfSettingsSubDomainEXT),
-        ("fromLevel", PerfSettingsNotificationLevelEXT),
-        ("toLevel", PerfSettingsNotificationLevelEXT),
+        ("sub_domain", PerfSettingsSubDomainEXT),
+        ("from_level", PerfSettingsNotificationLevelEXT),
+        ("to_level", PerfSettingsNotificationLevelEXT),
     ]
 
 
@@ -1053,9 +1053,9 @@ class DebugUtilsObjectNameInfoEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("objectType", ObjectType),
-        ("objectHandle", c_uint64),
-        ("objectName", c_char_p),
+        ("object_type", ObjectType),
+        ("object_handle", c_uint64),
+        ("object_name", c_char_p),
     ]
 
 
@@ -1063,7 +1063,7 @@ class DebugUtilsLabelEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("labelName", c_char_p),
+        ("label_name", c_char_p),
     ]
 
 
@@ -1071,13 +1071,13 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("messageId", c_char_p),
-        ("functionName", c_char_p),
+        ("message_id", c_char_p),
+        ("function_name", c_char_p),
         ("message", c_char_p),
-        ("objectCount", c_uint32),
+        ("object_count", c_uint32),
         ("objects", POINTER(DebugUtilsObjectNameInfoEXT)),
-        ("sessionLabelCount", c_uint32),
-        ("sessionLabels", POINTER(DebugUtilsLabelEXT)),
+        ("session_label_count", c_uint32),
+        ("session_labels", POINTER(DebugUtilsLabelEXT)),
     ]
 
 
@@ -1088,10 +1088,10 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("messageSeverities", DebugUtilsMessageSeverityFlagsEXT),
-        ("messageTypes", DebugUtilsMessageTypeFlagsEXT),
-        ("userCallback", PFN_xrDebugUtilsMessengerCallbackEXT),
-        ("userData", c_void_p),
+        ("message_severities", DebugUtilsMessageSeverityFlagsEXT),
+        ("message_types", DebugUtilsMessageTypeFlagsEXT),
+        ("user_callback", PFN_xrDebugUtilsMessengerCallbackEXT),
+        ("user_data", c_void_p),
     ]
 
 
@@ -1114,7 +1114,7 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("supportsEyeGazeInteraction", Bool32),
+        ("supports_eye_gaze_interaction", Bool32),
     ]
 
 
@@ -1135,8 +1135,8 @@ class SessionCreateInfoOverlayEXTX(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("createFlags", OverlaySessionCreateFlagsEXTX),
-        ("sessionLayersPlacement", c_uint32),
+        ("create_flags", OverlaySessionCreateFlagsEXTX),
+        ("session_layers_placement", c_uint32),
     ]
 
 
@@ -1171,7 +1171,7 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("anchor", SpatialAnchorMSFT),
-        ("poseInAnchorSpace", Posef),
+        ("pose_in_anchor_space", Posef),
     ]
 
 
@@ -1199,10 +1199,10 @@ class CompositionLayerAlphaBlendFB(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("srcFactorColor", BlendFactorFB),
-        ("dstFactorColor", BlendFactorFB),
-        ("srcFactorAlpha", BlendFactorFB),
-        ("dstFactorAlpha", BlendFactorFB),
+        ("src_factor_color", BlendFactorFB),
+        ("dst_factor_color", BlendFactorFB),
+        ("src_factor_alpha", BlendFactorFB),
+        ("dst_factor_alpha", BlendFactorFB),
     ]
 
 
@@ -1210,10 +1210,10 @@ class ViewConfigurationDepthRangeEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("recommendedNearZ", c_float),
-        ("minNearZ", c_float),
-        ("recommendedFarZ", c_float),
-        ("maxFarZ", c_float),
+        ("recommended_near_z", c_float),
+        ("min_near_z", c_float),
+        ("recommended_far_z", c_float),
+        ("max_far_z", c_float),
     ]
 
 
@@ -1234,8 +1234,8 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("nodeType", SpatialGraphNodeTypeMSFT),
-        ("nodeId", (c_uint8 * 16)),
+        ("node_type", SpatialGraphNodeTypeMSFT),
+        ("node_id", (c_uint8 * 16)),
         ("pose", Posef),
     ]
 
@@ -1260,7 +1260,7 @@ class SystemHandTrackingPropertiesEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("supportsHandTracking", Bool32),
+        ("supports_hand_tracking", Bool32),
     ]
 
 
@@ -1269,7 +1269,7 @@ class HandTrackerCreateInfoEXT(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("hand", HandEXT),
-        ("handJointSet", HandJointSetEXT),
+        ("hand_joint_set", HandJointSetEXT),
     ]
 
 
@@ -1277,14 +1277,14 @@ class HandJointsLocateInfoEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("baseSpace", Space),
+        ("base_space", Space),
         ("time", Time),
     ]
 
 
 class HandJointLocationEXT(Structure):
     _fields_ = [
-        ("locationFlags", SpaceLocationFlags),
+        ("location_flags", SpaceLocationFlags),
         ("pose", Posef),
         ("radius", c_float),
     ]
@@ -1292,9 +1292,9 @@ class HandJointLocationEXT(Structure):
 
 class HandJointVelocityEXT(Structure):
     _fields_ = [
-        ("velocityFlags", SpaceVelocityFlags),
-        ("linearVelocity", Vector3f),
-        ("angularVelocity", Vector3f),
+        ("velocity_flags", SpaceVelocityFlags),
+        ("linear_velocity", Vector3f),
+        ("angular_velocity", Vector3f),
     ]
 
 
@@ -1302,9 +1302,9 @@ class HandJointLocationsEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("isActive", Bool32),
-        ("jointCount", c_uint32),
-        ("jointLocations", POINTER(HandJointLocationEXT)),
+        ("is_active", Bool32),
+        ("joint_count", c_uint32),
+        ("joint_locations", POINTER(HandJointLocationEXT)),
     ]
 
 
@@ -1312,8 +1312,8 @@ class HandJointVelocitiesEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("jointCount", c_uint32),
-        ("jointVelocities", POINTER(HandJointVelocityEXT)),
+        ("joint_count", c_uint32),
+        ("joint_velocities", POINTER(HandJointVelocityEXT)),
     ]
 
 
@@ -1330,9 +1330,9 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("supportsHandTrackingMesh", Bool32),
-        ("maxHandMeshIndexCount", c_uint32),
-        ("maxHandMeshVertexCount", c_uint32),
+        ("supports_hand_tracking_mesh", Bool32),
+        ("max_hand_mesh_index_count", c_uint32),
+        ("max_hand_mesh_vertex_count", c_uint32),
     ]
 
 
@@ -1340,8 +1340,8 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("handPoseType", HandPoseTypeMSFT),
-        ("poseInHandMeshSpace", Posef),
+        ("hand_pose_type", HandPoseTypeMSFT),
+        ("pose_in_hand_mesh_space", Posef),
     ]
 
 
@@ -1350,15 +1350,15 @@ class HandMeshUpdateInfoMSFT(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("time", Time),
-        ("handPoseType", HandPoseTypeMSFT),
+        ("hand_pose_type", HandPoseTypeMSFT),
     ]
 
 
 class HandMeshIndexBufferMSFT(Structure):
     _fields_ = [
-        ("indexBufferKey", c_uint32),
-        ("indexCapacityInput", c_uint32),
-        ("indexCountOutput", c_uint32),
+        ("index_buffer_key", c_uint32),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
         ("indices", POINTER(c_uint32)),
     ]
 
@@ -1372,9 +1372,9 @@ class HandMeshVertexMSFT(Structure):
 
 class HandMeshVertexBufferMSFT(Structure):
     _fields_ = [
-        ("vertexUpdateTime", Time),
-        ("vertexCapacityInput", c_uint32),
-        ("vertexCountOutput", c_uint32),
+        ("vertex_update_time", Time),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
         ("vertices", POINTER(HandMeshVertexMSFT)),
     ]
 
@@ -1383,11 +1383,11 @@ class HandMeshMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("isActive", Bool32),
-        ("indexBufferChanged", Bool32),
-        ("vertexBufferChanged", Bool32),
-        ("indexBuffer", HandMeshIndexBufferMSFT),
-        ("vertexBuffer", HandMeshVertexBufferMSFT),
+        ("is_active", Bool32),
+        ("index_buffer_changed", Bool32),
+        ("vertex_buffer_changed", Bool32),
+        ("index_buffer", HandMeshIndexBufferMSFT),
+        ("vertex_buffer", HandMeshVertexBufferMSFT),
     ]
 
 
@@ -1395,7 +1395,7 @@ class HandPoseTypeInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("handPoseType", HandPoseTypeMSFT),
+        ("hand_pose_type", HandPoseTypeMSFT),
     ]
 
 
@@ -1408,8 +1408,8 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationCount", c_uint32),
-        ("enabledViewConfigurationTypes", POINTER(ViewConfigurationType)),
+        ("view_configuration_count", c_uint32),
+        ("enabled_view_configuration_types", POINTER(ViewConfigurationType)),
     ]
 
 
@@ -1417,7 +1417,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationType", ViewConfigurationType),
+        ("view_configuration_type", ViewConfigurationType),
         ("active", Bool32),
     ]
 
@@ -1426,8 +1426,8 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationCount", c_uint32),
-        ("viewConfigurationStates", POINTER(SecondaryViewConfigurationStateMSFT)),
+        ("view_configuration_count", c_uint32),
+        ("view_configuration_states", POINTER(SecondaryViewConfigurationStateMSFT)),
     ]
 
 
@@ -1435,9 +1435,9 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationType", ViewConfigurationType),
-        ("environmentBlendMode", EnvironmentBlendMode),
-        ("layerCount", c_uint32),
+        ("view_configuration_type", ViewConfigurationType),
+        ("environment_blend_mode", EnvironmentBlendMode),
+        ("layer_count", c_uint32),
         ("layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
@@ -1446,8 +1446,8 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationCount", c_uint32),
-        ("viewConfigurationLayersInfo", POINTER(SecondaryViewConfigurationLayerInfoMSFT)),
+        ("view_configuration_count", c_uint32),
+        ("view_configuration_layers_info", POINTER(SecondaryViewConfigurationLayerInfoMSFT)),
     ]
 
 
@@ -1455,7 +1455,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("viewConfigurationType", ViewConfigurationType),
+        ("view_configuration_type", ViewConfigurationType),
     ]
 
 
@@ -1466,7 +1466,7 @@ class ControllerModelKeyStateMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("modelKey", ControllerModelKeyMSFT),
+        ("model_key", ControllerModelKeyMSFT),
     ]
 
 
@@ -1474,8 +1474,8 @@ class ControllerModelNodePropertiesMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("parentNodeName", (c_char * 64)),
-        ("nodeName", (c_char * 64)),
+        ("parent_node_name", (c_char * 64)),
+        ("node_name", (c_char * 64)),
     ]
 
 
@@ -1483,9 +1483,9 @@ class ControllerModelPropertiesMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("nodeCapacityInput", c_uint32),
-        ("nodeCountOutput", c_uint32),
-        ("nodeProperties", POINTER(ControllerModelNodePropertiesMSFT)),
+        ("node_capacity_input", c_uint32),
+        ("node_count_output", c_uint32),
+        ("node_properties", POINTER(ControllerModelNodePropertiesMSFT)),
     ]
 
 
@@ -1493,7 +1493,7 @@ class ControllerModelNodeStateMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("nodePose", Posef),
+        ("node_pose", Posef),
     ]
 
 
@@ -1501,9 +1501,9 @@ class ControllerModelStateMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("nodeCapacityInput", c_uint32),
-        ("nodeCountOutput", c_uint32),
-        ("nodeStates", POINTER(ControllerModelNodeStateMSFT)),
+        ("node_capacity_input", c_uint32),
+        ("node_count_output", c_uint32),
+        ("node_states", POINTER(ControllerModelNodeStateMSFT)),
     ]
 
 
@@ -1520,8 +1520,8 @@ class ViewConfigurationViewFovEPIC(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("recommendedFov", Fovf),
-        ("maxMutableFov", Fovf),
+        ("recommended_fov", Fovf),
+        ("max_mutable_fov", Fovf),
     ]
 
 
@@ -1532,7 +1532,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("reprojectionMode", ReprojectionModeMSFT),
+        ("reprojection_mode", ReprojectionModeMSFT),
     ]
 
 
@@ -1577,10 +1577,10 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
         ("next", c_void_p),
         ("action", Action),
         ("binding", Path),
-        ("onThreshold", c_float),
-        ("offThreshold", c_float),
-        ("onHaptic", POINTER(HapticBaseHeader)),
-        ("offHaptic", POINTER(HapticBaseHeader)),
+        ("on_threshold", c_float),
+        ("off_threshold", c_float),
+        ("on_haptic", POINTER(HapticBaseHeader)),
+        ("off_haptic", POINTER(HapticBaseHeader)),
     ]
 
 
@@ -1591,7 +1591,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("handJointsMotionRange", HandJointsMotionRangeEXT),
+        ("hand_joints_motion_range", HandJointsMotionRangeEXT),
     ]
 
 
@@ -1661,7 +1661,7 @@ class SceneFrustumBoundMSFT(Structure):
     _fields_ = [
         ("pose", Posef),
         ("fov", Fovf),
-        ("farDistance", c_float),
+        ("far_distance", c_float),
     ]
 
 
@@ -1669,11 +1669,11 @@ class SceneBoundsMSFT(Structure):
     _fields_ = [
         ("space", Space),
         ("time", Time),
-        ("sphereCount", c_uint32),
+        ("sphere_count", c_uint32),
         ("spheres", POINTER(SceneSphereBoundMSFT)),
-        ("boxCount", c_uint32),
+        ("box_count", c_uint32),
         ("boxes", POINTER(SceneOrientedBoxBoundMSFT)),
-        ("frustumCount", c_uint32),
+        ("frustum_count", c_uint32),
         ("frustums", POINTER(SceneFrustumBoundMSFT)),
     ]
 
@@ -1682,8 +1682,8 @@ class NewSceneComputeInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("requestedFeatureCount", c_uint32),
-        ("requestedFeatures", POINTER(SceneComputeFeatureMSFT)),
+        ("requested_feature_count", c_uint32),
+        ("requested_features", POINTER(SceneComputeFeatureMSFT)),
         ("consistency", SceneComputeConsistencyMSFT),
         ("bounds", SceneBoundsMSFT),
     ]
@@ -1699,10 +1699,10 @@ class VisualMeshComputeLodInfoMSFT(Structure):
 
 class SceneComponentMSFT(Structure):
     _fields_ = [
-        ("componentType", SceneComponentTypeMSFT),
+        ("component_type", SceneComponentTypeMSFT),
         ("id", UuidMSFT),
-        ("parentId", UuidMSFT),
-        ("updateTime", Time),
+        ("parent_id", UuidMSFT),
+        ("update_time", Time),
     ]
 
 
@@ -1710,8 +1710,8 @@ class SceneComponentsMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("componentCapacityInput", c_uint32),
-        ("componentCountOutput", c_uint32),
+        ("component_capacity_input", c_uint32),
+        ("component_count_output", c_uint32),
         ("components", POINTER(SceneComponentMSFT)),
     ]
 
@@ -1720,7 +1720,7 @@ class SceneComponentsGetInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("componentType", SceneComponentTypeMSFT),
+        ("component_type", SceneComponentTypeMSFT),
     ]
 
 
@@ -1735,7 +1735,7 @@ class SceneComponentLocationsMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("locationCount", c_uint32),
+        ("location_count", c_uint32),
         ("locations", POINTER(SceneComponentLocationMSFT)),
     ]
 
@@ -1744,16 +1744,16 @@ class SceneComponentsLocateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("baseSpace", Space),
+        ("base_space", Space),
         ("time", Time),
-        ("componentIdCount", c_uint32),
-        ("componentIds", POINTER(UuidMSFT)),
+        ("component_id_count", c_uint32),
+        ("component_ids", POINTER(UuidMSFT)),
     ]
 
 
 class SceneObjectMSFT(Structure):
     _fields_ = [
-        ("objectType", SceneObjectTypeMSFT),
+        ("object_type", SceneObjectTypeMSFT),
     ]
 
 
@@ -1761,8 +1761,8 @@ class SceneObjectsMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("sceneObjectCount", c_uint32),
-        ("sceneObjects", POINTER(SceneObjectMSFT)),
+        ("scene_object_count", c_uint32),
+        ("scene_objects", POINTER(SceneObjectMSFT)),
     ]
 
 
@@ -1770,7 +1770,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("parentId", UuidMSFT),
+        ("parent_id", UuidMSFT),
     ]
 
 
@@ -1778,8 +1778,8 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("objectTypeCount", c_uint32),
-        ("objectTypes", POINTER(SceneObjectTypeMSFT)),
+        ("object_type_count", c_uint32),
+        ("object_types", POINTER(SceneObjectTypeMSFT)),
     ]
 
 
@@ -1787,8 +1787,8 @@ class ScenePlaneMSFT(Structure):
     _fields_ = [
         ("alignment", ScenePlaneAlignmentTypeMSFT),
         ("size", Extent2Df),
-        ("meshBufferId", c_uint64),
-        ("supportsIndicesUint16", Bool32),
+        ("mesh_buffer_id", c_uint64),
+        ("supports_indices_uint16", Bool32),
     ]
 
 
@@ -1796,8 +1796,8 @@ class ScenePlanesMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("scenePlaneCount", c_uint32),
-        ("scenePlanes", POINTER(ScenePlaneMSFT)),
+        ("scene_plane_count", c_uint32),
+        ("scene_planes", POINTER(ScenePlaneMSFT)),
     ]
 
 
@@ -1805,15 +1805,15 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("alignmentCount", c_uint32),
+        ("alignment_count", c_uint32),
         ("alignments", POINTER(ScenePlaneAlignmentTypeMSFT)),
     ]
 
 
 class SceneMeshMSFT(Structure):
     _fields_ = [
-        ("meshBufferId", c_uint64),
-        ("supportsIndicesUint16", Bool32),
+        ("mesh_buffer_id", c_uint64),
+        ("supports_indices_uint16", Bool32),
     ]
 
 
@@ -1821,8 +1821,8 @@ class SceneMeshesMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("sceneMeshCount", c_uint32),
-        ("sceneMeshes", POINTER(SceneMeshMSFT)),
+        ("scene_mesh_count", c_uint32),
+        ("scene_meshes", POINTER(SceneMeshMSFT)),
     ]
 
 
@@ -1830,7 +1830,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("meshBufferId", c_uint64),
+        ("mesh_buffer_id", c_uint64),
     ]
 
 
@@ -1845,8 +1845,8 @@ class SceneMeshVertexBufferMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("vertexCapacityInput", c_uint32),
-        ("vertexCountOutput", c_uint32),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
         ("vertices", POINTER(Vector3f)),
     ]
 
@@ -1855,8 +1855,8 @@ class SceneMeshIndicesUint32MSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("indexCapacityInput", c_uint32),
-        ("indexCountOutput", c_uint32),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
         ("indices", POINTER(c_uint32)),
     ]
 
@@ -1865,8 +1865,8 @@ class SceneMeshIndicesUint16MSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("indexCapacityInput", c_uint32),
-        ("indexCountOutput", c_uint32),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
         ("indices", POINTER(c_uint16)),
     ]
 
@@ -1896,13 +1896,13 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("sceneFragmentId", UuidMSFT),
+        ("scene_fragment_id", UuidMSFT),
     ]
 
 
 class DeserializeSceneFragmentMSFT(Structure):
     _fields_ = [
-        ("bufferSize", c_uint32),
+        ("buffer_size", c_uint32),
         ("buffer", POINTER(c_uint8)),
     ]
 
@@ -1911,7 +1911,7 @@ class SceneDeserializeInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("fragmentCount", c_uint32),
+        ("fragment_count", c_uint32),
         ("fragments", POINTER(DeserializeSceneFragmentMSFT)),
     ]
 
@@ -1925,8 +1925,8 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("fromDisplayRefreshRate", c_float),
-        ("toDisplayRefreshRate", c_float),
+        ("from_display_refresh_rate", c_float),
+        ("to_display_refresh_rate", c_float),
     ]
 
 
@@ -1943,7 +1943,7 @@ class SystemColorSpacePropertiesFB(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("colorSpace", ColorSpaceFB),
+        ("color_space", ColorSpaceFB),
     ]
 
 
@@ -2001,7 +2001,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
         ("type", StructureType),
         ("next", c_void_p),
         ("level", FoveationLevelFB),
-        ("verticalOffset", c_float),
+        ("vertical_offset", c_float),
         ("dynamic", FoveationDynamicFB),
     ]
 
@@ -2010,7 +2010,7 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("foveatedRenderingActive", Bool32),
+        ("foveated_rendering_active", Bool32),
     ]
 
 
@@ -2018,7 +2018,7 @@ class FoveatedViewConfigurationViewVARJO(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("foveatedRenderingActive", Bool32),
+        ("foveated_rendering_active", Bool32),
     ]
 
 
@@ -2026,7 +2026,7 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("supportsFoveatedRendering", Bool32),
+        ("supports_foveated_rendering", Bool32),
     ]
 
 
@@ -2034,8 +2034,8 @@ class CompositionLayerDepthTestVARJO(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("depthTestRangeNearZ", c_float),
-        ("depthTestRangeFarZ", c_float),
+        ("depth_test_range_near_z", c_float),
+        ("depth_test_range_far_z", c_float),
     ]
 
 
@@ -2059,8 +2059,8 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("spatialAnchorPersistenceName", SpatialAnchorPersistenceNameMSFT),
-        ("spatialAnchor", SpatialAnchorMSFT),
+        ("spatial_anchor_persistence_name", SpatialAnchorPersistenceNameMSFT),
+        ("spatial_anchor", SpatialAnchorMSFT),
     ]
 
 
@@ -2068,8 +2068,8 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType),
         ("next", c_void_p),
-        ("spatialAnchorStore", SpatialAnchorStoreConnectionMSFT),
-        ("spatialAnchorPersistenceName", SpatialAnchorPersistenceNameMSFT),
+        ("spatial_anchor_store", SpatialAnchorStoreConnectionMSFT),
+        ("spatial_anchor_persistence_name", SpatialAnchorPersistenceNameMSFT),
     ]
 
 
