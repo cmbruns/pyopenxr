@@ -43,21 +43,12 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/xrg")
 configure_file(xrg/__init__.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
 
 configure_file(print_openxr_version.py ${CMAKE_BINARY_DIR}/ @ONLY)
-configure_file(generate_version.py ${CMAKE_BINARY_DIR}/ @ONLY)
-
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/print_openxr_version.py"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
     OUTPUT_VARIABLE OPENXR_VERSION
 )
 message(STATUS "OpenXR Version = ${OPENXR_VERSION}")
-
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_version.py"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-    OUTPUT_FILE ${STAGING_DIR}/version.py
-)
-message(STATUS "Generated file ${STAGING_DIR}/version.py")
 
 #########################################
 ### Copy openxr_loader shared library ###
@@ -95,47 +86,28 @@ find_file(LIBCLANG_SHARED_LIBRARY
 ### Generate enums source file ###
 ##################################
 
-configure_file(generate_enums.py ${CMAKE_BINARY_DIR}/ @ONLY)
+function(generate_source GENERATOR OUTPUT)
+    configure_file("${GENERATOR}" "${CMAKE_BINARY_DIR}/" @ONLY)
+    # Two step copy so newlines are used as line ending
+    execute_process(
+        COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/${GENERATOR}"
+        WORKING_DIRECTORY "${STAGING_DIR}"
+        OUTPUT_FILE "${CMAKE_BINARY_DIR}/${OUTPUT}"
+    )
+    configure_file(
+        "${CMAKE_BINARY_DIR}/${OUTPUT}"
+        "${STAGING_DIR}/"
+        @ONLY
+        NEWLINE_STYLE LF  # Even on windows...
+    )
+    message(STATUS "Generated file ${STAGING_DIR}/${OUTPUT}")
+endfunction()
 
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_enums.py"
-    WORKING_DIRECTORY "${STAGING_DIR}"
-    OUTPUT_FILE "${STAGING_DIR}/enums.py"
-)
-message(STATUS "Generated file ${STAGING_DIR}/enums.py")
-
-###########
-
-configure_file(generate_constants.py ${CMAKE_BINARY_DIR}/ @ONLY)
-
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_constants.py"
-    WORKING_DIRECTORY "${STAGING_DIR}"
-    OUTPUT_FILE "${STAGING_DIR}/constants.py"
-)
-message(STATUS "Generated file ${STAGING_DIR}/constants.py")
-
-##########
-
-configure_file(generate_typedefs.py ${CMAKE_BINARY_DIR}/ @ONLY)
-
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_typedefs.py"
-    WORKING_DIRECTORY "${STAGING_DIR}"
-    OUTPUT_FILE "${STAGING_DIR}/typedefs.py"
-)
-message(STATUS "Generated file ${STAGING_DIR}/typedefs.py")
-
-##########
-
-configure_file(generate_raw_functions.py ${CMAKE_BINARY_DIR}/ @ONLY)
-
-execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/generate_raw_functions.py"
-    WORKING_DIRECTORY "${STAGING_DIR}"
-    OUTPUT_FILE "${STAGING_DIR}/raw_functions.py"
-)
-message(STATUS "Generated file ${STAGING_DIR}/raw_functions.py")
+generate_source("generate_version.py" "version.py")
+generate_source("generate_enums.py" "enums.py")
+generate_source("generate_constants.py" "constants.py")
+generate_source("generate_typedefs.py" "typedefs.py")
+generate_source("generate_raw_functions.py" "raw_functions.py")
 
 ##########################################
 ### Find OpenXR-Registry documentation ###
