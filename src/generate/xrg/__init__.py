@@ -41,6 +41,12 @@ class SkippableCodeItemException(Exception):
 ################
 
 
+class Api(enum.Enum):
+    C = 1,  # symbols and code from the original C file
+    CTYPES = 2,  #
+    PYTHON = 3,  # High level pythonic interface symbols
+
+
 class TypeBase(ABC):
     def __init__(self, clang_type: clang.cindex.Type):
         self.clang_type = clang_type
@@ -50,7 +56,7 @@ class TypeBase(ABC):
         pass
 
     @abstractmethod
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         pass
 
     @abstractmethod
@@ -68,8 +74,8 @@ class ArrayType(TypeBase):
     def capi_string(self) -> str:
         return f"({self.element_type.capi_string()} * {self.count})"
 
-    def py_string(self) -> str:
-        return f"({self.element_type.py_string()} * {self.count})"
+    def code(self, api=Api.PYTHON) -> str:
+        return f"({self.element_type.code(Api.PYTHON)} * {self.count})"
 
     def used_ctypes(self) -> set[str]:
         return self.element_type.used_ctypes()
@@ -87,7 +93,7 @@ class EnumType(TypeBase):
     def capi_string(self) -> str:
         return self._capi_name
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def used_ctypes(self) -> set[str]:
@@ -108,7 +114,7 @@ class FunctionPointerType(TypeBase):
             a.capi_string() for a in [self.result_type, *self.arg_types]
         )
         py_arg_string = ", ".join(
-            a.py_string() for a in [self.result_type, *self.arg_types]
+            a.code(Api.PYTHON) for a in [self.result_type, *self.arg_types]
         )
         self._capi_string = f"CFUNCTYPE({c_arg_string})"
         self._py_string = f"CFUNCTYPE({py_arg_string})"
@@ -116,7 +122,7 @@ class FunctionPointerType(TypeBase):
     def capi_string(self) -> str:
         return self._capi_string
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return self._py_string
 
     def used_ctypes(self) -> set[str]:
@@ -142,8 +148,8 @@ class PointerType(TypeBase):
     def capi_string(self) -> str:
         return f"POINTER({self.pointee.capi_string()})"
 
-    def py_string(self) -> str:
-        return f"POINTER({self.pointee.py_string()})"
+    def code(self, api=Api.PYTHON) -> str:
+        return f"POINTER({self.pointee.code(Api.PYTHON)})"
 
     def used_ctypes(self) -> set[str]:
         result = self.pointee.used_ctypes()
@@ -159,7 +165,7 @@ class PrimitiveCTypesType(TypeBase):
     def capi_string(self) -> str:
         return self.name
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return self.name
 
     def used_ctypes(self) -> set[str]:
@@ -178,7 +184,7 @@ class RecordType(TypeBase):
     def capi_string(self) -> str:
         return self._capi_name
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def used_ctypes(self) -> set[str]:
@@ -202,7 +208,7 @@ class TypedefType(TypeBase):
     def capi_string(self) -> str:
         return self._capi_name
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def used_ctypes(self) -> set[str]:
@@ -222,7 +228,7 @@ class VoidType(TypeBase):
     def capi_string(self) -> str:
         return "None"
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return "None"
 
     def used_ctypes(self) -> set[str]:
@@ -232,12 +238,6 @@ class VoidType(TypeBase):
 ####################
 # CodeItem classes #
 ####################
-
-
-class Api(enum.Enum):
-    C = 1,  # symbols and code from the original C file
-    CTYPES = 2,  #
-    PYTHON = 3,  # High level pythonic interface symbols
 
 
 class CodeItem(ABC):
@@ -261,7 +261,7 @@ class CodeItem(ABC):
         pass
 
     @abstractmethod
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         pass
 
     @abstractmethod
@@ -308,7 +308,7 @@ class DefinitionItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return f"{self.name(Api.PYTHON)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
@@ -350,13 +350,13 @@ class EnumItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         result = f"class {self.name(Api.PYTHON)}(enum.Enum):"
         value_count = 0
         for v in self.values:
             if v.name(Api.PYTHON) == "_MAX_ENUM":
                 continue
-            result += v.py_string()
+            result += v.code(Api.PYTHON)
             value_count += 1
         if value_count < 1:
             result += "\n    pass"
@@ -430,7 +430,7 @@ class EnumValueItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return f"\n    {self.name(Api.PYTHON)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
@@ -479,12 +479,12 @@ class FunctionItem(CodeItem):
         result = inspect.cleandoc(
             f"""
         {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
-        {self.name(Api.C)}.restype = {self.return_type.py_string()}
+        {self.name(Api.C)}.restype = {self.return_type.code(Api.PYTHON)}
         {self.name(Api.C)}.argtypes = [
         """
         )
         for p in self.parameters:
-            result += f"\n    {p.type.py_string()},  # {p.name(Api.PYTHON)}"
+            result += f"\n    {p.type.code(Api.PYTHON)},  # {p.name(Api.PYTHON)}"
         result += "\n]"
         return result
 
@@ -498,7 +498,7 @@ class FunctionItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return f"def {self.name(Api.PYTHON)}() -> :\n    pass"
 
     def used_ctypes(self) -> set[str]:
@@ -531,7 +531,7 @@ class FunctionParameterItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         pass
 
     def used_ctypes(self) -> set[str]:
@@ -561,8 +561,8 @@ class StructFieldItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
-        return f'\n        ("{self.name(Api.PYTHON)}", {self.type.py_string()}),'
+    def code(self, api=Api.PYTHON) -> str:
+        return f'\n        ("{self.name(Api.PYTHON)}", {self.type.code(Api.PYTHON)}),'
 
     def used_ctypes(self) -> set[str]:
         return self.type.used_ctypes()
@@ -622,7 +622,7 @@ class StructItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         result = f"class {self.name(Api.PYTHON)}(Structure):"
         if len(self.fields) == 0:
             # Empty structure
@@ -634,7 +634,7 @@ class StructItem(CodeItem):
             result += f"\n\n\n{self.name(Api.PYTHON)}._fields_ = ["
         else:
             result += "\n    _fields_ = ["
-        result += "".join([f.py_string() for f in self.fields])
+        result += "".join([f.code(Api.PYTHON) for f in self.fields])
         result += "\n    ]"
         return result
 
@@ -672,8 +672,8 @@ class TypeDefItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
-        return f"{self.name(Api.PYTHON)} = {self.type.py_string()}"
+    def code(self, api=Api.PYTHON) -> str:
+        return f"{self.name(Api.PYTHON)} = {self.type.code(Api.PYTHON)}"
 
     def used_ctypes(self) -> set[str]:
         return self.type.used_ctypes()
@@ -719,7 +719,7 @@ class VariableItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def py_string(self) -> str:
+    def code(self, api=Api.PYTHON) -> str:
         return f"{self.name(Api.PYTHON)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
@@ -773,7 +773,7 @@ class CodeGenerator(object):
             for b in range(max(blanks1, blanks2)):
                 print("")
             if py:
-                print(t.py_string())
+                print(t.code(Api.PYTHON))
             else:
                 print(t.capi_string())
             blanks2 = t.blank_lines_after()
