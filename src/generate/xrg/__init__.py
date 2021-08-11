@@ -253,10 +253,6 @@ class CodeItem(ABC):
         return 1
 
     @abstractmethod
-    def capi_name(self) -> str:
-        pass
-
-    @abstractmethod
     def capi_string(self) -> str:
         pass
 
@@ -299,14 +295,18 @@ class DefinitionItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        return f"{self.capi_name()} = {self.value}"
+        return f"{self.name(Api.C)} = {self.value}"
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         return f"{self.name(Api.PYTHON)} = {self.value}"
@@ -334,17 +334,21 @@ class EnumItem(CodeItem):
     def blank_lines_after():
         return 1
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        result = f"{self.capi_name()} = c_int"
+        result = f"{self.name(Api.C)} = c_int"
         for v in self.values:
             result += f"\n{v.capi_string()}"
         return result
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         result = f"class {self.name(Api.PYTHON)}(enum.Enum):"
@@ -413,14 +417,18 @@ class EnumValueItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        return f"\n{self.capi_name()} = {self.parent.capi_name()}({self.value})"
+        return f"\n{self.name(Api.C)} = {self.parent.name(Api.C)}({self.value})"
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         return f"\n    {self.name(Api.PYTHON)} = {self.value}"
@@ -464,18 +472,15 @@ class FunctionItem(CodeItem):
     def blank_lines_after():
         return 2
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        return f"def {self.capi_name()}() -> :\n    pass"
+        return f"def {self.name(Api.C)}() -> :\n    pass"
 
     def ctypes_string(self):
         result = inspect.cleandoc(
             f"""
-        {self.capi_name()} = openxr_loader_library.{self.capi_name()}
-        {self.capi_name()}.restype = {self.return_type.py_string()}
-        {self.capi_name()}.argtypes = [
+        {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
+        {self.name(Api.C)}.restype = {self.return_type.py_string()}
+        {self.name(Api.C)}.argtypes = [
         """
         )
         for p in self.parameters:
@@ -484,7 +489,14 @@ class FunctionItem(CodeItem):
         return result
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         return f"def {self.name(Api.PYTHON)}() -> :\n    pass"
@@ -506,14 +518,18 @@ class FunctionParameterItem(CodeItem):
         ).lower()  # snake from camel
         self.type = parse_type(cursor.type)
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
         pass
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         pass
@@ -532,14 +548,18 @@ class StructFieldItem(CodeItem):
         ).lower()  # snake from camel
         self.type = parse_type(cursor.type)
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        return f'\n        ("{self.capi_name()}", {self.type.capi_string()}),'
+        return f'\n        ("{self.name(Api.C)}", {self.type.capi_string()}),'
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         return f'\n        ("{self.name(Api.PYTHON)}", {self.type.py_string()}),'
@@ -577,18 +597,15 @@ class StructItem(CodeItem):
     def blank_lines_after():
         return 2
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        result = f"class {self.capi_name()}(Structure):"
+        result = f"class {self.name(Api.C)}(Structure):"
         if len(self.fields) == 0:
             # Empty structure
             result += "\n    pass"
             return result
         if self.is_recursive:
             result += "\n    pass"
-            result += f"\n\n\n{self.capi_name()}._fields_ = ["
+            result += f"\n\n\n{self.name(Api.C)}._fields_ = ["
         else:
             result += "\n    _fields_ = ["
         result += "".join([f.capi_string() for f in self.fields])
@@ -596,7 +613,14 @@ class StructItem(CodeItem):
         return result
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         result = f"class {self.name(Api.PYTHON)}(Structure):"
@@ -635,14 +659,18 @@ class TypeDefItem(CodeItem):
         if self._capi_name == self.type.capi_string():
             raise SkippableCodeItemException  # Nonsense A = A typedef
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        return f"{self.capi_name()} = {self.type.capi_string()}"
+        return f"{self.name(Api.C)} = {self.type.capi_string()}"
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         return f"{self.name(Api.PYTHON)} = {self.type.py_string()}"
@@ -678,14 +706,18 @@ class VariableItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def capi_name(self) -> str:
-        return self._capi_name
-
     def capi_string(self) -> str:
-        return f"{self.capi_name()} = {self.value}"
+        return f"{self.name(Api.C)} = {self.value}"
 
     def name(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._capi_name
+        else:
+            raise NotImplementedError
 
     def py_string(self) -> str:
         return f"{self.name(Api.PYTHON)} = {self.value}"
@@ -712,7 +744,7 @@ class CodeGenerator(object):
             if py:
                 print(f'    "{t.name(Api.PYTHON)}",')
             else:
-                print(f'    "{t.capi_name()}",')
+                print(f'    "{t.name(Api.C)}",')
         print("]")
 
     def print_enum_aliases(self) -> None:
