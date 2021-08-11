@@ -8,6 +8,7 @@ This module contains code to help generate the code in pyopenxr.
 #  * generate docstrings
 
 from abc import ABC, abstractmethod
+import enum
 import inspect
 import os
 import re
@@ -17,9 +18,14 @@ import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 
 # These variables are filled in by CMake during the configure step
-OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
-if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
-    clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
+# OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
+# if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
+#     clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
+
+# TODO: remove hard-coded versions
+OPENXR_HEADER = "C:/Program Files/OPENXR/include/openxr/openxr.h"
+if os.path.isfile("C:/Program Files/LLVM/bin/libclang.dll"):
+    clang.cindex.Config.set_library_file("C:/Program Files/LLVM/bin/libclang.dll")
 
 ##############
 # Exceptions #
@@ -228,6 +234,12 @@ class VoidType(TypeBase):
 ####################
 
 
+class Api(enum.Enum):
+    C = 1,  # symbols and code from the original C file
+    CTYPES = 2,  #
+    PYTHON = 3,  # High level pythonic interface symbols
+
+
 class CodeItem(ABC):
     def __init__(self, cursor: Cursor) -> None:
         self.cursor = cursor
@@ -249,7 +261,7 @@ class CodeItem(ABC):
         pass
 
     @abstractmethod
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         pass
 
     @abstractmethod
@@ -293,11 +305,11 @@ class DefinitionItem(CodeItem):
     def capi_string(self) -> str:
         return f"{self.capi_name()} = {self.value}"
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        return f"{self.py_name()} = {self.value}"
+        return f"{self.name(Api.PYTHON)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
         return set()
@@ -331,14 +343,14 @@ class EnumItem(CodeItem):
             result += f"\n{v.capi_string()}"
         return result
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        result = f"class {self.py_name()}(enum.Enum):"
+        result = f"class {self.name(Api.PYTHON)}(enum.Enum):"
         value_count = 0
         for v in self.values:
-            if v.py_name() == "_MAX_ENUM":
+            if v.name(Api.PYTHON) == "_MAX_ENUM":
                 continue
             result += v.py_string()
             value_count += 1
@@ -373,7 +385,7 @@ class EnumValueItem(CodeItem):
         n = self._capi_name
         assert n.startswith("XR_")
         n = n[3:]  # Strip off initial "XR_"
-        prefix = self.parent.py_name()
+        prefix = self.parent.name(Api.PYTHON)
         postfix = ""
         for postfix1 in ["EXT", "FB", "KHR", "MSFT"]:
             if prefix.endswith(postfix1):
@@ -407,11 +419,11 @@ class EnumValueItem(CodeItem):
     def capi_string(self) -> str:
         return f"\n{self.capi_name()} = {self.parent.capi_name()}({self.value})"
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        return f"\n    {self.py_name()} = {self.value}"
+        return f"\n    {self.name(Api.PYTHON)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
         return {
@@ -467,15 +479,15 @@ class FunctionItem(CodeItem):
         """
         )
         for p in self.parameters:
-            result += f"\n    {p.type.py_string()},  # {p.py_name()}"
+            result += f"\n    {p.type.py_string()},  # {p.name(Api.PYTHON)}"
         result += "\n]"
         return result
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        return f"def {self.py_name()}() -> :\n    pass"
+        return f"def {self.name(Api.PYTHON)}() -> :\n    pass"
 
     def used_ctypes(self) -> set[str]:
         result = self.return_type.used_ctypes()
@@ -500,7 +512,7 @@ class FunctionParameterItem(CodeItem):
     def capi_string(self) -> str:
         pass
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
@@ -526,11 +538,11 @@ class StructFieldItem(CodeItem):
     def capi_string(self) -> str:
         return f'\n        ("{self.capi_name()}", {self.type.capi_string()}),'
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        return f'\n        ("{self.py_name()}", {self.type.py_string()}),'
+        return f'\n        ("{self.name(Api.PYTHON)}", {self.type.py_string()}),'
 
     def used_ctypes(self) -> set[str]:
         return self.type.used_ctypes()
@@ -583,11 +595,11 @@ class StructItem(CodeItem):
         result += "\n    ]"
         return result
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        result = f"class {self.py_name()}(Structure):"
+        result = f"class {self.name(Api.PYTHON)}(Structure):"
         if len(self.fields) == 0:
             # Empty structure
             result += "\n    pass"
@@ -595,7 +607,7 @@ class StructItem(CodeItem):
         if self.is_recursive:
             # Structure containing self-reference must be declared in two stanzas
             result += "\n    pass"
-            result += f"\n\n\n{self.py_name()}._fields_ = ["
+            result += f"\n\n\n{self.name(Api.PYTHON)}._fields_ = ["
         else:
             result += "\n    _fields_ = ["
         result += "".join([f.py_string() for f in self.fields])
@@ -629,11 +641,11 @@ class TypeDefItem(CodeItem):
     def capi_string(self) -> str:
         return f"{self.capi_name()} = {self.type.capi_string()}"
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        return f"{self.py_name()} = {self.type.py_string()}"
+        return f"{self.name(Api.PYTHON)} = {self.type.py_string()}"
 
     def used_ctypes(self) -> set[str]:
         return self.type.used_ctypes()
@@ -672,11 +684,11 @@ class VariableItem(CodeItem):
     def capi_string(self) -> str:
         return f"{self.capi_name()} = {self.value}"
 
-    def py_name(self) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         return self._py_name
 
     def py_string(self) -> str:
-        return f"{self.py_name()} = {self.value}"
+        return f"{self.name(Api.PYTHON)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
         return set()
@@ -698,7 +710,7 @@ class CodeGenerator(object):
         print("\n\n__all__ = [")
         for t in self.items:
             if py:
-                print(f'    "{t.py_name()}",')
+                print(f'    "{t.name(Api.PYTHON)}",')
             else:
                 print(f'    "{t.capi_name()}",')
         print("]")
@@ -712,7 +724,7 @@ class CodeGenerator(object):
         )
         for enum in enums.items:
             assert isinstance(enum, EnumItem)
-            print(f"{enum.py_name()} = c_int")
+            print(f"{enum.name(Api.PYTHON)} = c_int")
 
     def print_header(self) -> None:
         for t in self.items:
