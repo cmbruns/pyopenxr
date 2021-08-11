@@ -5,10 +5,12 @@ import xrg
 
 
 def main():
-    cg = xrg.CodeGenerator([
-        CursorKind.MACRO_DEFINITION,
-        CursorKind.VAR_DECL,
-    ])
+    cg = xrg.CodeGenerator(
+        [
+            CursorKind.MACRO_DEFINITION,
+            CursorKind.VAR_DECL,
+        ]
+    )
     cg.print_header()
     cg.print_items(py=True)
     cg.print_all_list(py=True)

@@ -8,6 +8,7 @@ raise_on_qualified_success = True
 
 class XrException(Exception):
     """Base class for all OpenXR exceptions."""
+
     @staticmethod
     def is_exception() -> bool:
         return True
@@ -15,6 +16,7 @@ class XrException(Exception):
 
 class ResultException(XrException):
     """Exception related to return value of and OpenXR function."""
+
     @staticmethod
     def get_result_enum() -> Optional[Result]:
         return None
@@ -26,6 +28,7 @@ class ResultError(ResultException):
 
 class QualifiedSuccessResult(ResultException):
     """An OpenXR function returned a non-error status other than SUCCESS"""
+
     @staticmethod
     def is_exception() -> bool:
         return raise_on_qualified_success
@@ -33,6 +36,7 @@ class QualifiedSuccessResult(ResultException):
 
 class SuccessResult(ResultException):
     """An OpenXR function call completed successfully."""
+
     @staticmethod
     def is_exception() -> bool:
         return False
@@ -63,7 +67,9 @@ _exception_map = {
 }
 
 
-def check_result(xr_result_int: int, message: str = None) -> Union[XrException, SuccessResult]:
+def check_result(
+    xr_result_int: int, message: str = None
+) -> Union[XrException, SuccessResult]:
     xr_result_enum = Result(xr_result_int)
     if xr_result_enum in _exception_map:
         xr_result_exception = _exception_map[xr_result_enum]

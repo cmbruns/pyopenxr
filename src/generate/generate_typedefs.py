@@ -5,10 +5,12 @@ import xrg
 
 
 def main():
-    cg = xrg.CodeGenerator([
-        CursorKind.STRUCT_DECL,
-        CursorKind.TYPEDEF_DECL,
-    ])
+    cg = xrg.CodeGenerator(
+        [
+            CursorKind.STRUCT_DECL,
+            CursorKind.TYPEDEF_DECL,
+        ]
+    )
 
     cg.ctypes_names.add("c_int")  # Because print_enum_aliases() below
     cg.print_header()

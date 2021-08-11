@@ -12,22 +12,28 @@ import xrg
 
 
 def main():
-    functions = xrg.CodeGenerator([
-        CursorKind.FUNCTION_DECL,
-    ])
+    functions = xrg.CodeGenerator(
+        [
+            CursorKind.FUNCTION_DECL,
+        ]
+    )
 
     functions.ctypes_names.add("c_int")  # because of enum aliases, below
     functions.print_header()
     print("")
 
-    print(inspect.cleandoc('''
+    print(
+        inspect.cleandoc(
+            '''
     """
     File xr.raw_function.py
     
     Defines low-level ctypes function definitions for use by
     higher-level pythonic functions in pyopenxr.
     """
-    '''))
+    '''
+        )
+    )
 
     print("")
     print("from .library import openxr_loader_library")

@@ -73,7 +73,9 @@ class EnumType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.ENUM
-        self._capi_name = "c_int"  # TODO we could use the actual name if we had the enums loaded
+        self._capi_name = (
+            "c_int"  # TODO we could use the actual name if we had the enums loaded
+        )
         self._py_name = "c_int"
 
     def capi_string(self) -> str:
@@ -83,7 +85,9 @@ class EnumType(TypeBase):
         return self._py_name
 
     def used_ctypes(self) -> set[str]:
-        return {"c_int", }
+        return {
+            "c_int",
+        }
 
 
 class FunctionPointerType(TypeBase):
@@ -94,8 +98,12 @@ class FunctionPointerType(TypeBase):
         assert pt.kind == TypeKind.FUNCTIONPROTO
         self.result_type = parse_type(pt.get_result())
         self.arg_types = [parse_type(t) for t in pt.argument_types()]
-        c_arg_string = ", ".join(a.capi_string() for a in [self.result_type, *self.arg_types])
-        py_arg_string = ", ".join(a.py_string() for a in [self.result_type, *self.arg_types])
+        c_arg_string = ", ".join(
+            a.capi_string() for a in [self.result_type, *self.arg_types]
+        )
+        py_arg_string = ", ".join(
+            a.py_string() for a in [self.result_type, *self.arg_types]
+        )
         self._capi_string = f"CFUNCTYPE({c_arg_string})"
         self._py_string = f"CFUNCTYPE({py_arg_string})"
 
@@ -106,7 +114,9 @@ class FunctionPointerType(TypeBase):
         return self._py_string
 
     def used_ctypes(self) -> set[str]:
-        result = {"CFUNCTYPE", }
+        result = {
+            "CFUNCTYPE",
+        }
         result.update(self.result_type.used_ctypes())
         result.update(self.result_type.used_ctypes())
         for a in self.arg_types:
@@ -147,7 +157,9 @@ class PrimitiveCTypesType(TypeBase):
         return self.name
 
     def used_ctypes(self) -> set[str]:
-        return {self.name, }
+        return {
+            self.name,
+        }
 
 
 class RecordType(TypeBase):
@@ -177,7 +189,9 @@ class TypedefType(TypeBase):
             type_name = f"c_{m.group(1)}"
         self._capi_name = capi_type_name(type_name)
         self._py_name = py_type_name(self._capi_name)
-        self.underlying_type = parse_type(clang_type.get_declaration().underlying_typedef_type)
+        self.underlying_type = parse_type(
+            clang_type.get_declaration().underlying_typedef_type
+        )
 
     def capi_string(self) -> str:
         return self._capi_name
@@ -187,7 +201,9 @@ class TypedefType(TypeBase):
 
     def used_ctypes(self) -> set[str]:
         if self._capi_name.startswith("c_"):
-            return {self._capi_name, }
+            return {
+                self._capi_name,
+            }
         else:
             return self.underlying_type.used_ctypes()
 
@@ -210,6 +226,7 @@ class VoidType(TypeBase):
 ####################
 # CodeItem classes #
 ####################
+
 
 class CodeItem(ABC):
     def __init__(self, cursor: Cursor) -> None:
@@ -330,7 +347,9 @@ class EnumItem(CodeItem):
         return result
 
     def used_ctypes(self) -> set[str]:
-        return {"c_int", }
+        return {
+            "c_int",
+        }
 
 
 class EnumValueItem(CodeItem):
@@ -358,18 +377,20 @@ class EnumValueItem(CodeItem):
         postfix = ""
         for postfix1 in ["EXT", "FB", "KHR", "MSFT"]:
             if prefix.endswith(postfix1):
-                prefix = prefix[:-len(postfix1)]
+                prefix = prefix[: -len(postfix1)]
                 postfix = f"_{postfix1}"
                 break
-        prefix = re.sub(r"(?<!^)(?=[A-Z])", "_", prefix).upper() + "_"  # snake from camel
+        prefix = (
+            re.sub(r"(?<!^)(?=[A-Z])", "_", prefix).upper() + "_"
+        )  # snake from camel
         if n == f"{prefix}MAX_ENUM{postfix}":
             return f"_MAX_ENUM"  # private enum value
         if prefix in self._PREFIX_TABLE:
             prefix = self._PREFIX_TABLE[prefix]
         assert n.startswith(prefix)
-        n = n[len(prefix):]
+        n = n[len(prefix) :]
         if len(postfix) > 0:
-            n = n[:-len(postfix)]  # It's already in the parent enum name
+            n = n[: -len(postfix)]  # It's already in the parent enum name
         return n
 
     @staticmethod
@@ -393,7 +414,9 @@ class EnumValueItem(CodeItem):
         return f"\n    {self.py_name()} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
-        return {"c_int", }
+        return {
+            "c_int",
+        }
 
 
 class FunctionItem(CodeItem):
@@ -436,11 +459,13 @@ class FunctionItem(CodeItem):
         return f"def {self.capi_name()}() -> :\n    pass"
 
     def ctypes_string(self):
-        result = inspect.cleandoc(f"""
+        result = inspect.cleandoc(
+            f"""
         {self.capi_name()} = openxr_loader_library.{self.capi_name()}
         {self.capi_name()}.restype = {self.return_type.py_string()}
         {self.capi_name()}.argtypes = [
-        """)
+        """
+        )
         for p in self.parameters:
             result += f"\n    {p.type.py_string()},  # {p.py_name()}"
         result += "\n]"
@@ -464,7 +489,9 @@ class FunctionParameterItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.PARM_DECL
         self._capi_name = cursor.spelling
-        self._py_name = re.sub(r"(?<!^)(?=[A-Z])", "_", self._capi_name).lower()  # snake from camel
+        self._py_name = re.sub(
+            r"(?<!^)(?=[A-Z])", "_", self._capi_name
+        ).lower()  # snake from camel
         self.type = parse_type(cursor.type)
 
     def capi_name(self) -> str:
@@ -488,7 +515,9 @@ class StructFieldItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.FIELD_DECL
         self._capi_name = cursor.spelling
-        self._py_name = re.sub(r"(?<!^)(?=[A-Z])", "_", self._capi_name).lower()  # snake from camel
+        self._py_name = re.sub(
+            r"(?<!^)(?=[A-Z])", "_", self._capi_name
+        ).lower()  # snake from camel
         self.type = parse_type(cursor.type)
 
     def capi_name(self) -> str:
@@ -574,7 +603,9 @@ class StructItem(CodeItem):
         return result
 
     def used_ctypes(self) -> set[str]:
-        result = {"Structure", }
+        result = {
+            "Structure",
+        }
         for f in self.fields:
             result.update(f.used_ctypes())
         return result
@@ -674,7 +705,11 @@ class CodeGenerator(object):
 
     def print_enum_aliases(self) -> None:
         print("# Enum aliases (not exposed in __all__)")
-        enums = CodeGenerator([CursorKind.ENUM_DECL, ])
+        enums = CodeGenerator(
+            [
+                CursorKind.ENUM_DECL,
+            ]
+        )
         for enum in enums.items:
             assert isinstance(enum, EnumItem)
             print(f"{enum.py_name()} = c_int")
@@ -704,6 +739,7 @@ class CodeGenerator(object):
 # functions #
 #############
 
+
 def capi_type_name(c_type_name: str) -> str:
     """The low level C-like api uses the exact same names as in C"""
     s = re.sub(r"\b(?:const|volatile)\s+", "", c_type_name)  # But without const
@@ -732,7 +768,9 @@ _CursorHandlers = {
 }
 
 
-def generate_code_items(kinds: list[CursorKind] = None) -> Generator[CodeItem, None, None]:
+def generate_code_items(
+    kinds: list[CursorKind] = None,
+) -> Generator[CodeItem, None, None]:
     for cursor in generate_cursors():
         if kinds is not None and cursor.kind not in kinds:
             continue

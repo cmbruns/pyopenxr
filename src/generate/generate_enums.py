@@ -6,9 +6,11 @@ import xrg
 
 
 def main():
-    cg = xrg.CodeGenerator([
-        CursorKind.ENUM_DECL,
-    ])
+    cg = xrg.CodeGenerator(
+        [
+            CursorKind.ENUM_DECL,
+        ]
+    )
     cg.print_header()
     print("import enum")
     cg.print_items(py=True)
