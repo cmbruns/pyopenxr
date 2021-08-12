@@ -1,6 +1,6 @@
+from abc import ABC, abstractmethod
 import enum
 import re
-from abc import ABC, abstractmethod
 
 import clang.cindex
 from clang.cindex import TypeKind

@@ -42,6 +42,7 @@ find_package(PythonInterp)
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/xrg")
 configure_file(xrg/__init__.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
 configure_file(xrg/types.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
+configure_file(xrg/declarations.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
 
 configure_file(print_openxr_version.py ${CMAKE_BINARY_DIR}/ @ONLY)
 execute_process(

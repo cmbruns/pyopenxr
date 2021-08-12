@@ -4,7 +4,6 @@ Code generator script creates an updated version of xr/raw_functions.py.
 """
 
 import inspect
-import typing
 
 from clang.cindex import CursorKind
 
@@ -46,8 +45,6 @@ def main():
     print("\n# ctypes Function definitions")
 
     for fn in functions.items:
-        assert isinstance(fn, xrg.FunctionItem)
-        fn = typing.cast(xrg.FunctionItem, fn)
         print("")
         print(fn.code(api=xrg.Api.CTYPES))
     functions.print_all_list(api=xrg.Api.CTYPES)
