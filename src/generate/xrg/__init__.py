@@ -17,14 +17,9 @@ from .types import *
 from .declarations import *
 
 # These variables are filled in by CMake during the configure step
-# OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
-# if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
-#     clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
-
-# TODO: remove hard-coded versions
-OPENXR_HEADER = "C:/Program Files/OPENXR/include/openxr/openxr.h"
-if os.path.isfile("C:/Program Files/LLVM/bin/libclang.dll"):
-    clang.cindex.Config.set_library_file("C:/Program Files/LLVM/bin/libclang.dll")
+OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
+if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
+    clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
 
 
 class CodeGenerator(object):
