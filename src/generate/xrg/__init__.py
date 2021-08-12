@@ -56,7 +56,7 @@ class TypeBase(ABC):
         pass
 
     @abstractmethod
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         pass
 
 
@@ -73,8 +73,8 @@ class ArrayType(TypeBase):
         else:
             return f"({self.element_type.code(api)} * {self.count})"
 
-    def used_ctypes(self) -> set[str]:
-        return self.element_type.used_ctypes()
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        return self.element_type.used_ctypes(api)
 
 
 class EnumType(TypeBase):
@@ -90,7 +90,7 @@ class EnumType(TypeBase):
         else:
             return "c_int"  # TODO we could use the actual name if we had the enums loaded
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return {
             "c_int",
         }
@@ -114,14 +114,14 @@ class FunctionPointerType(TypeBase):
             )
             return f"CFUNCTYPE({arg_string})"
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         result = {
             "CFUNCTYPE",
         }
-        result.update(self.result_type.used_ctypes())
-        result.update(self.result_type.used_ctypes())
+        result.update(self.result_type.used_ctypes(api))
+        result.update(self.result_type.used_ctypes(api))
         for a in self.arg_types:
-            result.update(a.used_ctypes())
+            result.update(a.used_ctypes(api))
         return result
 
 
@@ -140,8 +140,8 @@ class PointerType(TypeBase):
         else:
             return f"POINTER({self.pointee.code(api)})"
 
-    def used_ctypes(self) -> set[str]:
-        result = self.pointee.used_ctypes()
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        result = self.pointee.used_ctypes(api)
         result.add("POINTER")
         return result
 
@@ -157,7 +157,7 @@ class PrimitiveCTypesType(TypeBase):
         else:
             return self.name
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return {
             self.name,
         }
@@ -180,7 +180,7 @@ class RecordType(TypeBase):
         else:
             raise NotImplementedError
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return set()
 
 
@@ -208,13 +208,15 @@ class TypedefType(TypeBase):
         else:
             raise NotImplementedError
 
-    def used_ctypes(self) -> set[str]:
-        if self._capi_name.startswith("c_"):
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        if api == Api.C:
+            return set()
+        elif self._capi_name.startswith("c_"):
             return {
                 self._capi_name,
             }
         else:
-            return self.underlying_type.used_ctypes()
+            return set()
 
 
 class VoidType(TypeBase):
@@ -228,7 +230,7 @@ class VoidType(TypeBase):
         else:
             return "None"
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return set()
 
 
@@ -258,7 +260,7 @@ class CodeItem(ABC):
         pass
 
     @abstractmethod
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         pass
 
 
@@ -304,7 +306,7 @@ class DefinitionItem(CodeItem):
             return f"#define {self.name(api)} {self.c_value}"
         return f"{self.name(api)} = {self.value}"
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return set()
 
 
@@ -362,7 +364,7 @@ class EnumItem(CodeItem):
             result += "\n}"
             return result
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return {
             "c_int",
         }
@@ -436,7 +438,7 @@ class EnumValueItem(CodeItem):
             line_indent = ""
         return f"\n{line_indent}{self.name(api)} = {self.value}{line_end}"
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return {
             "c_int",
         }
@@ -504,10 +506,10 @@ class FunctionItem(CodeItem):
         elif api == Api.C:
             raise NotImplementedError
 
-    def used_ctypes(self) -> set[str]:
-        result = self.return_type.used_ctypes()
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        result = self.return_type.used_ctypes(api)
         for p in self.parameters:
-            result.update(p.used_ctypes())
+            result.update(p.used_ctypes(api))
         return result
 
 
@@ -534,8 +536,8 @@ class FunctionParameterItem(CodeItem):
     def code(self, api=Api.PYTHON) -> str:
         pass
 
-    def used_ctypes(self) -> set[str]:
-        return self.type.used_ctypes()
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        return self.type.used_ctypes(api)
 
 
 class StructFieldItem(CodeItem):
@@ -563,8 +565,8 @@ class StructFieldItem(CodeItem):
             raise NotImplementedError
         return f'\n        ("{self.name(api)}", {self.type.code(api)}),'
 
-    def used_ctypes(self) -> set[str]:
-        return self.type.used_ctypes()
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        return self.type.used_ctypes(api)
 
 
 class StructItem(CodeItem):
@@ -624,12 +626,12 @@ class StructItem(CodeItem):
         result += "\n    ]"
         return result
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         result = {
             "Structure",
         }
         for f in self.fields:
-            result.update(f.used_ctypes())
+            result.update(f.used_ctypes(api))
         return result
 
 
@@ -660,8 +662,8 @@ class TypeDefItem(CodeItem):
             raise NotImplementedError
         return f"{self.name(api)} = {self.type.code(api)}"
 
-    def used_ctypes(self) -> set[str]:
-        return self.type.used_ctypes()
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        return self.type.used_ctypes(api)
 
 
 class VariableItem(CodeItem):
@@ -706,7 +708,7 @@ class VariableItem(CodeItem):
             raise NotImplementedError
         return f"{self.name(api)} = {self.value}"
 
-    def used_ctypes(self) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return set()
 
 
@@ -740,9 +742,9 @@ class CodeGenerator(object):
             assert isinstance(e, EnumItem)
             print(f"{e.name(Api.PYTHON)} = c_int")
 
-    def print_header(self) -> None:
+    def print_header(self, api=Api.PYTHON) -> None:
         for t in self.items:
-            self.ctypes_names.update(t.used_ctypes())
+            self.ctypes_names.update(t.used_ctypes(api))
         print("""# Warning: this file is auto-generated. Do not edit.""")
         print("")
         if len(self.ctypes_names) > 0:

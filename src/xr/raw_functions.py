@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, c_char, c_char_p, c_int, c_int64, c_uint32, c_uint64
+from ctypes import POINTER, c_char, c_char_p, c_int, c_int64, c_uint32
 
 """
 File xr.raw_function.py

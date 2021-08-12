@@ -19,7 +19,7 @@ def main():
     )
 
     functions.ctypes_names.add("c_int")  # because of enum aliases, below
-    functions.print_header()
+    functions.print_header(api=xrg.Api.CTYPES)
     print("")
 
     print(
