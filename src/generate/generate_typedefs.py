@@ -19,8 +19,8 @@ def main():
     print("")
     cg.print_enum_aliases()
 
-    cg.print_items(py=True)
-    cg.print_all_list(py=True)
+    cg.print_items()
+    cg.print_all_list()
 
 
 if __name__ == "__main__":

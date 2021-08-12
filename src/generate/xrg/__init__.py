@@ -52,10 +52,6 @@ class TypeBase(ABC):
         self.clang_type = clang_type
 
     @abstractmethod
-    def capi_string(self) -> str:
-        pass
-
-    @abstractmethod
     def code(self, api=Api.PYTHON) -> str:
         pass
 
@@ -71,11 +67,11 @@ class ArrayType(TypeBase):
         self.element_type = parse_type(clang_type.element_type)
         self.count = clang_type.element_count
 
-    def capi_string(self) -> str:
-        return f"({self.element_type.capi_string()} * {self.count})"
-
     def code(self, api=Api.PYTHON) -> str:
-        return f"({self.element_type.code(Api.PYTHON)} * {self.count})"
+        if api == Api.C:
+            return f"{self.element_type.code(api)}[{self.count}]"
+        else:
+            return f"({self.element_type.code(api)} * {self.count})"
 
     def used_ctypes(self) -> set[str]:
         return self.element_type.used_ctypes()
@@ -85,16 +81,14 @@ class EnumType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.ENUM
-        self._capi_name = (
-            "c_int"  # TODO we could use the actual name if we had the enums loaded
-        )
-        self._py_name = "c_int"
-
-    def capi_string(self) -> str:
-        return self._capi_name
 
     def code(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == Api.C:
+            return self.clang_type.spelling
+        elif api == Api.CTYPES:
+            return "c_int"
+        else:
+            return "c_int"  # TODO we could use the actual name if we had the enums loaded
 
     def used_ctypes(self) -> set[str]:
         return {
@@ -110,20 +104,15 @@ class FunctionPointerType(TypeBase):
         assert pt.kind == TypeKind.FUNCTIONPROTO
         self.result_type = parse_type(pt.get_result())
         self.arg_types = [parse_type(t) for t in pt.argument_types()]
-        c_arg_string = ", ".join(
-            a.capi_string() for a in [self.result_type, *self.arg_types]
-        )
-        py_arg_string = ", ".join(
-            a.code(Api.PYTHON) for a in [self.result_type, *self.arg_types]
-        )
-        self._capi_string = f"CFUNCTYPE({c_arg_string})"
-        self._py_string = f"CFUNCTYPE({py_arg_string})"
-
-    def capi_string(self) -> str:
-        return self._capi_string
 
     def code(self, api=Api.PYTHON) -> str:
-        return self._py_string
+        if api == api.C:
+            return self.clang_type.spelling
+        else:
+            arg_string = ", ".join(
+                a.code(api) for a in [self.result_type, *self.arg_types]
+            )
+            return f"CFUNCTYPE({arg_string})"
 
     def used_ctypes(self) -> set[str]:
         result = {
@@ -145,11 +134,11 @@ class PointerType(TypeBase):
         assert pt.kind != TypeKind.FUNCTIONPROTO
         self.pointee = parse_type(pt)
 
-    def capi_string(self) -> str:
-        return f"POINTER({self.pointee.capi_string()})"
-
     def code(self, api=Api.PYTHON) -> str:
-        return f"POINTER({self.pointee.code(Api.PYTHON)})"
+        if api == Api.C:
+            return self.clang_type.spelling
+        else:
+            return f"POINTER({self.pointee.code(api)})"
 
     def used_ctypes(self) -> set[str]:
         result = self.pointee.used_ctypes()
@@ -162,11 +151,11 @@ class PrimitiveCTypesType(TypeBase):
         super().__init__(clang_type)
         self.name = ctypes_type
 
-    def capi_string(self) -> str:
-        return self.name
-
     def code(self, api=Api.PYTHON) -> str:
-        return self.name
+        if api == Api.C:
+            return self.clang_type.spelling
+        else:
+            return self.name
 
     def used_ctypes(self) -> set[str]:
         return {
@@ -181,11 +170,15 @@ class RecordType(TypeBase):
         self._capi_name = capi_type_name(clang_type.get_declaration().spelling)
         self._py_name = py_type_name(self._capi_name)
 
-    def capi_string(self) -> str:
-        return self._capi_name
-
     def code(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == Api.C:
+            return self.clang_type.spelling
+        elif api == Api.CTYPES:
+            return self._capi_name
+        elif api == Api.PYTHON:
+            return self._py_name
+        else:
+            raise NotImplementedError
 
     def used_ctypes(self) -> set[str]:
         return set()
@@ -205,11 +198,15 @@ class TypedefType(TypeBase):
             clang_type.get_declaration().underlying_typedef_type
         )
 
-    def capi_string(self) -> str:
-        return self._capi_name
-
     def code(self, api=Api.PYTHON) -> str:
-        return self._py_name
+        if api == Api.C:
+            return self.clang_type.spelling
+        elif api == Api.CTYPES:
+            return self._capi_name
+        elif api == Api.PYTHON:
+            return self._py_name
+        else:
+            raise NotImplementedError
 
     def used_ctypes(self) -> set[str]:
         if self._capi_name.startswith("c_"):
@@ -225,11 +222,11 @@ class VoidType(TypeBase):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.VOID
 
-    def capi_string(self) -> str:
-        return "None"
-
     def code(self, api=Api.PYTHON) -> str:
-        return "None"
+        if api == Api.C:
+            return "void"
+        else:
+            return "None"
 
     def used_ctypes(self) -> set[str]:
         return set()
@@ -251,10 +248,6 @@ class CodeItem(ABC):
     @staticmethod
     def blank_lines_after() -> int:
         return 1
-
-    @abstractmethod
-    def capi_string(self) -> str:
-        pass
 
     @abstractmethod
     def name(self, api=Api.PYTHON) -> str:
@@ -279,7 +272,8 @@ class DefinitionItem(CodeItem):
         tokens = list(cursor.get_tokens())[1:]
         if len(tokens) > 1:
             raise SkippableCodeItemException  # We only want simple #define values
-        self.value = tokens[0].spelling
+        self.c_value = tokens[0].spelling
+        self.value = self.c_value
         if self.value is None:
             raise SkippableCodeItemException  # #define with no value
         assert self._capi_name.startswith("XR_")
@@ -295,9 +289,6 @@ class DefinitionItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def capi_string(self) -> str:
-        return f"{self.name(Api.C)} = {self.value}"
-
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
@@ -309,7 +300,9 @@ class DefinitionItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        return f"{self.name(Api.PYTHON)} = {self.value}"
+        if api == api.C:
+            return f"#define {self.name(api)} {self.c_value}"
+        return f"{self.name(api)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
         return set()
@@ -334,12 +327,6 @@ class EnumItem(CodeItem):
     def blank_lines_after():
         return 1
 
-    def capi_string(self) -> str:
-        result = f"{self.name(Api.C)} = c_int"
-        for v in self.values:
-            result += f"\n{v.capi_string()}"
-        return result
-
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
@@ -351,16 +338,29 @@ class EnumItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        result = f"class {self.name(Api.PYTHON)}(enum.Enum):"
-        value_count = 0
-        for v in self.values:
-            if v.name(Api.PYTHON) == "_MAX_ENUM":
-                continue
-            result += v.code(Api.PYTHON)
-            value_count += 1
-        if value_count < 1:
-            result += "\n    pass"
-        return result
+        if api == api.CTYPES:
+            result = f"{self.name(api)} = c_int"
+            for v in self.values:
+                result += f"\n{v.code(api)}"
+            return result
+        elif api == api.PYTHON:
+            result = f"class {self.name(api)}(enum.Enum):"
+            value_count = 0
+            for v in self.values:
+                if v.name(api) == "_MAX_ENUM":
+                    continue
+                result += v.code(api)
+                value_count += 1
+            if value_count < 1:
+                result += "\n    pass"
+            return result
+        elif api == api.C:
+            # TODO: this is probably not tested...
+            result = f"{self.name(api)} {{"  # Q: does this already have "enum" at the beginning?
+            for v in self.values:
+                result += f"    \n{v.code(api)}"
+            result += "\n}"
+            return result
 
     def used_ctypes(self) -> set[str]:
         return {
@@ -404,7 +404,7 @@ class EnumValueItem(CodeItem):
         if prefix in self._PREFIX_TABLE:
             prefix = self._PREFIX_TABLE[prefix]
         assert n.startswith(prefix)
-        n = n[len(prefix) :]
+        n = n[len(prefix):]
         if len(postfix) > 0:
             n = n[: -len(postfix)]  # It's already in the parent enum name
         return n
@@ -417,9 +417,6 @@ class EnumValueItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def capi_string(self) -> str:
-        return f"\n{self.name(Api.C)} = {self.parent.name(Api.C)}({self.value})"
-
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
@@ -431,7 +428,13 @@ class EnumValueItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        return f"\n    {self.name(Api.PYTHON)} = {self.value}"
+        line_end = ""
+        line_indent = "    "
+        if api == Api.C:
+            line_end = ","  # TODO: but not the last one, right?
+        elif api == Api.CTYPES:
+            line_indent = ""
+        return f"\n{line_indent}{self.name(api)} = {self.value}{line_end}"
 
     def used_ctypes(self) -> set[str]:
         return {
@@ -472,22 +475,6 @@ class FunctionItem(CodeItem):
     def blank_lines_after():
         return 2
 
-    def capi_string(self) -> str:
-        return f"def {self.name(Api.C)}() -> :\n    pass"
-
-    def ctypes_string(self):
-        result = inspect.cleandoc(
-            f"""
-        {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
-        {self.name(Api.C)}.restype = {self.return_type.code(Api.PYTHON)}
-        {self.name(Api.C)}.argtypes = [
-        """
-        )
-        for p in self.parameters:
-            result += f"\n    {p.type.code(Api.PYTHON)},  # {p.name(Api.PYTHON)}"
-        result += "\n]"
-        return result
-
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
@@ -499,7 +486,23 @@ class FunctionItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        return f"def {self.name(Api.PYTHON)}() -> :\n    pass"
+        if api == Api.CTYPES:
+            # ctypes raw function definition
+            result = inspect.cleandoc(
+                f"""
+                {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
+                {self.name(Api.C)}.restype = {self.return_type.code(Api.PYTHON)}
+                {self.name(Api.C)}.argtypes = [
+                """)
+            for p in self.parameters:
+                result += f"\n    {p.type.code(Api.PYTHON)},  # {p.name(Api.PYTHON)}"
+            result += "\n]"
+            return result
+        elif api == Api.PYTHON:
+            # TODO: python functions are pretty complicated
+            return f"def {self.name(api)}() -> :\n    pass"
+        elif api == Api.C:
+            raise NotImplementedError
 
     def used_ctypes(self) -> set[str]:
         result = self.return_type.used_ctypes()
@@ -517,9 +520,6 @@ class FunctionParameterItem(CodeItem):
             r"(?<!^)(?=[A-Z])", "_", self._capi_name
         ).lower()  # snake from camel
         self.type = parse_type(cursor.type)
-
-    def capi_string(self) -> str:
-        pass
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -548,9 +548,6 @@ class StructFieldItem(CodeItem):
         ).lower()  # snake from camel
         self.type = parse_type(cursor.type)
 
-    def capi_string(self) -> str:
-        return f'\n        ("{self.name(Api.C)}", {self.type.capi_string()}),'
-
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
@@ -562,7 +559,9 @@ class StructFieldItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        return f'\n        ("{self.name(Api.PYTHON)}", {self.type.code(Api.PYTHON)}),'
+        if api == Api.C:
+            raise NotImplementedError
+        return f'\n        ("{self.name(api)}", {self.type.code(api)}),'
 
     def used_ctypes(self) -> set[str]:
         return self.type.used_ctypes()
@@ -585,7 +584,7 @@ class StructItem(CodeItem):
                 assert False
         self.is_recursive = False
         for f in self.fields:
-            m = re.search(fr"\b{self._capi_name}\b", f.type.capi_string())
+            m = re.search(fr"\b{self.name(Api.CTYPES)}\b", f.type.code(Api.CTYPES))
             if m:
                 self.is_recursive = True
 
@@ -596,21 +595,6 @@ class StructItem(CodeItem):
     @staticmethod
     def blank_lines_after():
         return 2
-
-    def capi_string(self) -> str:
-        result = f"class {self.name(Api.C)}(Structure):"
-        if len(self.fields) == 0:
-            # Empty structure
-            result += "\n    pass"
-            return result
-        if self.is_recursive:
-            result += "\n    pass"
-            result += f"\n\n\n{self.name(Api.C)}._fields_ = ["
-        else:
-            result += "\n    _fields_ = ["
-        result += "".join([f.capi_string() for f in self.fields])
-        result += "\n    ]"
-        return result
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -623,7 +607,9 @@ class StructItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        result = f"class {self.name(Api.PYTHON)}(Structure):"
+        if api == Api.C:
+            raise NotImplementedError
+        result = f"class {self.name(api)}(Structure):"
         if len(self.fields) == 0:
             # Empty structure
             result += "\n    pass"
@@ -631,10 +617,10 @@ class StructItem(CodeItem):
         if self.is_recursive:
             # Structure containing self-reference must be declared in two stanzas
             result += "\n    pass"
-            result += f"\n\n\n{self.name(Api.PYTHON)}._fields_ = ["
+            result += f"\n\n\n{self.name(api)}._fields_ = ["
         else:
             result += "\n    _fields_ = ["
-        result += "".join([f.code(Api.PYTHON) for f in self.fields])
+        result += "".join([f.code(api) for f in self.fields])
         result += "\n    ]"
         return result
 
@@ -656,11 +642,8 @@ class TypeDefItem(CodeItem):
         self.type = parse_type(cursor.underlying_typedef_type)
         if self.type.clang_type.kind == TypeKind.ENUM:
             raise SkippableCodeItemException  # Keep enum typedefs out of typedefs.py
-        if self._capi_name == self.type.capi_string():
+        if self._capi_name == self.type.code(Api.CTYPES):
             raise SkippableCodeItemException  # Nonsense A = A typedef
-
-    def capi_string(self) -> str:
-        return f"{self.name(Api.C)} = {self.type.capi_string()}"
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -673,7 +656,9 @@ class TypeDefItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        return f"{self.name(Api.PYTHON)} = {self.type.code(Api.PYTHON)}"
+        if api == Api.C:
+            raise NotImplementedError
+        return f"{self.name(api)} = {self.type.code(api)}"
 
     def used_ctypes(self) -> set[str]:
         return self.type.used_ctypes()
@@ -706,9 +691,6 @@ class VariableItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def capi_string(self) -> str:
-        return f"{self.name(Api.C)} = {self.value}"
-
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
@@ -720,7 +702,9 @@ class VariableItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
-        return f"{self.name(Api.PYTHON)} = {self.value}"
+        if api == Api.C:
+            raise NotImplementedError
+        return f"{self.name(api)} = {self.value}"
 
     def used_ctypes(self) -> set[str]:
         return set()
@@ -738,25 +722,23 @@ class CodeGenerator(object):
             self._items = list(generate_code_items(self.cursor_kinds))
         return self._items
 
-    def print_all_list(self, py=True) -> None:
+    def print_all_list(self, api=Api.PYTHON) -> None:
         print("\n\n__all__ = [")
         for t in self.items:
-            if py:
-                print(f'    "{t.name(Api.PYTHON)}",')
-            else:
-                print(f'    "{t.name(Api.C)}",')
+            print(f'    "{t.name(api)}",')
         print("]")
 
-    def print_enum_aliases(self) -> None:
+    @staticmethod
+    def print_enum_aliases() -> None:
         print("# Enum aliases (not exposed in __all__)")
         enums = CodeGenerator(
             [
                 CursorKind.ENUM_DECL,
             ]
         )
-        for enum in enums.items:
-            assert isinstance(enum, EnumItem)
-            print(f"{enum.name(Api.PYTHON)} = c_int")
+        for e in enums.items:
+            assert isinstance(e, EnumItem)
+            print(f"{e.name(Api.PYTHON)} = c_int")
 
     def print_header(self) -> None:
         for t in self.items:
@@ -766,16 +748,13 @@ class CodeGenerator(object):
         if len(self.ctypes_names) > 0:
             print(f"from ctypes import {', '.join(sorted(self.ctypes_names))}")
 
-    def print_items(self, py=True) -> None:
+    def print_items(self, api=Api.PYTHON) -> None:
         blanks2 = 0
         for t in self.items:
             blanks1 = t.blank_lines_before()
             for b in range(max(blanks1, blanks2)):
                 print("")
-            if py:
-                print(t.code(Api.PYTHON))
-            else:
-                print(t.capi_string())
+            print(t.code(api))
             blanks2 = t.blank_lines_after()
 
 
@@ -886,6 +865,7 @@ def py_type_name(capi_type: str) -> str:
 
 
 __all__ = [
+    "Api",
     "get_header_as_string",
     "CodeGenerator",
     "CodeItem",

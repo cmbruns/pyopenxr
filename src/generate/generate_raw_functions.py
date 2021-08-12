@@ -49,8 +49,8 @@ def main():
         assert isinstance(fn, xrg.FunctionItem)
         fn = typing.cast(xrg.FunctionItem, fn)
         print("")
-        print(fn.ctypes_string())
-    functions.print_all_list(py=False)
+        print(fn.code(api=xrg.Api.CTYPES))
+    functions.print_all_list(api=xrg.Api.CTYPES)
 
 
 if __name__ == "__main__":
