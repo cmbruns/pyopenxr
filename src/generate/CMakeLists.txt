@@ -16,14 +16,6 @@ mark_as_advanced(
     LIBRARY_OUTPUT_PATH
 )
 
-# Create staging folder for generated source files
-set(STAGING_DIR "${CMAKE_BINARY_DIR}/xr")
-file(MAKE_DIRECTORY "${STAGING_DIR}")
-
-###########################
-### Generate version.py ###
-###########################
-
 # TODO: add more hints for Mac and Linux
 find_path(OPENXR_INCLUDE_DIR
     NAMES openxr/openxr.h
@@ -35,19 +27,39 @@ find_path(OPENXR_INCLUDE_DIR
 )
 
 set(OPENXR_INCLUDE_FILE "${OPENXR_INCLUDE_DIR}/openxr/openxr.h")
+if (EXISTS "${OPENXR_INCLUDE_FILE}")
+    file(COPY "${OPENXR_INCLUDE_DIR}/openxr/" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/xrg/")
+endif()
+
+####################################
+### Find libclang shared library ###
+####################################
+
+find_file(LIBCLANG_SHARED_LIBRARY
+    NAMES libclang.dll libclang.so libclang.dylib
+    HINTS
+        "$ENV{ProgramW6432}/LLVM"
+        "$ENV{ProgramFiles}/LLVM"
+    PATH_SUFFIXES bin
+    DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
+)
+if (EXISTS "${LIBCLANG_SHARED_LIBRARY}")
+    file(COPY "${LIBCLANG_SHARED_LIBRARY}" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/xrg/")
+endif()
+
+# Create staging folder for generated source files
+set(STAGING_DIR "${CMAKE_BINARY_DIR}/xr")
+file(MAKE_DIRECTORY "${STAGING_DIR}")
+
+###########################
+### Generate version.py ###
+###########################
 
 find_package(PythonInterp)
 
-# Helper files for generate_whatever.py
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/xrg")
-configure_file(xrg/__init__.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
-configure_file(xrg/types.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
-configure_file(xrg/declarations.py ${CMAKE_BINARY_DIR}/xrg @ONLY)
-
-configure_file(print_openxr_version.py ${CMAKE_BINARY_DIR}/ @ONLY)
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/print_openxr_version.py"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+    COMMAND ${PYTHON_EXECUTABLE} print_openxr_version.py
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     OUTPUT_VARIABLE OPENXR_VERSION
 )
 message(STATUS "OpenXR Version = ${OPENXR_VERSION}")
@@ -71,36 +83,22 @@ if (OPENXR_LOADER_SHARED_LIBRARY)
     message(STATUS "Copied openxr_loader shared library to ${STAGING_DIR}/library/")
 endif()
 
-####################################
-### Find libclang shared library ###
-####################################
-
-find_file(LIBCLANG_SHARED_LIBRARY
-    NAMES libclang.dll libclang.so libclang.dylib
-    HINTS
-        "$ENV{ProgramW6432}/LLVM"
-        "$ENV{ProgramFiles}/LLVM"
-    PATH_SUFFIXES bin
-    DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
-)
-
 ##################################
 ### Generate enums source file ###
 ##################################
 
 function(generate_source GENERATOR OUTPUT)
-    configure_file("${GENERATOR}" "${CMAKE_BINARY_DIR}/" @ONLY)
     # Two step copy so newlines are used as line ending
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_BINARY_DIR}/${GENERATOR}"
-        WORKING_DIRECTORY "${STAGING_DIR}"
+        COMMAND ${PYTHON_EXECUTABLE} "${GENERATOR}"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         OUTPUT_FILE "${CMAKE_BINARY_DIR}/${OUTPUT}"
     )
     configure_file(
         "${CMAKE_BINARY_DIR}/${OUTPUT}"
         "${STAGING_DIR}/"
         @ONLY
-        NEWLINE_STYLE LF  # Even on windows...
+        NEWLINE_STYLE LF  # Even/especially on windows...
     )
     message(STATUS "Generated file ${STAGING_DIR}/${OUTPUT}")
 endfunction()

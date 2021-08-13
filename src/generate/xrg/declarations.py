@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import inspect
 import re
 
-from clang.cindex import Cursor, CursorKind, TypeKind
+from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
 from .types import Api, py_type_name, parse_type, capi_type_name
 
@@ -443,7 +443,8 @@ class VariableItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.VAR_DECL
         self._capi_name = cursor.spelling
-        assert self._capi_name.startswith("XR_")
+        if not self._capi_name.startswith("XR_"):
+            assert False
         self._py_name = self._capi_name[3:]
         self.type = None
         for e in cursor.get_children():
@@ -454,6 +455,12 @@ class VariableItem(CodeItem):
                 tokens = list(value_cursor.get_tokens())
                 assert len(tokens) == 1
                 self.value = tokens[0].spelling
+            elif e.kind == CursorKind.INTEGER_LITERAL:
+                tokens = list(e.get_tokens())
+                assert tokens[0].kind == TokenKind.LITERAL
+                self.value = tokens[0].spelling
+            else:
+                assert False
         if self.value.endswith("LL"):
             self.value = self.value[:-2]
 

@@ -3,6 +3,12 @@ import unittest
 import xr
 
 
+# TODO:
+#  * string comparison
+#  * __str__ and __repr__
+#  * field values
+#  * array construction
+
 class TestExtensionProperties(unittest.TestCase):
     def setUp(self):
         pass

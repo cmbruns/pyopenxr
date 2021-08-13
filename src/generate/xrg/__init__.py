@@ -8,6 +8,7 @@ This module contains code to help generate the code in pyopenxr.
 #  * generate docstrings
 
 import os
+import pkg_resources
 from typing import Generator
 
 import clang.cindex
@@ -16,10 +17,10 @@ from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 from .types import *
 from .declarations import *
 
-# These variables are filled in by CMake during the configure step
-OPENXR_HEADER = "@OPENXR_INCLUDE_FILE@"
-if os.path.isfile("@LIBCLANG_SHARED_LIBRARY@"):
-    clang.cindex.Config.set_library_file("@LIBCLANG_SHARED_LIBRARY@")
+OPENXR_HEADER = pkg_resources.resource_filename("xrg", "openxr.h")
+LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")  # TODO: Linux, Mac
+if os.path.isfile(LIBCLANG_SHARED_LIBRARY):
+    clang.cindex.Config.set_library_file(LIBCLANG_SHARED_LIBRARY)
 
 
 class CodeGenerator(object):
