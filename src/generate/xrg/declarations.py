@@ -170,9 +170,7 @@ class EnumValueItem(CodeItem):
                 prefix = prefix[: -len(postfix1)]
                 postfix = f"_{postfix1}"
                 break
-        prefix = (
-            re.sub(r"(?<!^)(?=[A-Z])", "_", prefix).upper() + "_"
-        )  # snake from camel
+        prefix = snake_from_camel(prefix).upper() + "_"
         if n == f"{prefix}MAX_ENUM{postfix}":
             return f"_MAX_ENUM"  # private enum value
         if prefix in self._PREFIX_TABLE:
@@ -290,9 +288,7 @@ class FunctionParameterItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.PARM_DECL
         self._capi_name = cursor.spelling
-        self._py_name = re.sub(
-            r"(?<!^)(?=[A-Z])", "_", self._capi_name
-        ).lower()  # snake from camel
+        self._py_name = snake_from_camel(self._capi_name)
         self.type = parse_type(cursor.type)
 
     def name(self, api=Api.PYTHON) -> str:
@@ -317,9 +313,7 @@ class StructFieldItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.FIELD_DECL
         self._capi_name = cursor.spelling
-        self._py_name = re.sub(
-            r"(?<!^)(?=[A-Z])", "_", self._capi_name
-        ).lower()  # snake from camel
+        self._py_name = snake_from_camel(self._capi_name)
         self.type = parse_type(cursor.type)
 
     def name(self, api=Api.PYTHON) -> str:
@@ -489,6 +483,10 @@ class VariableItem(CodeItem):
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return set()
+
+
+def snake_from_camel(camel: str) -> str:
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", camel).lower()
 
 
 __all__ = [

@@ -25,7 +25,7 @@ def main():
         inspect.cleandoc(
             '''
     """
-    File xr.raw_function.py
+    File xr.raw_functions.py
     
     Defines low-level ctypes function definitions for use by
     higher-level pythonic functions in pyopenxr.
