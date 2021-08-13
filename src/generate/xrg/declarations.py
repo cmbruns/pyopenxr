@@ -233,11 +233,10 @@ class FunctionItem(CodeItem):
 
     @staticmethod
     def _py_function_name(capi_name: str) -> str:
-        # TODO: snake case
         s = capi_name
         if s.startswith("xr"):
             s = s[2:]
-        return s
+        return snake_from_camel(s)
 
     @staticmethod
     def blank_lines_before():
@@ -271,8 +270,21 @@ class FunctionItem(CodeItem):
             result += "\n]"
             return result
         elif api == Api.PYTHON:
+            input_params = self.parameters  # TODO:
+            result = f"def {self.name(api)}("
+            for p in input_params:
+                result += f"\n    {p.name(api)}: {p.type.code(api)},"
+            return_type = self.return_type  # TODO
+            result += f"\n) -> {return_type.code(api)}:"
+            docstring = ""
+            result += f'\n    """{docstring}"""'
+            result += f"\n    fn = raw_functions.{self.name(Api.CTYPES)}"
+            result += f"\n    result = check_result(fn("
+            result += f"\n    )"
+            result += f"\n    if result.is_exception():"
+            result += f"\n        raise result"
             # TODO: python functions are pretty complicated
-            return f"def {self.name(api)}() -> :\n    pass"
+            return result
         elif api == Api.C:
             raise NotImplementedError
 

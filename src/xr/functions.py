@@ -1,4 +1,4 @@
-import ctypes
+from ctypes import Array, byref, c_uint32
 
 from . import raw_functions  # Side effect of defining low-level c signatures
 from .enums import *
@@ -17,7 +17,7 @@ from .typedefs import *
 
 def enumerate_instance_extension_properties(
     layer_name: str = None,
-) -> ctypes.Array[ExtensionProperties]:
+) -> Array[ExtensionProperties]:
     """
     Returns properties of available instance extensions
 
@@ -37,9 +37,9 @@ def enumerate_instance_extension_properties(
     if layer_name is not None:
         layer_name = layer_name.encode()
 
-    extension_count = ctypes.c_uint32(0)
+    extension_count = c_uint32(0)
     fn = raw_functions.xrEnumerateInstanceExtensionProperties
-    result = check_result(fn(layer_name, 0, ctypes.byref(extension_count), None))
+    result = check_result(fn(layer_name, 0, byref(extension_count), None))
     if result.is_exception():
         raise result
 
@@ -54,7 +54,7 @@ def enumerate_instance_extension_properties(
         fn(
             layer_name,
             extension_count,
-            ctypes.byref(extension_count),
+            byref(extension_count),
             properties,  # Don't use byref for arrays...
         )
     )
