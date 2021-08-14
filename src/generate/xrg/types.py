@@ -10,7 +10,6 @@ class Api(enum.Enum):
     C = 1,  # C language symbols and code from the original C file
     CTYPES = 2,  # Python code with maximum similarity to C code
     PYTHON = 3,  # High-level pythonic interface symbols and code
-    NATIVE_PYTHON = 4,  # No ctypes, only mainline python
 
 
 class TypeBase(ABC):
@@ -76,7 +75,7 @@ class FunctionPointerType(TypeBase):
             return self.clang_type.spelling
         else:
             arg_string = ", ".join(
-                a.code(api) for a in [self.result_type, *self.arg_types]
+                a.code(Api.CTYPES) for a in [self.result_type, *self.arg_types]
             )
             return f"CFUNCTYPE({arg_string})"
 
@@ -104,6 +103,9 @@ class PointerType(TypeBase):
         if api == Api.C:
             return self.clang_type.spelling
         else:
+            s = self.pointee.code(api)
+            if s.startswith("Xr"):
+                x = 3
             return f"POINTER({self.pointee.code(api)})"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
@@ -121,7 +123,7 @@ class PrimitiveCTypesType(TypeBase):
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
-        elif api == Api.NATIVE_PYTHON:
+        elif api == Api.PYTHON:
             return self.py_name
         else:
             return self.name
@@ -143,7 +145,7 @@ class RecordType(TypeBase):
         if api == Api.C:
             return self.clang_type.spelling
         elif api == Api.CTYPES:
-            return self._capi_name
+            return self._py_name
         elif api == Api.PYTHON:
             return self._py_name
         else:
@@ -171,7 +173,7 @@ class TypedefType(TypeBase):
         if api == Api.C:
             return self.clang_type.spelling
         elif api == Api.CTYPES:
-            return self._capi_name
+            return self._py_name
         elif api == Api.PYTHON:
             return self._py_name
         elif api == Api.NATIVE_PYTHON:

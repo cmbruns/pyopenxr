@@ -108,7 +108,7 @@ class EnumItem(CodeItem):
         elif api == api.C:
             return self._capi_name
         elif api == api.CTYPES:
-            return self._capi_name
+            return self._py_name
         else:
             raise NotImplementedError
 
@@ -268,7 +268,7 @@ class FunctionItem(CodeItem):
                 {self.name(Api.C)}.argtypes = [
                 """)
             for p in self.parameters:
-                result += f"\n    {p.type.code(Api.PYTHON)},  # {p.name(Api.PYTHON)}"
+                result += f"\n    {p.type.code(api)},  # {p.name(Api.PYTHON)}"
             result += "\n]"
             return result
         elif api == Api.PYTHON:
@@ -322,7 +322,7 @@ class StructFieldItem(CodeItem):
         elif api == api.C:
             return self._capi_name
         elif api == api.CTYPES:
-            return self._capi_name
+            return self._py_name
         else:
             raise NotImplementedError
 
@@ -370,7 +370,7 @@ class StructItem(CodeItem):
         elif api == api.C:
             return self._capi_name
         elif api == api.CTYPES:
-            return self._capi_name
+            return self._py_name
         else:
             raise NotImplementedError
 
@@ -388,7 +388,7 @@ class StructItem(CodeItem):
             result += f"\n\n\n{self.name(api)}._fields_ = ["
         else:
             result += "\n    _fields_ = ["
-        result += "".join([f.code(api) for f in self.fields])
+        result += "".join([f.code(Api.CTYPES) for f in self.fields])
         result += "\n    ]"
         return result
 
@@ -410,7 +410,7 @@ class TypeDefItem(CodeItem):
         self.type = parse_type(cursor.underlying_typedef_type)
         if self.type.clang_type.kind == TypeKind.ENUM:
             raise SkippableCodeItemException  # Keep enum typedefs out of typedefs.py
-        if self._capi_name == self.type.code(Api.CTYPES):
+        if self._py_name == self.type.code(Api.CTYPES):
             raise SkippableCodeItemException  # Nonsense A = A typedef
 
     def name(self, api=Api.PYTHON) -> str:
@@ -598,12 +598,10 @@ def snake_from_camel(camel: str) -> str:
 
 __all__ = [
     "CodeItem",
-    "EnumItem",
-    "SkippableCodeItemException",
-    "CodeItem",
     "DefinitionItem",
     "EnumItem",
     "FunctionItem",
+    "SkippableCodeItemException",
     "StructItem",
     "TypeDefItem",
     "VariableItem",
