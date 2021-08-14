@@ -1,8 +1,9 @@
 import ctypes
-import os
+import pkg_resources
 
-os.add_dll_directory(os.path.dirname(__file__))
-openxr_loader_library = ctypes.cdll.LoadLibrary("openxr_loader")
+library_name = "openxr_loader.dll"  # TODO: Mac and Linux
+library_path = pkg_resources.resource_filename("xr.library", library_name)
+openxr_loader_library = ctypes.cdll.LoadLibrary(library_path)
 
 __all__ = [
     "openxr_loader_library",

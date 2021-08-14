@@ -176,12 +176,6 @@ class TypedefType(TypeBase):
             return self._py_name
         elif api == Api.PYTHON:
             return self._py_name
-        elif api == Api.NATIVE_PYTHON:
-            m = re.match(r"c_(u?int(?:8|16|32|64))", self._py_name)
-            if m:
-                return "int"
-            else:
-                return self._py_name
         else:
             raise NotImplementedError
 
