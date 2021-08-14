@@ -264,11 +264,11 @@ class FunctionItem(CodeItem):
             result = inspect.cleandoc(
                 f"""
                 {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
-                {self.name(Api.C)}.restype = {self.return_type.code(Api.PYTHON)}
+                {self.name(Api.C)}.restype = {self.return_type.name(Api.PYTHON)}
                 {self.name(Api.C)}.argtypes = [
                 """)
             for p in self.parameters:
-                result += f"\n    {p.type.code(api)},  # {p.name(Api.PYTHON)}"
+                result += f"\n    {p.type.name(api)},  # {p.name(Api.PYTHON)}"
             result += "\n]"
             return result
         elif api == Api.PYTHON:
@@ -329,7 +329,7 @@ class StructFieldItem(CodeItem):
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
-        return f'\n        ("{self.name(api)}", {self.type.code(api)}),'
+        return f'\n        ("{self.name(api)}", {self.type.name(api)}),'
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return self.type.used_ctypes(api)
@@ -352,7 +352,7 @@ class StructItem(CodeItem):
                 assert False
         self.is_recursive = False
         for f in self.fields:
-            m = re.search(fr"\b{self.name(Api.CTYPES)}\b", f.type.code(Api.CTYPES))
+            m = re.search(fr"\b{self.name(Api.CTYPES)}\b", f.type.name(Api.CTYPES))
             if m:
                 self.is_recursive = True
 
@@ -410,7 +410,7 @@ class TypeDefItem(CodeItem):
         self.type = parse_type(cursor.underlying_typedef_type)
         if self.type.clang_type.kind == TypeKind.ENUM:
             raise SkippableCodeItemException  # Keep enum typedefs out of typedefs.py
-        if self._py_name == self.type.code(Api.CTYPES):
+        if self._py_name == self.type.name(Api.CTYPES):
             raise SkippableCodeItemException  # Nonsense A = A typedef
 
     def name(self, api=Api.PYTHON) -> str:
@@ -426,7 +426,7 @@ class TypeDefItem(CodeItem):
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
-        return f"{self.name(api)} = {self.type.code(api)}"
+        return f"{self.name(api)} = {self.type.name(api)}"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return self.type.used_ctypes(api)
@@ -507,7 +507,7 @@ class ParameterCoderBase(object):
 
 class BufferCapacityInputParameterCoder(ParameterCoderBase):
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"{self.parameter.name(api)} = {self.parameter.type.code(api)}(0)"
+        yield f"{self.parameter.name(api)} = {self.parameter.type.name(api)}(0)"
 
 
 class BufferCountOutputParameterCoder(ParameterCoderBase):
@@ -520,14 +520,14 @@ class BufferOutputArrayCoder(ParameterCoderBase):
             assert not self.parameter.type.clang_type.get_pointee().is_const_qualified()
             yield "str"
         else:  # array case
-            yield f"Array[{self.parameter.type.pointee.code()}]"
+            yield f"Array[{self.parameter.type.pointee.name()}]"
 
 
 class InputParameterCoder(ParameterCoderBase):
     def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         # TODO: default value (from docstring?) e.g. None for string that can be empty
         p = self.parameter
-        yield f"{p.name(api)}: {p.type.code(Api.NATIVE_PYTHON)}"
+        yield f"{p.name(api)}: {p.type.name(Api.PYTHON)}"
 
 
 class FunctionCoder(object):
@@ -541,12 +541,12 @@ class FunctionCoder(object):
             p, c = pc
             if p.name().endswith("_capacity_input"):
                 # OpenXR buffer size parameters consist of three consecutive parameters
-                assert "int" in p.type.code()
+                assert "int" in p.type.name()
                 self.param_coders[ix][1] = BufferCapacityInputParameterCoder(p)
                 p2 = self.param_coders[ix + 1][0]
                 assert p2.name().endswith("_count_output")
                 assert p2.type.clang_type.kind == TypeKind.POINTER
-                assert "int" in p2.type.pointee.code()
+                assert "int" in p2.type.pointee.name()
                 self.param_coders[ix + 1][1] = BufferCountOutputParameterCoder(p2)
                 p3 = self.param_coders[ix + 2][0]
                 assert p2.type.clang_type.kind == TypeKind.POINTER
@@ -563,7 +563,7 @@ class FunctionCoder(object):
         for p, c in self.param_coders:
             for s in c.declaration_code(api):
                 params += f"\n{' ' * 16}{s},"
-            for r in c.result_code(Api.NATIVE_PYTHON):
+            for r in c.result_code(Api.PYTHON):
                 result_types.append(r)
         if len(result_types) == 0:
             result = "None"

@@ -132,9 +132,7 @@ find_path(OPENXR_REGISTRY_PATH
 ######################################
 
 if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
-   message(WARNING "Warning: Overwriting contents of source xr package. Are you authoring a new release of pyopenxr?")
+   message(STATUS "")
+   message(WARNING "Warning: Overwriting contents of source xr package.")
    file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/../xr/")
 endif()
-
-# I think one more blank line looks nice
-message(STATUS "")

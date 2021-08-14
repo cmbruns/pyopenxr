@@ -17,7 +17,7 @@ class TypeBase(ABC):
         self.clang_type = clang_type
 
     @abstractmethod
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         pass
 
     @abstractmethod
@@ -32,11 +32,11 @@ class ArrayType(TypeBase):
         self.element_type = parse_type(clang_type.element_type)
         self.count = clang_type.element_count
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
-            return f"{self.element_type.code(api)}[{self.count}]"
+            return f"{self.element_type.name(api)}[{self.count}]"
         else:
-            return f"({self.element_type.code(api)} * {self.count})"
+            return f"({self.element_type.name(api)} * {self.count})"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return self.element_type.used_ctypes(api)
@@ -47,7 +47,7 @@ class EnumType(TypeBase):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.ENUM
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
         elif api == Api.CTYPES:
@@ -70,12 +70,12 @@ class FunctionPointerType(TypeBase):
         self.result_type = parse_type(pt.get_result())
         self.arg_types = [parse_type(t) for t in pt.argument_types()]
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == api.C:
             return self.clang_type.spelling
         else:
             arg_string = ", ".join(
-                a.code(Api.CTYPES) for a in [self.result_type, *self.arg_types]
+                a.name(Api.CTYPES) for a in [self.result_type, *self.arg_types]
             )
             return f"CFUNCTYPE({arg_string})"
 
@@ -99,14 +99,14 @@ class PointerType(TypeBase):
         assert pt.kind != TypeKind.FUNCTIONPROTO
         self.pointee = parse_type(pt)
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
         else:
-            s = self.pointee.code(api)
+            s = self.pointee.name(api)
             if s.startswith("Xr"):
                 x = 3
-            return f"POINTER({self.pointee.code(api)})"
+            return f"POINTER({self.pointee.name(api)})"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         result = self.pointee.used_ctypes(api)
@@ -117,20 +117,20 @@ class PointerType(TypeBase):
 class PrimitiveCTypesType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type, ctypes_type: str, python_type: str):
         super().__init__(clang_type)
-        self.name = ctypes_type
+        self._name = ctypes_type
         self.py_name = python_type
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
         elif api == Api.PYTHON:
             return self.py_name
         else:
-            return self.name
+            return self._name
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return {
-            self.name,
+            self._name,
         }
 
 
@@ -141,7 +141,7 @@ class RecordType(TypeBase):
         self._capi_name = capi_type_name(clang_type.get_declaration().spelling)
         self._py_name = py_type_name(self._capi_name)
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
         elif api == Api.CTYPES:
@@ -169,7 +169,7 @@ class TypedefType(TypeBase):
             clang_type.get_declaration().underlying_typedef_type
         )
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
         elif api == Api.CTYPES:
@@ -201,7 +201,7 @@ class VoidType(TypeBase):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.VOID
 
-    def code(self, api=Api.PYTHON) -> str:
+    def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return "void"
         else:
