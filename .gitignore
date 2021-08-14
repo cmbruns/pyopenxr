@@ -6,3 +6,4 @@ build_cmake/
 /src/pyopenxr.egg-info
 /.tox
 /.coverage
+/src/generate/xrg/libclang.dll
