@@ -28,7 +28,7 @@ find_path(OPENXR_INCLUDE_DIR
 
 set(OPENXR_INCLUDE_FILE "${OPENXR_INCLUDE_DIR}/openxr/openxr.h")
 if (EXISTS "${OPENXR_INCLUDE_FILE}")
-    file(COPY "${OPENXR_INCLUDE_DIR}/openxr/" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/xrg/")
+    file(COPY "${OPENXR_INCLUDE_DIR}/openxr/" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/xrg/headers")
 endif()
 
 ####################################

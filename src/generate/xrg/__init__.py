@@ -17,7 +17,7 @@ from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 from .types import *
 from .declarations import *
 
-OPENXR_HEADER = pkg_resources.resource_filename("xrg", "openxr.h")
+OPENXR_HEADER = pkg_resources.resource_filename("xrg", "headers/openxr.h")
 LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")  # TODO: Linux, Mac
 if os.path.isfile(LIBCLANG_SHARED_LIBRARY):
     clang.cindex.Config.set_library_file(LIBCLANG_SHARED_LIBRARY)
