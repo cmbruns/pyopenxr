@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import inspect
 import re
+from typing import Generator
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
@@ -257,6 +258,7 @@ class FunctionItem(CodeItem):
             raise NotImplementedError
 
     def code(self, api=Api.PYTHON) -> str:
+
         if api == Api.CTYPES:
             # ctypes raw function definition
             result = inspect.cleandoc(
@@ -270,21 +272,7 @@ class FunctionItem(CodeItem):
             result += "\n]"
             return result
         elif api == Api.PYTHON:
-            input_params = self.parameters  # TODO:
-            result = f"def {self.name(api)}("
-            for p in input_params:
-                result += f"\n    {p.name(api)}: {p.type.code(api)},"
-            return_type = self.return_type  # TODO
-            result += f"\n) -> {return_type.code(api)}:"
-            docstring = ""
-            result += f'\n    """{docstring}"""'
-            result += f"\n    fn = raw_functions.{self.name(Api.CTYPES)}"
-            result += f"\n    result = check_result(fn("
-            result += f"\n    )"
-            result += f"\n    if result.is_exception():"
-            result += f"\n        raise result"
-            # TODO: python functions are pretty complicated
-            return result
+            return str(FunctionCoder(self))
         elif api == Api.C:
             raise NotImplementedError
 
@@ -495,6 +483,113 @@ class VariableItem(CodeItem):
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return set()
+
+
+class ParameterCoderBase(object):
+    def __init__(self, parameter: FunctionParameterItem):
+        self.parameter = parameter
+
+    @staticmethod
+    def declaration_code(api=Api.PYTHON) -> Generator[str, None, None]:
+        yield from []
+
+    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"{self.parameter.name(api)}"
+
+    @staticmethod
+    def pre_body_code(api=Api.PYTHON) -> Generator[str, None, None]:
+        yield from []
+
+    @staticmethod
+    def result_code(api=Api.PYTHON) -> Generator[str, None, None]:
+        yield from []
+
+
+class BufferCapacityInputParameterCoder(ParameterCoderBase):
+    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"{self.parameter.name(api)} = {self.parameter.type.code(api)}(0)"
+
+
+class BufferCountOutputParameterCoder(ParameterCoderBase):
+    pass
+
+
+class BufferOutputArrayCoder(ParameterCoderBase):
+    def result_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        if self.parameter.type.clang_type.spelling == "char *":  # string case
+            assert not self.parameter.type.clang_type.get_pointee().is_const_qualified()
+            yield "str"
+        else:  # array case
+            yield f"Array[{self.parameter.type.pointee.code()}]"
+
+
+class InputParameterCoder(ParameterCoderBase):
+    def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        # TODO: default value (from docstring?) e.g. None for string that can be empty
+        p = self.parameter
+        yield f"{p.name(api)}: {p.type.code(Api.NATIVE_PYTHON)}"
+
+
+class FunctionCoder(object):
+    def __init__(self, function: FunctionItem):
+        self.function = function
+        # TODO: categorize parameters finely
+        # TODO: buffer size parameters
+        self.param_coders = [[p, None] for p in self.function.parameters]
+        # First pass: Buffer size arguments
+        for ix, pc in enumerate(self.param_coders):
+            p, c = pc
+            if p.name().endswith("_capacity_input"):
+                # OpenXR buffer size parameters consist of three consecutive parameters
+                assert "int" in p.type.code()
+                self.param_coders[ix][1] = BufferCapacityInputParameterCoder(p)
+                p2 = self.param_coders[ix + 1][0]
+                assert p2.name().endswith("_count_output")
+                assert p2.type.clang_type.kind == TypeKind.POINTER
+                assert "int" in p2.type.pointee.code()
+                self.param_coders[ix + 1][1] = BufferCountOutputParameterCoder(p2)
+                p3 = self.param_coders[ix + 2][0]
+                assert p2.type.clang_type.kind == TypeKind.POINTER
+                self.param_coders[ix + 2][1] = BufferOutputArrayCoder(p3)
+        # Assume remainder are simple inputs
+        for ix, pc in enumerate(self.param_coders):
+            p, c = pc
+            if c is None:
+                pc[1] = InputParameterCoder(p)
+
+    def declaration_code(self, api=Api.PYTHON) -> str:
+        params = ""
+        result_types = []
+        for p, c in self.param_coders:
+            for s in c.declaration_code(api):
+                params += f"\n{' ' * 16}{s},"
+            for r in c.result_code(Api.NATIVE_PYTHON):
+                result_types.append(r)
+        if len(result_types) == 0:
+            result = "None"
+        elif len(result_types) == 1:
+            result = result_types[0]
+        else:
+            result = f"({', '.join(result_types)})"
+        return_type = self.function.return_type  # TODO
+        return inspect.cleandoc(f"""
+            def {self.function.name(api)}({params}
+            ) -> {result}:
+        """)
+
+    def __str__(self, api=Api.PYTHON):
+        result = self.declaration_code(api)
+        docstring = ""
+        result += f'\n    """{docstring}"""'
+        for p, c in self.param_coders:
+            for line in c.pre_body_code():
+                result += f"\n    {line}"
+        result += f"\n    fxn = raw_functions.{self.function.name(Api.CTYPES)}"
+        result += f"\n    result = check_result(fxn("
+        result += f"\n    )"
+        result += f"\n    if result.is_exception():"
+        result += f"\n        raise result"
+        return result
 
 
 def snake_from_camel(camel: str) -> str:

@@ -10,6 +10,7 @@ class Api(enum.Enum):
     C = 1,  # C language symbols and code from the original C file
     CTYPES = 2,  # Python code with maximum similarity to C code
     PYTHON = 3,  # High-level pythonic interface symbols and code
+    NATIVE_PYTHON = 4,  # No ctypes, only mainline python
 
 
 class TypeBase(ABC):
@@ -112,13 +113,16 @@ class PointerType(TypeBase):
 
 
 class PrimitiveCTypesType(TypeBase):
-    def __init__(self, clang_type: clang.cindex.Type, ctypes_type: str):
+    def __init__(self, clang_type: clang.cindex.Type, ctypes_type: str, python_type: str):
         super().__init__(clang_type)
         self.name = ctypes_type
+        self.py_name = python_type
 
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
+        elif api == Api.NATIVE_PYTHON:
+            return self.py_name
         else:
             return self.name
 
@@ -170,6 +174,12 @@ class TypedefType(TypeBase):
             return self._capi_name
         elif api == Api.PYTHON:
             return self._py_name
+        elif api == Api.NATIVE_PYTHON:
+            m = re.match(r"c_(u?int(?:8|16|32|64))", self._py_name)
+            if m:
+                return "int"
+            else:
+                return self._py_name
         else:
             raise NotImplementedError
 
@@ -207,7 +217,7 @@ def capi_type_name(c_type_name: str) -> str:
 
 def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     if clang_type.kind == TypeKind.CHAR_S:
-        return PrimitiveCTypesType(clang_type, "c_char")
+        return PrimitiveCTypesType(clang_type, "c_char", "str")
     elif clang_type.kind == TypeKind.CONSTANTARRAY:
         return ArrayType(clang_type)
     elif clang_type.kind == TypeKind.ELABORATED:
@@ -215,20 +225,20 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     elif clang_type.kind == TypeKind.ENUM:
         return EnumType(clang_type)
     elif clang_type.kind == TypeKind.FLOAT:
-        return PrimitiveCTypesType(clang_type, "c_float")
+        return PrimitiveCTypesType(clang_type, "c_float", "float")
     elif clang_type.kind == TypeKind.INT:
-        return PrimitiveCTypesType(clang_type, "c_int")
+        return PrimitiveCTypesType(clang_type, "c_int", "int")
     elif clang_type.kind == TypeKind.LONGLONG:
-        return PrimitiveCTypesType(clang_type, "c_longlong")
+        return PrimitiveCTypesType(clang_type, "c_longlong", "int")
     elif clang_type.kind == TypeKind.POINTER:
         pt = clang_type.get_pointee()
         if pt.kind == TypeKind.CHAR_S:
             # But this works ONLY if these are always null terminated strings
-            return PrimitiveCTypesType(clang_type, "c_char_p")
+            return PrimitiveCTypesType(clang_type, "c_char_p", "str")
         elif pt.kind == TypeKind.FUNCTIONPROTO:
             return FunctionPointerType(clang_type)
         elif pt.kind == TypeKind.VOID:
-            return PrimitiveCTypesType(clang_type, "c_void_p")
+            return PrimitiveCTypesType(clang_type, "c_void_p", "None")
         else:
             return PointerType(clang_type)
     elif clang_type.kind == TypeKind.RECORD:
@@ -236,19 +246,19 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     elif clang_type.kind == TypeKind.TYPEDEF:
         return TypedefType(clang_type)
     elif clang_type.kind == TypeKind.UCHAR:
-        return PrimitiveCTypesType(clang_type, "c_uchar")
+        return PrimitiveCTypesType(clang_type, "c_uchar", "str")
     elif clang_type.kind == TypeKind.UINT:
-        return PrimitiveCTypesType(clang_type, "c_uint")
+        return PrimitiveCTypesType(clang_type, "c_uint", "int")
     elif clang_type.kind == TypeKind.ULONGLONG:
-        return PrimitiveCTypesType(clang_type, "c_ulonglong")
+        return PrimitiveCTypesType(clang_type, "c_ulonglong", "int")
     elif clang_type.kind == TypeKind.USHORT:
-        return PrimitiveCTypesType(clang_type, "c_ushort")
+        return PrimitiveCTypesType(clang_type, "c_ushort", "int")
     elif clang_type.kind == TypeKind.VOID:
         return VoidType(clang_type)
 
     m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", clang_type.spelling)
     if m:
-        return PrimitiveCTypesType(clang_type, f"c_{m.group(1)}")
+        return PrimitiveCTypesType(clang_type, f"c_{m.group(1)}", "int")
 
     assert False
 
