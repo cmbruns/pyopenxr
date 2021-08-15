@@ -62,6 +62,31 @@ class EnumType(TypeBase):
         }
 
 
+class FloatType(TypeBase):
+    def __init__(self, clang_type: clang.cindex.Type):
+        self._ctypes_name = self.CLANG_NAMES_FOR_KINDS[clang_type.kind]
+        super().__init__(clang_type)
+
+    CLANG_NAMES_FOR_KINDS = {
+        TypeKind.FLOAT: "c_float",
+        TypeKind.DOUBLE: "c_double",
+    }
+
+    def name(self, api=Api.PYTHON) -> str:
+        if api == Api.C:
+            return self.clang_type.spelling
+        elif api == Api.PYTHON:
+            return "float"
+        else:
+            return self._ctypes_name
+
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        if api == Api.CTYPES:
+            return {self._ctypes_name, }
+        else:
+            return set()
+
+
 class FunctionPointerType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
@@ -93,7 +118,7 @@ class FunctionPointerType(TypeBase):
 
 class IntegerType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
-        self._name = IntegerType.clang_name_for_type(clang_type)
+        self._name = self.clang_name_for_type(clang_type)
         if self._name is None:
             raise ValueError(f"clang type `{clang_type.kind}` is not an integer")
         super().__init__(clang_type)
@@ -200,6 +225,35 @@ class RecordType(TypeBase):
         return set()
 
 
+class StringType(TypeBase):
+    def __init__(self, clang_type: clang.cindex.Type):
+        if clang_type.kind == TypeKind.POINTER:
+            assert clang_type.get_pointee().kind == TypeKind.CHAR_S
+            self._ctypes_name = "c_char_p"
+        else:
+            self._ctypes_name = self.CLANG_NAMES_FOR_KINDS[clang_type.kind]
+        super().__init__(clang_type)
+
+    CLANG_NAMES_FOR_KINDS = {
+        TypeKind.CHAR_S: "c_char",
+        TypeKind.UCHAR: "c_uchar",
+    }
+
+    def name(self, api=Api.PYTHON) -> str:
+        if api == Api.C:
+            return self.clang_type.spelling
+        elif api == Api.PYTHON:
+            return "str"
+        else:
+            return self._ctypes_name
+
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        if api == Api.CTYPES:
+            return {self._ctypes_name, }
+        else:
+            return set()
+
+
 class TypedefType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
@@ -255,22 +309,22 @@ def capi_type_name(c_type_name: str) -> str:
 
 def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     if clang_type.kind == TypeKind.CHAR_S:
-        return PrimitiveCTypesType(clang_type, "c_char", "str")
+        return StringType(clang_type)
     elif clang_type.kind == TypeKind.CONSTANTARRAY:
         return ArrayType(clang_type)
     elif clang_type.kind == TypeKind.ELABORATED:
         return parse_type(clang_type.get_named_type())
     elif clang_type.kind == TypeKind.ENUM:
         return EnumType(clang_type)
-    elif clang_type.kind == TypeKind.FLOAT:
-        return PrimitiveCTypesType(clang_type, "c_float", "float")
+    elif clang_type.kind in FloatType.CLANG_NAMES_FOR_KINDS:
+        return FloatType(clang_type)
     elif clang_type.kind in IntegerType.CLANG_NAMES_FOR_KINDS:
         return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.POINTER:
         pt = clang_type.get_pointee()
         if pt.kind == TypeKind.CHAR_S:
             # But this works ONLY if these are always null terminated strings
-            return PrimitiveCTypesType(clang_type, "c_char_p", "str")
+            return StringType(clang_type)
         elif pt.kind == TypeKind.FUNCTIONPROTO:
             return FunctionPointerType(clang_type)
         elif pt.kind == TypeKind.VOID:
@@ -285,7 +339,7 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
         except ValueError:
             return TypedefType(clang_type)
     elif clang_type.kind == TypeKind.UCHAR:
-        return PrimitiveCTypesType(clang_type, "c_uchar", "str")
+        return StringType(clang_type)
     elif clang_type.kind == TypeKind.VOID:
         return VoidType(clang_type)
 
