@@ -504,7 +504,7 @@ class VariableItem(CodeItem):
         return set()
 
 
-class ParameterCoderBase(object):
+class NothingParameterCoder(object):
     def __init__(self, parameter: FunctionParameterItem):
         self.parameter = parameter
 
@@ -513,7 +513,14 @@ class ParameterCoderBase(object):
         yield from []
 
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"{self.parameter.name(api)}"
+        yield from []
+
+    def buffer_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield from self.main_call_code()
+
+    @staticmethod
+    def mid_body_code(api=Api.PYTHON) -> Generator[str, None, None]:
+        yield from []
 
     @staticmethod
     def pre_body_code(api=Api.PYTHON) -> Generator[str, None, None]:
@@ -524,16 +531,56 @@ class ParameterCoderBase(object):
         yield from []
 
 
-class BufferCapacityInputParameterCoder(ParameterCoderBase):
+class ParameterCoderBase(NothingParameterCoder):
+    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"{self.parameter.name(api)}"
+
+    @staticmethod
+    def result_code(api=Api.PYTHON) -> Generator[str, None, None]:
+        yield from []
+
+
+class BufferCoder(ParameterCoderBase):
+    def __init__(self, cap_in: FunctionParameterItem, count_out: FunctionParameterItem, array: FunctionParameterItem):
+        super().__init__(cap_in)
+        self.cap_in = cap_in
+        self.count_out = count_out
+        self.array = array
+        self.array_type: str = self.array.type.pointee.name()
+
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"{self.parameter.name(api)} = {self.parameter.type.name(Api.CTYPES)}(0)"
+        yield f"{self.cap_in.name(api)} = {self.cap_in.type.name(Api.CTYPES)}(0)"
+
+    def buffer_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield "0"
+        yield f"byref({self.cap_in.name(api)})"
+        yield "None"
+
+    def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"{self.array.name()} = ({self.array_type} * {self.cap_in.name(api)}.value)()"
+
+    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"{self.cap_in.name(api)}"
+        yield f"byref({self.cap_in.name(api)})"
+        yield f"{self.array.name(api)}"
+
+    def result_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        if self.array.type.clang_type.spelling == "char *":  # string case
+            assert not self.array.type.clang_type.get_pointee().is_const_qualified()
+            yield "str"
+        else:  # array case
+            yield f"Array[{self.array_type}]"
 
 
 class BufferCountOutputParameterCoder(ParameterCoderBase):
-    pass
+    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"byref({self.parameter.name(api)})"
 
 
 class BufferOutputArrayCoder(ParameterCoderBase):
+    def buffer_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield "None"
+
     def result_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         if self.parameter.type.clang_type.spelling == "char *":  # string case
             assert not self.parameter.type.clang_type.get_pointee().is_const_qualified()
@@ -562,20 +609,22 @@ class FunctionCoder(object):
         # TODO: buffer size parameters
         self.param_coders = [[p, None] for p in self.function.parameters]
         # First pass: Buffer size arguments
+        self._needs_two_calls = False
         for ix, pc in enumerate(self.param_coders):
             p, c = pc
             if p.name().endswith("_capacity_input"):
                 # OpenXR buffer size parameters consist of three consecutive parameters
                 assert "int" in p.type.name()
-                self.param_coders[ix][1] = BufferCapacityInputParameterCoder(p)
                 p2 = self.param_coders[ix + 1][0]
                 assert p2.name().endswith("_count_output")
                 assert p2.type.clang_type.kind == TypeKind.POINTER
                 assert "int" in p2.type.pointee.name()
-                self.param_coders[ix + 1][1] = BufferCountOutputParameterCoder(p2)
                 p3 = self.param_coders[ix + 2][0]
                 assert p2.type.clang_type.kind == TypeKind.POINTER
-                self.param_coders[ix + 2][1] = BufferOutputArrayCoder(p3)
+                self.param_coders[ix][1] = BufferCoder(p, p2, p3)
+                self.param_coders[ix + 1][1] = NothingParameterCoder(p2)
+                self.param_coders[ix + 2][1] = NothingParameterCoder(p3)
+                self._needs_two_calls = True
         # Assume remainder are simple inputs
         for ix, pc in enumerate(self.param_coders):
             p, c = pc
@@ -622,7 +671,22 @@ class FunctionCoder(object):
             for line in c.pre_body_code():
                 result += f"\n    {line}"
         result += f"\n    fxn = raw_functions.{self.function.name(Api.CTYPES)}"
+        if self._needs_two_calls:
+            result += f"\n    # First call of two, to retrieve buffer sizes"
+            result += f"\n    result = check_result(fxn("
+            for p, c in self.param_coders:
+                for param_name in c.buffer_call_code():
+                    result += f"\n        {param_name},"
+            result += f"\n    ))"
+            result += f"\n    if result.is_exception():"
+            result += f"\n        raise result"
+        for p, c in self.param_coders:
+            for line in c.mid_body_code():
+                result += f"\n    {line}"
         result += f"\n    result = check_result(fxn("
+        for p, c in self.param_coders:
+            for param_name in c.main_call_code():
+                result += f"\n        {param_name},"
         result += f"\n    ))"
         result += f"\n    if result.is_exception():"
         result += f"\n        raise result"

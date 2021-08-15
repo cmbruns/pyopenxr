@@ -29,7 +29,7 @@ def main():
         Defines high-level pythonic function definitions for pyopenxr.
         """
         
-        from ctypes import Array
+        from ctypes import Array, byref
         
         from . import raw_functions
         from .enums import *
