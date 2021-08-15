@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import enum
 import re
+from typing import Optional
 
 import clang.cindex
 from clang.cindex import TypeKind
@@ -90,6 +91,50 @@ class FunctionPointerType(TypeBase):
         return result
 
 
+class IntegerType(TypeBase):
+    def __init__(self, clang_type: clang.cindex.Type):
+        self._name = IntegerType.clang_name_for_type(clang_type)
+        if self._name is None:
+            raise ValueError(f"clang type `{clang_type.kind}` is not an integer")
+        super().__init__(clang_type)
+
+    _CLANG_NAMES_FOR_KINDS = {
+        TypeKind.LONGLONG: "c_longlong",
+        TypeKind.INT: "c_int",
+        TypeKind.UINT: "c_uint",
+        TypeKind.ULONGLONG: "c_ulonglong",
+        TypeKind.USHORT: "c_ushort",
+    }
+
+    @staticmethod
+    def clang_name_for_type(clang_type: clang.cindex.Type) -> Optional[str]:
+        if clang_type.kind in IntegerType._CLANG_NAMES_FOR_KINDS:
+            return IntegerType._CLANG_NAMES_FOR_KINDS[clang_type.kind]
+        if clang_type.kind == TypeKind.TYPEDEF:
+            return IntegerType.clang_name_for_c_name(clang_type.spelling)
+
+    @staticmethod
+    def clang_name_for_c_name(c_name: str) -> Optional[str]:
+        m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", c_name)
+        if m:
+            return f"c_{m.group(1)}"
+        return None
+
+    def name(self, api=Api.PYTHON) -> str:
+        if api == Api.C:
+            return self.clang_type.spelling
+        elif api == Api.PYTHON:
+            return "int"
+        else:
+            return self._name
+
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        if api == Api.CTYPES:
+            return {self._name, }
+        else:
+            return set()
+
+
 class PointerType(TypeBase):
     def __init__(self, clang_type: clang.cindex.Type):
         super().__init__(clang_type)
@@ -103,9 +148,6 @@ class PointerType(TypeBase):
         if api == Api.C:
             return self.clang_type.spelling
         else:
-            s = self.pointee.name(api)
-            if s.startswith("Xr"):
-                x = 3
             return f"POINTER({self.pointee.name(api)})"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
@@ -160,9 +202,6 @@ class TypedefType(TypeBase):
         super().__init__(clang_type)
         assert clang_type.kind == TypeKind.TYPEDEF
         type_name = clang_type.spelling
-        m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", type_name)
-        if m:
-            type_name = f"c_{m.group(1)}"
         self._capi_name = capi_type_name(type_name)
         self._py_name = py_type_name(self._capi_name)
         self.underlying_type = parse_type(
@@ -223,9 +262,9 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     elif clang_type.kind == TypeKind.FLOAT:
         return PrimitiveCTypesType(clang_type, "c_float", "float")
     elif clang_type.kind == TypeKind.INT:
-        return PrimitiveCTypesType(clang_type, "c_int", "int")
+        return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.LONGLONG:
-        return PrimitiveCTypesType(clang_type, "c_longlong", "int")
+        return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.POINTER:
         pt = clang_type.get_pointee()
         if pt.kind == TypeKind.CHAR_S:
@@ -240,21 +279,20 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     elif clang_type.kind == TypeKind.RECORD:
         return RecordType(clang_type)
     elif clang_type.kind == TypeKind.TYPEDEF:
-        return TypedefType(clang_type)
+        try:
+            return IntegerType(clang_type)
+        except ValueError:
+            return TypedefType(clang_type)
     elif clang_type.kind == TypeKind.UCHAR:
         return PrimitiveCTypesType(clang_type, "c_uchar", "str")
     elif clang_type.kind == TypeKind.UINT:
-        return PrimitiveCTypesType(clang_type, "c_uint", "int")
+        return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.ULONGLONG:
-        return PrimitiveCTypesType(clang_type, "c_ulonglong", "int")
+        return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.USHORT:
-        return PrimitiveCTypesType(clang_type, "c_ushort", "int")
+        return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.VOID:
         return VoidType(clang_type)
-
-    m = re.match(r"(?:const )?(u?int(?:8|16|32|64))_t", clang_type.spelling)
-    if m:
-        return PrimitiveCTypesType(clang_type, f"c_{m.group(1)}", "int")
 
     assert False
 

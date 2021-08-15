@@ -397,7 +397,7 @@ class StructItem(CodeItem):
             "Structure",
         }
         for f in self.fields:
-            result.update(f.used_ctypes(api))
+            result.update(f.used_ctypes(Api.CTYPES))
         return result
 
 
@@ -426,10 +426,10 @@ class TypeDefItem(CodeItem):
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
-        return f"{self.name(api)} = {self.type.name(api)}"
+        return f"{self.name(api)} = {self.type.name(Api.CTYPES)}"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
-        return self.type.used_ctypes(api)
+        return self.type.used_ctypes(Api.CTYPES)
 
 
 class VariableItem(CodeItem):
@@ -571,7 +571,6 @@ class FunctionCoder(object):
             result = result_types[0]
         else:
             result = f"({', '.join(result_types)})"
-        return_type = self.function.return_type  # TODO
         return inspect.cleandoc(f"""
             def {self.function.name(api)}({params}
             ) -> {result}:
