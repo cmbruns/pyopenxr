@@ -364,6 +364,7 @@ __all__ = [
     "PrimitiveCTypesType",
     "py_type_name",
     "RecordType",
+    "StringType",
     "TypeBase",
     "TypedefType",
     "VoidType",

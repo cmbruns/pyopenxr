@@ -5,7 +5,7 @@ from typing import Generator
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
-from .types import Api, py_type_name, parse_type, capi_type_name
+from .types import Api, py_type_name, parse_type, capi_type_name, StringType
 
 
 class SkippableCodeItemException(Exception):
@@ -507,7 +507,7 @@ class ParameterCoderBase(object):
 
 class BufferCapacityInputParameterCoder(ParameterCoderBase):
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"{self.parameter.name(api)} = {self.parameter.type.name(api)}(0)"
+        yield f"{self.parameter.name(api)} = {self.parameter.type.name(Api.CTYPES)}(0)"
 
 
 class BufferCountOutputParameterCoder(ParameterCoderBase):
@@ -528,6 +528,14 @@ class InputParameterCoder(ParameterCoderBase):
         # TODO: default value (from docstring?) e.g. None for string that can be empty
         p = self.parameter
         yield f"{p.name(api)}: {p.type.name(Api.PYTHON)}"
+
+
+# TODO: use this new class
+class StringInputParameterCoder(InputParameterCoder):
+    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"ubx_{self.parameter.name(api)} = None"
+        yield f"if {self.parameter.name(api)} is not None:"
+        yield f"    ubx_{self.parameter.name(api)} = {self.parameter.name(api)}.encode()"
 
 
 class FunctionCoder(object):
@@ -554,8 +562,12 @@ class FunctionCoder(object):
         # Assume remainder are simple inputs
         for ix, pc in enumerate(self.param_coders):
             p, c = pc
-            if c is None:
-                pc[1] = InputParameterCoder(p)
+            if c is not None:
+                continue
+            if isinstance(p.type, StringType):
+                pc[1] = StringInputParameterCoder(p)
+                continue
+            pc[1] = InputParameterCoder(p)
 
     def declaration_code(self, api=Api.PYTHON) -> str:
         params = ""

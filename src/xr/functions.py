@@ -22,6 +22,9 @@ def get_instance_proc_addr(
     function: POINTER(PFN_xrVoidFunction),
 ) -> None:
     """"""
+    ubx_name = None
+    if name is not None:
+        ubx_name = name.encode()
     fxn = raw_functions.xrGetInstanceProcAddr
     result = check_result(fxn(
     ))
@@ -32,7 +35,7 @@ def get_instance_proc_addr(
 def enumerate_api_layer_properties(
 ) -> Array[ApiLayerProperties]:
     """"""
-    property_capacity_input = int(0)
+    property_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateApiLayerProperties
     result = check_result(fxn(
     ))
@@ -44,7 +47,10 @@ def enumerate_instance_extension_properties(
     layer_name: str,
 ) -> Array[ExtensionProperties]:
     """"""
-    property_capacity_input = int(0)
+    ubx_layer_name = None
+    if layer_name is not None:
+        ubx_layer_name = layer_name.encode()
+    property_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateInstanceExtensionProperties
     result = check_result(fxn(
     ))
@@ -157,7 +163,7 @@ def enumerate_environment_blend_modes(
     view_configuration_type: ViewConfigurationType,
 ) -> Array[EnvironmentBlendMode]:
     """"""
-    environment_blend_mode_capacity_input = int(0)
+    environment_blend_mode_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateEnvironmentBlendModes
     result = check_result(fxn(
     ))
@@ -193,7 +199,7 @@ def enumerate_reference_spaces(
     session: Session,
 ) -> Array[ReferenceSpaceType]:
     """"""
-    space_capacity_input = int(0)
+    space_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateReferenceSpaces
     result = check_result(fxn(
     ))
@@ -270,7 +276,7 @@ def enumerate_view_configurations(
     system_id: SystemId,
 ) -> Array[ViewConfigurationType]:
     """"""
-    view_configuration_type_capacity_input = int(0)
+    view_configuration_type_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateViewConfigurations
     result = check_result(fxn(
     ))
@@ -298,7 +304,7 @@ def enumerate_view_configuration_views(
     view_configuration_type: ViewConfigurationType,
 ) -> Array[ViewConfigurationView]:
     """"""
-    view_capacity_input = int(0)
+    view_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateViewConfigurationViews
     result = check_result(fxn(
     ))
@@ -310,7 +316,7 @@ def enumerate_swapchain_formats(
     session: Session,
 ) -> Array[int]:
     """"""
-    format_capacity_input = int(0)
+    format_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainFormats
     result = check_result(fxn(
     ))
@@ -346,7 +352,7 @@ def enumerate_swapchain_images(
     swapchain: Swapchain,
 ) -> Array[SwapchainImageBaseHeader]:
     """"""
-    image_capacity_input = int(0)
+    image_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainImages
     result = check_result(fxn(
     ))
@@ -468,7 +474,7 @@ def locate_views(
     view_state: POINTER(ViewState),
 ) -> Array[View]:
     """"""
-    view_capacity_input = int(0)
+    view_capacity_input = c_uint32(0)
     fxn = raw_functions.xrLocateViews
     result = check_result(fxn(
     ))
@@ -482,6 +488,9 @@ def string_to_path(
     path: POINTER(Path),
 ) -> None:
     """"""
+    ubx_path_string = None
+    if path_string is not None:
+        ubx_path_string = path_string.encode()
     fxn = raw_functions.xrStringToPath
     result = check_result(fxn(
     ))
@@ -494,7 +503,7 @@ def path_to_string(
     path: Path,
 ) -> str:
     """"""
-    buffer_capacity_input = int(0)
+    buffer_capacity_input = c_uint32(0)
     fxn = raw_functions.xrPathToString
     result = check_result(fxn(
     ))
@@ -656,7 +665,7 @@ def enumerate_bound_sources_for_action(
     enumerate_info: POINTER(BoundSourcesForActionEnumerateInfo),
 ) -> Array[Path]:
     """"""
-    source_capacity_input = int(0)
+    source_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateBoundSourcesForAction
     result = check_result(fxn(
     ))
@@ -669,7 +678,7 @@ def get_input_source_localized_name(
     get_info: POINTER(InputSourceLocalizedNameGetInfo),
 ) -> str:
     """"""
-    buffer_capacity_input = int(0)
+    buffer_capacity_input = c_uint32(0)
     fxn = raw_functions.xrGetInputSourceLocalizedName
     result = check_result(fxn(
     ))
