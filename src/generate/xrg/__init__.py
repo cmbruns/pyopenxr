@@ -17,11 +17,12 @@ from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 from .types import *
 from .declarations import *
 
+# NOTE: some of these files should have been copied here by cmake...
 OPENXR_HEADER = pkg_resources.resource_filename("xrg", "headers/openxr.h")
+
 LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")  # TODO: Linux, Mac
 if os.path.isfile(LIBCLANG_SHARED_LIBRARY):
     clang.cindex.Config.set_library_file(LIBCLANG_SHARED_LIBRARY)
-
 
 class CodeGenerator(object):
     def __init__(self, kinds: list[CursorKind] = None):

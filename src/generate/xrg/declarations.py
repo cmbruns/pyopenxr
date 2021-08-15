@@ -6,6 +6,7 @@ from typing import Generator
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
 from .types import Api, py_type_name, parse_type, capi_type_name, StringType
+from .registry import xr_registry
 
 
 class SkippableCodeItemException(Exception):
@@ -290,6 +291,16 @@ class FunctionParameterItem(CodeItem):
         self._capi_name = cursor.spelling
         self._py_name = snake_from_camel(self._capi_name)
         self.type = parse_type(cursor.type)
+        self._optional = False
+        # Query xr registry to see if this parameter is optional
+        if xr_registry:
+            function_c_name = cursor.semantic_parent.spelling
+            try:
+                command = xr_registry.find(f'commands/command/proto[name="{function_c_name}"]/..')
+                this_param = command.find(f'param[name="{self._capi_name}"]')
+                self._optional = this_param.attrib["optional"] == "true"
+            except Exception as exc:
+                pass
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -303,6 +314,9 @@ class FunctionParameterItem(CodeItem):
 
     def code(self, api=Api.PYTHON) -> str:
         pass
+
+    def is_optional(self) -> bool:
+        return self._optional
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
         return self.type.used_ctypes(api)

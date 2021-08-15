@@ -31,6 +31,24 @@ if (EXISTS "${OPENXR_INCLUDE_FILE}")
     file(COPY "${OPENXR_INCLUDE_DIR}/openxr/" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/xrg/headers")
 endif()
 
+######################
+
+find_file(OPENXR_REGISTRY_FILE
+    NAMES xr.xml
+    HINTS
+        "$ENV{USERPROFILE}/Documents/git"
+        "$ENV{HOME}/git"
+    PATH_SUFFIXES OpenXR-SDK/specification/registry
+    DOC "The file location of the OpenXR registry file (xr.xml)"
+)
+if (OPENXR_REGISTRY_FILE)
+    configure_file(
+        "${OPENXR_REGISTRY_FILE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/xrg/headers"
+        COPYONLY
+    )
+endif()
+
 ####################################
 ### Find libclang shared library ###
 ####################################
