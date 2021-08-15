@@ -98,18 +98,21 @@ class IntegerType(TypeBase):
             raise ValueError(f"clang type `{clang_type.kind}` is not an integer")
         super().__init__(clang_type)
 
-    _CLANG_NAMES_FOR_KINDS = {
-        TypeKind.LONGLONG: "c_longlong",
+    CLANG_NAMES_FOR_KINDS = {
         TypeKind.INT: "c_int",
+        TypeKind.LONG: "c_long",
+        TypeKind.LONGLONG: "c_longlong",
+        TypeKind.SHORT: "c_short",
         TypeKind.UINT: "c_uint",
+        TypeKind.ULONG: "c_ulong",
         TypeKind.ULONGLONG: "c_ulonglong",
         TypeKind.USHORT: "c_ushort",
     }
 
     @staticmethod
     def clang_name_for_type(clang_type: clang.cindex.Type) -> Optional[str]:
-        if clang_type.kind in IntegerType._CLANG_NAMES_FOR_KINDS:
-            return IntegerType._CLANG_NAMES_FOR_KINDS[clang_type.kind]
+        if clang_type.kind in IntegerType.CLANG_NAMES_FOR_KINDS:
+            return IntegerType.CLANG_NAMES_FOR_KINDS[clang_type.kind]
         if clang_type.kind == TypeKind.TYPEDEF:
             return IntegerType.clang_name_for_c_name(clang_type.spelling)
 
@@ -261,9 +264,7 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
         return EnumType(clang_type)
     elif clang_type.kind == TypeKind.FLOAT:
         return PrimitiveCTypesType(clang_type, "c_float", "float")
-    elif clang_type.kind == TypeKind.INT:
-        return IntegerType(clang_type)
-    elif clang_type.kind == TypeKind.LONGLONG:
+    elif clang_type.kind in IntegerType.CLANG_NAMES_FOR_KINDS:
         return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.POINTER:
         pt = clang_type.get_pointee()
@@ -285,12 +286,6 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
             return TypedefType(clang_type)
     elif clang_type.kind == TypeKind.UCHAR:
         return PrimitiveCTypesType(clang_type, "c_uchar", "str")
-    elif clang_type.kind == TypeKind.UINT:
-        return IntegerType(clang_type)
-    elif clang_type.kind == TypeKind.ULONGLONG:
-        return IntegerType(clang_type)
-    elif clang_type.kind == TypeKind.USHORT:
-        return IntegerType(clang_type)
     elif clang_type.kind == TypeKind.VOID:
         return VoidType(clang_type)
 
