@@ -22,9 +22,8 @@ def get_instance_proc_addr(
     function: POINTER(PFN_xrVoidFunction),
 ) -> None:
     """"""
-    ubx_name = None
     if name is not None:
-        ubx_name = name.encode()
+        name = name.encode()
     fxn = raw_functions.xrGetInstanceProcAddr
     result = check_result(fxn(
     ))
@@ -44,12 +43,11 @@ def enumerate_api_layer_properties(
 
 
 def enumerate_instance_extension_properties(
-    layer_name: str,
+    layer_name: str = None,
 ) -> Array[ExtensionProperties]:
     """"""
-    ubx_layer_name = None
     if layer_name is not None:
-        ubx_layer_name = layer_name.encode()
+        layer_name = layer_name.encode()
     property_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateInstanceExtensionProperties
     result = check_result(fxn(
@@ -387,7 +385,7 @@ def wait_swapchain_image(
 
 def release_swapchain_image(
     swapchain: Swapchain,
-    release_info: POINTER(SwapchainImageReleaseInfo),
+    release_info: POINTER(SwapchainImageReleaseInfo) = None,
 ) -> None:
     """"""
     fxn = raw_functions.xrReleaseSwapchainImage
@@ -446,7 +444,7 @@ def wait_frame(
 
 def begin_frame(
     session: Session,
-    frame_begin_info: POINTER(FrameBeginInfo),
+    frame_begin_info: POINTER(FrameBeginInfo) = None,
 ) -> None:
     """"""
     fxn = raw_functions.xrBeginFrame
@@ -488,9 +486,8 @@ def string_to_path(
     path: POINTER(Path),
 ) -> None:
     """"""
-    ubx_path_string = None
     if path_string is not None:
-        ubx_path_string = path_string.encode()
+        path_string = path_string.encode()
     fxn = raw_functions.xrStringToPath
     result = check_result(fxn(
     ))

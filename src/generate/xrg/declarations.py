@@ -315,6 +315,11 @@ class FunctionParameterItem(CodeItem):
     def code(self, api=Api.PYTHON) -> str:
         pass
 
+    @staticmethod
+    def default_value() -> str:
+        """Only applies if is_optional() is True"""
+        return "None"
+
     def is_optional(self) -> bool:
         return self._optional
 
@@ -544,12 +549,10 @@ class InputParameterCoder(ParameterCoderBase):
         yield f"{p.name(api)}: {p.type.name(Api.PYTHON)}"
 
 
-# TODO: use this new class
 class StringInputParameterCoder(InputParameterCoder):
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"ubx_{self.parameter.name(api)} = None"
         yield f"if {self.parameter.name(api)} is not None:"
-        yield f"    ubx_{self.parameter.name(api)} = {self.parameter.name(api)}.encode()"
+        yield f"    {self.parameter.name(api)} = {self.parameter.name(api)}.encode()"
 
 
 class FunctionCoder(object):
@@ -584,13 +587,22 @@ class FunctionCoder(object):
             pc[1] = InputParameterCoder(p)
 
     def declaration_code(self, api=Api.PYTHON) -> str:
-        params = ""
         result_types = []
         for p, c in self.param_coders:
-            for s in c.declaration_code(api):
-                params += f"\n{' ' * 16}{s},"
             for r in c.result_code(Api.PYTHON):
                 result_types.append(r)
+        # Don't show default value for any parameter that appears before required parameters
+        can_haz_default = True
+        param_strings = []
+        for p, c in reversed(self.param_coders):
+            for s in c.declaration_code(api):
+                default = ","
+                if p.is_optional() and can_haz_default:
+                    default = f" = {p.default_value()},"
+                if not p.is_optional():
+                    can_haz_default = False
+                param_strings.append(f"\n{' ' * 16}{s}{default}")
+        params = "".join(reversed(param_strings))
         if len(result_types) == 0:
             result = "None"
         elif len(result_types) == 1:
