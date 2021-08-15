@@ -585,7 +585,7 @@ class FunctionCoder(object):
                 result += f"\n    {line}"
         result += f"\n    fxn = raw_functions.{self.function.name(Api.CTYPES)}"
         result += f"\n    result = check_result(fxn("
-        result += f"\n    )"
+        result += f"\n    ))"
         result += f"\n    if result.is_exception():"
         result += f"\n        raise result"
         return result

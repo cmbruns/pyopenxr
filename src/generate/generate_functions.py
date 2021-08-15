@@ -23,19 +23,24 @@ def main():
     print(
         inspect.cleandoc(
             '''
-    """
-    File xr.functions.py
-    
-    Defines high-level pythonic function definitions for pyopenxr.
-    """
+        """
+        File xr.functions.py
+        
+        Defines high-level pythonic function definitions for pyopenxr.
+        """
+        
+        from ctypes import Array
+        
+        from . import raw_functions
+        from .enums import *
+        from .exceptions import check_result
+        from .typedefs import *
     '''
         )
     )
 
-    print("")
-
     for fn in functions.items:
-        print("")
+        print("\n")
         print(fn.code(api=xrg.Api.PYTHON))
     functions.print_all_list(api=xrg.Api.PYTHON)
 

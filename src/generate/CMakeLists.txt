@@ -108,6 +108,7 @@ generate_source("generate_enums.py" "enums.py")
 generate_source("generate_constants.py" "constants.py")
 generate_source("generate_typedefs.py" "typedefs.py")
 generate_source("generate_raw_functions.py" "raw_functions.py")
+generate_source("generate_functions.py" "functions.py")
 
 ##########################################
 ### Find OpenXR-Registry documentation ###

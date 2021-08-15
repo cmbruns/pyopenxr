@@ -37,10 +37,10 @@ class ArrayType(TypeBase):
         if api == Api.C:
             return f"{self.element_type.name(api)}[{self.count}]"
         else:
-            return f"({self.element_type.name(api)} * {self.count})"
+            return f"({self.element_type.name(Api.CTYPES)} * {self.count})"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
-        return self.element_type.used_ctypes(api)
+        return self.element_type.used_ctypes(Api.CTYPES)
 
 
 class EnumType(TypeBase):
@@ -176,10 +176,10 @@ class PointerType(TypeBase):
         if api == Api.C:
             return self.clang_type.spelling
         else:
-            return f"POINTER({self.pointee.name(api)})"
+            return f"POINTER({self.pointee.name(Api.CTYPES)})"
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
-        result = self.pointee.used_ctypes(api)
+        result = self.pointee.used_ctypes(Api.CTYPES)
         result.add("POINTER")
         return result
 
