@@ -527,7 +527,10 @@ class NothingParameterCoder(object):
         yield from []
 
     @staticmethod
-    def result_code(api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_type_code(api=Api.PYTHON) -> Generator[str, None, None]:
+        yield from []
+
+    def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield from []
 
 
@@ -536,7 +539,7 @@ class ParameterCoderBase(NothingParameterCoder):
         yield f"{self.parameter.name(api)}"
 
     @staticmethod
-    def result_code(api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_type_code(api=Api.PYTHON) -> Generator[str, None, None]:
         yield from []
 
 
@@ -546,7 +549,11 @@ class BufferCoder(ParameterCoderBase):
         self.cap_in = cap_in
         self.count_out = count_out
         self.array = array
-        self.array_type: str = self.array.type.pointee.name()
+        if self.array.type.clang_type.spelling == "char *":  # string case
+            assert not self.array.type.clang_type.get_pointee().is_const_qualified()
+            self.array_type = "str"
+        else:
+            self.array_type: str = self.array.type.pointee.name(Api.CTYPES)
 
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)} = {self.cap_in.type.name(Api.CTYPES)}(0)"
@@ -557,36 +564,27 @@ class BufferCoder(ParameterCoderBase):
         yield "None"
 
     def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"{self.array.name()} = ({self.array_type} * {self.cap_in.name(api)}.value)()"
+        if self.array_type == "str":
+            yield f"{self.array.name()} = create_string_buffer({self.cap_in.name(api)}.value)"
+        else:
+            yield f"{self.array.name()} = ({self.array_type} * {self.cap_in.name(api)}.value)()"
 
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
         yield f"byref({self.cap_in.name(api)})"
         yield f"{self.array.name(api)}"
 
-    def result_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        if self.array.type.clang_type.spelling == "char *":  # string case
-            assert not self.array.type.clang_type.get_pointee().is_const_qualified()
+    def result_type_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        if self.array_type == "str":
             yield "str"
         else:  # array case
             yield f"Array[{self.array_type}]"
 
-
-class BufferCountOutputParameterCoder(ParameterCoderBase):
-    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"byref({self.parameter.name(api)})"
-
-
-class BufferOutputArrayCoder(ParameterCoderBase):
-    def buffer_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield "None"
-
-    def result_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        if self.parameter.type.clang_type.spelling == "char *":  # string case
-            assert not self.parameter.type.clang_type.get_pointee().is_const_qualified()
-            yield "str"
+    def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        if self.array_type == "str":
+            yield f"{self.array.name(api)}.value.decode()"
         else:  # array case
-            yield f"Array[{self.parameter.type.pointee.name()}]"
+            yield f"{self.array.name(api)}"
 
 
 class InputParameterCoder(ParameterCoderBase):
@@ -638,7 +636,7 @@ class FunctionCoder(object):
     def declaration_code(self, api=Api.PYTHON) -> str:
         result_types = []
         for p, c in self.param_coders:
-            for r in c.result_code(Api.PYTHON):
+            for r in c.result_type_code(Api.PYTHON):
                 result_types.append(r)
         # Don't show default value for any parameter that appears before required parameters
         can_haz_default = True
@@ -690,6 +688,12 @@ class FunctionCoder(object):
         result += f"\n    ))"
         result += f"\n    if result.is_exception():"
         result += f"\n        raise result"
+        result_values = []
+        for p, c in self.param_coders:
+            for r in c.result_value_code(Api.PYTHON):
+                result_values.append(r)
+        if len(result_values) > 0:
+            result += f"\n    return {', '.join(result_values)}"
         return result
 
 

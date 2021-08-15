@@ -8,7 +8,7 @@ File xr.functions.py
 Defines high-level pythonic function definitions for pyopenxr.
 """
 
-from ctypes import Array, byref
+from ctypes import Array, byref, create_string_buffer
 
 from . import raw_functions
 from .enums import *
@@ -55,6 +55,7 @@ def enumerate_api_layer_properties(
     ))
     if result.is_exception():
         raise result
+    return properties
 
 
 def enumerate_instance_extension_properties(
@@ -83,6 +84,7 @@ def enumerate_instance_extension_properties(
     ))
     if result.is_exception():
         raise result
+    return properties
 
 
 def create_instance(
@@ -233,6 +235,7 @@ def enumerate_environment_blend_modes(
     ))
     if result.is_exception():
         raise result
+    return environment_blend_modes
 
 
 def create_session(
@@ -287,6 +290,7 @@ def enumerate_reference_spaces(
     ))
     if result.is_exception():
         raise result
+    return spaces
 
 
 def create_reference_space(
@@ -394,6 +398,7 @@ def enumerate_view_configurations(
     ))
     if result.is_exception():
         raise result
+    return view_configuration_types
 
 
 def get_view_configuration_properties(
@@ -444,11 +449,12 @@ def enumerate_view_configuration_views(
     ))
     if result.is_exception():
         raise result
+    return views
 
 
 def enumerate_swapchain_formats(
     session: Session,
-) -> Array[int]:
+) -> Array[c_int64]:
     """"""
     format_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainFormats
@@ -461,7 +467,7 @@ def enumerate_swapchain_formats(
     ))
     if result.is_exception():
         raise result
-    formats = (int * format_capacity_input.value)()
+    formats = (c_int64 * format_capacity_input.value)()
     result = check_result(fxn(
         session,
         format_capacity_input,
@@ -470,6 +476,7 @@ def enumerate_swapchain_formats(
     ))
     if result.is_exception():
         raise result
+    return formats
 
 
 def create_swapchain(
@@ -524,6 +531,7 @@ def enumerate_swapchain_images(
     ))
     if result.is_exception():
         raise result
+    return images
 
 
 def acquire_swapchain_image(
@@ -682,6 +690,7 @@ def locate_views(
     ))
     if result.is_exception():
         raise result
+    return views
 
 
 def string_to_path(
@@ -702,3 +711,358 @@ def string_to_path(
         raise result
 
 
+def path_to_string(
+    instance: Instance,
+    path: Path,
+) -> str:
+    """"""
+    buffer_capacity_input = c_uint32(0)
+    fxn = raw_functions.xrPathToString
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        path,
+        0,
+        byref(buffer_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    buffer = create_string_buffer(buffer_capacity_input.value)
+    result = check_result(fxn(
+        instance,
+        path,
+        buffer_capacity_input,
+        byref(buffer_capacity_input),
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+    return buffer.value.decode()
+
+
+def create_action_set(
+    instance: Instance,
+    create_info: POINTER(ActionSetCreateInfo),
+    action_set: POINTER(ActionSet),
+) -> None:
+    """"""
+    fxn = raw_functions.xrCreateActionSet
+    result = check_result(fxn(
+        instance,
+        create_info,
+        action_set,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def destroy_action_set(
+    action_set: ActionSet,
+) -> None:
+    """"""
+    fxn = raw_functions.xrDestroyActionSet
+    result = check_result(fxn(
+        action_set,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_action(
+    action_set: ActionSet,
+    create_info: POINTER(ActionCreateInfo),
+    action: POINTER(Action),
+) -> None:
+    """"""
+    fxn = raw_functions.xrCreateAction
+    result = check_result(fxn(
+        action_set,
+        create_info,
+        action,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def destroy_action(
+    action: Action,
+) -> None:
+    """"""
+    fxn = raw_functions.xrDestroyAction
+    result = check_result(fxn(
+        action,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def suggest_interaction_profile_bindings(
+    instance: Instance,
+    suggested_bindings: POINTER(InteractionProfileSuggestedBinding),
+) -> None:
+    """"""
+    fxn = raw_functions.xrSuggestInteractionProfileBindings
+    result = check_result(fxn(
+        instance,
+        suggested_bindings,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def attach_session_action_sets(
+    session: Session,
+    attach_info: POINTER(SessionActionSetsAttachInfo),
+) -> None:
+    """"""
+    fxn = raw_functions.xrAttachSessionActionSets
+    result = check_result(fxn(
+        session,
+        attach_info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_current_interaction_profile(
+    session: Session,
+    top_level_user_path: Path,
+    interaction_profile: POINTER(InteractionProfileState),
+) -> None:
+    """"""
+    fxn = raw_functions.xrGetCurrentInteractionProfile
+    result = check_result(fxn(
+        session,
+        top_level_user_path,
+        interaction_profile,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_action_state_boolean(
+    session: Session,
+    get_info: POINTER(ActionStateGetInfo),
+    state: POINTER(ActionStateBoolean),
+) -> None:
+    """"""
+    fxn = raw_functions.xrGetActionStateBoolean
+    result = check_result(fxn(
+        session,
+        get_info,
+        state,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_action_state_float(
+    session: Session,
+    get_info: POINTER(ActionStateGetInfo),
+    state: POINTER(ActionStateFloat),
+) -> None:
+    """"""
+    fxn = raw_functions.xrGetActionStateFloat
+    result = check_result(fxn(
+        session,
+        get_info,
+        state,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_action_state_vector2f(
+    session: Session,
+    get_info: POINTER(ActionStateGetInfo),
+    state: POINTER(ActionStateVector2f),
+) -> None:
+    """"""
+    fxn = raw_functions.xrGetActionStateVector2f
+    result = check_result(fxn(
+        session,
+        get_info,
+        state,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_action_state_pose(
+    session: Session,
+    get_info: POINTER(ActionStateGetInfo),
+    state: POINTER(ActionStatePose),
+) -> None:
+    """"""
+    fxn = raw_functions.xrGetActionStatePose
+    result = check_result(fxn(
+        session,
+        get_info,
+        state,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def sync_actions(
+    session: Session,
+    sync_info: POINTER(ActionsSyncInfo),
+) -> None:
+    """"""
+    fxn = raw_functions.xrSyncActions
+    result = check_result(fxn(
+        session,
+        sync_info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def enumerate_bound_sources_for_action(
+    session: Session,
+    enumerate_info: POINTER(BoundSourcesForActionEnumerateInfo),
+) -> Array[Path]:
+    """"""
+    source_capacity_input = c_uint32(0)
+    fxn = raw_functions.xrEnumerateBoundSourcesForAction
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        enumerate_info,
+        0,
+        byref(source_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    sources = (Path * source_capacity_input.value)()
+    result = check_result(fxn(
+        session,
+        enumerate_info,
+        source_capacity_input,
+        byref(source_capacity_input),
+        sources,
+    ))
+    if result.is_exception():
+        raise result
+    return sources
+
+
+def get_input_source_localized_name(
+    session: Session,
+    get_info: POINTER(InputSourceLocalizedNameGetInfo),
+) -> str:
+    """"""
+    buffer_capacity_input = c_uint32(0)
+    fxn = raw_functions.xrGetInputSourceLocalizedName
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        get_info,
+        0,
+        byref(buffer_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    buffer = create_string_buffer(buffer_capacity_input.value)
+    result = check_result(fxn(
+        session,
+        get_info,
+        buffer_capacity_input,
+        byref(buffer_capacity_input),
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+    return buffer.value.decode()
+
+
+def apply_haptic_feedback(
+    session: Session,
+    haptic_action_info: POINTER(HapticActionInfo),
+    haptic_feedback: POINTER(HapticBaseHeader),
+) -> None:
+    """"""
+    fxn = raw_functions.xrApplyHapticFeedback
+    result = check_result(fxn(
+        session,
+        haptic_action_info,
+        haptic_feedback,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def stop_haptic_feedback(
+    session: Session,
+    haptic_action_info: POINTER(HapticActionInfo),
+) -> None:
+    """"""
+    fxn = raw_functions.xrStopHapticFeedback
+    result = check_result(fxn(
+        session,
+        haptic_action_info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+__all__ = [
+    "get_instance_proc_addr",
+    "enumerate_api_layer_properties",
+    "enumerate_instance_extension_properties",
+    "create_instance",
+    "destroy_instance",
+    "get_instance_properties",
+    "poll_event",
+    "result_to_string",
+    "structure_type_to_string",
+    "get_system",
+    "get_system_properties",
+    "enumerate_environment_blend_modes",
+    "create_session",
+    "destroy_session",
+    "enumerate_reference_spaces",
+    "create_reference_space",
+    "get_reference_space_bounds_rect",
+    "create_action_space",
+    "locate_space",
+    "destroy_space",
+    "enumerate_view_configurations",
+    "get_view_configuration_properties",
+    "enumerate_view_configuration_views",
+    "enumerate_swapchain_formats",
+    "create_swapchain",
+    "destroy_swapchain",
+    "enumerate_swapchain_images",
+    "acquire_swapchain_image",
+    "wait_swapchain_image",
+    "release_swapchain_image",
+    "begin_session",
+    "end_session",
+    "request_exit_session",
+    "wait_frame",
+    "begin_frame",
+    "end_frame",
+    "locate_views",
+    "string_to_path",
+    "path_to_string",
+    "create_action_set",
+    "destroy_action_set",
+    "create_action",
+    "destroy_action",
+    "suggest_interaction_profile_bindings",
+    "attach_session_action_sets",
+    "get_current_interaction_profile",
+    "get_action_state_boolean",
+    "get_action_state_float",
+    "get_action_state_vector2f",
+    "get_action_state_pose",
+    "sync_actions",
+    "enumerate_bound_sources_for_action",
+    "get_input_source_localized_name",
+    "apply_haptic_feedback",
+    "stop_haptic_feedback",
+]
