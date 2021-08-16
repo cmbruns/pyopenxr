@@ -412,14 +412,7 @@ class StructItem(CodeItem):
                     super().__init__(
                         StructureType.{type_enum_name}.value,
                         None, *args, **kwargs,
-                    )
-                    
-                @classmethod
-                def make_array(cls, element_count: int):
-                    result = (cls * element_count)()
-                    for element in result:
-                        element.type = StructureType.{type_enum_name}.value
-                    return result                
+                    )            
             """), "    ")
             result += "\n"
         # Hard code this for now, generalize later if needed
@@ -580,9 +573,38 @@ class ParameterCoderBase(NothingParameterCoder):
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.parameter.name(api)}"
 
-    @staticmethod
-    def result_type_code(api=Api.PYTHON) -> Generator[str, None, None]:
-        yield from []
+
+class InputParameterCoder(ParameterCoderBase):
+    def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        # TODO: default value (from docstring?) e.g. None for string that can be empty
+        p = self.parameter
+        yield f"{p.name(api)}: {p.type.name(Api.PYTHON)}"
+
+
+class StringInputParameterCoder(InputParameterCoder):
+    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"if {self.parameter.name(api)} is not None:"
+        yield f"    {self.parameter.name(api)} = {self.parameter.name(api)}.encode()"
+
+
+class OutputParameterCoder(ParameterCoderBase):
+    def result_type_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        rtype = self.parameter.type.pointee
+        yield f"{rtype.name(api)}"
+
+    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        rtype = self.parameter.type.pointee
+        yield f"{self.parameter.name(api)} = {rtype.name(Api.CTYPES)}()"
+
+    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"byref({self.parameter.name(api)})"
+
+    def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        rtype = self.parameter.type.pointee
+        if rtype.name(Api.PYTHON) == "int":
+            yield f"{self.parameter.name(api)}.value"
+        else:
+            yield f"{self.parameter.name(api)}"
 
 
 class BufferCoder(ParameterCoderBase):
@@ -607,13 +629,15 @@ class BufferCoder(ParameterCoderBase):
         yield "None"
 
     def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        name = f"{self.array.name()}"
+        N = f"{self.cap_in.name(api)}.value"
+        etype = self.array_type_name
         if self.array_type_name == "str":
-            yield f"{self.array.name()} = create_string_buffer({self.cap_in.name(api)}.value)"
-        elif self.array_type.name(Api.C).startswith("Xr"):  # TODO: "if" still needs work
-            # Presumably a structure
-            yield f"{self.array.name()} = {self.array_type_name}.make_array({self.cap_in.name(api)}.value)"
+            yield f"{name} = create_string_buffer({N})"
         else:
-            yield f"{self.array.name()} = ({self.array_type_name} * {self.cap_in.name(api)}.value)()"
+            # Use the default constructor to initialize each array member
+            # initialized_array = (MyStructure * N)(*([MyStructure()] * N))
+            yield f"{name} = ({etype} * {N})(*([{etype}()] * {N}))"
 
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
@@ -631,19 +655,6 @@ class BufferCoder(ParameterCoderBase):
             yield f"{self.array.name(api)}.value.decode()"
         else:  # array case
             yield f"{self.array.name(api)}"
-
-
-class InputParameterCoder(ParameterCoderBase):
-    def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        # TODO: default value (from docstring?) e.g. None for string that can be empty
-        p = self.parameter
-        yield f"{p.name(api)}: {p.type.name(Api.PYTHON)}"
-
-
-class StringInputParameterCoder(InputParameterCoder):
-    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        yield f"if {self.parameter.name(api)} is not None:"
-        yield f"    {self.parameter.name(api)} = {self.parameter.name(api)}.encode()"
 
 
 class FunctionCoder(object):
@@ -676,6 +687,10 @@ class FunctionCoder(object):
                 continue
             if isinstance(p.type, StringType):
                 pc[1] = StringInputParameterCoder(p)
+                continue
+            ct = p.type.clang_type
+            if ct.kind == TypeKind.POINTER and not ct.get_pointee().is_const_qualified():
+                pc[1] = OutputParameterCoder(p)
                 continue
             pc[1] = InputParameterCoder(p)
 

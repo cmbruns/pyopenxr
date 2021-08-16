@@ -19,19 +19,20 @@ from .typedefs import *
 def get_instance_proc_addr(
     instance: Instance,
     name: str,
-    function: POINTER(PFN_xrVoidFunction),
-) -> None:
+) -> PFN_xrVoidFunction:
     """"""
     if name is not None:
         name = name.encode()
+    function = PFN_xrVoidFunction()
     fxn = raw_functions.xrGetInstanceProcAddr
     result = check_result(fxn(
         instance,
         name,
-        function,
+        byref(function),
     ))
     if result.is_exception():
         raise result
+    return function
 
 
 def enumerate_api_layer_properties(
@@ -47,7 +48,7 @@ def enumerate_api_layer_properties(
     ))
     if result.is_exception():
         raise result
-    properties = ApiLayerProperties.make_array(property_capacity_input.value)
+    properties = (ApiLayerProperties * property_capacity_input.value)(*([ApiLayerProperties()] * property_capacity_input.value))
     result = check_result(fxn(
         property_capacity_input,
         byref(property_capacity_input),
@@ -75,7 +76,7 @@ def enumerate_instance_extension_properties(
     ))
     if result.is_exception():
         raise result
-    properties = ExtensionProperties.make_array(property_capacity_input.value)
+    properties = (ExtensionProperties * property_capacity_input.value)(*([ExtensionProperties()] * property_capacity_input.value))
     result = check_result(fxn(
         layer_name,
         property_capacity_input,
@@ -89,16 +90,17 @@ def enumerate_instance_extension_properties(
 
 def create_instance(
     create_info: POINTER(InstanceCreateInfo),
-    instance: POINTER(Instance),
-) -> None:
+) -> Instance:
     """"""
+    instance = Instance()
     fxn = raw_functions.xrCreateInstance
     result = check_result(fxn(
         create_info,
-        instance,
+        byref(instance),
     ))
     if result.is_exception():
         raise result
+    return instance
 
 
 def destroy_instance(
@@ -115,30 +117,32 @@ def destroy_instance(
 
 def get_instance_properties(
     instance: Instance,
-    instance_properties: POINTER(InstanceProperties),
-) -> None:
+) -> InstanceProperties:
     """"""
+    instance_properties = InstanceProperties()
     fxn = raw_functions.xrGetInstanceProperties
     result = check_result(fxn(
         instance,
-        instance_properties,
+        byref(instance_properties),
     ))
     if result.is_exception():
         raise result
+    return instance_properties
 
 
 def poll_event(
     instance: Instance,
-    event_data: POINTER(EventDataBuffer),
-) -> None:
+) -> EventDataBuffer:
     """"""
+    event_data = EventDataBuffer()
     fxn = raw_functions.xrPollEvent
     result = check_result(fxn(
         instance,
-        event_data,
+        byref(event_data),
     ))
     if result.is_exception():
         raise result
+    return event_data
 
 
 def result_to_string(
@@ -176,33 +180,35 @@ def structure_type_to_string(
 def get_system(
     instance: Instance,
     get_info: POINTER(SystemGetInfo),
-    system_id: POINTER(SystemId),
-) -> None:
+) -> SystemId:
     """"""
+    system_id = SystemId()
     fxn = raw_functions.xrGetSystem
     result = check_result(fxn(
         instance,
         get_info,
-        system_id,
+        byref(system_id),
     ))
     if result.is_exception():
         raise result
+    return system_id
 
 
 def get_system_properties(
     instance: Instance,
     system_id: SystemId,
-    properties: POINTER(SystemProperties),
-) -> None:
+) -> SystemProperties:
     """"""
+    properties = SystemProperties()
     fxn = raw_functions.xrGetSystemProperties
     result = check_result(fxn(
         instance,
         system_id,
-        properties,
+        byref(properties),
     ))
     if result.is_exception():
         raise result
+    return properties
 
 
 def enumerate_environment_blend_modes(
@@ -224,7 +230,7 @@ def enumerate_environment_blend_modes(
     ))
     if result.is_exception():
         raise result
-    environment_blend_modes = EnvironmentBlendMode.ctype().make_array(environment_blend_mode_capacity_input.value)
+    environment_blend_modes = (EnvironmentBlendMode.ctype() * environment_blend_mode_capacity_input.value)(*([EnvironmentBlendMode.ctype()()] * environment_blend_mode_capacity_input.value))
     result = check_result(fxn(
         instance,
         system_id,
@@ -241,17 +247,18 @@ def enumerate_environment_blend_modes(
 def create_session(
     instance: Instance,
     create_info: POINTER(SessionCreateInfo),
-    session: POINTER(Session),
-) -> None:
+) -> Session:
     """"""
+    session = Session()
     fxn = raw_functions.xrCreateSession
     result = check_result(fxn(
         instance,
         create_info,
-        session,
+        byref(session),
     ))
     if result.is_exception():
         raise result
+    return session
 
 
 def destroy_session(
@@ -281,7 +288,7 @@ def enumerate_reference_spaces(
     ))
     if result.is_exception():
         raise result
-    spaces = ReferenceSpaceType.ctype().make_array(space_capacity_input.value)
+    spaces = (ReferenceSpaceType.ctype() * space_capacity_input.value)(*([ReferenceSpaceType.ctype()()] * space_capacity_input.value))
     result = check_result(fxn(
         session,
         space_capacity_input,
@@ -296,67 +303,71 @@ def enumerate_reference_spaces(
 def create_reference_space(
     session: Session,
     create_info: POINTER(ReferenceSpaceCreateInfo),
-    space: POINTER(Space),
-) -> None:
+) -> Space:
     """"""
+    space = Space()
     fxn = raw_functions.xrCreateReferenceSpace
     result = check_result(fxn(
         session,
         create_info,
-        space,
+        byref(space),
     ))
     if result.is_exception():
         raise result
+    return space
 
 
 def get_reference_space_bounds_rect(
     session: Session,
     reference_space_type: ReferenceSpaceType,
-    bounds: POINTER(Extent2Df),
-) -> None:
+) -> Extent2Df:
     """"""
+    bounds = Extent2Df()
     fxn = raw_functions.xrGetReferenceSpaceBoundsRect
     result = check_result(fxn(
         session,
         reference_space_type,
-        bounds,
+        byref(bounds),
     ))
     if result.is_exception():
         raise result
+    return bounds
 
 
 def create_action_space(
     session: Session,
     create_info: POINTER(ActionSpaceCreateInfo),
-    space: POINTER(Space),
-) -> None:
+) -> Space:
     """"""
+    space = Space()
     fxn = raw_functions.xrCreateActionSpace
     result = check_result(fxn(
         session,
         create_info,
-        space,
+        byref(space),
     ))
     if result.is_exception():
         raise result
+    return space
 
 
 def locate_space(
     space: Space,
     base_space: Space,
     time: Time,
-    location: POINTER(SpaceLocation),
-) -> None:
+) -> SpaceLocation:
     """"""
+    location = SpaceLocation()
     fxn = raw_functions.xrLocateSpace
     result = check_result(fxn(
         space,
         base_space,
         time,
-        location,
+        byref(location),
     ))
     if result.is_exception():
         raise result
+    return location
 
 
 def destroy_space(
@@ -388,7 +399,7 @@ def enumerate_view_configurations(
     ))
     if result.is_exception():
         raise result
-    view_configuration_types = ViewConfigurationType.ctype().make_array(view_configuration_type_capacity_input.value)
+    view_configuration_types = (ViewConfigurationType.ctype() * view_configuration_type_capacity_input.value)(*([ViewConfigurationType.ctype()()] * view_configuration_type_capacity_input.value))
     result = check_result(fxn(
         instance,
         system_id,
@@ -405,18 +416,19 @@ def get_view_configuration_properties(
     instance: Instance,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
-    configuration_properties: POINTER(ViewConfigurationProperties),
-) -> None:
+) -> ViewConfigurationProperties:
     """"""
+    configuration_properties = ViewConfigurationProperties()
     fxn = raw_functions.xrGetViewConfigurationProperties
     result = check_result(fxn(
         instance,
         system_id,
         view_configuration_type,
-        configuration_properties,
+        byref(configuration_properties),
     ))
     if result.is_exception():
         raise result
+    return configuration_properties
 
 
 def enumerate_view_configuration_views(
@@ -438,7 +450,7 @@ def enumerate_view_configuration_views(
     ))
     if result.is_exception():
         raise result
-    views = ViewConfigurationView.make_array(view_capacity_input.value)
+    views = (ViewConfigurationView * view_capacity_input.value)(*([ViewConfigurationView()] * view_capacity_input.value))
     result = check_result(fxn(
         instance,
         system_id,
@@ -467,7 +479,7 @@ def enumerate_swapchain_formats(
     ))
     if result.is_exception():
         raise result
-    formats = (c_int64 * format_capacity_input.value)()
+    formats = (c_int64 * format_capacity_input.value)(*([c_int64()] * format_capacity_input.value))
     result = check_result(fxn(
         session,
         format_capacity_input,
@@ -482,17 +494,18 @@ def enumerate_swapchain_formats(
 def create_swapchain(
     session: Session,
     create_info: POINTER(SwapchainCreateInfo),
-    swapchain: POINTER(Swapchain),
-) -> None:
+) -> Swapchain:
     """"""
+    swapchain = Swapchain()
     fxn = raw_functions.xrCreateSwapchain
     result = check_result(fxn(
         session,
         create_info,
-        swapchain,
+        byref(swapchain),
     ))
     if result.is_exception():
         raise result
+    return swapchain
 
 
 def destroy_swapchain(
@@ -522,7 +535,7 @@ def enumerate_swapchain_images(
     ))
     if result.is_exception():
         raise result
-    images = SwapchainImageBaseHeader.make_array(image_capacity_input.value)
+    images = (SwapchainImageBaseHeader * image_capacity_input.value)(*([SwapchainImageBaseHeader()] * image_capacity_input.value))
     result = check_result(fxn(
         swapchain,
         image_capacity_input,
@@ -536,18 +549,19 @@ def enumerate_swapchain_images(
 
 def acquire_swapchain_image(
     swapchain: Swapchain,
-    acquire_info: POINTER(SwapchainImageAcquireInfo),
-    index: POINTER(c_uint32),
-) -> None:
+    acquire_info: POINTER(SwapchainImageAcquireInfo) = None,
+) -> int:
     """"""
+    index = c_uint32()
     fxn = raw_functions.xrAcquireSwapchainImage
     result = check_result(fxn(
         swapchain,
         acquire_info,
-        index,
+        byref(index),
     ))
     if result.is_exception():
         raise result
+    return index.value
 
 
 def wait_swapchain_image(
@@ -618,18 +632,19 @@ def request_exit_session(
 
 def wait_frame(
     session: Session,
-    frame_wait_info: POINTER(FrameWaitInfo),
-    frame_state: POINTER(FrameState),
-) -> None:
+    frame_wait_info: POINTER(FrameWaitInfo) = None,
+) -> FrameState:
     """"""
+    frame_state = FrameState()
     fxn = raw_functions.xrWaitFrame
     result = check_result(fxn(
         session,
         frame_wait_info,
-        frame_state,
+        byref(frame_state),
     ))
     if result.is_exception():
         raise result
+    return frame_state
 
 
 def begin_frame(
@@ -663,52 +678,53 @@ def end_frame(
 def locate_views(
     session: Session,
     view_locate_info: POINTER(ViewLocateInfo),
-    view_state: POINTER(ViewState),
-) -> Array[View]:
+) -> (ViewState, Array[View]):
     """"""
+    view_state = ViewState()
     view_capacity_input = c_uint32(0)
     fxn = raw_functions.xrLocateViews
     # First call of two, to retrieve buffer sizes
     result = check_result(fxn(
         session,
         view_locate_info,
-        view_state,
+        byref(view_state),
         0,
         byref(view_capacity_input),
         None,
     ))
     if result.is_exception():
         raise result
-    views = View.make_array(view_capacity_input.value)
+    views = (View * view_capacity_input.value)(*([View()] * view_capacity_input.value))
     result = check_result(fxn(
         session,
         view_locate_info,
-        view_state,
+        byref(view_state),
         view_capacity_input,
         byref(view_capacity_input),
         views,
     ))
     if result.is_exception():
         raise result
-    return views
+    return view_state, views
 
 
 def string_to_path(
     instance: Instance,
     path_string: str,
-    path: POINTER(Path),
-) -> None:
+) -> Path:
     """"""
     if path_string is not None:
         path_string = path_string.encode()
+    path = Path()
     fxn = raw_functions.xrStringToPath
     result = check_result(fxn(
         instance,
         path_string,
-        path,
+        byref(path),
     ))
     if result.is_exception():
         raise result
+    return path
 
 
 def path_to_string(
@@ -744,17 +760,18 @@ def path_to_string(
 def create_action_set(
     instance: Instance,
     create_info: POINTER(ActionSetCreateInfo),
-    action_set: POINTER(ActionSet),
-) -> None:
+) -> ActionSet:
     """"""
+    action_set = ActionSet()
     fxn = raw_functions.xrCreateActionSet
     result = check_result(fxn(
         instance,
         create_info,
-        action_set,
+        byref(action_set),
     ))
     if result.is_exception():
         raise result
+    return action_set
 
 
 def destroy_action_set(
@@ -772,17 +789,18 @@ def destroy_action_set(
 def create_action(
     action_set: ActionSet,
     create_info: POINTER(ActionCreateInfo),
-    action: POINTER(Action),
-) -> None:
+) -> Action:
     """"""
+    action = Action()
     fxn = raw_functions.xrCreateAction
     result = check_result(fxn(
         action_set,
         create_info,
-        action,
+        byref(action),
     ))
     if result.is_exception():
         raise result
+    return action
 
 
 def destroy_action(
@@ -828,81 +846,86 @@ def attach_session_action_sets(
 def get_current_interaction_profile(
     session: Session,
     top_level_user_path: Path,
-    interaction_profile: POINTER(InteractionProfileState),
-) -> None:
+) -> InteractionProfileState:
     """"""
+    interaction_profile = InteractionProfileState()
     fxn = raw_functions.xrGetCurrentInteractionProfile
     result = check_result(fxn(
         session,
         top_level_user_path,
-        interaction_profile,
+        byref(interaction_profile),
     ))
     if result.is_exception():
         raise result
+    return interaction_profile
 
 
 def get_action_state_boolean(
     session: Session,
     get_info: POINTER(ActionStateGetInfo),
-    state: POINTER(ActionStateBoolean),
-) -> None:
+) -> ActionStateBoolean:
     """"""
+    state = ActionStateBoolean()
     fxn = raw_functions.xrGetActionStateBoolean
     result = check_result(fxn(
         session,
         get_info,
-        state,
+        byref(state),
     ))
     if result.is_exception():
         raise result
+    return state
 
 
 def get_action_state_float(
     session: Session,
     get_info: POINTER(ActionStateGetInfo),
-    state: POINTER(ActionStateFloat),
-) -> None:
+) -> ActionStateFloat:
     """"""
+    state = ActionStateFloat()
     fxn = raw_functions.xrGetActionStateFloat
     result = check_result(fxn(
         session,
         get_info,
-        state,
+        byref(state),
     ))
     if result.is_exception():
         raise result
+    return state
 
 
 def get_action_state_vector2f(
     session: Session,
     get_info: POINTER(ActionStateGetInfo),
-    state: POINTER(ActionStateVector2f),
-) -> None:
+) -> ActionStateVector2f:
     """"""
+    state = ActionStateVector2f()
     fxn = raw_functions.xrGetActionStateVector2f
     result = check_result(fxn(
         session,
         get_info,
-        state,
+        byref(state),
     ))
     if result.is_exception():
         raise result
+    return state
 
 
 def get_action_state_pose(
     session: Session,
     get_info: POINTER(ActionStateGetInfo),
-    state: POINTER(ActionStatePose),
-) -> None:
+) -> ActionStatePose:
     """"""
+    state = ActionStatePose()
     fxn = raw_functions.xrGetActionStatePose
     result = check_result(fxn(
         session,
         get_info,
-        state,
+        byref(state),
     ))
     if result.is_exception():
         raise result
+    return state
 
 
 def sync_actions(
@@ -936,7 +959,7 @@ def enumerate_bound_sources_for_action(
     ))
     if result.is_exception():
         raise result
-    sources = Path.make_array(source_capacity_input.value)
+    sources = (Path * source_capacity_input.value)(*([Path()] * source_capacity_input.value))
     result = check_result(fxn(
         session,
         enumerate_info,

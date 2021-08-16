@@ -42,18 +42,6 @@ class CodeGenerator(object):
             print(f'    "{t.name(api)}",')
         print("]")
 
-    @staticmethod
-    def print_enum_aliases() -> None:
-        print("# Enum aliases (not exposed in __all__)")
-        enums = CodeGenerator(
-            [
-                CursorKind.ENUM_DECL,
-            ]
-        )
-        for e in enums.items:
-            assert isinstance(e, EnumItem)
-            print(f"{e.name(Api.PYTHON)} = c_int")
-
     def print_header(self, api=Api.PYTHON) -> None:
         for t in self.items:
             self.ctypes_names.update(t.used_ctypes(api))

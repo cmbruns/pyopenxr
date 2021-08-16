@@ -85,14 +85,7 @@ class ApiLayerProperties(Structure):
         super().__init__(
             StructureType.API_LAYER_PROPERTIES.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.API_LAYER_PROPERTIES.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -109,14 +102,7 @@ class ExtensionProperties(Structure):
         super().__init__(
             StructureType.EXTENSION_PROPERTIES.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EXTENSION_PROPERTIES.value
-        return result                
+        )            
 
     def __bytes__(self):
         return self.extension_name
@@ -155,14 +141,7 @@ class InstanceCreateInfo(Structure):
         super().__init__(
             StructureType.INSTANCE_CREATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.INSTANCE_CREATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -181,14 +160,7 @@ class InstanceProperties(Structure):
         super().__init__(
             StructureType.INSTANCE_PROPERTIES.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.INSTANCE_PROPERTIES.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -203,14 +175,7 @@ class EventDataBuffer(Structure):
         super().__init__(
             StructureType.EVENT_DATA_BUFFER.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_BUFFER.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -224,14 +189,7 @@ class SystemGetInfo(Structure):
         super().__init__(
             StructureType.SYSTEM_GET_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SYSTEM_GET_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -260,14 +218,7 @@ class SystemProperties(Structure):
         super().__init__(
             StructureType.SYSTEM_PROPERTIES.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SYSTEM_PROPERTIES.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -285,14 +236,7 @@ class SessionCreateInfo(Structure):
         super().__init__(
             StructureType.SESSION_CREATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SESSION_CREATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -315,14 +259,7 @@ class SpaceVelocity(Structure):
         super().__init__(
             StructureType.SPACE_VELOCITY.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SPACE_VELOCITY.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -354,14 +291,7 @@ class ReferenceSpaceCreateInfo(Structure):
         super().__init__(
             StructureType.REFERENCE_SPACE_CREATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.REFERENCE_SPACE_CREATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -383,14 +313,7 @@ class ActionSpaceCreateInfo(Structure):
         super().__init__(
             StructureType.ACTION_SPACE_CREATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_SPACE_CREATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -406,14 +329,7 @@ class SpaceLocation(Structure):
         super().__init__(
             StructureType.SPACE_LOCATION.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SPACE_LOCATION.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -428,14 +344,7 @@ class ViewConfigurationProperties(Structure):
         super().__init__(
             StructureType.VIEW_CONFIGURATION_PROPERTIES.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW_CONFIGURATION_PROPERTIES.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -450,14 +359,7 @@ class ViewConfigurationView(Structure):
         super().__init__(
             StructureType.VIEW_CONFIGURATION_VIEW.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW_CONFIGURATION_VIEW.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -476,14 +378,7 @@ class SwapchainCreateInfo(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_CREATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_CREATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -505,14 +400,7 @@ class SwapchainImageBaseHeader(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_IMAGE_BASE_HEADER.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_IMAGE_BASE_HEADER.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -525,14 +413,7 @@ class SwapchainImageAcquireInfo(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -545,14 +426,7 @@ class SwapchainImageWaitInfo(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_IMAGE_WAIT_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_IMAGE_WAIT_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -566,14 +440,7 @@ class SwapchainImageReleaseInfo(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_IMAGE_RELEASE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_IMAGE_RELEASE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -586,14 +453,7 @@ class SessionBeginInfo(Structure):
         super().__init__(
             StructureType.SESSION_BEGIN_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SESSION_BEGIN_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -607,14 +467,7 @@ class FrameWaitInfo(Structure):
         super().__init__(
             StructureType.FRAME_WAIT_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.FRAME_WAIT_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -627,14 +480,7 @@ class FrameState(Structure):
         super().__init__(
             StructureType.FRAME_STATE.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.FRAME_STATE.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -650,14 +496,7 @@ class FrameBeginInfo(Structure):
         super().__init__(
             StructureType.FRAME_BEGIN_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.FRAME_BEGIN_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -670,14 +509,7 @@ class CompositionLayerBaseHeader(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_BASE_HEADER.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_BASE_HEADER.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -692,14 +524,7 @@ class FrameEndInfo(Structure):
         super().__init__(
             StructureType.FRAME_END_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.FRAME_END_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -716,14 +541,7 @@ class ViewLocateInfo(Structure):
         super().__init__(
             StructureType.VIEW_LOCATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW_LOCATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -739,14 +557,7 @@ class ViewState(Structure):
         super().__init__(
             StructureType.VIEW_STATE.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW_STATE.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -769,14 +580,7 @@ class View(Structure):
         super().__init__(
             StructureType.VIEW.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -791,14 +595,7 @@ class ActionSetCreateInfo(Structure):
         super().__init__(
             StructureType.ACTION_SET_CREATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_SET_CREATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -814,14 +611,7 @@ class ActionCreateInfo(Structure):
         super().__init__(
             StructureType.ACTION_CREATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_CREATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -846,14 +636,7 @@ class InteractionProfileSuggestedBinding(Structure):
         super().__init__(
             StructureType.INTERACTION_PROFILE_SUGGESTED_BINDING.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.INTERACTION_PROFILE_SUGGESTED_BINDING.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -869,14 +652,7 @@ class SessionActionSetsAttachInfo(Structure):
         super().__init__(
             StructureType.SESSION_ACTION_SETS_ATTACH_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SESSION_ACTION_SETS_ATTACH_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -891,14 +667,7 @@ class InteractionProfileState(Structure):
         super().__init__(
             StructureType.INTERACTION_PROFILE_STATE.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.INTERACTION_PROFILE_STATE.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -912,14 +681,7 @@ class ActionStateGetInfo(Structure):
         super().__init__(
             StructureType.ACTION_STATE_GET_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_STATE_GET_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -934,14 +696,7 @@ class ActionStateBoolean(Structure):
         super().__init__(
             StructureType.ACTION_STATE_BOOLEAN.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_STATE_BOOLEAN.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -958,14 +713,7 @@ class ActionStateFloat(Structure):
         super().__init__(
             StructureType.ACTION_STATE_FLOAT.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_STATE_FLOAT.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -989,14 +737,7 @@ class ActionStateVector2f(Structure):
         super().__init__(
             StructureType.ACTION_STATE_VECTOR2F.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_STATE_VECTOR2F.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1013,14 +754,7 @@ class ActionStatePose(Structure):
         super().__init__(
             StructureType.ACTION_STATE_POSE.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTION_STATE_POSE.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1041,14 +775,7 @@ class ActionsSyncInfo(Structure):
         super().__init__(
             StructureType.ACTIONS_SYNC_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.ACTIONS_SYNC_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1063,14 +790,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
         super().__init__(
             StructureType.BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1084,14 +804,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
         super().__init__(
             StructureType.INPUT_SOURCE_LOCALIZED_NAME_GET_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.INPUT_SOURCE_LOCALIZED_NAME_GET_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1106,14 +819,7 @@ class HapticActionInfo(Structure):
         super().__init__(
             StructureType.HAPTIC_ACTION_INFO.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAPTIC_ACTION_INFO.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1128,14 +834,7 @@ class HapticBaseHeader(Structure):
         super().__init__(
             StructureType.HAPTIC_BASE_HEADER.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAPTIC_BASE_HEADER.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1148,14 +847,7 @@ class BaseInStructure(Structure):
         super().__init__(
             StructureType.BASE_IN_STRUCTURE.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.BASE_IN_STRUCTURE.value
-        return result                
+        )            
 
     pass
 
@@ -1171,14 +863,7 @@ class BaseOutStructure(Structure):
         super().__init__(
             StructureType.BASE_OUT_STRUCTURE.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.BASE_OUT_STRUCTURE.value
-        return result                
+        )            
 
     pass
 
@@ -1223,14 +908,7 @@ class CompositionLayerProjectionView(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_PROJECTION_VIEW.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_PROJECTION_VIEW.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1246,14 +924,7 @@ class CompositionLayerProjection(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_PROJECTION.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_PROJECTION.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1270,14 +941,7 @@ class CompositionLayerQuad(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_QUAD.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_QUAD.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1296,14 +960,7 @@ class EventDataBaseHeader(Structure):
         super().__init__(
             StructureType.EVENT_DATA_BASE_HEADER.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_BASE_HEADER.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1316,14 +973,7 @@ class EventDataEventsLost(Structure):
         super().__init__(
             StructureType.EVENT_DATA_EVENTS_LOST.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_EVENTS_LOST.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1337,14 +987,7 @@ class EventDataInstanceLossPending(Structure):
         super().__init__(
             StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1358,14 +1001,7 @@ class EventDataSessionStateChanged(Structure):
         super().__init__(
             StructureType.EVENT_DATA_SESSION_STATE_CHANGED.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_SESSION_STATE_CHANGED.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1381,14 +1017,7 @@ class EventDataReferenceSpaceChangePending(Structure):
         super().__init__(
             StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1406,14 +1035,7 @@ class EventDataInteractionProfileChanged(Structure):
         super().__init__(
             StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1427,14 +1049,7 @@ class HapticVibration(Structure):
         super().__init__(
             StructureType.HAPTIC_VIBRATION.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAPTIC_VIBRATION.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1593,14 +1208,7 @@ class CompositionLayerCubeKHR(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_CUBE_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_CUBE_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1619,14 +1227,7 @@ class CompositionLayerDepthInfoKHR(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_DEPTH_INFO_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_DEPTH_INFO_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1644,14 +1245,7 @@ class CompositionLayerCylinderKHR(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_CYLINDER_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_CYLINDER_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1672,14 +1266,7 @@ class CompositionLayerEquirectKHR(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_EQUIRECT_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_EQUIRECT_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1700,14 +1287,7 @@ class VisibilityMaskKHR(Structure):
         super().__init__(
             StructureType.VISIBILITY_MASK_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VISIBILITY_MASK_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1726,14 +1306,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
         super().__init__(
             StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1752,14 +1325,7 @@ class CompositionLayerColorScaleBiasKHR(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_COLOR_SCALE_BIAS_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_COLOR_SCALE_BIAS_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1774,14 +1340,7 @@ class LoaderInitInfoBaseHeaderKHR(Structure):
         super().__init__(
             StructureType.LOADER_INIT_INFO_BASE_HEADER_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.LOADER_INIT_INFO_BASE_HEADER_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1797,14 +1356,7 @@ class CompositionLayerEquirect2KHR(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_EQUIRECT2_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_EQUIRECT2_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1826,14 +1378,7 @@ class BindingModificationBaseHeaderKHR(Structure):
         super().__init__(
             StructureType.BINDING_MODIFICATION_BASE_HEADER_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.BINDING_MODIFICATION_BASE_HEADER_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1846,14 +1391,7 @@ class BindingModificationsKHR(Structure):
         super().__init__(
             StructureType.BINDING_MODIFICATIONS_K_H_R.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.BINDING_MODIFICATIONS_K_H_R.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1868,14 +1406,7 @@ class EventDataPerfSettingsEXT(Structure):
         super().__init__(
             StructureType.EVENT_DATA_PERF_SETTINGS_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_PERF_SETTINGS_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1908,14 +1439,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
         super().__init__(
             StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1931,14 +1455,7 @@ class DebugUtilsLabelEXT(Structure):
         super().__init__(
             StructureType.DEBUG_UTILS_LABEL_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.DEBUG_UTILS_LABEL_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1952,14 +1469,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         super().__init__(
             StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1982,14 +1492,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         super().__init__(
             StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2021,14 +1524,7 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
         super().__init__(
             StructureType.SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2042,14 +1538,7 @@ class EyeGazeSampleTimeEXT(Structure):
         super().__init__(
             StructureType.EYE_GAZE_SAMPLE_TIME_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EYE_GAZE_SAMPLE_TIME_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2068,14 +1557,7 @@ class SessionCreateInfoOverlayEXTX(Structure):
         super().__init__(
             StructureType.SESSION_CREATE_INFO_OVERLAY_E_X_T_X.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SESSION_CREATE_INFO_OVERLAY_E_X_T_X.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2090,14 +1572,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
         super().__init__(
             StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_E_X_T_X.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_E_X_T_X.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2119,14 +1594,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.SPATIAL_ANCHOR_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SPATIAL_ANCHOR_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2142,14 +1610,7 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2173,14 +1634,7 @@ class CompositionLayerImageLayoutFB(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2194,14 +1648,7 @@ class CompositionLayerAlphaBlendFB(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_ALPHA_BLEND_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_ALPHA_BLEND_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2218,14 +1665,7 @@ class ViewConfigurationDepthRangeEXT(Structure):
         super().__init__(
             StructureType.VIEW_CONFIGURATION_DEPTH_RANGE_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW_CONFIGURATION_DEPTH_RANGE_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2253,14 +1693,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2286,14 +1719,7 @@ class SystemHandTrackingPropertiesEXT(Structure):
         super().__init__(
             StructureType.SYSTEM_HAND_TRACKING_PROPERTIES_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SYSTEM_HAND_TRACKING_PROPERTIES_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2307,14 +1733,7 @@ class HandTrackerCreateInfoEXT(Structure):
         super().__init__(
             StructureType.HAND_TRACKER_CREATE_INFO_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_TRACKER_CREATE_INFO_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2329,14 +1748,7 @@ class HandJointsLocateInfoEXT(Structure):
         super().__init__(
             StructureType.HAND_JOINTS_LOCATE_INFO_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_JOINTS_LOCATE_INFO_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2367,14 +1779,7 @@ class HandJointLocationsEXT(Structure):
         super().__init__(
             StructureType.HAND_JOINT_LOCATIONS_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_JOINT_LOCATIONS_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2390,14 +1795,7 @@ class HandJointVelocitiesEXT(Structure):
         super().__init__(
             StructureType.HAND_JOINT_VELOCITIES_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_JOINT_VELOCITIES_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2419,14 +1817,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
         super().__init__(
             StructureType.SYSTEM_HAND_TRACKING_MESH_PROPERTIES_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SYSTEM_HAND_TRACKING_MESH_PROPERTIES_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2442,14 +1833,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.HAND_MESH_SPACE_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_MESH_SPACE_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2464,14 +1848,7 @@ class HandMeshUpdateInfoMSFT(Structure):
         super().__init__(
             StructureType.HAND_MESH_UPDATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_MESH_UPDATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2511,14 +1888,7 @@ class HandMeshMSFT(Structure):
         super().__init__(
             StructureType.HAND_MESH_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_MESH_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2536,14 +1906,7 @@ class HandPoseTypeInfoMSFT(Structure):
         super().__init__(
             StructureType.HAND_POSE_TYPE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_POSE_TYPE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2562,14 +1925,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
         super().__init__(
             StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2584,14 +1940,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
         super().__init__(
             StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2606,14 +1955,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
         super().__init__(
             StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2628,14 +1970,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         super().__init__(
             StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2652,14 +1987,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
         super().__init__(
             StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2674,14 +2002,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2698,14 +2019,7 @@ class ControllerModelKeyStateMSFT(Structure):
         super().__init__(
             StructureType.CONTROLLER_MODEL_KEY_STATE_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.CONTROLLER_MODEL_KEY_STATE_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2719,14 +2033,7 @@ class ControllerModelNodePropertiesMSFT(Structure):
         super().__init__(
             StructureType.CONTROLLER_MODEL_NODE_PROPERTIES_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.CONTROLLER_MODEL_NODE_PROPERTIES_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2741,14 +2048,7 @@ class ControllerModelPropertiesMSFT(Structure):
         super().__init__(
             StructureType.CONTROLLER_MODEL_PROPERTIES_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.CONTROLLER_MODEL_PROPERTIES_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2764,14 +2064,7 @@ class ControllerModelNodeStateMSFT(Structure):
         super().__init__(
             StructureType.CONTROLLER_MODEL_NODE_STATE_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.CONTROLLER_MODEL_NODE_STATE_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2785,14 +2078,7 @@ class ControllerModelStateMSFT(Structure):
         super().__init__(
             StructureType.CONTROLLER_MODEL_STATE_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.CONTROLLER_MODEL_STATE_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2817,14 +2103,7 @@ class ViewConfigurationViewFovEPIC(Structure):
         super().__init__(
             StructureType.VIEW_CONFIGURATION_VIEW_FOV_E_P_I_C.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW_CONFIGURATION_VIEW_FOV_E_P_I_C.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2839,14 +2118,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2860,14 +2132,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2886,14 +2151,7 @@ class SwapchainStateBaseHeaderFB(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_STATE_BASE_HEADER_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_STATE_BASE_HEADER_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2913,14 +2171,7 @@ class CompositionLayerSecureContentFB(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_SECURE_CONTENT_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_SECURE_CONTENT_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2934,14 +2185,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
         super().__init__(
             StructureType.INTERACTION_PROFILE_ANALOG_THRESHOLD_V_A_L_V_E.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.INTERACTION_PROFILE_ANALOG_THRESHOLD_V_A_L_V_E.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2960,14 +2204,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
         super().__init__(
             StructureType.HAND_JOINTS_MOTION_RANGE_INFO_E_X_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.HAND_JOINTS_MOTION_RANGE_INFO_E_X_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3001,14 +2238,7 @@ class SceneObserverCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_OBSERVER_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_OBSERVER_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3021,14 +2251,7 @@ class SceneCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3076,14 +2299,7 @@ class NewSceneComputeInfoMSFT(Structure):
         super().__init__(
             StructureType.NEW_SCENE_COMPUTE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.NEW_SCENE_COMPUTE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3100,14 +2316,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
         super().__init__(
             StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3130,14 +2339,7 @@ class SceneComponentsMSFT(Structure):
         super().__init__(
             StructureType.SCENE_COMPONENTS_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_COMPONENTS_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3153,14 +2355,7 @@ class SceneComponentsGetInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_COMPONENTS_GET_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_COMPONENTS_GET_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3181,14 +2376,7 @@ class SceneComponentLocationsMSFT(Structure):
         super().__init__(
             StructureType.SCENE_COMPONENT_LOCATIONS_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_COMPONENT_LOCATIONS_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3203,14 +2391,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_COMPONENTS_LOCATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_COMPONENTS_LOCATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3233,14 +2414,7 @@ class SceneObjectsMSFT(Structure):
         super().__init__(
             StructureType.SCENE_OBJECTS_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_OBJECTS_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3255,14 +2429,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_COMPONENT_PARENT_FILTER_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_COMPONENT_PARENT_FILTER_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3276,14 +2443,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3307,14 +2467,7 @@ class ScenePlanesMSFT(Structure):
         super().__init__(
             StructureType.SCENE_PLANES_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_PLANES_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3329,14 +2482,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3358,14 +2504,7 @@ class SceneMeshesMSFT(Structure):
         super().__init__(
             StructureType.SCENE_MESHES_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_MESHES_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3380,14 +2519,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_MESH_BUFFERS_GET_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_MESH_BUFFERS_GET_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3401,14 +2533,7 @@ class SceneMeshBuffersMSFT(Structure):
         super().__init__(
             StructureType.SCENE_MESH_BUFFERS_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_MESH_BUFFERS_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3421,14 +2546,7 @@ class SceneMeshVertexBufferMSFT(Structure):
         super().__init__(
             StructureType.SCENE_MESH_VERTEX_BUFFER_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_MESH_VERTEX_BUFFER_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3444,14 +2562,7 @@ class SceneMeshIndicesUint32MSFT(Structure):
         super().__init__(
             StructureType.SCENE_MESH_INDICES_UINT32_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_MESH_INDICES_UINT32_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3467,14 +2578,7 @@ class SceneMeshIndicesUint16MSFT(Structure):
         super().__init__(
             StructureType.SCENE_MESH_INDICES_UINT16_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_MESH_INDICES_UINT16_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3511,14 +2615,7 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
         super().__init__(
             StructureType.SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3539,14 +2636,7 @@ class SceneDeserializeInfoMSFT(Structure):
         super().__init__(
             StructureType.SCENE_DESERIALIZE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SCENE_DESERIALIZE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3566,14 +2656,7 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
         super().__init__(
             StructureType.EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3595,14 +2678,7 @@ class SystemColorSpacePropertiesFB(Structure):
         super().__init__(
             StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3632,14 +2708,7 @@ class FoveationProfileCreateInfoFB(Structure):
         super().__init__(
             StructureType.FOVEATION_PROFILE_CREATE_INFO_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.FOVEATION_PROFILE_CREATE_INFO_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3652,14 +2721,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3673,14 +2735,7 @@ class SwapchainStateFoveationFB(Structure):
         super().__init__(
             StructureType.SWAPCHAIN_STATE_FOVEATION_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SWAPCHAIN_STATE_FOVEATION_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3700,14 +2755,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
         super().__init__(
             StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_F_B.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_F_B.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3723,14 +2771,7 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
         super().__init__(
             StructureType.VIEW_LOCATE_FOVEATED_RENDERING_V_A_R_J_O.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.VIEW_LOCATE_FOVEATED_RENDERING_V_A_R_J_O.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3744,14 +2785,7 @@ class FoveatedViewConfigurationViewVARJO(Structure):
         super().__init__(
             StructureType.FOVEATED_VIEW_CONFIGURATION_VIEW_V_A_R_J_O.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.FOVEATED_VIEW_CONFIGURATION_VIEW_V_A_R_J_O.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3765,14 +2799,7 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
         super().__init__(
             StructureType.SYSTEM_FOVEATED_RENDERING_PROPERTIES_V_A_R_J_O.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SYSTEM_FOVEATED_RENDERING_PROPERTIES_V_A_R_J_O.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3786,14 +2813,7 @@ class CompositionLayerDepthTestVARJO(Structure):
         super().__init__(
             StructureType.COMPOSITION_LAYER_DEPTH_TEST_V_A_R_J_O.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.COMPOSITION_LAYER_DEPTH_TEST_V_A_R_J_O.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3824,14 +2844,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
         super().__init__(
             StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3846,14 +2859,7 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
         super().__init__(
             StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_M_S_F_T.value,
             None, *args, **kwargs,
-        )
-    
-    @classmethod
-    def make_array(cls, element_count: int):
-        result = (cls * element_count)()
-        for element in result:
-            element.type = StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_M_S_F_T.value
-        return result                
+        )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
