@@ -8,3 +8,4 @@ build_cmake/
 /.coverage
 /src/generate/xrg/libclang.dll
 /src/generate/xrg/headers/xr.xml
+/src/generate/xrg/headers/*.h
