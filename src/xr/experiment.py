@@ -1,9 +1,58 @@
-from ctypes import Array, byref, c_uint32
+from ctypes import Array, byref, c_char, c_int, c_uint32, c_void_p, Structure
+import ctypes
 
 from . import raw_functions  # Side effect of defining low-level c signatures
 from .enums import *
 from .exceptions import check_result
 from .typedefs import *
+
+
+class ExtensionProperties(Structure):
+    _fields_ = [
+        ("type", c_int),  #  StructureType),
+        ("next", c_void_p),
+        ("extension_name", (c_char * 128)),
+        ("extension_version", c_uint32),
+    ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EXTENSION_PROPERTIES.value,
+            None,
+            *args, **kwargs,
+        )
+
+    def __bytes__(self):
+        return self.extension_name
+
+    def __eq__(self, other):
+        try:
+            if other.type != self.type:
+                return False
+            if other.extension_version != self.extension_version:
+                return False
+        except AttributeError as exc:
+            pass  # That's OK, objects without those attributes can use string comparison
+        return str(other) == str(self)
+
+    def __str__(self):
+        return self.extension_name.decode()
+
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EXTENSION_PROPERTIES.value
+        return result
+
+
+if False:
+    raw_functions.xrEnumerateInstanceExtensionProperties.argtypes = [
+        ctypes.c_char_p,  # layer_name
+        c_uint32,  # property_capacity_input
+        ctypes.POINTER(c_uint32),  # property_count_output
+        ctypes.POINTER(ExtensionProperties),  # properties
+    ]
 
 
 # function transformations:
@@ -43,12 +92,11 @@ def enumerate_instance_extension_properties(
     if result.is_exception():
         raise result
 
-    properties_type = ExtensionProperties * extension_count.value
-    properties = properties_type()
+    properties = ExtensionProperties.make_array(extension_count.value)
 
     # TODO: automatically initialize?
-    for p in properties:
-        p.type = StructureType.EXTENSION_PROPERTIES.value
+    # for p in properties:
+    #     p.type = StructureType.EXTENSION_PROPERTIES.value
 
     result = check_result(
         fn(
@@ -65,5 +113,6 @@ def enumerate_instance_extension_properties(
 
 
 __all__ = [
-    "enumerate_instance_extension_properties",
+    # "enumerate_instance_extension_properties",
+    # "ExtensionProperties",
 ]

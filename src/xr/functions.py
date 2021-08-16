@@ -47,7 +47,7 @@ def enumerate_api_layer_properties(
     ))
     if result.is_exception():
         raise result
-    properties = (ApiLayerProperties * property_capacity_input.value)()
+    properties = ApiLayerProperties.make_array(property_capacity_input.value)
     result = check_result(fxn(
         property_capacity_input,
         byref(property_capacity_input),
@@ -75,7 +75,7 @@ def enumerate_instance_extension_properties(
     ))
     if result.is_exception():
         raise result
-    properties = (ExtensionProperties * property_capacity_input.value)()
+    properties = ExtensionProperties.make_array(property_capacity_input.value)
     result = check_result(fxn(
         layer_name,
         property_capacity_input,
@@ -209,7 +209,7 @@ def enumerate_environment_blend_modes(
     instance: Instance,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
-) -> Array[EnvironmentBlendMode]:
+) -> Array[EnvironmentBlendMode.ctype()]:
     """"""
     environment_blend_mode_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateEnvironmentBlendModes
@@ -224,7 +224,7 @@ def enumerate_environment_blend_modes(
     ))
     if result.is_exception():
         raise result
-    environment_blend_modes = (EnvironmentBlendMode * environment_blend_mode_capacity_input.value)()
+    environment_blend_modes = EnvironmentBlendMode.ctype().make_array(environment_blend_mode_capacity_input.value)
     result = check_result(fxn(
         instance,
         system_id,
@@ -268,7 +268,7 @@ def destroy_session(
 
 def enumerate_reference_spaces(
     session: Session,
-) -> Array[ReferenceSpaceType]:
+) -> Array[ReferenceSpaceType.ctype()]:
     """"""
     space_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateReferenceSpaces
@@ -281,7 +281,7 @@ def enumerate_reference_spaces(
     ))
     if result.is_exception():
         raise result
-    spaces = (ReferenceSpaceType * space_capacity_input.value)()
+    spaces = ReferenceSpaceType.ctype().make_array(space_capacity_input.value)
     result = check_result(fxn(
         session,
         space_capacity_input,
@@ -374,7 +374,7 @@ def destroy_space(
 def enumerate_view_configurations(
     instance: Instance,
     system_id: SystemId,
-) -> Array[ViewConfigurationType]:
+) -> Array[ViewConfigurationType.ctype()]:
     """"""
     view_configuration_type_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateViewConfigurations
@@ -388,7 +388,7 @@ def enumerate_view_configurations(
     ))
     if result.is_exception():
         raise result
-    view_configuration_types = (ViewConfigurationType * view_configuration_type_capacity_input.value)()
+    view_configuration_types = ViewConfigurationType.ctype().make_array(view_configuration_type_capacity_input.value)
     result = check_result(fxn(
         instance,
         system_id,
@@ -438,7 +438,7 @@ def enumerate_view_configuration_views(
     ))
     if result.is_exception():
         raise result
-    views = (ViewConfigurationView * view_capacity_input.value)()
+    views = ViewConfigurationView.make_array(view_capacity_input.value)
     result = check_result(fxn(
         instance,
         system_id,
@@ -522,7 +522,7 @@ def enumerate_swapchain_images(
     ))
     if result.is_exception():
         raise result
-    images = (SwapchainImageBaseHeader * image_capacity_input.value)()
+    images = SwapchainImageBaseHeader.make_array(image_capacity_input.value)
     result = check_result(fxn(
         swapchain,
         image_capacity_input,
@@ -679,7 +679,7 @@ def locate_views(
     ))
     if result.is_exception():
         raise result
-    views = (View * view_capacity_input.value)()
+    views = View.make_array(view_capacity_input.value)
     result = check_result(fxn(
         session,
         view_locate_info,
@@ -936,7 +936,7 @@ def enumerate_bound_sources_for_action(
     ))
     if result.is_exception():
         raise result
-    sources = (Path * source_capacity_input.value)()
+    sources = Path.make_array(source_capacity_input.value)
     result = check_result(fxn(
         session,
         enumerate_info,

@@ -17,7 +17,6 @@ def main():
         ]
     )
 
-    functions.ctypes_names.add("c_int")  # because of enum aliases, below
     functions.print_header(api=xrg.Api.CTYPES)
     print("")
 
@@ -36,11 +35,9 @@ def main():
 
     print("")
     print("from .library import openxr_loader_library")
+    print("from .enums import *")
     print("from .typedefs import *")
     print("")
-
-    # Generate custom enum declarations, not exposed in __all__
-    functions.print_enum_aliases()
 
     print("\n# ctypes Function definitions")
 

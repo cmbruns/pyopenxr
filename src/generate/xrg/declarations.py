@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import inspect
 import re
+import textwrap
 from typing import Generator
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
@@ -120,7 +121,7 @@ class EnumItem(CodeItem):
                 result += f"\n{v.code(api)}"
             return result
         elif api == api.PYTHON:
-            result = f"class {self.name(api)}(enum.Enum):"
+            result = f"class {self.name(api)}(EnumBase):"
             value_count = 0
             for v in self.values:
                 if v.name(api) == "_MAX_ENUM":
@@ -299,7 +300,7 @@ class FunctionParameterItem(CodeItem):
                 command = xr_registry.find(f'commands/command/proto[name="{function_c_name}"]/..')
                 this_param = command.find(f'param[name="{self._capi_name}"]')
                 self._optional = this_param.attrib["optional"] == "true"
-            except Exception as exc:
+            except Exception:
                 pass
 
     def name(self, api=Api.PYTHON) -> str:
@@ -401,6 +402,47 @@ class StructItem(CodeItem):
             # Empty structure
             result += "\n    pass"
             return result
+        elif len(self.fields) >= 2 and self.fields[0].name() == "type":
+            assert self.fields[0].type.name() == "StructureType"
+            assert self.fields[1].name() == "next"
+            result += "\n"
+            type_enum_name = snake_from_camel(self.name()).upper()
+            result += textwrap.indent(inspect.cleandoc(f"""
+                def __init__(self, *args, **kwargs):
+                    super().__init__(
+                        StructureType.{type_enum_name}.value,
+                        None, *args, **kwargs,
+                    )
+                    
+                @classmethod
+                def make_array(cls, element_count: int):
+                    result = (cls * element_count)()
+                    for element in result:
+                        element.type = StructureType.{type_enum_name}.value
+                    return result                
+            """), "    ")
+            result += "\n"
+        # Hard code this for now, generalize later if needed
+        if self.name() == "ExtensionProperties":
+            result += "\n"
+            # This structure is sort of equivalent to a string
+            string_field = "extension_name"
+            result += textwrap.indent(inspect.cleandoc(f"""
+                def __bytes__(self):
+                    return self.extension_name
+            
+                def __eq__(self, other):
+                    try:
+                        if other.type != self.type:
+                            return False
+                    except AttributeError:
+                        pass  # That's OK, objects without those attributes can use string comparison
+                    return str(other) == str(self)
+            
+                def __str__(self):
+                    return self.{string_field}.decode()                
+            """), "    ")
+            result += "\n"
         if self.is_recursive:
             # Structure containing self-reference must be declared in two stanzas
             result += "\n    pass"
@@ -551,9 +593,10 @@ class BufferCoder(ParameterCoderBase):
         self.array = array
         if self.array.type.clang_type.spelling == "char *":  # string case
             assert not self.array.type.clang_type.get_pointee().is_const_qualified()
-            self.array_type = "str"
+            self.array_type_name = "str"
         else:
-            self.array_type: str = self.array.type.pointee.name(Api.CTYPES)
+            self.array_type = self.array.type.pointee
+            self.array_type_name: str = self.array_type.name(Api.CTYPES)
 
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)} = {self.cap_in.type.name(Api.CTYPES)}(0)"
@@ -564,10 +607,13 @@ class BufferCoder(ParameterCoderBase):
         yield "None"
 
     def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        if self.array_type == "str":
+        if self.array_type_name == "str":
             yield f"{self.array.name()} = create_string_buffer({self.cap_in.name(api)}.value)"
+        elif self.array_type.name(Api.C).startswith("Xr"):  # TODO: "if" still needs work
+            # Presumably a structure
+            yield f"{self.array.name()} = {self.array_type_name}.make_array({self.cap_in.name(api)}.value)"
         else:
-            yield f"{self.array.name()} = ({self.array_type} * {self.cap_in.name(api)}.value)()"
+            yield f"{self.array.name()} = ({self.array_type_name} * {self.cap_in.name(api)}.value)()"
 
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
@@ -575,13 +621,13 @@ class BufferCoder(ParameterCoderBase):
         yield f"{self.array.name(api)}"
 
     def result_type_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        if self.array_type == "str":
+        if self.array_type_name == "str":
             yield "str"
         else:  # array case
-            yield f"Array[{self.array_type}]"
+            yield f"Array[{self.array_type_name}]"
 
     def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        if self.array_type == "str":
+        if self.array_type_name == "str":
             yield f"{self.array.name(api)}.value.decode()"
         else:  # array case
             yield f"{self.array.name(api)}"

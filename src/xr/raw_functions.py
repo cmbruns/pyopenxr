@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import POINTER, c_char, c_char_p, c_int, c_int64, c_uint32
+from ctypes import POINTER, c_char, c_char_p, c_int64, c_uint32
 
 """
 File xr.raw_functions.py
@@ -10,42 +10,9 @@ higher-level pythonic functions in pyopenxr.
 """
 
 from .library import openxr_loader_library
+from .enums import *
 from .typedefs import *
 
-# Enum aliases (not exposed in __all__)
-Result = c_int
-StructureType = c_int
-FormFactor = c_int
-ViewConfigurationType = c_int
-EnvironmentBlendMode = c_int
-ReferenceSpaceType = c_int
-ActionType = c_int
-EyeVisibility = c_int
-SessionState = c_int
-ObjectType = c_int
-VisibilityMaskTypeKHR = c_int
-PerfSettingsDomainEXT = c_int
-PerfSettingsSubDomainEXT = c_int
-PerfSettingsLevelEXT = c_int
-PerfSettingsNotificationLevelEXT = c_int
-BlendFactorFB = c_int
-SpatialGraphNodeTypeMSFT = c_int
-HandEXT = c_int
-HandJointEXT = c_int
-HandJointSetEXT = c_int
-HandPoseTypeMSFT = c_int
-ReprojectionModeMSFT = c_int
-HandJointsMotionRangeEXT = c_int
-SceneComputeFeatureMSFT = c_int
-SceneComputeConsistencyMSFT = c_int
-MeshComputeLodMSFT = c_int
-SceneComponentTypeMSFT = c_int
-SceneObjectTypeMSFT = c_int
-ScenePlaneAlignmentTypeMSFT = c_int
-SceneComputeStateMSFT = c_int
-ColorSpaceFB = c_int
-FoveationLevelFB = c_int
-FoveationDynamicFB = c_int
 
 # ctypes Function definitions
 
@@ -105,7 +72,7 @@ xrResultToString = openxr_loader_library.xrResultToString
 xrResultToString.restype = Result
 xrResultToString.argtypes = [
     Instance,  # instance
-    Result,  # value
+    Result.ctype(),  # value
     (c_char * 64),  # buffer
 ]
 
@@ -113,7 +80,7 @@ xrStructureTypeToString = openxr_loader_library.xrStructureTypeToString
 xrStructureTypeToString.restype = Result
 xrStructureTypeToString.argtypes = [
     Instance,  # instance
-    StructureType,  # value
+    StructureType.ctype(),  # value
     (c_char * 64),  # buffer
 ]
 
@@ -138,10 +105,10 @@ xrEnumerateEnvironmentBlendModes.restype = Result
 xrEnumerateEnvironmentBlendModes.argtypes = [
     Instance,  # instance
     SystemId,  # system_id
-    ViewConfigurationType,  # view_configuration_type
+    ViewConfigurationType.ctype(),  # view_configuration_type
     c_uint32,  # environment_blend_mode_capacity_input
     POINTER(c_uint32),  # environment_blend_mode_count_output
-    POINTER(EnvironmentBlendMode),  # environment_blend_modes
+    POINTER(EnvironmentBlendMode.ctype()),  # environment_blend_modes
 ]
 
 xrCreateSession = openxr_loader_library.xrCreateSession
@@ -164,7 +131,7 @@ xrEnumerateReferenceSpaces.argtypes = [
     Session,  # session
     c_uint32,  # space_capacity_input
     POINTER(c_uint32),  # space_count_output
-    POINTER(ReferenceSpaceType),  # spaces
+    POINTER(ReferenceSpaceType.ctype()),  # spaces
 ]
 
 xrCreateReferenceSpace = openxr_loader_library.xrCreateReferenceSpace
@@ -179,7 +146,7 @@ xrGetReferenceSpaceBoundsRect = openxr_loader_library.xrGetReferenceSpaceBoundsR
 xrGetReferenceSpaceBoundsRect.restype = Result
 xrGetReferenceSpaceBoundsRect.argtypes = [
     Session,  # session
-    ReferenceSpaceType,  # reference_space_type
+    ReferenceSpaceType.ctype(),  # reference_space_type
     POINTER(Extent2Df),  # bounds
 ]
 
@@ -213,7 +180,7 @@ xrEnumerateViewConfigurations.argtypes = [
     SystemId,  # system_id
     c_uint32,  # view_configuration_type_capacity_input
     POINTER(c_uint32),  # view_configuration_type_count_output
-    POINTER(ViewConfigurationType),  # view_configuration_types
+    POINTER(ViewConfigurationType.ctype()),  # view_configuration_types
 ]
 
 xrGetViewConfigurationProperties = openxr_loader_library.xrGetViewConfigurationProperties
@@ -221,7 +188,7 @@ xrGetViewConfigurationProperties.restype = Result
 xrGetViewConfigurationProperties.argtypes = [
     Instance,  # instance
     SystemId,  # system_id
-    ViewConfigurationType,  # view_configuration_type
+    ViewConfigurationType.ctype(),  # view_configuration_type
     POINTER(ViewConfigurationProperties),  # configuration_properties
 ]
 
@@ -230,7 +197,7 @@ xrEnumerateViewConfigurationViews.restype = Result
 xrEnumerateViewConfigurationViews.argtypes = [
     Instance,  # instance
     SystemId,  # system_id
-    ViewConfigurationType,  # view_configuration_type
+    ViewConfigurationType.ctype(),  # view_configuration_type
     c_uint32,  # view_capacity_input
     POINTER(c_uint32),  # view_count_output
     POINTER(ViewConfigurationView),  # views

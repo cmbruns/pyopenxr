@@ -57,9 +57,7 @@ class EnumType(TypeBase):
             return "c_int"  # TODO we could use the actual name if we had the enums loaded
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
-        return {
-            "c_int",
-        }
+        return set()
 
 
 class FloatType(TypeBase):
@@ -261,15 +259,18 @@ class TypedefType(TypeBase):
         type_name = clang_type.spelling
         self._capi_name = capi_type_name(type_name)
         self._py_name = py_type_name(self._capi_name)
+        self._ctypes_name = self._py_name
         self.underlying_type = parse_type(
             clang_type.get_declaration().underlying_typedef_type
         )
+        if isinstance(self.underlying_type, EnumType):
+            self._ctypes_name += ".ctype()"
 
     def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             return self.clang_type.spelling
         elif api == Api.CTYPES:
-            return self._py_name
+            return self._ctypes_name
         elif api == Api.PYTHON:
             return self._py_name
         else:

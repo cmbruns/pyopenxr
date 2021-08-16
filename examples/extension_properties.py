@@ -1,5 +1,7 @@
 import xr
 
 # Query the available VR/AR capabilities
-for prop in xr.enumerate_instance_extension_properties():
-    print(prop.extension_name.decode())
+eprops = xr.enumerate_instance_extension_properties()
+for p in eprops:
+    print(p)
+assert "XR_KHR_opengl_enable" in eprops

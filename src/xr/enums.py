@@ -4,7 +4,13 @@ from ctypes import c_int
 import enum
 
 
-class Result(enum.Enum):
+class EnumBase(enum.Enum):
+    @staticmethod
+    def ctype():
+        return c_int
+
+
+class Result(EnumBase):
     SUCCESS = 0
     TIMEOUT_EXPIRED = 1
     SESSION_LOSS_PENDING = 3
@@ -78,7 +84,7 @@ class Result(enum.Enum):
     ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT = -1000142002
 
 
-class StructureType(enum.Enum):
+class StructureType(EnumBase):
     UNKNOWN = 0
     API_LAYER_PROPERTIES = 1
     EXTENSION_PROPERTIES = 2
@@ -249,25 +255,25 @@ class StructureType(enum.Enum):
     GRAPHICS_REQUIREMENTS_VULKAN2_KHR = 1000025002
 
 
-class FormFactor(enum.Enum):
+class FormFactor(EnumBase):
     HEAD_MOUNTED_DISPLAY = 1
     HANDHELD_DISPLAY = 2
 
 
-class ViewConfigurationType(enum.Enum):
+class ViewConfigurationType(EnumBase):
     PRIMARY_MONO = 1
     PRIMARY_STEREO = 2
     PRIMARY_QUAD_VARJO = 1000037000
     SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT = 1000054000
 
 
-class EnvironmentBlendMode(enum.Enum):
+class EnvironmentBlendMode(EnumBase):
     OPAQUE = 1
     ADDITIVE = 2
     ALPHA_BLEND = 3
 
 
-class ReferenceSpaceType(enum.Enum):
+class ReferenceSpaceType(EnumBase):
     VIEW = 1
     LOCAL = 2
     STAGE = 3
@@ -275,7 +281,7 @@ class ReferenceSpaceType(enum.Enum):
     COMBINED_EYE_VARJO = 1000121000
 
 
-class ActionType(enum.Enum):
+class ActionType(EnumBase):
     BOOLEAN_INPUT = 1
     FLOAT_INPUT = 2
     VECTOR2F_INPUT = 3
@@ -283,13 +289,13 @@ class ActionType(enum.Enum):
     VIBRATION_OUTPUT = 100
 
 
-class EyeVisibility(enum.Enum):
+class EyeVisibility(EnumBase):
     BOTH = 0
     LEFT = 1
     RIGHT = 2
 
 
-class SessionState(enum.Enum):
+class SessionState(EnumBase):
     UNKNOWN = 0
     IDLE = 1
     READY = 2
@@ -301,7 +307,7 @@ class SessionState(enum.Enum):
     EXITING = 8
 
 
-class ObjectType(enum.Enum):
+class ObjectType(EnumBase):
     UNKNOWN = 0
     INSTANCE = 1
     SESSION = 2
@@ -318,37 +324,37 @@ class ObjectType(enum.Enum):
     SPATIAL_ANCHOR_STORE_CONNECTION_MSFT = 1000142000
 
 
-class VisibilityMaskTypeKHR(enum.Enum):
+class VisibilityMaskTypeKHR(EnumBase):
     HIDDEN_TRIANGLE_MESH = 1
     VISIBLE_TRIANGLE_MESH = 2
     LINE_LOOP = 3
 
 
-class PerfSettingsDomainEXT(enum.Enum):
+class PerfSettingsDomainEXT(EnumBase):
     CPU = 1
     GPU = 2
 
 
-class PerfSettingsSubDomainEXT(enum.Enum):
+class PerfSettingsSubDomainEXT(EnumBase):
     COMPOSITING = 1
     RENDERING = 2
     THERMAL = 3
 
 
-class PerfSettingsLevelEXT(enum.Enum):
+class PerfSettingsLevelEXT(EnumBase):
     POWER_SAVINGS = 0
     SUSTAINED_LOW = 25
     SUSTAINED_HIGH = 50
     BOOST = 75
 
 
-class PerfSettingsNotificationLevelEXT(enum.Enum):
+class PerfSettingsNotificationLevelEXT(EnumBase):
     NORMAL = 0
     WARNING = 25
     IMPAIRED = 75
 
 
-class BlendFactorFB(enum.Enum):
+class BlendFactorFB(EnumBase):
     ZERO = 0
     ONE = 1
     SRC_ALPHA = 2
@@ -357,17 +363,17 @@ class BlendFactorFB(enum.Enum):
     ONE_MINUS_DST_ALPHA = 5
 
 
-class SpatialGraphNodeTypeMSFT(enum.Enum):
+class SpatialGraphNodeTypeMSFT(EnumBase):
     STATIC = 1
     DYNAMIC = 2
 
 
-class HandEXT(enum.Enum):
+class HandEXT(EnumBase):
     LEFT = 1
     RIGHT = 2
 
 
-class HandJointEXT(enum.Enum):
+class HandJointEXT(EnumBase):
     PALM = 0
     WRIST = 1
     THUMB_METACARPAL = 2
@@ -396,28 +402,28 @@ class HandJointEXT(enum.Enum):
     LITTLE_TIP = 25
 
 
-class HandJointSetEXT(enum.Enum):
+class HandJointSetEXT(EnumBase):
     DEFAULT = 0
 
 
-class HandPoseTypeMSFT(enum.Enum):
+class HandPoseTypeMSFT(EnumBase):
     TRACKED = 0
     REFERENCE_OPEN_PALM = 1
 
 
-class ReprojectionModeMSFT(enum.Enum):
+class ReprojectionModeMSFT(EnumBase):
     DEPTH = 1
     PLANAR_FROM_DEPTH = 2
     PLANAR_MANUAL = 3
     ORIENTATION_ONLY = 4
 
 
-class HandJointsMotionRangeEXT(enum.Enum):
+class HandJointsMotionRangeEXT(EnumBase):
     UNOBSTRUCTED = 1
     CONFORMING_TO_CONTROLLER = 2
 
 
-class SceneComputeFeatureMSFT(enum.Enum):
+class SceneComputeFeatureMSFT(EnumBase):
     PLANE = 1
     PLANE_MESH = 2
     VISUAL_MESH = 3
@@ -425,20 +431,20 @@ class SceneComputeFeatureMSFT(enum.Enum):
     SERIALIZE_SCENE = 1000098000
 
 
-class SceneComputeConsistencyMSFT(enum.Enum):
+class SceneComputeConsistencyMSFT(EnumBase):
     SNAPSHOT_COMPLETE = 1
     SNAPSHOT_INCOMPLETE_FAST = 2
     OCCLUSION_OPTIMIZED = 3
 
 
-class MeshComputeLodMSFT(enum.Enum):
+class MeshComputeLodMSFT(EnumBase):
     COARSE = 1
     MEDIUM = 2
     FINE = 3
     UNLIMITED = 4
 
 
-class SceneComponentTypeMSFT(enum.Enum):
+class SceneComponentTypeMSFT(EnumBase):
     INVALID = -1
     OBJECT = 1
     PLANE = 2
@@ -447,7 +453,7 @@ class SceneComponentTypeMSFT(enum.Enum):
     SERIALIZED_SCENE_FRAGMENT = 1000098000
 
 
-class SceneObjectTypeMSFT(enum.Enum):
+class SceneObjectTypeMSFT(EnumBase):
     UNCATEGORIZED = -1
     BACKGROUND = 1
     WALL = 2
@@ -457,20 +463,20 @@ class SceneObjectTypeMSFT(enum.Enum):
     INFERRED = 6
 
 
-class ScenePlaneAlignmentTypeMSFT(enum.Enum):
+class ScenePlaneAlignmentTypeMSFT(EnumBase):
     NON_ORTHOGONAL = 0
     HORIZONTAL = 1
     VERTICAL = 2
 
 
-class SceneComputeStateMSFT(enum.Enum):
+class SceneComputeStateMSFT(EnumBase):
     NONE = 0
     UPDATING = 1
     COMPLETED = 2
     COMPLETED_WITH_ERROR = 3
 
 
-class ColorSpaceFB(enum.Enum):
+class ColorSpaceFB(EnumBase):
     UNMANAGED = 0
     REC2020 = 1
     REC709 = 2
@@ -481,14 +487,14 @@ class ColorSpaceFB(enum.Enum):
     ADOBE_RGB = 7
 
 
-class FoveationLevelFB(enum.Enum):
+class FoveationLevelFB(EnumBase):
     NONE = 0
     LOW = 1
     MEDIUM = 2
     HIGH = 3
 
 
-class FoveationDynamicFB(enum.Enum):
+class FoveationDynamicFB(EnumBase):
     DISABLED = 0
     LEVEL_ENABLED = 1
 

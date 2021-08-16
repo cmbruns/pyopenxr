@@ -64,23 +64,24 @@ class ValidationFailureError(ResultError):
 _exception_map = {
     Result.SUCCESS: SuccessResult,
     Result.TIMEOUT_EXPIRED: TimeoutExpired,
+    Result.ERROR_VALIDATION_FAILURE: ValidationFailureError,
 }
 
 
 def check_result(
-    xr_result_int: int, message: str = None
+    xr_result: Result, message: str = None
 ) -> Union[XrException, SuccessResult]:
-    xr_result_enum = Result(xr_result_int)
-    if xr_result_enum in _exception_map:
-        xr_result_exception = _exception_map[xr_result_enum]
+    if xr_result in _exception_map:
+        xr_result_exception = _exception_map[xr_result]
     else:
-        if xr_result_int < 0:
+        if xr_result.value < 0:
             xr_result_exception = ResultError
-        elif xr_result_int > 1:
+        elif xr_result.value > 1:
             xr_result_exception = QualifiedSuccessResult
         else:
             xr_result_exception = SuccessResult
     if message is None:
+        # TODO: I see a message in the logging...
         return xr_result_exception()
     else:
         return xr_result_exception(message)

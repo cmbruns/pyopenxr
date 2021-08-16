@@ -12,12 +12,8 @@ def main():
         ]
     )
 
-    cg.ctypes_names.add("c_int")  # Because print_enum_aliases() below
     cg.print_header()
-
-    # Generate local ctypes enum symbol declarations, not exposed in __all__
-    print("")
-    cg.print_enum_aliases()
+    print("from .enums import *")
 
     cg.print_items()
     cg.print_all_list()

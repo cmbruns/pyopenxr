@@ -1,4 +1,5 @@
 # This script creates an updated version of xr/enums.py
+import inspect
 
 from clang.cindex import CursorKind
 
@@ -12,7 +13,15 @@ def main():
         ]
     )
     cg.print_header()
-    print("import enum")
+    print(inspect.cleandoc("""
+    import enum
+
+
+    class EnumBase(enum.Enum):
+        @staticmethod
+        def ctype():
+            return c_int
+    """))
     cg.print_items()
     cg.print_all_list()
 

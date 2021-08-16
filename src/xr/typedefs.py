@@ -1,41 +1,7 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
-
-# Enum aliases (not exposed in __all__)
-Result = c_int
-StructureType = c_int
-FormFactor = c_int
-ViewConfigurationType = c_int
-EnvironmentBlendMode = c_int
-ReferenceSpaceType = c_int
-ActionType = c_int
-EyeVisibility = c_int
-SessionState = c_int
-ObjectType = c_int
-VisibilityMaskTypeKHR = c_int
-PerfSettingsDomainEXT = c_int
-PerfSettingsSubDomainEXT = c_int
-PerfSettingsLevelEXT = c_int
-PerfSettingsNotificationLevelEXT = c_int
-BlendFactorFB = c_int
-SpatialGraphNodeTypeMSFT = c_int
-HandEXT = c_int
-HandJointEXT = c_int
-HandJointSetEXT = c_int
-HandPoseTypeMSFT = c_int
-ReprojectionModeMSFT = c_int
-HandJointsMotionRangeEXT = c_int
-SceneComputeFeatureMSFT = c_int
-SceneComputeConsistencyMSFT = c_int
-MeshComputeLodMSFT = c_int
-SceneComponentTypeMSFT = c_int
-SceneObjectTypeMSFT = c_int
-ScenePlaneAlignmentTypeMSFT = c_int
-SceneComputeStateMSFT = c_int
-ColorSpaceFB = c_int
-FoveationLevelFB = c_int
-FoveationDynamicFB = c_int
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
+from .enums import *
 
 Version = c_uint64
 
@@ -115,8 +81,21 @@ PFN_xrVoidFunction = CFUNCTYPE(None)
 
 
 class ApiLayerProperties(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.API_LAYER_PROPERTIES.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.API_LAYER_PROPERTIES.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_name", (c_char * 256)),
         ("spec_version", Version),
@@ -126,8 +105,35 @@ class ApiLayerProperties(Structure):
 
 
 class ExtensionProperties(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EXTENSION_PROPERTIES.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EXTENSION_PROPERTIES.value
+        return result                
+
+    def __bytes__(self):
+        return self.extension_name
+
+    def __eq__(self, other):
+        try:
+            if other.type != self.type:
+                return False
+        except AttributeError:
+            pass  # That's OK, objects without those attributes can use string comparison
+        return str(other) == str(self)
+
+    def __str__(self):
+        return self.extension_name.decode()                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("extension_name", (c_char * 128)),
         ("extension_version", c_uint32),
@@ -145,8 +151,21 @@ class ApplicationInfo(Structure):
 
 
 class InstanceCreateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.INSTANCE_CREATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.INSTANCE_CREATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("create_flags", InstanceCreateFlags),
         ("application_info", ApplicationInfo),
@@ -158,8 +177,21 @@ class InstanceCreateInfo(Structure):
 
 
 class InstanceProperties(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.INSTANCE_PROPERTIES.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.INSTANCE_PROPERTIES.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("runtime_version", Version),
         ("runtime_name", (c_char * 128)),
@@ -167,18 +199,44 @@ class InstanceProperties(Structure):
 
 
 class EventDataBuffer(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_BUFFER.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_BUFFER.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("varying", (c_uint8 * 4000)),
     ]
 
 
 class SystemGetInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_GET_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SYSTEM_GET_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("form_factor", FormFactor),
+        ("form_factor", FormFactor.ctype()),
     ]
 
 
@@ -198,8 +256,21 @@ class SystemTrackingProperties(Structure):
 
 
 class SystemProperties(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_PROPERTIES.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SYSTEM_PROPERTIES.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("system_id", SystemId),
         ("vendor_id", c_uint32),
@@ -210,8 +281,21 @@ class SystemProperties(Structure):
 
 
 class SessionCreateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SESSION_CREATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SESSION_CREATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("create_flags", SessionCreateFlags),
         ("system_id", SystemId),
@@ -227,8 +311,21 @@ class Vector3f(Structure):
 
 
 class SpaceVelocity(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SPACE_VELOCITY.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SPACE_VELOCITY.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("velocity_flags", SpaceVelocityFlags),
         ("linear_velocity", Vector3f),
@@ -253,10 +350,23 @@ class Posef(Structure):
 
 
 class ReferenceSpaceCreateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.REFERENCE_SPACE_CREATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.REFERENCE_SPACE_CREATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("reference_space_type", ReferenceSpaceType),
+        ("reference_space_type", ReferenceSpaceType.ctype()),
         ("pose_in_reference_space", Posef),
     ]
 
@@ -269,8 +379,21 @@ class Extent2Df(Structure):
 
 
 class ActionSpaceCreateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_SPACE_CREATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_SPACE_CREATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("action", Action),
         ("subaction_path", Path),
@@ -279,8 +402,21 @@ class ActionSpaceCreateInfo(Structure):
 
 
 class SpaceLocation(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SPACE_LOCATION.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SPACE_LOCATION.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("location_flags", SpaceLocationFlags),
         ("pose", Posef),
@@ -288,17 +424,43 @@ class SpaceLocation(Structure):
 
 
 class ViewConfigurationProperties(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW_CONFIGURATION_PROPERTIES.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW_CONFIGURATION_PROPERTIES.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_configuration_type", ViewConfigurationType),
+        ("view_configuration_type", ViewConfigurationType.ctype()),
         ("fov_mutable", Bool32),
     ]
 
 
 class ViewConfigurationView(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW_CONFIGURATION_VIEW.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW_CONFIGURATION_VIEW.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("recommended_image_rect_width", c_uint32),
         ("max_image_rect_width", c_uint32),
@@ -310,8 +472,21 @@ class ViewConfigurationView(Structure):
 
 
 class SwapchainCreateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_CREATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_CREATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("create_flags", SwapchainCreateFlags),
         ("usage_flags", SwapchainUsageFlags),
@@ -326,52 +501,143 @@ class SwapchainCreateInfo(Structure):
 
 
 class SwapchainImageBaseHeader(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_IMAGE_BASE_HEADER.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_IMAGE_BASE_HEADER.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class SwapchainImageAcquireInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class SwapchainImageWaitInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_IMAGE_WAIT_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_IMAGE_WAIT_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("timeout", Duration),
     ]
 
 
 class SwapchainImageReleaseInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_IMAGE_RELEASE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_IMAGE_RELEASE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class SessionBeginInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SESSION_BEGIN_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SESSION_BEGIN_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("primary_view_configuration_type", ViewConfigurationType),
+        ("primary_view_configuration_type", ViewConfigurationType.ctype()),
     ]
 
 
 class FrameWaitInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.FRAME_WAIT_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.FRAME_WAIT_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class FrameState(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.FRAME_STATE.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.FRAME_STATE.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("predicted_display_time", Time),
         ("predicted_display_period", Duration),
@@ -380,15 +646,41 @@ class FrameState(Structure):
 
 
 class FrameBeginInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.FRAME_BEGIN_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.FRAME_BEGIN_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class CompositionLayerBaseHeader(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_BASE_HEADER.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_BASE_HEADER.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
         ("space", Space),
@@ -396,29 +688,68 @@ class CompositionLayerBaseHeader(Structure):
 
 
 class FrameEndInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.FRAME_END_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.FRAME_END_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("display_time", Time),
-        ("environment_blend_mode", EnvironmentBlendMode),
+        ("environment_blend_mode", EnvironmentBlendMode.ctype()),
         ("layer_count", c_uint32),
         ("layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
 
 class ViewLocateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW_LOCATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW_LOCATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_configuration_type", ViewConfigurationType),
+        ("view_configuration_type", ViewConfigurationType.ctype()),
         ("display_time", Time),
         ("space", Space),
     ]
 
 
 class ViewState(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW_STATE.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW_STATE.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("view_state_flags", ViewStateFlags),
     ]
@@ -434,8 +765,21 @@ class Fovf(Structure):
 
 
 class View(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("pose", Posef),
         ("fov", Fovf),
@@ -443,8 +787,21 @@ class View(Structure):
 
 
 class ActionSetCreateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_SET_CREATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_SET_CREATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("action_set_name", (c_char * 64)),
         ("localized_action_set_name", (c_char * 128)),
@@ -453,11 +810,24 @@ class ActionSetCreateInfo(Structure):
 
 
 class ActionCreateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_CREATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_CREATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("action_name", (c_char * 64)),
-        ("action_type", ActionType),
+        ("action_type", ActionType.ctype()),
         ("count_subaction_paths", c_uint32),
         ("subaction_paths", POINTER(Path)),
         ("localized_action_name", (c_char * 128)),
@@ -472,8 +842,21 @@ class ActionSuggestedBinding(Structure):
 
 
 class InteractionProfileSuggestedBinding(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.INTERACTION_PROFILE_SUGGESTED_BINDING.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.INTERACTION_PROFILE_SUGGESTED_BINDING.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("interaction_profile", Path),
         ("count_suggested_bindings", c_uint32),
@@ -482,8 +865,21 @@ class InteractionProfileSuggestedBinding(Structure):
 
 
 class SessionActionSetsAttachInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SESSION_ACTION_SETS_ATTACH_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SESSION_ACTION_SETS_ATTACH_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("count_action_sets", c_uint32),
         ("action_sets", POINTER(ActionSet)),
@@ -491,16 +887,42 @@ class SessionActionSetsAttachInfo(Structure):
 
 
 class InteractionProfileState(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.INTERACTION_PROFILE_STATE.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.INTERACTION_PROFILE_STATE.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("interaction_profile", Path),
     ]
 
 
 class ActionStateGetInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_STATE_GET_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_STATE_GET_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("action", Action),
         ("subaction_path", Path),
@@ -508,8 +930,21 @@ class ActionStateGetInfo(Structure):
 
 
 class ActionStateBoolean(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_STATE_BOOLEAN.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_STATE_BOOLEAN.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("current_state", Bool32),
         ("changed_since_last_sync", Bool32),
@@ -519,8 +954,21 @@ class ActionStateBoolean(Structure):
 
 
 class ActionStateFloat(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_STATE_FLOAT.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_STATE_FLOAT.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("current_state", c_float),
         ("changed_since_last_sync", Bool32),
@@ -537,8 +985,21 @@ class Vector2f(Structure):
 
 
 class ActionStateVector2f(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_STATE_VECTOR2F.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_STATE_VECTOR2F.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("current_state", Vector2f),
         ("changed_since_last_sync", Bool32),
@@ -548,8 +1009,21 @@ class ActionStateVector2f(Structure):
 
 
 class ActionStatePose(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTION_STATE_POSE.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTION_STATE_POSE.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("is_active", Bool32),
     ]
@@ -563,8 +1037,21 @@ class ActiveActionSet(Structure):
 
 
 class ActionsSyncInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.ACTIONS_SYNC_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.ACTIONS_SYNC_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("count_active_action_sets", c_uint32),
         ("active_action_sets", POINTER(ActiveActionSet)),
@@ -572,16 +1059,42 @@ class ActionsSyncInfo(Structure):
 
 
 class BoundSourcesForActionEnumerateInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("action", Action),
     ]
 
 
 class InputSourceLocalizedNameGetInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.INPUT_SOURCE_LOCALIZED_NAME_GET_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.INPUT_SOURCE_LOCALIZED_NAME_GET_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("source_path", Path),
         ("which_components", InputSourceLocalizedNameFlags),
@@ -589,8 +1102,21 @@ class InputSourceLocalizedNameGetInfo(Structure):
 
 
 class HapticActionInfo(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAPTIC_ACTION_INFO.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAPTIC_ACTION_INFO.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("action", Action),
         ("subaction_path", Path),
@@ -598,28 +1124,67 @@ class HapticActionInfo(Structure):
 
 
 class HapticBaseHeader(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAPTIC_BASE_HEADER.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAPTIC_BASE_HEADER.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class BaseInStructure(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.BASE_IN_STRUCTURE.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.BASE_IN_STRUCTURE.value
+        return result                
+
     pass
 
 
 BaseInStructure._fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", POINTER(BaseInStructure)),
     ]
 
 
 class BaseOutStructure(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.BASE_OUT_STRUCTURE.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.BASE_OUT_STRUCTURE.value
+        return result                
+
     pass
 
 
 BaseOutStructure._fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", POINTER(BaseOutStructure)),
     ]
 
@@ -654,8 +1219,21 @@ class SwapchainSubImage(Structure):
 
 
 class CompositionLayerProjectionView(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_PROJECTION_VIEW.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_PROJECTION_VIEW.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("pose", Posef),
         ("fov", Fovf),
@@ -664,8 +1242,21 @@ class CompositionLayerProjectionView(Structure):
 
 
 class CompositionLayerProjection(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_PROJECTION.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_PROJECTION.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
         ("space", Space),
@@ -675,12 +1266,25 @@ class CompositionLayerProjection(Structure):
 
 
 class CompositionLayerQuad(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_QUAD.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_QUAD.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eye_visibility", EyeVisibility),
+        ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("size", Extent2Df),
@@ -688,44 +1292,109 @@ class CompositionLayerQuad(Structure):
 
 
 class EventDataBaseHeader(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_BASE_HEADER.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_BASE_HEADER.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class EventDataEventsLost(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_EVENTS_LOST.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_EVENTS_LOST.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("lost_event_count", c_uint32),
     ]
 
 
 class EventDataInstanceLossPending(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("loss_time", Time),
     ]
 
 
 class EventDataSessionStateChanged(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_SESSION_STATE_CHANGED.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_SESSION_STATE_CHANGED.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("session", Session),
-        ("state", SessionState),
+        ("state", SessionState.ctype()),
         ("time", Time),
     ]
 
 
 class EventDataReferenceSpaceChangePending(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("session", Session),
-        ("reference_space_type", ReferenceSpaceType),
+        ("reference_space_type", ReferenceSpaceType.ctype()),
         ("change_time", Time),
         ("pose_valid", Bool32),
         ("pose_in_previous_space", Posef),
@@ -733,16 +1402,42 @@ class EventDataReferenceSpaceChangePending(Structure):
 
 
 class EventDataInteractionProfileChanged(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("session", Session),
     ]
 
 
 class HapticVibration(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAPTIC_VIBRATION.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAPTIC_VIBRATION.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("duration", Duration),
         ("frequency", c_float),
@@ -782,124 +1477,137 @@ class Color4f(Structure):
     ]
 
 
-PFN_xrGetInstanceProcAddr = CFUNCTYPE(Result, Instance, c_char_p, POINTER(PFN_xrVoidFunction))
+PFN_xrGetInstanceProcAddr = CFUNCTYPE(Result.ctype(), Instance, c_char_p, POINTER(PFN_xrVoidFunction))
 
-PFN_xrEnumerateApiLayerProperties = CFUNCTYPE(Result, c_uint32, POINTER(c_uint32), POINTER(ApiLayerProperties))
+PFN_xrEnumerateApiLayerProperties = CFUNCTYPE(Result.ctype(), c_uint32, POINTER(c_uint32), POINTER(ApiLayerProperties))
 
-PFN_xrEnumerateInstanceExtensionProperties = CFUNCTYPE(Result, c_char_p, c_uint32, POINTER(c_uint32), POINTER(ExtensionProperties))
+PFN_xrEnumerateInstanceExtensionProperties = CFUNCTYPE(Result.ctype(), c_char_p, c_uint32, POINTER(c_uint32), POINTER(ExtensionProperties))
 
-PFN_xrCreateInstance = CFUNCTYPE(Result, POINTER(InstanceCreateInfo), POINTER(Instance))
+PFN_xrCreateInstance = CFUNCTYPE(Result.ctype(), POINTER(InstanceCreateInfo), POINTER(Instance))
 
-PFN_xrDestroyInstance = CFUNCTYPE(Result, Instance)
+PFN_xrDestroyInstance = CFUNCTYPE(Result.ctype(), Instance)
 
-PFN_xrGetInstanceProperties = CFUNCTYPE(Result, Instance, POINTER(InstanceProperties))
+PFN_xrGetInstanceProperties = CFUNCTYPE(Result.ctype(), Instance, POINTER(InstanceProperties))
 
-PFN_xrPollEvent = CFUNCTYPE(Result, Instance, POINTER(EventDataBuffer))
+PFN_xrPollEvent = CFUNCTYPE(Result.ctype(), Instance, POINTER(EventDataBuffer))
 
-PFN_xrResultToString = CFUNCTYPE(Result, Instance, Result, (c_char * 64))
+PFN_xrResultToString = CFUNCTYPE(Result.ctype(), Instance, Result.ctype(), (c_char * 64))
 
-PFN_xrStructureTypeToString = CFUNCTYPE(Result, Instance, StructureType, (c_char * 64))
+PFN_xrStructureTypeToString = CFUNCTYPE(Result.ctype(), Instance, StructureType.ctype(), (c_char * 64))
 
-PFN_xrGetSystem = CFUNCTYPE(Result, Instance, POINTER(SystemGetInfo), POINTER(SystemId))
+PFN_xrGetSystem = CFUNCTYPE(Result.ctype(), Instance, POINTER(SystemGetInfo), POINTER(SystemId))
 
-PFN_xrGetSystemProperties = CFUNCTYPE(Result, Instance, SystemId, POINTER(SystemProperties))
+PFN_xrGetSystemProperties = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(SystemProperties))
 
-PFN_xrEnumerateEnvironmentBlendModes = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, POINTER(c_uint32), POINTER(EnvironmentBlendMode))
+PFN_xrEnumerateEnvironmentBlendModes = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(EnvironmentBlendMode.ctype()))
 
-PFN_xrCreateSession = CFUNCTYPE(Result, Instance, POINTER(SessionCreateInfo), POINTER(Session))
+PFN_xrCreateSession = CFUNCTYPE(Result.ctype(), Instance, POINTER(SessionCreateInfo), POINTER(Session))
 
-PFN_xrDestroySession = CFUNCTYPE(Result, Session)
+PFN_xrDestroySession = CFUNCTYPE(Result.ctype(), Session)
 
-PFN_xrEnumerateReferenceSpaces = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(ReferenceSpaceType))
+PFN_xrEnumerateReferenceSpaces = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(ReferenceSpaceType.ctype()))
 
-PFN_xrCreateReferenceSpace = CFUNCTYPE(Result, Session, POINTER(ReferenceSpaceCreateInfo), POINTER(Space))
+PFN_xrCreateReferenceSpace = CFUNCTYPE(Result.ctype(), Session, POINTER(ReferenceSpaceCreateInfo), POINTER(Space))
 
-PFN_xrGetReferenceSpaceBoundsRect = CFUNCTYPE(Result, Session, ReferenceSpaceType, POINTER(Extent2Df))
+PFN_xrGetReferenceSpaceBoundsRect = CFUNCTYPE(Result.ctype(), Session, ReferenceSpaceType.ctype(), POINTER(Extent2Df))
 
-PFN_xrCreateActionSpace = CFUNCTYPE(Result, Session, POINTER(ActionSpaceCreateInfo), POINTER(Space))
+PFN_xrCreateActionSpace = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionSpaceCreateInfo), POINTER(Space))
 
-PFN_xrLocateSpace = CFUNCTYPE(Result, Space, Space, Time, POINTER(SpaceLocation))
+PFN_xrLocateSpace = CFUNCTYPE(Result.ctype(), Space, Space, Time, POINTER(SpaceLocation))
 
-PFN_xrDestroySpace = CFUNCTYPE(Result, Space)
+PFN_xrDestroySpace = CFUNCTYPE(Result.ctype(), Space)
 
-PFN_xrEnumerateViewConfigurations = CFUNCTYPE(Result, Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationType))
+PFN_xrEnumerateViewConfigurations = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationType.ctype()))
 
-PFN_xrGetViewConfigurationProperties = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, POINTER(ViewConfigurationProperties))
+PFN_xrGetViewConfigurationProperties = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), POINTER(ViewConfigurationProperties))
 
-PFN_xrEnumerateViewConfigurationViews = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationView))
+PFN_xrEnumerateViewConfigurationViews = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationView))
 
-PFN_xrEnumerateSwapchainFormats = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(c_int64))
+PFN_xrEnumerateSwapchainFormats = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(c_int64))
 
-PFN_xrCreateSwapchain = CFUNCTYPE(Result, Session, POINTER(SwapchainCreateInfo), POINTER(Swapchain))
+PFN_xrCreateSwapchain = CFUNCTYPE(Result.ctype(), Session, POINTER(SwapchainCreateInfo), POINTER(Swapchain))
 
-PFN_xrDestroySwapchain = CFUNCTYPE(Result, Swapchain)
+PFN_xrDestroySwapchain = CFUNCTYPE(Result.ctype(), Swapchain)
 
-PFN_xrEnumerateSwapchainImages = CFUNCTYPE(Result, Swapchain, c_uint32, POINTER(c_uint32), POINTER(SwapchainImageBaseHeader))
+PFN_xrEnumerateSwapchainImages = CFUNCTYPE(Result.ctype(), Swapchain, c_uint32, POINTER(c_uint32), POINTER(SwapchainImageBaseHeader))
 
-PFN_xrAcquireSwapchainImage = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainImageAcquireInfo), POINTER(c_uint32))
+PFN_xrAcquireSwapchainImage = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainImageAcquireInfo), POINTER(c_uint32))
 
-PFN_xrWaitSwapchainImage = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainImageWaitInfo))
+PFN_xrWaitSwapchainImage = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainImageWaitInfo))
 
-PFN_xrReleaseSwapchainImage = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainImageReleaseInfo))
+PFN_xrReleaseSwapchainImage = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainImageReleaseInfo))
 
-PFN_xrBeginSession = CFUNCTYPE(Result, Session, POINTER(SessionBeginInfo))
+PFN_xrBeginSession = CFUNCTYPE(Result.ctype(), Session, POINTER(SessionBeginInfo))
 
-PFN_xrEndSession = CFUNCTYPE(Result, Session)
+PFN_xrEndSession = CFUNCTYPE(Result.ctype(), Session)
 
-PFN_xrRequestExitSession = CFUNCTYPE(Result, Session)
+PFN_xrRequestExitSession = CFUNCTYPE(Result.ctype(), Session)
 
-PFN_xrWaitFrame = CFUNCTYPE(Result, Session, POINTER(FrameWaitInfo), POINTER(FrameState))
+PFN_xrWaitFrame = CFUNCTYPE(Result.ctype(), Session, POINTER(FrameWaitInfo), POINTER(FrameState))
 
-PFN_xrBeginFrame = CFUNCTYPE(Result, Session, POINTER(FrameBeginInfo))
+PFN_xrBeginFrame = CFUNCTYPE(Result.ctype(), Session, POINTER(FrameBeginInfo))
 
-PFN_xrEndFrame = CFUNCTYPE(Result, Session, POINTER(FrameEndInfo))
+PFN_xrEndFrame = CFUNCTYPE(Result.ctype(), Session, POINTER(FrameEndInfo))
 
-PFN_xrLocateViews = CFUNCTYPE(Result, Session, POINTER(ViewLocateInfo), POINTER(ViewState), c_uint32, POINTER(c_uint32), POINTER(View))
+PFN_xrLocateViews = CFUNCTYPE(Result.ctype(), Session, POINTER(ViewLocateInfo), POINTER(ViewState), c_uint32, POINTER(c_uint32), POINTER(View))
 
-PFN_xrStringToPath = CFUNCTYPE(Result, Instance, c_char_p, POINTER(Path))
+PFN_xrStringToPath = CFUNCTYPE(Result.ctype(), Instance, c_char_p, POINTER(Path))
 
-PFN_xrPathToString = CFUNCTYPE(Result, Instance, Path, c_uint32, POINTER(c_uint32), c_char_p)
+PFN_xrPathToString = CFUNCTYPE(Result.ctype(), Instance, Path, c_uint32, POINTER(c_uint32), c_char_p)
 
-PFN_xrCreateActionSet = CFUNCTYPE(Result, Instance, POINTER(ActionSetCreateInfo), POINTER(ActionSet))
+PFN_xrCreateActionSet = CFUNCTYPE(Result.ctype(), Instance, POINTER(ActionSetCreateInfo), POINTER(ActionSet))
 
-PFN_xrDestroyActionSet = CFUNCTYPE(Result, ActionSet)
+PFN_xrDestroyActionSet = CFUNCTYPE(Result.ctype(), ActionSet)
 
-PFN_xrCreateAction = CFUNCTYPE(Result, ActionSet, POINTER(ActionCreateInfo), POINTER(Action))
+PFN_xrCreateAction = CFUNCTYPE(Result.ctype(), ActionSet, POINTER(ActionCreateInfo), POINTER(Action))
 
-PFN_xrDestroyAction = CFUNCTYPE(Result, Action)
+PFN_xrDestroyAction = CFUNCTYPE(Result.ctype(), Action)
 
-PFN_xrSuggestInteractionProfileBindings = CFUNCTYPE(Result, Instance, POINTER(InteractionProfileSuggestedBinding))
+PFN_xrSuggestInteractionProfileBindings = CFUNCTYPE(Result.ctype(), Instance, POINTER(InteractionProfileSuggestedBinding))
 
-PFN_xrAttachSessionActionSets = CFUNCTYPE(Result, Session, POINTER(SessionActionSetsAttachInfo))
+PFN_xrAttachSessionActionSets = CFUNCTYPE(Result.ctype(), Session, POINTER(SessionActionSetsAttachInfo))
 
-PFN_xrGetCurrentInteractionProfile = CFUNCTYPE(Result, Session, Path, POINTER(InteractionProfileState))
+PFN_xrGetCurrentInteractionProfile = CFUNCTYPE(Result.ctype(), Session, Path, POINTER(InteractionProfileState))
 
-PFN_xrGetActionStateBoolean = CFUNCTYPE(Result, Session, POINTER(ActionStateGetInfo), POINTER(ActionStateBoolean))
+PFN_xrGetActionStateBoolean = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStateBoolean))
 
-PFN_xrGetActionStateFloat = CFUNCTYPE(Result, Session, POINTER(ActionStateGetInfo), POINTER(ActionStateFloat))
+PFN_xrGetActionStateFloat = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStateFloat))
 
-PFN_xrGetActionStateVector2f = CFUNCTYPE(Result, Session, POINTER(ActionStateGetInfo), POINTER(ActionStateVector2f))
+PFN_xrGetActionStateVector2f = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStateVector2f))
 
-PFN_xrGetActionStatePose = CFUNCTYPE(Result, Session, POINTER(ActionStateGetInfo), POINTER(ActionStatePose))
+PFN_xrGetActionStatePose = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStatePose))
 
-PFN_xrSyncActions = CFUNCTYPE(Result, Session, POINTER(ActionsSyncInfo))
+PFN_xrSyncActions = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionsSyncInfo))
 
-PFN_xrEnumerateBoundSourcesForAction = CFUNCTYPE(Result, Session, POINTER(BoundSourcesForActionEnumerateInfo), c_uint32, POINTER(c_uint32), POINTER(Path))
+PFN_xrEnumerateBoundSourcesForAction = CFUNCTYPE(Result.ctype(), Session, POINTER(BoundSourcesForActionEnumerateInfo), c_uint32, POINTER(c_uint32), POINTER(Path))
 
-PFN_xrGetInputSourceLocalizedName = CFUNCTYPE(Result, Session, POINTER(InputSourceLocalizedNameGetInfo), c_uint32, POINTER(c_uint32), c_char_p)
+PFN_xrGetInputSourceLocalizedName = CFUNCTYPE(Result.ctype(), Session, POINTER(InputSourceLocalizedNameGetInfo), c_uint32, POINTER(c_uint32), c_char_p)
 
-PFN_xrApplyHapticFeedback = CFUNCTYPE(Result, Session, POINTER(HapticActionInfo), POINTER(HapticBaseHeader))
+PFN_xrApplyHapticFeedback = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActionInfo), POINTER(HapticBaseHeader))
 
-PFN_xrStopHapticFeedback = CFUNCTYPE(Result, Session, POINTER(HapticActionInfo))
+PFN_xrStopHapticFeedback = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActionInfo))
 
 
 class CompositionLayerCubeKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_CUBE_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_CUBE_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eye_visibility", EyeVisibility),
+        ("eye_visibility", EyeVisibility.ctype()),
         ("swapchain", Swapchain),
         ("image_array_index", c_uint32),
         ("orientation", Quaternionf),
@@ -907,8 +1615,21 @@ class CompositionLayerCubeKHR(Structure):
 
 
 class CompositionLayerDepthInfoKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_DEPTH_INFO_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_DEPTH_INFO_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("sub_image", SwapchainSubImage),
         ("min_depth", c_float),
@@ -919,12 +1640,25 @@ class CompositionLayerDepthInfoKHR(Structure):
 
 
 class CompositionLayerCylinderKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_CYLINDER_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_CYLINDER_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eye_visibility", EyeVisibility),
+        ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("radius", c_float),
@@ -934,12 +1668,25 @@ class CompositionLayerCylinderKHR(Structure):
 
 
 class CompositionLayerEquirectKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_EQUIRECT_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_EQUIRECT_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eye_visibility", EyeVisibility),
+        ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("radius", c_float),
@@ -949,8 +1696,21 @@ class CompositionLayerEquirectKHR(Structure):
 
 
 class VisibilityMaskKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VISIBILITY_MASK_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VISIBILITY_MASK_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("vertex_capacity_input", c_uint32),
         ("vertex_count_output", c_uint32),
@@ -962,21 +1722,47 @@ class VisibilityMaskKHR(Structure):
 
 
 class EventDataVisibilityMaskChangedKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("session", Session),
-        ("view_configuration_type", ViewConfigurationType),
+        ("view_configuration_type", ViewConfigurationType.ctype()),
         ("view_index", c_uint32),
     ]
 
 
-PFN_xrGetVisibilityMaskKHR = CFUNCTYPE(Result, Session, ViewConfigurationType, c_uint32, VisibilityMaskTypeKHR, POINTER(VisibilityMaskKHR))
+PFN_xrGetVisibilityMaskKHR = CFUNCTYPE(Result.ctype(), Session, ViewConfigurationType.ctype(), c_uint32, VisibilityMaskTypeKHR.ctype(), POINTER(VisibilityMaskKHR))
 
 
 class CompositionLayerColorScaleBiasKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_COLOR_SCALE_BIAS_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_COLOR_SCALE_BIAS_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("color_scale", Color4f),
         ("color_bias", Color4f),
@@ -984,22 +1770,48 @@ class CompositionLayerColorScaleBiasKHR(Structure):
 
 
 class LoaderInitInfoBaseHeaderKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.LOADER_INIT_INFO_BASE_HEADER_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.LOADER_INIT_INFO_BASE_HEADER_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
-PFN_xrInitializeLoaderKHR = CFUNCTYPE(Result, POINTER(LoaderInitInfoBaseHeaderKHR))
+PFN_xrInitializeLoaderKHR = CFUNCTYPE(Result.ctype(), POINTER(LoaderInitInfoBaseHeaderKHR))
 
 
 class CompositionLayerEquirect2KHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_EQUIRECT2_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_EQUIRECT2_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
         ("space", Space),
-        ("eye_visibility", EyeVisibility),
+        ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
         ("radius", c_float),
@@ -1010,15 +1822,41 @@ class CompositionLayerEquirect2KHR(Structure):
 
 
 class BindingModificationBaseHeaderKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.BINDING_MODIFICATION_BASE_HEADER_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.BINDING_MODIFICATION_BASE_HEADER_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class BindingModificationsKHR(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.BINDING_MODIFICATIONS_K_H_R.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.BINDING_MODIFICATIONS_K_H_R.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("binding_modification_count", c_uint32),
         ("binding_modifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
@@ -1026,19 +1864,32 @@ class BindingModificationsKHR(Structure):
 
 
 class EventDataPerfSettingsEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_PERF_SETTINGS_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_PERF_SETTINGS_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("domain", PerfSettingsDomainEXT),
-        ("sub_domain", PerfSettingsSubDomainEXT),
-        ("from_level", PerfSettingsNotificationLevelEXT),
-        ("to_level", PerfSettingsNotificationLevelEXT),
+        ("domain", PerfSettingsDomainEXT.ctype()),
+        ("sub_domain", PerfSettingsSubDomainEXT.ctype()),
+        ("from_level", PerfSettingsNotificationLevelEXT.ctype()),
+        ("to_level", PerfSettingsNotificationLevelEXT.ctype()),
     ]
 
 
-PFN_xrPerfSettingsSetPerformanceLevelEXT = CFUNCTYPE(Result, Session, PerfSettingsDomainEXT, PerfSettingsLevelEXT)
+PFN_xrPerfSettingsSetPerformanceLevelEXT = CFUNCTYPE(Result.ctype(), Session, PerfSettingsDomainEXT.ctype(), PerfSettingsLevelEXT.ctype())
 
-PFN_xrThermalGetTemperatureTrendEXT = CFUNCTYPE(Result, Session, PerfSettingsDomainEXT, POINTER(PerfSettingsNotificationLevelEXT), POINTER(c_float), POINTER(c_float))
+PFN_xrThermalGetTemperatureTrendEXT = CFUNCTYPE(Result.ctype(), Session, PerfSettingsDomainEXT.ctype(), POINTER(PerfSettingsNotificationLevelEXT.ctype()), POINTER(c_float), POINTER(c_float))
 
 
 class DebugUtilsMessengerEXT_T(Structure):
@@ -1053,26 +1904,65 @@ DebugUtilsMessageTypeFlagsEXT = Flags64
 
 
 class DebugUtilsObjectNameInfoEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("object_type", ObjectType),
+        ("object_type", ObjectType.ctype()),
         ("object_handle", c_uint64),
         ("object_name", c_char_p),
     ]
 
 
 class DebugUtilsLabelEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.DEBUG_UTILS_LABEL_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.DEBUG_UTILS_LABEL_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("label_name", c_char_p),
     ]
 
 
 class DebugUtilsMessengerCallbackDataEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("message_id", c_char_p),
         ("function_name", c_char_p),
@@ -1088,8 +1978,21 @@ PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeveri
 
 
 class DebugUtilsMessengerCreateInfoEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("message_severities", DebugUtilsMessageSeverityFlagsEXT),
         ("message_types", DebugUtilsMessageTypeFlagsEXT),
@@ -1098,32 +2001,58 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     ]
 
 
-PFN_xrSetDebugUtilsObjectNameEXT = CFUNCTYPE(Result, Instance, POINTER(DebugUtilsObjectNameInfoEXT))
+PFN_xrSetDebugUtilsObjectNameEXT = CFUNCTYPE(Result.ctype(), Instance, POINTER(DebugUtilsObjectNameInfoEXT))
 
-PFN_xrCreateDebugUtilsMessengerEXT = CFUNCTYPE(Result, Instance, POINTER(DebugUtilsMessengerCreateInfoEXT), POINTER(DebugUtilsMessengerEXT))
+PFN_xrCreateDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), Instance, POINTER(DebugUtilsMessengerCreateInfoEXT), POINTER(DebugUtilsMessengerEXT))
 
-PFN_xrDestroyDebugUtilsMessengerEXT = CFUNCTYPE(Result, DebugUtilsMessengerEXT)
+PFN_xrDestroyDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), DebugUtilsMessengerEXT)
 
-PFN_xrSubmitDebugUtilsMessageEXT = CFUNCTYPE(Result, Instance, DebugUtilsMessageSeverityFlagsEXT, DebugUtilsMessageTypeFlagsEXT, POINTER(DebugUtilsMessengerCallbackDataEXT))
+PFN_xrSubmitDebugUtilsMessageEXT = CFUNCTYPE(Result.ctype(), Instance, DebugUtilsMessageSeverityFlagsEXT, DebugUtilsMessageTypeFlagsEXT, POINTER(DebugUtilsMessengerCallbackDataEXT))
 
-PFN_xrSessionBeginDebugUtilsLabelRegionEXT = CFUNCTYPE(Result, Session, POINTER(DebugUtilsLabelEXT))
+PFN_xrSessionBeginDebugUtilsLabelRegionEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(DebugUtilsLabelEXT))
 
-PFN_xrSessionEndDebugUtilsLabelRegionEXT = CFUNCTYPE(Result, Session)
+PFN_xrSessionEndDebugUtilsLabelRegionEXT = CFUNCTYPE(Result.ctype(), Session)
 
-PFN_xrSessionInsertDebugUtilsLabelEXT = CFUNCTYPE(Result, Session, POINTER(DebugUtilsLabelEXT))
+PFN_xrSessionInsertDebugUtilsLabelEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(DebugUtilsLabelEXT))
 
 
 class SystemEyeGazeInteractionPropertiesEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("supports_eye_gaze_interaction", Bool32),
     ]
 
 
 class EyeGazeSampleTimeEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EYE_GAZE_SAMPLE_TIME_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EYE_GAZE_SAMPLE_TIME_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("time", Time),
     ]
@@ -1135,8 +2064,21 @@ OverlayMainSessionFlagsEXTX = Flags64
 
 
 class SessionCreateInfoOverlayEXTX(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SESSION_CREATE_INFO_OVERLAY_E_X_T_X.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SESSION_CREATE_INFO_OVERLAY_E_X_T_X.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("create_flags", OverlaySessionCreateFlagsEXTX),
         ("session_layers_placement", c_uint32),
@@ -1144,8 +2086,21 @@ class SessionCreateInfoOverlayEXTX(Structure):
 
 
 class EventDataMainSessionVisibilityChangedEXTX(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_E_X_T_X.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_E_X_T_X.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("visible", Bool32),
         ("flags", OverlayMainSessionFlagsEXTX),
@@ -1160,8 +2115,21 @@ SpatialAnchorMSFT = POINTER(SpatialAnchorMSFT_T)
 
 
 class SpatialAnchorCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SPATIAL_ANCHOR_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SPATIAL_ANCHOR_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("space", Space),
         ("pose", Posef),
@@ -1170,45 +2138,97 @@ class SpatialAnchorCreateInfoMSFT(Structure):
 
 
 class SpatialAnchorSpaceCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("anchor", SpatialAnchorMSFT),
         ("pose_in_anchor_space", Posef),
     ]
 
 
-PFN_xrCreateSpatialAnchorMSFT = CFUNCTYPE(Result, Session, POINTER(SpatialAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFT))
+PFN_xrCreateSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFT))
 
-PFN_xrCreateSpatialAnchorSpaceMSFT = CFUNCTYPE(Result, Session, POINTER(SpatialAnchorSpaceCreateInfoMSFT), POINTER(Space))
+PFN_xrCreateSpatialAnchorSpaceMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorSpaceCreateInfoMSFT), POINTER(Space))
 
-PFN_xrDestroySpatialAnchorMSFT = CFUNCTYPE(Result, SpatialAnchorMSFT)
+PFN_xrDestroySpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorMSFT)
 
 CompositionLayerImageLayoutFlagsFB = Flags64
 
 
 class CompositionLayerImageLayoutFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("flags", CompositionLayerImageLayoutFlagsFB),
     ]
 
 
 class CompositionLayerAlphaBlendFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_ALPHA_BLEND_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_ALPHA_BLEND_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("src_factor_color", BlendFactorFB),
-        ("dst_factor_color", BlendFactorFB),
-        ("src_factor_alpha", BlendFactorFB),
-        ("dst_factor_alpha", BlendFactorFB),
+        ("src_factor_color", BlendFactorFB.ctype()),
+        ("dst_factor_color", BlendFactorFB.ctype()),
+        ("src_factor_alpha", BlendFactorFB.ctype()),
+        ("dst_factor_alpha", BlendFactorFB.ctype()),
     ]
 
 
 class ViewConfigurationDepthRangeEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW_CONFIGURATION_DEPTH_RANGE_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW_CONFIGURATION_DEPTH_RANGE_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("recommended_near_z", c_float),
         ("min_near_z", c_float),
@@ -1217,28 +2237,41 @@ class ViewConfigurationDepthRangeEXT(Structure):
     ]
 
 
-PFN_xrSetInputDeviceActiveEXT = CFUNCTYPE(Result, Session, Path, Path, Bool32)
+PFN_xrSetInputDeviceActiveEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Bool32)
 
-PFN_xrSetInputDeviceStateBoolEXT = CFUNCTYPE(Result, Session, Path, Path, Bool32)
+PFN_xrSetInputDeviceStateBoolEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Bool32)
 
-PFN_xrSetInputDeviceStateFloatEXT = CFUNCTYPE(Result, Session, Path, Path, c_float)
+PFN_xrSetInputDeviceStateFloatEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, c_float)
 
-PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result, Session, Path, Path, Vector2f)
+PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Vector2f)
 
-PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result, Session, Path, Path, Space, Posef)
+PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Space, Posef)
 
 
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("node_type", SpatialGraphNodeTypeMSFT),
+        ("node_type", SpatialGraphNodeTypeMSFT.ctype()),
         ("node_id", (c_uint8 * 16)),
         ("pose", Posef),
     ]
 
 
-PFN_xrCreateSpatialGraphNodeSpaceMSFT = CFUNCTYPE(Result, Session, POINTER(SpatialGraphNodeSpaceCreateInfoMSFT), POINTER(Space))
+PFN_xrCreateSpatialGraphNodeSpaceMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialGraphNodeSpaceCreateInfoMSFT), POINTER(Space))
 
 
 class HandTrackerEXT_T(Structure):
@@ -1249,25 +2282,64 @@ HandTrackerEXT = POINTER(HandTrackerEXT_T)
 
 
 class SystemHandTrackingPropertiesEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_HAND_TRACKING_PROPERTIES_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SYSTEM_HAND_TRACKING_PROPERTIES_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("supports_hand_tracking", Bool32),
     ]
 
 
 class HandTrackerCreateInfoEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_TRACKER_CREATE_INFO_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_TRACKER_CREATE_INFO_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("hand", HandEXT),
-        ("hand_joint_set", HandJointSetEXT),
+        ("hand", HandEXT.ctype()),
+        ("hand_joint_set", HandJointSetEXT.ctype()),
     ]
 
 
 class HandJointsLocateInfoEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_JOINTS_LOCATE_INFO_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_JOINTS_LOCATE_INFO_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("base_space", Space),
         ("time", Time),
@@ -1291,8 +2363,21 @@ class HandJointVelocityEXT(Structure):
 
 
 class HandJointLocationsEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_JOINT_LOCATIONS_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_JOINT_LOCATIONS_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("is_active", Bool32),
         ("joint_count", c_uint32),
@@ -1301,24 +2386,50 @@ class HandJointLocationsEXT(Structure):
 
 
 class HandJointVelocitiesEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_JOINT_VELOCITIES_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_JOINT_VELOCITIES_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("joint_count", c_uint32),
         ("joint_velocities", POINTER(HandJointVelocityEXT)),
     ]
 
 
-PFN_xrCreateHandTrackerEXT = CFUNCTYPE(Result, Session, POINTER(HandTrackerCreateInfoEXT), POINTER(HandTrackerEXT))
+PFN_xrCreateHandTrackerEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(HandTrackerCreateInfoEXT), POINTER(HandTrackerEXT))
 
-PFN_xrDestroyHandTrackerEXT = CFUNCTYPE(Result, HandTrackerEXT)
+PFN_xrDestroyHandTrackerEXT = CFUNCTYPE(Result.ctype(), HandTrackerEXT)
 
-PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result, HandTrackerEXT, POINTER(HandJointsLocateInfoEXT), POINTER(HandJointLocationsEXT))
+PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandJointsLocateInfoEXT), POINTER(HandJointLocationsEXT))
 
 
 class SystemHandTrackingMeshPropertiesMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_HAND_TRACKING_MESH_PROPERTIES_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SYSTEM_HAND_TRACKING_MESH_PROPERTIES_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("supports_hand_tracking_mesh", Bool32),
         ("max_hand_mesh_index_count", c_uint32),
@@ -1327,20 +2438,46 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
 
 
 class HandMeshSpaceCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_MESH_SPACE_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_MESH_SPACE_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("hand_pose_type", HandPoseTypeMSFT),
+        ("hand_pose_type", HandPoseTypeMSFT.ctype()),
         ("pose_in_hand_mesh_space", Posef),
     ]
 
 
 class HandMeshUpdateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_MESH_UPDATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_MESH_UPDATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("time", Time),
-        ("hand_pose_type", HandPoseTypeMSFT),
+        ("hand_pose_type", HandPoseTypeMSFT.ctype()),
     ]
 
 
@@ -1370,8 +2507,21 @@ class HandMeshVertexBufferMSFT(Structure):
 
 
 class HandMeshMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_MESH_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_MESH_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("is_active", Bool32),
         ("index_buffer_changed", Bool32),
@@ -1382,39 +2532,91 @@ class HandMeshMSFT(Structure):
 
 
 class HandPoseTypeInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_POSE_TYPE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_POSE_TYPE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("hand_pose_type", HandPoseTypeMSFT),
+        ("hand_pose_type", HandPoseTypeMSFT.ctype()),
     ]
 
 
-PFN_xrCreateHandMeshSpaceMSFT = CFUNCTYPE(Result, HandTrackerEXT, POINTER(HandMeshSpaceCreateInfoMSFT), POINTER(Space))
+PFN_xrCreateHandMeshSpaceMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandMeshSpaceCreateInfoMSFT), POINTER(Space))
 
-PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result, HandTrackerEXT, POINTER(HandMeshUpdateInfoMSFT), POINTER(HandMeshMSFT))
+PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandMeshUpdateInfoMSFT), POINTER(HandMeshMSFT))
 
 
 class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("view_configuration_count", c_uint32),
-        ("enabled_view_configuration_types", POINTER(ViewConfigurationType)),
+        ("enabled_view_configuration_types", POINTER(ViewConfigurationType.ctype())),
     ]
 
 
 class SecondaryViewConfigurationStateMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_configuration_type", ViewConfigurationType),
+        ("view_configuration_type", ViewConfigurationType.ctype()),
         ("active", Bool32),
     ]
 
 
 class SecondaryViewConfigurationFrameStateMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("view_configuration_count", c_uint32),
         ("view_configuration_states", POINTER(SecondaryViewConfigurationStateMSFT)),
@@ -1422,19 +2624,45 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
 
 
 class SecondaryViewConfigurationLayerInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_configuration_type", ViewConfigurationType),
-        ("environment_blend_mode", EnvironmentBlendMode),
+        ("view_configuration_type", ViewConfigurationType.ctype()),
+        ("environment_blend_mode", EnvironmentBlendMode.ctype()),
         ("layer_count", c_uint32),
         ("layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
 
 class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("view_configuration_count", c_uint32),
         ("view_configuration_layers_info", POINTER(SecondaryViewConfigurationLayerInfoMSFT)),
@@ -1442,10 +2670,23 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
 
 
 class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_configuration_type", ViewConfigurationType),
+        ("view_configuration_type", ViewConfigurationType.ctype()),
     ]
 
 
@@ -1453,16 +2694,42 @@ ControllerModelKeyMSFT = c_uint64
 
 
 class ControllerModelKeyStateMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.CONTROLLER_MODEL_KEY_STATE_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.CONTROLLER_MODEL_KEY_STATE_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("model_key", ControllerModelKeyMSFT),
     ]
 
 
 class ControllerModelNodePropertiesMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.CONTROLLER_MODEL_NODE_PROPERTIES_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.CONTROLLER_MODEL_NODE_PROPERTIES_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("parent_node_name", (c_char * 64)),
         ("node_name", (c_char * 64)),
@@ -1470,8 +2737,21 @@ class ControllerModelNodePropertiesMSFT(Structure):
 
 
 class ControllerModelPropertiesMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.CONTROLLER_MODEL_PROPERTIES_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.CONTROLLER_MODEL_PROPERTIES_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("node_capacity_input", c_uint32),
         ("node_count_output", c_uint32),
@@ -1480,16 +2760,42 @@ class ControllerModelPropertiesMSFT(Structure):
 
 
 class ControllerModelNodeStateMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.CONTROLLER_MODEL_NODE_STATE_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.CONTROLLER_MODEL_NODE_STATE_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("node_pose", Posef),
     ]
 
 
 class ControllerModelStateMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.CONTROLLER_MODEL_STATE_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.CONTROLLER_MODEL_STATE_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("node_capacity_input", c_uint32),
         ("node_count_output", c_uint32),
@@ -1497,18 +2803,31 @@ class ControllerModelStateMSFT(Structure):
     ]
 
 
-PFN_xrGetControllerModelKeyMSFT = CFUNCTYPE(Result, Session, Path, POINTER(ControllerModelKeyStateMSFT))
+PFN_xrGetControllerModelKeyMSFT = CFUNCTYPE(Result.ctype(), Session, Path, POINTER(ControllerModelKeyStateMSFT))
 
-PFN_xrLoadControllerModelMSFT = CFUNCTYPE(Result, Session, ControllerModelKeyMSFT, c_uint32, POINTER(c_uint32), POINTER(c_uint8))
+PFN_xrLoadControllerModelMSFT = CFUNCTYPE(Result.ctype(), Session, ControllerModelKeyMSFT, c_uint32, POINTER(c_uint32), POINTER(c_uint8))
 
-PFN_xrGetControllerModelPropertiesMSFT = CFUNCTYPE(Result, Session, ControllerModelKeyMSFT, POINTER(ControllerModelPropertiesMSFT))
+PFN_xrGetControllerModelPropertiesMSFT = CFUNCTYPE(Result.ctype(), Session, ControllerModelKeyMSFT, POINTER(ControllerModelPropertiesMSFT))
 
-PFN_xrGetControllerModelStateMSFT = CFUNCTYPE(Result, Session, ControllerModelKeyMSFT, POINTER(ControllerModelStateMSFT))
+PFN_xrGetControllerModelStateMSFT = CFUNCTYPE(Result.ctype(), Session, ControllerModelKeyMSFT, POINTER(ControllerModelStateMSFT))
 
 
 class ViewConfigurationViewFovEPIC(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW_CONFIGURATION_VIEW_FOV_E_P_I_C.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW_CONFIGURATION_VIEW_FOV_E_P_I_C.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("recommended_fov", Fovf),
         ("max_mutable_fov", Fovf),
@@ -1516,16 +2835,42 @@ class ViewConfigurationViewFovEPIC(Structure):
 
 
 class CompositionLayerReprojectionInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("reprojection_mode", ReprojectionModeMSFT),
+        ("reprojection_mode", ReprojectionModeMSFT.ctype()),
     ]
 
 
 class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("position", Vector3f),
         ("normal", Vector3f),
@@ -1533,34 +2878,73 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     ]
 
 
-PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result, Instance, SystemId, ViewConfigurationType, c_uint32, POINTER(c_uint32), POINTER(ReprojectionModeMSFT))
+PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(ReprojectionModeMSFT.ctype()))
 
 
 class SwapchainStateBaseHeaderFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_STATE_BASE_HEADER_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_STATE_BASE_HEADER_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
-PFN_xrUpdateSwapchainFB = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainStateBaseHeaderFB))
+PFN_xrUpdateSwapchainFB = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainStateBaseHeaderFB))
 
-PFN_xrGetSwapchainStateFB = CFUNCTYPE(Result, Swapchain, POINTER(SwapchainStateBaseHeaderFB))
+PFN_xrGetSwapchainStateFB = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainStateBaseHeaderFB))
 
 CompositionLayerSecureContentFlagsFB = Flags64
 
 
 class CompositionLayerSecureContentFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_SECURE_CONTENT_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_SECURE_CONTENT_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("flags", CompositionLayerSecureContentFlagsFB),
     ]
 
 
 class InteractionProfileAnalogThresholdVALVE(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.INTERACTION_PROFILE_ANALOG_THRESHOLD_V_A_L_V_E.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.INTERACTION_PROFILE_ANALOG_THRESHOLD_V_A_L_V_E.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("action", Action),
         ("binding", Path),
@@ -1572,10 +2956,23 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
 
 
 class HandJointsMotionRangeInfoEXT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_JOINTS_MOTION_RANGE_INFO_E_X_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.HAND_JOINTS_MOTION_RANGE_INFO_E_X_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("hand_joints_motion_range", HandJointsMotionRangeEXT),
+        ("hand_joints_motion_range", HandJointsMotionRangeEXT.ctype()),
     ]
 
 
@@ -1600,15 +2997,41 @@ class UuidMSFT(Structure):
 
 
 class SceneObserverCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_OBSERVER_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_OBSERVER_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class SceneCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
@@ -1649,27 +3072,53 @@ class SceneBoundsMSFT(Structure):
 
 
 class NewSceneComputeInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.NEW_SCENE_COMPUTE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.NEW_SCENE_COMPUTE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("requested_feature_count", c_uint32),
-        ("requested_features", POINTER(SceneComputeFeatureMSFT)),
-        ("consistency", SceneComputeConsistencyMSFT),
+        ("requested_features", POINTER(SceneComputeFeatureMSFT.ctype())),
+        ("consistency", SceneComputeConsistencyMSFT.ctype()),
         ("bounds", SceneBoundsMSFT),
     ]
 
 
 class VisualMeshComputeLodInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("lod", MeshComputeLodMSFT),
+        ("lod", MeshComputeLodMSFT.ctype()),
     ]
 
 
 class SceneComponentMSFT(Structure):
     _fields_ = [
-        ("component_type", SceneComponentTypeMSFT),
+        ("component_type", SceneComponentTypeMSFT.ctype()),
         ("id", UuidMSFT),
         ("parent_id", UuidMSFT),
         ("update_time", Time),
@@ -1677,8 +3126,21 @@ class SceneComponentMSFT(Structure):
 
 
 class SceneComponentsMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_COMPONENTS_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_COMPONENTS_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("component_capacity_input", c_uint32),
         ("component_count_output", c_uint32),
@@ -1687,10 +3149,23 @@ class SceneComponentsMSFT(Structure):
 
 
 class SceneComponentsGetInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_COMPONENTS_GET_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_COMPONENTS_GET_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("component_type", SceneComponentTypeMSFT),
+        ("component_type", SceneComponentTypeMSFT.ctype()),
     ]
 
 
@@ -1702,8 +3177,21 @@ class SceneComponentLocationMSFT(Structure):
 
 
 class SceneComponentLocationsMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_COMPONENT_LOCATIONS_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_COMPONENT_LOCATIONS_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("location_count", c_uint32),
         ("locations", POINTER(SceneComponentLocationMSFT)),
@@ -1711,8 +3199,21 @@ class SceneComponentLocationsMSFT(Structure):
 
 
 class SceneComponentsLocateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_COMPONENTS_LOCATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_COMPONENTS_LOCATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("base_space", Space),
         ("time", Time),
@@ -1723,13 +3224,26 @@ class SceneComponentsLocateInfoMSFT(Structure):
 
 class SceneObjectMSFT(Structure):
     _fields_ = [
-        ("object_type", SceneObjectTypeMSFT),
+        ("object_type", SceneObjectTypeMSFT.ctype()),
     ]
 
 
 class SceneObjectsMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_OBJECTS_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_OBJECTS_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("scene_object_count", c_uint32),
         ("scene_objects", POINTER(SceneObjectMSFT)),
@@ -1737,25 +3251,51 @@ class SceneObjectsMSFT(Structure):
 
 
 class SceneComponentParentFilterInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_COMPONENT_PARENT_FILTER_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_COMPONENT_PARENT_FILTER_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("parent_id", UuidMSFT),
     ]
 
 
 class SceneObjectTypesFilterInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("object_type_count", c_uint32),
-        ("object_types", POINTER(SceneObjectTypeMSFT)),
+        ("object_types", POINTER(SceneObjectTypeMSFT.ctype())),
     ]
 
 
 class ScenePlaneMSFT(Structure):
     _fields_ = [
-        ("alignment", ScenePlaneAlignmentTypeMSFT),
+        ("alignment", ScenePlaneAlignmentTypeMSFT.ctype()),
         ("size", Extent2Df),
         ("mesh_buffer_id", c_uint64),
         ("supports_indices_uint16", Bool32),
@@ -1763,8 +3303,21 @@ class ScenePlaneMSFT(Structure):
 
 
 class ScenePlanesMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_PLANES_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_PLANES_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("scene_plane_count", c_uint32),
         ("scene_planes", POINTER(ScenePlaneMSFT)),
@@ -1772,11 +3325,24 @@ class ScenePlanesMSFT(Structure):
 
 
 class ScenePlaneAlignmentFilterInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("alignment_count", c_uint32),
-        ("alignments", POINTER(ScenePlaneAlignmentTypeMSFT)),
+        ("alignments", POINTER(ScenePlaneAlignmentTypeMSFT.ctype())),
     ]
 
 
@@ -1788,8 +3354,21 @@ class SceneMeshMSFT(Structure):
 
 
 class SceneMeshesMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_MESHES_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_MESHES_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("scene_mesh_count", c_uint32),
         ("scene_meshes", POINTER(SceneMeshMSFT)),
@@ -1797,23 +3376,62 @@ class SceneMeshesMSFT(Structure):
 
 
 class SceneMeshBuffersGetInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_MESH_BUFFERS_GET_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_MESH_BUFFERS_GET_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("mesh_buffer_id", c_uint64),
     ]
 
 
 class SceneMeshBuffersMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_MESH_BUFFERS_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_MESH_BUFFERS_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class SceneMeshVertexBufferMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_MESH_VERTEX_BUFFER_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_MESH_VERTEX_BUFFER_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("vertex_capacity_input", c_uint32),
         ("vertex_count_output", c_uint32),
@@ -1822,8 +3440,21 @@ class SceneMeshVertexBufferMSFT(Structure):
 
 
 class SceneMeshIndicesUint32MSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_MESH_INDICES_UINT32_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_MESH_INDICES_UINT32_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("index_capacity_input", c_uint32),
         ("index_count_output", c_uint32),
@@ -1832,8 +3463,21 @@ class SceneMeshIndicesUint32MSFT(Structure):
 
 
 class SceneMeshIndicesUint16MSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_MESH_INDICES_UINT16_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_MESH_INDICES_UINT16_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("index_capacity_input", c_uint32),
         ("index_count_output", c_uint32),
@@ -1841,30 +3485,43 @@ class SceneMeshIndicesUint16MSFT(Structure):
     ]
 
 
-PFN_xrEnumerateSceneComputeFeaturesMSFT = CFUNCTYPE(Result, Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SceneComputeFeatureMSFT))
+PFN_xrEnumerateSceneComputeFeaturesMSFT = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SceneComputeFeatureMSFT.ctype()))
 
-PFN_xrCreateSceneObserverMSFT = CFUNCTYPE(Result, Session, POINTER(SceneObserverCreateInfoMSFT), POINTER(SceneObserverMSFT))
+PFN_xrCreateSceneObserverMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SceneObserverCreateInfoMSFT), POINTER(SceneObserverMSFT))
 
-PFN_xrDestroySceneObserverMSFT = CFUNCTYPE(Result, SceneObserverMSFT)
+PFN_xrDestroySceneObserverMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT)
 
-PFN_xrCreateSceneMSFT = CFUNCTYPE(Result, SceneObserverMSFT, POINTER(SceneCreateInfoMSFT), POINTER(SceneMSFT))
+PFN_xrCreateSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(SceneCreateInfoMSFT), POINTER(SceneMSFT))
 
-PFN_xrDestroySceneMSFT = CFUNCTYPE(Result, SceneMSFT)
+PFN_xrDestroySceneMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT)
 
-PFN_xrComputeNewSceneMSFT = CFUNCTYPE(Result, SceneObserverMSFT, POINTER(NewSceneComputeInfoMSFT))
+PFN_xrComputeNewSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(NewSceneComputeInfoMSFT))
 
-PFN_xrGetSceneComputeStateMSFT = CFUNCTYPE(Result, SceneObserverMSFT, POINTER(SceneComputeStateMSFT))
+PFN_xrGetSceneComputeStateMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(SceneComputeStateMSFT.ctype()))
 
-PFN_xrGetSceneComponentsMSFT = CFUNCTYPE(Result, SceneMSFT, POINTER(SceneComponentsGetInfoMSFT), POINTER(SceneComponentsMSFT))
+PFN_xrGetSceneComponentsMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SceneComponentsGetInfoMSFT), POINTER(SceneComponentsMSFT))
 
-PFN_xrLocateSceneComponentsMSFT = CFUNCTYPE(Result, SceneMSFT, POINTER(SceneComponentsLocateInfoMSFT), POINTER(SceneComponentLocationsMSFT))
+PFN_xrLocateSceneComponentsMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SceneComponentsLocateInfoMSFT), POINTER(SceneComponentLocationsMSFT))
 
-PFN_xrGetSceneMeshBuffersMSFT = CFUNCTYPE(Result, SceneMSFT, POINTER(SceneMeshBuffersGetInfoMSFT), POINTER(SceneMeshBuffersMSFT))
+PFN_xrGetSceneMeshBuffersMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SceneMeshBuffersGetInfoMSFT), POINTER(SceneMeshBuffersMSFT))
 
 
 class SerializedSceneFragmentDataGetInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("scene_fragment_id", UuidMSFT),
     ]
@@ -1878,46 +3535,85 @@ class DeserializeSceneFragmentMSFT(Structure):
 
 
 class SceneDeserializeInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SCENE_DESERIALIZE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SCENE_DESERIALIZE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("fragment_count", c_uint32),
         ("fragments", POINTER(DeserializeSceneFragmentMSFT)),
     ]
 
 
-PFN_xrDeserializeSceneMSFT = CFUNCTYPE(Result, SceneObserverMSFT, POINTER(SceneDeserializeInfoMSFT))
+PFN_xrDeserializeSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(SceneDeserializeInfoMSFT))
 
-PFN_xrGetSerializedSceneFragmentDataMSFT = CFUNCTYPE(Result, SceneMSFT, POINTER(SerializedSceneFragmentDataGetInfoMSFT), c_uint32, POINTER(c_uint32), POINTER(c_uint8))
+PFN_xrGetSerializedSceneFragmentDataMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SerializedSceneFragmentDataGetInfoMSFT), c_uint32, POINTER(c_uint32), POINTER(c_uint8))
 
 
 class EventDataDisplayRefreshRateChangedFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("from_display_refresh_rate", c_float),
         ("to_display_refresh_rate", c_float),
     ]
 
 
-PFN_xrEnumerateDisplayRefreshRatesFB = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(c_float))
+PFN_xrEnumerateDisplayRefreshRatesFB = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(c_float))
 
-PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result, Session, POINTER(c_float))
+PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), Session, POINTER(c_float))
 
-PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result, Session, c_float)
+PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), Session, c_float)
 
 
 class SystemColorSpacePropertiesFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("color_space", ColorSpaceFB),
+        ("color_space", ColorSpaceFB.ctype()),
     ]
 
 
-PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result, Session, c_uint32, POINTER(c_uint32), POINTER(ColorSpaceFB))
+PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(ColorSpaceFB.ctype()))
 
-PFN_xrSetColorSpaceFB = CFUNCTYPE(Result, Session, ColorSpaceFB)
+PFN_xrSetColorSpaceFB = CFUNCTYPE(Result.ctype(), Session, ColorSpaceFB.ctype())
 
 
 class FoveationProfileFB_T(Structure):
@@ -1932,78 +3628,182 @@ SwapchainStateFoveationFlagsFB = Flags64
 
 
 class FoveationProfileCreateInfoFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.FOVEATION_PROFILE_CREATE_INFO_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.FOVEATION_PROFILE_CREATE_INFO_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
     ]
 
 
 class SwapchainCreateInfoFoveationFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("flags", SwapchainCreateFoveationFlagsFB),
     ]
 
 
 class SwapchainStateFoveationFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SWAPCHAIN_STATE_FOVEATION_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SWAPCHAIN_STATE_FOVEATION_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("flags", SwapchainStateFoveationFlagsFB),
         ("profile", FoveationProfileFB),
     ]
 
 
-PFN_xrCreateFoveationProfileFB = CFUNCTYPE(Result, Session, POINTER(FoveationProfileCreateInfoFB), POINTER(FoveationProfileFB))
+PFN_xrCreateFoveationProfileFB = CFUNCTYPE(Result.ctype(), Session, POINTER(FoveationProfileCreateInfoFB), POINTER(FoveationProfileFB))
 
-PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result, FoveationProfileFB)
+PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result.ctype(), FoveationProfileFB)
 
 
 class FoveationLevelProfileCreateInfoFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_F_B.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_F_B.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("level", FoveationLevelFB),
+        ("level", FoveationLevelFB.ctype()),
         ("vertical_offset", c_float),
-        ("dynamic", FoveationDynamicFB),
+        ("dynamic", FoveationDynamicFB.ctype()),
     ]
 
 
 class ViewLocateFoveatedRenderingVARJO(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.VIEW_LOCATE_FOVEATED_RENDERING_V_A_R_J_O.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.VIEW_LOCATE_FOVEATED_RENDERING_V_A_R_J_O.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("foveated_rendering_active", Bool32),
     ]
 
 
 class FoveatedViewConfigurationViewVARJO(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.FOVEATED_VIEW_CONFIGURATION_VIEW_V_A_R_J_O.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.FOVEATED_VIEW_CONFIGURATION_VIEW_V_A_R_J_O.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("foveated_rendering_active", Bool32),
     ]
 
 
 class SystemFoveatedRenderingPropertiesVARJO(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_FOVEATED_RENDERING_PROPERTIES_V_A_R_J_O.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SYSTEM_FOVEATED_RENDERING_PROPERTIES_V_A_R_J_O.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("supports_foveated_rendering", Bool32),
     ]
 
 
 class CompositionLayerDepthTestVARJO(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_DEPTH_TEST_V_A_R_J_O.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.COMPOSITION_LAYER_DEPTH_TEST_V_A_R_J_O.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("depth_test_range_near_z", c_float),
         ("depth_test_range_far_z", c_float),
     ]
 
 
-PFN_xrSetEnvironmentDepthEstimationVARJO = CFUNCTYPE(Result, Session, Bool32)
+PFN_xrSetEnvironmentDepthEstimationVARJO = CFUNCTYPE(Result.ctype(), Session, Bool32)
 
 
 class SpatialAnchorStoreConnectionMSFT_T(Structure):
@@ -2020,8 +3820,21 @@ class SpatialAnchorPersistenceNameMSFT(Structure):
 
 
 class SpatialAnchorPersistenceInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("spatial_anchor_persistence_name", SpatialAnchorPersistenceNameMSFT),
         ("spatial_anchor", SpatialAnchorMSFT),
@@ -2029,27 +3842,40 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
 
 
 class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_M_S_F_T.value,
+            None, *args, **kwargs,
+        )
+    
+    @classmethod
+    def make_array(cls, element_count: int):
+        result = (cls * element_count)()
+        for element in result:
+            element.type = StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_M_S_F_T.value
+        return result                
+
     _fields_ = [
-        ("type", StructureType),
+        ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("spatial_anchor_store", SpatialAnchorStoreConnectionMSFT),
         ("spatial_anchor_persistence_name", SpatialAnchorPersistenceNameMSFT),
     ]
 
 
-PFN_xrCreateSpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result, Session, POINTER(SpatialAnchorStoreConnectionMSFT))
+PFN_xrCreateSpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorStoreConnectionMSFT))
 
-PFN_xrDestroySpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT)
+PFN_xrDestroySpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT)
 
-PFN_xrPersistSpatialAnchorMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceInfoMSFT))
+PFN_xrPersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceInfoMSFT))
 
-PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT, c_uint32, POINTER(c_uint32), POINTER(SpatialAnchorPersistenceNameMSFT))
+PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, c_uint32, POINTER(c_uint32), POINTER(SpatialAnchorPersistenceNameMSFT))
 
-PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result, Session, POINTER(SpatialAnchorFromPersistedAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFT))
+PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorFromPersistedAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFT))
 
-PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceNameMSFT))
+PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceNameMSFT))
 
-PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result, SpatialAnchorStoreConnectionMSFT)
+PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT)
 
 
 __all__ = [
