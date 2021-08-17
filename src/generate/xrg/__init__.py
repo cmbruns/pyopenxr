@@ -24,6 +24,7 @@ LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")
 if os.path.isfile(LIBCLANG_SHARED_LIBRARY):
     clang.cindex.Config.set_library_file(LIBCLANG_SHARED_LIBRARY)
 
+
 class CodeGenerator(object):
     def __init__(self, kinds: list[CursorKind] = None):
         self.cursor_kinds = kinds
@@ -63,6 +64,7 @@ class CodeGenerator(object):
 def generate_cursors() -> Generator[Cursor, None, None]:
     tu = Index.create().parse(
         path=OPENXR_HEADER,
+        args=["-DXR_USE_PLATFORM_WIN32", "-DXR_USE_GRAPHICS_API_OPENGL"],
         options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
     )
     tu_file_name = str(tu.cursor.spelling)
