@@ -9,7 +9,7 @@ This module contains code to help generate the code in pyopenxr.
 
 import os
 import pkg_resources
-from typing import Generator
+from typing import Generator, List
 
 import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
@@ -37,6 +37,16 @@ class CodeGenerator(object):
             self._items = list(generate_code_items(self.cursor_kinds))
         return self._items
 
+    @staticmethod
+    def platform_items(compiler_args) -> list[CodeItem]:
+        return list(generate_platform_code_items(compiler_args))
+
+    def print_all_platform_list(self, compiler_args) -> None:
+        print("\n\n__all__ = [")
+        for t in self.platform_items(compiler_args):
+            print(f'    "{t.name(Api.PYTHON)}",')
+        print("]")
+
     def print_all_list(self, api=Api.PYTHON) -> None:
         print("\n\n__all__ = [")
         for t in self.items:
@@ -60,11 +70,33 @@ class CodeGenerator(object):
             print(t.code(api))
             blanks2 = t.blank_lines_after()
 
+    def print_platform_items(self, compiler_args: List[str]) -> None:
+        blanks2 = 0
+        for t in self.platform_items(compiler_args):
+            blanks1 = t.blank_lines_before()
+            for b in range(max(blanks1, blanks2)):
+                print("")
+            print(t.code(Api.PYTHON))
+            blanks2 = t.blank_lines_after()
+
 
 def generate_cursors() -> Generator[Cursor, None, None]:
     tu = Index.create().parse(
         path=OPENXR_HEADER,
-        args=["-DXR_USE_PLATFORM_WIN32", "-DXR_USE_GRAPHICS_API_OPENGL"],
+        options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
+    )
+    tu_file_name = str(tu.cursor.spelling)
+    for child in tu.cursor.get_children():
+        if not str(child.location.file) == tu_file_name:
+            continue  # Don't leave this file
+        yield child
+
+
+def generate_platform_cursors(compiler_args=[]) -> Generator[Cursor, None, None]:
+    package_header = pkg_resources.resource_filename("xrg", "headers/openxr_platform.h")
+    tu = Index.create().parse(
+        path=package_header,
+        args=compiler_args,
         options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
     )
     tu_file_name = str(tu.cursor.spelling)
@@ -77,7 +109,9 @@ def generate_cursors() -> Generator[Cursor, None, None]:
 _CursorHandlers = {
     CursorKind.ENUM_DECL: EnumItem,
     CursorKind.FUNCTION_DECL: FunctionItem,
+    CursorKind.INCLUSION_DIRECTIVE: None,
     CursorKind.MACRO_DEFINITION: DefinitionItem,
+    CursorKind.MACRO_INSTANTIATION: None,
     CursorKind.TYPEDEF_DECL: TypeDefItem,
     CursorKind.STRUCT_DECL: StructItem,
     CursorKind.VAR_DECL: VariableItem,
@@ -92,6 +126,18 @@ def generate_code_items(
             continue
         try:
             yield _CursorHandlers[cursor.kind](cursor)
+        except SkippableCodeItemException:
+            continue
+
+
+def generate_platform_code_items(
+    compiler_args,
+) -> Generator[CodeItem, None, None]:
+    for cursor in generate_platform_cursors(compiler_args):
+        try:
+            handler = _CursorHandlers[cursor.kind]
+            if handler is not None:
+                yield handler(cursor)
         except SkippableCodeItemException:
             continue
 

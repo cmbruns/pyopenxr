@@ -68,6 +68,8 @@ endif()
 # Create staging folder for generated source files
 set(STAGING_DIR "${CMAKE_BINARY_DIR}/xr")
 file(MAKE_DIRECTORY "${STAGING_DIR}")
+file(MAKE_DIRECTORY "${STAGING_DIR}/platform")
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 
 ###########################
 ### Generate version.py ###
@@ -105,7 +107,7 @@ endif()
 ### Generate enums source file ###
 ##################################
 
-function(generate_source GENERATOR OUTPUT)
+function(generate_source GENERATOR OUTPUT OUT_DIR)
     # Two step copy so newlines are used as line ending
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE} "${GENERATOR}"
@@ -114,19 +116,20 @@ function(generate_source GENERATOR OUTPUT)
     )
     configure_file(
         "${CMAKE_BINARY_DIR}/${OUTPUT}"
-        "${STAGING_DIR}/"
+        "${STAGING_DIR}/${OUT_DIR}/"
         @ONLY
         NEWLINE_STYLE LF  # Even/especially on windows...
     )
     message(STATUS "Generated file ${STAGING_DIR}/${OUTPUT}")
 endfunction()
 
-generate_source("generate_version.py" "version.py")
-generate_source("generate_enums.py" "enums.py")
-generate_source("generate_constants.py" "constants.py")
-generate_source("generate_typedefs.py" "typedefs.py")
-generate_source("generate_raw_functions.py" "raw_functions.py")
-generate_source("generate_functions.py" "functions.py")
+generate_source("generate_version.py" "version.py" "")
+generate_source("generate_enums.py" "enums.py" "")
+generate_source("generate_constants.py" "constants.py" "")
+generate_source("generate_typedefs.py" "typedefs.py" "")
+generate_source("generate_raw_functions.py" "raw_functions.py" "")
+generate_source("generate_functions.py" "functions.py" "")
+generate_source("generate_windows_platform.py" "windows.py" "platform")
 
 ##########################################
 ### Find OpenXR-Registry documentation ###
