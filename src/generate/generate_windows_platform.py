@@ -6,7 +6,6 @@ import xrg
 
 
 def main():
-    cg = xrg.CodeGenerator()
     compiler_args = [
         "-DXR_USE_PLATFORM_WIN32",
         "-DXR_USE_GRAPHICS_API_OPENGL",
@@ -15,6 +14,8 @@ def main():
         "-DXR_USE_GRAPHICS_API_D3D12",
         "-DXR_USE_TIMESPEC",
     ]
+    cg = xrg.CodeGenerator(header=xrg.Header.PLATFORM, compiler_args=compiler_args)
+
     print(inspect.cleandoc("""
         from ctypes import c_char_p, c_float, c_int, c_uint32, c_void_p, CFUNCTYPE, POINTER, Structure
         
@@ -22,8 +23,8 @@ def main():
         from ..typedefs import *
     """))
     print("")
-    cg.print_platform_items(compiler_args=compiler_args)
-    cg.print_all_platform_list(compiler_args=compiler_args)
+    cg.print_items()
+    cg.print_all_list()
 
 
 if __name__ == "__main__":

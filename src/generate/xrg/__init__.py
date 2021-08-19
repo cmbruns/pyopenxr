@@ -7,6 +7,7 @@ This module contains code to help generate the code in pyopenxr.
 # TODO:
 #  * generate docstrings
 
+import enum
 import os
 import pkg_resources
 from typing import Generator, List
@@ -17,35 +18,36 @@ from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 from .types import *
 from .declarations import *
 
-# NOTE: some of these files should have been copied here by cmake...
-OPENXR_HEADER = pkg_resources.resource_filename("xrg", "headers/openxr.h")
-
 LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")  # TODO: Linux, Mac
 if os.path.isfile(LIBCLANG_SHARED_LIBRARY):
     clang.cindex.Config.set_library_file(LIBCLANG_SHARED_LIBRARY)
 
 
+class Header(enum.Enum):
+    OPENXR = "openxr.h",
+    PLATFORM = "openxr_platform.h",
+
+    def file_name(self) -> str:
+        return self.value[0]
+
+
 class CodeGenerator(object):
-    def __init__(self, kinds: list[CursorKind] = None):
+    def __init__(self, kinds: list[CursorKind] = None, header: Header = Header.OPENXR, compiler_args=None):
         self.cursor_kinds = kinds
         self._items = None
+        self.header = header
+        self.compiler_args = compiler_args
         self.ctypes_names = set()
 
     @property
     def items(self) -> list[CodeItem]:
         if self._items is None:  # Populate list just in time
-            self._items = list(generate_code_items(self.cursor_kinds))
+            self._items = list(generate_code_items(
+                kinds=self.cursor_kinds,
+                header=self.header,
+                compiler_args=self.compiler_args,
+            ))
         return self._items
-
-    @staticmethod
-    def platform_items(compiler_args) -> list[CodeItem]:
-        return list(generate_platform_code_items(compiler_args))
-
-    def print_all_platform_list(self, compiler_args) -> None:
-        print("\n\n__all__ = [")
-        for t in self.platform_items(compiler_args):
-            print(f'    "{t.name(Api.PYTHON)}",')
-        print("]")
 
     def print_all_list(self, api=Api.PYTHON) -> None:
         print("\n\n__all__ = [")
@@ -70,34 +72,17 @@ class CodeGenerator(object):
             print(t.code(api))
             blanks2 = t.blank_lines_after()
 
-    def print_platform_items(self, compiler_args: List[str]) -> None:
-        blanks2 = 0
-        for t in self.platform_items(compiler_args):
-            blanks1 = t.blank_lines_before()
-            for b in range(max(blanks1, blanks2)):
-                print("")
-            print(t.code(Api.PYTHON))
-            blanks2 = t.blank_lines_after()
 
-
-def generate_cursors() -> Generator[Cursor, None, None]:
+def generate_cursors(
+        header: Header = Header.OPENXR,
+        compiler_args=None,) -> Generator[Cursor, None, None]:
+    header_file = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
+    if compiler_args is None:
+        compiler_args = []
     tu = Index.create().parse(
-        path=OPENXR_HEADER,
+        path=header_file,
         options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
-    )
-    tu_file_name = str(tu.cursor.spelling)
-    for child in tu.cursor.get_children():
-        if not str(child.location.file) == tu_file_name:
-            continue  # Don't leave this file
-        yield child
-
-
-def generate_platform_cursors(compiler_args=[]) -> Generator[Cursor, None, None]:
-    package_header = pkg_resources.resource_filename("xrg", "headers/openxr_platform.h")
-    tu = Index.create().parse(
-        path=package_header,
         args=compiler_args,
-        options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
     )
     tu_file_name = str(tu.cursor.spelling)
     for child in tu.cursor.get_children():
@@ -120,36 +105,31 @@ _CursorHandlers = {
 
 def generate_code_items(
     kinds: list[CursorKind] = None,
+    header: Header = Header.OPENXR,
+    compiler_args=None,
 ) -> Generator[CodeItem, None, None]:
-    for cursor in generate_cursors():
+    for cursor in generate_cursors(header=header, compiler_args=compiler_args):
         if kinds is not None and cursor.kind not in kinds:
             continue
+        handler = _CursorHandlers[cursor.kind]
+        if handler is None:
+            continue
         try:
-            yield _CursorHandlers[cursor.kind](cursor)
+            yield handler(cursor)
         except SkippableCodeItemException:
             continue
 
 
-def generate_platform_code_items(
-    compiler_args,
-) -> Generator[CodeItem, None, None]:
-    for cursor in generate_platform_cursors(compiler_args):
-        try:
-            handler = _CursorHandlers[cursor.kind]
-            if handler is not None:
-                yield handler(cursor)
-        except SkippableCodeItemException:
-            continue
-
-
-def get_header_as_string() -> str:
-    with open(OPENXR_HEADER) as f:
+def get_header_as_string(header: Header = Header.OPENXR) -> str:
+    header_file = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
+    with open(header_file) as f:
         file_string = f.read()
     return file_string
 
 
 __all__ = [
     "Api",
-    "get_header_as_string",
     "CodeGenerator",
+    "get_header_as_string",
+    "Header",
 ]
