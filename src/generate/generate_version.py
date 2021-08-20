@@ -35,13 +35,21 @@ print(
     XR_VERSION_MAJOR = {major}
     XR_VERSION_MINOR = {minor}
     XR_VERSION_PATCH = {patch}
-    XR_CURRENT_API_VERSION = "{major}.{minor}.{patch}"
+    XR_CURRENT_API_VERSION_STRING = "{major}.{minor}.{patch}"
 
     PYOPENXR_VERSION_MAJOR = {major}
     PYOPENXR_VERSION_MINOR = {minor}
     PYOPENXR_VERSION_PATCH = {patch2}
     PYOPENXR_VERSION_PATCH_INCREMENTAL = {pyopenxr_patch}
     PYOPENXR_VERSION = "{major}.{minor}.{patch2}"
+
+
+    def make_version(major: int, minor: int, patch: int) -> int:
+        return ((major & 0xffff) << 48) | ((minor & 0xffff) << 32) | (patch & 0xffffffff)
+    
+    
+    XR_CURRENT_API_VERSION = make_version(XR_VERSION_MAJOR, XR_VERSION_MINOR, XR_VERSION_PATCH)
+
 
     __version__ = PYOPENXR_VERSION
 

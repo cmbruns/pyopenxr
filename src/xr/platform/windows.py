@@ -93,7 +93,7 @@ class SwapchainImageOpenGLKHR(Structure):
 class GraphicsRequirementsOpenGLKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_REQUIREMENTS_OPEN_G_L_K_H_R.value,
+            StructureType.GRAPHICS_REQUIREMENTS_OPENGL_KHR.value,
             None, *args, **kwargs,
         )            
 

@@ -7,7 +7,7 @@
 XR_VERSION_MAJOR = 1
 XR_VERSION_MINOR = 0
 XR_VERSION_PATCH = 18
-XR_CURRENT_API_VERSION = "1.0.18"
+XR_CURRENT_API_VERSION_STRING = "1.0.18"
 
 PYOPENXR_VERSION_MAJOR = 1
 PYOPENXR_VERSION_MINOR = 0
@@ -15,9 +15,18 @@ PYOPENXR_VERSION_PATCH = 1801
 PYOPENXR_VERSION_PATCH_INCREMENTAL = 1
 PYOPENXR_VERSION = "1.0.1801"
 
+
+def make_version(major: int, minor: int, patch: int) -> int:
+    return ((major & 0xffff) << 48) | ((minor & 0xffff) << 32) | (patch & 0xffffffff)
+
+
+XR_CURRENT_API_VERSION = make_version(XR_VERSION_MAJOR, XR_VERSION_MINOR, XR_VERSION_PATCH)
+
+
 __version__ = PYOPENXR_VERSION
 
 __all__ = [
+    "make_version",
     "XR_VERSION_MAJOR",
     "XR_VERSION_MINOR",
     "XR_VERSION_PATCH",
