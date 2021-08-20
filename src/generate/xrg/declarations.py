@@ -411,7 +411,7 @@ class StructItem(CodeItem):
                 def __init__(self, *args, **kwargs):
                     super().__init__(
                         StructureType.{type_enum_name}.value,
-                        None, *args, **kwargs,
+                        *args, **kwargs,
                     )            
             """), "    ")
             result += "\n"
@@ -759,7 +759,11 @@ class FunctionCoder(object):
 
 
 def snake_from_camel(camel: str) -> str:
-    return re.sub(r"(?<!^)(?=[A-Z])", "_", camel).lower()
+    snake = f"{camel}"
+    snake = re.sub(r"([^A-Z])([A-Z])", r"\1_\2", snake)
+    snake = snake.lower()
+    snake = re.sub(r"open_gl", "opengl_", snake)
+    return snake
 
 
 __all__ = [

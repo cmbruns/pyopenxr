@@ -1,8 +1,29 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_uint32, c_void_p, c_wchar
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar
+import ctypes
+from ctypes import wintypes
+
 from ..enums import *
 from ..typedefs import *
+
+
+class HDC__(ctypes.Structure):
+    pass
+
+
+class HGLRC__(ctypes.Structure):
+    pass
+
+
+class _LUID(ctypes.Structure):
+    _fields_ = [
+        ("low_part", c_ulong),
+        ("high_part", c_long),
+    ]
+
+
+_LARGE_INTEGER = c_longlong
 
 KHR_vulkan_swapchain_format_list = 1
 KHR_vulkan_swapchain_format_list_SPEC_VERSION = 4
@@ -49,8 +70,8 @@ FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME = "XR_FB_swapchain_update_state_
 class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -65,22 +86,22 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.GRAPHICS_BINDING_OPENGL_WIN32_KHR.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("h_d_c", c_int),
-        ("h_g_l_r_c", c_int),
+        ("h_dc", c_longlong),
+        ("h_glrc", c_longlong),
     ]
 
 
 class SwapchainImageOpenGLKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_IMAGE_OPEN_G_L_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_IMAGE_OPENGL_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -94,7 +115,7 @@ class GraphicsRequirementsOpenGLKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.GRAPHICS_REQUIREMENTS_OPENGL_KHR.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -111,8 +132,8 @@ PFN_xrGetOpenGLGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, Sys
 class GraphicsBindingVulkanKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_BINDING_VULKAN_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.GRAPHICS_BINDING_VULKAN_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -129,8 +150,8 @@ class GraphicsBindingVulkanKHR(Structure):
 class SwapchainImageVulkanKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_IMAGE_VULKAN_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_IMAGE_VULKAN_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -143,8 +164,8 @@ class SwapchainImageVulkanKHR(Structure):
 class GraphicsRequirementsVulkanKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_REQUIREMENTS_VULKAN_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.GRAPHICS_REQUIREMENTS_VULKAN_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -167,8 +188,8 @@ PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, Sys
 class GraphicsBindingD3D11KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_BINDING_D3_D11_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.GRAPHICS_BINDING_D3_D11_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -181,8 +202,8 @@ class GraphicsBindingD3D11KHR(Structure):
 class SwapchainImageD3D11KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_IMAGE_D3_D11_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_IMAGE_D3_D11_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -195,14 +216,14 @@ class SwapchainImageD3D11KHR(Structure):
 class GraphicsRequirementsD3D11KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_REQUIREMENTS_D3_D11_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.GRAPHICS_REQUIREMENTS_D3_D11_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("adapter_luid", c_int),
+        ("adapter_luid", _LUID),
         ("min_feature_level", c_int),
     ]
 
@@ -213,8 +234,8 @@ PFN_xrGetD3D11GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, Syst
 class GraphicsBindingD3D12KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_BINDING_D3_D12_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.GRAPHICS_BINDING_D3_D12_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -228,8 +249,8 @@ class GraphicsBindingD3D12KHR(Structure):
 class SwapchainImageD3D12KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_IMAGE_D3_D12_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_IMAGE_D3_D12_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -242,23 +263,23 @@ class SwapchainImageD3D12KHR(Structure):
 class GraphicsRequirementsD3D12KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_REQUIREMENTS_D3_D12_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.GRAPHICS_REQUIREMENTS_D3_D12_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("adapter_luid", c_int),
+        ("adapter_luid", _LUID),
         ("min_feature_level", c_int),
     ]
 
 
 PFN_xrGetD3D12GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsD3D12KHR))
 
-PFN_xrConvertWin32PerformanceCounterToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(c_int), POINTER(Time))
+PFN_xrConvertWin32PerformanceCounterToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(_LARGE_INTEGER), POINTER(Time))
 
-PFN_xrConvertTimeToWin32PerformanceCounterKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(c_int))
+PFN_xrConvertTimeToWin32PerformanceCounterKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(_LARGE_INTEGER))
 
 
 class timespec(Structure):
@@ -282,8 +303,8 @@ VulkanDeviceCreateFlagsKHR = Flags64
 class VulkanInstanceCreateInfoKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VULKAN_INSTANCE_CREATE_INFO_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.VULKAN_INSTANCE_CREATE_INFO_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -300,8 +321,8 @@ class VulkanInstanceCreateInfoKHR(Structure):
 class VulkanDeviceCreateInfoKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VULKAN_DEVICE_CREATE_INFO_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.VULKAN_DEVICE_CREATE_INFO_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -322,8 +343,8 @@ GraphicsBindingVulkan2KHR = GraphicsBindingVulkanKHR
 class VulkanGraphicsDeviceGetInfoKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VULKAN_GRAPHICS_DEVICE_GET_INFO_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -354,8 +375,8 @@ PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), Se
 class HolographicWindowAttachmentMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HOLOGRAPHIC_WINDOW_ATTACHMENT_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.HOLOGRAPHIC_WINDOW_ATTACHMENT_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -374,8 +395,8 @@ PFN_xrGetAudioInputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (c_wch
 class SwapchainImageFoveationVulkanFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_IMAGE_FOVEATION_VULKAN_F_B.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_IMAGE_FOVEATION_VULKAN_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -390,8 +411,8 @@ class SwapchainImageFoveationVulkanFB(Structure):
 class SwapchainStateSamplerVulkanFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_STATE_SAMPLER_VULKAN_F_B.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_STATE_SAMPLER_VULKAN_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [

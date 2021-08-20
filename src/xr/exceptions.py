@@ -52,6 +52,12 @@ class TimeoutExpired(QualifiedSuccessResult):
         return Result.TIMEOUT_EXPIRED
 
 
+class EventUnavailable(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.EVENT_UNAVAILABLE
+
+
 class ValidationFailureError(ResultError):
     @staticmethod
     def get_result_enum() -> Result:
@@ -65,6 +71,7 @@ _exception_map = {
     Result.SUCCESS: SuccessResult,
     Result.TIMEOUT_EXPIRED: TimeoutExpired,
     Result.ERROR_VALIDATION_FAILURE: ValidationFailureError,
+    Result.EVENT_UNAVAILABLE: EventUnavailable,
 }
 
 
@@ -90,6 +97,7 @@ def check_result(
 __all__ = [
     "check_result",
     "raise_on_qualified_success",
+    "EventUnavailable",
     "ResultError",
     "XrException",
     "ResultException",

@@ -57,7 +57,7 @@ class EnumType(TypeBase):
             return "c_int"  # TODO we could use the actual name if we had the enums loaded
 
     def used_ctypes(self, api=Api.PYTHON) -> set[str]:
-        return set()
+        return {"c_int", }
 
 
 class FloatType(TypeBase):
@@ -357,7 +357,13 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
         try:
             return IntegerType(clang_type)
         except ValueError:
-            return TypedefType(clang_type)
+            underlying_type = clang_type.get_declaration().underlying_typedef_type
+            if clang_type.spelling[:2].upper() == "XR":
+                return TypedefType(clang_type)
+            elif clang_type.spelling.startswith("PFN_"):
+                return TypedefType(clang_type)
+            else:
+                return parse_type(underlying_type)
     elif clang_type.kind == TypeKind.UCHAR:
         return StringType(clang_type)
     elif clang_type.kind == TypeKind.VOID:

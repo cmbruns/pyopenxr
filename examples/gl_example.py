@@ -1,7 +1,7 @@
 import ctypes
 
 import glfw
-from OpenGL import WGL
+from OpenGL import GL, WGL
 
 import xr
 
@@ -19,16 +19,18 @@ class GlExample(object):
         self.render_target_size = None
         self.window = None
         self.session = None
-
-    def destroy(self):
-        if self.instance is not None:
-            xr.destroy_instance(self.instance)
-        self.system_id = None
-        if self.window is not None:
-            glfw.terminate()  # TODO: raii
+        self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(*([xr.CompositionLayerProjectionView()] * 2))
+        self.projection_layer = xr.CompositionLayerProjection(None, 0, None, 2, self.projection_layer_views)
+        self.swapchain_create_info = xr.SwapchainCreateInfo(None)
+        self.swapchain = None
+        self.swapchain_images = None
+        self.fbo_id = None
+        self.fbo_depth_buffer = None
 
     def run(self):
         self.prepare()
+        while not glfw.window_should_close(self.window):
+            self.frame()
         self.destroy()  # TODO: raii
 
     def prepare(self):
@@ -36,6 +38,9 @@ class GlExample(object):
         self.prepare_xr_system()
         self.prepare_window()
         self.prepare_xr_session()
+        self.prepare_xr_swapchain()
+        self.prepare_xr_composition_layers()
+        self.prepare_gl_framebuffer()
 
     def prepare_xr_instance(self):
         requested_extensions = [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
@@ -50,7 +55,7 @@ class GlExample(object):
         str_arr = arr_type()
         for i, s in enumerate(bs):
             str_arr[i] = s
-        ici = xr.InstanceCreateInfo(0, app_info, 0, None, 1, str_arr)
+        ici = xr.InstanceCreateInfo(None, 0, app_info, 0, None, 1, str_arr)
         self.instance = xr.create_instance(ici)
         # TODO: pythonic wrapper
         pfn = xr.get_instance_proc_addr(
@@ -61,7 +66,7 @@ class GlExample(object):
         print(instance_properties)
 
     def prepare_xr_system(self):
-        get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
+        get_info = xr.SystemGetInfo(None, xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
         self.system_id = xr.get_system(self.instance, ctypes.pointer(get_info))  # TODO: not a pointer
         sys_props = xr.get_system_properties(self.instance, self.system_id)
         view_configs = xr.enumerate_view_configurations(self.instance, self.system_id)
@@ -101,6 +106,7 @@ class GlExample(object):
         # HDC type is not processed properly
         # May need to include Windows.h and enhance parser
         graphics_binding = xr.GraphicsBindingOpenGLWin32KHR(
+            None,
             WGL.wglGetCurrentDC(),
             WGL.wglGetCurrentContext(),
         )
@@ -108,8 +114,101 @@ class GlExample(object):
         sci = xr.SessionCreateInfo(pp, 0, self.system_id)
         self.session = xr.create_session(self.instance, sci)  # Failing here...
         reference_spaces = xr.enumerate_reference_spaces(self.session)
-        rsci = xr.ReferenceSpaceCreateInfo()
-        space = xr.create_reference_space(self.session, rsci)
+        for rs in reference_spaces:
+            print(rs)
+        # TODO: default constructors for Quaternion, Vector3f, Posef, ReferenceSpaceCreateInfo
+        rsci = xr.ReferenceSpaceCreateInfo(None, 3, xr.Posef(xr.Quaternionf(0, 0, 0, 1), xr.Vector3f(0, 0, 0)))
+        self.projection_layer.space = xr.create_reference_space(self.session, rsci)
+        swapchain_formats = xr.enumerate_swapchain_formats(self.session)
+        for scf in swapchain_formats:
+            print(scf)
+
+    def prepare_xr_swapchain(self):
+        self.swapchain_create_info.usage_flags = xr.SWAPCHAIN_USAGE_TRANSFER_DST_BIT
+        self.swapchain_create_info.format = GL.GL_SRGB8_ALPHA8
+        self.swapchain_create_info.sample_count = 1
+        self.swapchain_create_info.array_size = 1
+        self.swapchain_create_info.face_count = 1
+        self.swapchain_create_info.mip_count = 1
+        self.swapchain_create_info.width = self.render_target_size[0]
+        self.swapchain_create_info.height = self.render_target_size[1]
+        self.swapchain = xr.create_swapchain(self.session, self.swapchain_create_info)
+        self.swapchain_images = xr.enumerate_swapchain_images(self.swapchain)
+        for si in self.swapchain_images:
+            print(si)
+
+    def prepare_xr_composition_layers(self):
+        self.projection_layer.view_count = 2
+        self.projection_layer.views = self.projection_layer_views
+        for eye_index in range(2):
+            layer_view = self.projection_layer_views[eye_index]
+            layer_view.sub_image.swapchain = self.swapchain
+            layer_view.sub_image.image_rect.extent.width = self.render_target_size[0] // 2
+            layer_view.sub_image.image_rect.extent.width = self.render_target_size[1]
+            if eye_index == 1:
+                layer_view.sub_image.image_rect.offset.x = layer_view.sub_image.image_rect.extent.width
+
+    def prepare_gl_framebuffer(self):
+        self.fbo_depth_buffer = GL.glGenRenderbuffers(1)
+        GL.glBindRenderbuffer(GL.GL_RENDERBUFFER, self.fbo_depth_buffer)
+        if self.swapchain_create_info.sample_count == 1:
+            GL.glRenderbufferStorage(
+                GL.GL_RENDERBUFFER,
+                GL.GL_DEPTH24_STENCIL8,
+                self.swapchain_create_info.width,
+                self.swapchain_create_info.height,
+            )
+        else:
+            GL.glRenderbufferStorageMultisample(
+                GL.GL_RENDERBUFFER,
+                self.swapchain_create_info.sample_count,
+                GL.GL_DEPTH24_STENCIL8,
+                self.swapchain_create_info.width,
+                self.swapchain_create_info.height,
+            )
+        self.fbo_id = GL.glGenFramebuffers(1)
+        GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, self.fbo_id)
+        GL.glFramebufferRenderbuffer(
+            GL.GL_DRAW_FRAMEBUFFER,
+            GL.GL_DEPTH_STENCIL_ATTACHMENT,
+            GL.GL_RENDERBUFFER,
+            self.fbo_depth_buffer,
+        )
+        GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
+
+    def frame(self):
+        glfw.poll_events()
+        self.poll_xr_events()
+        glfw.swap_buffers(self.window)
+
+    def poll_xr_events(self):
+        while True:
+            try:
+                event_buffer = xr.poll_event(self.instance)
+            except xr.EventUnavailable as exc:
+                break
+
+
+    def destroy(self):
+        if self.fbo_id is not None:
+            GL.glDeleteFramebuffers(1, [self.fbo_id])
+            self.fbo_id = None
+        if self.fbo_depth_buffer is not None:
+            GL.glDeleteRenderbuffers(1, [self.fbo_depth_buffer])
+            self.fbo_depth_buffer = None
+        if self.swapchain is not None:
+            xr.destroy_swapchain(self.swapchain)
+            self.swapchain = None
+        if self.session is not None:
+            xr.destroy_session(self.session)
+            self.session = None
+        if self.window is not None:
+            glfw.terminate()  # TODO: raii
+            self.window = None
+        self.system_id = None
+        if self.instance is not None:
+            xr.destroy_instance(self.instance)
+            self.instance = None
 
 
 if __name__ == "__main__":

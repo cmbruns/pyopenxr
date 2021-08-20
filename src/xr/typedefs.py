@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
 from .enums import *
 
 Version = c_uint64
@@ -84,7 +84,7 @@ class ApiLayerProperties(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.API_LAYER_PROPERTIES.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -101,7 +101,7 @@ class ExtensionProperties(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EXTENSION_PROPERTIES.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     def __bytes__(self):
@@ -140,7 +140,7 @@ class InstanceCreateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.INSTANCE_CREATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -159,7 +159,7 @@ class InstanceProperties(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.INSTANCE_PROPERTIES.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -174,7 +174,7 @@ class EventDataBuffer(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EVENT_DATA_BUFFER.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -188,7 +188,7 @@ class SystemGetInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SYSTEM_GET_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -217,7 +217,7 @@ class SystemProperties(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SYSTEM_PROPERTIES.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -258,7 +258,7 @@ class SpaceVelocity(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SPACE_VELOCITY.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -290,7 +290,7 @@ class ReferenceSpaceCreateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.REFERENCE_SPACE_CREATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -312,7 +312,7 @@ class ActionSpaceCreateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_SPACE_CREATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -328,7 +328,7 @@ class SpaceLocation(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SPACE_LOCATION.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -343,7 +343,7 @@ class ViewConfigurationProperties(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.VIEW_CONFIGURATION_PROPERTIES.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -358,7 +358,7 @@ class ViewConfigurationView(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.VIEW_CONFIGURATION_VIEW.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -377,7 +377,7 @@ class SwapchainCreateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SWAPCHAIN_CREATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -398,8 +398,8 @@ class SwapchainCreateInfo(Structure):
 class SwapchainImageBaseHeader(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_IMAGE_BASE_HEADER.value,
-            None, *args, **kwargs,
+            0,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -412,7 +412,7 @@ class SwapchainImageAcquireInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -425,7 +425,7 @@ class SwapchainImageWaitInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SWAPCHAIN_IMAGE_WAIT_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -439,7 +439,7 @@ class SwapchainImageReleaseInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SWAPCHAIN_IMAGE_RELEASE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -452,7 +452,7 @@ class SessionBeginInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SESSION_BEGIN_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -466,7 +466,7 @@ class FrameWaitInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.FRAME_WAIT_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -479,7 +479,7 @@ class FrameState(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.FRAME_STATE.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -495,7 +495,7 @@ class FrameBeginInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.FRAME_BEGIN_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -508,7 +508,7 @@ class CompositionLayerBaseHeader(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.COMPOSITION_LAYER_BASE_HEADER.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -523,7 +523,7 @@ class FrameEndInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.FRAME_END_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -540,7 +540,7 @@ class ViewLocateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.VIEW_LOCATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -556,7 +556,7 @@ class ViewState(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.VIEW_STATE.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -579,7 +579,7 @@ class View(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.VIEW.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -594,7 +594,7 @@ class ActionSetCreateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_SET_CREATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -610,7 +610,7 @@ class ActionCreateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_CREATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -619,7 +619,7 @@ class ActionCreateInfo(Structure):
         ("action_name", (c_char * 64)),
         ("action_type", ActionType.ctype()),
         ("count_subaction_paths", c_uint32),
-        ("subaction_paths", POINTER(Path)),
+        ("subaction_paths", POINTER(c_uint64)),
         ("localized_action_name", (c_char * 128)),
     ]
 
@@ -635,7 +635,7 @@ class InteractionProfileSuggestedBinding(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.INTERACTION_PROFILE_SUGGESTED_BINDING.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -651,14 +651,14 @@ class SessionActionSetsAttachInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SESSION_ACTION_SETS_ATTACH_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("count_action_sets", c_uint32),
-        ("action_sets", POINTER(ActionSet)),
+        ("action_sets", POINTER(POINTER(ActionSet_T))),
     ]
 
 
@@ -666,7 +666,7 @@ class InteractionProfileState(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.INTERACTION_PROFILE_STATE.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -680,7 +680,7 @@ class ActionStateGetInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_STATE_GET_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -695,7 +695,7 @@ class ActionStateBoolean(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_STATE_BOOLEAN.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -712,7 +712,7 @@ class ActionStateFloat(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_STATE_FLOAT.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -736,7 +736,7 @@ class ActionStateVector2f(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_STATE_VECTOR2F.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -753,7 +753,7 @@ class ActionStatePose(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTION_STATE_POSE.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -774,7 +774,7 @@ class ActionsSyncInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.ACTIONS_SYNC_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -789,7 +789,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -803,7 +803,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.INPUT_SOURCE_LOCALIZED_NAME_GET_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -818,7 +818,7 @@ class HapticActionInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.HAPTIC_ACTION_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -833,7 +833,7 @@ class HapticBaseHeader(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.HAPTIC_BASE_HEADER.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -846,7 +846,7 @@ class BaseInStructure(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.BASE_IN_STRUCTURE.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     pass
@@ -862,7 +862,7 @@ class BaseOutStructure(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.BASE_OUT_STRUCTURE.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     pass
@@ -907,7 +907,7 @@ class CompositionLayerProjectionView(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.COMPOSITION_LAYER_PROJECTION_VIEW.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -923,7 +923,7 @@ class CompositionLayerProjection(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.COMPOSITION_LAYER_PROJECTION.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -940,7 +940,7 @@ class CompositionLayerQuad(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.COMPOSITION_LAYER_QUAD.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -959,7 +959,7 @@ class EventDataBaseHeader(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EVENT_DATA_BASE_HEADER.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -972,7 +972,7 @@ class EventDataEventsLost(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EVENT_DATA_EVENTS_LOST.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -986,7 +986,7 @@ class EventDataInstanceLossPending(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1000,7 +1000,7 @@ class EventDataSessionStateChanged(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EVENT_DATA_SESSION_STATE_CHANGED.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1016,7 +1016,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1034,7 +1034,7 @@ class EventDataInteractionProfileChanged(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1048,7 +1048,7 @@ class HapticVibration(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.HAPTIC_VIBRATION.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1206,8 +1206,8 @@ PFN_xrStopHapticFeedback = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActi
 class CompositionLayerCubeKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_CUBE_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_CUBE_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1225,8 +1225,8 @@ class CompositionLayerCubeKHR(Structure):
 class CompositionLayerDepthInfoKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_DEPTH_INFO_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_DEPTH_INFO_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1243,8 +1243,8 @@ class CompositionLayerDepthInfoKHR(Structure):
 class CompositionLayerCylinderKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_CYLINDER_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_CYLINDER_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1264,8 +1264,8 @@ class CompositionLayerCylinderKHR(Structure):
 class CompositionLayerEquirectKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_EQUIRECT_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_EQUIRECT_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1285,8 +1285,8 @@ class CompositionLayerEquirectKHR(Structure):
 class VisibilityMaskKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VISIBILITY_MASK_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.VISIBILITY_MASK_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1304,8 +1304,8 @@ class VisibilityMaskKHR(Structure):
 class EventDataVisibilityMaskChangedKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1323,8 +1323,8 @@ PFN_xrGetVisibilityMaskKHR = CFUNCTYPE(Result.ctype(), Session, ViewConfiguratio
 class CompositionLayerColorScaleBiasKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_COLOR_SCALE_BIAS_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1338,8 +1338,8 @@ class CompositionLayerColorScaleBiasKHR(Structure):
 class LoaderInitInfoBaseHeaderKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.LOADER_INIT_INFO_BASE_HEADER_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.LOADER_INIT_INFO_BASE_HEADER_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1354,8 +1354,8 @@ PFN_xrInitializeLoaderKHR = CFUNCTYPE(Result.ctype(), POINTER(LoaderInitInfoBase
 class CompositionLayerEquirect2KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_EQUIRECT2_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_EQUIRECT2_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1376,8 +1376,8 @@ class CompositionLayerEquirect2KHR(Structure):
 class BindingModificationBaseHeaderKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.BINDING_MODIFICATION_BASE_HEADER_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.BINDING_MODIFICATION_BASE_HEADER_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1389,8 +1389,8 @@ class BindingModificationBaseHeaderKHR(Structure):
 class BindingModificationsKHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.BINDING_MODIFICATIONS_K_H_R.value,
-            None, *args, **kwargs,
+            StructureType.BINDING_MODIFICATIONS_KHR.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1404,8 +1404,8 @@ class BindingModificationsKHR(Structure):
 class EventDataPerfSettingsEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.EVENT_DATA_PERF_SETTINGS_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.EVENT_DATA_PERF_SETTINGS_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1437,8 +1437,8 @@ DebugUtilsMessageTypeFlagsEXT = Flags64
 class DebugUtilsObjectNameInfoEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1453,8 +1453,8 @@ class DebugUtilsObjectNameInfoEXT(Structure):
 class DebugUtilsLabelEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.DEBUG_UTILS_LABEL_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.DEBUG_UTILS_LABEL_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1467,8 +1467,8 @@ class DebugUtilsLabelEXT(Structure):
 class DebugUtilsMessengerCallbackDataEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1490,8 +1490,8 @@ PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeveri
 class DebugUtilsMessengerCreateInfoEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1522,8 +1522,8 @@ PFN_xrSessionInsertDebugUtilsLabelEXT = CFUNCTYPE(Result.ctype(), Session, POINT
 class SystemEyeGazeInteractionPropertiesEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1536,8 +1536,8 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
 class EyeGazeSampleTimeEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.EYE_GAZE_SAMPLE_TIME_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.EYE_GAZE_SAMPLE_TIME_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1555,8 +1555,8 @@ OverlayMainSessionFlagsEXTX = Flags64
 class SessionCreateInfoOverlayEXTX(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SESSION_CREATE_INFO_OVERLAY_E_X_T_X.value,
-            None, *args, **kwargs,
+            StructureType.SESSION_CREATE_INFO_OVERLAY_EXTX.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1570,8 +1570,8 @@ class SessionCreateInfoOverlayEXTX(Structure):
 class EventDataMainSessionVisibilityChangedEXTX(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_E_X_T_X.value,
-            None, *args, **kwargs,
+            StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1592,8 +1592,8 @@ SpatialAnchorMSFT = POINTER(SpatialAnchorMSFT_T)
 class SpatialAnchorCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SPATIAL_ANCHOR_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SPATIAL_ANCHOR_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1608,8 +1608,8 @@ class SpatialAnchorCreateInfoMSFT(Structure):
 class SpatialAnchorSpaceCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1632,8 +1632,8 @@ CompositionLayerImageLayoutFlagsFB = Flags64
 class CompositionLayerImageLayoutFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_F_B.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1646,8 +1646,8 @@ class CompositionLayerImageLayoutFB(Structure):
 class CompositionLayerAlphaBlendFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_ALPHA_BLEND_F_B.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_ALPHA_BLEND_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1663,8 +1663,8 @@ class CompositionLayerAlphaBlendFB(Structure):
 class ViewConfigurationDepthRangeEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VIEW_CONFIGURATION_DEPTH_RANGE_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.VIEW_CONFIGURATION_DEPTH_RANGE_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1691,8 +1691,8 @@ PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path,
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1717,8 +1717,8 @@ HandTrackerEXT = POINTER(HandTrackerEXT_T)
 class SystemHandTrackingPropertiesEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SYSTEM_HAND_TRACKING_PROPERTIES_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.SYSTEM_HAND_TRACKING_PROPERTIES_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1731,8 +1731,8 @@ class SystemHandTrackingPropertiesEXT(Structure):
 class HandTrackerCreateInfoEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_TRACKER_CREATE_INFO_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_TRACKER_CREATE_INFO_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1746,8 +1746,8 @@ class HandTrackerCreateInfoEXT(Structure):
 class HandJointsLocateInfoEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_JOINTS_LOCATE_INFO_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_JOINTS_LOCATE_INFO_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1777,8 +1777,8 @@ class HandJointVelocityEXT(Structure):
 class HandJointLocationsEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_JOINT_LOCATIONS_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_JOINT_LOCATIONS_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1793,8 +1793,8 @@ class HandJointLocationsEXT(Structure):
 class HandJointVelocitiesEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_JOINT_VELOCITIES_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_JOINT_VELOCITIES_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1815,8 +1815,8 @@ PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(Ha
 class SystemHandTrackingMeshPropertiesMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SYSTEM_HAND_TRACKING_MESH_PROPERTIES_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1831,8 +1831,8 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
 class HandMeshSpaceCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_MESH_SPACE_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_MESH_SPACE_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1846,8 +1846,8 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
 class HandMeshUpdateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_MESH_UPDATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_MESH_UPDATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1886,8 +1886,8 @@ class HandMeshVertexBufferMSFT(Structure):
 class HandMeshMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_MESH_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_MESH_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1904,8 +1904,8 @@ class HandMeshMSFT(Structure):
 class HandPoseTypeInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_POSE_TYPE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_POSE_TYPE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1923,23 +1923,23 @@ PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(Han
 class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("view_configuration_count", c_uint32),
-        ("enabled_view_configuration_types", POINTER(ViewConfigurationType.ctype())),
+        ("enabled_view_configuration_types", POINTER(c_int)),
     ]
 
 
 class SecondaryViewConfigurationStateMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1953,8 +1953,8 @@ class SecondaryViewConfigurationStateMSFT(Structure):
 class SecondaryViewConfigurationFrameStateMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1968,8 +1968,8 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
 class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -1985,8 +1985,8 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
 class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2000,8 +2000,8 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
 class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2017,8 +2017,8 @@ ControllerModelKeyMSFT = c_uint64
 class ControllerModelKeyStateMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.CONTROLLER_MODEL_KEY_STATE_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.CONTROLLER_MODEL_KEY_STATE_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2031,8 +2031,8 @@ class ControllerModelKeyStateMSFT(Structure):
 class ControllerModelNodePropertiesMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.CONTROLLER_MODEL_NODE_PROPERTIES_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.CONTROLLER_MODEL_NODE_PROPERTIES_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2046,8 +2046,8 @@ class ControllerModelNodePropertiesMSFT(Structure):
 class ControllerModelPropertiesMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.CONTROLLER_MODEL_PROPERTIES_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.CONTROLLER_MODEL_PROPERTIES_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2062,8 +2062,8 @@ class ControllerModelPropertiesMSFT(Structure):
 class ControllerModelNodeStateMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.CONTROLLER_MODEL_NODE_STATE_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.CONTROLLER_MODEL_NODE_STATE_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2076,8 +2076,8 @@ class ControllerModelNodeStateMSFT(Structure):
 class ControllerModelStateMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.CONTROLLER_MODEL_STATE_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.CONTROLLER_MODEL_STATE_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2101,8 +2101,8 @@ PFN_xrGetControllerModelStateMSFT = CFUNCTYPE(Result.ctype(), Session, Controlle
 class ViewConfigurationViewFovEPIC(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VIEW_CONFIGURATION_VIEW_FOV_E_P_I_C.value,
-            None, *args, **kwargs,
+            StructureType.VIEW_CONFIGURATION_VIEW_FOV_EPIC.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2116,8 +2116,8 @@ class ViewConfigurationViewFovEPIC(Structure):
 class CompositionLayerReprojectionInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2130,8 +2130,8 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
 class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2149,8 +2149,8 @@ PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result.ctype(), Instance, Syste
 class SwapchainStateBaseHeaderFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_STATE_BASE_HEADER_F_B.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_STATE_BASE_HEADER_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2169,8 +2169,8 @@ CompositionLayerSecureContentFlagsFB = Flags64
 class CompositionLayerSecureContentFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_SECURE_CONTENT_F_B.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_SECURE_CONTENT_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2183,8 +2183,8 @@ class CompositionLayerSecureContentFB(Structure):
 class InteractionProfileAnalogThresholdVALVE(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.INTERACTION_PROFILE_ANALOG_THRESHOLD_V_A_L_V_E.value,
-            None, *args, **kwargs,
+            StructureType.INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2202,8 +2202,8 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
 class HandJointsMotionRangeInfoEXT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.HAND_JOINTS_MOTION_RANGE_INFO_E_X_T.value,
-            None, *args, **kwargs,
+            StructureType.HAND_JOINTS_MOTION_RANGE_INFO_EXT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2236,8 +2236,8 @@ class UuidMSFT(Structure):
 class SceneObserverCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_OBSERVER_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_OBSERVER_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2249,8 +2249,8 @@ class SceneObserverCreateInfoMSFT(Structure):
 class SceneCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2297,15 +2297,15 @@ class SceneBoundsMSFT(Structure):
 class NewSceneComputeInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.NEW_SCENE_COMPUTE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.NEW_SCENE_COMPUTE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("requested_feature_count", c_uint32),
-        ("requested_features", POINTER(SceneComputeFeatureMSFT.ctype())),
+        ("requested_features", POINTER(c_int)),
         ("consistency", SceneComputeConsistencyMSFT.ctype()),
         ("bounds", SceneBoundsMSFT),
     ]
@@ -2314,8 +2314,8 @@ class NewSceneComputeInfoMSFT(Structure):
 class VisualMeshComputeLodInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2337,8 +2337,8 @@ class SceneComponentMSFT(Structure):
 class SceneComponentsMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_COMPONENTS_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_COMPONENTS_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2353,8 +2353,8 @@ class SceneComponentsMSFT(Structure):
 class SceneComponentsGetInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_COMPONENTS_GET_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_COMPONENTS_GET_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2374,8 +2374,8 @@ class SceneComponentLocationMSFT(Structure):
 class SceneComponentLocationsMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_COMPONENT_LOCATIONS_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_COMPONENT_LOCATIONS_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2389,8 +2389,8 @@ class SceneComponentLocationsMSFT(Structure):
 class SceneComponentsLocateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_COMPONENTS_LOCATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_COMPONENTS_LOCATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2412,8 +2412,8 @@ class SceneObjectMSFT(Structure):
 class SceneObjectsMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_OBJECTS_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_OBJECTS_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2427,8 +2427,8 @@ class SceneObjectsMSFT(Structure):
 class SceneComponentParentFilterInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_COMPONENT_PARENT_FILTER_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_COMPONENT_PARENT_FILTER_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2441,15 +2441,15 @@ class SceneComponentParentFilterInfoMSFT(Structure):
 class SceneObjectTypesFilterInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("object_type_count", c_uint32),
-        ("object_types", POINTER(SceneObjectTypeMSFT.ctype())),
+        ("object_types", POINTER(c_int)),
     ]
 
 
@@ -2465,8 +2465,8 @@ class ScenePlaneMSFT(Structure):
 class ScenePlanesMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_PLANES_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_PLANES_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2480,15 +2480,15 @@ class ScenePlanesMSFT(Structure):
 class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("alignment_count", c_uint32),
-        ("alignments", POINTER(ScenePlaneAlignmentTypeMSFT.ctype())),
+        ("alignments", POINTER(c_int)),
     ]
 
 
@@ -2502,8 +2502,8 @@ class SceneMeshMSFT(Structure):
 class SceneMeshesMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_MESHES_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_MESHES_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2517,8 +2517,8 @@ class SceneMeshesMSFT(Structure):
 class SceneMeshBuffersGetInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_MESH_BUFFERS_GET_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_MESH_BUFFERS_GET_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2531,8 +2531,8 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
 class SceneMeshBuffersMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_MESH_BUFFERS_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_MESH_BUFFERS_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2544,8 +2544,8 @@ class SceneMeshBuffersMSFT(Structure):
 class SceneMeshVertexBufferMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_MESH_VERTEX_BUFFER_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_MESH_VERTEX_BUFFER_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2560,8 +2560,8 @@ class SceneMeshVertexBufferMSFT(Structure):
 class SceneMeshIndicesUint32MSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_MESH_INDICES_UINT32_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_MESH_INDICES_UINT32_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2576,8 +2576,8 @@ class SceneMeshIndicesUint32MSFT(Structure):
 class SceneMeshIndicesUint16MSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_MESH_INDICES_UINT16_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_MESH_INDICES_UINT16_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2613,8 +2613,8 @@ PFN_xrGetSceneMeshBuffersMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(Sce
 class SerializedSceneFragmentDataGetInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2634,8 +2634,8 @@ class DeserializeSceneFragmentMSFT(Structure):
 class SceneDeserializeInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SCENE_DESERIALIZE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SCENE_DESERIALIZE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2654,8 +2654,8 @@ PFN_xrGetSerializedSceneFragmentDataMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, 
 class EventDataDisplayRefreshRateChangedFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_F_B.value,
-            None, *args, **kwargs,
+            StructureType.EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2676,8 +2676,8 @@ PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), Session, c_float)
 class SystemColorSpacePropertiesFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_F_B.value,
-            None, *args, **kwargs,
+            StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2689,7 +2689,7 @@ class SystemColorSpacePropertiesFB(Structure):
 
 PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(ColorSpaceFB.ctype()))
 
-PFN_xrSetColorSpaceFB = CFUNCTYPE(Result.ctype(), Session, ColorSpaceFB.ctype())
+PFN_xrSetColorSpaceFB = CFUNCTYPE(Result.ctype(), Session, c_int)
 
 
 class FoveationProfileFB_T(Structure):
@@ -2706,8 +2706,8 @@ SwapchainStateFoveationFlagsFB = Flags64
 class FoveationProfileCreateInfoFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.FOVEATION_PROFILE_CREATE_INFO_F_B.value,
-            None, *args, **kwargs,
+            StructureType.FOVEATION_PROFILE_CREATE_INFO_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2719,8 +2719,8 @@ class FoveationProfileCreateInfoFB(Structure):
 class SwapchainCreateInfoFoveationFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_F_B.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2733,8 +2733,8 @@ class SwapchainCreateInfoFoveationFB(Structure):
 class SwapchainStateFoveationFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_STATE_FOVEATION_F_B.value,
-            None, *args, **kwargs,
+            StructureType.SWAPCHAIN_STATE_FOVEATION_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2753,8 +2753,8 @@ PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result.ctype(), FoveationProfileFB)
 class FoveationLevelProfileCreateInfoFB(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_F_B.value,
-            None, *args, **kwargs,
+            StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_FB.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2769,8 +2769,8 @@ class FoveationLevelProfileCreateInfoFB(Structure):
 class ViewLocateFoveatedRenderingVARJO(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.VIEW_LOCATE_FOVEATED_RENDERING_V_A_R_J_O.value,
-            None, *args, **kwargs,
+            StructureType.VIEW_LOCATE_FOVEATED_RENDERING_VARJO.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2783,8 +2783,8 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
 class FoveatedViewConfigurationViewVARJO(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.FOVEATED_VIEW_CONFIGURATION_VIEW_V_A_R_J_O.value,
-            None, *args, **kwargs,
+            StructureType.FOVEATED_VIEW_CONFIGURATION_VIEW_VARJO.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2797,8 +2797,8 @@ class FoveatedViewConfigurationViewVARJO(Structure):
 class SystemFoveatedRenderingPropertiesVARJO(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SYSTEM_FOVEATED_RENDERING_PROPERTIES_V_A_R_J_O.value,
-            None, *args, **kwargs,
+            StructureType.SYSTEM_FOVEATED_RENDERING_PROPERTIES_VARJO.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2811,8 +2811,8 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
 class CompositionLayerDepthTestVARJO(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.COMPOSITION_LAYER_DEPTH_TEST_V_A_R_J_O.value,
-            None, *args, **kwargs,
+            StructureType.COMPOSITION_LAYER_DEPTH_TEST_VARJO.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2842,8 +2842,8 @@ class SpatialAnchorPersistenceNameMSFT(Structure):
 class SpatialAnchorPersistenceInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [
@@ -2857,8 +2857,8 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
 class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_M_S_F_T.value,
-            None, *args, **kwargs,
+            StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_MSFT.value,
+            *args, **kwargs,
         )            
 
     _fields_ = [

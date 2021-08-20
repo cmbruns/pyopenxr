@@ -54,6 +54,7 @@ print(
     __version__ = PYOPENXR_VERSION
 
     __all__ = [
+        "make_version",
         "XR_VERSION_MAJOR",
         "XR_VERSION_MINOR",
         "XR_VERSION_PATCH",

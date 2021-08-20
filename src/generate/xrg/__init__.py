@@ -32,12 +32,19 @@ class Header(enum.Enum):
 
 
 class CodeGenerator(object):
-    def __init__(self, kinds: list[CursorKind] = None, header: Header = Header.OPENXR, compiler_args=None):
+    def __init__(
+            self,
+            kinds: list[CursorKind] = None,
+            header: Header = Header.OPENXR,
+            compiler_args=None,
+            header_preamble: str = None,
+    ):
         self.cursor_kinds = kinds
         self._items = None
         self.header = header
         self.compiler_args = compiler_args
         self.ctypes_names = set()
+        self.header_preamble = header_preamble
 
     @property
     def items(self) -> list[CodeItem]:
@@ -46,6 +53,7 @@ class CodeGenerator(object):
                 kinds=self.cursor_kinds,
                 header=self.header,
                 compiler_args=self.compiler_args,
+                header_preamble=self.header_preamble,
             ))
         return self._items
 
@@ -75,12 +83,18 @@ class CodeGenerator(object):
 
 def generate_cursors(
         header: Header = Header.OPENXR,
-        compiler_args=None,) -> Generator[Cursor, None, None]:
-    header_file = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
+        compiler_args=None,
+        header_preamble=None,
+) -> Generator[Cursor, None, None]:
+    header_file_name = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
+    header_text = pkg_resources.resource_string("xrg", f"headers/{header.value[0]}")
+    if header_preamble is not None:
+        header_text = f"{header_preamble}\n" + header_text.decode()
     if compiler_args is None:
         compiler_args = []
     tu = Index.create().parse(
-        path=header_file,
+        path=header_file_name,
+        unsaved_files=((header_file_name, header_text), ),
         options=TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
         args=compiler_args,
     )
@@ -107,8 +121,13 @@ def generate_code_items(
     kinds: list[CursorKind] = None,
     header: Header = Header.OPENXR,
     compiler_args=None,
+    header_preamble=None,
 ) -> Generator[CodeItem, None, None]:
-    for cursor in generate_cursors(header=header, compiler_args=compiler_args):
+    for cursor in generate_cursors(
+            header=header,
+            compiler_args=compiler_args,
+            header_preamble=header_preamble,
+    ):
         if kinds is not None and cursor.kind not in kinds:
             continue
         handler = _CursorHandlers[cursor.kind]
