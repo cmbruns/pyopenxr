@@ -235,7 +235,7 @@ class SessionCreateInfo(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
             StructureType.SESSION_CREATE_INFO.value,
-            None, *args, **kwargs,
+            *args, **kwargs,
         )            
 
     _fields_ = [

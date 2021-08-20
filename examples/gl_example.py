@@ -1,4 +1,8 @@
 import ctypes
+
+import glfw
+from OpenGL import WGL
+
 import xr
 
 # TODO: finish translating example at
@@ -13,11 +17,15 @@ class GlExample(object):
         self.pxrGetOpenGLGraphicsRequirementsKHR = None
         self.graphics_requirements = None
         self.render_target_size = None
+        self.window = None
+        self.session = None
 
     def destroy(self):
         if self.instance is not None:
             xr.destroy_instance(self.instance)
         self.system_id = None
+        if self.window is not None:
+            glfw.terminate()  # TODO: raii
 
     def run(self):
         self.prepare()
@@ -26,6 +34,8 @@ class GlExample(object):
     def prepare(self):
         self.prepare_xr_instance()
         self.prepare_xr_system()
+        self.prepare_window()
+        self.prepare_xr_session()
 
     def prepare_xr_instance(self):
         requested_extensions = [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
@@ -67,6 +77,34 @@ class GlExample(object):
         result = xr.exceptions.check_result(xr.Result(result))
         if result.is_exception():
             raise result
+
+    def prepare_window(self):
+        assert glfw.init()
+        glfw.window_hint(glfw.DOUBLEBUFFER, False)
+        glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
+        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
+        glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
+        gws = [int(s / 4) for s in self.render_target_size]
+        self.window = glfw.create_window(*gws, "GLFW Window", None, None)
+        if self.window is None:
+            glfw.terminate()  # TODO raii
+            assert False
+        glfw.make_context_current(self.window)
+        glfw.swap_interval(0)
+
+    def prepare_xr_session(self):
+        hdc = WGL.wglGetCurrentDC()
+        context = WGL.wglGetCurrentContext()
+        graphics_binding = xr.GraphicsBindingOpenGLWin32KHR(
+            glfw.get_win32_window(self.window),
+            glfw.get_wgl_context(self.window),
+        )
+        pp = ctypes.cast(ctypes.pointer(graphics_binding), ctypes.c_void_p)
+        sci = xr.SessionCreateInfo(pp, 0, self.system_id)
+        self.session = xr.create_session(self.instance, ctypes.byref(sci))
+        reference_spaces = xr.enumerate_reference_spaces(self.session)
+        rsci = xr.ReferenceSpaceCreateInfo()
+        space = xr.create_reference_space(self.session, rsci)
 
 
 if __name__ == "__main__":

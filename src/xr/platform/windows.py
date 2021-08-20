@@ -64,7 +64,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 class GraphicsBindingOpenGLWin32KHR(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.GRAPHICS_BINDING_OPEN_G_L_WIN32_K_H_R.value,
+            StructureType.GRAPHICS_BINDING_OPENGL_WIN32_KHR.value,
             None, *args, **kwargs,
         )            
 
