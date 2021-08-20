@@ -7,7 +7,7 @@ import xr
 
 # TODO: finish translating example at
 # https://github.com/jherico/OpenXR-Samples/blob/master/src/examples/sdl2_gl_single_file_example_c.cpp
-# Next task: prepare_window()
+# Next task: continue work on prepare_xr_session()
 
 
 class GlExample(object):
@@ -95,13 +95,18 @@ class GlExample(object):
     def prepare_xr_session(self):
         hdc = WGL.wglGetCurrentDC()
         context = WGL.wglGetCurrentContext()
+        window = glfw.get_win32_window(self.window)
+        wgl_context = glfw.get_wgl_context(self.window)
+        # TODO: debug this structure GraphicsBindingOpenGLWin32KHR
+        # HDC type is not processed properly
+        # May need to include Windows.h and enhance parser
         graphics_binding = xr.GraphicsBindingOpenGLWin32KHR(
-            glfw.get_win32_window(self.window),
-            glfw.get_wgl_context(self.window),
+            WGL.wglGetCurrentDC(),
+            WGL.wglGetCurrentContext(),
         )
         pp = ctypes.cast(ctypes.pointer(graphics_binding), ctypes.c_void_p)
         sci = xr.SessionCreateInfo(pp, 0, self.system_id)
-        self.session = xr.create_session(self.instance, ctypes.byref(sci))
+        self.session = xr.create_session(self.instance, sci)  # Failing here...
         reference_spaces = xr.enumerate_reference_spaces(self.session)
         rsci = xr.ReferenceSpaceCreateInfo()
         space = xr.create_reference_space(self.session, rsci)
