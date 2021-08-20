@@ -16,9 +16,8 @@ def main():
     ]
     cg = xrg.CodeGenerator(header=xrg.Header.PLATFORM, compiler_args=compiler_args)
 
+    cg.print_header()
     print(inspect.cleandoc("""
-        from ctypes import c_char_p, c_float, c_int, c_uint32, c_void_p, CFUNCTYPE, POINTER, Structure
-        
         from ..enums import *
         from ..typedefs import *
     """))

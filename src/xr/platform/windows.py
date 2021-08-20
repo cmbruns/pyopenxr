@@ -1,5 +1,6 @@
-from ctypes import c_char_p, c_float, c_int, c_uint32, c_void_p, CFUNCTYPE, POINTER, Structure
+# Warning: this file is auto-generated. Do not edit.
 
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_uint32, c_void_p, c_wchar
 from ..enums import *
 from ..typedefs import *
 
@@ -365,9 +366,9 @@ class HolographicWindowAttachmentMSFT(Structure):
     ]
 
 
-PFN_xrGetAudioOutputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (wchar_t * 128))
+PFN_xrGetAudioOutputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (c_wchar * 128))
 
-PFN_xrGetAudioInputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (wchar_t * 128))
+PFN_xrGetAudioInputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (c_wchar * 128))
 
 
 class SwapchainImageFoveationVulkanFB(Structure):

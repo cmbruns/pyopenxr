@@ -265,6 +265,8 @@ class TypedefType(TypeBase):
         )
         if isinstance(self.underlying_type, EnumType):
             self._ctypes_name += ".ctype()"
+        if not self._capi_name.upper()[:2] in ("XR", "PF", ):
+            raise ValueError(self._capi_name)
 
     def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
@@ -302,6 +304,21 @@ class VoidType(TypeBase):
         return set()
 
 
+class WideCharType(TypeBase):
+    def __init__(self, clang_type: clang.cindex.Type):
+        super().__init__(clang_type)
+        assert clang_type.spelling == "wchar_t"
+
+    def name(self, api=Api.PYTHON) -> str:
+        if api == Api.C:
+            return "wchar_t"
+        else:
+            return "c_wchar"
+
+    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+        return {"c_wchar", }
+
+
 def capi_type_name(c_type_name: str) -> str:
     """The low level C-like api uses the exact same names as in C"""
     s = re.sub(r"\b(?:const|volatile)\s+", "", c_type_name)  # But without const
@@ -335,6 +352,8 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
     elif clang_type.kind == TypeKind.RECORD:
         return RecordType(clang_type)
     elif clang_type.kind == TypeKind.TYPEDEF:
+        if clang_type.spelling == "wchar_t":
+            return WideCharType(clang_type)
         try:
             return IntegerType(clang_type)
         except ValueError:
