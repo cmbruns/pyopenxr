@@ -10,7 +10,7 @@ import xr
 # Next task: continue work on prepare_xr_session()
 
 
-class GlExample(object):
+class OpenXrExample(object):
     def __init__(self):
         self.instance = None
         self.system_id = None
@@ -26,11 +26,19 @@ class GlExample(object):
         self.swapchain_images = None
         self.fbo_id = None
         self.fbo_depth_buffer = None
+        self.quit = False
+        self.session_state = xr.SessionState.IDLE
+        self.frame_state = xr.FrameState()
+        self.eye_view_states = None
+        self.window_size = None
 
     def run(self):
         self.prepare()
-        while not glfw.window_should_close(self.window):
-            self.frame()
+        while not self.quit:
+            if glfw.window_should_close(self.window):
+                self.quit = True
+            else:
+                self.frame()
         self.destroy()  # TODO: raii
 
     def prepare(self):
@@ -89,13 +97,13 @@ class GlExample(object):
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-        gws = [int(s / 4) for s in self.render_target_size]
-        self.window = glfw.create_window(*gws, "GLFW Window", None, None)
+        self.window_size = [s // 4 for s in self.render_target_size]
+        self.window = glfw.create_window(*self.window_size, "GLFW Window", None, None)
         if self.window is None:
             glfw.terminate()  # TODO raii
             assert False
         glfw.make_context_current(self.window)
-        glfw.swap_interval(0)
+        glfw.swap_interval(1)
 
     def prepare_xr_session(self):
         hdc = WGL.wglGetCurrentDC()
@@ -143,8 +151,10 @@ class GlExample(object):
         for eye_index in range(2):
             layer_view = self.projection_layer_views[eye_index]
             layer_view.sub_image.swapchain = self.swapchain
-            layer_view.sub_image.image_rect.extent.width = self.render_target_size[0] // 2
-            layer_view.sub_image.image_rect.extent.width = self.render_target_size[1]
+            layer_view.sub_image.image_rect.extent = xr.Extent2Di(
+                self.render_target_size[0] // 2,
+                self.render_target_size[1],
+            )
             if eye_index == 1:
                 layer_view.sub_image.image_rect.offset.x = layer_view.sub_image.image_rect.extent.width
 
@@ -179,15 +189,129 @@ class GlExample(object):
     def frame(self):
         glfw.poll_events()
         self.poll_xr_events()
-        glfw.swap_buffers(self.window)
+        if self.quit:
+            return
+        if self.start_xr_frame():
+            self.update_xr_views()
+            if self.frame_state.should_render:
+                self.render()
+            self.end_xr_frame()
 
     def poll_xr_events(self):
         while True:
             try:
                 event_buffer = xr.poll_event(self.instance)
-            except xr.EventUnavailable as exc:
+                event_type = xr.StructureType(event_buffer.type)
+                if event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED:
+                    self.on_session_state_changed(event_buffer)
+            except xr.EventUnavailable:
                 break
 
+    def on_session_state_changed(self, session_state_changed_event):
+        # TODO: it would be nice to avoid this horrible cast...
+        event = ctypes.cast(
+            ctypes.byref(session_state_changed_event),
+            ctypes.POINTER(xr.EventDataSessionStateChanged)).contents
+        # TODO: enum property
+        self.session_state = xr.SessionState(event.state)
+        if self.session_state == xr.SessionState.READY:
+            if not self.quit:
+                sbi = xr.SessionBeginInfo(None, xr.ViewConfigurationType.PRIMARY_STEREO.value)
+                xr.begin_session(self.session, sbi)
+        elif self.session_state == xr.SessionState.STOPPING:
+            xr.end_session(self.session)
+            self.session = None
+            self.quit = True
+
+    def start_xr_frame(self) -> bool:
+        frame_wait_info = xr.FrameWaitInfo(None)
+        if self.session_state in [
+            xr.SessionState.READY,
+            xr.SessionState.FOCUSED,
+            xr.SessionState.SYNCHRONIZED,
+            xr.SessionState.VISIBLE,
+        ]:
+            try:
+                self.frame_state = xr.wait_frame(self.session, frame_wait_info)
+                xr.begin_frame(self.session, None)
+                return True
+            except Exception:
+                return False
+        return False
+
+    def end_xr_frame(self):
+        frame_end_info = xr.FrameEndInfo(
+            None,
+            self.frame_state.predicted_display_time,
+            xr.EnvironmentBlendMode.OPAQUE.value
+        )
+        if self.frame_state.should_render:
+            for eye_index in range(2):
+                layer_view = self.projection_layer_views[eye_index]
+                eye_view = self.eye_view_states[eye_index]
+                layer_view.fov = eye_view.fov
+                layer_view.pose = eye_view.pose
+            frame_end_info.layer_count = 1  # len(self.layer_pointers)
+            p_layer_projection = ctypes.cast(
+                ctypes.byref(self.projection_layer),
+                ctypes.POINTER(xr.CompositionLayerBaseHeader))
+            frame_end_info.layers = ctypes.pointer(p_layer_projection)
+        xr.end_frame(self.session, frame_end_info)
+
+    def update_xr_views(self):
+        vi = xr.ViewLocateInfo(
+            None,
+            xr.ViewConfigurationType.PRIMARY_STEREO.value,
+            self.frame_state.predicted_display_time,
+            self.projection_layer.space,
+        )
+        vs, self.eye_view_states = xr.locate_views(self.session, vi)
+        for eye_index in range(2):
+            view_state = self.eye_view_states[eye_index]
+            # These aren't actually used in this simple example...
+            # self.eye_projections[eye_index] = something(view_state.fov)  # TODO:
+            # self.eye_views[eye_index] = something_else(view_state.pose)  # TODO:
+
+    def render(self):
+        ai = xr.SwapchainImageAcquireInfo(None)
+        swapchain_index = xr.acquire_swapchain_image(self.swapchain, ai)
+        wi = xr.SwapchainImageWaitInfo(None, xr.INFINITE_DURATION)
+        xr.wait_swapchain_image(self.swapchain, wi)
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.fbo_id)
+        # TODO: it would be nice to avoid this horrible cast...
+        sw_image = ctypes.cast(
+            ctypes.byref(self.swapchain_images[swapchain_index]),
+            ctypes.POINTER(xr.SwapchainImageOpenGLKHR)).contents
+        GL.glFramebufferTexture(
+            GL.GL_FRAMEBUFFER,
+            GL.GL_COLOR_ATTACHMENT0,
+            sw_image.image,
+            0,
+        )
+        # "render" to the swapchain image
+        w, h = self.render_target_size
+        GL.glEnable(GL.GL_SCISSOR_TEST)
+        GL.glScissor(0, 0, w // 2, h)
+        GL.glClearColor(0, 1, 0, 1)
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        GL.glScissor(w // 2, 0, w // 2, h)
+        GL.glClearColor(0, 0, 1, 1)
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+
+        # fast blit from the fbo to the window surface
+        GL.glDisable(GL.GL_SCISSOR_TEST)
+        GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
+        GL.glBlitFramebuffer(
+            0, 0, w, h, 0, 0,
+            *self.window_size,
+            GL.GL_COLOR_BUFFER_BIT,
+            GL.GL_NEAREST
+        )
+        GL.glFramebufferTexture(GL.GL_READ_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, 0, 0)
+        GL.glBindFramebuffer(GL.GL_READ_FRAMEBUFFER, 0)
+        ri = xr.SwapchainImageReleaseInfo()
+        xr.release_swapchain_image(self.swapchain, ri)
+        glfw.swap_buffers(self.window)
 
     def destroy(self):
         if self.fbo_id is not None:
@@ -212,4 +336,4 @@ class GlExample(object):
 
 
 if __name__ == "__main__":
-    GlExample().run()
+    OpenXrExample().run()
