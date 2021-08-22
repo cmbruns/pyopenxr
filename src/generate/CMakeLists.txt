@@ -62,7 +62,9 @@ find_file(LIBCLANG_SHARED_LIBRARY
     DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
 )
 if (EXISTS "${LIBCLANG_SHARED_LIBRARY}")
-    file(COPY "${LIBCLANG_SHARED_LIBRARY}" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/xrg/")
+    get_filename_component(LIBCLANG_NAME ${LIBCLANG_SHARED_LIBRARY} NAME)
+    # Use COPY_FILE to copy real file not just symlink
+    file(COPY_FILE "${LIBCLANG_SHARED_LIBRARY}" "${CMAKE_CURRENT_SOURCE_DIR}/xrg/${LIBCLANG_NAME}")
 endif()
 
 # Create staging folder for generated source files
@@ -89,12 +91,12 @@ message(STATUS "OpenXR Version = ${OPENXR_VERSION}")
 #########################################
 
 find_file(OPENXR_LOADER_SHARED_LIBRARY
-    NAMES openxr_loader.dll openxr_loader.so openxr_loader.dylib
+    NAMES openxr_loader.dll libopenxr_loader.so libopenxr_loader.dylib
     HINTS
         "${OPENXR_INCLUDE_DIR}/.."
         "$ENV{ProgramW6432}/OPENXR"
         "$ENV{ProgramFiles}/OPENXR"
-    PATH_SUFFIXES bin
+    PATH_SUFFIXES bin lib
     DOC "The openxr_loader shared library file"
 )
 if (OPENXR_LOADER_SHARED_LIBRARY)

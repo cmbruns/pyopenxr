@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import enum
 import re
-from typing import Optional
+from typing import Optional, Set
 
 import clang.cindex
 from clang.cindex import TypeKind
@@ -22,7 +22,7 @@ class TypeBase(ABC):
         pass
 
     @abstractmethod
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         pass
 
 
@@ -39,7 +39,7 @@ class ArrayType(TypeBase):
         else:
             return f"({self.element_type.name(Api.CTYPES)} * {self.count})"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return self.element_type.used_ctypes(Api.CTYPES)
 
 
@@ -56,7 +56,7 @@ class EnumType(TypeBase):
         else:
             return "c_int"  # TODO we could use the actual name if we had the enums loaded
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return {"c_int", }
 
 
@@ -78,7 +78,7 @@ class FloatType(TypeBase):
         else:
             return self._ctypes_name
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         if api == Api.CTYPES:
             return {self._ctypes_name, }
         else:
@@ -103,7 +103,7 @@ class FunctionPointerType(TypeBase):
             )
             return f"CFUNCTYPE({arg_string})"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         result = {
             "CFUNCTYPE",
         }
@@ -154,7 +154,7 @@ class IntegerType(TypeBase):
         else:
             return self._name
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         if api == Api.CTYPES:
             return {self._name, }
         else:
@@ -176,7 +176,7 @@ class PointerType(TypeBase):
         else:
             return f"POINTER({self.pointee.name(Api.CTYPES)})"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         result = self.pointee.used_ctypes(Api.CTYPES)
         result.add("POINTER")
         return result
@@ -196,7 +196,7 @@ class PrimitiveCTypesType(TypeBase):
         else:
             return self._name
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return {
             self._name,
         }
@@ -219,7 +219,7 @@ class RecordType(TypeBase):
         else:
             raise NotImplementedError
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return set()
 
 
@@ -245,7 +245,7 @@ class StringType(TypeBase):
         else:
             return self._ctypes_name
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         if api == Api.CTYPES:
             return {self._ctypes_name, }
         else:
@@ -278,7 +278,7 @@ class TypedefType(TypeBase):
         else:
             raise NotImplementedError
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         if api == Api.C:
             return set()
         elif self._capi_name.startswith("c_"):
@@ -300,7 +300,7 @@ class VoidType(TypeBase):
         else:
             return "None"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return set()
 
 
@@ -315,7 +315,7 @@ class WideCharType(TypeBase):
         else:
             return "c_wchar"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return {"c_wchar", }
 
 

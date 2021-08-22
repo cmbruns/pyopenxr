@@ -10,6 +10,7 @@ This module contains code to help generate the code in pyopenxr.
 import enum
 import os
 import pkg_resources
+import platform
 from typing import Generator, List
 
 import clang.cindex
@@ -18,7 +19,12 @@ from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 from .types import *
 from .declarations import *
 
-LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")  # TODO: Linux, Mac
+LIBCLANG_SHARED_LIBRARY = ""
+if platform.system() == "Windows":
+    LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")  # TODO: Linux, Mac
+elif platform.system() == "Linux":
+    # TODO: don't hardcode this path
+    LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang-10.so")
 if os.path.isfile(LIBCLANG_SHARED_LIBRARY):
     clang.cindex.Config.set_library_file(LIBCLANG_SHARED_LIBRARY)
 
@@ -34,7 +40,7 @@ class Header(enum.Enum):
 class CodeGenerator(object):
     def __init__(
             self,
-            kinds: list[CursorKind] = None,
+            kinds: List[CursorKind] = None,
             header: Header = Header.OPENXR,
             compiler_args=None,
             header_preamble: str = None,
@@ -47,7 +53,7 @@ class CodeGenerator(object):
         self.header_preamble = header_preamble
 
     @property
-    def items(self) -> list[CodeItem]:
+    def items(self) -> List[CodeItem]:
         if self._items is None:  # Populate list just in time
             self._items = list(generate_code_items(
                 kinds=self.cursor_kinds,
@@ -118,7 +124,7 @@ _CursorHandlers = {
 
 
 def generate_code_items(
-    kinds: list[CursorKind] = None,
+    kinds: List[CursorKind] = None,
     header: Header = Header.OPENXR,
     compiler_args=None,
     header_preamble=None,

@@ -1,3 +1,4 @@
+from __future__ import annotations  # To support python 3.9+ style array type annotations
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import POINTER, c_char, c_int64, c_uint32

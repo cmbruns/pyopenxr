@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import inspect
 import re
 import textwrap
-from typing import Generator
+from typing import Generator, Set
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
@@ -35,7 +35,7 @@ class CodeItem(ABC):
         pass
 
     @abstractmethod
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         pass
 
 
@@ -81,7 +81,7 @@ class DefinitionItem(CodeItem):
             return f"#define {self.name(api)} {self.c_value}"
         return f"{self.name(api)} = {self.value}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return set()
 
 
@@ -139,7 +139,7 @@ class EnumItem(CodeItem):
             result += "\n}"
             return result
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return {
             "c_int",
         }
@@ -211,7 +211,7 @@ class EnumValueItem(CodeItem):
             line_indent = ""
         return f"\n{line_indent}{self.name(api)} = {self.value}{line_end}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return {
             "c_int",
         }
@@ -278,7 +278,7 @@ class FunctionItem(CodeItem):
         elif api == Api.C:
             raise NotImplementedError
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         result = self.return_type.used_ctypes(api)
         for p in self.parameters:
             result.update(p.used_ctypes(api))
@@ -324,7 +324,7 @@ class FunctionParameterItem(CodeItem):
     def is_optional(self) -> bool:
         return self._optional
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(api)
 
 
@@ -351,7 +351,7 @@ class StructFieldItem(CodeItem):
             raise NotImplementedError
         return f'\n        ("{self.name(api)}", {self.type.name(api)}),'
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(api)
 
 
@@ -446,7 +446,7 @@ class StructItem(CodeItem):
         result += "\n    ]"
         return result
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         result = {
             "Structure",
         }
@@ -482,7 +482,7 @@ class TypeDefItem(CodeItem):
             raise NotImplementedError
         return f"{self.name(api)} = {self.type.name(Api.CTYPES)}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(Api.CTYPES)
 
 
@@ -535,7 +535,7 @@ class VariableItem(CodeItem):
             raise NotImplementedError
         return f"{self.name(api)} = {self.value}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> set[str]:
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return set()
 
 
@@ -630,14 +630,14 @@ class BufferCoder(ParameterCoderBase):
 
     def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         name = f"{self.array.name()}"
-        N = f"{self.cap_in.name(api)}.value"
+        n = f"{self.cap_in.name(api)}.value"
         etype = self.array_type_name
         if self.array_type_name == "str":
-            yield f"{name} = create_string_buffer({N})"
+            yield f"{name} = create_string_buffer({n})"
         else:
             # Use the default constructor to initialize each array member
             # initialized_array = (MyStructure * N)(*([MyStructure()] * N))
-            yield f"{name} = ({etype} * {N})(*([{etype}()] * {N}))"
+            yield f"{name} = ({etype} * {n})(*([{etype}()] * {n}))"
 
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
