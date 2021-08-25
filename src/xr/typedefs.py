@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
 from .enums import *
 
 Version = c_uint64
@@ -2692,6 +2692,106 @@ PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result.ctype(), Session, c_uint32, POIN
 PFN_xrSetColorSpaceFB = CFUNCTYPE(Result.ctype(), Session, c_int)
 
 
+class Vector4sFB(Structure):
+    _fields_ = [
+        ("x", c_int16),
+        ("y", c_int16),
+        ("z", c_int16),
+        ("w", c_int16),
+    ]
+
+
+class HandTrackingMeshFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_TRACKING_MESH_FB.value,
+            *args, **kwargs,
+        )            
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("joint_capacity_input", c_uint32),
+        ("joint_count_output", c_uint32),
+        ("joint_bind_poses", POINTER(Posef)),
+        ("joint_radii", POINTER(c_float)),
+        ("joint_parents", POINTER(HandJointEXT.ctype())),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertex_positions", POINTER(Vector3f)),
+        ("vertex_normals", POINTER(Vector3f)),
+        ("vertex_uvs", POINTER(Vector2f)),
+        ("vertex_blend_indices", POINTER(Vector4sFB)),
+        ("vertex_blend_weights", POINTER(Vector4f)),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
+        ("indices", POINTER(c_int16)),
+    ]
+
+
+class HandTrackingScaleFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_TRACKING_SCALE_FB.value,
+            *args, **kwargs,
+        )            
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("sensor_output", c_float),
+        ("current_output", c_float),
+        ("override_hand_scale", Bool32),
+        ("override_value_input", c_float),
+    ]
+
+
+PFN_xrGetHandMeshFB = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandTrackingMeshFB))
+
+HandTrackingAimFlagsFB = Flags64
+
+
+class HandTrackingAimStateFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_TRACKING_AIM_STATE_FB.value,
+            *args, **kwargs,
+        )            
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("status", HandTrackingAimFlagsFB),
+        ("aim_pose", Posef),
+        ("pinch_strength_index", c_float),
+        ("pinch_strength_middle", c_float),
+        ("pinch_strength_ring", c_float),
+        ("pinch_strength_little", c_float),
+    ]
+
+
+class HandCapsuleFB(Structure):
+    _fields_ = [
+        ("points", (Vector3f * 2)),
+        ("radius", c_float),
+        ("joint", HandJointEXT.ctype()),
+    ]
+
+
+class HandTrackingCapsulesStateFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.HAND_TRACKING_CAPSULES_STATE_FB.value,
+            *args, **kwargs,
+        )            
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capsules", (HandCapsuleFB * 19)),
+    ]
+
+
 class FoveationProfileFB_T(Structure):
     pass
 
@@ -2882,6 +2982,44 @@ PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result.ctype(), Sessi
 PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceNameMSFT))
 
 PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT)
+
+CompositionLayerSpaceWarpInfoFlagsFB = Flags64
+
+
+class CompositionLayerSpaceWarpInfoFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.COMPOSITION_LAYER_SPACE_WARP_INFO_FB.value,
+            *args, **kwargs,
+        )            
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("layer_flags", CompositionLayerSpaceWarpInfoFlagsFB),
+        ("motion_vector_sub_image", SwapchainSubImage),
+        ("app_space_delta_pose", Posef),
+        ("depth_sub_image", SwapchainSubImage),
+        ("min_depth", c_float),
+        ("max_depth", c_float),
+        ("near_z", c_float),
+        ("far_z", c_float),
+    ]
+
+
+class SystemSpaceWarpPropertiesFB(Structure):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            StructureType.SYSTEM_SPACE_WARP_PROPERTIES_FB.value,
+            *args, **kwargs,
+        )            
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("recommended_motion_vector_image_rect_width", c_uint32),
+        ("recommended_motion_vector_image_rect_height", c_uint32),
+    ]
 
 
 __all__ = [
@@ -3203,6 +3341,14 @@ __all__ = [
     "SystemColorSpacePropertiesFB",
     "PFN_xrEnumerateColorSpacesFB",
     "PFN_xrSetColorSpaceFB",
+    "Vector4sFB",
+    "HandTrackingMeshFB",
+    "HandTrackingScaleFB",
+    "PFN_xrGetHandMeshFB",
+    "HandTrackingAimFlagsFB",
+    "HandTrackingAimStateFB",
+    "HandCapsuleFB",
+    "HandTrackingCapsulesStateFB",
     "FoveationProfileFB_T",
     "FoveationProfileFB",
     "SwapchainCreateFoveationFlagsFB",
@@ -3230,4 +3376,7 @@ __all__ = [
     "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
     "PFN_xrUnpersistSpatialAnchorMSFT",
     "PFN_xrClearSpatialAnchorStoreMSFT",
+    "CompositionLayerSpaceWarpInfoFlagsFB",
+    "CompositionLayerSpaceWarpInfoFB",
+    "SystemSpaceWarpPropertiesFB",
 ]
