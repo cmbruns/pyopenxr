@@ -29,7 +29,7 @@ def main():
 
     print(inspect.cleandoc('''
         from typing import Optional
-        from xr.enums import Result
+        from .enums import Result
         
         # raise_on_qualified_success is a module setting to control whether positive non-SUCCESS result
         # trigger exceptions.
