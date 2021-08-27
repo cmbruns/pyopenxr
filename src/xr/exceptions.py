@@ -1188,4 +1188,5 @@ __all__ = [
     "ValidationFailureError",
     "ViewConfigurationTypeUnsupportedError",
     "XrException",
+    "check_result",
 ]
