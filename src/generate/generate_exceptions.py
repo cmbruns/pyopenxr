@@ -81,6 +81,7 @@ def main():
 
     exception_map = {}
 
+    # TODO: look through the extensions for more XrResults...
     result_reg = xr_registry.find(f'enums[@name="XrResult"]')
 
     for enum in cg.items:
@@ -140,6 +141,7 @@ def main():
         print(f"    Result.{k}: {v},")
     print("}\n\n")
 
+    all_exceptions.add("check_result")
     print(inspect.cleandoc('''
         def check_result(
             xr_result: Result, message: str = None
