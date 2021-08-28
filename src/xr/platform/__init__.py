@@ -6,4 +6,9 @@ if platform.system() == "Windows":
     from .windows import *
     from . import windows
     __all__ += windows.__all__
-# TODO: Linux, Mac, Android?
+elif platform.system() == "Linux":
+    from .linux import *
+    from . import linux
+    __all__ += linux.__all__
+else:
+    assert False  # We did not implement your platform yet...
