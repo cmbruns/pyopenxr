@@ -368,6 +368,8 @@ class StructItem(CodeItem):
                 self.fields.append(StructFieldItem(c))
             elif c.kind == CursorKind.UNEXPOSED_ATTR:
                 pass  # something about the typedef?
+            elif c.kind == CursorKind.STRUCT_DECL:
+                pass  # Probably just a structure pointer, right?
             else:
                 assert False
         self.is_recursive = False

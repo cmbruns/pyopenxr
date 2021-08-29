@@ -2,6 +2,7 @@
 *.pyc
 __pycache__/
 build_cmake/
+/build
 /dist
 /src/pyopenxr.egg-info
 /.tox
@@ -9,4 +10,4 @@ build_cmake/
 /src/generate/xrg/libclang.dll
 /src/generate/xrg/headers/xr.xml
 /src/generate/xrg/headers/*.h
-/build
+src/generate/xrg/libclang*.so
