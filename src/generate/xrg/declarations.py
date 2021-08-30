@@ -462,12 +462,20 @@ class TypeDefItem(CodeItem):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.TYPEDEF_DECL
         self._capi_name = cursor.spelling
+        self._ctypes_name = self._capi_name
         self._py_name = py_type_name(self._capi_name)
         self.type = parse_type(cursor.underlying_typedef_type)
         if self.type.clang_type.kind == TypeKind.ENUM:
             raise SkippableCodeItemException  # Keep enum typedefs out of typedefs.py
         if self._py_name == self.type.name(Api.CTYPES):
             raise SkippableCodeItemException  # Nonsense A = A typedef
+        if cursor.underlying_typedef_type.kind == TypeKind.POINTER:
+            pointee = cursor.underlying_typedef_type.get_pointee()
+            if pointee.kind == TypeKind.ELABORATED:
+                if pointee.spelling.endswith("_T"):
+                    # This is a HANDLE type
+                    self._py_name += "Handle"  # To distinguish Instance from InstanceHandle
+                    self._ctypes_name = self._py_name
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -475,7 +483,7 @@ class TypeDefItem(CodeItem):
         elif api == api.C:
             return self._capi_name
         elif api == api.CTYPES:
-            return self._capi_name
+            return self._ctypes_name
         else:
             raise NotImplementedError
 

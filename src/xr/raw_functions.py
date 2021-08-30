@@ -19,7 +19,7 @@ from .typedefs import *
 xrGetInstanceProcAddr = openxr_loader_library.xrGetInstanceProcAddr
 xrGetInstanceProcAddr.restype = Result
 xrGetInstanceProcAddr.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     c_char_p,  # name
     POINTER(PFN_xrVoidFunction),  # function
 ]
@@ -45,33 +45,33 @@ xrCreateInstance = openxr_loader_library.xrCreateInstance
 xrCreateInstance.restype = Result
 xrCreateInstance.argtypes = [
     POINTER(InstanceCreateInfo),  # create_info
-    POINTER(Instance),  # instance
+    POINTER(InstanceHandle),  # instance
 ]
 
 xrDestroyInstance = openxr_loader_library.xrDestroyInstance
 xrDestroyInstance.restype = Result
 xrDestroyInstance.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
 ]
 
 xrGetInstanceProperties = openxr_loader_library.xrGetInstanceProperties
 xrGetInstanceProperties.restype = Result
 xrGetInstanceProperties.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     POINTER(InstanceProperties),  # instance_properties
 ]
 
 xrPollEvent = openxr_loader_library.xrPollEvent
 xrPollEvent.restype = Result
 xrPollEvent.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     POINTER(EventDataBuffer),  # event_data
 ]
 
 xrResultToString = openxr_loader_library.xrResultToString
 xrResultToString.restype = Result
 xrResultToString.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     Result.ctype(),  # value
     (c_char * 64),  # buffer
 ]
@@ -79,7 +79,7 @@ xrResultToString.argtypes = [
 xrStructureTypeToString = openxr_loader_library.xrStructureTypeToString
 xrStructureTypeToString.restype = Result
 xrStructureTypeToString.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     StructureType.ctype(),  # value
     (c_char * 64),  # buffer
 ]
@@ -87,7 +87,7 @@ xrStructureTypeToString.argtypes = [
 xrGetSystem = openxr_loader_library.xrGetSystem
 xrGetSystem.restype = Result
 xrGetSystem.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     POINTER(SystemGetInfo),  # get_info
     POINTER(SystemId),  # system_id
 ]
@@ -95,7 +95,7 @@ xrGetSystem.argtypes = [
 xrGetSystemProperties = openxr_loader_library.xrGetSystemProperties
 xrGetSystemProperties.restype = Result
 xrGetSystemProperties.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     SystemId,  # system_id
     POINTER(SystemProperties),  # properties
 ]
@@ -103,7 +103,7 @@ xrGetSystemProperties.argtypes = [
 xrEnumerateEnvironmentBlendModes = openxr_loader_library.xrEnumerateEnvironmentBlendModes
 xrEnumerateEnvironmentBlendModes.restype = Result
 xrEnumerateEnvironmentBlendModes.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     SystemId,  # system_id
     ViewConfigurationType.ctype(),  # view_configuration_type
     c_uint32,  # environment_blend_mode_capacity_input
@@ -114,21 +114,21 @@ xrEnumerateEnvironmentBlendModes.argtypes = [
 xrCreateSession = openxr_loader_library.xrCreateSession
 xrCreateSession.restype = Result
 xrCreateSession.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     POINTER(SessionCreateInfo),  # create_info
-    POINTER(Session),  # session
+    POINTER(SessionHandle),  # session
 ]
 
 xrDestroySession = openxr_loader_library.xrDestroySession
 xrDestroySession.restype = Result
 xrDestroySession.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
 ]
 
 xrEnumerateReferenceSpaces = openxr_loader_library.xrEnumerateReferenceSpaces
 xrEnumerateReferenceSpaces.restype = Result
 xrEnumerateReferenceSpaces.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     c_uint32,  # space_capacity_input
     POINTER(c_uint32),  # space_count_output
     POINTER(ReferenceSpaceType.ctype()),  # spaces
@@ -137,15 +137,15 @@ xrEnumerateReferenceSpaces.argtypes = [
 xrCreateReferenceSpace = openxr_loader_library.xrCreateReferenceSpace
 xrCreateReferenceSpace.restype = Result
 xrCreateReferenceSpace.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ReferenceSpaceCreateInfo),  # create_info
-    POINTER(Space),  # space
+    POINTER(SpaceHandle),  # space
 ]
 
 xrGetReferenceSpaceBoundsRect = openxr_loader_library.xrGetReferenceSpaceBoundsRect
 xrGetReferenceSpaceBoundsRect.restype = Result
 xrGetReferenceSpaceBoundsRect.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     ReferenceSpaceType.ctype(),  # reference_space_type
     POINTER(Extent2Df),  # bounds
 ]
@@ -153,16 +153,16 @@ xrGetReferenceSpaceBoundsRect.argtypes = [
 xrCreateActionSpace = openxr_loader_library.xrCreateActionSpace
 xrCreateActionSpace.restype = Result
 xrCreateActionSpace.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ActionSpaceCreateInfo),  # create_info
-    POINTER(Space),  # space
+    POINTER(SpaceHandle),  # space
 ]
 
 xrLocateSpace = openxr_loader_library.xrLocateSpace
 xrLocateSpace.restype = Result
 xrLocateSpace.argtypes = [
-    Space,  # space
-    Space,  # base_space
+    SpaceHandle,  # space
+    SpaceHandle,  # base_space
     Time,  # time
     POINTER(SpaceLocation),  # location
 ]
@@ -170,13 +170,13 @@ xrLocateSpace.argtypes = [
 xrDestroySpace = openxr_loader_library.xrDestroySpace
 xrDestroySpace.restype = Result
 xrDestroySpace.argtypes = [
-    Space,  # space
+    SpaceHandle,  # space
 ]
 
 xrEnumerateViewConfigurations = openxr_loader_library.xrEnumerateViewConfigurations
 xrEnumerateViewConfigurations.restype = Result
 xrEnumerateViewConfigurations.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     SystemId,  # system_id
     c_uint32,  # view_configuration_type_capacity_input
     POINTER(c_uint32),  # view_configuration_type_count_output
@@ -186,7 +186,7 @@ xrEnumerateViewConfigurations.argtypes = [
 xrGetViewConfigurationProperties = openxr_loader_library.xrGetViewConfigurationProperties
 xrGetViewConfigurationProperties.restype = Result
 xrGetViewConfigurationProperties.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     SystemId,  # system_id
     ViewConfigurationType.ctype(),  # view_configuration_type
     POINTER(ViewConfigurationProperties),  # configuration_properties
@@ -195,7 +195,7 @@ xrGetViewConfigurationProperties.argtypes = [
 xrEnumerateViewConfigurationViews = openxr_loader_library.xrEnumerateViewConfigurationViews
 xrEnumerateViewConfigurationViews.restype = Result
 xrEnumerateViewConfigurationViews.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     SystemId,  # system_id
     ViewConfigurationType.ctype(),  # view_configuration_type
     c_uint32,  # view_capacity_input
@@ -206,7 +206,7 @@ xrEnumerateViewConfigurationViews.argtypes = [
 xrEnumerateSwapchainFormats = openxr_loader_library.xrEnumerateSwapchainFormats
 xrEnumerateSwapchainFormats.restype = Result
 xrEnumerateSwapchainFormats.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     c_uint32,  # format_capacity_input
     POINTER(c_uint32),  # format_count_output
     POINTER(c_int64),  # formats
@@ -215,21 +215,21 @@ xrEnumerateSwapchainFormats.argtypes = [
 xrCreateSwapchain = openxr_loader_library.xrCreateSwapchain
 xrCreateSwapchain.restype = Result
 xrCreateSwapchain.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(SwapchainCreateInfo),  # create_info
-    POINTER(Swapchain),  # swapchain
+    POINTER(SwapchainHandle),  # swapchain
 ]
 
 xrDestroySwapchain = openxr_loader_library.xrDestroySwapchain
 xrDestroySwapchain.restype = Result
 xrDestroySwapchain.argtypes = [
-    Swapchain,  # swapchain
+    SwapchainHandle,  # swapchain
 ]
 
 xrEnumerateSwapchainImages = openxr_loader_library.xrEnumerateSwapchainImages
 xrEnumerateSwapchainImages.restype = Result
 xrEnumerateSwapchainImages.argtypes = [
-    Swapchain,  # swapchain
+    SwapchainHandle,  # swapchain
     c_uint32,  # image_capacity_input
     POINTER(c_uint32),  # image_count_output
     POINTER(SwapchainImageBaseHeader),  # images
@@ -238,7 +238,7 @@ xrEnumerateSwapchainImages.argtypes = [
 xrAcquireSwapchainImage = openxr_loader_library.xrAcquireSwapchainImage
 xrAcquireSwapchainImage.restype = Result
 xrAcquireSwapchainImage.argtypes = [
-    Swapchain,  # swapchain
+    SwapchainHandle,  # swapchain
     POINTER(SwapchainImageAcquireInfo),  # acquire_info
     POINTER(c_uint32),  # index
 ]
@@ -246,40 +246,40 @@ xrAcquireSwapchainImage.argtypes = [
 xrWaitSwapchainImage = openxr_loader_library.xrWaitSwapchainImage
 xrWaitSwapchainImage.restype = Result
 xrWaitSwapchainImage.argtypes = [
-    Swapchain,  # swapchain
+    SwapchainHandle,  # swapchain
     POINTER(SwapchainImageWaitInfo),  # wait_info
 ]
 
 xrReleaseSwapchainImage = openxr_loader_library.xrReleaseSwapchainImage
 xrReleaseSwapchainImage.restype = Result
 xrReleaseSwapchainImage.argtypes = [
-    Swapchain,  # swapchain
+    SwapchainHandle,  # swapchain
     POINTER(SwapchainImageReleaseInfo),  # release_info
 ]
 
 xrBeginSession = openxr_loader_library.xrBeginSession
 xrBeginSession.restype = Result
 xrBeginSession.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(SessionBeginInfo),  # begin_info
 ]
 
 xrEndSession = openxr_loader_library.xrEndSession
 xrEndSession.restype = Result
 xrEndSession.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
 ]
 
 xrRequestExitSession = openxr_loader_library.xrRequestExitSession
 xrRequestExitSession.restype = Result
 xrRequestExitSession.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
 ]
 
 xrWaitFrame = openxr_loader_library.xrWaitFrame
 xrWaitFrame.restype = Result
 xrWaitFrame.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(FrameWaitInfo),  # frame_wait_info
     POINTER(FrameState),  # frame_state
 ]
@@ -287,21 +287,21 @@ xrWaitFrame.argtypes = [
 xrBeginFrame = openxr_loader_library.xrBeginFrame
 xrBeginFrame.restype = Result
 xrBeginFrame.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(FrameBeginInfo),  # frame_begin_info
 ]
 
 xrEndFrame = openxr_loader_library.xrEndFrame
 xrEndFrame.restype = Result
 xrEndFrame.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(FrameEndInfo),  # frame_end_info
 ]
 
 xrLocateViews = openxr_loader_library.xrLocateViews
 xrLocateViews.restype = Result
 xrLocateViews.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ViewLocateInfo),  # view_locate_info
     POINTER(ViewState),  # view_state
     c_uint32,  # view_capacity_input
@@ -312,7 +312,7 @@ xrLocateViews.argtypes = [
 xrStringToPath = openxr_loader_library.xrStringToPath
 xrStringToPath.restype = Result
 xrStringToPath.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     c_char_p,  # path_string
     POINTER(Path),  # path
 ]
@@ -320,7 +320,7 @@ xrStringToPath.argtypes = [
 xrPathToString = openxr_loader_library.xrPathToString
 xrPathToString.restype = Result
 xrPathToString.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     Path,  # path
     c_uint32,  # buffer_capacity_input
     POINTER(c_uint32),  # buffer_count_output
@@ -330,49 +330,49 @@ xrPathToString.argtypes = [
 xrCreateActionSet = openxr_loader_library.xrCreateActionSet
 xrCreateActionSet.restype = Result
 xrCreateActionSet.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     POINTER(ActionSetCreateInfo),  # create_info
-    POINTER(ActionSet),  # action_set
+    POINTER(ActionSetHandle),  # action_set
 ]
 
 xrDestroyActionSet = openxr_loader_library.xrDestroyActionSet
 xrDestroyActionSet.restype = Result
 xrDestroyActionSet.argtypes = [
-    ActionSet,  # action_set
+    ActionSetHandle,  # action_set
 ]
 
 xrCreateAction = openxr_loader_library.xrCreateAction
 xrCreateAction.restype = Result
 xrCreateAction.argtypes = [
-    ActionSet,  # action_set
+    ActionSetHandle,  # action_set
     POINTER(ActionCreateInfo),  # create_info
-    POINTER(Action),  # action
+    POINTER(ActionHandle),  # action
 ]
 
 xrDestroyAction = openxr_loader_library.xrDestroyAction
 xrDestroyAction.restype = Result
 xrDestroyAction.argtypes = [
-    Action,  # action
+    ActionHandle,  # action
 ]
 
 xrSuggestInteractionProfileBindings = openxr_loader_library.xrSuggestInteractionProfileBindings
 xrSuggestInteractionProfileBindings.restype = Result
 xrSuggestInteractionProfileBindings.argtypes = [
-    Instance,  # instance
+    InstanceHandle,  # instance
     POINTER(InteractionProfileSuggestedBinding),  # suggested_bindings
 ]
 
 xrAttachSessionActionSets = openxr_loader_library.xrAttachSessionActionSets
 xrAttachSessionActionSets.restype = Result
 xrAttachSessionActionSets.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(SessionActionSetsAttachInfo),  # attach_info
 ]
 
 xrGetCurrentInteractionProfile = openxr_loader_library.xrGetCurrentInteractionProfile
 xrGetCurrentInteractionProfile.restype = Result
 xrGetCurrentInteractionProfile.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     Path,  # top_level_user_path
     POINTER(InteractionProfileState),  # interaction_profile
 ]
@@ -380,7 +380,7 @@ xrGetCurrentInteractionProfile.argtypes = [
 xrGetActionStateBoolean = openxr_loader_library.xrGetActionStateBoolean
 xrGetActionStateBoolean.restype = Result
 xrGetActionStateBoolean.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ActionStateGetInfo),  # get_info
     POINTER(ActionStateBoolean),  # state
 ]
@@ -388,7 +388,7 @@ xrGetActionStateBoolean.argtypes = [
 xrGetActionStateFloat = openxr_loader_library.xrGetActionStateFloat
 xrGetActionStateFloat.restype = Result
 xrGetActionStateFloat.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ActionStateGetInfo),  # get_info
     POINTER(ActionStateFloat),  # state
 ]
@@ -396,7 +396,7 @@ xrGetActionStateFloat.argtypes = [
 xrGetActionStateVector2f = openxr_loader_library.xrGetActionStateVector2f
 xrGetActionStateVector2f.restype = Result
 xrGetActionStateVector2f.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ActionStateGetInfo),  # get_info
     POINTER(ActionStateVector2f),  # state
 ]
@@ -404,7 +404,7 @@ xrGetActionStateVector2f.argtypes = [
 xrGetActionStatePose = openxr_loader_library.xrGetActionStatePose
 xrGetActionStatePose.restype = Result
 xrGetActionStatePose.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ActionStateGetInfo),  # get_info
     POINTER(ActionStatePose),  # state
 ]
@@ -412,14 +412,14 @@ xrGetActionStatePose.argtypes = [
 xrSyncActions = openxr_loader_library.xrSyncActions
 xrSyncActions.restype = Result
 xrSyncActions.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(ActionsSyncInfo),  # sync_info
 ]
 
 xrEnumerateBoundSourcesForAction = openxr_loader_library.xrEnumerateBoundSourcesForAction
 xrEnumerateBoundSourcesForAction.restype = Result
 xrEnumerateBoundSourcesForAction.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(BoundSourcesForActionEnumerateInfo),  # enumerate_info
     c_uint32,  # source_capacity_input
     POINTER(c_uint32),  # source_count_output
@@ -429,7 +429,7 @@ xrEnumerateBoundSourcesForAction.argtypes = [
 xrGetInputSourceLocalizedName = openxr_loader_library.xrGetInputSourceLocalizedName
 xrGetInputSourceLocalizedName.restype = Result
 xrGetInputSourceLocalizedName.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(InputSourceLocalizedNameGetInfo),  # get_info
     c_uint32,  # buffer_capacity_input
     POINTER(c_uint32),  # buffer_count_output
@@ -439,7 +439,7 @@ xrGetInputSourceLocalizedName.argtypes = [
 xrApplyHapticFeedback = openxr_loader_library.xrApplyHapticFeedback
 xrApplyHapticFeedback.restype = Result
 xrApplyHapticFeedback.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(HapticActionInfo),  # haptic_action_info
     POINTER(HapticBaseHeader),  # haptic_feedback
 ]
@@ -447,7 +447,7 @@ xrApplyHapticFeedback.argtypes = [
 xrStopHapticFeedback = openxr_loader_library.xrStopHapticFeedback
 xrStopHapticFeedback.restype = Result
 xrStopHapticFeedback.argtypes = [
-    Session,  # session
+    SessionHandle,  # session
     POINTER(HapticActionInfo),  # haptic_action_info
 ]
 
