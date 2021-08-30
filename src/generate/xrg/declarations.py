@@ -408,11 +408,16 @@ class StructItem(CodeItem):
             assert self.fields[0].type.name() == "StructureType"
             assert self.fields[1].name() == "next"
             result += "\n"
-            type_enum_name = snake_from_camel(self.name()).upper()
+            # Special case for structure with no special type
+            if self.name() == "SwapchainImageBaseHeader":
+                type_value = 0
+            else:
+                type_enum_name = snake_from_camel(self.name()).upper()
+                type_value = f"StructureType.{type_enum_name}.value"
             result += textwrap.indent(inspect.cleandoc(f"""
                 def __init__(self, *args, **kwargs):
                     super().__init__(
-                        StructureType.{type_enum_name}.value,
+                        {type_value},
                         *args, **kwargs,
                     )            
             """), "    ")

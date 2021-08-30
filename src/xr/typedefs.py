@@ -398,7 +398,7 @@ class SwapchainCreateInfo(Structure):
 class SwapchainImageBaseHeader(Structure):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            StructureType.SWAPCHAIN_IMAGE_BASE_HEADER.value,
+            0,
             *args, **kwargs,
         )            
 

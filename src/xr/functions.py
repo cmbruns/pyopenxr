@@ -9,7 +9,7 @@ File xr.functions.py
 Defines high-level pythonic function definitions for pyopenxr.
 """
 
-from ctypes import Array, byref, create_string_buffer
+from ctypes import Array, byref, cast, create_string_buffer
 
 from . import raw_functions
 from .enums import *
@@ -523,6 +523,7 @@ def destroy_swapchain(
 
 def enumerate_swapchain_images(
     swapchain: SwapchainHandle,
+    structure_type: StructureType
 ) -> Array[SwapchainImageBaseHeader]:
     """"""
     image_capacity_input = c_uint32(0)
@@ -536,12 +537,12 @@ def enumerate_swapchain_images(
     ))
     if result.is_exception():
         raise result
-    images = (SwapchainImageBaseHeader * image_capacity_input.value)(*([SwapchainImageBaseHeader()] * image_capacity_input.value))
+    images = (structure_type * image_capacity_input.value)(*([structure_type()] * image_capacity_input.value))
     result = check_result(fxn(
         swapchain,
         image_capacity_input,
         byref(image_capacity_input),
-        images,
+        cast(images, POINTER(SwapchainImageBaseHeader)),
     ))
     if result.is_exception():
         raise result
