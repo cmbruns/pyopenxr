@@ -126,7 +126,7 @@ class GraphicsRequirementsOpenGLKHR(Structure):
     ]
 
 
-PFN_xrGetOpenGLGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsOpenGLKHR))
+PFN_xrGetOpenGLGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsOpenGLKHR))
 
 
 class GraphicsBindingVulkanKHR(Structure):
@@ -176,13 +176,13 @@ class GraphicsRequirementsVulkanKHR(Structure):
     ]
 
 
-PFN_xrGetVulkanInstanceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
+PFN_xrGetVulkanInstanceExtensionsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
 
-PFN_xrGetVulkanDeviceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
+PFN_xrGetVulkanDeviceExtensionsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
 
-PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_int, POINTER(c_int))
+PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, c_int, POINTER(c_int))
 
-PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
+PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
 
 class GraphicsBindingD3D11KHR(Structure):
@@ -228,7 +228,7 @@ class GraphicsRequirementsD3D11KHR(Structure):
     ]
 
 
-PFN_xrGetD3D11GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsD3D11KHR))
+PFN_xrGetD3D11GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsD3D11KHR))
 
 
 class GraphicsBindingD3D12KHR(Structure):
@@ -275,25 +275,25 @@ class GraphicsRequirementsD3D12KHR(Structure):
     ]
 
 
-PFN_xrGetD3D12GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsD3D12KHR))
+PFN_xrGetD3D12GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsD3D12KHR))
 
-PFN_xrConvertWin32PerformanceCounterToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(_LARGE_INTEGER), POINTER(Time))
+PFN_xrConvertWin32PerformanceCounterToTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(_LARGE_INTEGER), POINTER(Time))
 
-PFN_xrConvertTimeToWin32PerformanceCounterKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(_LARGE_INTEGER))
-
-
-class timespec(Structure):
-    pass
-
-
-PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(timespec), POINTER(Time))
+PFN_xrConvertTimeToWin32PerformanceCounterKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(_LARGE_INTEGER))
 
 
 class timespec(Structure):
     pass
 
 
-PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(timespec))
+PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(timespec), POINTER(Time))
+
+
+class timespec(Structure):
+    pass
+
+
+PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(timespec))
 
 VulkanInstanceCreateFlagsKHR = Flags64
 
@@ -359,17 +359,17 @@ SwapchainImageVulkan2KHR = SwapchainImageVulkanKHR
 
 GraphicsRequirementsVulkan2KHR = GraphicsRequirementsVulkanKHR
 
-PFN_xrCreateVulkanInstanceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanInstanceCreateInfoKHR), POINTER(c_int), POINTER(c_int))
+PFN_xrCreateVulkanInstanceKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(VulkanInstanceCreateInfoKHR), POINTER(c_int), POINTER(c_int))
 
-PFN_xrCreateVulkanDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanDeviceCreateInfoKHR), POINTER(c_int), POINTER(c_int))
+PFN_xrCreateVulkanDeviceKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(VulkanDeviceCreateInfoKHR), POINTER(c_int), POINTER(c_int))
 
-PFN_xrGetVulkanGraphicsDevice2KHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanGraphicsDeviceGetInfoKHR), POINTER(c_int))
+PFN_xrGetVulkanGraphicsDevice2KHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(VulkanGraphicsDeviceGetInfoKHR), POINTER(c_int))
 
-PFN_xrGetVulkanGraphicsRequirements2KHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
+PFN_xrGetVulkanGraphicsRequirements2KHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
-PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(c_int), POINTER(SpatialAnchorMSFT))
+PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(c_int), POINTER(SpatialAnchorMSFTHandle))
 
-PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), Session, SpatialAnchorMSFT, POINTER(POINTER(c_int)))
+PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, SpatialAnchorMSFTHandle, POINTER(POINTER(c_int)))
 
 
 class HolographicWindowAttachmentMSFT(Structure):
@@ -387,9 +387,9 @@ class HolographicWindowAttachmentMSFT(Structure):
     ]
 
 
-PFN_xrGetAudioOutputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (c_wchar * 128))
+PFN_xrGetAudioOutputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), InstanceHandle, (c_wchar * 128))
 
-PFN_xrGetAudioInputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (c_wchar * 128))
+PFN_xrGetAudioInputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), InstanceHandle, (c_wchar * 128))
 
 
 class SwapchainImageFoveationVulkanFB(Structure):

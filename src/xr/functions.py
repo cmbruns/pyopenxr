@@ -9,7 +9,7 @@ File xr.functions.py
 Defines high-level pythonic function definitions for pyopenxr.
 """
 
-from ctypes import Array, byref, create_string_buffer
+from ctypes import Array, byref, cast, create_string_buffer
 
 from . import raw_functions
 from .enums import *
@@ -19,7 +19,7 @@ from .typedefs import *
 from .platform import SwapchainImageOpenGLKHR
 
 def get_instance_proc_addr(
-    instance: Instance,
+    instance: InstanceHandle,
     name: str,
 ) -> PFN_xrVoidFunction:
     """"""
@@ -92,9 +92,9 @@ def enumerate_instance_extension_properties(
 
 def create_instance(
     create_info: POINTER(InstanceCreateInfo),
-) -> Instance:
+) -> InstanceHandle:
     """"""
-    instance = Instance()
+    instance = InstanceHandle()
     fxn = raw_functions.xrCreateInstance
     result = check_result(fxn(
         create_info,
@@ -106,7 +106,7 @@ def create_instance(
 
 
 def destroy_instance(
-    instance: Instance,
+    instance: InstanceHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrDestroyInstance
@@ -118,7 +118,7 @@ def destroy_instance(
 
 
 def get_instance_properties(
-    instance: Instance,
+    instance: InstanceHandle,
 ) -> InstanceProperties:
     """"""
     instance_properties = InstanceProperties()
@@ -133,7 +133,7 @@ def get_instance_properties(
 
 
 def poll_event(
-    instance: Instance,
+    instance: InstanceHandle,
 ) -> EventDataBuffer:
     """"""
     event_data = EventDataBuffer()
@@ -148,7 +148,7 @@ def poll_event(
 
 
 def result_to_string(
-    instance: Instance,
+    instance: InstanceHandle,
     value: Result,
     buffer: (c_char * 64),
 ) -> None:
@@ -164,7 +164,7 @@ def result_to_string(
 
 
 def structure_type_to_string(
-    instance: Instance,
+    instance: InstanceHandle,
     value: StructureType,
     buffer: (c_char * 64),
 ) -> None:
@@ -180,7 +180,7 @@ def structure_type_to_string(
 
 
 def get_system(
-    instance: Instance,
+    instance: InstanceHandle,
     get_info: POINTER(SystemGetInfo),
 ) -> SystemId:
     """"""
@@ -197,7 +197,7 @@ def get_system(
 
 
 def get_system_properties(
-    instance: Instance,
+    instance: InstanceHandle,
     system_id: SystemId,
 ) -> SystemProperties:
     """"""
@@ -214,7 +214,7 @@ def get_system_properties(
 
 
 def enumerate_environment_blend_modes(
-    instance: Instance,
+    instance: InstanceHandle,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
 ) -> Array[EnvironmentBlendMode.ctype()]:
@@ -247,11 +247,11 @@ def enumerate_environment_blend_modes(
 
 
 def create_session(
-    instance: Instance,
+    instance: InstanceHandle,
     create_info: POINTER(SessionCreateInfo),
-) -> Session:
+) -> SessionHandle:
     """"""
-    session = Session()
+    session = SessionHandle()
     fxn = raw_functions.xrCreateSession
     result = check_result(fxn(
         instance,
@@ -264,7 +264,7 @@ def create_session(
 
 
 def destroy_session(
-    session: Session,
+    session: SessionHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrDestroySession
@@ -276,7 +276,7 @@ def destroy_session(
 
 
 def enumerate_reference_spaces(
-    session: Session,
+    session: SessionHandle,
 ) -> Array[ReferenceSpaceType.ctype()]:
     """"""
     space_capacity_input = c_uint32(0)
@@ -303,11 +303,11 @@ def enumerate_reference_spaces(
 
 
 def create_reference_space(
-    session: Session,
+    session: SessionHandle,
     create_info: POINTER(ReferenceSpaceCreateInfo),
-) -> Space:
+) -> SpaceHandle:
     """"""
-    space = Space()
+    space = SpaceHandle()
     fxn = raw_functions.xrCreateReferenceSpace
     result = check_result(fxn(
         session,
@@ -320,7 +320,7 @@ def create_reference_space(
 
 
 def get_reference_space_bounds_rect(
-    session: Session,
+    session: SessionHandle,
     reference_space_type: ReferenceSpaceType,
 ) -> Extent2Df:
     """"""
@@ -337,11 +337,11 @@ def get_reference_space_bounds_rect(
 
 
 def create_action_space(
-    session: Session,
+    session: SessionHandle,
     create_info: POINTER(ActionSpaceCreateInfo),
-) -> Space:
+) -> SpaceHandle:
     """"""
-    space = Space()
+    space = SpaceHandle()
     fxn = raw_functions.xrCreateActionSpace
     result = check_result(fxn(
         session,
@@ -354,8 +354,8 @@ def create_action_space(
 
 
 def locate_space(
-    space: Space,
-    base_space: Space,
+    space: SpaceHandle,
+    base_space: SpaceHandle,
     time: Time,
 ) -> SpaceLocation:
     """"""
@@ -373,7 +373,7 @@ def locate_space(
 
 
 def destroy_space(
-    space: Space,
+    space: SpaceHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrDestroySpace
@@ -385,7 +385,7 @@ def destroy_space(
 
 
 def enumerate_view_configurations(
-    instance: Instance,
+    instance: InstanceHandle,
     system_id: SystemId,
 ) -> Array[ViewConfigurationType.ctype()]:
     """"""
@@ -415,7 +415,7 @@ def enumerate_view_configurations(
 
 
 def get_view_configuration_properties(
-    instance: Instance,
+    instance: InstanceHandle,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
 ) -> ViewConfigurationProperties:
@@ -434,7 +434,7 @@ def get_view_configuration_properties(
 
 
 def enumerate_view_configuration_views(
-    instance: Instance,
+    instance: InstanceHandle,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
 ) -> Array[ViewConfigurationView]:
@@ -467,7 +467,7 @@ def enumerate_view_configuration_views(
 
 
 def enumerate_swapchain_formats(
-    session: Session,
+    session: SessionHandle,
 ) -> Array[c_int64]:
     """"""
     format_capacity_input = c_uint32(0)
@@ -494,11 +494,11 @@ def enumerate_swapchain_formats(
 
 
 def create_swapchain(
-    session: Session,
+    session: SessionHandle,
     create_info: POINTER(SwapchainCreateInfo),
-) -> Swapchain:
+) -> SwapchainHandle:
     """"""
-    swapchain = Swapchain()
+    swapchain = SwapchainHandle()
     fxn = raw_functions.xrCreateSwapchain
     result = check_result(fxn(
         session,
@@ -511,7 +511,7 @@ def create_swapchain(
 
 
 def destroy_swapchain(
-    swapchain: Swapchain,
+    swapchain: SwapchainHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrDestroySwapchain
@@ -523,7 +523,8 @@ def destroy_swapchain(
 
 
 def enumerate_swapchain_images(
-    swapchain: Swapchain,
+    swapchain: SwapchainHandle,
+    structure_type: StructureType
 ) -> Array[SwapchainImageBaseHeader]:
     """"""
     image_capacity_input = c_uint32(0)
@@ -537,12 +538,12 @@ def enumerate_swapchain_images(
     ))
     if result.is_exception():
         raise result
-    images = (SwapchainImageBaseHeader * image_capacity_input.value)(*([SwapchainImageBaseHeader()] * image_capacity_input.value))
+    images = (structure_type * image_capacity_input.value)(*([structure_type()] * image_capacity_input.value))
     result = check_result(fxn(
         swapchain,
         image_capacity_input,
         byref(image_capacity_input),
-        images,
+        cast(images, POINTER(SwapchainImageBaseHeader)),
     ))
     if result.is_exception():
         raise result
@@ -576,7 +577,7 @@ def enumerate_swapchain_images_gl(
 
 
 def acquire_swapchain_image(
-    swapchain: Swapchain,
+    swapchain: SwapchainHandle,
     acquire_info: POINTER(SwapchainImageAcquireInfo) = None,
 ) -> int:
     """"""
@@ -593,7 +594,7 @@ def acquire_swapchain_image(
 
 
 def wait_swapchain_image(
-    swapchain: Swapchain,
+    swapchain: SwapchainHandle,
     wait_info: POINTER(SwapchainImageWaitInfo),
 ) -> None:
     """"""
@@ -607,7 +608,7 @@ def wait_swapchain_image(
 
 
 def release_swapchain_image(
-    swapchain: Swapchain,
+    swapchain: SwapchainHandle,
     release_info: POINTER(SwapchainImageReleaseInfo) = None,
 ) -> None:
     """"""
@@ -621,7 +622,7 @@ def release_swapchain_image(
 
 
 def begin_session(
-    session: Session,
+    session: SessionHandle,
     begin_info: POINTER(SessionBeginInfo),
 ) -> None:
     """"""
@@ -635,7 +636,7 @@ def begin_session(
 
 
 def end_session(
-    session: Session,
+    session: SessionHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrEndSession
@@ -647,7 +648,7 @@ def end_session(
 
 
 def request_exit_session(
-    session: Session,
+    session: SessionHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrRequestExitSession
@@ -659,7 +660,7 @@ def request_exit_session(
 
 
 def wait_frame(
-    session: Session,
+    session: SessionHandle,
     frame_wait_info: POINTER(FrameWaitInfo) = None,
 ) -> FrameState:
     """"""
@@ -676,7 +677,7 @@ def wait_frame(
 
 
 def begin_frame(
-    session: Session,
+    session: SessionHandle,
     frame_begin_info: POINTER(FrameBeginInfo) = None,
 ) -> None:
     """"""
@@ -690,7 +691,7 @@ def begin_frame(
 
 
 def end_frame(
-    session: Session,
+    session: SessionHandle,
     frame_end_info: POINTER(FrameEndInfo),
 ) -> None:
     """"""
@@ -704,7 +705,7 @@ def end_frame(
 
 
 def locate_views(
-    session: Session,
+    session: SessionHandle,
     view_locate_info: POINTER(ViewLocateInfo),
 ) -> (ViewState, Array[View]):
     """"""
@@ -737,7 +738,7 @@ def locate_views(
 
 
 def string_to_path(
-    instance: Instance,
+    instance: InstanceHandle,
     path_string: str,
 ) -> Path:
     """"""
@@ -756,7 +757,7 @@ def string_to_path(
 
 
 def path_to_string(
-    instance: Instance,
+    instance: InstanceHandle,
     path: Path,
 ) -> str:
     """"""
@@ -786,11 +787,11 @@ def path_to_string(
 
 
 def create_action_set(
-    instance: Instance,
+    instance: InstanceHandle,
     create_info: POINTER(ActionSetCreateInfo),
-) -> ActionSet:
+) -> ActionSetHandle:
     """"""
-    action_set = ActionSet()
+    action_set = ActionSetHandle()
     fxn = raw_functions.xrCreateActionSet
     result = check_result(fxn(
         instance,
@@ -803,7 +804,7 @@ def create_action_set(
 
 
 def destroy_action_set(
-    action_set: ActionSet,
+    action_set: ActionSetHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrDestroyActionSet
@@ -815,11 +816,11 @@ def destroy_action_set(
 
 
 def create_action(
-    action_set: ActionSet,
+    action_set: ActionSetHandle,
     create_info: POINTER(ActionCreateInfo),
-) -> Action:
+) -> ActionHandle:
     """"""
-    action = Action()
+    action = ActionHandle()
     fxn = raw_functions.xrCreateAction
     result = check_result(fxn(
         action_set,
@@ -832,7 +833,7 @@ def create_action(
 
 
 def destroy_action(
-    action: Action,
+    action: ActionHandle,
 ) -> None:
     """"""
     fxn = raw_functions.xrDestroyAction
@@ -844,7 +845,7 @@ def destroy_action(
 
 
 def suggest_interaction_profile_bindings(
-    instance: Instance,
+    instance: InstanceHandle,
     suggested_bindings: POINTER(InteractionProfileSuggestedBinding),
 ) -> None:
     """"""
@@ -858,7 +859,7 @@ def suggest_interaction_profile_bindings(
 
 
 def attach_session_action_sets(
-    session: Session,
+    session: SessionHandle,
     attach_info: POINTER(SessionActionSetsAttachInfo),
 ) -> None:
     """"""
@@ -872,7 +873,7 @@ def attach_session_action_sets(
 
 
 def get_current_interaction_profile(
-    session: Session,
+    session: SessionHandle,
     top_level_user_path: Path,
 ) -> InteractionProfileState:
     """"""
@@ -889,7 +890,7 @@ def get_current_interaction_profile(
 
 
 def get_action_state_boolean(
-    session: Session,
+    session: SessionHandle,
     get_info: POINTER(ActionStateGetInfo),
 ) -> ActionStateBoolean:
     """"""
@@ -906,7 +907,7 @@ def get_action_state_boolean(
 
 
 def get_action_state_float(
-    session: Session,
+    session: SessionHandle,
     get_info: POINTER(ActionStateGetInfo),
 ) -> ActionStateFloat:
     """"""
@@ -923,7 +924,7 @@ def get_action_state_float(
 
 
 def get_action_state_vector2f(
-    session: Session,
+    session: SessionHandle,
     get_info: POINTER(ActionStateGetInfo),
 ) -> ActionStateVector2f:
     """"""
@@ -940,7 +941,7 @@ def get_action_state_vector2f(
 
 
 def get_action_state_pose(
-    session: Session,
+    session: SessionHandle,
     get_info: POINTER(ActionStateGetInfo),
 ) -> ActionStatePose:
     """"""
@@ -957,7 +958,7 @@ def get_action_state_pose(
 
 
 def sync_actions(
-    session: Session,
+    session: SessionHandle,
     sync_info: POINTER(ActionsSyncInfo),
 ) -> None:
     """"""
@@ -971,7 +972,7 @@ def sync_actions(
 
 
 def enumerate_bound_sources_for_action(
-    session: Session,
+    session: SessionHandle,
     enumerate_info: POINTER(BoundSourcesForActionEnumerateInfo),
 ) -> Array[Path]:
     """"""
@@ -1001,7 +1002,7 @@ def enumerate_bound_sources_for_action(
 
 
 def get_input_source_localized_name(
-    session: Session,
+    session: SessionHandle,
     get_info: POINTER(InputSourceLocalizedNameGetInfo),
 ) -> str:
     """"""
@@ -1031,7 +1032,7 @@ def get_input_source_localized_name(
 
 
 def apply_haptic_feedback(
-    session: Session,
+    session: SessionHandle,
     haptic_action_info: POINTER(HapticActionInfo),
     haptic_feedback: POINTER(HapticBaseHeader),
 ) -> None:
@@ -1047,7 +1048,7 @@ def apply_haptic_feedback(
 
 
 def stop_haptic_feedback(
-    session: Session,
+    session: SessionHandle,
     haptic_action_info: POINTER(HapticActionInfo),
 ) -> None:
     """"""

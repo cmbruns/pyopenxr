@@ -22,42 +22,42 @@ class Instance_T(Structure):
     pass
 
 
-Instance = POINTER(Instance_T)
+InstanceHandle = POINTER(Instance_T)
 
 
 class Session_T(Structure):
     pass
 
 
-Session = POINTER(Session_T)
+SessionHandle = POINTER(Session_T)
 
 
 class Space_T(Structure):
     pass
 
 
-Space = POINTER(Space_T)
+SpaceHandle = POINTER(Space_T)
 
 
 class Action_T(Structure):
     pass
 
 
-Action = POINTER(Action_T)
+ActionHandle = POINTER(Action_T)
 
 
 class Swapchain_T(Structure):
     pass
 
 
-Swapchain = POINTER(Swapchain_T)
+SwapchainHandle = POINTER(Swapchain_T)
 
 
 class ActionSet_T(Structure):
     pass
 
 
-ActionSet = POINTER(ActionSet_T)
+ActionSetHandle = POINTER(ActionSet_T)
 
 InstanceCreateFlags = Flags64
 
@@ -318,7 +318,7 @@ class ActionSpaceCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("action", Action),
+        ("action", ActionHandle),
         ("subaction_path", Path),
         ("pose_in_action_space", Posef),
     ]
@@ -515,7 +515,7 @@ class CompositionLayerBaseHeader(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
-        ("space", Space),
+        ("space", SpaceHandle),
     ]
 
 
@@ -548,7 +548,7 @@ class ViewLocateInfo(Structure):
         ("next", c_void_p),
         ("view_configuration_type", ViewConfigurationType.ctype()),
         ("display_time", Time),
-        ("space", Space),
+        ("space", SpaceHandle),
     ]
 
 
@@ -626,7 +626,7 @@ class ActionCreateInfo(Structure):
 
 class ActionSuggestedBinding(Structure):
     _fields_ = [
-        ("action", Action),
+        ("action", ActionHandle),
         ("binding", Path),
     ]
 
@@ -686,7 +686,7 @@ class ActionStateGetInfo(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("action", Action),
+        ("action", ActionHandle),
         ("subaction_path", Path),
     ]
 
@@ -765,7 +765,7 @@ class ActionStatePose(Structure):
 
 class ActiveActionSet(Structure):
     _fields_ = [
-        ("action_set", ActionSet),
+        ("action_set", ActionSetHandle),
         ("subaction_path", Path),
     ]
 
@@ -795,7 +795,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("action", Action),
+        ("action", ActionHandle),
     ]
 
 
@@ -824,7 +824,7 @@ class HapticActionInfo(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("action", Action),
+        ("action", ActionHandle),
         ("subaction_path", Path),
     ]
 
@@ -897,7 +897,7 @@ class Rect2Di(Structure):
 
 class SwapchainSubImage(Structure):
     _fields_ = [
-        ("swapchain", Swapchain),
+        ("swapchain", SwapchainHandle),
         ("image_rect", Rect2Di),
         ("image_array_index", c_uint32),
     ]
@@ -930,7 +930,7 @@ class CompositionLayerProjection(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
-        ("space", Space),
+        ("space", SpaceHandle),
         ("view_count", c_uint32),
         ("views", POINTER(CompositionLayerProjectionView)),
     ]
@@ -947,7 +947,7 @@ class CompositionLayerQuad(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
-        ("space", Space),
+        ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
@@ -1006,7 +1006,7 @@ class EventDataSessionStateChanged(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("session", Session),
+        ("session", SessionHandle),
         ("state", SessionState.ctype()),
         ("time", Time),
     ]
@@ -1022,7 +1022,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("session", Session),
+        ("session", SessionHandle),
         ("reference_space_type", ReferenceSpaceType.ctype()),
         ("change_time", Time),
         ("pose_valid", Bool32),
@@ -1040,7 +1040,7 @@ class EventDataInteractionProfileChanged(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("session", Session),
+        ("session", SessionHandle),
     ]
 
 
@@ -1092,115 +1092,115 @@ class Color4f(Structure):
     ]
 
 
-PFN_xrGetInstanceProcAddr = CFUNCTYPE(Result.ctype(), Instance, c_char_p, POINTER(PFN_xrVoidFunction))
+PFN_xrGetInstanceProcAddr = CFUNCTYPE(Result.ctype(), InstanceHandle, c_char_p, POINTER(PFN_xrVoidFunction))
 
 PFN_xrEnumerateApiLayerProperties = CFUNCTYPE(Result.ctype(), c_uint32, POINTER(c_uint32), POINTER(ApiLayerProperties))
 
 PFN_xrEnumerateInstanceExtensionProperties = CFUNCTYPE(Result.ctype(), c_char_p, c_uint32, POINTER(c_uint32), POINTER(ExtensionProperties))
 
-PFN_xrCreateInstance = CFUNCTYPE(Result.ctype(), POINTER(InstanceCreateInfo), POINTER(Instance))
+PFN_xrCreateInstance = CFUNCTYPE(Result.ctype(), POINTER(InstanceCreateInfo), POINTER(InstanceHandle))
 
-PFN_xrDestroyInstance = CFUNCTYPE(Result.ctype(), Instance)
+PFN_xrDestroyInstance = CFUNCTYPE(Result.ctype(), InstanceHandle)
 
-PFN_xrGetInstanceProperties = CFUNCTYPE(Result.ctype(), Instance, POINTER(InstanceProperties))
+PFN_xrGetInstanceProperties = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(InstanceProperties))
 
-PFN_xrPollEvent = CFUNCTYPE(Result.ctype(), Instance, POINTER(EventDataBuffer))
+PFN_xrPollEvent = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(EventDataBuffer))
 
-PFN_xrResultToString = CFUNCTYPE(Result.ctype(), Instance, Result.ctype(), (c_char * 64))
+PFN_xrResultToString = CFUNCTYPE(Result.ctype(), InstanceHandle, Result.ctype(), (c_char * 64))
 
-PFN_xrStructureTypeToString = CFUNCTYPE(Result.ctype(), Instance, StructureType.ctype(), (c_char * 64))
+PFN_xrStructureTypeToString = CFUNCTYPE(Result.ctype(), InstanceHandle, StructureType.ctype(), (c_char * 64))
 
-PFN_xrGetSystem = CFUNCTYPE(Result.ctype(), Instance, POINTER(SystemGetInfo), POINTER(SystemId))
+PFN_xrGetSystem = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(SystemGetInfo), POINTER(SystemId))
 
-PFN_xrGetSystemProperties = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(SystemProperties))
+PFN_xrGetSystemProperties = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(SystemProperties))
 
-PFN_xrEnumerateEnvironmentBlendModes = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(EnvironmentBlendMode.ctype()))
+PFN_xrEnumerateEnvironmentBlendModes = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(EnvironmentBlendMode.ctype()))
 
-PFN_xrCreateSession = CFUNCTYPE(Result.ctype(), Instance, POINTER(SessionCreateInfo), POINTER(Session))
+PFN_xrCreateSession = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(SessionCreateInfo), POINTER(SessionHandle))
 
-PFN_xrDestroySession = CFUNCTYPE(Result.ctype(), Session)
+PFN_xrDestroySession = CFUNCTYPE(Result.ctype(), SessionHandle)
 
-PFN_xrEnumerateReferenceSpaces = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(ReferenceSpaceType.ctype()))
+PFN_xrEnumerateReferenceSpaces = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint32, POINTER(c_uint32), POINTER(ReferenceSpaceType.ctype()))
 
-PFN_xrCreateReferenceSpace = CFUNCTYPE(Result.ctype(), Session, POINTER(ReferenceSpaceCreateInfo), POINTER(Space))
+PFN_xrCreateReferenceSpace = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ReferenceSpaceCreateInfo), POINTER(SpaceHandle))
 
-PFN_xrGetReferenceSpaceBoundsRect = CFUNCTYPE(Result.ctype(), Session, ReferenceSpaceType.ctype(), POINTER(Extent2Df))
+PFN_xrGetReferenceSpaceBoundsRect = CFUNCTYPE(Result.ctype(), SessionHandle, ReferenceSpaceType.ctype(), POINTER(Extent2Df))
 
-PFN_xrCreateActionSpace = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionSpaceCreateInfo), POINTER(Space))
+PFN_xrCreateActionSpace = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ActionSpaceCreateInfo), POINTER(SpaceHandle))
 
-PFN_xrLocateSpace = CFUNCTYPE(Result.ctype(), Space, Space, Time, POINTER(SpaceLocation))
+PFN_xrLocateSpace = CFUNCTYPE(Result.ctype(), SpaceHandle, SpaceHandle, Time, POINTER(SpaceLocation))
 
-PFN_xrDestroySpace = CFUNCTYPE(Result.ctype(), Space)
+PFN_xrDestroySpace = CFUNCTYPE(Result.ctype(), SpaceHandle)
 
-PFN_xrEnumerateViewConfigurations = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationType.ctype()))
+PFN_xrEnumerateViewConfigurations = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationType.ctype()))
 
-PFN_xrGetViewConfigurationProperties = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), POINTER(ViewConfigurationProperties))
+PFN_xrGetViewConfigurationProperties = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, ViewConfigurationType.ctype(), POINTER(ViewConfigurationProperties))
 
-PFN_xrEnumerateViewConfigurationViews = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationView))
+PFN_xrEnumerateViewConfigurationViews = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(ViewConfigurationView))
 
-PFN_xrEnumerateSwapchainFormats = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(c_int64))
+PFN_xrEnumerateSwapchainFormats = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint32, POINTER(c_uint32), POINTER(c_int64))
 
-PFN_xrCreateSwapchain = CFUNCTYPE(Result.ctype(), Session, POINTER(SwapchainCreateInfo), POINTER(Swapchain))
+PFN_xrCreateSwapchain = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SwapchainCreateInfo), POINTER(SwapchainHandle))
 
-PFN_xrDestroySwapchain = CFUNCTYPE(Result.ctype(), Swapchain)
+PFN_xrDestroySwapchain = CFUNCTYPE(Result.ctype(), SwapchainHandle)
 
-PFN_xrEnumerateSwapchainImages = CFUNCTYPE(Result.ctype(), Swapchain, c_uint32, POINTER(c_uint32), POINTER(SwapchainImageBaseHeader))
+PFN_xrEnumerateSwapchainImages = CFUNCTYPE(Result.ctype(), SwapchainHandle, c_uint32, POINTER(c_uint32), POINTER(SwapchainImageBaseHeader))
 
-PFN_xrAcquireSwapchainImage = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainImageAcquireInfo), POINTER(c_uint32))
+PFN_xrAcquireSwapchainImage = CFUNCTYPE(Result.ctype(), SwapchainHandle, POINTER(SwapchainImageAcquireInfo), POINTER(c_uint32))
 
-PFN_xrWaitSwapchainImage = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainImageWaitInfo))
+PFN_xrWaitSwapchainImage = CFUNCTYPE(Result.ctype(), SwapchainHandle, POINTER(SwapchainImageWaitInfo))
 
-PFN_xrReleaseSwapchainImage = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainImageReleaseInfo))
+PFN_xrReleaseSwapchainImage = CFUNCTYPE(Result.ctype(), SwapchainHandle, POINTER(SwapchainImageReleaseInfo))
 
-PFN_xrBeginSession = CFUNCTYPE(Result.ctype(), Session, POINTER(SessionBeginInfo))
+PFN_xrBeginSession = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SessionBeginInfo))
 
-PFN_xrEndSession = CFUNCTYPE(Result.ctype(), Session)
+PFN_xrEndSession = CFUNCTYPE(Result.ctype(), SessionHandle)
 
-PFN_xrRequestExitSession = CFUNCTYPE(Result.ctype(), Session)
+PFN_xrRequestExitSession = CFUNCTYPE(Result.ctype(), SessionHandle)
 
-PFN_xrWaitFrame = CFUNCTYPE(Result.ctype(), Session, POINTER(FrameWaitInfo), POINTER(FrameState))
+PFN_xrWaitFrame = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(FrameWaitInfo), POINTER(FrameState))
 
-PFN_xrBeginFrame = CFUNCTYPE(Result.ctype(), Session, POINTER(FrameBeginInfo))
+PFN_xrBeginFrame = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(FrameBeginInfo))
 
-PFN_xrEndFrame = CFUNCTYPE(Result.ctype(), Session, POINTER(FrameEndInfo))
+PFN_xrEndFrame = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(FrameEndInfo))
 
-PFN_xrLocateViews = CFUNCTYPE(Result.ctype(), Session, POINTER(ViewLocateInfo), POINTER(ViewState), c_uint32, POINTER(c_uint32), POINTER(View))
+PFN_xrLocateViews = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ViewLocateInfo), POINTER(ViewState), c_uint32, POINTER(c_uint32), POINTER(View))
 
-PFN_xrStringToPath = CFUNCTYPE(Result.ctype(), Instance, c_char_p, POINTER(Path))
+PFN_xrStringToPath = CFUNCTYPE(Result.ctype(), InstanceHandle, c_char_p, POINTER(Path))
 
-PFN_xrPathToString = CFUNCTYPE(Result.ctype(), Instance, Path, c_uint32, POINTER(c_uint32), c_char_p)
+PFN_xrPathToString = CFUNCTYPE(Result.ctype(), InstanceHandle, Path, c_uint32, POINTER(c_uint32), c_char_p)
 
-PFN_xrCreateActionSet = CFUNCTYPE(Result.ctype(), Instance, POINTER(ActionSetCreateInfo), POINTER(ActionSet))
+PFN_xrCreateActionSet = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(ActionSetCreateInfo), POINTER(ActionSetHandle))
 
-PFN_xrDestroyActionSet = CFUNCTYPE(Result.ctype(), ActionSet)
+PFN_xrDestroyActionSet = CFUNCTYPE(Result.ctype(), ActionSetHandle)
 
-PFN_xrCreateAction = CFUNCTYPE(Result.ctype(), ActionSet, POINTER(ActionCreateInfo), POINTER(Action))
+PFN_xrCreateAction = CFUNCTYPE(Result.ctype(), ActionSetHandle, POINTER(ActionCreateInfo), POINTER(ActionHandle))
 
-PFN_xrDestroyAction = CFUNCTYPE(Result.ctype(), Action)
+PFN_xrDestroyAction = CFUNCTYPE(Result.ctype(), ActionHandle)
 
-PFN_xrSuggestInteractionProfileBindings = CFUNCTYPE(Result.ctype(), Instance, POINTER(InteractionProfileSuggestedBinding))
+PFN_xrSuggestInteractionProfileBindings = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(InteractionProfileSuggestedBinding))
 
-PFN_xrAttachSessionActionSets = CFUNCTYPE(Result.ctype(), Session, POINTER(SessionActionSetsAttachInfo))
+PFN_xrAttachSessionActionSets = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SessionActionSetsAttachInfo))
 
-PFN_xrGetCurrentInteractionProfile = CFUNCTYPE(Result.ctype(), Session, Path, POINTER(InteractionProfileState))
+PFN_xrGetCurrentInteractionProfile = CFUNCTYPE(Result.ctype(), SessionHandle, Path, POINTER(InteractionProfileState))
 
-PFN_xrGetActionStateBoolean = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStateBoolean))
+PFN_xrGetActionStateBoolean = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ActionStateGetInfo), POINTER(ActionStateBoolean))
 
-PFN_xrGetActionStateFloat = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStateFloat))
+PFN_xrGetActionStateFloat = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ActionStateGetInfo), POINTER(ActionStateFloat))
 
-PFN_xrGetActionStateVector2f = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStateVector2f))
+PFN_xrGetActionStateVector2f = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ActionStateGetInfo), POINTER(ActionStateVector2f))
 
-PFN_xrGetActionStatePose = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionStateGetInfo), POINTER(ActionStatePose))
+PFN_xrGetActionStatePose = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ActionStateGetInfo), POINTER(ActionStatePose))
 
-PFN_xrSyncActions = CFUNCTYPE(Result.ctype(), Session, POINTER(ActionsSyncInfo))
+PFN_xrSyncActions = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(ActionsSyncInfo))
 
-PFN_xrEnumerateBoundSourcesForAction = CFUNCTYPE(Result.ctype(), Session, POINTER(BoundSourcesForActionEnumerateInfo), c_uint32, POINTER(c_uint32), POINTER(Path))
+PFN_xrEnumerateBoundSourcesForAction = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(BoundSourcesForActionEnumerateInfo), c_uint32, POINTER(c_uint32), POINTER(Path))
 
-PFN_xrGetInputSourceLocalizedName = CFUNCTYPE(Result.ctype(), Session, POINTER(InputSourceLocalizedNameGetInfo), c_uint32, POINTER(c_uint32), c_char_p)
+PFN_xrGetInputSourceLocalizedName = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(InputSourceLocalizedNameGetInfo), c_uint32, POINTER(c_uint32), c_char_p)
 
-PFN_xrApplyHapticFeedback = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActionInfo), POINTER(HapticBaseHeader))
+PFN_xrApplyHapticFeedback = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(HapticActionInfo), POINTER(HapticBaseHeader))
 
-PFN_xrStopHapticFeedback = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActionInfo))
+PFN_xrStopHapticFeedback = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(HapticActionInfo))
 
 
 class CompositionLayerCubeKHR(Structure):
@@ -1214,9 +1214,9 @@ class CompositionLayerCubeKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
-        ("space", Space),
+        ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
-        ("swapchain", Swapchain),
+        ("swapchain", SwapchainHandle),
         ("image_array_index", c_uint32),
         ("orientation", Quaternionf),
     ]
@@ -1251,7 +1251,7 @@ class CompositionLayerCylinderKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
-        ("space", Space),
+        ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
@@ -1272,7 +1272,7 @@ class CompositionLayerEquirectKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
-        ("space", Space),
+        ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
@@ -1311,13 +1311,13 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("session", Session),
+        ("session", SessionHandle),
         ("view_configuration_type", ViewConfigurationType.ctype()),
         ("view_index", c_uint32),
     ]
 
 
-PFN_xrGetVisibilityMaskKHR = CFUNCTYPE(Result.ctype(), Session, ViewConfigurationType.ctype(), c_uint32, VisibilityMaskTypeKHR.ctype(), POINTER(VisibilityMaskKHR))
+PFN_xrGetVisibilityMaskKHR = CFUNCTYPE(Result.ctype(), SessionHandle, ViewConfigurationType.ctype(), c_uint32, VisibilityMaskTypeKHR.ctype(), POINTER(VisibilityMaskKHR))
 
 
 class CompositionLayerColorScaleBiasKHR(Structure):
@@ -1362,7 +1362,7 @@ class CompositionLayerEquirect2KHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlags),
-        ("space", Space),
+        ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
         ("pose", Posef),
@@ -1418,16 +1418,16 @@ class EventDataPerfSettingsEXT(Structure):
     ]
 
 
-PFN_xrPerfSettingsSetPerformanceLevelEXT = CFUNCTYPE(Result.ctype(), Session, PerfSettingsDomainEXT.ctype(), PerfSettingsLevelEXT.ctype())
+PFN_xrPerfSettingsSetPerformanceLevelEXT = CFUNCTYPE(Result.ctype(), SessionHandle, PerfSettingsDomainEXT.ctype(), PerfSettingsLevelEXT.ctype())
 
-PFN_xrThermalGetTemperatureTrendEXT = CFUNCTYPE(Result.ctype(), Session, PerfSettingsDomainEXT.ctype(), POINTER(PerfSettingsNotificationLevelEXT.ctype()), POINTER(c_float), POINTER(c_float))
+PFN_xrThermalGetTemperatureTrendEXT = CFUNCTYPE(Result.ctype(), SessionHandle, PerfSettingsDomainEXT.ctype(), POINTER(PerfSettingsNotificationLevelEXT.ctype()), POINTER(c_float), POINTER(c_float))
 
 
 class DebugUtilsMessengerEXT_T(Structure):
     pass
 
 
-DebugUtilsMessengerEXT = POINTER(DebugUtilsMessengerEXT_T)
+DebugUtilsMessengerEXTHandle = POINTER(DebugUtilsMessengerEXT_T)
 
 DebugUtilsMessageSeverityFlagsEXT = Flags64
 
@@ -1504,19 +1504,19 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     ]
 
 
-PFN_xrSetDebugUtilsObjectNameEXT = CFUNCTYPE(Result.ctype(), Instance, POINTER(DebugUtilsObjectNameInfoEXT))
+PFN_xrSetDebugUtilsObjectNameEXT = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(DebugUtilsObjectNameInfoEXT))
 
-PFN_xrCreateDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), Instance, POINTER(DebugUtilsMessengerCreateInfoEXT), POINTER(DebugUtilsMessengerEXT))
+PFN_xrCreateDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(DebugUtilsMessengerCreateInfoEXT), POINTER(DebugUtilsMessengerEXTHandle))
 
-PFN_xrDestroyDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), DebugUtilsMessengerEXT)
+PFN_xrDestroyDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), DebugUtilsMessengerEXTHandle)
 
-PFN_xrSubmitDebugUtilsMessageEXT = CFUNCTYPE(Result.ctype(), Instance, DebugUtilsMessageSeverityFlagsEXT, DebugUtilsMessageTypeFlagsEXT, POINTER(DebugUtilsMessengerCallbackDataEXT))
+PFN_xrSubmitDebugUtilsMessageEXT = CFUNCTYPE(Result.ctype(), InstanceHandle, DebugUtilsMessageSeverityFlagsEXT, DebugUtilsMessageTypeFlagsEXT, POINTER(DebugUtilsMessengerCallbackDataEXT))
 
-PFN_xrSessionBeginDebugUtilsLabelRegionEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(DebugUtilsLabelEXT))
+PFN_xrSessionBeginDebugUtilsLabelRegionEXT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(DebugUtilsLabelEXT))
 
-PFN_xrSessionEndDebugUtilsLabelRegionEXT = CFUNCTYPE(Result.ctype(), Session)
+PFN_xrSessionEndDebugUtilsLabelRegionEXT = CFUNCTYPE(Result.ctype(), SessionHandle)
 
-PFN_xrSessionInsertDebugUtilsLabelEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(DebugUtilsLabelEXT))
+PFN_xrSessionInsertDebugUtilsLabelEXT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(DebugUtilsLabelEXT))
 
 
 class SystemEyeGazeInteractionPropertiesEXT(Structure):
@@ -1586,7 +1586,7 @@ class SpatialAnchorMSFT_T(Structure):
     pass
 
 
-SpatialAnchorMSFT = POINTER(SpatialAnchorMSFT_T)
+SpatialAnchorMSFTHandle = POINTER(SpatialAnchorMSFT_T)
 
 
 class SpatialAnchorCreateInfoMSFT(Structure):
@@ -1599,7 +1599,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("space", Space),
+        ("space", SpaceHandle),
         ("pose", Posef),
         ("time", Time),
     ]
@@ -1615,16 +1615,16 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("anchor", SpatialAnchorMSFT),
+        ("anchor", SpatialAnchorMSFTHandle),
         ("pose_in_anchor_space", Posef),
     ]
 
 
-PFN_xrCreateSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFT))
+PFN_xrCreateSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFTHandle))
 
-PFN_xrCreateSpatialAnchorSpaceMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorSpaceCreateInfoMSFT), POINTER(Space))
+PFN_xrCreateSpatialAnchorSpaceMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialAnchorSpaceCreateInfoMSFT), POINTER(SpaceHandle))
 
-PFN_xrDestroySpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorMSFT)
+PFN_xrDestroySpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorMSFTHandle)
 
 CompositionLayerImageLayoutFlagsFB = Flags64
 
@@ -1677,15 +1677,15 @@ class ViewConfigurationDepthRangeEXT(Structure):
     ]
 
 
-PFN_xrSetInputDeviceActiveEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Bool32)
+PFN_xrSetInputDeviceActiveEXT = CFUNCTYPE(Result.ctype(), SessionHandle, Path, Path, Bool32)
 
-PFN_xrSetInputDeviceStateBoolEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Bool32)
+PFN_xrSetInputDeviceStateBoolEXT = CFUNCTYPE(Result.ctype(), SessionHandle, Path, Path, Bool32)
 
-PFN_xrSetInputDeviceStateFloatEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, c_float)
+PFN_xrSetInputDeviceStateFloatEXT = CFUNCTYPE(Result.ctype(), SessionHandle, Path, Path, c_float)
 
-PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Vector2f)
+PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result.ctype(), SessionHandle, Path, Path, Vector2f)
 
-PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result.ctype(), Session, Path, Path, Space, Posef)
+PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result.ctype(), SessionHandle, Path, Path, SpaceHandle, Posef)
 
 
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
@@ -1704,14 +1704,14 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     ]
 
 
-PFN_xrCreateSpatialGraphNodeSpaceMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialGraphNodeSpaceCreateInfoMSFT), POINTER(Space))
+PFN_xrCreateSpatialGraphNodeSpaceMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialGraphNodeSpaceCreateInfoMSFT), POINTER(SpaceHandle))
 
 
 class HandTrackerEXT_T(Structure):
     pass
 
 
-HandTrackerEXT = POINTER(HandTrackerEXT_T)
+HandTrackerEXTHandle = POINTER(HandTrackerEXT_T)
 
 
 class SystemHandTrackingPropertiesEXT(Structure):
@@ -1753,7 +1753,7 @@ class HandJointsLocateInfoEXT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("base_space", Space),
+        ("base_space", SpaceHandle),
         ("time", Time),
     ]
 
@@ -1805,11 +1805,11 @@ class HandJointVelocitiesEXT(Structure):
     ]
 
 
-PFN_xrCreateHandTrackerEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(HandTrackerCreateInfoEXT), POINTER(HandTrackerEXT))
+PFN_xrCreateHandTrackerEXT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(HandTrackerCreateInfoEXT), POINTER(HandTrackerEXTHandle))
 
-PFN_xrDestroyHandTrackerEXT = CFUNCTYPE(Result.ctype(), HandTrackerEXT)
+PFN_xrDestroyHandTrackerEXT = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle)
 
-PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandJointsLocateInfoEXT), POINTER(HandJointLocationsEXT))
+PFN_xrLocateHandJointsEXT = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINTER(HandJointsLocateInfoEXT), POINTER(HandJointLocationsEXT))
 
 
 class SystemHandTrackingMeshPropertiesMSFT(Structure):
@@ -1915,9 +1915,9 @@ class HandPoseTypeInfoMSFT(Structure):
     ]
 
 
-PFN_xrCreateHandMeshSpaceMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandMeshSpaceCreateInfoMSFT), POINTER(Space))
+PFN_xrCreateHandMeshSpaceMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINTER(HandMeshSpaceCreateInfoMSFT), POINTER(SpaceHandle))
 
-PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandMeshUpdateInfoMSFT), POINTER(HandMeshMSFT))
+PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINTER(HandMeshUpdateInfoMSFT), POINTER(HandMeshMSFT))
 
 
 class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
@@ -2089,13 +2089,13 @@ class ControllerModelStateMSFT(Structure):
     ]
 
 
-PFN_xrGetControllerModelKeyMSFT = CFUNCTYPE(Result.ctype(), Session, Path, POINTER(ControllerModelKeyStateMSFT))
+PFN_xrGetControllerModelKeyMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, Path, POINTER(ControllerModelKeyStateMSFT))
 
-PFN_xrLoadControllerModelMSFT = CFUNCTYPE(Result.ctype(), Session, ControllerModelKeyMSFT, c_uint32, POINTER(c_uint32), POINTER(c_uint8))
+PFN_xrLoadControllerModelMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, ControllerModelKeyMSFT, c_uint32, POINTER(c_uint32), POINTER(c_uint8))
 
-PFN_xrGetControllerModelPropertiesMSFT = CFUNCTYPE(Result.ctype(), Session, ControllerModelKeyMSFT, POINTER(ControllerModelPropertiesMSFT))
+PFN_xrGetControllerModelPropertiesMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, ControllerModelKeyMSFT, POINTER(ControllerModelPropertiesMSFT))
 
-PFN_xrGetControllerModelStateMSFT = CFUNCTYPE(Result.ctype(), Session, ControllerModelKeyMSFT, POINTER(ControllerModelStateMSFT))
+PFN_xrGetControllerModelStateMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, ControllerModelKeyMSFT, POINTER(ControllerModelStateMSFT))
 
 
 class ViewConfigurationViewFovEPIC(Structure):
@@ -2143,7 +2143,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     ]
 
 
-PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result.ctype(), Instance, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(ReprojectionModeMSFT.ctype()))
+PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, ViewConfigurationType.ctype(), c_uint32, POINTER(c_uint32), POINTER(ReprojectionModeMSFT.ctype()))
 
 
 class SwapchainStateBaseHeaderFB(Structure):
@@ -2159,9 +2159,9 @@ class SwapchainStateBaseHeaderFB(Structure):
     ]
 
 
-PFN_xrUpdateSwapchainFB = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainStateBaseHeaderFB))
+PFN_xrUpdateSwapchainFB = CFUNCTYPE(Result.ctype(), SwapchainHandle, POINTER(SwapchainStateBaseHeaderFB))
 
-PFN_xrGetSwapchainStateFB = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainStateBaseHeaderFB))
+PFN_xrGetSwapchainStateFB = CFUNCTYPE(Result.ctype(), SwapchainHandle, POINTER(SwapchainStateBaseHeaderFB))
 
 CompositionLayerSecureContentFlagsFB = Flags64
 
@@ -2190,7 +2190,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("action", Action),
+        ("action", ActionHandle),
         ("binding", Path),
         ("on_threshold", c_float),
         ("off_threshold", c_float),
@@ -2217,14 +2217,14 @@ class SceneObserverMSFT_T(Structure):
     pass
 
 
-SceneObserverMSFT = POINTER(SceneObserverMSFT_T)
+SceneObserverMSFTHandle = POINTER(SceneObserverMSFT_T)
 
 
 class SceneMSFT_T(Structure):
     pass
 
 
-SceneMSFT = POINTER(SceneMSFT_T)
+SceneMSFTHandle = POINTER(SceneMSFT_T)
 
 
 class UuidMSFT(Structure):
@@ -2283,7 +2283,7 @@ class SceneFrustumBoundMSFT(Structure):
 
 class SceneBoundsMSFT(Structure):
     _fields_ = [
-        ("space", Space),
+        ("space", SpaceHandle),
         ("time", Time),
         ("sphere_count", c_uint32),
         ("spheres", POINTER(SceneSphereBoundMSFT)),
@@ -2396,7 +2396,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("base_space", Space),
+        ("base_space", SpaceHandle),
         ("time", Time),
         ("component_id_count", c_uint32),
         ("component_ids", POINTER(UuidMSFT)),
@@ -2589,25 +2589,25 @@ class SceneMeshIndicesUint16MSFT(Structure):
     ]
 
 
-PFN_xrEnumerateSceneComputeFeaturesMSFT = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SceneComputeFeatureMSFT.ctype()))
+PFN_xrEnumerateSceneComputeFeaturesMSFT = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, c_uint32, POINTER(c_uint32), POINTER(SceneComputeFeatureMSFT.ctype()))
 
-PFN_xrCreateSceneObserverMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SceneObserverCreateInfoMSFT), POINTER(SceneObserverMSFT))
+PFN_xrCreateSceneObserverMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SceneObserverCreateInfoMSFT), POINTER(SceneObserverMSFTHandle))
 
-PFN_xrDestroySceneObserverMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT)
+PFN_xrDestroySceneObserverMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFTHandle)
 
-PFN_xrCreateSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(SceneCreateInfoMSFT), POINTER(SceneMSFT))
+PFN_xrCreateSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFTHandle, POINTER(SceneCreateInfoMSFT), POINTER(SceneMSFTHandle))
 
-PFN_xrDestroySceneMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT)
+PFN_xrDestroySceneMSFT = CFUNCTYPE(Result.ctype(), SceneMSFTHandle)
 
-PFN_xrComputeNewSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(NewSceneComputeInfoMSFT))
+PFN_xrComputeNewSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFTHandle, POINTER(NewSceneComputeInfoMSFT))
 
-PFN_xrGetSceneComputeStateMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(SceneComputeStateMSFT.ctype()))
+PFN_xrGetSceneComputeStateMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFTHandle, POINTER(SceneComputeStateMSFT.ctype()))
 
-PFN_xrGetSceneComponentsMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SceneComponentsGetInfoMSFT), POINTER(SceneComponentsMSFT))
+PFN_xrGetSceneComponentsMSFT = CFUNCTYPE(Result.ctype(), SceneMSFTHandle, POINTER(SceneComponentsGetInfoMSFT), POINTER(SceneComponentsMSFT))
 
-PFN_xrLocateSceneComponentsMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SceneComponentsLocateInfoMSFT), POINTER(SceneComponentLocationsMSFT))
+PFN_xrLocateSceneComponentsMSFT = CFUNCTYPE(Result.ctype(), SceneMSFTHandle, POINTER(SceneComponentsLocateInfoMSFT), POINTER(SceneComponentLocationsMSFT))
 
-PFN_xrGetSceneMeshBuffersMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SceneMeshBuffersGetInfoMSFT), POINTER(SceneMeshBuffersMSFT))
+PFN_xrGetSceneMeshBuffersMSFT = CFUNCTYPE(Result.ctype(), SceneMSFTHandle, POINTER(SceneMeshBuffersGetInfoMSFT), POINTER(SceneMeshBuffersMSFT))
 
 
 class SerializedSceneFragmentDataGetInfoMSFT(Structure):
@@ -2646,9 +2646,9 @@ class SceneDeserializeInfoMSFT(Structure):
     ]
 
 
-PFN_xrDeserializeSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFT, POINTER(SceneDeserializeInfoMSFT))
+PFN_xrDeserializeSceneMSFT = CFUNCTYPE(Result.ctype(), SceneObserverMSFTHandle, POINTER(SceneDeserializeInfoMSFT))
 
-PFN_xrGetSerializedSceneFragmentDataMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(SerializedSceneFragmentDataGetInfoMSFT), c_uint32, POINTER(c_uint32), POINTER(c_uint8))
+PFN_xrGetSerializedSceneFragmentDataMSFT = CFUNCTYPE(Result.ctype(), SceneMSFTHandle, POINTER(SerializedSceneFragmentDataGetInfoMSFT), c_uint32, POINTER(c_uint32), POINTER(c_uint8))
 
 
 class EventDataDisplayRefreshRateChangedFB(Structure):
@@ -2666,11 +2666,11 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
     ]
 
 
-PFN_xrEnumerateDisplayRefreshRatesFB = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(c_float))
+PFN_xrEnumerateDisplayRefreshRatesFB = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint32, POINTER(c_uint32), POINTER(c_float))
 
-PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), Session, POINTER(c_float))
+PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(c_float))
 
-PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), Session, c_float)
+PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), SessionHandle, c_float)
 
 
 class SystemColorSpacePropertiesFB(Structure):
@@ -2687,9 +2687,9 @@ class SystemColorSpacePropertiesFB(Structure):
     ]
 
 
-PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(ColorSpaceFB.ctype()))
+PFN_xrEnumerateColorSpacesFB = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint32, POINTER(c_uint32), POINTER(ColorSpaceFB.ctype()))
 
-PFN_xrSetColorSpaceFB = CFUNCTYPE(Result.ctype(), Session, c_int)
+PFN_xrSetColorSpaceFB = CFUNCTYPE(Result.ctype(), SessionHandle, c_int)
 
 
 class Vector4sFB(Structure):
@@ -2746,7 +2746,7 @@ class HandTrackingScaleFB(Structure):
     ]
 
 
-PFN_xrGetHandMeshFB = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(HandTrackingMeshFB))
+PFN_xrGetHandMeshFB = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINTER(HandTrackingMeshFB))
 
 HandTrackingAimFlagsFB = Flags64
 
@@ -2796,7 +2796,7 @@ class FoveationProfileFB_T(Structure):
     pass
 
 
-FoveationProfileFB = POINTER(FoveationProfileFB_T)
+FoveationProfileFBHandle = POINTER(FoveationProfileFB_T)
 
 SwapchainCreateFoveationFlagsFB = Flags64
 
@@ -2841,13 +2841,13 @@ class SwapchainStateFoveationFB(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("flags", SwapchainStateFoveationFlagsFB),
-        ("profile", FoveationProfileFB),
+        ("profile", FoveationProfileFBHandle),
     ]
 
 
-PFN_xrCreateFoveationProfileFB = CFUNCTYPE(Result.ctype(), Session, POINTER(FoveationProfileCreateInfoFB), POINTER(FoveationProfileFB))
+PFN_xrCreateFoveationProfileFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(FoveationProfileCreateInfoFB), POINTER(FoveationProfileFBHandle))
 
-PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result.ctype(), FoveationProfileFB)
+PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result.ctype(), FoveationProfileFBHandle)
 
 
 class FoveationLevelProfileCreateInfoFB(Structure):
@@ -2923,14 +2923,14 @@ class CompositionLayerDepthTestVARJO(Structure):
     ]
 
 
-PFN_xrSetEnvironmentDepthEstimationVARJO = CFUNCTYPE(Result.ctype(), Session, Bool32)
+PFN_xrSetEnvironmentDepthEstimationVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, Bool32)
 
 
 class SpatialAnchorStoreConnectionMSFT_T(Structure):
     pass
 
 
-SpatialAnchorStoreConnectionMSFT = POINTER(SpatialAnchorStoreConnectionMSFT_T)
+SpatialAnchorStoreConnectionMSFTHandle = POINTER(SpatialAnchorStoreConnectionMSFT_T)
 
 
 class SpatialAnchorPersistenceNameMSFT(Structure):
@@ -2950,7 +2950,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("spatial_anchor_persistence_name", SpatialAnchorPersistenceNameMSFT),
-        ("spatial_anchor", SpatialAnchorMSFT),
+        ("spatial_anchor", SpatialAnchorMSFTHandle),
     ]
 
 
@@ -2964,24 +2964,24 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("spatial_anchor_store", SpatialAnchorStoreConnectionMSFT),
+        ("spatial_anchor_store", SpatialAnchorStoreConnectionMSFTHandle),
         ("spatial_anchor_persistence_name", SpatialAnchorPersistenceNameMSFT),
     ]
 
 
-PFN_xrCreateSpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorStoreConnectionMSFT))
+PFN_xrCreateSpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialAnchorStoreConnectionMSFTHandle))
 
-PFN_xrDestroySpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT)
+PFN_xrDestroySpatialAnchorStoreConnectionMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle)
 
-PFN_xrPersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceInfoMSFT))
+PFN_xrPersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle, POINTER(SpatialAnchorPersistenceInfoMSFT))
 
-PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, c_uint32, POINTER(c_uint32), POINTER(SpatialAnchorPersistenceNameMSFT))
+PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle, c_uint32, POINTER(c_uint32), POINTER(SpatialAnchorPersistenceNameMSFT))
 
-PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorFromPersistedAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFT))
+PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialAnchorFromPersistedAnchorCreateInfoMSFT), POINTER(SpatialAnchorMSFTHandle))
 
-PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceNameMSFT))
+PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle, POINTER(SpatialAnchorPersistenceNameMSFT))
 
-PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT)
+PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle)
 
 CompositionLayerSpaceWarpInfoFlagsFB = Flags64
 
@@ -3031,17 +3031,17 @@ __all__ = [
     "Time",
     "Duration",
     "Instance_T",
-    "Instance",
+    "InstanceHandle",
     "Session_T",
-    "Session",
+    "SessionHandle",
     "Space_T",
-    "Space",
+    "SpaceHandle",
     "Action_T",
-    "Action",
+    "ActionHandle",
     "Swapchain_T",
-    "Swapchain",
+    "SwapchainHandle",
     "ActionSet_T",
-    "ActionSet",
+    "ActionSetHandle",
     "InstanceCreateFlags",
     "SessionCreateFlags",
     "SpaceVelocityFlags",
@@ -3198,7 +3198,7 @@ __all__ = [
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
     "PFN_xrThermalGetTemperatureTrendEXT",
     "DebugUtilsMessengerEXT_T",
-    "DebugUtilsMessengerEXT",
+    "DebugUtilsMessengerEXTHandle",
     "DebugUtilsMessageSeverityFlagsEXT",
     "DebugUtilsMessageTypeFlagsEXT",
     "DebugUtilsObjectNameInfoEXT",
@@ -3220,7 +3220,7 @@ __all__ = [
     "SessionCreateInfoOverlayEXTX",
     "EventDataMainSessionVisibilityChangedEXTX",
     "SpatialAnchorMSFT_T",
-    "SpatialAnchorMSFT",
+    "SpatialAnchorMSFTHandle",
     "SpatialAnchorCreateInfoMSFT",
     "SpatialAnchorSpaceCreateInfoMSFT",
     "PFN_xrCreateSpatialAnchorMSFT",
@@ -3238,7 +3238,7 @@ __all__ = [
     "SpatialGraphNodeSpaceCreateInfoMSFT",
     "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
     "HandTrackerEXT_T",
-    "HandTrackerEXT",
+    "HandTrackerEXTHandle",
     "SystemHandTrackingPropertiesEXT",
     "HandTrackerCreateInfoEXT",
     "HandJointsLocateInfoEXT",
@@ -3287,9 +3287,9 @@ __all__ = [
     "InteractionProfileAnalogThresholdVALVE",
     "HandJointsMotionRangeInfoEXT",
     "SceneObserverMSFT_T",
-    "SceneObserverMSFT",
+    "SceneObserverMSFTHandle",
     "SceneMSFT_T",
-    "SceneMSFT",
+    "SceneMSFTHandle",
     "UuidMSFT",
     "SceneObserverCreateInfoMSFT",
     "SceneCreateInfoMSFT",
@@ -3350,7 +3350,7 @@ __all__ = [
     "HandCapsuleFB",
     "HandTrackingCapsulesStateFB",
     "FoveationProfileFB_T",
-    "FoveationProfileFB",
+    "FoveationProfileFBHandle",
     "SwapchainCreateFoveationFlagsFB",
     "SwapchainStateFoveationFlagsFB",
     "FoveationProfileCreateInfoFB",
@@ -3365,7 +3365,7 @@ __all__ = [
     "CompositionLayerDepthTestVARJO",
     "PFN_xrSetEnvironmentDepthEstimationVARJO",
     "SpatialAnchorStoreConnectionMSFT_T",
-    "SpatialAnchorStoreConnectionMSFT",
+    "SpatialAnchorStoreConnectionMSFTHandle",
     "SpatialAnchorPersistenceNameMSFT",
     "SpatialAnchorPersistenceInfoMSFT",
     "SpatialAnchorFromPersistedAnchorCreateInfoMSFT",

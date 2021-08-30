@@ -267,6 +267,12 @@ class TypedefType(TypeBase):
             self._ctypes_name += ".ctype()"
         if not self._capi_name.upper()[:2] in ("XR", "PF", ):
             raise ValueError(self._capi_name)
+        # Rename handle types
+        if self.underlying_type.clang_type.kind == TypeKind.POINTER:
+            pt = self.underlying_type.clang_type.get_pointee()
+            if pt.kind == TypeKind.ELABORATED:
+                if pt.spelling.endswith("_T"):
+                    self._py_name = self._ctypes_name = self._py_name + "Handle"
 
     def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:

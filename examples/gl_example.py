@@ -1,4 +1,5 @@
 import ctypes
+import logging
 
 import glfw
 import platform
@@ -11,11 +12,114 @@ import xr
 # Next task: continue work on prepare_xr_session()
 
 
+ALL_SEVERITIES = (
+    xr.DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+    | xr.DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+    | xr.DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+    | xr.DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+)
+
+ALL_TYPES = (
+    xr.DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+    | xr.DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+    | xr.DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+    | xr.DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+)
+
+
+def py_log_level(severity_flags: int):
+    if severity_flags & 0x0001:  # VERBOSE
+        return logging.DEBUG
+    if severity_flags & 0x0010:  # INFO
+        return logging.INFO
+    if severity_flags & 0x0100:  # WARNING
+        return logging.WARNING
+    if severity_flags & 0x1000:  # ERROR
+        return logging.ERROR
+    return logging.CRITICAL
+
+
+stringForFormat = {
+    GL.GL_COMPRESSED_R11_EAC: "COMPRESSED_R11_EAC",
+    GL.GL_COMPRESSED_RED_RGTC1: "COMPRESSED_RED_RGTC1",
+    GL.GL_COMPRESSED_RG_RGTC2: "COMPRESSED_RG_RGTC2",
+    GL.GL_COMPRESSED_RG11_EAC: "COMPRESSED_RG11_EAC",
+    GL.GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT: "COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT",
+    GL.GL_COMPRESSED_RGB8_ETC2: "COMPRESSED_RGB8_ETC2",
+    GL.GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2: "COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2",
+    GL.GL_COMPRESSED_RGBA8_ETC2_EAC: "COMPRESSED_RGBA8_ETC2_EAC",
+    GL.GL_COMPRESSED_SIGNED_R11_EAC: "COMPRESSED_SIGNED_R11_EAC",
+    GL.GL_COMPRESSED_SIGNED_RG11_EAC: "COMPRESSED_SIGNED_RG11_EAC",
+    GL.GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM: "COMPRESSED_SRGB_ALPHA_BPTC_UNORM",
+    GL.GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC: "COMPRESSED_SRGB8_ALPHA8_ETC2_EAC",
+    GL.GL_COMPRESSED_SRGB8_ETC2: "COMPRESSED_SRGB8_ETC2",
+    GL.GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2: "COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2",
+    GL.GL_DEPTH_COMPONENT16: "DEPTH_COMPONENT16",
+    GL.GL_DEPTH_COMPONENT24: "DEPTH_COMPONENT24",
+    GL.GL_DEPTH_COMPONENT32: "DEPTH_COMPONENT32",
+    GL.GL_DEPTH_COMPONENT32F: "DEPTH_COMPONENT32F",
+    GL.GL_DEPTH24_STENCIL8: "DEPTH24_STENCIL8",
+    GL.GL_R11F_G11F_B10F: "R11F_G11F_B10F",
+    GL.GL_R16_SNORM: "R16_SNORM",
+    GL.GL_R16: "R16",
+    GL.GL_R16F: "R16F",
+    GL.GL_R16I: "R16I",
+    GL.GL_R16UI: "R16UI",
+    GL.GL_R32F: "R32F",
+    GL.GL_R32I: "R32I",
+    GL.GL_R32UI: "R32UI",
+    GL.GL_R8_SNORM: "R8_SNORM",
+    GL.GL_R8: "R8",
+    GL.GL_R8I: "R8I",
+    GL.GL_R8UI: "R8UI",
+    GL.GL_RG16_SNORM: "RG16_SNORM",
+    GL.GL_RG16: "RG16",
+    GL.GL_RG16F: "RG16F",
+    GL.GL_RG16I: "RG16I",
+    GL.GL_RG16UI: "RG16UI",
+    GL.GL_RG32F: "RG32F",
+    GL.GL_RG32I: "RG32I",
+    GL.GL_RG32UI: "RG32UI",
+    GL.GL_RG8_SNORM: "RG8_SNORM",
+    GL.GL_RG8: "RG8",
+    GL.GL_RG8I: "RG8I",
+    GL.GL_RG8UI: "RG8UI",
+    GL.GL_RGB10_A2: "RGB10_A2",
+    GL.GL_RGB8: "RGB8",
+    GL.GL_RGB9_E5: "RGB9_E5",
+    GL.GL_RGBA16_SNORM: "RGBA16_SNORM",
+    GL.GL_RGBA16: "RGBA16",
+    GL.GL_RGBA16F: "RGBA16F",
+    GL.GL_RGBA16I: "RGBA16I",
+    GL.GL_RGBA16UI: "RGBA16UI",
+    GL.GL_RGBA2: "RGBA2",
+    GL.GL_RGBA32F: "RGBA32F",
+    GL.GL_RGBA32I: "RGBA32I",
+    GL.GL_RGBA32UI: "RGBA32UI",
+    GL.GL_RGBA8_SNORM: "RGBA8_SNORM",
+    GL.GL_RGBA8: "RGBA8",
+    GL.GL_RGBA8I: "RGBA8I",
+    GL.GL_RGBA8UI: "RGBA8UI",
+    GL.GL_SRGB8_ALPHA8: "SRGB8_ALPHA8",
+    GL.GL_SRGB8: "SRGB8",
+    GL.GL_RGB16F: "RGB16F",
+    GL.GL_DEPTH32F_STENCIL8: "DEPTH32F_STENCIL8",
+    GL.GL_BGR: "BGR (Out of spec)",
+    GL.GL_BGRA: "BGRA (Out of spec)",
+}
+
+
 class OpenXrExample(object):
     def __init__(self):
+        logging.basicConfig()
+        self.logger = logging.getLogger("gl_example")
+        self.logger.setLevel(logging.DEBUG)
+        self.debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(self.debug_callback_py)
         self.mirror_window = False
         self.instance = None
         self.system_id = None
+        self.pxrCreateDebugUtilsMessengerEXT = None
+        self.pxrDestroyDebugUtilsMessengerEXT = None
         self.pxrGetOpenGLGraphicsRequirementsKHR = None
         self.graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
         if platform.system() == 'Windows':
@@ -40,6 +144,35 @@ class OpenXrExample(object):
         self.frame_state = xr.FrameState()
         self.eye_view_states = None
         self.window_size = None
+        self.enable_debug = True
+
+    def debug_callback_py(
+            self,
+            severity: xr.DebugUtilsMessageSeverityFlagsEXT,
+            type_: xr.DebugUtilsMessageTypeFlagsEXT,
+            data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
+            user_data: ctypes.c_void_p,
+    ) -> bool:
+        d = data.contents
+        # TODO structure properties to return unicode strings
+        self.logger.log(py_log_level(severity), f"{d.function_name.decode()}: {d.message.decode()}")
+        return True
+
+    def create_messenger(
+            self,
+            instance: xr.InstanceHandle,
+            severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT = ALL_SEVERITIES,
+            type_flags: xr.DebugUtilsMessageTypeFlagsEXT = ALL_TYPES,
+            user_data: ctypes.c_void_p = None,
+    ) -> xr.DebugUtilsMessengerEXTHandle:
+        create_info = xr.DebugUtilsMessengerCreateInfoEXT(
+            None,
+            severity_flags,
+            type_flags,
+            self.debug_callback,
+            user_data,
+        )
+        # TODO
 
     def run(self):
         while not self.quit:
@@ -59,8 +192,12 @@ class OpenXrExample(object):
         return self
 
     def prepare_xr_instance(self):
-        requested_extensions = [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
         discovered_extensions = xr.enumerate_instance_extension_properties()
+        if xr.EXT_DEBUG_UTILS_EXTENSION_NAME not in discovered_extensions:
+            self.enable_debug = False
+        requested_extensions = [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
+        if self.enable_debug:
+            requested_extensions.append(xr.EXT_DEBUG_UTILS_EXTENSION_NAME)
         for extension in requested_extensions:
             assert extension in discovered_extensions
         # TODO: str arguments
@@ -72,14 +209,40 @@ class OpenXrExample(object):
         for i, s in enumerate(bs):
             str_arr[i] = s
         ici = xr.InstanceCreateInfo(None, 0, app_info, 0, None, 1, str_arr)
+        dumci = xr.DebugUtilsMessengerCreateInfoEXT()
+        if self.enable_debug:
+            dumci.message_severities = ALL_SEVERITIES
+            dumci.message_types = ALL_TYPES
+            dumci.user_data = None  # TODO
+            dumci.user_callback = self.debug_callback
+            ici.next = ctypes.cast(ctypes.pointer(dumci), ctypes.c_void_p)  # TODO: yuck
         self.instance = xr.create_instance(ici)
         # TODO: pythonic wrapper
-        pfn = xr.get_instance_proc_addr(
-            self.instance, "xrGetOpenGLGraphicsRequirementsKHR")
-        self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(pfn, xr.PFN_xrGetOpenGLGraphicsRequirementsKHR)
-        print(self.pxrGetOpenGLGraphicsRequirementsKHR)
+        self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(
+            xr.get_instance_proc_addr(
+                self.instance,
+                "xrGetOpenGLGraphicsRequirementsKHR",
+            ),
+            xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
+        )
+        try:
+            self.pxrCreateDebugUtilsMessengerEXT = ctypes.cast(
+                xr.get_instance_proc_addr(
+                    self.instance,
+                    "xrCreateDebugUtilsMessengerEXT",
+                ),
+                xr.PFN_xrCreateDebugUtilsMessengerEXT
+            )
+            self.pxrDestroyDebugUtilsMessengerEXT = ctypes.cast(
+                xr.get_instance_proc_addr(
+                    self.instance,
+                    "xrDestroyDebugUtilsMessengerEXT",
+                ),
+                xr.PFN_xrDestroyDebugUtilsMessengerEXT
+            )
+        except xr.exceptions.FunctionUnsupportedError:
+            pass  # TODO: not sure why this is happening
         instance_properties = xr.get_instance_properties(self.instance)
-        print(instance_properties)
 
     def prepare_xr_system(self):
         get_info = xr.SystemGetInfo(None, xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
@@ -130,13 +293,13 @@ class OpenXrExample(object):
         self.session = xr.create_session(self.instance, sci)  # Failing here...
         reference_spaces = xr.enumerate_reference_spaces(self.session)
         for rs in reference_spaces:
-            print(rs)
+            print(xr.ReferenceSpaceType(rs))
         # TODO: default constructors for Quaternion, Vector3f, Posef, ReferenceSpaceCreateInfo
         rsci = xr.ReferenceSpaceCreateInfo(None, 3, xr.Posef(xr.Quaternionf(0, 0, 0, 1), xr.Vector3f(0, 0, 0)))
         self.projection_layer.space = xr.create_reference_space(self.session, rsci)
         swapchain_formats = xr.enumerate_swapchain_formats(self.session)
         for scf in swapchain_formats:
-            print(scf)
+            print(stringForFormat[scf])
 
     def prepare_xr_swapchain(self):
         self.swapchain_create_info.usage_flags = xr.SWAPCHAIN_USAGE_TRANSFER_DST_BIT
@@ -148,9 +311,9 @@ class OpenXrExample(object):
         self.swapchain_create_info.width = self.render_target_size[0]
         self.swapchain_create_info.height = self.render_target_size[1]
         self.swapchain = xr.create_swapchain(self.session, self.swapchain_create_info)
-        self.swapchain_images = xr.enumerate_swapchain_images_gl(self.swapchain)
+        self.swapchain_images = xr.enumerate_swapchain_images(self.swapchain, xr.SwapchainImageOpenGLKHR)
         for si in self.swapchain_images:
-            print(si)
+            print(xr.StructureType(si.type))
 
     def prepare_xr_composition_layers(self):
         self.projection_layer.view_count = 2
