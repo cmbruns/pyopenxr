@@ -3,11 +3,11 @@
 
 This is a work in progress. Stay tuned.
 
-## Installation
+## Installing pyopenxr
 
 ``pip install pyopenxr``
 
-## Use
+## Using pyopenxr
 
 ```python
 import xr
@@ -22,7 +22,7 @@ for prop in required:
     assert prop in available
 ```
 
-## Pythonic naming convention
+## Pythonic naming conventions in pyopenxr
 
 | symbol      | Python example                       | C example                             |
 | ----------- | ------------------------------------ | ------------------------------------- |
