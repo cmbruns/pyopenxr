@@ -110,10 +110,10 @@ stringForFormat = {
 
 
 class OpenXrExample(object):
-    def __init__(self):
+    def __init__(self, log_level=logging.WARNING):
         logging.basicConfig()
         self.logger = logging.getLogger("gl_example")
-        self.logger.setLevel(logging.DEBUG)
+        self.logger.setLevel(log_level)
         self.debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(self.debug_callback_py)
         self.mirror_window = False
         self.instance = None
@@ -155,7 +155,7 @@ class OpenXrExample(object):
     ) -> bool:
         d = data.contents
         # TODO structure properties to return unicode strings
-        self.logger.log(py_log_level(severity), f"{d.function_name.decode()}: {d.message.decode()}")
+        self.logger.log(py_log_level(int(severity)), f"{d.function_name.decode()}: {d.message.decode()}")
         return True
 
     def create_messenger(
@@ -270,7 +270,8 @@ class OpenXrExample(object):
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-        self.window = glfw.create_window(64, 64, "GLFW Window", None, None)
+        self.window_size = [s // 4 for s in self.render_target_size]
+        self.window = glfw.create_window(*self.window_size, "gl_example", None, None)
         if self.window is None:
             raise RuntimeError("Failed to create GLFW window")
         glfw.make_context_current(self.window)
@@ -293,13 +294,13 @@ class OpenXrExample(object):
         self.session = xr.create_session(self.instance, sci)  # Failing here...
         reference_spaces = xr.enumerate_reference_spaces(self.session)
         for rs in reference_spaces:
-            print(xr.ReferenceSpaceType(rs))
+            self.logger.debug(f"Session supports reference space {xr.ReferenceSpaceType(rs)}")
         # TODO: default constructors for Quaternion, Vector3f, Posef, ReferenceSpaceCreateInfo
         rsci = xr.ReferenceSpaceCreateInfo(None, 3, xr.Posef(xr.Quaternionf(0, 0, 0, 1), xr.Vector3f(0, 0, 0)))
         self.projection_layer.space = xr.create_reference_space(self.session, rsci)
         swapchain_formats = xr.enumerate_swapchain_formats(self.session)
         for scf in swapchain_formats:
-            print(stringForFormat[scf])
+            self.logger.debug(f"Session supports swapchain format {stringForFormat[scf]}")
 
     def prepare_xr_swapchain(self):
         self.swapchain_create_info.usage_flags = xr.SWAPCHAIN_USAGE_TRANSFER_DST_BIT
@@ -312,8 +313,8 @@ class OpenXrExample(object):
         self.swapchain_create_info.height = self.render_target_size[1]
         self.swapchain = xr.create_swapchain(self.session, self.swapchain_create_info)
         self.swapchain_images = xr.enumerate_swapchain_images(self.swapchain, xr.SwapchainImageOpenGLKHR)
-        for si in self.swapchain_images:
-            print(xr.StructureType(si.type))
+        for i, si in enumerate(self.swapchain_images):
+            self.logger.debug(f"Swapchain image {i} type = {xr.StructureType(si.type)}")
 
     def prepare_xr_composition_layers(self):
         self.projection_layer.view_count = 2
@@ -466,7 +467,7 @@ class OpenXrExample(object):
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         if self.mirror_window:
-        # fast blit from the fbo to the window surface
+            # fast blit from the fbo to the window surface
             GL.glDisable(GL.GL_SCISSOR_TEST)
             GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
             GL.glBlitFramebuffer(
@@ -508,6 +509,5 @@ class OpenXrExample(object):
 
 
 if __name__ == "__main__":
-    with OpenXrExample() as ex:
+    with OpenXrExample(logging.DEBUG) as ex:
         ex.run()
-

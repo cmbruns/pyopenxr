@@ -1,7 +1,7 @@
 from __future__ import annotations  # To support python 3.9+ style array type annotations
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import POINTER, c_char, c_int64, c_uint32, cast
+from ctypes import POINTER, c_char, c_int64, c_uint32
 
 """
 File xr.functions.py
@@ -16,7 +16,6 @@ from .enums import *
 from .exceptions import check_result
 from .typedefs import *
 
-from .platform import SwapchainImageOpenGLKHR
 
 def get_instance_proc_addr(
     instance: InstanceHandle,
@@ -524,7 +523,7 @@ def destroy_swapchain(
 
 def enumerate_swapchain_images(
     swapchain: SwapchainHandle,
-    structure_type: StructureType
+    structure_type
 ) -> Array[SwapchainImageBaseHeader]:
     """"""
     image_capacity_input = c_uint32(0)
@@ -544,32 +543,6 @@ def enumerate_swapchain_images(
         image_capacity_input,
         byref(image_capacity_input),
         cast(images, POINTER(SwapchainImageBaseHeader)),
-    ))
-    if result.is_exception():
-        raise result
-    return images
-
-def enumerate_swapchain_images_gl(
-    swapchain: Swapchain,
-) -> Array[SwapchainImageOpenGLKHR]:
-    """"""
-    image_capacity_input = c_uint32(0)
-    fxn = raw_functions.xrEnumerateSwapchainImages
-    # First call of two, to retrieve buffer sizes
-    result = check_result(fxn(
-        swapchain,
-        0,
-        byref(image_capacity_input),
-        None,
-    ))
-    if result.is_exception():
-        raise result
-    images = (SwapchainImageOpenGLKHR * image_capacity_input.value)(*([SwapchainImageOpenGLKHR()] * image_capacity_input.value))
-    result = check_result(fxn(
-        swapchain,
-        image_capacity_input,
-        byref(image_capacity_input),
-        cast(images, POINTER(SwapchainImageBaseHeader))
     ))
     if result.is_exception():
         raise result
@@ -1089,7 +1062,6 @@ __all__ = [
     "create_swapchain",
     "destroy_swapchain",
     "enumerate_swapchain_images",
-    "enumerate_swapchain_images_gl",
     "acquire_swapchain_image",
     "wait_swapchain_image",
     "release_swapchain_image",
