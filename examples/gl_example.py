@@ -1,6 +1,7 @@
 import ctypes
 
 import glfw
+import platform
 from OpenGL import GL, WGL
 
 import xr
@@ -12,10 +13,18 @@ import xr
 
 class OpenXrExample(object):
     def __init__(self):
+        self.mirror_window = False
         self.instance = None
         self.system_id = None
         self.pxrGetOpenGLGraphicsRequirementsKHR = None
-        self.graphics_requirements = None
+        self.graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
+        if platform.system() == 'Windows':
+            self.graphics_binding = xr.GraphicsBindingOpenGLWin32KHR()
+        elif platform.system() == 'Linux':
+            # TODO - support X11 and Wayland and DirectFB maybe?
+            raise NotImplementedError('X11, Wayland and DirectFB not supported')
+        else:
+            raise NotImplementedError('Unsupported platform')
         self.render_target_size = None
         self.window = None
         self.session = None
@@ -33,15 +42,13 @@ class OpenXrExample(object):
         self.window_size = None
 
     def run(self):
-        self.prepare()
         while not self.quit:
             if glfw.window_should_close(self.window):
                 self.quit = True
             else:
                 self.frame()
-        self.destroy()  # TODO: raii
 
-    def prepare(self):
+    def __enter__(self):
         self.prepare_xr_instance()
         self.prepare_xr_system()
         self.prepare_window()
@@ -49,6 +56,7 @@ class OpenXrExample(object):
         self.prepare_xr_swapchain()
         self.prepare_xr_composition_layers()
         self.prepare_gl_framebuffer()
+        return self
 
     def prepare_xr_instance(self):
         requested_extensions = [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
@@ -84,7 +92,6 @@ class OpenXrExample(object):
         assert len(view_config_views) == 2
         assert view_config_views[0].recommended_image_rect_height == view_config_views[1].recommended_image_rect_height
         self.render_target_size = (view_config_views[0].recommended_image_rect_width * 2, view_config_views[0].recommended_image_rect_height)
-        self.graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
         result = self.pxrGetOpenGLGraphicsRequirementsKHR(
             self.instance, self.system_id, ctypes.byref(self.graphics_requirements))  # TODO: pythonic wrapper
         result = xr.exceptions.check_result(xr.Result(result))
@@ -92,33 +99,33 @@ class OpenXrExample(object):
             raise result
 
     def prepare_window(self):
-        assert glfw.init()
+        if not glfw.init():
+            raise RuntimeError("GLFW initialization failed")
+        if not self.mirror_window:
+            glfw.window_hint(glfw.VISIBLE, False)
         glfw.window_hint(glfw.DOUBLEBUFFER, False)
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
-        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
+        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-        self.window_size = [s // 4 for s in self.render_target_size]
-        self.window = glfw.create_window(*self.window_size, "GLFW Window", None, None)
+        self.window = glfw.create_window(64, 64, "GLFW Window", None, None)
         if self.window is None:
-            glfw.terminate()  # TODO raii
-            assert False
+            raise RuntimeError("Failed to create GLFW window")
         glfw.make_context_current(self.window)
-        glfw.swap_interval(1)
+        # Attempt to disable vsync on the desktop window or
+        # it will interfere with the OpenXR frame loop timing
+        glfw.swap_interval(0)
 
     def prepare_xr_session(self):
-        hdc = WGL.wglGetCurrentDC()
-        context = WGL.wglGetCurrentContext()
-        window = glfw.get_win32_window(self.window)
-        wgl_context = glfw.get_wgl_context(self.window)
         # TODO: debug this structure GraphicsBindingOpenGLWin32KHR
         # HDC type is not processed properly
         # May need to include Windows.h and enhance parser
-        graphics_binding = xr.GraphicsBindingOpenGLWin32KHR(
-            None,
-            WGL.wglGetCurrentDC(),
-            WGL.wglGetCurrentContext(),
-        )
-        pp = ctypes.cast(ctypes.pointer(graphics_binding), ctypes.c_void_p)
+        if platform.system() == 'Windows':
+            self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
+            self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
+        else:
+            # TODO fix for Linux
+            raise NotImplementedError("Only Windows is supported")
+        pp = ctypes.cast(ctypes.pointer(self.graphics_binding), ctypes.c_void_p)
         sci = xr.SessionCreateInfo(pp, 0, self.system_id)
         self.session = xr.create_session(self.instance, sci)  # Failing here...
         reference_spaces = xr.enumerate_reference_spaces(self.session)
@@ -141,7 +148,7 @@ class OpenXrExample(object):
         self.swapchain_create_info.width = self.render_target_size[0]
         self.swapchain_create_info.height = self.render_target_size[1]
         self.swapchain = xr.create_swapchain(self.session, self.swapchain_create_info)
-        self.swapchain_images = xr.enumerate_swapchain_images(self.swapchain)
+        self.swapchain_images = xr.enumerate_swapchain_images_gl(self.swapchain)
         for si in self.swapchain_images:
             print(si)
 
@@ -278,10 +285,7 @@ class OpenXrExample(object):
         wi = xr.SwapchainImageWaitInfo(None, xr.INFINITE_DURATION)
         xr.wait_swapchain_image(self.swapchain, wi)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.fbo_id)
-        # TODO: it would be nice to avoid this horrible cast...
-        sw_image = ctypes.cast(
-            ctypes.byref(self.swapchain_images[swapchain_index]),
-            ctypes.POINTER(xr.SwapchainImageOpenGLKHR)).contents
+        sw_image = self.swapchain_images[swapchain_index]
         GL.glFramebufferTexture(
             GL.GL_FRAMEBUFFER,
             GL.GL_COLOR_ATTACHMENT0,
@@ -298,22 +302,26 @@ class OpenXrExample(object):
         GL.glClearColor(0, 0, 1, 1)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
+        if self.mirror_window:
         # fast blit from the fbo to the window surface
-        GL.glDisable(GL.GL_SCISSOR_TEST)
-        GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
-        GL.glBlitFramebuffer(
-            0, 0, w, h, 0, 0,
-            *self.window_size,
-            GL.GL_COLOR_BUFFER_BIT,
-            GL.GL_NEAREST
-        )
-        GL.glFramebufferTexture(GL.GL_READ_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, 0, 0)
-        GL.glBindFramebuffer(GL.GL_READ_FRAMEBUFFER, 0)
+            GL.glDisable(GL.GL_SCISSOR_TEST)
+            GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
+            GL.glBlitFramebuffer(
+                0, 0, w, h, 0, 0,
+                *self.window_size,
+                GL.GL_COLOR_BUFFER_BIT,
+                GL.GL_NEAREST
+            )
+            GL.glFramebufferTexture(GL.GL_READ_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, 0, 0)
+            GL.glBindFramebuffer(GL.GL_READ_FRAMEBUFFER, 0)
         ri = xr.SwapchainImageReleaseInfo()
         xr.release_swapchain_image(self.swapchain, ri)
-        glfw.swap_buffers(self.window)
+        # If we're mirror make sure to do the potentially blocking command
+        # AFTER we've released the swapchain image
+        if self.mirror_window:
+            glfw.swap_buffers(self.window)
 
-    def destroy(self):
+    def __exit__(self, exc_type, exc_value, traceback):
         if self.fbo_id is not None:
             GL.glDeleteFramebuffers(1, [self.fbo_id])
             self.fbo_id = None
@@ -333,7 +341,10 @@ class OpenXrExample(object):
         if self.instance is not None:
             xr.destroy_instance(self.instance)
             self.instance = None
+        glfw.terminate()
 
 
 if __name__ == "__main__":
-    OpenXrExample().run()
+    with OpenXrExample() as ex:
+        ex.run()
+
