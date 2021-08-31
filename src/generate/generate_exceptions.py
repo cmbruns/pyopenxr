@@ -1,4 +1,4 @@
-# This script creates an updated version of xr/exceptions.py
+# This script creates an updated version of xr/exception.py
 
 import inspect
 import re

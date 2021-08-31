@@ -3,7 +3,7 @@ import ctypes
 
 from . import raw_functions  # Side effect of defining low-level c signatures
 from .enums import *
-from .exceptions import check_result
+from .exception import check_result
 from .typedefs import *
 
 

@@ -7,10 +7,6 @@ from OpenGL import GL, WGL
 
 import xr
 
-# TODO: finish translating example at
-# https://github.com/jherico/OpenXR-Samples/blob/master/src/examples/sdl2_gl_single_file_example_c.cpp
-# Next task: continue work on prepare_xr_session()
-
 
 ALL_SEVERITIES = (
     xr.DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
@@ -155,24 +151,8 @@ class OpenXrExample(object):
     ) -> bool:
         d = data.contents
         # TODO structure properties to return unicode strings
-        self.logger.log(py_log_level(int(severity)), f"{d.function_name.decode()}: {d.message.decode()}")
+        self.logger.log(py_log_level(severity), f"{d.function_name.decode()}: {d.message.decode()}")
         return True
-
-    def create_messenger(
-            self,
-            instance: xr.InstanceHandle,
-            severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT = ALL_SEVERITIES,
-            type_flags: xr.DebugUtilsMessageTypeFlagsEXT = ALL_TYPES,
-            user_data: ctypes.c_void_p = None,
-    ) -> xr.DebugUtilsMessengerEXTHandle:
-        create_info = xr.DebugUtilsMessengerCreateInfoEXT(
-            None,
-            severity_flags,
-            type_flags,
-            self.debug_callback,
-            user_data,
-        )
-        # TODO
 
     def run(self):
         while not self.quit:
@@ -225,24 +205,6 @@ class OpenXrExample(object):
             ),
             xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
         )
-        try:
-            self.pxrCreateDebugUtilsMessengerEXT = ctypes.cast(
-                xr.get_instance_proc_addr(
-                    self.instance,
-                    "xrCreateDebugUtilsMessengerEXT",
-                ),
-                xr.PFN_xrCreateDebugUtilsMessengerEXT
-            )
-            self.pxrDestroyDebugUtilsMessengerEXT = ctypes.cast(
-                xr.get_instance_proc_addr(
-                    self.instance,
-                    "xrDestroyDebugUtilsMessengerEXT",
-                ),
-                xr.PFN_xrDestroyDebugUtilsMessengerEXT
-            )
-        except xr.exceptions.FunctionUnsupportedError:
-            pass  # TODO: not sure why this is happening
-        instance_properties = xr.get_instance_properties(self.instance)
 
     def prepare_xr_system(self):
         get_info = xr.SystemGetInfo(None, xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
@@ -257,7 +219,7 @@ class OpenXrExample(object):
         self.render_target_size = (view_config_views[0].recommended_image_rect_width * 2, view_config_views[0].recommended_image_rect_height)
         result = self.pxrGetOpenGLGraphicsRequirementsKHR(
             self.instance, self.system_id, ctypes.byref(self.graphics_requirements))  # TODO: pythonic wrapper
-        result = xr.exceptions.check_result(xr.Result(result))
+        result = xr.exception.check_result(xr.Result(result))
         if result.is_exception():
             raise result
 
@@ -280,9 +242,6 @@ class OpenXrExample(object):
         glfw.swap_interval(0)
 
     def prepare_xr_session(self):
-        # TODO: debug this structure GraphicsBindingOpenGLWin32KHR
-        # HDC type is not processed properly
-        # May need to include Windows.h and enhance parser
         if platform.system() == 'Windows':
             self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
             self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
@@ -291,7 +250,7 @@ class OpenXrExample(object):
             raise NotImplementedError("Only Windows is supported")
         pp = ctypes.cast(ctypes.pointer(self.graphics_binding), ctypes.c_void_p)
         sci = xr.SessionCreateInfo(pp, 0, self.system_id)
-        self.session = xr.create_session(self.instance, sci)  # Failing here...
+        self.session = xr.create_session(self.instance, sci)
         reference_spaces = xr.enumerate_reference_spaces(self.session)
         for rs in reference_spaces:
             self.logger.debug(f"Session supports reference space {xr.ReferenceSpaceType(rs)}")
@@ -395,18 +354,18 @@ class OpenXrExample(object):
             self.quit = True
 
     def start_xr_frame(self) -> bool:
-        frame_wait_info = xr.FrameWaitInfo(None)
         if self.session_state in [
             xr.SessionState.READY,
             xr.SessionState.FOCUSED,
             xr.SessionState.SYNCHRONIZED,
             xr.SessionState.VISIBLE,
         ]:
+            frame_wait_info = xr.FrameWaitInfo(None)
             try:
                 self.frame_state = xr.wait_frame(self.session, frame_wait_info)
                 xr.begin_frame(self.session, None)
                 return True
-            except Exception:
+            except xr.ResultException:
                 return False
         return False
 
@@ -437,11 +396,10 @@ class OpenXrExample(object):
             self.projection_layer.space,
         )
         vs, self.eye_view_states = xr.locate_views(self.session, vi)
-        for eye_index in range(2):
-            view_state = self.eye_view_states[eye_index]
+        for eye_index, view_state in enumerate(self.eye_view_states):
             # These aren't actually used in this simple example...
             # self.eye_projections[eye_index] = something(view_state.fov)  # TODO:
-            # self.eye_views[eye_index] = something_else(view_state.pose)  # TODO:
+            print(repr(view_state.pose))
 
     def render(self):
         ai = xr.SwapchainImageAcquireInfo(None)

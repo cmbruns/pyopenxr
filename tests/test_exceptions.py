@@ -13,16 +13,16 @@ class TestSuccessResult(unittest.TestCase):
     def test_construct(self):
         self.assertEqual("Function successfully completed.", str(self.exc))
         self.assertEqual("Bar", str(xr.Success("Bar")))
-        xr.exceptions.raise_on_qualified_success = False
+        xr.exception.raise_on_qualified_success = False
         self.assertFalse(self.exc.is_exception())
-        xr.exceptions.raise_on_qualified_success = True
+        xr.exception.raise_on_qualified_success = True
         self.assertFalse(self.exc.is_exception())
 
     def test_methods(self):
         self.assertEqual(xr.Result.SUCCESS, self.exc.get_result_enum())
-        xr.exceptions.raise_on_qualified_success = False
+        xr.exception.raise_on_qualified_success = False
         self.assertFalse(self.exc.is_exception())
-        xr.exceptions.raise_on_qualified_success = True
+        xr.exception.raise_on_qualified_success = True
         self.assertFalse(self.exc.is_exception())
 
 
@@ -43,9 +43,9 @@ class TestTimeoutExpired(unittest.TestCase):
 
     def test_methods(self):
         self.assertEqual(xr.Result.TIMEOUT_EXPIRED, self.exc.get_result_enum())
-        xr.exceptions.raise_on_qualified_success = False
+        xr.exception.raise_on_qualified_success = False
         self.assertFalse(self.exc.is_exception())
-        xr.exceptions.raise_on_qualified_success = True
+        xr.exception.raise_on_qualified_success = True
         self.assertTrue(self.exc.is_exception())
 
 

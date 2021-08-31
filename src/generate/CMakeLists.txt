@@ -133,7 +133,7 @@ generate_source("generate_raw_functions.py" "raw_functions.py" "")
 generate_source("generate_functions.py" "functions.py" "")
 generate_source("generate_windows_platform.py" "windows.py" "platform")
 generate_source("generate_linux_platform.py" "linux.py" "platform")
-generate_source("generate_exceptions.py" "exceptions.py" "")
+generate_source("generate_exceptions.py" "exception.py" "")
 
 ##########################################
 ### Find OpenXR-Registry documentation ###

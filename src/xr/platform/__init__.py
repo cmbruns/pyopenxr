@@ -11,4 +11,4 @@ elif platform.system() == "Linux":
     from . import linux
     __all__ += linux.__all__
 else:
-    assert False  # We did not implement your platform yet...
+    raise NotImplementedError

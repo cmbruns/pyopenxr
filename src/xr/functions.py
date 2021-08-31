@@ -13,7 +13,7 @@ from ctypes import Array, byref, cast, create_string_buffer
 
 from . import raw_functions
 from .enums import *
-from .exceptions import check_result
+from .exception import check_result
 from .typedefs import *
 
 
