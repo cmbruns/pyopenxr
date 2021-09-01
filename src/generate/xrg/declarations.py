@@ -591,7 +591,6 @@ class ParameterCoderBase(NothingParameterCoder):
 
 class InputParameterCoder(ParameterCoderBase):
     def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
-        # TODO: default value (from docstring?) e.g. None for string that can be empty
         p = self.parameter
         yield f"{p.name(api)}: {p.type.name(Api.PYTHON)}"
 
@@ -623,17 +622,32 @@ class OutputParameterCoder(ParameterCoderBase):
 
 
 class BufferCoder(ParameterCoderBase):
-    def __init__(self, cap_in: FunctionParameterItem, count_out: FunctionParameterItem, array: FunctionParameterItem):
-        super().__init__(cap_in)
+    def __init__(
+            self,
+            cap_in: FunctionParameterItem,
+            count_out: FunctionParameterItem,
+            array: FunctionParameterItem,
+            use_element_type_arg: bool = False
+    ):
+        super().__init__(count_out)  # Not cap_in because it's optional
         self.cap_in = cap_in
         self.count_out = count_out
         self.array = array
+        self.use_element_type_arg = use_element_type_arg
         if self.array.type.clang_type.spelling == "char *":  # string case
             assert not self.array.type.clang_type.get_pointee().is_const_qualified()
             self.array_type_name = "str"
         else:
             self.array_type = self.array.type.pointee
             self.array_type_name: str = self.array_type.name(Api.CTYPES)
+        if self.use_element_type_arg:
+            self.array_type_name_internal = "element_type"
+        else:
+            self.array_type_name_internal = self.array_type_name
+
+    def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        if self.use_element_type_arg:
+            yield f"element_type: type"
 
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)} = {self.cap_in.type.name(Api.CTYPES)}(0)"
@@ -646,7 +660,7 @@ class BufferCoder(ParameterCoderBase):
     def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         name = f"{self.array.name()}"
         n = f"{self.cap_in.name(api)}.value"
-        etype = self.array_type_name
+        etype = self.array_type_name_internal
         if self.array_type_name == "str":
             yield f"{name} = create_string_buffer({n})"
         else:
@@ -657,7 +671,10 @@ class BufferCoder(ParameterCoderBase):
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
         yield f"byref({self.cap_in.name(api)})"
-        yield f"{self.array.name(api)}"
+        if self.use_element_type_arg:
+            yield f"cast({self.array.name(api)}, POINTER({self.array_type_name}))"
+        else:
+            yield f"{self.array.name(api)}"
 
     def result_type_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         if self.array_type_name == "str":
@@ -675,8 +692,6 @@ class BufferCoder(ParameterCoderBase):
 class FunctionCoder(object):
     def __init__(self, function: FunctionItem):
         self.function = function
-        # TODO: categorize parameters finely
-        # TODO: buffer size parameters
         self.param_coders = [[p, None] for p in self.function.parameters]
         # First pass: Buffer size arguments
         self._needs_two_calls = False
@@ -691,8 +706,9 @@ class FunctionCoder(object):
                 assert "int" in p2.type.pointee.name()
                 p3 = self.param_coders[ix + 2][0]
                 assert p2.type.clang_type.kind == TypeKind.POINTER
-                self.param_coders[ix][1] = BufferCoder(p, p2, p3)
-                self.param_coders[ix + 1][1] = NothingParameterCoder(p2)
+                add_element_type_arg = self.function.name() in ["enumerate_swapchain_images", ]
+                self.param_coders[ix][1] = NothingParameterCoder(p)
+                self.param_coders[ix + 1][1] = BufferCoder(p, p2, p3, add_element_type_arg)
                 self.param_coders[ix + 2][1] = NothingParameterCoder(p3)
                 self._needs_two_calls = True
         # Assume remainder are simple inputs

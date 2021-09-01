@@ -1,15 +1,13 @@
 from __future__ import annotations  # To support python 3.9+ style array type annotations
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import POINTER, c_char, c_int64, c_uint32
+from ctypes import Array, POINTER, byref, c_char, c_int64, c_uint32, cast, create_string_buffer
 
 """
 File xr.functions.py
 
 Defines high-level pythonic function definitions for pyopenxr.
 """
-
-from ctypes import Array, byref, cast, create_string_buffer
 
 from . import raw_functions
 from .enums import *
@@ -523,7 +521,7 @@ def destroy_swapchain(
 
 def enumerate_swapchain_images(
     swapchain: SwapchainHandle,
-    structure_type
+    element_type: type,
 ) -> Array[SwapchainImageBaseHeader]:
     """"""
     image_capacity_input = c_uint32(0)
@@ -537,7 +535,7 @@ def enumerate_swapchain_images(
     ))
     if result.is_exception():
         raise result
-    images = (structure_type * image_capacity_input.value)(*([structure_type()] * image_capacity_input.value))
+    images = (element_type * image_capacity_input.value)(*([element_type()] * image_capacity_input.value))
     result = check_result(fxn(
         swapchain,
         image_capacity_input,
