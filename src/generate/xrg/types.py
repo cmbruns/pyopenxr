@@ -273,6 +273,9 @@ class TypedefType(TypeBase):
             if pt.kind == TypeKind.ELABORATED:
                 if pt.spelling.endswith("_T"):
                     self._py_name = self._ctypes_name = self._py_name + "Handle"
+        # Custom Windows types
+        if self._capi_name == "HDC":
+            self._ctypes_name = self._py_name = "wintypes.HDC"  # from ctypes import wintypes
 
     def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:
@@ -290,6 +293,10 @@ class TypedefType(TypeBase):
         elif self._capi_name.startswith("c_"):
             return {
                 self._capi_name,
+            }
+        elif self._ctypes_name.startswith("wintypes."):
+            return {
+                "wintypes",
             }
         else:
             return set()
@@ -323,6 +330,33 @@ class WideCharType(TypeBase):
 
     def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return {"c_wchar", }
+
+
+class WindowsType(TypeBase):
+    type_map = {
+        "HDC": "wintypes.HDC",
+        "HGLRC": "WGL.HGLRC",  # Needs from OpenGL import WGL
+    }
+
+    def __init__(self, clang_type: clang.cindex.Type):
+        super().__init__(clang_type)
+        self._c_name = clang_type.spelling
+        self._ctypes_name = self.type_map.get(self._c_name, None)
+        if self._ctypes_name is None:
+            raise NotImplementedError
+
+    def name(self, api=Api.PYTHON) -> str:
+        if api == Api.C:
+            return self._c_name
+        else:
+            return self._ctypes_name
+
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+        if self._ctypes_name.startswith("wintypes."):
+            return {
+                "wintypes",
+            }
+        return set()
 
 
 def capi_type_name(c_type_name: str) -> str:
@@ -363,6 +397,8 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
         try:
             return IntegerType(clang_type)
         except ValueError:
+            if clang_type.spelling in WindowsType.type_map:
+                return WindowsType(clang_type)
             underlying_type = clang_type.get_declaration().underlying_typedef_type
             if clang_type.spelling[:2].upper() == "XR":
                 return TypedefType(clang_type)

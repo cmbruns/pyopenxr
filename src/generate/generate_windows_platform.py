@@ -29,19 +29,12 @@ def main():
     cg.print_header()
     print(inspect.cleandoc("""
         import ctypes
-        from ctypes import wintypes
 
+        from OpenGL import WGL
+        
         from ..enums import *
         from ..typedefs import *
 
-        
-        class HDC__(ctypes.Structure):
-            pass
-
-        
-        class HGLRC__(ctypes.Structure):
-            pass
-        
         
         class _LUID(ctypes.Structure):
             _fields_ = [

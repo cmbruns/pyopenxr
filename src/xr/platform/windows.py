@@ -1,21 +1,12 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, wintypes
 import ctypes
-from ctypes import wintypes
 
 from OpenGL import WGL
 
 from ..enums import *
 from ..typedefs import *
-
-
-class HDC__(ctypes.Structure):
-    pass
-
-
-class HGLRC__(ctypes.Structure):
-    pass
 
 
 class _LUID(ctypes.Structure):
