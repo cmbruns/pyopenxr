@@ -4,6 +4,8 @@ from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_lo
 import ctypes
 from ctypes import wintypes
 
+from OpenGL import WGL
+
 from ..enums import *
 from ..typedefs import *
 
@@ -92,8 +94,8 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("h_dc", c_longlong),
-        ("h_glrc", c_longlong),
+        ("h_dc", wintypes.HDC),
+        ("h_glrc", WGL.HGLRC),
     ]
 
 
