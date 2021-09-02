@@ -1,5 +1,7 @@
 # Warning: this file is auto-generated. Do not edit.
 
+from typing import Generator
+
 from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
 from .enums import *
 
@@ -252,6 +254,23 @@ class Vector3f(Structure):
         ("y", c_float),
         ("z", c_float),
     ]
+
+    def __iter__(self) -> Generator[float, None, None]:
+        yield self.x
+        yield self.y
+        yield self.z
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __len__(self) -> int:
+        return 3
+
+    def __repr__(self) -> str:
+        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
+
+    def __str__(self) -> str:
+        return f"({', '.join([f'{v:.3f}' for v in self])})"
 
 
 class SpaceVelocity(Structure):
