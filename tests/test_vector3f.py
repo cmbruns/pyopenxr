@@ -11,7 +11,7 @@ class TestVector3f(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_vector3f(self):
+    def test_container(self):
         self.assertEqual(3, len(self.v))
         self.assertAlmostEqual(17.44444444442, self.v[2], 5)
         self.assertEqual("(1.340, -9.600, 17.444)", str(self.v))
@@ -24,6 +24,10 @@ class TestVector3f(unittest.TestCase):
         self.assertEqual(3, count)
         self.assertTrue(self.v.y in self.v)
         self.assertTrue(c_float(1.340).value in self.v)
+
+    def test_constructor(self):
+        v = xr.Vector3f()
+        self.assertTrue(v.x == v.y == v.z == 0)
 
 
 if __name__ == '__main__':

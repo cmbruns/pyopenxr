@@ -297,12 +297,39 @@ class Quaternionf(Structure):
         ("w", c_float),
     ]
 
+    def __init__(self, x=0, y=0, z=0, w=1):
+        super().__init__(x, y, z, w)
+
+    def __iter__(self) -> Generator[float, None, None]:
+        yield self.x
+        yield self.y
+        yield self.z
+        yield self.w
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __len__(self) -> int:
+        return 4
+
+    def __repr__(self) -> str:
+        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
+
+    def __str__(self) -> str:
+        return f"({', '.join([f'{v:.3f}' for v in self])})"
+
 
 class Posef(Structure):
     _fields_ = [
         ("orientation", Quaternionf),
         ("position", Vector3f),
     ]
+
+    def __repr__(self) -> str:
+        return f"xr.{self.__class__.__name__}({repr(self.orientation)}, {repr(self.position)})"
+
+    def __str__(self) -> str:
+        return f"xr.{self.__class__.__name__}({self.orientation}, {self.position})"
 
 
 class ReferenceSpaceCreateInfo(Structure):
