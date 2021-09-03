@@ -7,9 +7,11 @@ This module contains code to help generate the code in pyopenxr.
 # TODO:
 #  * generate docstrings
 
+import atexit
+from contextlib import ExitStack
 import enum
+import importlib.resources
 import os
-import pkg_resources
 import platform
 from typing import Generator, List
 
@@ -19,14 +21,28 @@ from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
 from .types import *
 from .declarations import *
 
-LIBCLANG_SHARED_LIBRARY = ""
+
+def resource_filename(module, filename) -> str:
+    file_manager = ExitStack()
+    atexit.register(file_manager.close)
+    file_ref = importlib.resources.files(module) / filename
+    file_path = file_manager.enter_context(importlib.resources.as_file(file_ref))
+    return str(file_path)
+
+
+def resource_string(module, filename) -> bytes:
+    return importlib.resources.read_binary(module, filename)
+
+
 if platform.system() == "Windows":
-    LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang.dll")  # TODO: Linux, Mac
+    lib_clang = resource_filename("xrg", "libclang.dll")
 elif platform.system() == "Linux":
     # TODO: don't hardcode this path
-    LIBCLANG_SHARED_LIBRARY = pkg_resources.resource_filename("xrg", "libclang-10.so")
-if os.path.isfile(LIBCLANG_SHARED_LIBRARY):
-    clang.cindex.Config.set_library_file(LIBCLANG_SHARED_LIBRARY)
+    lib_clang = resource_filename("xrg", "libclang-10.so")
+else:
+    raise NotImplementedError
+if os.path.isfile(lib_clang):
+    clang.cindex.Config.set_library_file(lib_clang)
 
 
 class Header(enum.Enum):
@@ -92,8 +108,8 @@ def generate_cursors(
         compiler_args=None,
         header_preamble=None,
 ) -> Generator[Cursor, None, None]:
-    header_file_name = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
-    header_text = pkg_resources.resource_string("xrg", f"headers/{header.value[0]}")
+    header_file_name = resource_filename("xrg", f"headers/{header.value[0]}")
+    header_text = resource_string("xrg.headers", f"{header.value[0]}")
     if header_preamble is not None:
         header_text = f"{header_preamble}\n" + header_text.decode()
     if compiler_args is None:
@@ -146,7 +162,7 @@ def generate_code_items(
 
 
 def get_header_as_string(header: Header = Header.OPENXR) -> str:
-    header_file = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
+    header_file = resource_filename("xrg", f"headers/{header.value[0]}")
     with open(header_file) as f:
         file_string = f.read()
     return file_string
