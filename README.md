@@ -1,7 +1,5 @@
 # pyopenxr
-### Unofficial python bindings for the OpenXR SDK to access VR and AR devices
-
-This is a work in progress. Stay tuned.
+### Unofficial python bindings for the [OpenXR SDK](https://github.com/KhronosGroup/OpenXR-SDK) to access VR and AR devices
 
 ## Installing pyopenxr
 
@@ -32,3 +30,4 @@ for prop in required:
 | type alias  | `xr.Version`                         | `XrVersion`                           |
 | enum type   | `xr.FormFactor`                      | `xrFormFactor`                        |
 | enum value  | `xr.FormFactor.HEAD_MOUNTED_DISPLAY` | `XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY` |
+| handle      | `xr.InstanceHandle`                  | `XrInstance`                          |
