@@ -1,7 +1,5 @@
-import atexit
-from contextlib import ExitStack
 import ctypes
-import importlib.resources
+import pkg_resources
 import platform
 
 if platform.system() == "Windows":
@@ -11,11 +9,8 @@ elif platform.system() == "Linux":
 else:
     raise NotImplementedError
 
-lib_manager = ExitStack()
-atexit.register(lib_manager.close)
-lib_ref = importlib.resources.files("xr.library") / library_name
-library_path = lib_manager.enter_context(importlib.resources.as_file(lib_ref))
-openxr_loader_library = ctypes.cdll.LoadLibrary(str(library_path))
+library_path = pkg_resources.resource_filename("xr.library", library_name)
+openxr_loader_library = ctypes.cdll.LoadLibrary(library_path)
 
 __all__ = [
     "openxr_loader_library",
