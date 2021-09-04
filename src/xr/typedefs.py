@@ -2,7 +2,8 @@
 
 from typing import Generator
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
+from ctypes import CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p
+import numpy
 from .enums import *
 
 Version = c_uint64
@@ -299,6 +300,7 @@ class Quaternionf(Structure):
 
     def __init__(self, x=0, y=0, z=0, w=1):
         super().__init__(x, y, z, w)
+        self._numpy = None  # self.as_numpy will construct it just-in-time
 
     def __iter__(self) -> Generator[float, None, None]:
         yield self.x
@@ -318,12 +320,27 @@ class Quaternionf(Structure):
     def __str__(self) -> str:
         return f"({', '.join([f'{v:.3f}' for v in self])})"
 
+    def as_numpy(self):
+        if self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
 
 class Posef(Structure):
     _fields_ = [
         ("orientation", Quaternionf),
         ("position", Vector3f),
     ]
+
+    def __init__(self, orientation: Quaternionf = None, position: Vector3f = None):
+        if orientation is None:
+            orientation = Quaternionf()
+        if position is None:
+            position = Vector3f()
+        super().__init__(orientation, position)
 
     def __repr__(self) -> str:
         return f"xr.{self.__class__.__name__}({repr(self.orientation)}, {repr(self.position)})"

@@ -1,9 +1,10 @@
+import numpy
 import unittest
 
 import xr
 
 
-class TestVector3f(unittest.TestCase):
+class TestQuaternionf(unittest.TestCase):
     def setUp(self):
         self.q = xr.Quaternionf()
 
@@ -24,6 +25,19 @@ class TestVector3f(unittest.TestCase):
         self.assertTrue(self.q.y in self.q)
         self.assertTrue(0 in self.q)
         self.assertTrue(1 in self.q)
+
+    def test_numpy(self):
+        nq = self.q.as_numpy()
+        self.assertEqual(1.0, numpy.linalg.norm(nq))
+        self.assertEqual(1.0, numpy.sum(nq))
+        self.assertEqual(numpy.float32, nq.dtype)
+        # Prove that the numpy array references the internal ctypes data
+        self.assertEqual(1, nq[3])
+        self.assertEqual(0, nq[0])
+        self.q.x = 1
+        self.q.w = 0
+        self.assertEqual(0, nq[3])
+        self.assertEqual(1, nq[0])
 
 
 if __name__ == '__main__':
