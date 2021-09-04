@@ -1,4 +1,3 @@
-import numpy
 import unittest
 
 import xr

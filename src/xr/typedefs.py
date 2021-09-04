@@ -299,7 +299,7 @@ class Quaternionf(Structure):
     ]
 
     def __init__(self, x=0, y=0, z=0, w=1):
-        super().__init__(x, y, z, w)
+        super().__init__(x=x, y=y, z=z, w=w)
         self._numpy = None  # self.as_numpy will construct it just-in-time
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -340,7 +340,7 @@ class Posef(Structure):
             orientation = Quaternionf()
         if position is None:
             position = Vector3f()
-        super().__init__(orientation, position)
+        super().__init__(orientation=orientation, position=position)
 
     def __repr__(self) -> str:
         return f"xr.{self.__class__.__name__}({repr(self.orientation)}, {repr(self.position)})"
