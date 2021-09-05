@@ -399,7 +399,8 @@ class OpenXrExample(object):
         for eye_index, view_state in enumerate(self.eye_view_states):
             # These aren't actually used in this simple example...
             # self.eye_projections[eye_index] = something(view_state.fov)  # TODO:
-            print(view_state.pose)
+            # print(view_state.pose)
+            pass
 
     def render(self):
         ai = xr.SwapchainImageAcquireInfo(None)

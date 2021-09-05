@@ -17,5 +17,5 @@ with xr.Instance(application_name="track_hmd") as instance:
                         session.begin_frame()
                         view_state, views = session.locate_views()
                         print(views[xr.Eye.LEFT.value].pose, flush=True)
-                        time.sleep(0.2)
+                        time.sleep(0.5)
                         session.end_frame()

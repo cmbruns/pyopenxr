@@ -148,7 +148,7 @@ def generate_code_items(
 
 
 def get_header_as_string(header: Header = Header.OPENXR) -> str:
-    header_file = resource_filename("xrg", f"headers/{header.value[0]}")
+    header_file = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
     with open(header_file) as f:
         file_string = f.read()
     return file_string
