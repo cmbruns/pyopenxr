@@ -404,8 +404,7 @@ class StructItem(CodeItem):
             # Empty structure
             result += "\n    pass"
             return result
-        constructor_coder = ConstructorCoder(self)
-        result += str(constructor_coder)
+        result += str(ConstructorCoder(self))
         # Add special container methods for structures whose fields are all floats
         float_count = 0
         for field in self.fields:
@@ -442,6 +441,20 @@ class StructItem(CodeItem):
                     return self._numpy
             """), "    ")
             result += "\n"
+        else:
+            # Generic string conversion
+            class_name = self.name()
+            field_reprs = ", ".join([f"{f.name()}={{repr(self.{f.name()})}}" for f in self.fields])
+            field_strs = ", ".join([f"{f.name()}={{str(self.{f.name()})}}" for f in self.fields])
+            result += textwrap.indent(inspect.cleandoc(f"""
+                def __repr__(self) -> str:
+                    return f"xr.{class_name}({field_reprs})"
+
+                def __str__(self) -> str:
+                    return f"xr.{class_name}({field_strs})"
+            """), "    ")
+            result += "\n"
+        # Recursive structures require two separate stanzas
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
             result += "\n"
