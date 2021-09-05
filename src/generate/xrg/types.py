@@ -274,8 +274,8 @@ class TypedefType(TypeBase):
                 if pt.spelling.endswith("_T"):
                     self._py_name = self._ctypes_name = self._py_name + "Handle"
         # Custom Windows types
-        if self._capi_name == "HDC":
-            self._ctypes_name = self._py_name = "wintypes.HDC"  # from ctypes import wintypes
+        if self._capi_name in PlatformType.type_map:
+            self._ctypes_name = self._py_name = PlatformType.type_map[self._ctypes_name]
         # Special case for typedef whose name is used by a pythonic class
         if self._ctypes_name == "Version":
             self._ctypes_name = self._py_name = "VersionNumber"
@@ -335,8 +335,12 @@ class WideCharType(TypeBase):
         return {"c_wchar", }
 
 
-class WindowsType(TypeBase):
+class PlatformType(TypeBase):
     type_map = {
+        "Display": "GLX.Display",
+        "GLXContext": "GLX.GLXContext",
+        "GLXDrawable": "GLX.GLXDrawable",
+        "GLXFBConfig": "GLX.GLXFBConfig",
         "HDC": "wintypes.HDC",
         "HGLRC": "WGL.HGLRC",  # Needs from OpenGL import WGL
     }
@@ -400,8 +404,8 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
         try:
             return IntegerType(clang_type)
         except ValueError:
-            if clang_type.spelling in WindowsType.type_map:
-                return WindowsType(clang_type)
+            if clang_type.spelling in PlatformType.type_map:
+                return PlatformType(clang_type)
             underlying_type = clang_type.get_declaration().underlying_typedef_type
             if clang_type.spelling[:2].upper() == "XR":
                 return TypedefType(clang_type)
@@ -430,6 +434,7 @@ __all__ = [
     "capi_type_name",
     "EnumType",
     "FunctionPointerType",
+    "PlatformType",
     "PointerType",
     "parse_type",
     "PrimitiveCTypesType",

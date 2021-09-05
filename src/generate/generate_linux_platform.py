@@ -18,12 +18,16 @@ def main():
         header=xrg.Header.PLATFORM,
         compiler_args=compiler_args,
         header_preamble=inspect.cleandoc("""
-            #include <Windows.h>
+            #include <GL/gl.h>
+            #include <GL/glx.h>
         """),
     )
 
     cg.print_header()
+    print("\n")
     print(inspect.cleandoc("""
+        from OpenGL import GLX
+
         from ..enums import *
         from ..typedefs import *
         from ..version import *
