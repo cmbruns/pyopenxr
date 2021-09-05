@@ -6,7 +6,7 @@ from typing import Generator, Set
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
-from .types import Api, py_type_name, parse_type, capi_type_name, StringType
+from .types import Api, py_type_name, parse_type, capi_type_name, StringType, PointerType
 from .registry import xr_registry
 
 
@@ -592,7 +592,13 @@ class ParameterCoderBase(NothingParameterCoder):
 class InputParameterCoder(ParameterCoderBase):
     def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         p = self.parameter
-        yield f"{p.name(api)}: {p.type.name(Api.PYTHON)}"
+        type_string = p.type.name(Api.PYTHON)
+        # Pass structure types directly, even if C API says pointer
+        if isinstance(p.type, PointerType):
+            pt = p.type.pointee
+            if pt.clang_type.kind == TypeKind.RECORD:  # struct
+                type_string = pt.name(Api.PYTHON)
+        yield f"{p.name(api)}: {type_string}"
 
 
 class StringInputParameterCoder(InputParameterCoder):

@@ -6,7 +6,7 @@ from ctypes import CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c
 import numpy
 from .enums import *
 
-Version = c_uint64
+VersionNumber = c_uint64
 
 Flags64 = c_uint64
 
@@ -94,7 +94,7 @@ class ApiLayerProperties(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_name", (c_char * 256)),
-        ("spec_version", Version),
+        ("spec_version", VersionNumber),
         ("layer_version", c_uint32),
         ("description", (c_char * 256)),
     ]
@@ -135,7 +135,7 @@ class ApplicationInfo(Structure):
         ("application_version", c_uint32),
         ("engine_name", (c_char * 128)),
         ("engine_version", c_uint32),
-        ("api_version", Version),
+        ("api_version", VersionNumber),
     ]
 
 
@@ -168,7 +168,7 @@ class InstanceProperties(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("runtime_version", Version),
+        ("runtime_version", VersionNumber),
         ("runtime_name", (c_char * 128)),
     ]
 
@@ -3086,7 +3086,7 @@ class SystemSpaceWarpPropertiesFB(Structure):
 
 
 __all__ = [
-    "Version",
+    "VersionNumber",
     "Flags64",
     "SystemId",
     "Bool32",

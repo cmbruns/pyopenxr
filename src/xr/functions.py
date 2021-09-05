@@ -88,7 +88,7 @@ def enumerate_instance_extension_properties(
 
 
 def create_instance(
-    create_info: POINTER(InstanceCreateInfo),
+    create_info: InstanceCreateInfo,
 ) -> InstanceHandle:
     """"""
     instance = InstanceHandle()
@@ -178,7 +178,7 @@ def structure_type_to_string(
 
 def get_system(
     instance: InstanceHandle,
-    get_info: POINTER(SystemGetInfo),
+    get_info: SystemGetInfo,
 ) -> SystemId:
     """"""
     system_id = SystemId()
@@ -245,7 +245,7 @@ def enumerate_environment_blend_modes(
 
 def create_session(
     instance: InstanceHandle,
-    create_info: POINTER(SessionCreateInfo),
+    create_info: SessionCreateInfo,
 ) -> SessionHandle:
     """"""
     session = SessionHandle()
@@ -301,7 +301,7 @@ def enumerate_reference_spaces(
 
 def create_reference_space(
     session: SessionHandle,
-    create_info: POINTER(ReferenceSpaceCreateInfo),
+    create_info: ReferenceSpaceCreateInfo,
 ) -> SpaceHandle:
     """"""
     space = SpaceHandle()
@@ -594,7 +594,7 @@ def release_swapchain_image(
 
 def begin_session(
     session: SessionHandle,
-    begin_info: POINTER(SessionBeginInfo),
+    begin_info: SessionBeginInfo,
 ) -> None:
     """"""
     fxn = raw_functions.xrBeginSession
@@ -632,7 +632,7 @@ def request_exit_session(
 
 def wait_frame(
     session: SessionHandle,
-    frame_wait_info: POINTER(FrameWaitInfo) = None,
+    frame_wait_info: FrameWaitInfo = None,
 ) -> FrameState:
     """"""
     frame_state = FrameState()
@@ -663,7 +663,7 @@ def begin_frame(
 
 def end_frame(
     session: SessionHandle,
-    frame_end_info: POINTER(FrameEndInfo),
+    frame_end_info: FrameEndInfo,
 ) -> None:
     """"""
     fxn = raw_functions.xrEndFrame
@@ -677,7 +677,7 @@ def end_frame(
 
 def locate_views(
     session: SessionHandle,
-    view_locate_info: POINTER(ViewLocateInfo),
+    view_locate_info: ViewLocateInfo,
 ) -> (ViewState, Array[View]):
     """"""
     view_state = ViewState()

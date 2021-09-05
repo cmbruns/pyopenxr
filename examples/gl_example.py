@@ -181,7 +181,7 @@ class OpenXrExample(object):
         for extension in requested_extensions:
             assert extension in discovered_extensions
         # TODO: str arguments
-        app_info = xr.ApplicationInfo(b"gl_example", 0, b"pyopenxr", 0, xr.XR_CURRENT_API_VERSION)
+        app_info = xr.ApplicationInfo(b"gl_example", 0, b"pyopenxr", 0, xr.XR_CURRENT_API_VERSION.number())
         # TODO: buffer
         bs = [s.encode() for s in requested_extensions]
         arr_type = ctypes.c_char_p * len(bs)
@@ -208,7 +208,7 @@ class OpenXrExample(object):
 
     def prepare_xr_system(self):
         get_info = xr.SystemGetInfo(None, xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
-        self.system_id = xr.get_system(self.instance, ctypes.pointer(get_info))  # TODO: not a pointer
+        self.system_id = xr.get_system(self.instance, get_info)  # TODO: not a pointer
         sys_props = xr.get_system_properties(self.instance, self.system_id)
         view_configs = xr.enumerate_view_configurations(self.instance, self.system_id)
         assert view_configs[0] == xr.ViewConfigurationType.PRIMARY_STEREO.value  # TODO: equality...

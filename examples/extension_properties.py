@@ -2,6 +2,8 @@ import xr
 
 # Query the available VR/AR extensions
 available = xr.enumerate_instance_extension_properties()
+for prop in available:
+    print(prop)
 
 # Replace with whatever extensions are required for your
 # particular application...
