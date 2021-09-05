@@ -276,6 +276,9 @@ class TypedefType(TypeBase):
         # Custom Windows types
         if self._capi_name == "HDC":
             self._ctypes_name = self._py_name = "wintypes.HDC"  # from ctypes import wintypes
+        # Special case for typedef whose name is used by a pythonic class
+        if self._ctypes_name == "Version":
+            self._ctypes_name = self._py_name = "VersionNumber"
 
     def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:

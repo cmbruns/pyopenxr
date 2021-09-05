@@ -123,8 +123,8 @@ class GraphicsRequirementsOpenGLKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("min_api_version_supported", Version),
-        ("max_api_version_supported", Version),
+        ("min_api_version_supported", VersionNumber),
+        ("max_api_version_supported", VersionNumber),
     ]
 
 
@@ -173,8 +173,8 @@ class GraphicsRequirementsVulkanKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("min_api_version_supported", Version),
-        ("max_api_version_supported", Version),
+        ("min_api_version_supported", VersionNumber),
+        ("max_api_version_supported", VersionNumber),
     ]
 
 

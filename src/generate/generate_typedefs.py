@@ -13,6 +13,8 @@ def main():
     )
 
     cg.print_header()
+    print("from typing import Generator\n")
+    print("import numpy\n")
     print("from .enums import *")
 
     cg.print_items()

@@ -474,6 +474,7 @@ class TypeDefItem(CodeItem):
             raise SkippableCodeItemException  # Keep enum typedefs out of typedefs.py
         if self._py_name == self.type.name(Api.CTYPES):
             raise SkippableCodeItemException  # Nonsense A = A typedef
+        # Rename xr "Handle" types
         if cursor.underlying_typedef_type.kind == TypeKind.POINTER:
             pointee = cursor.underlying_typedef_type.get_pointee()
             if pointee.kind == TypeKind.ELABORATED:
@@ -481,6 +482,8 @@ class TypeDefItem(CodeItem):
                     # This is a HANDLE type
                     self._py_name += "Handle"  # To distinguish Instance from InstanceHandle
                     self._ctypes_name = self._py_name
+        if self._py_name == "Version":
+            self._py_name = self._ctypes_name = "VersionNumber"
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
