@@ -1,3 +1,5 @@
+from __future__ import annotations  # To support python 3.9+ style array type annotations
+
 import ctypes
 from ctypes import Array
 import enum
@@ -8,6 +10,8 @@ from typing import Sequence
 from OpenGL import GL
 if platform.system() == "Windows":
     from OpenGL import WGL
+elif platform.system() == "Linux":
+    from OpenGL import GLX
 import glfw
 
 from .enums import *
@@ -168,10 +172,19 @@ class GlfwWindow(object):
 class Session(object):
     def __init__(self, system: System, graphics_binding=None):
         if graphics_binding is None:
-            graphics_binding = GraphicsBindingOpenGLWin32KHR()
             if platform.system() == "Windows":
+                graphics_binding = GraphicsBindingOpenGLWin32KHR()
                 graphics_binding.h_dc = WGL.wglGetCurrentDC()
                 graphics_binding.h_glrc = WGL.wglGetCurrentContext()
+            elif platform.system() == "Linux":
+                drawable = GLX.glXGetCurrentDrawable()
+                context = GLX.glXGetCurrentContext()
+                display = GLX.glXGetCurrentDisplay()
+                graphics_binding = GraphicsBindingOpenGLXlibKHR(
+                    x_display=display,
+                    glx_drawable=drawable,
+                    glx_context=context,
+                )
             else:
                 raise NotImplementedError  # Linux
         graphics_binding_pointer = ctypes.cast(
