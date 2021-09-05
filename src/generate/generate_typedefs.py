@@ -12,10 +12,13 @@ def main():
         ]
     )
 
+    cg.ctypes_names.add("addressof")
+    cg.ctypes_names.add("cast")
     cg.print_header()
     print("from typing import Generator\n")
     print("import numpy\n")
     print("from .enums import *")
+    print("from .version import *")
 
     cg.print_items()
     cg.print_all_list()

@@ -1,6 +1,8 @@
 import time
 import xr
 
+# Once XR_KHR_headless extension is ratified and adopted, we
+# should be able to avoid the Window and frame stuff here.
 with xr.Instance(application_name="track_hmd") as instance:
     with xr.System(instance) as system:
         with xr.GlfwWindow(system) as window:

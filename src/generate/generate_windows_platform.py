@@ -34,6 +34,7 @@ def main():
         
         from ..enums import *
         from ..typedefs import *
+        from ..version import *
 
         
         class _LUID(ctypes.Structure):

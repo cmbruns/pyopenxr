@@ -129,8 +129,8 @@ class OpenXrExample(object):
         self.window = None
         self.session = None
         self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(*([xr.CompositionLayerProjectionView()] * 2))
-        self.projection_layer = xr.CompositionLayerProjection(None, 0, None, 2, self.projection_layer_views)
-        self.swapchain_create_info = xr.SwapchainCreateInfo(None)
+        self.projection_layer = xr.CompositionLayerProjection(0, None, 2, self.projection_layer_views)
+        self.swapchain_create_info = xr.SwapchainCreateInfo()
         self.swapchain = None
         self.swapchain_images = None
         self.fbo_id = None
@@ -180,15 +180,14 @@ class OpenXrExample(object):
             requested_extensions.append(xr.EXT_DEBUG_UTILS_EXTENSION_NAME)
         for extension in requested_extensions:
             assert extension in discovered_extensions
-        # TODO: str arguments
-        app_info = xr.ApplicationInfo(b"gl_example", 0, b"pyopenxr", 0, xr.XR_CURRENT_API_VERSION.number())
+        app_info = xr.ApplicationInfo("gl_example", 0, "pyopenxr", 0, xr.XR_CURRENT_API_VERSION)
         # TODO: buffer
         bs = [s.encode() for s in requested_extensions]
         arr_type = ctypes.c_char_p * len(bs)
         str_arr = arr_type()
         for i, s in enumerate(bs):
             str_arr[i] = s
-        ici = xr.InstanceCreateInfo(None, 0, app_info, 0, None, 1, str_arr)
+        ici = xr.InstanceCreateInfo(0, app_info, 0, None, 1, str_arr)
         dumci = xr.DebugUtilsMessengerCreateInfoEXT()
         if self.enable_debug:
             dumci.message_severities = ALL_SEVERITIES
@@ -207,7 +206,7 @@ class OpenXrExample(object):
         )
 
     def prepare_xr_system(self):
-        get_info = xr.SystemGetInfo(None, xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
+        get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
         self.system_id = xr.get_system(self.instance, get_info)  # TODO: not a pointer
         sys_props = xr.get_system_properties(self.instance, self.system_id)
         view_configs = xr.enumerate_view_configurations(self.instance, self.system_id)
@@ -249,13 +248,16 @@ class OpenXrExample(object):
             # TODO fix for Linux
             raise NotImplementedError("Only Windows is supported")
         pp = ctypes.cast(ctypes.pointer(self.graphics_binding), ctypes.c_void_p)
-        sci = xr.SessionCreateInfo(pp, 0, self.system_id)
+        sci = xr.SessionCreateInfo(0, self.system_id, next_structure=pp)
         self.session = xr.create_session(self.instance, sci)
         reference_spaces = xr.enumerate_reference_spaces(self.session)
         for rs in reference_spaces:
             self.logger.debug(f"Session supports reference space {xr.ReferenceSpaceType(rs)}")
         # TODO: default constructors for Quaternion, Vector3f, Posef, ReferenceSpaceCreateInfo
-        rsci = xr.ReferenceSpaceCreateInfo(None, 3, xr.Posef(xr.Quaternionf(0, 0, 0, 1), xr.Vector3f(0, 0, 0)))
+        rsci = xr.ReferenceSpaceCreateInfo(
+            xr.ReferenceSpaceType.STAGE.value,  # TODO: enums
+            xr.Posef(xr.Quaternionf(0, 0, 0, 1), xr.Vector3f(0, 0, 0))
+        )
         self.projection_layer.space = xr.create_reference_space(self.session, rsci)
         swapchain_formats = xr.enumerate_swapchain_formats(self.session)
         for scf in swapchain_formats:
@@ -346,7 +348,7 @@ class OpenXrExample(object):
         self.session_state = xr.SessionState(event.state)
         if self.session_state == xr.SessionState.READY:
             if not self.quit:
-                sbi = xr.SessionBeginInfo(None, xr.ViewConfigurationType.PRIMARY_STEREO.value)
+                sbi = xr.SessionBeginInfo(xr.ViewConfigurationType.PRIMARY_STEREO.value)
                 xr.begin_session(self.session, sbi)
         elif self.session_state == xr.SessionState.STOPPING:
             xr.end_session(self.session)
@@ -371,7 +373,6 @@ class OpenXrExample(object):
 
     def end_xr_frame(self):
         frame_end_info = xr.FrameEndInfo(
-            None,
             self.frame_state.predicted_display_time,
             xr.EnvironmentBlendMode.OPAQUE.value
         )
@@ -390,7 +391,6 @@ class OpenXrExample(object):
 
     def update_xr_views(self):
         vi = xr.ViewLocateInfo(
-            None,
             xr.ViewConfigurationType.PRIMARY_STEREO.value,
             self.frame_state.predicted_display_time,
             self.projection_layer.space,
@@ -405,7 +405,7 @@ class OpenXrExample(object):
     def render(self):
         ai = xr.SwapchainImageAcquireInfo(None)
         swapchain_index = xr.acquire_swapchain_image(self.swapchain, ai)
-        wi = xr.SwapchainImageWaitInfo(None, xr.INFINITE_DURATION)
+        wi = xr.SwapchainImageWaitInfo(xr.INFINITE_DURATION)
         xr.wait_swapchain_image(self.swapchain, wi)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.fbo_id)
         sw_image = self.swapchain_images[swapchain_index]

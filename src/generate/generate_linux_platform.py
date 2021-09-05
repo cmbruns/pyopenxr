@@ -26,6 +26,7 @@ def main():
     print(inspect.cleandoc("""
         from ..enums import *
         from ..typedefs import *
+        from ..version import *
 
 
         # Forward declaration of a Wayland structure

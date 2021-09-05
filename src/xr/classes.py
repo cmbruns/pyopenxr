@@ -50,18 +50,17 @@ class Instance(object):
         if engine_version is None:
             engine_version = Version()
         application_info = ApplicationInfo(
-            application_name=application_name.encode(),
+            application_name=application_name,
             application_version=application_version.number(),
-            engine_name=engine_name.encode(),
+            engine_name=engine_name,
             engine_version=engine_version.number(),
-            api_version=XR_CURRENT_API_VERSION.number(),
+            api_version=XR_CURRENT_API_VERSION,
         )
         encoded_extensions = [s.encode() for s in requested_extensions]
         extension_names = (ctypes.c_char_p * len(encoded_extensions))()
         for i, s in enumerate(encoded_extensions):
             extension_names[i] = s
         instance_create_info = InstanceCreateInfo(
-            next=None,
             create_flags=0,
             application_info=application_info,
             enabled_api_layer_count=0,  # TODO:
@@ -179,7 +178,7 @@ class Session(object):
             ctypes.pointer(graphics_binding),
             ctypes.c_void_p)
         session_create_info = SessionCreateInfo(
-            next=graphics_binding_pointer,
+            next_structure=graphics_binding_pointer,
             create_flags=0,
             system_id=system.id,
         )
@@ -225,7 +224,6 @@ class Session(object):
         display_time = self.frame_state.predicted_display_time
         #
         view_locate_info = ViewLocateInfo(
-            None,
             view_configuration_type.value,
             display_time,
             self.space.handle,
@@ -243,7 +241,7 @@ class Session(object):
         self.state = SessionState(event.state)
         if self.state == SessionState.READY:
             if self.handle is not None:
-                sbi = SessionBeginInfo(None, self.system.view_configuration_type.value)
+                sbi = SessionBeginInfo(self.system.view_configuration_type.value)
                 begin_session(self.handle, sbi)
         elif self.state == SessionState.STOPPING:
             self.destroy()
@@ -272,7 +270,6 @@ class Space(object):
         if pose_in_reference_space is None:
             pose_in_reference_space = Posef()
         reference_space_create_info = ReferenceSpaceCreateInfo(
-            next=None,
             reference_space_type=reference_space_type.value,
             pose_in_reference_space=pose_in_reference_space,
         )
