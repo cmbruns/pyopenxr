@@ -6,7 +6,7 @@ from typing import Generator, Set
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
-from .types import Api, py_type_name, parse_type, capi_type_name, StringType, PointerType
+from .types import *
 from .registry import xr_registry
 
 
@@ -404,22 +404,42 @@ class StructItem(CodeItem):
             # Empty structure
             result += "\n    pass"
             return result
-        elif len(self.fields) >= 2 and self.fields[0].name() == "type":
-            assert self.fields[0].type.name() == "StructureType"
-            assert self.fields[1].name() == "next"
+        constructor_coder = ConstructorCoder(self)
+        result += str(constructor_coder)
+        # Add special container methods for structures whose fields are all floats
+        float_count = 0
+        for field in self.fields:
+            if field.type.name(Api.CTYPES) == "c_float":
+                float_count += 1
+        if float_count > 1 and float_count == len(self.fields):
+            # Constructor
+            result += "        self._numpy = None\n"
+            # Iterator
+            result += "\n    def __iter__(self) -> Generator[float, None, None]:\n"
+            for f in self.fields:
+                result += f"        yield self.{f.name()}\n"
             result += "\n"
-            # Special case for structure with no special type
-            if self.name() == "SwapchainImageBaseHeader":
-                type_value = 0
-            else:
-                type_enum_name = snake_from_camel(self.name()).upper()
-                type_value = f"StructureType.{type_enum_name}.value"
+            # Other container methods
             result += textwrap.indent(inspect.cleandoc(f"""
-                def __init__(self, *args, **kwargs):
-                    super().__init__(
-                        {type_value},
-                        *args, **kwargs,
-                    )            
+                def __getitem__(self, key):
+                    return tuple(self)[key]
+            
+                def __len__(self) -> int:
+                    return {float_count}
+            
+                def __repr__(self) -> str:
+                    return f"xr.{{self.__class__.__name__}}({{', '.join([repr(v) for v in self])}})"
+            
+                def __str__(self) -> str:
+                    return f"({{', '.join([f'{{v:.3f}}' for v in self])}})"
+                
+                def as_numpy(self):
+                    if self._numpy is None:
+                        # Just in time construction
+                        buffer = (c_float * len(self)).from_address(addressof(self))
+                        buffer._wrapper = self  # To link lifetime of buffer to self
+                        self._numpy = numpy.ctypeslib.as_array(buffer)
+                    return self._numpy
             """), "    ")
             result += "\n"
         # Hard code this for now, generalize later if needed
@@ -440,7 +460,7 @@ class StructItem(CodeItem):
                     return str(other) == str(self)
             
                 def __str__(self):
-                    return self.{string_field}.decode()                
+                    return self.{string_field}.decode()      
             """), "    ")
             result += "\n"
         if self.is_recursive:
@@ -795,6 +815,131 @@ class FunctionCoder(object):
                 result_values.append(r)
         if len(result_values) > 0:
             result += f"\n    return {', '.join(result_values)}"
+        return result
+
+
+class FieldCoder(object):
+    """Code generator helper for a single field in a ctypes.Structure constructor"""
+    def __init__(self, field: StructFieldItem, default=0):
+        self.field = field
+        self.name = self.field.name(Api.PYTHON)
+        self.default = default
+
+    def param_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = {self.default}"
+
+    @staticmethod
+    def pre_call_code() -> Generator[str, None, None]:
+        yield from []
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}={self.name}"
+
+
+class VoidPointerFieldCoder(FieldCoder):
+    def param_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}: {self.field.type.name(Api.CTYPES)} = None"
+
+
+class BaseStructureTypeFieldCoder(FieldCoder):
+    def param_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = StructureType.UNKNOWN"
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}={self.name}.value"
+
+
+class StringFieldCoder(FieldCoder):
+    def param_code(self) -> Generator[str, None, None]:
+        yield f'{self.name}: str = ""'
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}={self.name}.encode()"
+
+
+class VersionFieldCoder(FieldCoder):
+    def param_code(self) -> Generator[str, None, None]:
+        yield f'{self.name}: Version = Version()'
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}={self.name}.number()"
+
+
+class StructureFieldCoder(FieldCoder):
+    def pre_call_code(self) -> Generator[str, None, None]:
+        yield f"if {self.name} is None:"
+        yield f"    {self.name} = {self.field.type.name(Api.PYTHON)}()"
+
+
+class StructureTypeFieldCoder(FieldCoder):
+    def __init__(self, field, struct):
+        super().__init__(field)
+        self.struct = struct
+
+    def param_code(self) -> Generator[str, None, None]:
+        type_enum_name = snake_from_camel(self.struct.name()).upper()
+        yield f"structure_type: {self.field.type.name(Api.PYTHON)} = StructureType.{type_enum_name}"
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}=structure_type.value"
+
+
+class ConstructorCoder(object):
+    def __init__(self, struct: StructItem):
+        self.struct = struct
+        self.field_coders = []
+        for field in self.struct.fields:
+            if field.type.name(Api.CTYPES) == "c_void_p":
+                self.field_coders.append(VoidPointerFieldCoder(field))
+            elif field.type.name(Api.PYTHON) == "StructureType":
+                if "Base" in struct.name():
+                    self.field_coders.append(BaseStructureTypeFieldCoder(field))
+                else:
+                    self.field_coders.append(StructureTypeFieldCoder(field, struct))
+            elif field.type.name(Api.PYTHON) == "str":
+                self.field_coders.append(StringFieldCoder(field))
+            elif field.type.name(Api.PYTHON).startswith("(c_char * "):
+                self.field_coders.append(StringFieldCoder(field))
+            elif field.type.name(Api.CTYPES) == "VersionNumber":
+                self.field_coders.append(VersionFieldCoder(field))
+            elif struct.name() == "Quaternionf" and field.name() == "w":
+                self.field_coders.append(FieldCoder(field, 1))
+            elif isinstance(field.type, TypedefType) and isinstance(field.type.underlying_type, RecordType):
+                self.field_coders.append(StructureFieldCoder(field, None))
+            else:
+                self.field_coders.append(FieldCoder(field))
+        # Rearrange arguments of Typed Structures
+        fields = self.struct.fields
+        if len(fields) > 1 and fields[0].name() == "type" and fields[1].name() == "next":
+            assert fields[0].type.name() == "StructureType"
+            n1 = fields[1].type.name(Api.CTYPES)
+            assert n1 == "c_void_p" or n1.startswith("POINTER(Base")
+            self.field_coders = self.field_coders[2:] + [self.field_coders[1]] + [self.field_coders[0]]
+            x = 3
+
+    """Creates __init__(...) method for Structure types"""
+    def __str__(self):
+        # Special cases for default values
+        # TODO: box/unbox enums
+        # TODO: use default constructors for fields that are themselves structures
+        # TODO: use None as default for pointer fields
+        i4 = "    "
+        i8 = "        "
+        i12 = "            "
+        result = ""
+        result += f"\n{i4}def __init__(\n{i8}self,\n"
+        for fc in self.field_coders:
+            for s in fc.param_code():
+                result += f"{i8}{s},\n"
+        result += f"{i4}) -> None:\n"
+        for fc in self.field_coders:
+            for s in fc.pre_call_code():
+                result += f"{i8}{s}\n"
+        result += f"{i8}super().__init(\n"
+        for fc in self.field_coders:
+            for s in fc.call_code():
+                result += f"{i12}{s},\n"
+        result += f"{i8})\n"
         return result
 
 
