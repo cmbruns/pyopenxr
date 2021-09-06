@@ -134,8 +134,11 @@ generate_source("generate_constants.py" "constants.py" "")
 generate_source("generate_typedefs.py" "typedefs.py" "")
 generate_source("generate_raw_functions.py" "raw_functions.py" "")
 generate_source("generate_functions.py" "functions.py" "")
-generate_source("generate_windows_platform.py" "windows.py" "platform")
-generate_source("generate_linux_platform.py" "linux.py" "platform")
+if(WIN32)
+    generate_source("generate_windows_platform.py" "windows.py" "platform")
+else()
+    generate_source("generate_linux_platform.py" "linux.py" "platform")
+endif()
 generate_source("generate_exceptions.py" "exception.py" "")
 
 ##########################################
