@@ -3,7 +3,11 @@ import logging
 
 import glfw
 import platform
-from OpenGL import GL, WGL
+from OpenGL import GL
+if platform.system() == "Windows":
+    from OpenGL import WGL
+elif platform.system() == "Linux":
+    from OpenGL import GLX
 
 import xr
 
@@ -121,8 +125,7 @@ class OpenXrExample(object):
         if platform.system() == 'Windows':
             self.graphics_binding = xr.GraphicsBindingOpenGLWin32KHR()
         elif platform.system() == 'Linux':
-            # TODO - support X11 and Wayland and DirectFB maybe?
-            raise NotImplementedError('X11, Wayland and DirectFB not supported')
+            self.graphics_binding = xr.GraphicsBindingOpenGLXlibKHR()
         else:
             raise NotImplementedError('Unsupported platform')
         self.render_target_size = None
@@ -245,8 +248,9 @@ class OpenXrExample(object):
             self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
             self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
         else:
-            # TODO fix for Linux
-            raise NotImplementedError("Only Windows is supported")
+            self.graphics_binding.x_display = GLX.glXGetCurrentDisplay()
+            self.graphics_binding.glx_context = GLX.glXGetCurrentContext()
+            self.graphics_binding.glx_drawable = GLX.glXGetCurrentDrawable()
         pp = ctypes.cast(ctypes.pointer(self.graphics_binding), ctypes.c_void_p)
         sci = xr.SessionCreateInfo(0, self.system_id, next_structure=pp)
         self.session = xr.create_session(self.instance, sci)

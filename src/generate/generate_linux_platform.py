@@ -18,12 +18,18 @@ def main():
         header=xrg.Header.PLATFORM,
         compiler_args=compiler_args,
         header_preamble=inspect.cleandoc("""
-            #include <Windows.h>
+            #include <GL/gl.h>
+            #include <GL/glx.h>
         """),
     )
 
+    cg.ctypes_names.add("c_long")
+    cg.ctypes_names.add("c_longlong")
     cg.print_header()
+    print("")
     print(inspect.cleandoc("""
+        from OpenGL import GLX
+
         from ..enums import *
         from ..typedefs import *
         from ..version import *
@@ -32,6 +38,13 @@ def main():
         # Forward declaration of a Wayland structure
         class wl_display(Structure):
             pass
+            
+
+        class timespec(Structure):
+            _fields_ = [
+                ("tv_sec", c_longlong),  # TODO: is this the correct type?
+                ("tv_nsec", c_long),
+            ]
     """))
     print("\n")
     cg.print_items()

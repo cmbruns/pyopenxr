@@ -1,6 +1,9 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_uint32, c_void_p
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_void_p
+
+from OpenGL import GLX
+
 from ..enums import *
 from ..typedefs import *
 from ..version import *
@@ -9,6 +12,13 @@ from ..version import *
 # Forward declaration of a Wayland structure
 class wl_display(Structure):
     pass
+    
+
+class timespec(Structure):
+    _fields_ = [
+        ("tv_sec", c_longlong),  # TODO: is this the correct type?
+        ("tv_nsec", c_long),
+    ]
 
 
 KHR_vulkan_swapchain_format_list = 1
@@ -66,11 +76,11 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 class GraphicsBindingOpenGLXlibKHR(Structure):
     def __init__(
         self,
-        x_display: POINTER(c_int) = None,
+        x_display: POINTER(GLX.Display) = None,
         visualid: int = 0,
-        glx_fbconfig: int = 0,
-        glx_drawable: int = 0,
-        glx_context: int = 0,
+        glx_fbconfig: GLX.GLXFBConfig = None,
+        glx_drawable: GLX.GLXDrawable = 0,
+        glx_context: GLX.GLXContext = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_XLIB_KHR,
     ) -> None:
@@ -93,11 +103,11 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("x_display", POINTER(c_int)),
+        ("x_display", POINTER(GLX.Display)),
         ("visualid", c_uint32),
-        ("glx_fbconfig", c_int),
-        ("glx_drawable", c_int),
-        ("glx_context", c_int),
+        ("glx_fbconfig", GLX.GLXFBConfig),
+        ("glx_drawable", GLX.GLXDrawable),
+        ("glx_context", GLX.GLXContext),
     ]
 
 
@@ -327,17 +337,7 @@ PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Sys
 
 PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
-
-class timespec(Structure):
-    pass
-
-
 PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(timespec), POINTER(Time))
-
-
-class timespec(Structure):
-    pass
-
 
 PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(timespec))
 
@@ -596,9 +596,7 @@ __all__ = [
     "PFN_xrGetVulkanDeviceExtensionsKHR",
     "PFN_xrGetVulkanGraphicsDeviceKHR",
     "PFN_xrGetVulkanGraphicsRequirementsKHR",
-    "timespec",
     "PFN_xrConvertTimespecTimeToTimeKHR",
-    "timespec",
     "PFN_xrConvertTimeToTimespecTimeKHR",
     "VulkanInstanceCreateFlagsKHR",
     "VulkanDeviceCreateFlagsKHR",
