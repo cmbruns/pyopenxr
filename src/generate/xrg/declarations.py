@@ -334,6 +334,10 @@ class StructFieldItem(CodeItem):
         assert cursor.kind == CursorKind.FIELD_DECL
         self._capi_name = cursor.spelling
         self._py_name = snake_from_camel(self._capi_name)
+        if False and self.cursor.type.kind == TypeKind.INT:
+            possible_type = tuple(self.cursor.get_tokens())[0].spelling
+            if possible_type in PlatformType.type_map:
+                self._py_name = PlatformType.type_map[possible_type]
         self.type = parse_type(cursor.type)
 
     def name(self, api=Api.PYTHON) -> str:
@@ -983,6 +987,10 @@ class StructureCoder(object):
                 self.field_coders.append(FunctionPointerFieldCoder(field))
             elif field.type.name().startswith("POINTER("):
                 self.field_coders.append(FieldCoder(field, default=None))
+            elif field.type.name().endswith("GLXFBConfig"):
+                self.field_coders.append(FieldCoder(field, default=None))
+            elif field.type.name().endswith("GLXContext"):
+                self.field_coders.append(FieldCoder(field, default=None))
             else:
                 self.field_coders.append(FieldCoder(field))
         # Rearrange arguments of Typed Structures
@@ -1032,7 +1040,6 @@ def structure_type_enum_name(struct: StructItem):
     type_enum_name = snake_from_camel(struct.name()).upper()
     type_enum_name = type_enum_name.replace("D3_D", "D3D")
     return type_enum_name
-
 
 
 __all__ = [

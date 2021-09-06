@@ -23,8 +23,10 @@ def main():
         """),
     )
 
+    cg.ctypes_names.add("c_long")
+    cg.ctypes_names.add("c_longlong")
     cg.print_header()
-    print("\n")
+    print("")
     print(inspect.cleandoc("""
         from OpenGL import GLX
 
@@ -36,6 +38,13 @@ def main():
         # Forward declaration of a Wayland structure
         class wl_display(Structure):
             pass
+            
+
+        class timespec(Structure):
+            _fields_ = [
+                ("tv_sec", c_longlong),  # TODO: is this the correct type?
+                ("tv_nsec", c_long),
+            ]
     """))
     print("\n")
     cg.print_items()

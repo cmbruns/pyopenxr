@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_uint32, c_void_p
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_void_p
 
 from OpenGL import GLX
 
@@ -12,6 +12,13 @@ from ..version import *
 # Forward declaration of a Wayland structure
 class wl_display(Structure):
     pass
+    
+
+class timespec(Structure):
+    _fields_ = [
+        ("tv_sec", c_longlong),  # TODO: is this the correct type?
+        ("tv_nsec", c_long),
+    ]
 
 
 KHR_vulkan_swapchain_format_list = 1
@@ -330,17 +337,7 @@ PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Sys
 
 PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
-
-class timespec(Structure):
-    pass
-
-
 PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(timespec), POINTER(Time))
-
-
-class timespec(Structure):
-    pass
-
 
 PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(timespec))
 
@@ -599,9 +596,7 @@ __all__ = [
     "PFN_xrGetVulkanDeviceExtensionsKHR",
     "PFN_xrGetVulkanGraphicsDeviceKHR",
     "PFN_xrGetVulkanGraphicsRequirementsKHR",
-    "timespec",
     "PFN_xrConvertTimespecTimeToTimeKHR",
-    "timespec",
     "PFN_xrConvertTimeToTimespecTimeKHR",
     "VulkanInstanceCreateFlagsKHR",
     "VulkanDeviceCreateFlagsKHR",
