@@ -209,13 +209,13 @@ class OpenXrExample(object):
         )
 
     def prepare_xr_system(self):
-        get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY.value)
+        get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY)
         self.system_id = xr.get_system(self.instance, get_info)  # TODO: not a pointer
         sys_props = xr.get_system_properties(self.instance, self.system_id)
         view_configs = xr.enumerate_view_configurations(self.instance, self.system_id)
         assert view_configs[0] == xr.ViewConfigurationType.PRIMARY_STEREO.value  # TODO: equality...
         view_config_views = xr.enumerate_view_configuration_views(
-            self.instance, self.system_id, xr.ViewConfigurationType.PRIMARY_STEREO.value)  # TODO: pass enum
+            self.instance, self.system_id, xr.ViewConfigurationType.PRIMARY_STEREO)
         assert len(view_config_views) == 2
         assert view_config_views[0].recommended_image_rect_height == view_config_views[1].recommended_image_rect_height
         self.render_target_size = (view_config_views[0].recommended_image_rect_width * 2, view_config_views[0].recommended_image_rect_height)
@@ -259,7 +259,7 @@ class OpenXrExample(object):
             self.logger.debug(f"Session supports reference space {xr.ReferenceSpaceType(rs)}")
         # TODO: default constructors for Quaternion, Vector3f, Posef, ReferenceSpaceCreateInfo
         rsci = xr.ReferenceSpaceCreateInfo(
-            xr.ReferenceSpaceType.STAGE.value,  # TODO: enums
+            xr.ReferenceSpaceType.STAGE,
             xr.Posef(xr.Quaternionf(0, 0, 0, 1), xr.Vector3f(0, 0, 0))
         )
         self.projection_layer.space = xr.create_reference_space(self.session, rsci)
@@ -352,7 +352,7 @@ class OpenXrExample(object):
         self.session_state = xr.SessionState(event.state)
         if self.session_state == xr.SessionState.READY:
             if not self.quit:
-                sbi = xr.SessionBeginInfo(xr.ViewConfigurationType.PRIMARY_STEREO.value)
+                sbi = xr.SessionBeginInfo(xr.ViewConfigurationType.PRIMARY_STEREO)
                 xr.begin_session(self.session, sbi)
         elif self.session_state == xr.SessionState.STOPPING:
             xr.end_session(self.session)
@@ -378,7 +378,7 @@ class OpenXrExample(object):
     def end_xr_frame(self):
         frame_end_info = xr.FrameEndInfo(
             self.frame_state.predicted_display_time,
-            xr.EnvironmentBlendMode.OPAQUE.value
+            xr.EnvironmentBlendMode.OPAQUE
         )
         if self.frame_state.should_render:
             for eye_index in range(2):
@@ -395,7 +395,7 @@ class OpenXrExample(object):
 
     def update_xr_views(self):
         vi = xr.ViewLocateInfo(
-            xr.ViewConfigurationType.PRIMARY_STEREO.value,
+            xr.ViewConfigurationType.PRIMARY_STEREO,
             self.frame_state.predicted_display_time,
             self.projection_layer.space,
         )

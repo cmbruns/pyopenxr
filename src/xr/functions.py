@@ -153,7 +153,7 @@ def result_to_string(
     fxn = raw_functions.xrResultToString
     result = check_result(fxn(
         instance,
-        value,
+        value.value,
         buffer,
     ))
     if result.is_exception():
@@ -169,7 +169,7 @@ def structure_type_to_string(
     fxn = raw_functions.xrStructureTypeToString
     result = check_result(fxn(
         instance,
-        value,
+        value.value,
         buffer,
     ))
     if result.is_exception():
@@ -222,7 +222,7 @@ def enumerate_environment_blend_modes(
     result = check_result(fxn(
         instance,
         system_id,
-        view_configuration_type,
+        view_configuration_type.value,
         0,
         byref(environment_blend_mode_capacity_input),
         None,
@@ -233,7 +233,7 @@ def enumerate_environment_blend_modes(
     result = check_result(fxn(
         instance,
         system_id,
-        view_configuration_type,
+        view_configuration_type.value,
         environment_blend_mode_capacity_input,
         byref(environment_blend_mode_capacity_input),
         environment_blend_modes,
@@ -325,7 +325,7 @@ def get_reference_space_bounds_rect(
     fxn = raw_functions.xrGetReferenceSpaceBoundsRect
     result = check_result(fxn(
         session,
-        reference_space_type,
+        reference_space_type.value,
         byref(bounds),
     ))
     if result.is_exception():
@@ -422,7 +422,7 @@ def get_view_configuration_properties(
     result = check_result(fxn(
         instance,
         system_id,
-        view_configuration_type,
+        view_configuration_type.value,
         byref(configuration_properties),
     ))
     if result.is_exception():
@@ -442,7 +442,7 @@ def enumerate_view_configuration_views(
     result = check_result(fxn(
         instance,
         system_id,
-        view_configuration_type,
+        view_configuration_type.value,
         0,
         byref(view_capacity_input),
         None,
@@ -453,7 +453,7 @@ def enumerate_view_configuration_views(
     result = check_result(fxn(
         instance,
         system_id,
-        view_configuration_type,
+        view_configuration_type.value,
         view_capacity_input,
         byref(view_capacity_input),
         views,

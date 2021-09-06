@@ -642,6 +642,11 @@ class InputParameterCoder(ParameterCoderBase):
         yield f"{p.name(api)}: {type_string}"
 
 
+class EnumParameterCoder(InputParameterCoder):
+    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"{self.parameter.name(api)}.value"
+
+
 class StringInputParameterCoder(InputParameterCoder):
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"if {self.parameter.name(api)} is not None:"
@@ -770,6 +775,11 @@ class FunctionCoder(object):
             if ct.kind == TypeKind.POINTER and not ct.get_pointee().is_const_qualified():
                 pc[1] = OutputParameterCoder(p)
                 continue
+            if ct.kind == TypeKind.TYPEDEF:
+                ut = ct.get_declaration().underlying_typedef_type
+                if ut.kind == TypeKind.ELABORATED:
+                    pc[1] = EnumParameterCoder(p)
+                    continue
             pc[1] = InputParameterCoder(p)
 
     def declaration_code(self, api=Api.PYTHON) -> str:
@@ -865,7 +875,13 @@ class FieldCoder(object):
 class EnumFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        yield f"{self.name}: {enum_name} = {enum_name}(0)"
+        default = 1  # Most enums have a 1 value
+        if enum_name in [
+            "PerfSettingsNotificationLevelEXT",
+            "HandJointSetEXT",
+        ]:
+            default = 0
+        yield f"{self.name}: {enum_name} = {enum_name}({default})"
 
     def call_code(self) -> Generator[str, None, None]:
         yield f"{self.field.name()}={self.name}.value"

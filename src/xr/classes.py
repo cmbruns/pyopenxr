@@ -95,7 +95,7 @@ class System(object):
     ) -> None:
         # TODO: default managed value for instance
         system_get_info = SystemGetInfo(
-            form_factor=form_factor.value,
+            form_factor=form_factor,
         )
         self.id = get_system(instance.handle, system_get_info)
         self.instance = instance
@@ -103,7 +103,7 @@ class System(object):
         view_configs = enumerate_view_configurations(self.instance.handle, self.id)
         assert view_configuration_type.value in view_configs
         view_config_views = enumerate_view_configuration_views(
-            self.instance.handle, self.id, view_configuration_type.value)
+            self.instance.handle, self.id, view_configuration_type)
         for vcv in view_config_views:
             assert view_config_views[0].recommended_image_rect_height == vcv.recommended_image_rect_height
         assert view_config_views[0].recommended_image_rect_height == view_config_views[1].recommended_image_rect_height
@@ -224,7 +224,7 @@ class Session(object):
     def end_frame(self, layer_count=0, layers=None):
         frame_end_info = FrameEndInfo(
             display_time=self.frame_state.predicted_display_time,
-            environment_blend_mode=EnvironmentBlendMode.OPAQUE.value,
+            environment_blend_mode=EnvironmentBlendMode.OPAQUE,
             layer_count=layer_count,
             layers=layers,
         )
@@ -237,7 +237,7 @@ class Session(object):
         display_time = self.frame_state.predicted_display_time
         #
         view_locate_info = ViewLocateInfo(
-            view_configuration_type.value,
+            view_configuration_type,
             display_time,
             self.space.handle,
         )
@@ -254,7 +254,7 @@ class Session(object):
         self.state = SessionState(event.state)
         if self.state == SessionState.READY:
             if self.handle is not None:
-                sbi = SessionBeginInfo(self.system.view_configuration_type.value)
+                sbi = SessionBeginInfo(self.system.view_configuration_type)
                 begin_session(self.handle, sbi)
         elif self.state == SessionState.STOPPING:
             self.destroy()
@@ -283,7 +283,7 @@ class Space(object):
         if pose_in_reference_space is None:
             pose_in_reference_space = Posef()
         reference_space_create_info = ReferenceSpaceCreateInfo(
-            reference_space_type=reference_space_type.value,
+            reference_space_type=reference_space_type,
             pose_in_reference_space=pose_in_reference_space,
         )
         self.handle = create_reference_space(session.handle, reference_space_create_info)

@@ -294,12 +294,12 @@ class EventDataBuffer(Structure):
 class SystemGetInfo(Structure):
     def __init__(
         self,
-        form_factor: FormFactor = 0,
+        form_factor: FormFactor = FormFactor(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SYSTEM_GET_INFO,
     ) -> None:
         super().__init__(
-            form_factor=form_factor,
+            form_factor=form_factor.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -601,7 +601,7 @@ class Posef(Structure):
 class ReferenceSpaceCreateInfo(Structure):
     def __init__(
         self,
-        reference_space_type: ReferenceSpaceType = 0,
+        reference_space_type: ReferenceSpaceType = ReferenceSpaceType(1),
         pose_in_reference_space: Posef = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.REFERENCE_SPACE_CREATE_INFO,
@@ -609,7 +609,7 @@ class ReferenceSpaceCreateInfo(Structure):
         if pose_in_reference_space is None:
             pose_in_reference_space = Posef()
         super().__init__(
-            reference_space_type=reference_space_type,
+            reference_space_type=reference_space_type.value,
             pose_in_reference_space=pose_in_reference_space,
             next=next_structure,
             type=structure_type.value,
@@ -740,13 +740,13 @@ class SpaceLocation(Structure):
 class ViewConfigurationProperties(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = 0,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType(1),
         fov_mutable: Bool32 = 0,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.VIEW_CONFIGURATION_PROPERTIES,
     ) -> None:
         super().__init__(
-            view_configuration_type=view_configuration_type,
+            view_configuration_type=view_configuration_type.value,
             fov_mutable=fov_mutable,
             next=next_structure,
             type=structure_type.value,
@@ -955,12 +955,12 @@ class SwapchainImageReleaseInfo(Structure):
 class SessionBeginInfo(Structure):
     def __init__(
         self,
-        primary_view_configuration_type: ViewConfigurationType = 0,
+        primary_view_configuration_type: ViewConfigurationType = ViewConfigurationType(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SESSION_BEGIN_INFO,
     ) -> None:
         super().__init__(
-            primary_view_configuration_type=primary_view_configuration_type,
+            primary_view_configuration_type=primary_view_configuration_type.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -1089,7 +1089,7 @@ class FrameEndInfo(Structure):
     def __init__(
         self,
         display_time: Time = 0,
-        environment_blend_mode: EnvironmentBlendMode = 0,
+        environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(1),
         layer_count: int = 0,
         layers: POINTER(POINTER(CompositionLayerBaseHeader)) = None,
         next_structure: c_void_p = None,
@@ -1097,7 +1097,7 @@ class FrameEndInfo(Structure):
     ) -> None:
         super().__init__(
             display_time=display_time,
-            environment_blend_mode=environment_blend_mode,
+            environment_blend_mode=environment_blend_mode.value,
             layer_count=layer_count,
             layers=layers,
             next=next_structure,
@@ -1123,14 +1123,14 @@ class FrameEndInfo(Structure):
 class ViewLocateInfo(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = 0,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType(1),
         display_time: Time = 0,
         space: SpaceHandle = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.VIEW_LOCATE_INFO,
     ) -> None:
         super().__init__(
-            view_configuration_type=view_configuration_type,
+            view_configuration_type=view_configuration_type.value,
             display_time=display_time,
             space=space,
             next=next_structure,
@@ -1298,7 +1298,7 @@ class ActionCreateInfo(Structure):
     def __init__(
         self,
         action_name: str = "",
-        action_type: ActionType = 0,
+        action_type: ActionType = ActionType(1),
         count_subaction_paths: int = 0,
         subaction_paths: POINTER(c_uint64) = None,
         localized_action_name: str = "",
@@ -1307,7 +1307,7 @@ class ActionCreateInfo(Structure):
     ) -> None:
         super().__init__(
             action_name=action_name.encode(),
-            action_type=action_type,
+            action_type=action_type.value,
             count_subaction_paths=count_subaction_paths,
             subaction_paths=subaction_paths,
             localized_action_name=localized_action_name.encode(),
@@ -2037,7 +2037,7 @@ class CompositionLayerQuad(Structure):
         self,
         layer_flags: CompositionLayerFlags = 0,
         space: SpaceHandle = None,
-        eye_visibility: EyeVisibility = 0,
+        eye_visibility: EyeVisibility = EyeVisibility(1),
         sub_image: SwapchainSubImage = None,
         pose: Posef = None,
         size: Extent2Df = None,
@@ -2053,7 +2053,7 @@ class CompositionLayerQuad(Structure):
         super().__init__(
             layer_flags=layer_flags,
             space=space,
-            eye_visibility=eye_visibility,
+            eye_visibility=eye_visibility.value,
             sub_image=sub_image,
             pose=pose,
             size=size,
@@ -2158,14 +2158,14 @@ class EventDataSessionStateChanged(Structure):
     def __init__(
         self,
         session: SessionHandle = None,
-        state: SessionState = 0,
+        state: SessionState = SessionState(1),
         time: Time = 0,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.EVENT_DATA_SESSION_STATE_CHANGED,
     ) -> None:
         super().__init__(
             session=session,
-            state=state,
+            state=state.value,
             time=time,
             next=next_structure,
             type=structure_type.value,
@@ -2190,7 +2190,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     def __init__(
         self,
         session: SessionHandle = None,
-        reference_space_type: ReferenceSpaceType = 0,
+        reference_space_type: ReferenceSpaceType = ReferenceSpaceType(1),
         change_time: Time = 0,
         pose_valid: Bool32 = 0,
         pose_in_previous_space: Posef = None,
@@ -2201,7 +2201,7 @@ class EventDataReferenceSpaceChangePending(Structure):
             pose_in_previous_space = Posef()
         super().__init__(
             session=session,
-            reference_space_type=reference_space_type,
+            reference_space_type=reference_space_type.value,
             change_time=change_time,
             pose_valid=pose_valid,
             pose_in_previous_space=pose_in_previous_space,
@@ -2572,7 +2572,7 @@ class CompositionLayerCubeKHR(Structure):
         self,
         layer_flags: CompositionLayerFlags = 0,
         space: SpaceHandle = None,
-        eye_visibility: EyeVisibility = 0,
+        eye_visibility: EyeVisibility = EyeVisibility(1),
         swapchain: SwapchainHandle = None,
         image_array_index: int = 0,
         orientation: Quaternionf = None,
@@ -2584,7 +2584,7 @@ class CompositionLayerCubeKHR(Structure):
         super().__init__(
             layer_flags=layer_flags,
             space=space,
-            eye_visibility=eye_visibility,
+            eye_visibility=eye_visibility.value,
             swapchain=swapchain,
             image_array_index=image_array_index,
             orientation=orientation,
@@ -2655,7 +2655,7 @@ class CompositionLayerCylinderKHR(Structure):
         self,
         layer_flags: CompositionLayerFlags = 0,
         space: SpaceHandle = None,
-        eye_visibility: EyeVisibility = 0,
+        eye_visibility: EyeVisibility = EyeVisibility(1),
         sub_image: SwapchainSubImage = None,
         pose: Posef = None,
         radius: float = 0,
@@ -2671,7 +2671,7 @@ class CompositionLayerCylinderKHR(Structure):
         super().__init__(
             layer_flags=layer_flags,
             space=space,
-            eye_visibility=eye_visibility,
+            eye_visibility=eye_visibility.value,
             sub_image=sub_image,
             pose=pose,
             radius=radius,
@@ -2706,7 +2706,7 @@ class CompositionLayerEquirectKHR(Structure):
         self,
         layer_flags: CompositionLayerFlags = 0,
         space: SpaceHandle = None,
-        eye_visibility: EyeVisibility = 0,
+        eye_visibility: EyeVisibility = EyeVisibility(1),
         sub_image: SwapchainSubImage = None,
         pose: Posef = None,
         radius: float = 0,
@@ -2726,7 +2726,7 @@ class CompositionLayerEquirectKHR(Structure):
         super().__init__(
             layer_flags=layer_flags,
             space=space,
-            eye_visibility=eye_visibility,
+            eye_visibility=eye_visibility.value,
             sub_image=sub_image,
             pose=pose,
             radius=radius,
@@ -2801,14 +2801,14 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     def __init__(
         self,
         session: SessionHandle = None,
-        view_configuration_type: ViewConfigurationType = 0,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType(1),
         view_index: int = 0,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR,
     ) -> None:
         super().__init__(
             session=session,
-            view_configuration_type=view_configuration_type,
+            view_configuration_type=view_configuration_type.value,
             view_index=view_index,
             next=next_structure,
             type=structure_type.value,
@@ -2896,7 +2896,7 @@ class CompositionLayerEquirect2KHR(Structure):
         self,
         layer_flags: CompositionLayerFlags = 0,
         space: SpaceHandle = None,
-        eye_visibility: EyeVisibility = 0,
+        eye_visibility: EyeVisibility = EyeVisibility(1),
         sub_image: SwapchainSubImage = None,
         pose: Posef = None,
         radius: float = 0,
@@ -2913,7 +2913,7 @@ class CompositionLayerEquirect2KHR(Structure):
         super().__init__(
             layer_flags=layer_flags,
             space=space,
-            eye_visibility=eye_visibility,
+            eye_visibility=eye_visibility.value,
             sub_image=sub_image,
             pose=pose,
             radius=radius,
@@ -3000,18 +3000,18 @@ class BindingModificationsKHR(Structure):
 class EventDataPerfSettingsEXT(Structure):
     def __init__(
         self,
-        domain: PerfSettingsDomainEXT = 0,
-        sub_domain: PerfSettingsSubDomainEXT = 0,
-        from_level: PerfSettingsNotificationLevelEXT = 0,
-        to_level: PerfSettingsNotificationLevelEXT = 0,
+        domain: PerfSettingsDomainEXT = PerfSettingsDomainEXT(1),
+        sub_domain: PerfSettingsSubDomainEXT = PerfSettingsSubDomainEXT(1),
+        from_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT(0),
+        to_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT(0),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.EVENT_DATA_PERF_SETTINGS_EXT,
     ) -> None:
         super().__init__(
-            domain=domain,
-            sub_domain=sub_domain,
-            from_level=from_level,
-            to_level=to_level,
+            domain=domain.value,
+            sub_domain=sub_domain.value,
+            from_level=from_level.value,
+            to_level=to_level.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -3051,14 +3051,14 @@ DebugUtilsMessageTypeFlagsEXT = Flags64
 class DebugUtilsObjectNameInfoEXT(Structure):
     def __init__(
         self,
-        object_type: ObjectType = 0,
+        object_type: ObjectType = ObjectType(1),
         object_handle: int = 0,
         object_name: str = "",
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
     ) -> None:
         super().__init__(
-            object_type=object_type,
+            object_type=object_type.value,
             object_handle=object_handle,
             object_name=object_name.encode(),
             next=next_structure,
@@ -3428,18 +3428,18 @@ class CompositionLayerImageLayoutFB(Structure):
 class CompositionLayerAlphaBlendFB(Structure):
     def __init__(
         self,
-        src_factor_color: BlendFactorFB = 0,
-        dst_factor_color: BlendFactorFB = 0,
-        src_factor_alpha: BlendFactorFB = 0,
-        dst_factor_alpha: BlendFactorFB = 0,
+        src_factor_color: BlendFactorFB = BlendFactorFB(1),
+        dst_factor_color: BlendFactorFB = BlendFactorFB(1),
+        src_factor_alpha: BlendFactorFB = BlendFactorFB(1),
+        dst_factor_alpha: BlendFactorFB = BlendFactorFB(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.COMPOSITION_LAYER_ALPHA_BLEND_FB,
     ) -> None:
         super().__init__(
-            src_factor_color=src_factor_color,
-            dst_factor_color=dst_factor_color,
-            src_factor_alpha=src_factor_alpha,
-            dst_factor_alpha=dst_factor_alpha,
+            src_factor_color=src_factor_color.value,
+            dst_factor_color=dst_factor_color.value,
+            src_factor_alpha=src_factor_alpha.value,
+            dst_factor_alpha=dst_factor_alpha.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -3509,7 +3509,7 @@ PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result.ctype(), SessionHandle, Path,
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     def __init__(
         self,
-        node_type: SpatialGraphNodeTypeMSFT = 0,
+        node_type: SpatialGraphNodeTypeMSFT = SpatialGraphNodeTypeMSFT(1),
         pose: Posef = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_MSFT,
@@ -3517,7 +3517,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
         if pose is None:
             pose = Posef()
         super().__init__(
-            node_type=node_type,
+            node_type=node_type.value,
             pose=pose,
             next=next_structure,
             type=structure_type.value,
@@ -3577,14 +3577,14 @@ class SystemHandTrackingPropertiesEXT(Structure):
 class HandTrackerCreateInfoEXT(Structure):
     def __init__(
         self,
-        hand: HandEXT = 0,
-        hand_joint_set: HandJointSetEXT = 0,
+        hand: HandEXT = HandEXT(1),
+        hand_joint_set: HandJointSetEXT = HandJointSetEXT(0),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_TRACKER_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
-            hand=hand,
-            hand_joint_set=hand_joint_set,
+            hand=hand.value,
+            hand_joint_set=hand_joint_set.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -3793,7 +3793,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
 class HandMeshSpaceCreateInfoMSFT(Structure):
     def __init__(
         self,
-        hand_pose_type: HandPoseTypeMSFT = 0,
+        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(1),
         pose_in_hand_mesh_space: Posef = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_MESH_SPACE_CREATE_INFO_MSFT,
@@ -3801,7 +3801,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
         if pose_in_hand_mesh_space is None:
             pose_in_hand_mesh_space = Posef()
         super().__init__(
-            hand_pose_type=hand_pose_type,
+            hand_pose_type=hand_pose_type.value,
             pose_in_hand_mesh_space=pose_in_hand_mesh_space,
             next=next_structure,
             type=structure_type.value,
@@ -3825,13 +3825,13 @@ class HandMeshUpdateInfoMSFT(Structure):
     def __init__(
         self,
         time: Time = 0,
-        hand_pose_type: HandPoseTypeMSFT = 0,
+        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_MESH_UPDATE_INFO_MSFT,
     ) -> None:
         super().__init__(
             time=time,
-            hand_pose_type=hand_pose_type,
+            hand_pose_type=hand_pose_type.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -3980,12 +3980,12 @@ class HandMeshMSFT(Structure):
 class HandPoseTypeInfoMSFT(Structure):
     def __init__(
         self,
-        hand_pose_type: HandPoseTypeMSFT = 0,
+        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_POSE_TYPE_INFO_MSFT,
     ) -> None:
         super().__init__(
-            hand_pose_type=hand_pose_type,
+            hand_pose_type=hand_pose_type.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -4040,13 +4040,13 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
 class SecondaryViewConfigurationStateMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = 0,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType(1),
         active: Bool32 = 0,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_MSFT,
     ) -> None:
         super().__init__(
-            view_configuration_type=view_configuration_type,
+            view_configuration_type=view_configuration_type.value,
             active=active,
             next=next_structure,
             type=structure_type.value,
@@ -4098,16 +4098,16 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
 class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = 0,
-        environment_blend_mode: EnvironmentBlendMode = 0,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType(1),
+        environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(1),
         layer_count: int = 0,
         layers: POINTER(POINTER(CompositionLayerBaseHeader)) = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT,
     ) -> None:
         super().__init__(
-            view_configuration_type=view_configuration_type,
-            environment_blend_mode=environment_blend_mode,
+            view_configuration_type=view_configuration_type.value,
+            environment_blend_mode=environment_blend_mode.value,
             layer_count=layer_count,
             layers=layers,
             next=next_structure,
@@ -4162,12 +4162,12 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
 class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = 0,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
-            view_configuration_type=view_configuration_type,
+            view_configuration_type=view_configuration_type.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -4380,12 +4380,12 @@ class ViewConfigurationViewFovEPIC(Structure):
 class CompositionLayerReprojectionInfoMSFT(Structure):
     def __init__(
         self,
-        reprojection_mode: ReprojectionModeMSFT = 0,
+        reprojection_mode: ReprojectionModeMSFT = ReprojectionModeMSFT(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_MSFT,
     ) -> None:
         super().__init__(
-            reprojection_mode=reprojection_mode,
+            reprojection_mode=reprojection_mode.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -4544,12 +4544,12 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
 class HandJointsMotionRangeInfoEXT(Structure):
     def __init__(
         self,
-        hand_joints_motion_range: HandJointsMotionRangeEXT = 0,
+        hand_joints_motion_range: HandJointsMotionRangeEXT = HandJointsMotionRangeEXT(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_JOINTS_MOTION_RANGE_INFO_EXT,
     ) -> None:
         super().__init__(
-            hand_joints_motion_range=hand_joints_motion_range,
+            hand_joints_motion_range=hand_joints_motion_range.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -4773,7 +4773,7 @@ class NewSceneComputeInfoMSFT(Structure):
         self,
         requested_feature_count: int = 0,
         requested_features: POINTER(c_int) = None,
-        consistency: SceneComputeConsistencyMSFT = 0,
+        consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT(1),
         bounds: SceneBoundsMSFT = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.NEW_SCENE_COMPUTE_INFO_MSFT,
@@ -4783,7 +4783,7 @@ class NewSceneComputeInfoMSFT(Structure):
         super().__init__(
             requested_feature_count=requested_feature_count,
             requested_features=requested_features,
-            consistency=consistency,
+            consistency=consistency.value,
             bounds=bounds,
             next=next_structure,
             type=structure_type.value,
@@ -4808,12 +4808,12 @@ class NewSceneComputeInfoMSFT(Structure):
 class VisualMeshComputeLodInfoMSFT(Structure):
     def __init__(
         self,
-        lod: MeshComputeLodMSFT = 0,
+        lod: MeshComputeLodMSFT = MeshComputeLodMSFT(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_MSFT,
     ) -> None:
         super().__init__(
-            lod=lod,
+            lod=lod.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -4834,7 +4834,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
 class SceneComponentMSFT(Structure):
     def __init__(
         self,
-        component_type: SceneComponentTypeMSFT = 0,
+        component_type: SceneComponentTypeMSFT = SceneComponentTypeMSFT(1),
         id: UuidMSFT = None,
         parent_id: UuidMSFT = None,
         update_time: Time = 0,
@@ -4844,7 +4844,7 @@ class SceneComponentMSFT(Structure):
         if parent_id is None:
             parent_id = UuidMSFT()
         super().__init__(
-            component_type=component_type,
+            component_type=component_type.value,
             id=id,
             parent_id=parent_id,
             update_time=update_time,
@@ -4899,12 +4899,12 @@ class SceneComponentsMSFT(Structure):
 class SceneComponentsGetInfoMSFT(Structure):
     def __init__(
         self,
-        component_type: SceneComponentTypeMSFT = 0,
+        component_type: SceneComponentTypeMSFT = SceneComponentTypeMSFT(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_COMPONENTS_GET_INFO_MSFT,
     ) -> None:
         super().__init__(
-            component_type=component_type,
+            component_type=component_type.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -5014,10 +5014,10 @@ class SceneComponentsLocateInfoMSFT(Structure):
 class SceneObjectMSFT(Structure):
     def __init__(
         self,
-        object_type: SceneObjectTypeMSFT = 0,
+        object_type: SceneObjectTypeMSFT = SceneObjectTypeMSFT(1),
     ) -> None:
         super().__init__(
-            object_type=object_type,
+            object_type=object_type.value,
         )
 
     def __repr__(self) -> str:
@@ -5120,7 +5120,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
 class ScenePlaneMSFT(Structure):
     def __init__(
         self,
-        alignment: ScenePlaneAlignmentTypeMSFT = 0,
+        alignment: ScenePlaneAlignmentTypeMSFT = ScenePlaneAlignmentTypeMSFT(1),
         size: Extent2Df = None,
         mesh_buffer_id: int = 0,
         supports_indices_uint16: Bool32 = 0,
@@ -5128,7 +5128,7 @@ class ScenePlaneMSFT(Structure):
         if size is None:
             size = Extent2Df()
         super().__init__(
-            alignment=alignment,
+            alignment=alignment.value,
             size=size,
             mesh_buffer_id=mesh_buffer_id,
             supports_indices_uint16=supports_indices_uint16,
@@ -5548,12 +5548,12 @@ PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), SessionHandle, c_f
 class SystemColorSpacePropertiesFB(Structure):
     def __init__(
         self,
-        color_space: ColorSpaceFB = 0,
+        color_space: ColorSpaceFB = ColorSpaceFB(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_FB,
     ) -> None:
         super().__init__(
-            color_space=color_space,
+            color_space=color_space.value,
             next=next_structure,
             type=structure_type.value,
         )
@@ -5760,11 +5760,11 @@ class HandCapsuleFB(Structure):
     def __init__(
         self,
         radius: float = 0,
-        joint: HandJointEXT = 0,
+        joint: HandJointEXT = HandJointEXT(1),
     ) -> None:
         super().__init__(
             radius=radius,
-            joint=joint,
+            joint=joint.value,
         )
 
     def __repr__(self) -> str:
@@ -5901,16 +5901,16 @@ PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result.ctype(), FoveationProfileFBHa
 class FoveationLevelProfileCreateInfoFB(Structure):
     def __init__(
         self,
-        level: FoveationLevelFB = 0,
+        level: FoveationLevelFB = FoveationLevelFB(1),
         vertical_offset: float = 0,
-        dynamic: FoveationDynamicFB = 0,
+        dynamic: FoveationDynamicFB = FoveationDynamicFB(1),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
-            level=level,
+            level=level.value,
             vertical_offset=vertical_offset,
-            dynamic=dynamic,
+            dynamic=dynamic.value,
             next=next_structure,
             type=structure_type.value,
         )
