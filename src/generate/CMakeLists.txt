@@ -125,7 +125,10 @@ function(generate_source GENERATOR OUTPUT OUT_DIR)
     message(STATUS "Generated file ${STAGING_DIR}/${OUTPUT}")
 endfunction()
 
-generate_source("generate_version.py" "version.py" "")
+set(ENV{PYTHONPATH} "${CMAKE_CURRENT_SOURCE_DIR}")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/generate_version.py ${CMAKE_CURRENT_BINARY_DIR}/ @ONLY)
+generate_source("${CMAKE_CURRENT_BINARY_DIR}/generate_version.py" "version.py" "")
+
 generate_source("generate_enums.py" "enums.py" "")
 generate_source("generate_constants.py" "constants.py" "")
 generate_source("generate_typedefs.py" "typedefs.py" "")
