@@ -404,7 +404,7 @@ class StructItem(CodeItem):
             # Empty structure
             result += "\n    pass"
             return result
-        result += StructureCoder(self).constructor()
+        result += StructureCoder(self).generate_constructor()
         result += "\n"
         # Add special container methods for structures whose fields are all floats
         float_count = 0
@@ -858,6 +858,15 @@ class FieldCoder(object):
         yield f"{self.field.name()}={{repr(self.{self.name})}}"
 
 
+class EnumFieldCoder(FieldCoder):
+    def param_code(self) -> Generator[str, None, None]:
+        enum_name = self.field.type.name(Api.PYTHON)
+        yield f"{self.name}: {enum_name} = {enum_name}(0)"
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.field.name()}={self.name}.value"
+
+
 class FunctionPointerFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         fn_type = self.field.type.name(Api.PYTHON)
@@ -983,6 +992,8 @@ class StructureCoder(object):
                 self.field_coders.append(FunctionPointerFieldCoder(field))
             elif field.type.name().startswith("POINTER("):
                 self.field_coders.append(FieldCoder(field, default=None))
+            elif isinstance(field.type, TypedefType) and isinstance(field.type.underlying_type, EnumType):
+                self.field_coders.append(EnumFieldCoder(field))
             else:
                 self.field_coders.append(FieldCoder(field))
         # Rearrange arguments of Typed Structures
@@ -995,7 +1006,7 @@ class StructureCoder(object):
             x = 3
 
     """Creates __init__(...) method for Structure types"""
-    def constructor(self) -> str:
+    def generate_constructor(self) -> str:
         # Special cases for default values
         # TODO: box/unbox enums
         # TODO: use None as default for pointer fields
@@ -1019,6 +1030,28 @@ class StructureCoder(object):
         result += f"{i8})\n"
         return result
 
+    def generate_repr_str(self) -> str:
+        class_name = self.struct.name()
+        repr_strings = []
+        str_strings = []
+        for fc in self.field_coders:
+            for s in fc.repr_code():
+                repr_strings.append(s)
+            for s in fc.str_code():
+                str_strings.append(s)
+        field_reprs = ", ".join(repr_strings)
+        field_strs = ", ".join(str_strings)
+        result = ""
+        result += textwrap.indent(inspect.cleandoc(f"""
+            def __repr__(self) -> str:
+                return f"xr.{class_name}({field_reprs})"
+
+            def __str__(self) -> str:
+                return f"xr.{class_name}({field_strs})"
+        """), "    ")
+        result += "\n"
+        return result
+
 
 def snake_from_camel(camel: str) -> str:
     snake = f"{camel}"
@@ -1032,7 +1065,6 @@ def structure_type_enum_name(struct: StructItem):
     type_enum_name = snake_from_camel(struct.name()).upper()
     type_enum_name = type_enum_name.replace("D3_D", "D3D")
     return type_enum_name
-
 
 
 __all__ = [
