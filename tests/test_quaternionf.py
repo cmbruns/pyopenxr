@@ -14,9 +14,9 @@ class TestQuaternionf(unittest.TestCase):
     def test_container(self):
         self.assertEqual(4, len(self.q))
         self.assertEqual(0, self.q[2])
-        self.assertEqual("(0.000, 0.000, 0.000, 1.000)", str(self.q))
+        self.assertEqual("(x=0.000, y=0.000, z=0.000, w=1.000)", str(self.q))
         self.assertEqual(
-            "xr.Quaternionf(0.0, 0.0, 0.0, 1.0)",
+            "xr.Quaternionf(x=0.0, y=0.0, z=0.0, w=1.0)",
             repr(self.q))
         count = 0
         for f in self.q:

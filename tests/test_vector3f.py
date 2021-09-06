@@ -14,9 +14,9 @@ class TestVector3f(unittest.TestCase):
     def test_container(self):
         self.assertEqual(3, len(self.v))
         self.assertAlmostEqual(17.44444444442, self.v[2], 5)
-        self.assertEqual("(1.340, -9.600, 17.444)", str(self.v))
+        self.assertEqual("(x=1.340, y=-9.600, z=17.444)", str(self.v))
         self.assertEqual(
-            "xr.Vector3f(1.340000033378601, -9.600000381469727, 17.44444465637207)",
+            "xr.Vector3f(x=1.340000033378601, y=-9.600000381469727, z=17.44444465637207)",
             repr(self.v))
         count = 0
         for f in self.v:

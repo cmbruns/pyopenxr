@@ -105,10 +105,10 @@ class ApiLayerProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ApiLayerProperties(type={repr(self.type)}, next={repr(self.next)}, layer_name={repr(self.layer_name)}, spec_version={repr(self.spec_version)}, layer_version={repr(self.layer_version)}, description={repr(self.description)})"
+        return f"xr.ApiLayerProperties(layer_name={repr(self.layer_name)}, spec_version={repr(self.spec_version)}, layer_version={repr(self.layer_version)}, description={repr(self.description)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ApiLayerProperties(type={str(self.type)}, next={str(self.next)}, layer_name={str(self.layer_name)}, spec_version={str(self.spec_version)}, layer_version={str(self.layer_version)}, description={str(self.description)})"
+        return f"xr.ApiLayerProperties(layer_name={self.layer_name}, spec_version={self.spec_version}, layer_version={self.layer_version}, description={self.description}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -136,10 +136,10 @@ class ExtensionProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ExtensionProperties(type={repr(self.type)}, next={repr(self.next)}, extension_name={repr(self.extension_name)}, extension_version={repr(self.extension_version)})"
+        return f"xr.ExtensionProperties(extension_name={repr(self.extension_name)}, extension_version={repr(self.extension_version)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ExtensionProperties(type={str(self.type)}, next={str(self.next)}, extension_name={str(self.extension_name)}, extension_version={str(self.extension_version)})"
+        return f"xr.ExtensionProperties(extension_name={self.extension_name}, extension_version={self.extension_version}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     def __bytes__(self):
         return self.extension_name
@@ -184,7 +184,7 @@ class ApplicationInfo(Structure):
         return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self.application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self.engine_version)}, api_version={repr(self.api_version)})"
 
     def __str__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={str(self.application_name)}, application_version={str(self.application_version)}, engine_name={str(self.engine_name)}, engine_version={str(self.engine_version)}, api_version={str(self.api_version)})"
+        return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self.application_version}, engine_name={self.engine_name}, engine_version={self.engine_version}, api_version={self.api_version})"
 
     _fields_ = [
         ("application_name", (c_char * 128)),
@@ -221,10 +221,10 @@ class InstanceCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceCreateInfo(type={repr(self.type)}, next={repr(self.next)}, create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self.enabled_api_layer_count)}, enabled_api_layer_names={repr(self.enabled_api_layer_names)}, enabled_extension_count={repr(self.enabled_extension_count)}, enabled_extension_names={repr(self.enabled_extension_names)})"
+        return f"xr.InstanceCreateInfo(create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self.enabled_api_layer_count)}, enabled_api_layer_names={repr(self.enabled_api_layer_names)}, enabled_extension_count={repr(self.enabled_extension_count)}, enabled_extension_names={repr(self.enabled_extension_names)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.InstanceCreateInfo(type={str(self.type)}, next={str(self.next)}, create_flags={str(self.create_flags)}, application_info={str(self.application_info)}, enabled_api_layer_count={str(self.enabled_api_layer_count)}, enabled_api_layer_names={str(self.enabled_api_layer_names)}, enabled_extension_count={str(self.enabled_extension_count)}, enabled_extension_names={str(self.enabled_extension_names)})"
+        return f"xr.InstanceCreateInfo(create_flags={self.create_flags}, application_info={self.application_info}, enabled_api_layer_count={self.enabled_api_layer_count}, enabled_api_layer_names={self.enabled_api_layer_names}, enabled_extension_count={self.enabled_extension_count}, enabled_extension_names={self.enabled_extension_names}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -254,10 +254,10 @@ class InstanceProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceProperties(type={repr(self.type)}, next={repr(self.next)}, runtime_version={repr(self.runtime_version)}, runtime_name={repr(self.runtime_name)})"
+        return f"xr.InstanceProperties(runtime_version={repr(self.runtime_version)}, runtime_name={repr(self.runtime_name)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.InstanceProperties(type={str(self.type)}, next={str(self.next)}, runtime_version={str(self.runtime_version)}, runtime_name={str(self.runtime_name)})"
+        return f"xr.InstanceProperties(runtime_version={self.runtime_version}, runtime_name={self.runtime_name}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -279,10 +279,10 @@ class EventDataBuffer(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataBuffer(type={repr(self.type)}, next={repr(self.next)}, varying={repr(self.varying)})"
+        return f"xr.EventDataBuffer(varying={repr(self.varying)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataBuffer(type={str(self.type)}, next={str(self.next)}, varying={str(self.varying)})"
+        return f"xr.EventDataBuffer(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -305,10 +305,10 @@ class SystemGetInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemGetInfo(type={repr(self.type)}, next={repr(self.next)}, form_factor={repr(self.form_factor)})"
+        return f"xr.SystemGetInfo(form_factor={repr(self.form_factor)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemGetInfo(type={str(self.type)}, next={str(self.next)}, form_factor={str(self.form_factor)})"
+        return f"xr.SystemGetInfo(form_factor={self.form_factor}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -334,7 +334,7 @@ class SystemGraphicsProperties(Structure):
         return f"xr.SystemGraphicsProperties(max_swapchain_image_height={repr(self.max_swapchain_image_height)}, max_swapchain_image_width={repr(self.max_swapchain_image_width)}, max_layer_count={repr(self.max_layer_count)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemGraphicsProperties(max_swapchain_image_height={str(self.max_swapchain_image_height)}, max_swapchain_image_width={str(self.max_swapchain_image_width)}, max_layer_count={str(self.max_layer_count)})"
+        return f"xr.SystemGraphicsProperties(max_swapchain_image_height={self.max_swapchain_image_height}, max_swapchain_image_width={self.max_swapchain_image_width}, max_layer_count={self.max_layer_count})"
 
     _fields_ = [
         ("max_swapchain_image_height", c_uint32),
@@ -358,7 +358,7 @@ class SystemTrackingProperties(Structure):
         return f"xr.SystemTrackingProperties(orientation_tracking={repr(self.orientation_tracking)}, position_tracking={repr(self.position_tracking)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemTrackingProperties(orientation_tracking={str(self.orientation_tracking)}, position_tracking={str(self.position_tracking)})"
+        return f"xr.SystemTrackingProperties(orientation_tracking={self.orientation_tracking}, position_tracking={self.position_tracking})"
 
     _fields_ = [
         ("orientation_tracking", Bool32),
@@ -392,10 +392,10 @@ class SystemProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemProperties(type={repr(self.type)}, next={repr(self.next)}, system_id={repr(self.system_id)}, vendor_id={repr(self.vendor_id)}, system_name={repr(self.system_name)}, graphics_properties={repr(self.graphics_properties)}, tracking_properties={repr(self.tracking_properties)})"
+        return f"xr.SystemProperties(system_id={repr(self.system_id)}, vendor_id={repr(self.vendor_id)}, system_name={repr(self.system_name)}, graphics_properties={repr(self.graphics_properties)}, tracking_properties={repr(self.tracking_properties)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemProperties(type={str(self.type)}, next={str(self.next)}, system_id={str(self.system_id)}, vendor_id={str(self.vendor_id)}, system_name={str(self.system_name)}, graphics_properties={str(self.graphics_properties)}, tracking_properties={str(self.tracking_properties)})"
+        return f"xr.SystemProperties(system_id={self.system_id}, vendor_id={self.vendor_id}, system_name={self.system_name}, graphics_properties={self.graphics_properties}, tracking_properties={self.tracking_properties}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -424,10 +424,10 @@ class SessionCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionCreateInfo(type={repr(self.type)}, next={repr(self.next)}, create_flags={repr(self.create_flags)}, system_id={repr(self.system_id)})"
+        return f"xr.SessionCreateInfo(create_flags={repr(self.create_flags)}, system_id={repr(self.system_id)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SessionCreateInfo(type={str(self.type)}, next={str(self.next)}, create_flags={str(self.create_flags)}, system_id={str(self.system_id)})"
+        return f"xr.SessionCreateInfo(create_flags={self.create_flags}, system_id={self.system_id}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -463,12 +463,6 @@ class Vector3f(Structure):
     def __len__(self) -> int:
         return 3
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -476,6 +470,11 @@ class Vector3f(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Vector3f(x={repr(self.x)}, y={repr(self.y)}, z={repr(self.z)})"
+
+    def __str__(self) -> str:
+        return f"(x={self.x:.3f}, y={self.y:.3f}, z={self.z:.3f})"
 
     _fields_ = [
         ("x", c_float),
@@ -506,10 +505,10 @@ class SpaceVelocity(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceVelocity(type={repr(self.type)}, next={repr(self.next)}, velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)})"
+        return f"xr.SpaceVelocity(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpaceVelocity(type={str(self.type)}, next={str(self.next)}, velocity_flags={str(self.velocity_flags)}, linear_velocity={str(self.linear_velocity)}, angular_velocity={str(self.angular_velocity)})"
+        return f"xr.SpaceVelocity(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -549,12 +548,6 @@ class Quaternionf(Structure):
     def __len__(self) -> int:
         return 4
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -562,6 +555,11 @@ class Quaternionf(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Quaternionf(x={repr(self.x)}, y={repr(self.y)}, z={repr(self.z)}, w={repr(self.w)})"
+
+    def __str__(self) -> str:
+        return f"(x={self.x:.3f}, y={self.y:.3f}, z={self.z:.3f}, w={self.w:.3f})"
 
     _fields_ = [
         ("x", c_float),
@@ -590,7 +588,7 @@ class Posef(Structure):
         return f"xr.Posef(orientation={repr(self.orientation)}, position={repr(self.position)})"
 
     def __str__(self) -> str:
-        return f"xr.Posef(orientation={str(self.orientation)}, position={str(self.position)})"
+        return f"(orientation={self.orientation}, position={self.position})"
 
     _fields_ = [
         ("orientation", Quaternionf),
@@ -616,10 +614,10 @@ class ReferenceSpaceCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ReferenceSpaceCreateInfo(type={repr(self.type)}, next={repr(self.next)}, reference_space_type={repr(self.reference_space_type)}, pose_in_reference_space={repr(self.pose_in_reference_space)})"
+        return f"xr.ReferenceSpaceCreateInfo(reference_space_type={repr(self.reference_space_type)}, pose_in_reference_space={repr(self.pose_in_reference_space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ReferenceSpaceCreateInfo(type={str(self.type)}, next={str(self.next)}, reference_space_type={str(self.reference_space_type)}, pose_in_reference_space={str(self.pose_in_reference_space)})"
+        return f"xr.ReferenceSpaceCreateInfo(reference_space_type={self.reference_space_type}, pose_in_reference_space={self.pose_in_reference_space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -652,12 +650,6 @@ class Extent2Df(Structure):
     def __len__(self) -> int:
         return 2
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -665,6 +657,11 @@ class Extent2Df(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Extent2Df(width={repr(self.width)}, height={repr(self.height)})"
+
+    def __str__(self) -> str:
+        return f"xr.Extent2Df(width={self.width:.3f}, height={self.height:.3f})"
 
     _fields_ = [
         ("width", c_float),
@@ -692,10 +689,10 @@ class ActionSpaceCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionSpaceCreateInfo(type={repr(self.type)}, next={repr(self.next)}, action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, pose_in_action_space={repr(self.pose_in_action_space)})"
+        return f"xr.ActionSpaceCreateInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, pose_in_action_space={repr(self.pose_in_action_space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionSpaceCreateInfo(type={str(self.type)}, next={str(self.next)}, action={str(self.action)}, subaction_path={str(self.subaction_path)}, pose_in_action_space={str(self.pose_in_action_space)})"
+        return f"xr.ActionSpaceCreateInfo(action={self.action}, subaction_path={self.subaction_path}, pose_in_action_space={self.pose_in_action_space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -724,10 +721,10 @@ class SpaceLocation(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceLocation(type={repr(self.type)}, next={repr(self.next)}, location_flags={repr(self.location_flags)}, pose={repr(self.pose)})"
+        return f"xr.SpaceLocation(location_flags={repr(self.location_flags)}, pose={repr(self.pose)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpaceLocation(type={str(self.type)}, next={str(self.next)}, location_flags={str(self.location_flags)}, pose={str(self.pose)})"
+        return f"xr.SpaceLocation(location_flags={self.location_flags}, pose={self.pose}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -753,10 +750,10 @@ class ViewConfigurationProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationProperties(type={repr(self.type)}, next={repr(self.next)}, view_configuration_type={repr(self.view_configuration_type)}, fov_mutable={repr(self.fov_mutable)})"
+        return f"xr.ViewConfigurationProperties(view_configuration_type={repr(self.view_configuration_type)}, fov_mutable={repr(self.fov_mutable)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ViewConfigurationProperties(type={str(self.type)}, next={str(self.next)}, view_configuration_type={str(self.view_configuration_type)}, fov_mutable={str(self.fov_mutable)})"
+        return f"xr.ViewConfigurationProperties(view_configuration_type={self.view_configuration_type}, fov_mutable={self.fov_mutable}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -790,10 +787,10 @@ class ViewConfigurationView(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationView(type={repr(self.type)}, next={repr(self.next)}, recommended_image_rect_width={repr(self.recommended_image_rect_width)}, max_image_rect_width={repr(self.max_image_rect_width)}, recommended_image_rect_height={repr(self.recommended_image_rect_height)}, max_image_rect_height={repr(self.max_image_rect_height)}, recommended_swapchain_sample_count={repr(self.recommended_swapchain_sample_count)}, max_swapchain_sample_count={repr(self.max_swapchain_sample_count)})"
+        return f"xr.ViewConfigurationView(recommended_image_rect_width={repr(self.recommended_image_rect_width)}, max_image_rect_width={repr(self.max_image_rect_width)}, recommended_image_rect_height={repr(self.recommended_image_rect_height)}, max_image_rect_height={repr(self.max_image_rect_height)}, recommended_swapchain_sample_count={repr(self.recommended_swapchain_sample_count)}, max_swapchain_sample_count={repr(self.max_swapchain_sample_count)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ViewConfigurationView(type={str(self.type)}, next={str(self.next)}, recommended_image_rect_width={str(self.recommended_image_rect_width)}, max_image_rect_width={str(self.max_image_rect_width)}, recommended_image_rect_height={str(self.recommended_image_rect_height)}, max_image_rect_height={str(self.max_image_rect_height)}, recommended_swapchain_sample_count={str(self.recommended_swapchain_sample_count)}, max_swapchain_sample_count={str(self.max_swapchain_sample_count)})"
+        return f"xr.ViewConfigurationView(recommended_image_rect_width={self.recommended_image_rect_width}, max_image_rect_width={self.max_image_rect_width}, recommended_image_rect_height={self.recommended_image_rect_height}, max_image_rect_height={self.max_image_rect_height}, recommended_swapchain_sample_count={self.recommended_swapchain_sample_count}, max_swapchain_sample_count={self.max_swapchain_sample_count}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -837,10 +834,10 @@ class SwapchainCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainCreateInfo(type={repr(self.type)}, next={repr(self.next)}, create_flags={repr(self.create_flags)}, usage_flags={repr(self.usage_flags)}, format={repr(self.format)}, sample_count={repr(self.sample_count)}, width={repr(self.width)}, height={repr(self.height)}, face_count={repr(self.face_count)}, array_size={repr(self.array_size)}, mip_count={repr(self.mip_count)})"
+        return f"xr.SwapchainCreateInfo(create_flags={repr(self.create_flags)}, usage_flags={repr(self.usage_flags)}, format={repr(self.format)}, sample_count={repr(self.sample_count)}, width={repr(self.width)}, height={repr(self.height)}, face_count={repr(self.face_count)}, array_size={repr(self.array_size)}, mip_count={repr(self.mip_count)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainCreateInfo(type={str(self.type)}, next={str(self.next)}, create_flags={str(self.create_flags)}, usage_flags={str(self.usage_flags)}, format={str(self.format)}, sample_count={str(self.sample_count)}, width={str(self.width)}, height={str(self.height)}, face_count={str(self.face_count)}, array_size={str(self.array_size)}, mip_count={str(self.mip_count)})"
+        return f"xr.SwapchainCreateInfo(create_flags={self.create_flags}, usage_flags={self.usage_flags}, format={self.format}, sample_count={self.sample_count}, width={self.width}, height={self.height}, face_count={self.face_count}, array_size={self.array_size}, mip_count={self.mip_count}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -869,10 +866,10 @@ class SwapchainImageBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageBaseHeader(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.SwapchainImageBaseHeader(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageBaseHeader(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.SwapchainImageBaseHeader(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -892,10 +889,10 @@ class SwapchainImageAcquireInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageAcquireInfo(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.SwapchainImageAcquireInfo(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageAcquireInfo(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.SwapchainImageAcquireInfo(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -917,10 +914,10 @@ class SwapchainImageWaitInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageWaitInfo(type={repr(self.type)}, next={repr(self.next)}, timeout={repr(self.timeout)})"
+        return f"xr.SwapchainImageWaitInfo(timeout={repr(self.timeout)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageWaitInfo(type={str(self.type)}, next={str(self.next)}, timeout={str(self.timeout)})"
+        return f"xr.SwapchainImageWaitInfo(timeout={self.timeout}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -941,10 +938,10 @@ class SwapchainImageReleaseInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageReleaseInfo(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.SwapchainImageReleaseInfo(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageReleaseInfo(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.SwapchainImageReleaseInfo(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -966,10 +963,10 @@ class SessionBeginInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionBeginInfo(type={repr(self.type)}, next={repr(self.next)}, primary_view_configuration_type={repr(self.primary_view_configuration_type)})"
+        return f"xr.SessionBeginInfo(primary_view_configuration_type={repr(self.primary_view_configuration_type)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SessionBeginInfo(type={str(self.type)}, next={str(self.next)}, primary_view_configuration_type={str(self.primary_view_configuration_type)})"
+        return f"xr.SessionBeginInfo(primary_view_configuration_type={self.primary_view_configuration_type}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -990,10 +987,10 @@ class FrameWaitInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameWaitInfo(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.FrameWaitInfo(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.FrameWaitInfo(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.FrameWaitInfo(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1019,10 +1016,10 @@ class FrameState(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameState(type={repr(self.type)}, next={repr(self.next)}, predicted_display_time={repr(self.predicted_display_time)}, predicted_display_period={repr(self.predicted_display_period)}, should_render={repr(self.should_render)})"
+        return f"xr.FrameState(predicted_display_time={repr(self.predicted_display_time)}, predicted_display_period={repr(self.predicted_display_period)}, should_render={repr(self.should_render)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.FrameState(type={str(self.type)}, next={str(self.next)}, predicted_display_time={str(self.predicted_display_time)}, predicted_display_period={str(self.predicted_display_period)}, should_render={str(self.should_render)})"
+        return f"xr.FrameState(predicted_display_time={self.predicted_display_time}, predicted_display_period={self.predicted_display_period}, should_render={self.should_render}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1045,10 +1042,10 @@ class FrameBeginInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameBeginInfo(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.FrameBeginInfo(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.FrameBeginInfo(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.FrameBeginInfo(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1072,10 +1069,10 @@ class CompositionLayerBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerBaseHeader(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, space={repr(self.space)})"
+        return f"xr.CompositionLayerBaseHeader(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerBaseHeader(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, space={str(self.space)})"
+        return f"xr.CompositionLayerBaseHeader(layer_flags={self.layer_flags}, space={self.space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1105,10 +1102,10 @@ class FrameEndInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameEndInfo(type={repr(self.type)}, next={repr(self.next)}, display_time={repr(self.display_time)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)})"
+        return f"xr.FrameEndInfo(display_time={repr(self.display_time)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.FrameEndInfo(type={str(self.type)}, next={str(self.next)}, display_time={str(self.display_time)}, environment_blend_mode={str(self.environment_blend_mode)}, layer_count={str(self.layer_count)}, layers={str(self.layers)})"
+        return f"xr.FrameEndInfo(display_time={self.display_time}, environment_blend_mode={self.environment_blend_mode}, layer_count={self.layer_count}, layers={self.layers}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1138,10 +1135,10 @@ class ViewLocateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewLocateInfo(type={repr(self.type)}, next={repr(self.next)}, view_configuration_type={repr(self.view_configuration_type)}, display_time={repr(self.display_time)}, space={repr(self.space)})"
+        return f"xr.ViewLocateInfo(view_configuration_type={repr(self.view_configuration_type)}, display_time={repr(self.display_time)}, space={repr(self.space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ViewLocateInfo(type={str(self.type)}, next={str(self.next)}, view_configuration_type={str(self.view_configuration_type)}, display_time={str(self.display_time)}, space={str(self.space)})"
+        return f"xr.ViewLocateInfo(view_configuration_type={self.view_configuration_type}, display_time={self.display_time}, space={self.space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1166,10 +1163,10 @@ class ViewState(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewState(type={repr(self.type)}, next={repr(self.next)}, view_state_flags={repr(self.view_state_flags)})"
+        return f"xr.ViewState(view_state_flags={repr(self.view_state_flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ViewState(type={str(self.type)}, next={str(self.next)}, view_state_flags={str(self.view_state_flags)})"
+        return f"xr.ViewState(view_state_flags={self.view_state_flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1207,12 +1204,6 @@ class Fovf(Structure):
     def __len__(self) -> int:
         return 4
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -1220,6 +1211,11 @@ class Fovf(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Fovf(angle_left={repr(self.angle_left)}, angle_right={repr(self.angle_right)}, angle_up={repr(self.angle_up)}, angle_down={repr(self.angle_down)})"
+
+    def __str__(self) -> str:
+        return f"xr.Fovf(angle_left={self.angle_left:.3f}, angle_right={self.angle_right:.3f}, angle_up={self.angle_up:.3f}, angle_down={self.angle_down:.3f})"
 
     _fields_ = [
         ("angle_left", c_float),
@@ -1249,10 +1245,10 @@ class View(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.View(type={repr(self.type)}, next={repr(self.next)}, pose={repr(self.pose)}, fov={repr(self.fov)})"
+        return f"xr.View(pose={repr(self.pose)}, fov={repr(self.fov)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.View(type={str(self.type)}, next={str(self.next)}, pose={str(self.pose)}, fov={str(self.fov)})"
+        return f"xr.View(pose={self.pose}, fov={self.fov}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1280,10 +1276,10 @@ class ActionSetCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionSetCreateInfo(type={repr(self.type)}, next={repr(self.next)}, action_set_name={repr(self.action_set_name)}, localized_action_set_name={repr(self.localized_action_set_name)}, priority={repr(self.priority)})"
+        return f"xr.ActionSetCreateInfo(action_set_name={repr(self.action_set_name)}, localized_action_set_name={repr(self.localized_action_set_name)}, priority={repr(self.priority)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionSetCreateInfo(type={str(self.type)}, next={str(self.next)}, action_set_name={str(self.action_set_name)}, localized_action_set_name={str(self.localized_action_set_name)}, priority={str(self.priority)})"
+        return f"xr.ActionSetCreateInfo(action_set_name={self.action_set_name}, localized_action_set_name={self.localized_action_set_name}, priority={self.priority}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1316,10 +1312,10 @@ class ActionCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionCreateInfo(type={repr(self.type)}, next={repr(self.next)}, action_name={repr(self.action_name)}, action_type={repr(self.action_type)}, count_subaction_paths={repr(self.count_subaction_paths)}, subaction_paths={repr(self.subaction_paths)}, localized_action_name={repr(self.localized_action_name)})"
+        return f"xr.ActionCreateInfo(action_name={repr(self.action_name)}, action_type={repr(self.action_type)}, count_subaction_paths={repr(self.count_subaction_paths)}, subaction_paths={repr(self.subaction_paths)}, localized_action_name={repr(self.localized_action_name)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionCreateInfo(type={str(self.type)}, next={str(self.next)}, action_name={str(self.action_name)}, action_type={str(self.action_type)}, count_subaction_paths={str(self.count_subaction_paths)}, subaction_paths={str(self.subaction_paths)}, localized_action_name={str(self.localized_action_name)})"
+        return f"xr.ActionCreateInfo(action_name={self.action_name}, action_type={self.action_type}, count_subaction_paths={self.count_subaction_paths}, subaction_paths={self.subaction_paths}, localized_action_name={self.localized_action_name}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1347,7 +1343,7 @@ class ActionSuggestedBinding(Structure):
         return f"xr.ActionSuggestedBinding(action={repr(self.action)}, binding={repr(self.binding)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionSuggestedBinding(action={str(self.action)}, binding={str(self.binding)})"
+        return f"xr.ActionSuggestedBinding(action={self.action}, binding={self.binding})"
 
     _fields_ = [
         ("action", ActionHandle),
@@ -1373,10 +1369,10 @@ class InteractionProfileSuggestedBinding(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileSuggestedBinding(type={repr(self.type)}, next={repr(self.next)}, interaction_profile={repr(self.interaction_profile)}, count_suggested_bindings={repr(self.count_suggested_bindings)}, suggested_bindings={repr(self.suggested_bindings)})"
+        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={repr(self.interaction_profile)}, count_suggested_bindings={repr(self.count_suggested_bindings)}, suggested_bindings={repr(self.suggested_bindings)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.InteractionProfileSuggestedBinding(type={str(self.type)}, next={str(self.next)}, interaction_profile={str(self.interaction_profile)}, count_suggested_bindings={str(self.count_suggested_bindings)}, suggested_bindings={str(self.suggested_bindings)})"
+        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={self.interaction_profile}, count_suggested_bindings={self.count_suggested_bindings}, suggested_bindings={self.suggested_bindings}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1403,10 +1399,10 @@ class SessionActionSetsAttachInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionActionSetsAttachInfo(type={repr(self.type)}, next={repr(self.next)}, count_action_sets={repr(self.count_action_sets)}, action_sets={repr(self.action_sets)})"
+        return f"xr.SessionActionSetsAttachInfo(count_action_sets={repr(self.count_action_sets)}, action_sets={repr(self.action_sets)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SessionActionSetsAttachInfo(type={str(self.type)}, next={str(self.next)}, count_action_sets={str(self.count_action_sets)}, action_sets={str(self.action_sets)})"
+        return f"xr.SessionActionSetsAttachInfo(count_action_sets={self.count_action_sets}, action_sets={self.action_sets}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1430,10 +1426,10 @@ class InteractionProfileState(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileState(type={repr(self.type)}, next={repr(self.next)}, interaction_profile={repr(self.interaction_profile)})"
+        return f"xr.InteractionProfileState(interaction_profile={repr(self.interaction_profile)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.InteractionProfileState(type={str(self.type)}, next={str(self.next)}, interaction_profile={str(self.interaction_profile)})"
+        return f"xr.InteractionProfileState(interaction_profile={self.interaction_profile}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1458,10 +1454,10 @@ class ActionStateGetInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateGetInfo(type={repr(self.type)}, next={repr(self.next)}, action={repr(self.action)}, subaction_path={repr(self.subaction_path)})"
+        return f"xr.ActionStateGetInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionStateGetInfo(type={str(self.type)}, next={str(self.next)}, action={str(self.action)}, subaction_path={str(self.subaction_path)})"
+        return f"xr.ActionStateGetInfo(action={self.action}, subaction_path={self.subaction_path}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1491,10 +1487,10 @@ class ActionStateBoolean(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateBoolean(type={repr(self.type)}, next={repr(self.next)}, current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)})"
+        return f"xr.ActionStateBoolean(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionStateBoolean(type={str(self.type)}, next={str(self.next)}, current_state={str(self.current_state)}, changed_since_last_sync={str(self.changed_since_last_sync)}, last_change_time={str(self.last_change_time)}, is_active={str(self.is_active)})"
+        return f"xr.ActionStateBoolean(current_state={self.current_state}, changed_since_last_sync={self.changed_since_last_sync}, last_change_time={self.last_change_time}, is_active={self.is_active}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1526,10 +1522,10 @@ class ActionStateFloat(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateFloat(type={repr(self.type)}, next={repr(self.next)}, current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)})"
+        return f"xr.ActionStateFloat(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionStateFloat(type={str(self.type)}, next={str(self.next)}, current_state={str(self.current_state)}, changed_since_last_sync={str(self.changed_since_last_sync)}, last_change_time={str(self.last_change_time)}, is_active={str(self.is_active)})"
+        return f"xr.ActionStateFloat(current_state={self.current_state:.3f}, changed_since_last_sync={self.changed_since_last_sync}, last_change_time={self.last_change_time}, is_active={self.is_active}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1564,12 +1560,6 @@ class Vector2f(Structure):
     def __len__(self) -> int:
         return 2
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -1577,6 +1567,11 @@ class Vector2f(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Vector2f(x={repr(self.x)}, y={repr(self.y)})"
+
+    def __str__(self) -> str:
+        return f"xr.Vector2f(x={self.x:.3f}, y={self.y:.3f})"
 
     _fields_ = [
         ("x", c_float),
@@ -1606,10 +1601,10 @@ class ActionStateVector2f(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateVector2f(type={repr(self.type)}, next={repr(self.next)}, current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)})"
+        return f"xr.ActionStateVector2f(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionStateVector2f(type={str(self.type)}, next={str(self.next)}, current_state={str(self.current_state)}, changed_since_last_sync={str(self.changed_since_last_sync)}, last_change_time={str(self.last_change_time)}, is_active={str(self.is_active)})"
+        return f"xr.ActionStateVector2f(current_state={self.current_state}, changed_since_last_sync={self.changed_since_last_sync}, last_change_time={self.last_change_time}, is_active={self.is_active}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1635,10 +1630,10 @@ class ActionStatePose(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStatePose(type={repr(self.type)}, next={repr(self.next)}, is_active={repr(self.is_active)})"
+        return f"xr.ActionStatePose(is_active={repr(self.is_active)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionStatePose(type={str(self.type)}, next={str(self.next)}, is_active={str(self.is_active)})"
+        return f"xr.ActionStatePose(is_active={self.is_active}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1662,7 +1657,7 @@ class ActiveActionSet(Structure):
         return f"xr.ActiveActionSet(action_set={repr(self.action_set)}, subaction_path={repr(self.subaction_path)})"
 
     def __str__(self) -> str:
-        return f"xr.ActiveActionSet(action_set={str(self.action_set)}, subaction_path={str(self.subaction_path)})"
+        return f"xr.ActiveActionSet(action_set={self.action_set}, subaction_path={self.subaction_path})"
 
     _fields_ = [
         ("action_set", ActionSetHandle),
@@ -1686,10 +1681,10 @@ class ActionsSyncInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionsSyncInfo(type={repr(self.type)}, next={repr(self.next)}, count_active_action_sets={repr(self.count_active_action_sets)}, active_action_sets={repr(self.active_action_sets)})"
+        return f"xr.ActionsSyncInfo(count_active_action_sets={repr(self.count_active_action_sets)}, active_action_sets={repr(self.active_action_sets)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionsSyncInfo(type={str(self.type)}, next={str(self.next)}, count_active_action_sets={str(self.count_active_action_sets)}, active_action_sets={str(self.active_action_sets)})"
+        return f"xr.ActionsSyncInfo(count_active_action_sets={self.count_active_action_sets}, active_action_sets={self.active_action_sets}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1713,10 +1708,10 @@ class BoundSourcesForActionEnumerateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BoundSourcesForActionEnumerateInfo(type={repr(self.type)}, next={repr(self.next)}, action={repr(self.action)})"
+        return f"xr.BoundSourcesForActionEnumerateInfo(action={repr(self.action)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.BoundSourcesForActionEnumerateInfo(type={str(self.type)}, next={str(self.next)}, action={str(self.action)})"
+        return f"xr.BoundSourcesForActionEnumerateInfo(action={self.action}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1741,10 +1736,10 @@ class InputSourceLocalizedNameGetInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InputSourceLocalizedNameGetInfo(type={repr(self.type)}, next={repr(self.next)}, source_path={repr(self.source_path)}, which_components={repr(self.which_components)})"
+        return f"xr.InputSourceLocalizedNameGetInfo(source_path={repr(self.source_path)}, which_components={repr(self.which_components)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.InputSourceLocalizedNameGetInfo(type={str(self.type)}, next={str(self.next)}, source_path={str(self.source_path)}, which_components={str(self.which_components)})"
+        return f"xr.InputSourceLocalizedNameGetInfo(source_path={self.source_path}, which_components={self.which_components}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1770,10 +1765,10 @@ class HapticActionInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticActionInfo(type={repr(self.type)}, next={repr(self.next)}, action={repr(self.action)}, subaction_path={repr(self.subaction_path)})"
+        return f"xr.HapticActionInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HapticActionInfo(type={str(self.type)}, next={str(self.next)}, action={str(self.action)}, subaction_path={str(self.subaction_path)})"
+        return f"xr.HapticActionInfo(action={self.action}, subaction_path={self.subaction_path}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1795,10 +1790,10 @@ class HapticBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticBaseHeader(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.HapticBaseHeader(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HapticBaseHeader(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.HapticBaseHeader(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1818,10 +1813,10 @@ class BaseInStructure(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BaseInStructure(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.BaseInStructure(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.BaseInStructure(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.BaseInStructure(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     pass
 
@@ -1844,10 +1839,10 @@ class BaseOutStructure(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BaseOutStructure(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.BaseOutStructure(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.BaseOutStructure(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.BaseOutStructure(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     pass
 
@@ -1873,7 +1868,7 @@ class Offset2Di(Structure):
         return f"xr.Offset2Di(x={repr(self.x)}, y={repr(self.y)})"
 
     def __str__(self) -> str:
-        return f"xr.Offset2Di(x={str(self.x)}, y={str(self.y)})"
+        return f"xr.Offset2Di(x={self.x}, y={self.y})"
 
     _fields_ = [
         ("x", c_int32),
@@ -1896,7 +1891,7 @@ class Extent2Di(Structure):
         return f"xr.Extent2Di(width={repr(self.width)}, height={repr(self.height)})"
 
     def __str__(self) -> str:
-        return f"xr.Extent2Di(width={str(self.width)}, height={str(self.height)})"
+        return f"xr.Extent2Di(width={self.width}, height={self.height})"
 
     _fields_ = [
         ("width", c_int32),
@@ -1923,7 +1918,7 @@ class Rect2Di(Structure):
         return f"xr.Rect2Di(offset={repr(self.offset)}, extent={repr(self.extent)})"
 
     def __str__(self) -> str:
-        return f"xr.Rect2Di(offset={str(self.offset)}, extent={str(self.extent)})"
+        return f"xr.Rect2Di(offset={self.offset}, extent={self.extent})"
 
     _fields_ = [
         ("offset", Offset2Di),
@@ -1950,7 +1945,7 @@ class SwapchainSubImage(Structure):
         return f"xr.SwapchainSubImage(swapchain={repr(self.swapchain)}, image_rect={repr(self.image_rect)}, image_array_index={repr(self.image_array_index)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainSubImage(swapchain={str(self.swapchain)}, image_rect={str(self.image_rect)}, image_array_index={str(self.image_array_index)})"
+        return f"xr.SwapchainSubImage(swapchain={self.swapchain}, image_rect={self.image_rect}, image_array_index={self.image_array_index})"
 
     _fields_ = [
         ("swapchain", SwapchainHandle),
@@ -1983,10 +1978,10 @@ class CompositionLayerProjectionView(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerProjectionView(type={repr(self.type)}, next={repr(self.next)}, pose={repr(self.pose)}, fov={repr(self.fov)}, sub_image={repr(self.sub_image)})"
+        return f"xr.CompositionLayerProjectionView(pose={repr(self.pose)}, fov={repr(self.fov)}, sub_image={repr(self.sub_image)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerProjectionView(type={str(self.type)}, next={str(self.next)}, pose={str(self.pose)}, fov={str(self.fov)}, sub_image={str(self.sub_image)})"
+        return f"xr.CompositionLayerProjectionView(pose={self.pose}, fov={self.fov}, sub_image={self.sub_image}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2017,10 +2012,10 @@ class CompositionLayerProjection(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerProjection(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self.view_count)}, views={repr(self.views)})"
+        return f"xr.CompositionLayerProjection(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self.view_count)}, views={repr(self.views)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerProjection(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, space={str(self.space)}, view_count={str(self.view_count)}, views={str(self.views)})"
+        return f"xr.CompositionLayerProjection(layer_flags={self.layer_flags}, space={self.space}, view_count={self.view_count}, views={self.views}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2062,10 +2057,10 @@ class CompositionLayerQuad(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerQuad(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, size={repr(self.size)})"
+        return f"xr.CompositionLayerQuad(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, size={repr(self.size)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerQuad(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, space={str(self.space)}, eye_visibility={str(self.eye_visibility)}, sub_image={str(self.sub_image)}, pose={str(self.pose)}, size={str(self.size)})"
+        return f"xr.CompositionLayerQuad(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self.eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, size={self.size}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2091,10 +2086,10 @@ class EventDataBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataBaseHeader(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.EventDataBaseHeader(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataBaseHeader(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.EventDataBaseHeader(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2116,10 +2111,10 @@ class EventDataEventsLost(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataEventsLost(type={repr(self.type)}, next={repr(self.next)}, lost_event_count={repr(self.lost_event_count)})"
+        return f"xr.EventDataEventsLost(lost_event_count={repr(self.lost_event_count)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataEventsLost(type={str(self.type)}, next={str(self.next)}, lost_event_count={str(self.lost_event_count)})"
+        return f"xr.EventDataEventsLost(lost_event_count={self.lost_event_count}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2142,10 +2137,10 @@ class EventDataInstanceLossPending(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataInstanceLossPending(type={repr(self.type)}, next={repr(self.next)}, loss_time={repr(self.loss_time)})"
+        return f"xr.EventDataInstanceLossPending(loss_time={repr(self.loss_time)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataInstanceLossPending(type={str(self.type)}, next={str(self.next)}, loss_time={str(self.loss_time)})"
+        return f"xr.EventDataInstanceLossPending(loss_time={self.loss_time}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2172,10 +2167,10 @@ class EventDataSessionStateChanged(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSessionStateChanged(type={repr(self.type)}, next={repr(self.next)}, session={repr(self.session)}, state={repr(self.state)}, time={repr(self.time)})"
+        return f"xr.EventDataSessionStateChanged(session={repr(self.session)}, state={repr(self.state)}, time={repr(self.time)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataSessionStateChanged(type={str(self.type)}, next={str(self.next)}, session={str(self.session)}, state={str(self.state)}, time={str(self.time)})"
+        return f"xr.EventDataSessionStateChanged(session={self.session}, state={self.state}, time={self.time}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2210,10 +2205,10 @@ class EventDataReferenceSpaceChangePending(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataReferenceSpaceChangePending(type={repr(self.type)}, next={repr(self.next)}, session={repr(self.session)}, reference_space_type={repr(self.reference_space_type)}, change_time={repr(self.change_time)}, pose_valid={repr(self.pose_valid)}, pose_in_previous_space={repr(self.pose_in_previous_space)})"
+        return f"xr.EventDataReferenceSpaceChangePending(session={repr(self.session)}, reference_space_type={repr(self.reference_space_type)}, change_time={repr(self.change_time)}, pose_valid={repr(self.pose_valid)}, pose_in_previous_space={repr(self.pose_in_previous_space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataReferenceSpaceChangePending(type={str(self.type)}, next={str(self.next)}, session={str(self.session)}, reference_space_type={str(self.reference_space_type)}, change_time={str(self.change_time)}, pose_valid={str(self.pose_valid)}, pose_in_previous_space={str(self.pose_in_previous_space)})"
+        return f"xr.EventDataReferenceSpaceChangePending(session={self.session}, reference_space_type={self.reference_space_type}, change_time={self.change_time}, pose_valid={self.pose_valid}, pose_in_previous_space={self.pose_in_previous_space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2240,10 +2235,10 @@ class EventDataInteractionProfileChanged(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataInteractionProfileChanged(type={repr(self.type)}, next={repr(self.next)}, session={repr(self.session)})"
+        return f"xr.EventDataInteractionProfileChanged(session={repr(self.session)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataInteractionProfileChanged(type={str(self.type)}, next={str(self.next)}, session={str(self.session)})"
+        return f"xr.EventDataInteractionProfileChanged(session={self.session}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2270,10 +2265,10 @@ class HapticVibration(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticVibration(type={repr(self.type)}, next={repr(self.next)}, duration={repr(self.duration)}, frequency={repr(self.frequency)}, amplitude={repr(self.amplitude)})"
+        return f"xr.HapticVibration(duration={repr(self.duration)}, frequency={repr(self.frequency)}, amplitude={repr(self.amplitude)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HapticVibration(type={str(self.type)}, next={str(self.next)}, duration={str(self.duration)}, frequency={str(self.frequency)}, amplitude={str(self.amplitude)})"
+        return f"xr.HapticVibration(duration={self.duration}, frequency={self.frequency:.3f}, amplitude={self.amplitude:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2307,12 +2302,6 @@ class Offset2Df(Structure):
     def __len__(self) -> int:
         return 2
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -2320,6 +2309,11 @@ class Offset2Df(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Offset2Df(x={repr(self.x)}, y={repr(self.y)})"
+
+    def __str__(self) -> str:
+        return f"xr.Offset2Df(x={self.x:.3f}, y={self.y:.3f})"
 
     _fields_ = [
         ("x", c_float),
@@ -2346,7 +2340,7 @@ class Rect2Df(Structure):
         return f"xr.Rect2Df(offset={repr(self.offset)}, extent={repr(self.extent)})"
 
     def __str__(self) -> str:
-        return f"xr.Rect2Df(offset={str(self.offset)}, extent={str(self.extent)})"
+        return f"xr.Rect2Df(offset={self.offset}, extent={self.extent})"
 
     _fields_ = [
         ("offset", Offset2Df),
@@ -2383,12 +2377,6 @@ class Vector4f(Structure):
     def __len__(self) -> int:
         return 4
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -2396,6 +2384,11 @@ class Vector4f(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Vector4f(x={repr(self.x)}, y={repr(self.y)}, z={repr(self.z)}, w={repr(self.w)})"
+
+    def __str__(self) -> str:
+        return f"xr.Vector4f(x={self.x:.3f}, y={self.y:.3f}, z={self.z:.3f}, w={self.w:.3f})"
 
     _fields_ = [
         ("x", c_float),
@@ -2434,12 +2427,6 @@ class Color4f(Structure):
     def __len__(self) -> int:
         return 4
 
-    def __repr__(self) -> str:
-        return f"xr.{self.__class__.__name__}({', '.join([repr(v) for v in self])})"
-
-    def __str__(self) -> str:
-        return f"({', '.join([f'{v:.3f}' for v in self])})"
-
     def as_numpy(self):
         if self._numpy is None:
             # Just in time construction
@@ -2447,6 +2434,11 @@ class Color4f(Structure):
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
+    def __repr__(self) -> str:
+        return f"xr.Color4f(r={repr(self.r)}, g={repr(self.g)}, b={repr(self.b)}, a={repr(self.a)})"
+
+    def __str__(self) -> str:
+        return f"xr.Color4f(r={self.r:.3f}, g={self.g:.3f}, b={self.b:.3f}, a={self.a:.3f})"
 
     _fields_ = [
         ("r", c_float),
@@ -2593,10 +2585,10 @@ class CompositionLayerCubeKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerCubeKHR(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, swapchain={repr(self.swapchain)}, image_array_index={repr(self.image_array_index)}, orientation={repr(self.orientation)})"
+        return f"xr.CompositionLayerCubeKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, swapchain={repr(self.swapchain)}, image_array_index={repr(self.image_array_index)}, orientation={repr(self.orientation)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerCubeKHR(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, space={str(self.space)}, eye_visibility={str(self.eye_visibility)}, swapchain={str(self.swapchain)}, image_array_index={str(self.image_array_index)}, orientation={str(self.orientation)})"
+        return f"xr.CompositionLayerCubeKHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self.eye_visibility}, swapchain={self.swapchain}, image_array_index={self.image_array_index}, orientation={self.orientation}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2634,10 +2626,10 @@ class CompositionLayerDepthInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerDepthInfoKHR(type={repr(self.type)}, next={repr(self.next)}, sub_image={repr(self.sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)})"
+        return f"xr.CompositionLayerDepthInfoKHR(sub_image={repr(self.sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerDepthInfoKHR(type={str(self.type)}, next={str(self.next)}, sub_image={str(self.sub_image)}, min_depth={str(self.min_depth)}, max_depth={str(self.max_depth)}, near_z={str(self.near_z)}, far_z={str(self.far_z)})"
+        return f"xr.CompositionLayerDepthInfoKHR(sub_image={self.sub_image}, min_depth={self.min_depth:.3f}, max_depth={self.max_depth:.3f}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2682,10 +2674,10 @@ class CompositionLayerCylinderKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerCylinderKHR(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_angle={repr(self.central_angle)}, aspect_ratio={repr(self.aspect_ratio)})"
+        return f"xr.CompositionLayerCylinderKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_angle={repr(self.central_angle)}, aspect_ratio={repr(self.aspect_ratio)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerCylinderKHR(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, space={str(self.space)}, eye_visibility={str(self.eye_visibility)}, sub_image={str(self.sub_image)}, pose={str(self.pose)}, radius={str(self.radius)}, central_angle={str(self.central_angle)}, aspect_ratio={str(self.aspect_ratio)})"
+        return f"xr.CompositionLayerCylinderKHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self.eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, radius={self.radius:.3f}, central_angle={self.central_angle:.3f}, aspect_ratio={self.aspect_ratio:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2737,10 +2729,10 @@ class CompositionLayerEquirectKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerEquirectKHR(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, scale={repr(self.scale)}, bias={repr(self.bias)})"
+        return f"xr.CompositionLayerEquirectKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, scale={repr(self.scale)}, bias={repr(self.bias)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerEquirectKHR(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, space={str(self.space)}, eye_visibility={str(self.eye_visibility)}, sub_image={str(self.sub_image)}, pose={str(self.pose)}, radius={str(self.radius)}, scale={str(self.scale)}, bias={str(self.bias)})"
+        return f"xr.CompositionLayerEquirectKHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self.eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, radius={self.radius:.3f}, scale={self.scale}, bias={self.bias}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2780,10 +2772,10 @@ class VisibilityMaskKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VisibilityMaskKHR(type={repr(self.type)}, next={repr(self.next)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)})"
+        return f"xr.VisibilityMaskKHR(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.VisibilityMaskKHR(type={str(self.type)}, next={str(self.next)}, vertex_capacity_input={str(self.vertex_capacity_input)}, vertex_count_output={str(self.vertex_count_output)}, vertices={str(self.vertices)}, index_capacity_input={str(self.index_capacity_input)}, index_count_output={str(self.index_count_output)}, indices={str(self.indices)})"
+        return f"xr.VisibilityMaskKHR(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2815,10 +2807,10 @@ class EventDataVisibilityMaskChangedKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataVisibilityMaskChangedKHR(type={repr(self.type)}, next={repr(self.next)}, session={repr(self.session)}, view_configuration_type={repr(self.view_configuration_type)}, view_index={repr(self.view_index)})"
+        return f"xr.EventDataVisibilityMaskChangedKHR(session={repr(self.session)}, view_configuration_type={repr(self.view_configuration_type)}, view_index={repr(self.view_index)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataVisibilityMaskChangedKHR(type={str(self.type)}, next={str(self.next)}, session={str(self.session)}, view_configuration_type={str(self.view_configuration_type)}, view_index={str(self.view_index)})"
+        return f"xr.EventDataVisibilityMaskChangedKHR(session={self.session}, view_configuration_type={self.view_configuration_type}, view_index={self.view_index}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2852,10 +2844,10 @@ class CompositionLayerColorScaleBiasKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerColorScaleBiasKHR(type={repr(self.type)}, next={repr(self.next)}, color_scale={repr(self.color_scale)}, color_bias={repr(self.color_bias)})"
+        return f"xr.CompositionLayerColorScaleBiasKHR(color_scale={repr(self.color_scale)}, color_bias={repr(self.color_bias)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerColorScaleBiasKHR(type={str(self.type)}, next={str(self.next)}, color_scale={str(self.color_scale)}, color_bias={str(self.color_bias)})"
+        return f"xr.CompositionLayerColorScaleBiasKHR(color_scale={self.color_scale}, color_bias={self.color_bias}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2877,10 +2869,10 @@ class LoaderInitInfoBaseHeaderKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LoaderInitInfoBaseHeaderKHR(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.LoaderInitInfoBaseHeaderKHR(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.LoaderInitInfoBaseHeaderKHR(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.LoaderInitInfoBaseHeaderKHR(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2925,10 +2917,10 @@ class CompositionLayerEquirect2KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerEquirect2KHR(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_horizontal_angle={repr(self.central_horizontal_angle)}, upper_vertical_angle={repr(self.upper_vertical_angle)}, lower_vertical_angle={repr(self.lower_vertical_angle)})"
+        return f"xr.CompositionLayerEquirect2KHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_horizontal_angle={repr(self.central_horizontal_angle)}, upper_vertical_angle={repr(self.upper_vertical_angle)}, lower_vertical_angle={repr(self.lower_vertical_angle)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerEquirect2KHR(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, space={str(self.space)}, eye_visibility={str(self.eye_visibility)}, sub_image={str(self.sub_image)}, pose={str(self.pose)}, radius={str(self.radius)}, central_horizontal_angle={str(self.central_horizontal_angle)}, upper_vertical_angle={str(self.upper_vertical_angle)}, lower_vertical_angle={str(self.lower_vertical_angle)})"
+        return f"xr.CompositionLayerEquirect2KHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self.eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, radius={self.radius:.3f}, central_horizontal_angle={self.central_horizontal_angle:.3f}, upper_vertical_angle={self.upper_vertical_angle:.3f}, lower_vertical_angle={self.lower_vertical_angle:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2957,10 +2949,10 @@ class BindingModificationBaseHeaderKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BindingModificationBaseHeaderKHR(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.BindingModificationBaseHeaderKHR(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.BindingModificationBaseHeaderKHR(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.BindingModificationBaseHeaderKHR(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2984,10 +2976,10 @@ class BindingModificationsKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BindingModificationsKHR(type={repr(self.type)}, next={repr(self.next)}, binding_modification_count={repr(self.binding_modification_count)}, binding_modifications={repr(self.binding_modifications)})"
+        return f"xr.BindingModificationsKHR(binding_modification_count={repr(self.binding_modification_count)}, binding_modifications={repr(self.binding_modifications)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.BindingModificationsKHR(type={str(self.type)}, next={str(self.next)}, binding_modification_count={str(self.binding_modification_count)}, binding_modifications={str(self.binding_modifications)})"
+        return f"xr.BindingModificationsKHR(binding_modification_count={self.binding_modification_count}, binding_modifications={self.binding_modifications}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3017,10 +3009,10 @@ class EventDataPerfSettingsEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataPerfSettingsEXT(type={repr(self.type)}, next={repr(self.next)}, domain={repr(self.domain)}, sub_domain={repr(self.sub_domain)}, from_level={repr(self.from_level)}, to_level={repr(self.to_level)})"
+        return f"xr.EventDataPerfSettingsEXT(domain={repr(self.domain)}, sub_domain={repr(self.sub_domain)}, from_level={repr(self.from_level)}, to_level={repr(self.to_level)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataPerfSettingsEXT(type={str(self.type)}, next={str(self.next)}, domain={str(self.domain)}, sub_domain={str(self.sub_domain)}, from_level={str(self.from_level)}, to_level={str(self.to_level)})"
+        return f"xr.EventDataPerfSettingsEXT(domain={self.domain}, sub_domain={self.sub_domain}, from_level={self.from_level}, to_level={self.to_level}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3066,10 +3058,10 @@ class DebugUtilsObjectNameInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsObjectNameInfoEXT(type={repr(self.type)}, next={repr(self.next)}, object_type={repr(self.object_type)}, object_handle={repr(self.object_handle)}, object_name={repr(self.object_name)})"
+        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={repr(self.object_type)}, object_handle={repr(self.object_handle)}, object_name={repr(self.object_name)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsObjectNameInfoEXT(type={str(self.type)}, next={str(self.next)}, object_type={str(self.object_type)}, object_handle={str(self.object_handle)}, object_name={str(self.object_name)})"
+        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={self.object_type}, object_handle={self.object_handle}, object_name={self.object_name}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3094,10 +3086,10 @@ class DebugUtilsLabelEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsLabelEXT(type={repr(self.type)}, next={repr(self.next)}, label_name={repr(self.label_name)})"
+        return f"xr.DebugUtilsLabelEXT(label_name={repr(self.label_name)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsLabelEXT(type={str(self.type)}, next={str(self.next)}, label_name={str(self.label_name)})"
+        return f"xr.DebugUtilsLabelEXT(label_name={self.label_name}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3132,10 +3124,10 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(type={repr(self.type)}, next={repr(self.next)}, message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self.object_count)}, objects={repr(self.objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self.session_labels)})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self.object_count)}, objects={repr(self.objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self.session_labels)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(type={str(self.type)}, next={str(self.next)}, message_id={str(self.message_id)}, function_name={str(self.function_name)}, message={str(self.message)}, object_count={str(self.object_count)}, objects={str(self.objects)}, session_label_count={str(self.session_label_count)}, session_labels={str(self.session_labels)})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self.message_id}, function_name={self.function_name}, message={self.message}, object_count={self.object_count}, objects={self.objects}, session_label_count={self.session_label_count}, session_labels={self.session_labels}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3173,10 +3165,10 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCreateInfoEXT(type={repr(self.type)}, next={repr(self.next)}, message_severities={repr(self.message_severities)}, message_types={repr(self.message_types)}, user_callback={repr(self.user_callback)}, user_data={repr(self.user_data)})"
+        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={repr(self.message_severities)}, message_types={repr(self.message_types)}, user_callback={repr(self.user_callback)}, user_data={repr(self.user_data)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsMessengerCreateInfoEXT(type={str(self.type)}, next={str(self.next)}, message_severities={str(self.message_severities)}, message_types={str(self.message_types)}, user_callback={str(self.user_callback)}, user_data={str(self.user_data)})"
+        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={self.message_severities}, message_types={self.message_types}, user_callback={self.user_callback}, user_data={self.user_data}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3217,10 +3209,10 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemEyeGazeInteractionPropertiesEXT(type={repr(self.type)}, next={repr(self.next)}, supports_eye_gaze_interaction={repr(self.supports_eye_gaze_interaction)})"
+        return f"xr.SystemEyeGazeInteractionPropertiesEXT(supports_eye_gaze_interaction={repr(self.supports_eye_gaze_interaction)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemEyeGazeInteractionPropertiesEXT(type={str(self.type)}, next={str(self.next)}, supports_eye_gaze_interaction={str(self.supports_eye_gaze_interaction)})"
+        return f"xr.SystemEyeGazeInteractionPropertiesEXT(supports_eye_gaze_interaction={self.supports_eye_gaze_interaction}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3243,10 +3235,10 @@ class EyeGazeSampleTimeEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EyeGazeSampleTimeEXT(type={repr(self.type)}, next={repr(self.next)}, time={repr(self.time)})"
+        return f"xr.EyeGazeSampleTimeEXT(time={repr(self.time)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EyeGazeSampleTimeEXT(type={str(self.type)}, next={str(self.next)}, time={str(self.time)})"
+        return f"xr.EyeGazeSampleTimeEXT(time={self.time}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3276,10 +3268,10 @@ class SessionCreateInfoOverlayEXTX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionCreateInfoOverlayEXTX(type={repr(self.type)}, next={repr(self.next)}, create_flags={repr(self.create_flags)}, session_layers_placement={repr(self.session_layers_placement)})"
+        return f"xr.SessionCreateInfoOverlayEXTX(create_flags={repr(self.create_flags)}, session_layers_placement={repr(self.session_layers_placement)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SessionCreateInfoOverlayEXTX(type={str(self.type)}, next={str(self.next)}, create_flags={str(self.create_flags)}, session_layers_placement={str(self.session_layers_placement)})"
+        return f"xr.SessionCreateInfoOverlayEXTX(create_flags={self.create_flags}, session_layers_placement={self.session_layers_placement}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3305,10 +3297,10 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataMainSessionVisibilityChangedEXTX(type={repr(self.type)}, next={repr(self.next)}, visible={repr(self.visible)}, flags={repr(self.flags)})"
+        return f"xr.EventDataMainSessionVisibilityChangedEXTX(visible={repr(self.visible)}, flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataMainSessionVisibilityChangedEXTX(type={str(self.type)}, next={str(self.next)}, visible={str(self.visible)}, flags={str(self.flags)})"
+        return f"xr.EventDataMainSessionVisibilityChangedEXTX(visible={self.visible}, flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3345,10 +3337,10 @@ class SpatialAnchorCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, space={repr(self.space)}, pose={repr(self.pose)}, time={repr(self.time)})"
+        return f"xr.SpatialAnchorCreateInfoMSFT(space={repr(self.space)}, pose={repr(self.pose)}, time={repr(self.time)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpatialAnchorCreateInfoMSFT(type={str(self.type)}, next={str(self.next)}, space={str(self.space)}, pose={str(self.pose)}, time={str(self.time)})"
+        return f"xr.SpatialAnchorCreateInfoMSFT(space={self.space}, pose={self.pose}, time={self.time}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3377,10 +3369,10 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorSpaceCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, anchor={repr(self.anchor)}, pose_in_anchor_space={repr(self.pose_in_anchor_space)})"
+        return f"xr.SpatialAnchorSpaceCreateInfoMSFT(anchor={repr(self.anchor)}, pose_in_anchor_space={repr(self.pose_in_anchor_space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpatialAnchorSpaceCreateInfoMSFT(type={str(self.type)}, next={str(self.next)}, anchor={str(self.anchor)}, pose_in_anchor_space={str(self.pose_in_anchor_space)})"
+        return f"xr.SpatialAnchorSpaceCreateInfoMSFT(anchor={self.anchor}, pose_in_anchor_space={self.pose_in_anchor_space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3413,10 +3405,10 @@ class CompositionLayerImageLayoutFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerImageLayoutFB(type={repr(self.type)}, next={repr(self.next)}, flags={repr(self.flags)})"
+        return f"xr.CompositionLayerImageLayoutFB(flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerImageLayoutFB(type={str(self.type)}, next={str(self.next)}, flags={str(self.flags)})"
+        return f"xr.CompositionLayerImageLayoutFB(flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3445,10 +3437,10 @@ class CompositionLayerAlphaBlendFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerAlphaBlendFB(type={repr(self.type)}, next={repr(self.next)}, src_factor_color={repr(self.src_factor_color)}, dst_factor_color={repr(self.dst_factor_color)}, src_factor_alpha={repr(self.src_factor_alpha)}, dst_factor_alpha={repr(self.dst_factor_alpha)})"
+        return f"xr.CompositionLayerAlphaBlendFB(src_factor_color={repr(self.src_factor_color)}, dst_factor_color={repr(self.dst_factor_color)}, src_factor_alpha={repr(self.src_factor_alpha)}, dst_factor_alpha={repr(self.dst_factor_alpha)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerAlphaBlendFB(type={str(self.type)}, next={str(self.next)}, src_factor_color={str(self.src_factor_color)}, dst_factor_color={str(self.dst_factor_color)}, src_factor_alpha={str(self.src_factor_alpha)}, dst_factor_alpha={str(self.dst_factor_alpha)})"
+        return f"xr.CompositionLayerAlphaBlendFB(src_factor_color={self.src_factor_color}, dst_factor_color={self.dst_factor_color}, src_factor_alpha={self.src_factor_alpha}, dst_factor_alpha={self.dst_factor_alpha}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3480,10 +3472,10 @@ class ViewConfigurationDepthRangeEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationDepthRangeEXT(type={repr(self.type)}, next={repr(self.next)}, recommended_near_z={repr(self.recommended_near_z)}, min_near_z={repr(self.min_near_z)}, recommended_far_z={repr(self.recommended_far_z)}, max_far_z={repr(self.max_far_z)})"
+        return f"xr.ViewConfigurationDepthRangeEXT(recommended_near_z={repr(self.recommended_near_z)}, min_near_z={repr(self.min_near_z)}, recommended_far_z={repr(self.recommended_far_z)}, max_far_z={repr(self.max_far_z)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ViewConfigurationDepthRangeEXT(type={str(self.type)}, next={str(self.next)}, recommended_near_z={str(self.recommended_near_z)}, min_near_z={str(self.min_near_z)}, recommended_far_z={str(self.recommended_far_z)}, max_far_z={str(self.max_far_z)})"
+        return f"xr.ViewConfigurationDepthRangeEXT(recommended_near_z={self.recommended_near_z:.3f}, min_near_z={self.min_near_z:.3f}, recommended_far_z={self.recommended_far_z:.3f}, max_far_z={self.max_far_z:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3524,10 +3516,10 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialGraphNodeSpaceCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, node_type={repr(self.node_type)}, node_id={repr(self.node_id)}, pose={repr(self.pose)})"
+        return f"xr.SpatialGraphNodeSpaceCreateInfoMSFT(node_type={repr(self.node_type)}, node_id={repr(self.node_id)}, pose={repr(self.pose)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpatialGraphNodeSpaceCreateInfoMSFT(type={str(self.type)}, next={str(self.next)}, node_type={str(self.node_type)}, node_id={str(self.node_id)}, pose={str(self.pose)})"
+        return f"xr.SpatialGraphNodeSpaceCreateInfoMSFT(node_type={self.node_type}, pose={self.pose}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3562,10 +3554,10 @@ class SystemHandTrackingPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemHandTrackingPropertiesEXT(type={repr(self.type)}, next={repr(self.next)}, supports_hand_tracking={repr(self.supports_hand_tracking)})"
+        return f"xr.SystemHandTrackingPropertiesEXT(supports_hand_tracking={repr(self.supports_hand_tracking)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemHandTrackingPropertiesEXT(type={str(self.type)}, next={str(self.next)}, supports_hand_tracking={str(self.supports_hand_tracking)})"
+        return f"xr.SystemHandTrackingPropertiesEXT(supports_hand_tracking={self.supports_hand_tracking}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3590,10 +3582,10 @@ class HandTrackerCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackerCreateInfoEXT(type={repr(self.type)}, next={repr(self.next)}, hand={repr(self.hand)}, hand_joint_set={repr(self.hand_joint_set)})"
+        return f"xr.HandTrackerCreateInfoEXT(hand={repr(self.hand)}, hand_joint_set={repr(self.hand_joint_set)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandTrackerCreateInfoEXT(type={str(self.type)}, next={str(self.next)}, hand={str(self.hand)}, hand_joint_set={str(self.hand_joint_set)})"
+        return f"xr.HandTrackerCreateInfoEXT(hand={self.hand}, hand_joint_set={self.hand_joint_set}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3619,10 +3611,10 @@ class HandJointsLocateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointsLocateInfoEXT(type={repr(self.type)}, next={repr(self.next)}, base_space={repr(self.base_space)}, time={repr(self.time)})"
+        return f"xr.HandJointsLocateInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointsLocateInfoEXT(type={str(self.type)}, next={str(self.next)}, base_space={str(self.base_space)}, time={str(self.time)})"
+        return f"xr.HandJointsLocateInfoEXT(base_space={self.base_space}, time={self.time}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3651,7 +3643,7 @@ class HandJointLocationEXT(Structure):
         return f"xr.HandJointLocationEXT(location_flags={repr(self.location_flags)}, pose={repr(self.pose)}, radius={repr(self.radius)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointLocationEXT(location_flags={str(self.location_flags)}, pose={str(self.pose)}, radius={str(self.radius)})"
+        return f"xr.HandJointLocationEXT(location_flags={self.location_flags}, pose={self.pose}, radius={self.radius:.3f})"
 
     _fields_ = [
         ("location_flags", SpaceLocationFlags),
@@ -3681,7 +3673,7 @@ class HandJointVelocityEXT(Structure):
         return f"xr.HandJointVelocityEXT(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointVelocityEXT(velocity_flags={str(self.velocity_flags)}, linear_velocity={str(self.linear_velocity)}, angular_velocity={str(self.angular_velocity)})"
+        return f"xr.HandJointVelocityEXT(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity})"
 
     _fields_ = [
         ("velocity_flags", SpaceVelocityFlags),
@@ -3708,10 +3700,10 @@ class HandJointLocationsEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointLocationsEXT(type={repr(self.type)}, next={repr(self.next)}, is_active={repr(self.is_active)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self.joint_locations)})"
+        return f"xr.HandJointLocationsEXT(is_active={repr(self.is_active)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self.joint_locations)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointLocationsEXT(type={str(self.type)}, next={str(self.next)}, is_active={str(self.is_active)}, joint_count={str(self.joint_count)}, joint_locations={str(self.joint_locations)})"
+        return f"xr.HandJointLocationsEXT(is_active={self.is_active}, joint_count={self.joint_count}, joint_locations={self.joint_locations}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3738,10 +3730,10 @@ class HandJointVelocitiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointVelocitiesEXT(type={repr(self.type)}, next={repr(self.next)}, joint_count={repr(self.joint_count)}, joint_velocities={repr(self.joint_velocities)})"
+        return f"xr.HandJointVelocitiesEXT(joint_count={repr(self.joint_count)}, joint_velocities={repr(self.joint_velocities)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointVelocitiesEXT(type={str(self.type)}, next={str(self.next)}, joint_count={str(self.joint_count)}, joint_velocities={str(self.joint_velocities)})"
+        return f"xr.HandJointVelocitiesEXT(joint_count={self.joint_count}, joint_velocities={self.joint_velocities}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3776,10 +3768,10 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemHandTrackingMeshPropertiesMSFT(type={repr(self.type)}, next={repr(self.next)}, supports_hand_tracking_mesh={repr(self.supports_hand_tracking_mesh)}, max_hand_mesh_index_count={repr(self.max_hand_mesh_index_count)}, max_hand_mesh_vertex_count={repr(self.max_hand_mesh_vertex_count)})"
+        return f"xr.SystemHandTrackingMeshPropertiesMSFT(supports_hand_tracking_mesh={repr(self.supports_hand_tracking_mesh)}, max_hand_mesh_index_count={repr(self.max_hand_mesh_index_count)}, max_hand_mesh_vertex_count={repr(self.max_hand_mesh_vertex_count)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemHandTrackingMeshPropertiesMSFT(type={str(self.type)}, next={str(self.next)}, supports_hand_tracking_mesh={str(self.supports_hand_tracking_mesh)}, max_hand_mesh_index_count={str(self.max_hand_mesh_index_count)}, max_hand_mesh_vertex_count={str(self.max_hand_mesh_vertex_count)})"
+        return f"xr.SystemHandTrackingMeshPropertiesMSFT(supports_hand_tracking_mesh={self.supports_hand_tracking_mesh}, max_hand_mesh_index_count={self.max_hand_mesh_index_count}, max_hand_mesh_vertex_count={self.max_hand_mesh_vertex_count}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3808,10 +3800,10 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandMeshSpaceCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, hand_pose_type={repr(self.hand_pose_type)}, pose_in_hand_mesh_space={repr(self.pose_in_hand_mesh_space)})"
+        return f"xr.HandMeshSpaceCreateInfoMSFT(hand_pose_type={repr(self.hand_pose_type)}, pose_in_hand_mesh_space={repr(self.pose_in_hand_mesh_space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandMeshSpaceCreateInfoMSFT(type={str(self.type)}, next={str(self.next)}, hand_pose_type={str(self.hand_pose_type)}, pose_in_hand_mesh_space={str(self.pose_in_hand_mesh_space)})"
+        return f"xr.HandMeshSpaceCreateInfoMSFT(hand_pose_type={self.hand_pose_type}, pose_in_hand_mesh_space={self.pose_in_hand_mesh_space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3837,10 +3829,10 @@ class HandMeshUpdateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandMeshUpdateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, time={repr(self.time)}, hand_pose_type={repr(self.hand_pose_type)})"
+        return f"xr.HandMeshUpdateInfoMSFT(time={repr(self.time)}, hand_pose_type={repr(self.hand_pose_type)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandMeshUpdateInfoMSFT(type={str(self.type)}, next={str(self.next)}, time={str(self.time)}, hand_pose_type={str(self.hand_pose_type)})"
+        return f"xr.HandMeshUpdateInfoMSFT(time={self.time}, hand_pose_type={self.hand_pose_type}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3869,7 +3861,7 @@ class HandMeshIndexBufferMSFT(Structure):
         return f"xr.HandMeshIndexBufferMSFT(index_buffer_key={repr(self.index_buffer_key)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)})"
 
     def __str__(self) -> str:
-        return f"xr.HandMeshIndexBufferMSFT(index_buffer_key={str(self.index_buffer_key)}, index_capacity_input={str(self.index_capacity_input)}, index_count_output={str(self.index_count_output)}, indices={str(self.indices)})"
+        return f"xr.HandMeshIndexBufferMSFT(index_buffer_key={self.index_buffer_key}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices})"
 
     _fields_ = [
         ("index_buffer_key", c_uint32),
@@ -3898,7 +3890,7 @@ class HandMeshVertexMSFT(Structure):
         return f"xr.HandMeshVertexMSFT(position={repr(self.position)}, normal={repr(self.normal)})"
 
     def __str__(self) -> str:
-        return f"xr.HandMeshVertexMSFT(position={str(self.position)}, normal={str(self.normal)})"
+        return f"xr.HandMeshVertexMSFT(position={self.position}, normal={self.normal})"
 
     _fields_ = [
         ("position", Vector3f),
@@ -3925,7 +3917,7 @@ class HandMeshVertexBufferMSFT(Structure):
         return f"xr.HandMeshVertexBufferMSFT(vertex_update_time={repr(self.vertex_update_time)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)})"
 
     def __str__(self) -> str:
-        return f"xr.HandMeshVertexBufferMSFT(vertex_update_time={str(self.vertex_update_time)}, vertex_capacity_input={str(self.vertex_capacity_input)}, vertex_count_output={str(self.vertex_count_output)}, vertices={str(self.vertices)})"
+        return f"xr.HandMeshVertexBufferMSFT(vertex_update_time={self.vertex_update_time}, vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices})"
 
     _fields_ = [
         ("vertex_update_time", Time),
@@ -3961,10 +3953,10 @@ class HandMeshMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandMeshMSFT(type={repr(self.type)}, next={repr(self.next)}, is_active={repr(self.is_active)}, index_buffer_changed={repr(self.index_buffer_changed)}, vertex_buffer_changed={repr(self.vertex_buffer_changed)}, index_buffer={repr(self.index_buffer)}, vertex_buffer={repr(self.vertex_buffer)})"
+        return f"xr.HandMeshMSFT(is_active={repr(self.is_active)}, index_buffer_changed={repr(self.index_buffer_changed)}, vertex_buffer_changed={repr(self.vertex_buffer_changed)}, index_buffer={repr(self.index_buffer)}, vertex_buffer={repr(self.vertex_buffer)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandMeshMSFT(type={str(self.type)}, next={str(self.next)}, is_active={str(self.is_active)}, index_buffer_changed={str(self.index_buffer_changed)}, vertex_buffer_changed={str(self.vertex_buffer_changed)}, index_buffer={str(self.index_buffer)}, vertex_buffer={str(self.vertex_buffer)})"
+        return f"xr.HandMeshMSFT(is_active={self.is_active}, index_buffer_changed={self.index_buffer_changed}, vertex_buffer_changed={self.vertex_buffer_changed}, index_buffer={self.index_buffer}, vertex_buffer={self.vertex_buffer}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3991,10 +3983,10 @@ class HandPoseTypeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandPoseTypeInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, hand_pose_type={repr(self.hand_pose_type)})"
+        return f"xr.HandPoseTypeInfoMSFT(hand_pose_type={repr(self.hand_pose_type)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandPoseTypeInfoMSFT(type={str(self.type)}, next={str(self.next)}, hand_pose_type={str(self.hand_pose_type)})"
+        return f"xr.HandPoseTypeInfoMSFT(hand_pose_type={self.hand_pose_type}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4024,10 +4016,10 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, view_configuration_count={repr(self.view_configuration_count)}, enabled_view_configuration_types={repr(self.enabled_view_configuration_types)})"
+        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, enabled_view_configuration_types={repr(self.enabled_view_configuration_types)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(type={str(self.type)}, next={str(self.next)}, view_configuration_count={str(self.view_configuration_count)}, enabled_view_configuration_types={str(self.enabled_view_configuration_types)})"
+        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={self.view_configuration_count}, enabled_view_configuration_types={self.enabled_view_configuration_types}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4053,10 +4045,10 @@ class SecondaryViewConfigurationStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationStateMSFT(type={repr(self.type)}, next={repr(self.next)}, view_configuration_type={repr(self.view_configuration_type)}, active={repr(self.active)})"
+        return f"xr.SecondaryViewConfigurationStateMSFT(view_configuration_type={repr(self.view_configuration_type)}, active={repr(self.active)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationStateMSFT(type={str(self.type)}, next={str(self.next)}, view_configuration_type={str(self.view_configuration_type)}, active={str(self.active)})"
+        return f"xr.SecondaryViewConfigurationStateMSFT(view_configuration_type={self.view_configuration_type}, active={self.active}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4082,10 +4074,10 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameStateMSFT(type={repr(self.type)}, next={repr(self.next)}, view_configuration_count={repr(self.view_configuration_count)}, view_configuration_states={repr(self.view_configuration_states)})"
+        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_states={repr(self.view_configuration_states)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameStateMSFT(type={str(self.type)}, next={str(self.next)}, view_configuration_count={str(self.view_configuration_count)}, view_configuration_states={str(self.view_configuration_states)})"
+        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={self.view_configuration_count}, view_configuration_states={self.view_configuration_states}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4115,10 +4107,10 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, view_configuration_type={repr(self.view_configuration_type)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)})"
+        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(type={str(self.type)}, next={str(self.next)}, view_configuration_type={str(self.view_configuration_type)}, environment_blend_mode={str(self.environment_blend_mode)}, layer_count={str(self.layer_count)}, layers={str(self.layers)})"
+        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={self.view_configuration_type}, environment_blend_mode={self.environment_blend_mode}, layer_count={self.layer_count}, layers={self.layers}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4146,10 +4138,10 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameEndInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, view_configuration_count={repr(self.view_configuration_count)}, view_configuration_layers_info={repr(self.view_configuration_layers_info)})"
+        return f"xr.SecondaryViewConfigurationFrameEndInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_layers_info={repr(self.view_configuration_layers_info)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameEndInfoMSFT(type={str(self.type)}, next={str(self.next)}, view_configuration_count={str(self.view_configuration_count)}, view_configuration_layers_info={str(self.view_configuration_layers_info)})"
+        return f"xr.SecondaryViewConfigurationFrameEndInfoMSFT(view_configuration_count={self.view_configuration_count}, view_configuration_layers_info={self.view_configuration_layers_info}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4173,10 +4165,10 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSwapchainCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, view_configuration_type={repr(self.view_configuration_type)})"
+        return f"xr.SecondaryViewConfigurationSwapchainCreateInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSwapchainCreateInfoMSFT(type={str(self.type)}, next={str(self.next)}, view_configuration_type={str(self.view_configuration_type)})"
+        return f"xr.SecondaryViewConfigurationSwapchainCreateInfoMSFT(view_configuration_type={self.view_configuration_type}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4202,10 +4194,10 @@ class ControllerModelKeyStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelKeyStateMSFT(type={repr(self.type)}, next={repr(self.next)}, model_key={repr(self.model_key)})"
+        return f"xr.ControllerModelKeyStateMSFT(model_key={repr(self.model_key)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ControllerModelKeyStateMSFT(type={str(self.type)}, next={str(self.next)}, model_key={str(self.model_key)})"
+        return f"xr.ControllerModelKeyStateMSFT(model_key={self.model_key}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4230,10 +4222,10 @@ class ControllerModelNodePropertiesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelNodePropertiesMSFT(type={repr(self.type)}, next={repr(self.next)}, parent_node_name={repr(self.parent_node_name)}, node_name={repr(self.node_name)})"
+        return f"xr.ControllerModelNodePropertiesMSFT(parent_node_name={repr(self.parent_node_name)}, node_name={repr(self.node_name)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ControllerModelNodePropertiesMSFT(type={str(self.type)}, next={str(self.next)}, parent_node_name={str(self.parent_node_name)}, node_name={str(self.node_name)})"
+        return f"xr.ControllerModelNodePropertiesMSFT(parent_node_name={self.parent_node_name}, node_name={self.node_name}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4261,10 +4253,10 @@ class ControllerModelPropertiesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelPropertiesMSFT(type={repr(self.type)}, next={repr(self.next)}, node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_properties={repr(self.node_properties)})"
+        return f"xr.ControllerModelPropertiesMSFT(node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_properties={repr(self.node_properties)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ControllerModelPropertiesMSFT(type={str(self.type)}, next={str(self.next)}, node_capacity_input={str(self.node_capacity_input)}, node_count_output={str(self.node_count_output)}, node_properties={str(self.node_properties)})"
+        return f"xr.ControllerModelPropertiesMSFT(node_capacity_input={self.node_capacity_input}, node_count_output={self.node_count_output}, node_properties={self.node_properties}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4291,10 +4283,10 @@ class ControllerModelNodeStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelNodeStateMSFT(type={repr(self.type)}, next={repr(self.next)}, node_pose={repr(self.node_pose)})"
+        return f"xr.ControllerModelNodeStateMSFT(node_pose={repr(self.node_pose)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ControllerModelNodeStateMSFT(type={str(self.type)}, next={str(self.next)}, node_pose={str(self.node_pose)})"
+        return f"xr.ControllerModelNodeStateMSFT(node_pose={self.node_pose}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4321,10 +4313,10 @@ class ControllerModelStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelStateMSFT(type={repr(self.type)}, next={repr(self.next)}, node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_states={repr(self.node_states)})"
+        return f"xr.ControllerModelStateMSFT(node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_states={repr(self.node_states)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ControllerModelStateMSFT(type={str(self.type)}, next={str(self.next)}, node_capacity_input={str(self.node_capacity_input)}, node_count_output={str(self.node_count_output)}, node_states={str(self.node_states)})"
+        return f"xr.ControllerModelStateMSFT(node_capacity_input={self.node_capacity_input}, node_count_output={self.node_count_output}, node_states={self.node_states}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4364,10 +4356,10 @@ class ViewConfigurationViewFovEPIC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationViewFovEPIC(type={repr(self.type)}, next={repr(self.next)}, recommended_fov={repr(self.recommended_fov)}, max_mutable_fov={repr(self.max_mutable_fov)})"
+        return f"xr.ViewConfigurationViewFovEPIC(recommended_fov={repr(self.recommended_fov)}, max_mutable_fov={repr(self.max_mutable_fov)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ViewConfigurationViewFovEPIC(type={str(self.type)}, next={str(self.next)}, recommended_fov={str(self.recommended_fov)}, max_mutable_fov={str(self.max_mutable_fov)})"
+        return f"xr.ViewConfigurationViewFovEPIC(recommended_fov={self.recommended_fov}, max_mutable_fov={self.max_mutable_fov}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4391,10 +4383,10 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerReprojectionInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, reprojection_mode={repr(self.reprojection_mode)})"
+        return f"xr.CompositionLayerReprojectionInfoMSFT(reprojection_mode={repr(self.reprojection_mode)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerReprojectionInfoMSFT(type={str(self.type)}, next={str(self.next)}, reprojection_mode={str(self.reprojection_mode)})"
+        return f"xr.CompositionLayerReprojectionInfoMSFT(reprojection_mode={self.reprojection_mode}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4427,10 +4419,10 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerReprojectionPlaneOverrideMSFT(type={repr(self.type)}, next={repr(self.next)}, position={repr(self.position)}, normal={repr(self.normal)}, velocity={repr(self.velocity)})"
+        return f"xr.CompositionLayerReprojectionPlaneOverrideMSFT(position={repr(self.position)}, normal={repr(self.normal)}, velocity={repr(self.velocity)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerReprojectionPlaneOverrideMSFT(type={str(self.type)}, next={str(self.next)}, position={str(self.position)}, normal={str(self.normal)}, velocity={str(self.velocity)})"
+        return f"xr.CompositionLayerReprojectionPlaneOverrideMSFT(position={self.position}, normal={self.normal}, velocity={self.velocity}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4456,10 +4448,10 @@ class SwapchainStateBaseHeaderFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateBaseHeaderFB(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.SwapchainStateBaseHeaderFB(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainStateBaseHeaderFB(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.SwapchainStateBaseHeaderFB(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4488,10 +4480,10 @@ class CompositionLayerSecureContentFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerSecureContentFB(type={repr(self.type)}, next={repr(self.next)}, flags={repr(self.flags)})"
+        return f"xr.CompositionLayerSecureContentFB(flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerSecureContentFB(type={str(self.type)}, next={str(self.next)}, flags={str(self.flags)})"
+        return f"xr.CompositionLayerSecureContentFB(flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4524,10 +4516,10 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileAnalogThresholdVALVE(type={repr(self.type)}, next={repr(self.next)}, action={repr(self.action)}, binding={repr(self.binding)}, on_threshold={repr(self.on_threshold)}, off_threshold={repr(self.off_threshold)}, on_haptic={repr(self.on_haptic)}, off_haptic={repr(self.off_haptic)})"
+        return f"xr.InteractionProfileAnalogThresholdVALVE(action={repr(self.action)}, binding={repr(self.binding)}, on_threshold={repr(self.on_threshold)}, off_threshold={repr(self.off_threshold)}, on_haptic={repr(self.on_haptic)}, off_haptic={repr(self.off_haptic)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.InteractionProfileAnalogThresholdVALVE(type={str(self.type)}, next={str(self.next)}, action={str(self.action)}, binding={str(self.binding)}, on_threshold={str(self.on_threshold)}, off_threshold={str(self.off_threshold)}, on_haptic={str(self.on_haptic)}, off_haptic={str(self.off_haptic)})"
+        return f"xr.InteractionProfileAnalogThresholdVALVE(action={self.action}, binding={self.binding}, on_threshold={self.on_threshold:.3f}, off_threshold={self.off_threshold:.3f}, on_haptic={self.on_haptic}, off_haptic={self.off_haptic}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4555,10 +4547,10 @@ class HandJointsMotionRangeInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointsMotionRangeInfoEXT(type={repr(self.type)}, next={repr(self.next)}, hand_joints_motion_range={repr(self.hand_joints_motion_range)})"
+        return f"xr.HandJointsMotionRangeInfoEXT(hand_joints_motion_range={repr(self.hand_joints_motion_range)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointsMotionRangeInfoEXT(type={str(self.type)}, next={str(self.next)}, hand_joints_motion_range={str(self.hand_joints_motion_range)})"
+        return f"xr.HandJointsMotionRangeInfoEXT(hand_joints_motion_range={self.hand_joints_motion_range}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4592,7 +4584,7 @@ class UuidMSFT(Structure):
         return f"xr.UuidMSFT(bytes={repr(self.bytes)})"
 
     def __str__(self) -> str:
-        return f"xr.UuidMSFT(bytes={str(self.bytes)})"
+        return f"xr.UuidMSFT()"
 
     _fields_ = [
         ("bytes", (c_uint8 * 16)),
@@ -4611,10 +4603,10 @@ class SceneObserverCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObserverCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.SceneObserverCreateInfoMSFT(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObserverCreateInfoMSFT(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.SceneObserverCreateInfoMSFT(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4634,10 +4626,10 @@ class SceneCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.SceneCreateInfoMSFT(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneCreateInfoMSFT(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.SceneCreateInfoMSFT(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4662,7 +4654,7 @@ class SceneSphereBoundMSFT(Structure):
         return f"xr.SceneSphereBoundMSFT(center={repr(self.center)}, radius={repr(self.radius)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneSphereBoundMSFT(center={str(self.center)}, radius={str(self.radius)})"
+        return f"xr.SceneSphereBoundMSFT(center={self.center}, radius={self.radius:.3f})"
 
     _fields_ = [
         ("center", Vector3f),
@@ -4689,7 +4681,7 @@ class SceneOrientedBoxBoundMSFT(Structure):
         return f"xr.SceneOrientedBoxBoundMSFT(pose={repr(self.pose)}, extents={repr(self.extents)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneOrientedBoxBoundMSFT(pose={str(self.pose)}, extents={str(self.extents)})"
+        return f"xr.SceneOrientedBoxBoundMSFT(pose={self.pose}, extents={self.extents})"
 
     _fields_ = [
         ("pose", Posef),
@@ -4718,7 +4710,7 @@ class SceneFrustumBoundMSFT(Structure):
         return f"xr.SceneFrustumBoundMSFT(pose={repr(self.pose)}, fov={repr(self.fov)}, far_distance={repr(self.far_distance)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneFrustumBoundMSFT(pose={str(self.pose)}, fov={str(self.fov)}, far_distance={str(self.far_distance)})"
+        return f"xr.SceneFrustumBoundMSFT(pose={self.pose}, fov={self.fov}, far_distance={self.far_distance:.3f})"
 
     _fields_ = [
         ("pose", Posef),
@@ -4754,7 +4746,7 @@ class SceneBoundsMSFT(Structure):
         return f"xr.SceneBoundsMSFT(space={repr(self.space)}, time={repr(self.time)}, sphere_count={repr(self.sphere_count)}, spheres={repr(self.spheres)}, box_count={repr(self.box_count)}, boxes={repr(self.boxes)}, frustum_count={repr(self.frustum_count)}, frustums={repr(self.frustums)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneBoundsMSFT(space={str(self.space)}, time={str(self.time)}, sphere_count={str(self.sphere_count)}, spheres={str(self.spheres)}, box_count={str(self.box_count)}, boxes={str(self.boxes)}, frustum_count={str(self.frustum_count)}, frustums={str(self.frustums)})"
+        return f"xr.SceneBoundsMSFT(space={self.space}, time={self.time}, sphere_count={self.sphere_count}, spheres={self.spheres}, box_count={self.box_count}, boxes={self.boxes}, frustum_count={self.frustum_count}, frustums={self.frustums})"
 
     _fields_ = [
         ("space", SpaceHandle),
@@ -4790,10 +4782,10 @@ class NewSceneComputeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.NewSceneComputeInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, requested_feature_count={repr(self.requested_feature_count)}, requested_features={repr(self.requested_features)}, consistency={repr(self.consistency)}, bounds={repr(self.bounds)})"
+        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={repr(self.requested_feature_count)}, requested_features={repr(self.requested_features)}, consistency={repr(self.consistency)}, bounds={repr(self.bounds)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.NewSceneComputeInfoMSFT(type={str(self.type)}, next={str(self.next)}, requested_feature_count={str(self.requested_feature_count)}, requested_features={str(self.requested_features)}, consistency={str(self.consistency)}, bounds={str(self.bounds)})"
+        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={self.requested_feature_count}, requested_features={self.requested_features}, consistency={self.consistency}, bounds={self.bounds}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4819,10 +4811,10 @@ class VisualMeshComputeLodInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VisualMeshComputeLodInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, lod={repr(self.lod)})"
+        return f"xr.VisualMeshComputeLodInfoMSFT(lod={repr(self.lod)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.VisualMeshComputeLodInfoMSFT(type={str(self.type)}, next={str(self.next)}, lod={str(self.lod)})"
+        return f"xr.VisualMeshComputeLodInfoMSFT(lod={self.lod}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4854,7 +4846,7 @@ class SceneComponentMSFT(Structure):
         return f"xr.SceneComponentMSFT(component_type={repr(self.component_type)}, id={repr(self.id)}, parent_id={repr(self.parent_id)}, update_time={repr(self.update_time)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentMSFT(component_type={str(self.component_type)}, id={str(self.id)}, parent_id={str(self.parent_id)}, update_time={str(self.update_time)})"
+        return f"xr.SceneComponentMSFT(component_type={self.component_type}, id={self.id}, parent_id={self.parent_id}, update_time={self.update_time})"
 
     _fields_ = [
         ("component_type", SceneComponentTypeMSFT.ctype()),
@@ -4882,10 +4874,10 @@ class SceneComponentsMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsMSFT(type={repr(self.type)}, next={repr(self.next)}, component_capacity_input={repr(self.component_capacity_input)}, component_count_output={repr(self.component_count_output)}, components={repr(self.components)})"
+        return f"xr.SceneComponentsMSFT(component_capacity_input={repr(self.component_capacity_input)}, component_count_output={repr(self.component_count_output)}, components={repr(self.components)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentsMSFT(type={str(self.type)}, next={str(self.next)}, component_capacity_input={str(self.component_capacity_input)}, component_count_output={str(self.component_count_output)}, components={str(self.components)})"
+        return f"xr.SceneComponentsMSFT(component_capacity_input={self.component_capacity_input}, component_count_output={self.component_count_output}, components={self.components}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4910,10 +4902,10 @@ class SceneComponentsGetInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsGetInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, component_type={repr(self.component_type)})"
+        return f"xr.SceneComponentsGetInfoMSFT(component_type={repr(self.component_type)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentsGetInfoMSFT(type={str(self.type)}, next={str(self.next)}, component_type={str(self.component_type)})"
+        return f"xr.SceneComponentsGetInfoMSFT(component_type={self.component_type}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4939,7 +4931,7 @@ class SceneComponentLocationMSFT(Structure):
         return f"xr.SceneComponentLocationMSFT(flags={repr(self.flags)}, pose={repr(self.pose)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentLocationMSFT(flags={str(self.flags)}, pose={str(self.pose)})"
+        return f"xr.SceneComponentLocationMSFT(flags={self.flags}, pose={self.pose})"
 
     _fields_ = [
         ("flags", SpaceLocationFlags),
@@ -4963,10 +4955,10 @@ class SceneComponentLocationsMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentLocationsMSFT(type={repr(self.type)}, next={repr(self.next)}, location_count={repr(self.location_count)}, locations={repr(self.locations)})"
+        return f"xr.SceneComponentLocationsMSFT(location_count={repr(self.location_count)}, locations={repr(self.locations)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentLocationsMSFT(type={str(self.type)}, next={str(self.next)}, location_count={str(self.location_count)}, locations={str(self.locations)})"
+        return f"xr.SceneComponentLocationsMSFT(location_count={self.location_count}, locations={self.locations}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4996,10 +4988,10 @@ class SceneComponentsLocateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsLocateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self.component_id_count)}, component_ids={repr(self.component_ids)})"
+        return f"xr.SceneComponentsLocateInfoMSFT(base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self.component_id_count)}, component_ids={repr(self.component_ids)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentsLocateInfoMSFT(type={str(self.type)}, next={str(self.next)}, base_space={str(self.base_space)}, time={str(self.time)}, component_id_count={str(self.component_id_count)}, component_ids={str(self.component_ids)})"
+        return f"xr.SceneComponentsLocateInfoMSFT(base_space={self.base_space}, time={self.time}, component_id_count={self.component_id_count}, component_ids={self.component_ids}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5024,7 +5016,7 @@ class SceneObjectMSFT(Structure):
         return f"xr.SceneObjectMSFT(object_type={repr(self.object_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObjectMSFT(object_type={str(self.object_type)})"
+        return f"xr.SceneObjectMSFT(object_type={self.object_type})"
 
     _fields_ = [
         ("object_type", SceneObjectTypeMSFT.ctype()),
@@ -5047,10 +5039,10 @@ class SceneObjectsMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectsMSFT(type={repr(self.type)}, next={repr(self.next)}, scene_object_count={repr(self.scene_object_count)}, scene_objects={repr(self.scene_objects)})"
+        return f"xr.SceneObjectsMSFT(scene_object_count={repr(self.scene_object_count)}, scene_objects={repr(self.scene_objects)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObjectsMSFT(type={str(self.type)}, next={str(self.next)}, scene_object_count={str(self.scene_object_count)}, scene_objects={str(self.scene_objects)})"
+        return f"xr.SceneObjectsMSFT(scene_object_count={self.scene_object_count}, scene_objects={self.scene_objects}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5076,10 +5068,10 @@ class SceneComponentParentFilterInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentParentFilterInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, parent_id={repr(self.parent_id)})"
+        return f"xr.SceneComponentParentFilterInfoMSFT(parent_id={repr(self.parent_id)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentParentFilterInfoMSFT(type={str(self.type)}, next={str(self.next)}, parent_id={str(self.parent_id)})"
+        return f"xr.SceneComponentParentFilterInfoMSFT(parent_id={self.parent_id}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5104,10 +5096,10 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectTypesFilterInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, object_type_count={repr(self.object_type_count)}, object_types={repr(self.object_types)})"
+        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={repr(self.object_type_count)}, object_types={repr(self.object_types)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObjectTypesFilterInfoMSFT(type={str(self.type)}, next={str(self.next)}, object_type_count={str(self.object_type_count)}, object_types={str(self.object_types)})"
+        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={self.object_type_count}, object_types={self.object_types}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5138,7 +5130,7 @@ class ScenePlaneMSFT(Structure):
         return f"xr.ScenePlaneMSFT(alignment={repr(self.alignment)}, size={repr(self.size)}, mesh_buffer_id={repr(self.mesh_buffer_id)}, supports_indices_uint16={repr(self.supports_indices_uint16)})"
 
     def __str__(self) -> str:
-        return f"xr.ScenePlaneMSFT(alignment={str(self.alignment)}, size={str(self.size)}, mesh_buffer_id={str(self.mesh_buffer_id)}, supports_indices_uint16={str(self.supports_indices_uint16)})"
+        return f"xr.ScenePlaneMSFT(alignment={self.alignment}, size={self.size}, mesh_buffer_id={self.mesh_buffer_id}, supports_indices_uint16={self.supports_indices_uint16})"
 
     _fields_ = [
         ("alignment", ScenePlaneAlignmentTypeMSFT.ctype()),
@@ -5164,10 +5156,10 @@ class ScenePlanesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlanesMSFT(type={repr(self.type)}, next={repr(self.next)}, scene_plane_count={repr(self.scene_plane_count)}, scene_planes={repr(self.scene_planes)})"
+        return f"xr.ScenePlanesMSFT(scene_plane_count={repr(self.scene_plane_count)}, scene_planes={repr(self.scene_planes)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ScenePlanesMSFT(type={str(self.type)}, next={str(self.next)}, scene_plane_count={str(self.scene_plane_count)}, scene_planes={str(self.scene_planes)})"
+        return f"xr.ScenePlanesMSFT(scene_plane_count={self.scene_plane_count}, scene_planes={self.scene_planes}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5193,10 +5185,10 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, alignment_count={repr(self.alignment_count)}, alignments={repr(self.alignments)})"
+        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={repr(self.alignment_count)}, alignments={repr(self.alignments)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(type={str(self.type)}, next={str(self.next)}, alignment_count={str(self.alignment_count)}, alignments={str(self.alignments)})"
+        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={self.alignment_count}, alignments={self.alignments}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5221,7 +5213,7 @@ class SceneMeshMSFT(Structure):
         return f"xr.SceneMeshMSFT(mesh_buffer_id={repr(self.mesh_buffer_id)}, supports_indices_uint16={repr(self.supports_indices_uint16)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshMSFT(mesh_buffer_id={str(self.mesh_buffer_id)}, supports_indices_uint16={str(self.supports_indices_uint16)})"
+        return f"xr.SceneMeshMSFT(mesh_buffer_id={self.mesh_buffer_id}, supports_indices_uint16={self.supports_indices_uint16})"
 
     _fields_ = [
         ("mesh_buffer_id", c_uint64),
@@ -5245,10 +5237,10 @@ class SceneMeshesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshesMSFT(type={repr(self.type)}, next={repr(self.next)}, scene_mesh_count={repr(self.scene_mesh_count)}, scene_meshes={repr(self.scene_meshes)})"
+        return f"xr.SceneMeshesMSFT(scene_mesh_count={repr(self.scene_mesh_count)}, scene_meshes={repr(self.scene_meshes)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshesMSFT(type={str(self.type)}, next={str(self.next)}, scene_mesh_count={str(self.scene_mesh_count)}, scene_meshes={str(self.scene_meshes)})"
+        return f"xr.SceneMeshesMSFT(scene_mesh_count={self.scene_mesh_count}, scene_meshes={self.scene_meshes}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5272,10 +5264,10 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshBuffersGetInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, mesh_buffer_id={repr(self.mesh_buffer_id)})"
+        return f"xr.SceneMeshBuffersGetInfoMSFT(mesh_buffer_id={repr(self.mesh_buffer_id)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshBuffersGetInfoMSFT(type={str(self.type)}, next={str(self.next)}, mesh_buffer_id={str(self.mesh_buffer_id)})"
+        return f"xr.SceneMeshBuffersGetInfoMSFT(mesh_buffer_id={self.mesh_buffer_id}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5296,10 +5288,10 @@ class SceneMeshBuffersMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshBuffersMSFT(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.SceneMeshBuffersMSFT(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshBuffersMSFT(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.SceneMeshBuffersMSFT(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5325,10 +5317,10 @@ class SceneMeshVertexBufferMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshVertexBufferMSFT(type={repr(self.type)}, next={repr(self.next)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)})"
+        return f"xr.SceneMeshVertexBufferMSFT(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshVertexBufferMSFT(type={str(self.type)}, next={str(self.next)}, vertex_capacity_input={str(self.vertex_capacity_input)}, vertex_count_output={str(self.vertex_count_output)}, vertices={str(self.vertices)})"
+        return f"xr.SceneMeshVertexBufferMSFT(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5357,10 +5349,10 @@ class SceneMeshIndicesUint32MSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshIndicesUint32MSFT(type={repr(self.type)}, next={repr(self.next)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)})"
+        return f"xr.SceneMeshIndicesUint32MSFT(index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshIndicesUint32MSFT(type={str(self.type)}, next={str(self.next)}, index_capacity_input={str(self.index_capacity_input)}, index_count_output={str(self.index_count_output)}, indices={str(self.indices)})"
+        return f"xr.SceneMeshIndicesUint32MSFT(index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5389,10 +5381,10 @@ class SceneMeshIndicesUint16MSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshIndicesUint16MSFT(type={repr(self.type)}, next={repr(self.next)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)})"
+        return f"xr.SceneMeshIndicesUint16MSFT(index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshIndicesUint16MSFT(type={str(self.type)}, next={str(self.next)}, index_capacity_input={str(self.index_capacity_input)}, index_count_output={str(self.index_count_output)}, indices={str(self.indices)})"
+        return f"xr.SceneMeshIndicesUint16MSFT(index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5440,10 +5432,10 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SerializedSceneFragmentDataGetInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, scene_fragment_id={repr(self.scene_fragment_id)})"
+        return f"xr.SerializedSceneFragmentDataGetInfoMSFT(scene_fragment_id={repr(self.scene_fragment_id)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SerializedSceneFragmentDataGetInfoMSFT(type={str(self.type)}, next={str(self.next)}, scene_fragment_id={str(self.scene_fragment_id)})"
+        return f"xr.SerializedSceneFragmentDataGetInfoMSFT(scene_fragment_id={self.scene_fragment_id}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5467,7 +5459,7 @@ class DeserializeSceneFragmentMSFT(Structure):
         return f"xr.DeserializeSceneFragmentMSFT(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)})"
 
     def __str__(self) -> str:
-        return f"xr.DeserializeSceneFragmentMSFT(buffer_size={str(self.buffer_size)}, buffer={str(self.buffer)})"
+        return f"xr.DeserializeSceneFragmentMSFT(buffer_size={self.buffer_size}, buffer={self.buffer})"
 
     _fields_ = [
         ("buffer_size", c_uint32),
@@ -5491,10 +5483,10 @@ class SceneDeserializeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneDeserializeInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, fragment_count={repr(self.fragment_count)}, fragments={repr(self.fragments)})"
+        return f"xr.SceneDeserializeInfoMSFT(fragment_count={repr(self.fragment_count)}, fragments={repr(self.fragments)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneDeserializeInfoMSFT(type={str(self.type)}, next={str(self.next)}, fragment_count={str(self.fragment_count)}, fragments={str(self.fragments)})"
+        return f"xr.SceneDeserializeInfoMSFT(fragment_count={self.fragment_count}, fragments={self.fragments}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5525,10 +5517,10 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataDisplayRefreshRateChangedFB(type={repr(self.type)}, next={repr(self.next)}, from_display_refresh_rate={repr(self.from_display_refresh_rate)}, to_display_refresh_rate={repr(self.to_display_refresh_rate)})"
+        return f"xr.EventDataDisplayRefreshRateChangedFB(from_display_refresh_rate={repr(self.from_display_refresh_rate)}, to_display_refresh_rate={repr(self.to_display_refresh_rate)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.EventDataDisplayRefreshRateChangedFB(type={str(self.type)}, next={str(self.next)}, from_display_refresh_rate={str(self.from_display_refresh_rate)}, to_display_refresh_rate={str(self.to_display_refresh_rate)})"
+        return f"xr.EventDataDisplayRefreshRateChangedFB(from_display_refresh_rate={self.from_display_refresh_rate:.3f}, to_display_refresh_rate={self.to_display_refresh_rate:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5559,10 +5551,10 @@ class SystemColorSpacePropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemColorSpacePropertiesFB(type={repr(self.type)}, next={repr(self.next)}, color_space={repr(self.color_space)})"
+        return f"xr.SystemColorSpacePropertiesFB(color_space={repr(self.color_space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemColorSpacePropertiesFB(type={str(self.type)}, next={str(self.next)}, color_space={str(self.color_space)})"
+        return f"xr.SystemColorSpacePropertiesFB(color_space={self.color_space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5595,7 +5587,7 @@ class Vector4sFB(Structure):
         return f"xr.Vector4sFB(x={repr(self.x)}, y={repr(self.y)}, z={repr(self.z)}, w={repr(self.w)})"
 
     def __str__(self) -> str:
-        return f"xr.Vector4sFB(x={str(self.x)}, y={str(self.y)}, z={str(self.z)}, w={str(self.w)})"
+        return f"xr.Vector4sFB(x={self.x}, y={self.y}, z={self.z}, w={self.w})"
 
     _fields_ = [
         ("x", c_int16),
@@ -5647,10 +5639,10 @@ class HandTrackingMeshFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingMeshFB(type={repr(self.type)}, next={repr(self.next)}, joint_capacity_input={repr(self.joint_capacity_input)}, joint_count_output={repr(self.joint_count_output)}, joint_bind_poses={repr(self.joint_bind_poses)}, joint_radii={repr(self.joint_radii)}, joint_parents={repr(self.joint_parents)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertex_positions={repr(self.vertex_positions)}, vertex_normals={repr(self.vertex_normals)}, vertex_uvs={repr(self.vertex_uvs)}, vertex_blend_indices={repr(self.vertex_blend_indices)}, vertex_blend_weights={repr(self.vertex_blend_weights)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)})"
+        return f"xr.HandTrackingMeshFB(joint_capacity_input={repr(self.joint_capacity_input)}, joint_count_output={repr(self.joint_count_output)}, joint_bind_poses={repr(self.joint_bind_poses)}, joint_radii={repr(self.joint_radii)}, joint_parents={repr(self.joint_parents)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertex_positions={repr(self.vertex_positions)}, vertex_normals={repr(self.vertex_normals)}, vertex_uvs={repr(self.vertex_uvs)}, vertex_blend_indices={repr(self.vertex_blend_indices)}, vertex_blend_weights={repr(self.vertex_blend_weights)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandTrackingMeshFB(type={str(self.type)}, next={str(self.next)}, joint_capacity_input={str(self.joint_capacity_input)}, joint_count_output={str(self.joint_count_output)}, joint_bind_poses={str(self.joint_bind_poses)}, joint_radii={str(self.joint_radii)}, joint_parents={str(self.joint_parents)}, vertex_capacity_input={str(self.vertex_capacity_input)}, vertex_count_output={str(self.vertex_count_output)}, vertex_positions={str(self.vertex_positions)}, vertex_normals={str(self.vertex_normals)}, vertex_uvs={str(self.vertex_uvs)}, vertex_blend_indices={str(self.vertex_blend_indices)}, vertex_blend_weights={str(self.vertex_blend_weights)}, index_capacity_input={str(self.index_capacity_input)}, index_count_output={str(self.index_count_output)}, indices={str(self.indices)})"
+        return f"xr.HandTrackingMeshFB(joint_capacity_input={self.joint_capacity_input}, joint_count_output={self.joint_count_output}, joint_bind_poses={self.joint_bind_poses}, joint_radii={self.joint_radii}, joint_parents={self.joint_parents}, vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertex_positions={self.vertex_positions}, vertex_normals={self.vertex_normals}, vertex_uvs={self.vertex_uvs}, vertex_blend_indices={self.vertex_blend_indices}, vertex_blend_weights={self.vertex_blend_weights}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5693,10 +5685,10 @@ class HandTrackingScaleFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingScaleFB(type={repr(self.type)}, next={repr(self.next)}, sensor_output={repr(self.sensor_output)}, current_output={repr(self.current_output)}, override_hand_scale={repr(self.override_hand_scale)}, override_value_input={repr(self.override_value_input)})"
+        return f"xr.HandTrackingScaleFB(sensor_output={repr(self.sensor_output)}, current_output={repr(self.current_output)}, override_hand_scale={repr(self.override_hand_scale)}, override_value_input={repr(self.override_value_input)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandTrackingScaleFB(type={str(self.type)}, next={str(self.next)}, sensor_output={str(self.sensor_output)}, current_output={str(self.current_output)}, override_hand_scale={str(self.override_hand_scale)}, override_value_input={str(self.override_value_input)})"
+        return f"xr.HandTrackingScaleFB(sensor_output={self.sensor_output:.3f}, current_output={self.current_output:.3f}, override_hand_scale={self.override_hand_scale}, override_value_input={self.override_value_input:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5739,10 +5731,10 @@ class HandTrackingAimStateFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingAimStateFB(type={repr(self.type)}, next={repr(self.next)}, status={repr(self.status)}, aim_pose={repr(self.aim_pose)}, pinch_strength_index={repr(self.pinch_strength_index)}, pinch_strength_middle={repr(self.pinch_strength_middle)}, pinch_strength_ring={repr(self.pinch_strength_ring)}, pinch_strength_little={repr(self.pinch_strength_little)})"
+        return f"xr.HandTrackingAimStateFB(status={repr(self.status)}, aim_pose={repr(self.aim_pose)}, pinch_strength_index={repr(self.pinch_strength_index)}, pinch_strength_middle={repr(self.pinch_strength_middle)}, pinch_strength_ring={repr(self.pinch_strength_ring)}, pinch_strength_little={repr(self.pinch_strength_little)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandTrackingAimStateFB(type={str(self.type)}, next={str(self.next)}, status={str(self.status)}, aim_pose={str(self.aim_pose)}, pinch_strength_index={str(self.pinch_strength_index)}, pinch_strength_middle={str(self.pinch_strength_middle)}, pinch_strength_ring={str(self.pinch_strength_ring)}, pinch_strength_little={str(self.pinch_strength_little)})"
+        return f"xr.HandTrackingAimStateFB(status={self.status}, aim_pose={self.aim_pose}, pinch_strength_index={self.pinch_strength_index:.3f}, pinch_strength_middle={self.pinch_strength_middle:.3f}, pinch_strength_ring={self.pinch_strength_ring:.3f}, pinch_strength_little={self.pinch_strength_little:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5771,7 +5763,7 @@ class HandCapsuleFB(Structure):
         return f"xr.HandCapsuleFB(points={repr(self.points)}, radius={repr(self.radius)}, joint={repr(self.joint)})"
 
     def __str__(self) -> str:
-        return f"xr.HandCapsuleFB(points={str(self.points)}, radius={str(self.radius)}, joint={str(self.joint)})"
+        return f"xr.HandCapsuleFB(radius={self.radius:.3f}, joint={self.joint})"
 
     _fields_ = [
         ("points", (Vector3f * 2)),
@@ -5792,10 +5784,10 @@ class HandTrackingCapsulesStateFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingCapsulesStateFB(type={repr(self.type)}, next={repr(self.next)}, capsules={repr(self.capsules)})"
+        return f"xr.HandTrackingCapsulesStateFB(capsules={repr(self.capsules)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandTrackingCapsulesStateFB(type={str(self.type)}, next={str(self.next)}, capsules={str(self.capsules)})"
+        return f"xr.HandTrackingCapsulesStateFB(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5827,10 +5819,10 @@ class FoveationProfileCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationProfileCreateInfoFB(type={repr(self.type)}, next={repr(self.next)})"
+        return f"xr.FoveationProfileCreateInfoFB(next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.FoveationProfileCreateInfoFB(type={str(self.type)}, next={str(self.next)})"
+        return f"xr.FoveationProfileCreateInfoFB(next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5852,10 +5844,10 @@ class SwapchainCreateInfoFoveationFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainCreateInfoFoveationFB(type={repr(self.type)}, next={repr(self.next)}, flags={repr(self.flags)})"
+        return f"xr.SwapchainCreateInfoFoveationFB(flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainCreateInfoFoveationFB(type={str(self.type)}, next={str(self.next)}, flags={str(self.flags)})"
+        return f"xr.SwapchainCreateInfoFoveationFB(flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5880,10 +5872,10 @@ class SwapchainStateFoveationFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateFoveationFB(type={repr(self.type)}, next={repr(self.next)}, flags={repr(self.flags)}, profile={repr(self.profile)})"
+        return f"xr.SwapchainStateFoveationFB(flags={repr(self.flags)}, profile={repr(self.profile)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainStateFoveationFB(type={str(self.type)}, next={str(self.next)}, flags={str(self.flags)}, profile={str(self.profile)})"
+        return f"xr.SwapchainStateFoveationFB(flags={self.flags}, profile={self.profile}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5916,10 +5908,10 @@ class FoveationLevelProfileCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationLevelProfileCreateInfoFB(type={repr(self.type)}, next={repr(self.next)}, level={repr(self.level)}, vertical_offset={repr(self.vertical_offset)}, dynamic={repr(self.dynamic)})"
+        return f"xr.FoveationLevelProfileCreateInfoFB(level={repr(self.level)}, vertical_offset={repr(self.vertical_offset)}, dynamic={repr(self.dynamic)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.FoveationLevelProfileCreateInfoFB(type={str(self.type)}, next={str(self.next)}, level={str(self.level)}, vertical_offset={str(self.vertical_offset)}, dynamic={str(self.dynamic)})"
+        return f"xr.FoveationLevelProfileCreateInfoFB(level={self.level}, vertical_offset={self.vertical_offset:.3f}, dynamic={self.dynamic}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5944,10 +5936,10 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewLocateFoveatedRenderingVARJO(type={repr(self.type)}, next={repr(self.next)}, foveated_rendering_active={repr(self.foveated_rendering_active)})"
+        return f"xr.ViewLocateFoveatedRenderingVARJO(foveated_rendering_active={repr(self.foveated_rendering_active)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.ViewLocateFoveatedRenderingVARJO(type={str(self.type)}, next={str(self.next)}, foveated_rendering_active={str(self.foveated_rendering_active)})"
+        return f"xr.ViewLocateFoveatedRenderingVARJO(foveated_rendering_active={self.foveated_rendering_active}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5970,10 +5962,10 @@ class FoveatedViewConfigurationViewVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveatedViewConfigurationViewVARJO(type={repr(self.type)}, next={repr(self.next)}, foveated_rendering_active={repr(self.foveated_rendering_active)})"
+        return f"xr.FoveatedViewConfigurationViewVARJO(foveated_rendering_active={repr(self.foveated_rendering_active)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.FoveatedViewConfigurationViewVARJO(type={str(self.type)}, next={str(self.next)}, foveated_rendering_active={str(self.foveated_rendering_active)})"
+        return f"xr.FoveatedViewConfigurationViewVARJO(foveated_rendering_active={self.foveated_rendering_active}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5996,10 +5988,10 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFoveatedRenderingPropertiesVARJO(type={repr(self.type)}, next={repr(self.next)}, supports_foveated_rendering={repr(self.supports_foveated_rendering)})"
+        return f"xr.SystemFoveatedRenderingPropertiesVARJO(supports_foveated_rendering={repr(self.supports_foveated_rendering)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemFoveatedRenderingPropertiesVARJO(type={str(self.type)}, next={str(self.next)}, supports_foveated_rendering={str(self.supports_foveated_rendering)})"
+        return f"xr.SystemFoveatedRenderingPropertiesVARJO(supports_foveated_rendering={self.supports_foveated_rendering}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6024,10 +6016,10 @@ class CompositionLayerDepthTestVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerDepthTestVARJO(type={repr(self.type)}, next={repr(self.next)}, depth_test_range_near_z={repr(self.depth_test_range_near_z)}, depth_test_range_far_z={repr(self.depth_test_range_far_z)})"
+        return f"xr.CompositionLayerDepthTestVARJO(depth_test_range_near_z={repr(self.depth_test_range_near_z)}, depth_test_range_far_z={repr(self.depth_test_range_far_z)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerDepthTestVARJO(type={str(self.type)}, next={str(self.next)}, depth_test_range_near_z={str(self.depth_test_range_near_z)}, depth_test_range_far_z={str(self.depth_test_range_far_z)})"
+        return f"xr.CompositionLayerDepthTestVARJO(depth_test_range_near_z={self.depth_test_range_near_z:.3f}, depth_test_range_far_z={self.depth_test_range_far_z:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6060,7 +6052,7 @@ class SpatialAnchorPersistenceNameMSFT(Structure):
         return f"xr.SpatialAnchorPersistenceNameMSFT(name={repr(self.name)})"
 
     def __str__(self) -> str:
-        return f"xr.SpatialAnchorPersistenceNameMSFT(name={str(self.name)})"
+        return f"xr.SpatialAnchorPersistenceNameMSFT(name={self.name})"
 
     _fields_ = [
         ("name", (c_char * 256)),
@@ -6085,10 +6077,10 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorPersistenceInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)}, spatial_anchor={repr(self.spatial_anchor)})"
+        return f"xr.SpatialAnchorPersistenceInfoMSFT(spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)}, spatial_anchor={repr(self.spatial_anchor)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpatialAnchorPersistenceInfoMSFT(type={str(self.type)}, next={str(self.next)}, spatial_anchor_persistence_name={str(self.spatial_anchor_persistence_name)}, spatial_anchor={str(self.spatial_anchor)})"
+        return f"xr.SpatialAnchorPersistenceInfoMSFT(spatial_anchor_persistence_name={self.spatial_anchor_persistence_name}, spatial_anchor={self.spatial_anchor}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6116,10 +6108,10 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorFromPersistedAnchorCreateInfoMSFT(type={repr(self.type)}, next={repr(self.next)}, spatial_anchor_store={repr(self.spatial_anchor_store)}, spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)})"
+        return f"xr.SpatialAnchorFromPersistedAnchorCreateInfoMSFT(spatial_anchor_store={repr(self.spatial_anchor_store)}, spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpatialAnchorFromPersistedAnchorCreateInfoMSFT(type={str(self.type)}, next={str(self.next)}, spatial_anchor_store={str(self.spatial_anchor_store)}, spatial_anchor_persistence_name={str(self.spatial_anchor_persistence_name)})"
+        return f"xr.SpatialAnchorFromPersistedAnchorCreateInfoMSFT(spatial_anchor_store={self.spatial_anchor_store}, spatial_anchor_persistence_name={self.spatial_anchor_persistence_name}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6180,10 +6172,10 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerSpaceWarpInfoFB(type={repr(self.type)}, next={repr(self.next)}, layer_flags={repr(self.layer_flags)}, motion_vector_sub_image={repr(self.motion_vector_sub_image)}, app_space_delta_pose={repr(self.app_space_delta_pose)}, depth_sub_image={repr(self.depth_sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)})"
+        return f"xr.CompositionLayerSpaceWarpInfoFB(layer_flags={repr(self.layer_flags)}, motion_vector_sub_image={repr(self.motion_vector_sub_image)}, app_space_delta_pose={repr(self.app_space_delta_pose)}, depth_sub_image={repr(self.depth_sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerSpaceWarpInfoFB(type={str(self.type)}, next={str(self.next)}, layer_flags={str(self.layer_flags)}, motion_vector_sub_image={str(self.motion_vector_sub_image)}, app_space_delta_pose={str(self.app_space_delta_pose)}, depth_sub_image={str(self.depth_sub_image)}, min_depth={str(self.min_depth)}, max_depth={str(self.max_depth)}, near_z={str(self.near_z)}, far_z={str(self.far_z)})"
+        return f"xr.CompositionLayerSpaceWarpInfoFB(layer_flags={self.layer_flags}, motion_vector_sub_image={self.motion_vector_sub_image}, app_space_delta_pose={self.app_space_delta_pose}, depth_sub_image={self.depth_sub_image}, min_depth={self.min_depth:.3f}, max_depth={self.max_depth:.3f}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6215,10 +6207,10 @@ class SystemSpaceWarpPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpaceWarpPropertiesFB(type={repr(self.type)}, next={repr(self.next)}, recommended_motion_vector_image_rect_width={repr(self.recommended_motion_vector_image_rect_width)}, recommended_motion_vector_image_rect_height={repr(self.recommended_motion_vector_image_rect_height)})"
+        return f"xr.SystemSpaceWarpPropertiesFB(recommended_motion_vector_image_rect_width={repr(self.recommended_motion_vector_image_rect_width)}, recommended_motion_vector_image_rect_height={repr(self.recommended_motion_vector_image_rect_height)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SystemSpaceWarpPropertiesFB(type={str(self.type)}, next={str(self.next)}, recommended_motion_vector_image_rect_width={str(self.recommended_motion_vector_image_rect_width)}, recommended_motion_vector_image_rect_height={str(self.recommended_motion_vector_image_rect_height)})"
+        return f"xr.SystemSpaceWarpPropertiesFB(recommended_motion_vector_image_rect_width={self.recommended_motion_vector_image_rect_width}, recommended_motion_vector_image_rect_height={self.recommended_motion_vector_image_rect_height}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),

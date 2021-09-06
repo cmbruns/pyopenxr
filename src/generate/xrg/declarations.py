@@ -408,7 +408,8 @@ class StructItem(CodeItem):
             # Empty structure
             result += "\n    pass"
             return result
-        result += StructureCoder(self).generate_constructor()
+        structure_coder = StructureCoder(self)
+        result += structure_coder.generate_constructor()
         result += "\n"
         # Add special container methods for structures whose fields are all floats
         float_count = 0
@@ -431,12 +432,6 @@ class StructItem(CodeItem):
                 def __len__(self) -> int:
                     return {float_count}
             
-                def __repr__(self) -> str:
-                    return f"xr.{{self.__class__.__name__}}({{', '.join([repr(v) for v in self])}})"
-            
-                def __str__(self) -> str:
-                    return f"({{', '.join([f'{{v:.3f}}' for v in self])}})"
-                
                 def as_numpy(self):
                     if self._numpy is None:
                         # Just in time construction
@@ -446,19 +441,7 @@ class StructItem(CodeItem):
                     return self._numpy
             """), "    ")
             result += "\n"
-        else:
-            # Generic string conversion
-            class_name = self.name()
-            field_reprs = ", ".join([f"{f.name()}={{repr(self.{f.name()})}}" for f in self.fields])
-            field_strs = ", ".join([f"{f.name()}={{str(self.{f.name()})}}" for f in self.fields])
-            result += textwrap.indent(inspect.cleandoc(f"""
-                def __repr__(self) -> str:
-                    return f"xr.{class_name}({field_reprs})"
-
-                def __str__(self) -> str:
-                    return f"xr.{class_name}({field_strs})"
-            """), "    ")
-            result += "\n"
+        result += structure_coder.generate_repr_str()
         # Recursive structures require two separate stanzas
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
@@ -866,10 +849,14 @@ class FieldCoder(object):
         yield f"{self.field.name()}={self.name}"
 
     def str_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}={{str(self.{self.name})}}"
+        if self.field.type.name(Api.CTYPES) == "c_float":
+            value = f"{{self.{self.name}:.3f}}"
+        else:
+            value = f"{{self.{self.name}}}"
+        yield f"{self.name}={value}"
 
     def repr_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}={{repr(self.{self.name})}}"
+        yield f"{self.name}={{repr(self.{self.name})}}"
 
 
 class EnumFieldCoder(FieldCoder):
@@ -1065,13 +1052,17 @@ class StructureCoder(object):
                 str_strings.append(s)
         field_reprs = ", ".join(repr_strings)
         field_strs = ", ".join(str_strings)
+        first = f"xr.{class_name}"
+        # Short string version of classes that look more like tuples
+        if class_name in ["Quaternionf", "Vector3f", "Posef", ]:
+            first = ""
         result = ""
         result += textwrap.indent(inspect.cleandoc(f"""
             def __repr__(self) -> str:
                 return f"xr.{class_name}({field_reprs})"
 
             def __str__(self) -> str:
-                return f"xr.{class_name}({field_strs})"
+                return f"{first}({field_strs})"
         """), "    ")
         result += "\n"
         return result
