@@ -19,7 +19,7 @@ class TestVector3f(unittest.TestCase):
             "xr.Vector3f(x=1.340000033378601, y=-9.600000381469727, z=17.44444465637207)",
             repr(self.v))
         count = 0
-        for f in self.v:
+        for _ in self.v:
             count += 1
         self.assertEqual(3, count)
         self.assertTrue(self.v.y in self.v)

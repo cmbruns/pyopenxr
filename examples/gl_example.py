@@ -131,7 +131,8 @@ class OpenXrExample(object):
         self.render_target_size = None
         self.window = None
         self.session = None
-        self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(*([xr.CompositionLayerProjectionView()] * 2))
+        self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
+            *([xr.CompositionLayerProjectionView()] * 2))
         self.projection_layer = xr.CompositionLayerProjection(0, None, 2, self.projection_layer_views)
         self.swapchain_create_info = xr.SwapchainCreateInfo()
         self.swapchain = None
@@ -148,9 +149,9 @@ class OpenXrExample(object):
     def debug_callback_py(
             self,
             severity: xr.DebugUtilsMessageSeverityFlagsEXT,
-            type_: xr.DebugUtilsMessageTypeFlagsEXT,
+            _type: xr.DebugUtilsMessageTypeFlagsEXT,
             data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
-            user_data: ctypes.c_void_p,
+            _user_data: ctypes.c_void_p,
     ) -> bool:
         d = data.contents
         # TODO structure properties to return unicode strings
@@ -211,14 +212,15 @@ class OpenXrExample(object):
     def prepare_xr_system(self):
         get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY)
         self.system_id = xr.get_system(self.instance, get_info)  # TODO: not a pointer
-        sys_props = xr.get_system_properties(self.instance, self.system_id)
         view_configs = xr.enumerate_view_configurations(self.instance, self.system_id)
         assert view_configs[0] == xr.ViewConfigurationType.PRIMARY_STEREO.value  # TODO: equality...
         view_config_views = xr.enumerate_view_configuration_views(
             self.instance, self.system_id, xr.ViewConfigurationType.PRIMARY_STEREO)
         assert len(view_config_views) == 2
         assert view_config_views[0].recommended_image_rect_height == view_config_views[1].recommended_image_rect_height
-        self.render_target_size = (view_config_views[0].recommended_image_rect_width * 2, view_config_views[0].recommended_image_rect_height)
+        self.render_target_size = (
+            view_config_views[0].recommended_image_rect_width * 2,
+            view_config_views[0].recommended_image_rect_height)
         result = self.pxrGetOpenGLGraphicsRequirementsKHR(
             self.instance, self.system_id, ctypes.byref(self.graphics_requirements))  # TODO: pythonic wrapper
         result = xr.exception.check_result(xr.Result(result))

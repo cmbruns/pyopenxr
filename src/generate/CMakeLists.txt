@@ -77,7 +77,7 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 ### Generate version.py ###
 ###########################
 
-find_package(PythonInterp)
+find_package(PythonInterp REQUIRED)
 
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} print_openxr_version.py

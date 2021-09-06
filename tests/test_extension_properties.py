@@ -3,12 +3,6 @@ import unittest
 import xr
 
 
-# TODO:
-#  * string comparison
-#  * __str__ and __repr__
-#  * field values
-#  * array construction
-
 class TestExtensionProperties(unittest.TestCase):
     def setUp(self):
         pass
@@ -46,8 +40,6 @@ class TestExtensionProperties(unittest.TestCase):
         ep = xr.ExtensionProperties()
         ep.extension_name = b"Some String"
         self.assertEqual(str(ep), "Some String")
-
-    # TODO: from string. Actually let's see a use case first...
 
 
 if __name__ == '__main__':

@@ -19,7 +19,7 @@ class TestQuaternionf(unittest.TestCase):
             "xr.Quaternionf(x=0.0, y=0.0, z=0.0, w=1.0)",
             repr(self.q))
         count = 0
-        for f in self.q:
+        for _ in self.q:
             count += 1
         self.assertEqual(4, count)
         self.assertTrue(self.q.y in self.q)
