@@ -60,10 +60,10 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(type={repr(self.type)}, next={repr(self.next)}, view_format_count={repr(self.view_format_count)}, view_formats={repr(self.view_formats)})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self.view_format_count)}, view_formats={repr(self.view_formats)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(type={str(self.type)}, next={str(self.next)}, view_format_count={str(self.view_format_count)}, view_formats={str(self.view_formats)})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self.view_format_count}, view_formats={self.view_formats}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -95,10 +95,10 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXlibKHR(type={repr(self.type)}, next={repr(self.next)}, x_display={repr(self.x_display)}, visualid={repr(self.visualid)}, glx_fbconfig={repr(self.glx_fbconfig)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)})"
+        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={repr(self.x_display)}, visualid={repr(self.visualid)}, glx_fbconfig={repr(self.glx_fbconfig)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXlibKHR(type={str(self.type)}, next={str(self.next)}, x_display={str(self.x_display)}, visualid={str(self.visualid)}, glx_fbconfig={str(self.glx_fbconfig)}, glx_drawable={str(self.glx_drawable)}, glx_context={str(self.glx_context)})"
+        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={self.x_display}, visualid={self.visualid}, glx_fbconfig={self.glx_fbconfig}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -135,10 +135,10 @@ class GraphicsBindingOpenGLXcbKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXcbKHR(type={repr(self.type)}, next={repr(self.next)}, connection={repr(self.connection)}, screen_number={repr(self.screen_number)}, fbconfigid={repr(self.fbconfigid)}, visualid={repr(self.visualid)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)})"
+        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={repr(self.connection)}, screen_number={repr(self.screen_number)}, fbconfigid={repr(self.fbconfigid)}, visualid={repr(self.visualid)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXcbKHR(type={str(self.type)}, next={str(self.next)}, connection={str(self.connection)}, screen_number={str(self.screen_number)}, fbconfigid={str(self.fbconfigid)}, visualid={str(self.visualid)}, glx_drawable={str(self.glx_drawable)}, glx_context={str(self.glx_context)})"
+        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={self.connection}, screen_number={self.screen_number}, fbconfigid={self.fbconfigid}, visualid={self.visualid}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -166,10 +166,10 @@ class GraphicsBindingOpenGLWaylandKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLWaylandKHR(type={repr(self.type)}, next={repr(self.next)}, display={repr(self.display)})"
+        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={repr(self.display)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLWaylandKHR(type={str(self.type)}, next={str(self.next)}, display={str(self.display)})"
+        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={self.display}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -192,10 +192,10 @@ class SwapchainImageOpenGLKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageOpenGLKHR(type={repr(self.type)}, next={repr(self.next)}, image={repr(self.image)})"
+        return f"xr.SwapchainImageOpenGLKHR(image={repr(self.image)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageOpenGLKHR(type={str(self.type)}, next={str(self.next)}, image={str(self.image)})"
+        return f"xr.SwapchainImageOpenGLKHR(image={self.image}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -220,10 +220,10 @@ class GraphicsRequirementsOpenGLKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLKHR(type={repr(self.type)}, next={repr(self.next)}, min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)})"
+        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLKHR(type={str(self.type)}, next={str(self.next)}, min_api_version_supported={str(self.min_api_version_supported)}, max_api_version_supported={str(self.max_api_version_supported)})"
+        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={self.min_api_version_supported}, max_api_version_supported={self.max_api_version_supported}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -258,10 +258,10 @@ class GraphicsBindingVulkanKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingVulkanKHR(type={repr(self.type)}, next={repr(self.next)}, instance={repr(self.instance)}, physical_device={repr(self.physical_device)}, device={repr(self.device)}, queue_family_index={repr(self.queue_family_index)}, queue_index={repr(self.queue_index)})"
+        return f"xr.GraphicsBindingVulkanKHR(instance={repr(self.instance)}, physical_device={repr(self.physical_device)}, device={repr(self.device)}, queue_family_index={repr(self.queue_family_index)}, queue_index={repr(self.queue_index)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingVulkanKHR(type={str(self.type)}, next={str(self.next)}, instance={str(self.instance)}, physical_device={str(self.physical_device)}, device={str(self.device)}, queue_family_index={str(self.queue_family_index)}, queue_index={str(self.queue_index)})"
+        return f"xr.GraphicsBindingVulkanKHR(instance={self.instance}, physical_device={self.physical_device}, device={self.device}, queue_family_index={self.queue_family_index}, queue_index={self.queue_index}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -288,10 +288,10 @@ class SwapchainImageVulkanKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageVulkanKHR(type={repr(self.type)}, next={repr(self.next)}, image={repr(self.image)})"
+        return f"xr.SwapchainImageVulkanKHR(image={repr(self.image)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageVulkanKHR(type={str(self.type)}, next={str(self.next)}, image={str(self.image)})"
+        return f"xr.SwapchainImageVulkanKHR(image={self.image}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -316,10 +316,10 @@ class GraphicsRequirementsVulkanKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsVulkanKHR(type={repr(self.type)}, next={repr(self.next)}, min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)})"
+        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsRequirementsVulkanKHR(type={str(self.type)}, next={str(self.next)}, min_api_version_supported={str(self.min_api_version_supported)}, max_api_version_supported={str(self.max_api_version_supported)})"
+        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={self.min_api_version_supported}, max_api_version_supported={self.max_api_version_supported}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -368,10 +368,10 @@ class VulkanInstanceCreateInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanInstanceCreateInfoKHR(type={repr(self.type)}, next={repr(self.next)}, system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)})"
+        return f"xr.VulkanInstanceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanInstanceCreateInfoKHR(type={str(self.type)}, next={str(self.next)}, system_id={str(self.system_id)}, create_flags={str(self.create_flags)}, pfn_get_instance_proc_addr={str(self.pfn_get_instance_proc_addr)}, vulkan_create_info={str(self.vulkan_create_info)}, vulkan_allocator={str(self.vulkan_allocator)})"
+        return f"xr.VulkanInstanceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -408,10 +408,10 @@ class VulkanDeviceCreateInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanDeviceCreateInfoKHR(type={repr(self.type)}, next={repr(self.next)}, system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_physical_device={repr(self.vulkan_physical_device)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)})"
+        return f"xr.VulkanDeviceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_physical_device={repr(self.vulkan_physical_device)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanDeviceCreateInfoKHR(type={str(self.type)}, next={str(self.next)}, system_id={str(self.system_id)}, create_flags={str(self.create_flags)}, pfn_get_instance_proc_addr={str(self.pfn_get_instance_proc_addr)}, vulkan_physical_device={str(self.vulkan_physical_device)}, vulkan_create_info={str(self.vulkan_create_info)}, vulkan_allocator={str(self.vulkan_allocator)})"
+        return f"xr.VulkanDeviceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_physical_device={self.vulkan_physical_device}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -444,10 +444,10 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanGraphicsDeviceGetInfoKHR(type={repr(self.type)}, next={repr(self.next)}, system_id={repr(self.system_id)}, vulkan_instance={repr(self.vulkan_instance)})"
+        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={repr(self.system_id)}, vulkan_instance={repr(self.vulkan_instance)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanGraphicsDeviceGetInfoKHR(type={str(self.type)}, next={str(self.next)}, system_id={str(self.system_id)}, vulkan_instance={str(self.vulkan_instance)})"
+        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={self.system_id}, vulkan_instance={self.vulkan_instance}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -488,10 +488,10 @@ class SwapchainImageFoveationVulkanFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageFoveationVulkanFB(type={repr(self.type)}, next={repr(self.next)}, image={repr(self.image)}, width={repr(self.width)}, height={repr(self.height)})"
+        return f"xr.SwapchainImageFoveationVulkanFB(image={repr(self.image)}, width={repr(self.width)}, height={repr(self.height)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageFoveationVulkanFB(type={str(self.type)}, next={str(self.next)}, image={str(self.image)}, width={str(self.width)}, height={str(self.height)})"
+        return f"xr.SwapchainImageFoveationVulkanFB(image={self.image}, width={self.width}, height={self.height}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -538,10 +538,10 @@ class SwapchainStateSamplerVulkanFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateSamplerVulkanFB(type={repr(self.type)}, next={repr(self.next)}, min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, mipmap_mode={repr(self.mipmap_mode)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)})"
+        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, mipmap_mode={repr(self.mipmap_mode)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainStateSamplerVulkanFB(type={str(self.type)}, next={str(self.next)}, min_filter={str(self.min_filter)}, mag_filter={str(self.mag_filter)}, mipmap_mode={str(self.mipmap_mode)}, wrap_mode_s={str(self.wrap_mode_s)}, wrap_mode_t={str(self.wrap_mode_t)}, swizzle_red={str(self.swizzle_red)}, swizzle_green={str(self.swizzle_green)}, swizzle_blue={str(self.swizzle_blue)}, swizzle_alpha={str(self.swizzle_alpha)}, max_anisotropy={str(self.max_anisotropy)}, border_color={str(self.border_color)})"
+        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, mipmap_mode={self.mipmap_mode}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next_structure={self.next_structure}, structure_type={self.structure_type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
