@@ -13,8 +13,8 @@ def main():
             CursorKind.ENUM_DECL,
         ]
     )
-    cg.print_header()
     cg.ctypes_names.add("c_uint64")
+    cg.print_header()
     print(inspect.cleandoc('''
     import enum
 

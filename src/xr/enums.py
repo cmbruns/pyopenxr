@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import c_int
+from ctypes import c_int, c_uint64
 import enum
 
 

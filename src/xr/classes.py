@@ -7,7 +7,6 @@ import platform
 from typing import Sequence
 
 # TODO: separate package for opengl stuff
-from OpenGL import GL
 if platform.system() == "Windows":
     from OpenGL import WGL
 elif platform.system() == "Linux":
@@ -49,7 +48,7 @@ class Instance(object):
         if application_version is None:
             application_version = Version()
         if engine_name is None:
-            engine_name = "pyopenvr"
+            engine_name = "pyopenxr"
             engine_version = PYOPENXR_CURRENT_API_VERSION
         if engine_version is None:
             engine_version = Version()
@@ -65,7 +64,7 @@ class Instance(object):
         for i, s in enumerate(encoded_extensions):
             extension_names[i] = s
         instance_create_info = InstanceCreateInfo(
-            create_flags=0,
+            create_flags=InstanceCreateFlags(),
             application_info=application_info,
             enabled_api_layer_count=0,  # TODO:
             enabled_api_layer_names=None,
@@ -192,7 +191,7 @@ class Session(object):
             ctypes.c_void_p)
         session_create_info = SessionCreateInfo(
             next_structure=graphics_binding_pointer,
-            create_flags=0,
+            create_flags=SessionCreateFlags(),
             system_id=system.id,
         )
         self.handle = create_session(

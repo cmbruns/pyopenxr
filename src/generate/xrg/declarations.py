@@ -262,9 +262,7 @@ class FlagsItem(CodeItem):
             raise NotImplementedError
 
     def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
-        return {
-            "c_uint64",
-        }
+        return set()
 
 
 class FunctionItem(CodeItem):
@@ -491,8 +489,6 @@ class StructItem(CodeItem):
                     return self._numpy
             """), "    ")
             result += "\n"
-        result += structure_coder.generate_repr_str()
-        # Recursive structures require two separate stanzas
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
             result += "\n"
@@ -514,6 +510,9 @@ class StructItem(CodeItem):
                     return self.{string_field}.decode()      
             """), "    ")
             result += "\n"
+        else:
+            result += structure_coder.generate_repr_str()
+        # Recursive structures require two separate stanzas
         if self.is_recursive:
             # Structure containing self-reference must be declared in two stanzas
             result += "\n    pass"
@@ -914,16 +913,11 @@ class FieldCoder(object):
 class EnumFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        default = 1  # Most enums have a 1 value
-        if enum_name in [
-            "PerfSettingsNotificationLevelEXT",
-            "HandJointSetEXT",
-        ]:
-            default = 0
-        yield f"{self.name}: {enum_name} = {enum_name}({default})"
+        yield f"{self.name}: {enum_name} = {enum_name}()"
 
     def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}={self.name}.value"
+        enum_name = self.field.type.name(Api.PYTHON)
+        yield f"{self.field.name()}={enum_name}({self.name}).value"
 
 
 class FunctionPointerFieldCoder(FieldCoder):
@@ -1056,6 +1050,8 @@ class StructureCoder(object):
             elif field.type.name().endswith("GLXContext"):
                 self.field_coders.append(FieldCoder(field, default=None))
             elif isinstance(field.type, TypedefType) and isinstance(field.type.underlying_type, EnumType):
+                self.field_coders.append(EnumFieldCoder(field))
+            elif isinstance(field.type, TypedefType) and field.type.underlying_type.name() == "Flags64":
                 self.field_coders.append(EnumFieldCoder(field))
             else:
                 self.field_coders.append(FieldCoder(field))

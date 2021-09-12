@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_uint64, c_ulong, c_void_p, c_wchar, wintypes
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, wintypes
 import ctypes
 
 from OpenGL import WGL
@@ -482,7 +482,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanInstanceCreateFlagsKHR = 0,
+        create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR(),
         pfn_get_instance_proc_addr: int = 0,
         vulkan_create_info: POINTER(c_int) = None,
         vulkan_allocator: POINTER(c_int) = None,
@@ -491,7 +491,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=create_flags,
+            create_flags=VulkanInstanceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
@@ -520,7 +520,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanDeviceCreateFlagsKHR = 0,
+        create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR(),
         pfn_get_instance_proc_addr: int = 0,
         vulkan_physical_device: int = 0,
         vulkan_create_info: POINTER(c_int) = None,
@@ -530,7 +530,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=create_flags,
+            create_flags=VulkanDeviceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_physical_device=vulkan_physical_device,
             vulkan_create_info=vulkan_create_info,
