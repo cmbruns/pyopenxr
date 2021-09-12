@@ -503,6 +503,8 @@ class TypeDefItem(CodeItem):
                     # This is a HANDLE type
                     self._py_name += "Handle"  # To distinguish Instance from InstanceHandle
                     self._ctypes_name = self._py_name
+        if self.type.name() == "Flags64":
+            self._py_name = self._ctypes_name = self._py_name + "CInt"
         if self._py_name == "Version":
             self._py_name = self._ctypes_name = "VersionNumber"
 

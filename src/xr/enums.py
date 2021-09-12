@@ -19,7 +19,7 @@ class DefaultEnumMeta(enum.EnumMeta):
         return super().__call__(value, *args, **kwargs)
 
 
-class SpaceVelocityFlagBits(enum.Flag, metaclass=DefaultEnumMeta):
+class SpaceVelocityFlags(enum.Flag, metaclass=DefaultEnumMeta):
     NONE = 0x00000000
     LINEAR_VALID = 0x00000001
     ANGULAR_VALID = 0x00000002
