@@ -19,16 +19,16 @@ class DefaultEnumMeta(enum.EnumMeta):
         return super().__call__(value, *args, **kwargs)
 
 
-class SpaceVelocityFlags(enum.Flag, metaclass=DefaultEnumMeta):
-    NONE = 0x00000000
-    LINEAR_VALID = 0x00000001
-    ANGULAR_VALID = 0x00000002
-
-
-class EnumBase(enum.Enum):
+class EnumBase(enum.Enum, metaclass=DefaultEnumMeta):
     @staticmethod
     def ctype():
         return c_int
+        
+
+class FlagBase(enum.Flag, metaclass=DefaultEnumMeta):
+    @staticmethod
+    def ctype():
+        return c_uint64
 
 
 class Result(EnumBase):
@@ -526,39 +526,185 @@ class FoveationDynamicFB(EnumBase):
     LEVEL_ENABLED = 1
 
 
+class InstanceCreateFlags(FlagBase):
+    NONE = 0x00000000
+
+
+class SessionCreateFlags(FlagBase):
+    NONE = 0x00000000
+
+
+class SpaceVelocityFlags(FlagBase):
+    NONE = 0x00000000
+    LINEAR_VALID_BIT = 0x00000001
+    ANGULAR_VALID_BIT = 0x00000002
+
+
+class SpaceLocationFlags(FlagBase):
+    NONE = 0x00000000
+    ORIENTATION_VALID_BIT = 0x00000001
+    POSITION_VALID_BIT = 0x00000002
+    ORIENTATION_TRACKED_BIT = 0x00000004
+    POSITION_TRACKED_BIT = 0x00000008
+
+
+class SwapchainCreateFlags(FlagBase):
+    NONE = 0x00000000
+    PROTECTED_CONTENT_BIT = 0x00000001
+    STATIC_IMAGE_BIT = 0x00000002
+
+
+class SwapchainUsageFlags(FlagBase):
+    NONE = 0x00000000
+    COLOR_ATTACHMENT_BIT = 0x00000001
+    DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000002
+    UNORDERED_ACCESS_BIT = 0x00000004
+    TRANSFER_SRC_BIT = 0x00000008
+    TRANSFER_DST_BIT = 0x00000010
+    SAMPLED_BIT = 0x00000020
+    MUTABLE_FORMAT_BIT = 0x00000040
+    INPUT_ATTACHMENT_BIT_MND = 0x00000080
+    INPUT_ATTACHMENT_BIT_KHR = 0x00000080
+
+
+class CompositionLayerFlags(FlagBase):
+    NONE = 0x00000000
+    CORRECT_CHROMATIC_ABERRATION_BIT = 0x00000001
+    BLEND_TEXTURE_SOURCE_ALPHA_BIT = 0x00000002
+    UNPREMULTIPLIED_ALPHA_BIT = 0x00000004
+
+
+class ViewStateFlags(FlagBase):
+    NONE = 0x00000000
+    ORIENTATION_VALID_BIT = 0x00000001
+    POSITION_VALID_BIT = 0x00000002
+    ORIENTATION_TRACKED_BIT = 0x00000004
+    POSITION_TRACKED_BIT = 0x00000008
+
+
+class InputSourceLocalizedNameFlags(FlagBase):
+    NONE = 0x00000000
+    USER_PATH_BIT = 0x00000001
+    INTERACTION_PROFILE_BIT = 0x00000002
+    COMPONENT_BIT = 0x00000004
+
+
+class DebugUtilsMessageSeverityFlagsEXT(FlagBase):
+    NONE = 0x00000000
+    VERBOSE_BIT = 0x00000001
+    INFO_BIT = 0x00000010
+    WARNING_BIT = 0x00000100
+    ERROR_BIT = 0x00001000
+
+
+class DebugUtilsMessageTypeFlagsEXT(FlagBase):
+    NONE = 0x00000000
+    GENERAL_BIT = 0x00000001
+    VALIDATION_BIT = 0x00000002
+    PERFORMANCE_BIT = 0x00000004
+    CONFORMANCE_BIT = 0x00000008
+
+
+class OverlaySessionCreateFlagsEXTX(FlagBase):
+    NONE = 0x00000000
+
+
+class OverlayMainSessionFlagsEXTX(FlagBase):
+    NONE = 0x00000000
+    ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT = 0x00000001
+
+
+class CompositionLayerImageLayoutFlagsFB(FlagBase):
+    NONE = 0x00000000
+    VERTICAL_FLIP_BIT = 0x00000001
+
+
+class CompositionLayerSecureContentFlagsFB(FlagBase):
+    NONE = 0x00000000
+    EXCLUDE_LAYER_BIT = 0x00000001
+    REPLACE_LAYER_BIT = 0x00000002
+
+
+class HandTrackingAimFlagsFB(FlagBase):
+    NONE = 0x00000000
+    COMPUTED_BIT = 0x00000001
+    VALID_BIT = 0x00000002
+    INDEX_PINCHING_BIT = 0x00000004
+    MIDDLE_PINCHING_BIT = 0x00000008
+    RING_PINCHING_BIT = 0x00000010
+    LITTLE_PINCHING_BIT = 0x00000020
+    SYSTEM_GESTURE_BIT = 0x00000040
+    DOMINANT_HAND_BIT = 0x00000080
+    MENU_PRESSED_BIT = 0x00000100
+
+
+class SwapchainCreateFoveationFlagsFB(FlagBase):
+    NONE = 0x00000000
+    SCALED_BIN_BIT = 0x00000001
+    FRAGMENT_DENSITY_MAP_BIT = 0x00000002
+
+
+class SwapchainStateFoveationFlagsFB(FlagBase):
+    NONE = 0x00000000
+
+
+class CompositionLayerSpaceWarpInfoFlagsFB(FlagBase):
+    NONE = 0x00000000
+
+
 __all__ = [
-    "SpaceVelocityFlagBits",
-    "Result",
-    "StructureType",
-    "FormFactor",
-    "ViewConfigurationType",
-    "EnvironmentBlendMode",
-    "ReferenceSpaceType",
     "ActionType",
-    "EyeVisibility",
-    "SessionState",
-    "ObjectType",
-    "VisibilityMaskTypeKHR",
-    "PerfSettingsDomainEXT",
-    "PerfSettingsSubDomainEXT",
-    "PerfSettingsLevelEXT",
-    "PerfSettingsNotificationLevelEXT",
     "BlendFactorFB",
-    "SpatialGraphNodeTypeMSFT",
+    "ColorSpaceFB",
+    "CompositionLayerFlags",
+    "CompositionLayerImageLayoutFlagsFB",
+    "CompositionLayerSecureContentFlagsFB",
+    "CompositionLayerSpaceWarpInfoFlagsFB",
+    "DebugUtilsMessageSeverityFlagsEXT",
+    "DebugUtilsMessageTypeFlagsEXT",
+    "EnumBase",
+    "EnvironmentBlendMode",
+    "EyeVisibility",
+    "FlagBase",
+    "FormFactor",
+    "FoveationDynamicFB",
+    "FoveationLevelFB",
     "HandEXT",
     "HandJointEXT",
     "HandJointSetEXT",
-    "HandPoseTypeMSFT",
-    "ReprojectionModeMSFT",
     "HandJointsMotionRangeEXT",
-    "SceneComputeFeatureMSFT",
-    "SceneComputeConsistencyMSFT",
+    "HandPoseTypeMSFT",
+    "HandTrackingAimFlagsFB",
+    "InputSourceLocalizedNameFlags",
+    "InstanceCreateFlags",
     "MeshComputeLodMSFT",
+    "ObjectType",
+    "OverlayMainSessionFlagsEXTX",
+    "OverlaySessionCreateFlagsEXTX",
+    "PerfSettingsDomainEXT",
+    "PerfSettingsLevelEXT",
+    "PerfSettingsNotificationLevelEXT",
+    "PerfSettingsSubDomainEXT",
+    "ReferenceSpaceType",
+    "ReprojectionModeMSFT",
+    "Result",
     "SceneComponentTypeMSFT",
+    "SceneComputeConsistencyMSFT",
+    "SceneComputeFeatureMSFT",
+    "SceneComputeStateMSFT",
     "SceneObjectTypeMSFT",
     "ScenePlaneAlignmentTypeMSFT",
-    "SceneComputeStateMSFT",
-    "ColorSpaceFB",
-    "FoveationLevelFB",
-    "FoveationDynamicFB",
+    "SessionCreateFlags",
+    "SessionState",
+    "SpaceLocationFlags",
+    "SpaceVelocityFlags",
+    "SpatialGraphNodeTypeMSFT",
+    "StructureType",
+    "SwapchainCreateFlags",
+    "SwapchainCreateFoveationFlagsFB",
+    "SwapchainStateFoveationFlagsFB",
+    "SwapchainUsageFlags",
+    "ViewConfigurationType",
+    "ViewStateFlags",
+    "VisibilityMaskTypeKHR",
 ]

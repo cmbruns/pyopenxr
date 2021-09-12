@@ -64,23 +64,23 @@ class ActionSet_T(Structure):
 
 ActionSetHandle = POINTER(ActionSet_T)
 
-InstanceCreateFlags = Flags64
+InstanceCreateFlagsCInt = Flags64
 
-SessionCreateFlags = Flags64
+SessionCreateFlagsCInt = Flags64
 
-SpaceVelocityFlags = Flags64
+SpaceVelocityFlagsCInt = Flags64
 
-SpaceLocationFlags = Flags64
+SpaceLocationFlagsCInt = Flags64
 
-SwapchainCreateFlags = Flags64
+SwapchainCreateFlagsCInt = Flags64
 
-SwapchainUsageFlags = Flags64
+SwapchainUsageFlagsCInt = Flags64
 
-CompositionLayerFlags = Flags64
+CompositionLayerFlagsCInt = Flags64
 
-ViewStateFlags = Flags64
+ViewStateFlagsCInt = Flags64
 
-InputSourceLocalizedNameFlags = Flags64
+InputSourceLocalizedNameFlagsCInt = Flags64
 
 PFN_xrVoidFunction = CFUNCTYPE(None)
 
@@ -229,7 +229,7 @@ class InstanceCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("create_flags", InstanceCreateFlags),
+        ("create_flags", InstanceCreateFlagsCInt),
         ("application_info", ApplicationInfo),
         ("enabled_api_layer_count", c_uint32),
         ("enabled_api_layer_names", POINTER(c_char_p)),
@@ -432,7 +432,7 @@ class SessionCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("create_flags", SessionCreateFlags),
+        ("create_flags", SessionCreateFlagsCInt),
         ("system_id", SystemId),
     ]
 
@@ -513,7 +513,7 @@ class SpaceVelocity(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("velocity_flags", SpaceVelocityFlags),
+        ("velocity_flags", SpaceVelocityFlagsCInt),
         ("linear_velocity", Vector3f),
         ("angular_velocity", Vector3f),
     ]
@@ -729,7 +729,7 @@ class SpaceLocation(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("location_flags", SpaceLocationFlags),
+        ("location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -842,8 +842,8 @@ class SwapchainCreateInfo(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("create_flags", SwapchainCreateFlags),
-        ("usage_flags", SwapchainUsageFlags),
+        ("create_flags", SwapchainCreateFlagsCInt),
+        ("usage_flags", SwapchainUsageFlagsCInt),
         ("format", c_int64),
         ("sample_count", c_uint32),
         ("width", c_uint32),
@@ -1077,7 +1077,7 @@ class CompositionLayerBaseHeader(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
     ]
 
@@ -1171,7 +1171,7 @@ class ViewState(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_state_flags", ViewStateFlags),
+        ("view_state_flags", ViewStateFlagsCInt),
     ]
 
 
@@ -1745,7 +1745,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("source_path", Path),
-        ("which_components", InputSourceLocalizedNameFlags),
+        ("which_components", InputSourceLocalizedNameFlagsCInt),
     ]
 
 
@@ -2020,7 +2020,7 @@ class CompositionLayerProjection(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
         ("view_count", c_uint32),
         ("views", POINTER(CompositionLayerProjectionView)),
@@ -2065,7 +2065,7 @@ class CompositionLayerQuad(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
@@ -2593,7 +2593,7 @@ class CompositionLayerCubeKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("swapchain", SwapchainHandle),
@@ -2682,7 +2682,7 @@ class CompositionLayerCylinderKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
@@ -2737,7 +2737,7 @@ class CompositionLayerEquirectKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
@@ -2925,7 +2925,7 @@ class CompositionLayerEquirect2KHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerFlags),
+        ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
         ("eye_visibility", EyeVisibility.ctype()),
         ("sub_image", SwapchainSubImage),
@@ -3035,9 +3035,9 @@ class DebugUtilsMessengerEXT_T(Structure):
 
 DebugUtilsMessengerEXTHandle = POINTER(DebugUtilsMessengerEXT_T)
 
-DebugUtilsMessageSeverityFlagsEXT = Flags64
+DebugUtilsMessageSeverityFlagsEXTCInt = Flags64
 
-DebugUtilsMessageTypeFlagsEXT = Flags64
+DebugUtilsMessageTypeFlagsEXTCInt = Flags64
 
 
 class DebugUtilsObjectNameInfoEXT(Structure):
@@ -3142,7 +3142,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     ]
 
 
-PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeverityFlagsEXT, DebugUtilsMessageTypeFlagsEXT, POINTER(DebugUtilsMessengerCallbackDataEXT), c_void_p)
+PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeverityFlagsEXTCInt, DebugUtilsMessageTypeFlagsEXTCInt, POINTER(DebugUtilsMessengerCallbackDataEXT), c_void_p)
 
 
 class DebugUtilsMessengerCreateInfoEXT(Structure):
@@ -3173,8 +3173,8 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("message_severities", DebugUtilsMessageSeverityFlagsEXT),
-        ("message_types", DebugUtilsMessageTypeFlagsEXT),
+        ("message_severities", DebugUtilsMessageSeverityFlagsEXTCInt),
+        ("message_types", DebugUtilsMessageTypeFlagsEXTCInt),
         ("user_callback", PFN_xrDebugUtilsMessengerCallbackEXT),
         ("user_data", c_void_p),
     ]
@@ -3186,7 +3186,7 @@ PFN_xrCreateDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), InstanceHandle, P
 
 PFN_xrDestroyDebugUtilsMessengerEXT = CFUNCTYPE(Result.ctype(), DebugUtilsMessengerEXTHandle)
 
-PFN_xrSubmitDebugUtilsMessageEXT = CFUNCTYPE(Result.ctype(), InstanceHandle, DebugUtilsMessageSeverityFlagsEXT, DebugUtilsMessageTypeFlagsEXT, POINTER(DebugUtilsMessengerCallbackDataEXT))
+PFN_xrSubmitDebugUtilsMessageEXT = CFUNCTYPE(Result.ctype(), InstanceHandle, DebugUtilsMessageSeverityFlagsEXTCInt, DebugUtilsMessageTypeFlagsEXTCInt, POINTER(DebugUtilsMessengerCallbackDataEXT))
 
 PFN_xrSessionBeginDebugUtilsLabelRegionEXT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(DebugUtilsLabelEXT))
 
@@ -3247,9 +3247,9 @@ class EyeGazeSampleTimeEXT(Structure):
     ]
 
 
-OverlaySessionCreateFlagsEXTX = Flags64
+OverlaySessionCreateFlagsEXTXCInt = Flags64
 
-OverlayMainSessionFlagsEXTX = Flags64
+OverlayMainSessionFlagsEXTXCInt = Flags64
 
 
 class SessionCreateInfoOverlayEXTX(Structure):
@@ -3276,7 +3276,7 @@ class SessionCreateInfoOverlayEXTX(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("create_flags", OverlaySessionCreateFlagsEXTX),
+        ("create_flags", OverlaySessionCreateFlagsEXTXCInt),
         ("session_layers_placement", c_uint32),
     ]
 
@@ -3306,7 +3306,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("visible", Bool32),
-        ("flags", OverlayMainSessionFlagsEXTX),
+        ("flags", OverlayMainSessionFlagsEXTXCInt),
     ]
 
 
@@ -3388,7 +3388,7 @@ PFN_xrCreateSpatialAnchorSpaceMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, PO
 
 PFN_xrDestroySpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorMSFTHandle)
 
-CompositionLayerImageLayoutFlagsFB = Flags64
+CompositionLayerImageLayoutFlagsFBCInt = Flags64
 
 
 class CompositionLayerImageLayoutFB(Structure):
@@ -3413,7 +3413,7 @@ class CompositionLayerImageLayoutFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("flags", CompositionLayerImageLayoutFlagsFB),
+        ("flags", CompositionLayerImageLayoutFlagsFBCInt),
     ]
 
 
@@ -3646,7 +3646,7 @@ class HandJointLocationEXT(Structure):
         return f"xr.HandJointLocationEXT(location_flags={self.location_flags}, pose={self.pose}, radius={self.radius:.3f})"
 
     _fields_ = [
-        ("location_flags", SpaceLocationFlags),
+        ("location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
         ("radius", c_float),
     ]
@@ -3676,7 +3676,7 @@ class HandJointVelocityEXT(Structure):
         return f"xr.HandJointVelocityEXT(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity})"
 
     _fields_ = [
-        ("velocity_flags", SpaceVelocityFlags),
+        ("velocity_flags", SpaceVelocityFlagsCInt),
         ("linear_velocity", Vector3f),
         ("angular_velocity", Vector3f),
     ]
@@ -4463,7 +4463,7 @@ PFN_xrUpdateSwapchainFB = CFUNCTYPE(Result.ctype(), SwapchainHandle, POINTER(Swa
 
 PFN_xrGetSwapchainStateFB = CFUNCTYPE(Result.ctype(), SwapchainHandle, POINTER(SwapchainStateBaseHeaderFB))
 
-CompositionLayerSecureContentFlagsFB = Flags64
+CompositionLayerSecureContentFlagsFBCInt = Flags64
 
 
 class CompositionLayerSecureContentFB(Structure):
@@ -4488,7 +4488,7 @@ class CompositionLayerSecureContentFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("flags", CompositionLayerSecureContentFlagsFB),
+        ("flags", CompositionLayerSecureContentFlagsFBCInt),
     ]
 
 
@@ -4934,7 +4934,7 @@ class SceneComponentLocationMSFT(Structure):
         return f"xr.SceneComponentLocationMSFT(flags={self.flags}, pose={self.pose})"
 
     _fields_ = [
-        ("flags", SpaceLocationFlags),
+        ("flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -5702,7 +5702,7 @@ class HandTrackingScaleFB(Structure):
 
 PFN_xrGetHandMeshFB = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINTER(HandTrackingMeshFB))
 
-HandTrackingAimFlagsFB = Flags64
+HandTrackingAimFlagsFBCInt = Flags64
 
 
 class HandTrackingAimStateFB(Structure):
@@ -5739,7 +5739,7 @@ class HandTrackingAimStateFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("status", HandTrackingAimFlagsFB),
+        ("status", HandTrackingAimFlagsFBCInt),
         ("aim_pose", Posef),
         ("pinch_strength_index", c_float),
         ("pinch_strength_middle", c_float),
@@ -5802,9 +5802,9 @@ class FoveationProfileFB_T(Structure):
 
 FoveationProfileFBHandle = POINTER(FoveationProfileFB_T)
 
-SwapchainCreateFoveationFlagsFB = Flags64
+SwapchainCreateFoveationFlagsFBCInt = Flags64
 
-SwapchainStateFoveationFlagsFB = Flags64
+SwapchainStateFoveationFlagsFBCInt = Flags64
 
 
 class FoveationProfileCreateInfoFB(Structure):
@@ -5852,7 +5852,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("flags", SwapchainCreateFoveationFlagsFB),
+        ("flags", SwapchainCreateFoveationFlagsFBCInt),
     ]
 
 
@@ -5880,7 +5880,7 @@ class SwapchainStateFoveationFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("flags", SwapchainStateFoveationFlagsFB),
+        ("flags", SwapchainStateFoveationFlagsFBCInt),
         ("profile", FoveationProfileFBHandle),
     ]
 
@@ -6135,7 +6135,7 @@ PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreC
 
 PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle)
 
-CompositionLayerSpaceWarpInfoFlagsFB = Flags64
+CompositionLayerSpaceWarpInfoFlagsFBCInt = Flags64
 
 
 class CompositionLayerSpaceWarpInfoFB(Structure):
@@ -6180,7 +6180,7 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("layer_flags", CompositionLayerSpaceWarpInfoFlagsFB),
+        ("layer_flags", CompositionLayerSpaceWarpInfoFlagsFBCInt),
         ("motion_vector_sub_image", SwapchainSubImage),
         ("app_space_delta_pose", Posef),
         ("depth_sub_image", SwapchainSubImage),
@@ -6221,360 +6221,360 @@ class SystemSpaceWarpPropertiesFB(Structure):
 
 
 __all__ = [
-    "VersionNumber",
-    "Flags64",
-    "SystemId",
-    "Bool32",
-    "Path",
-    "Time",
-    "Duration",
-    "Instance_T",
-    "InstanceHandle",
-    "Session_T",
-    "SessionHandle",
-    "Space_T",
-    "SpaceHandle",
-    "Action_T",
-    "ActionHandle",
-    "Swapchain_T",
-    "SwapchainHandle",
-    "ActionSet_T",
-    "ActionSetHandle",
-    "InstanceCreateFlags",
-    "SessionCreateFlags",
-    "SpaceVelocityFlags",
-    "SpaceLocationFlags",
-    "SwapchainCreateFlags",
-    "SwapchainUsageFlags",
-    "CompositionLayerFlags",
-    "ViewStateFlags",
-    "InputSourceLocalizedNameFlags",
-    "PFN_xrVoidFunction",
-    "ApiLayerProperties",
-    "ExtensionProperties",
-    "ApplicationInfo",
-    "InstanceCreateInfo",
-    "InstanceProperties",
-    "EventDataBuffer",
-    "SystemGetInfo",
-    "SystemGraphicsProperties",
-    "SystemTrackingProperties",
-    "SystemProperties",
-    "SessionCreateInfo",
-    "Vector3f",
-    "SpaceVelocity",
-    "Quaternionf",
-    "Posef",
-    "ReferenceSpaceCreateInfo",
-    "Extent2Df",
-    "ActionSpaceCreateInfo",
-    "SpaceLocation",
-    "ViewConfigurationProperties",
-    "ViewConfigurationView",
-    "SwapchainCreateInfo",
-    "SwapchainImageBaseHeader",
-    "SwapchainImageAcquireInfo",
-    "SwapchainImageWaitInfo",
-    "SwapchainImageReleaseInfo",
-    "SessionBeginInfo",
-    "FrameWaitInfo",
-    "FrameState",
-    "FrameBeginInfo",
-    "CompositionLayerBaseHeader",
-    "FrameEndInfo",
-    "ViewLocateInfo",
-    "ViewState",
-    "Fovf",
-    "View",
-    "ActionSetCreateInfo",
     "ActionCreateInfo",
-    "ActionSuggestedBinding",
-    "InteractionProfileSuggestedBinding",
-    "SessionActionSetsAttachInfo",
-    "InteractionProfileState",
-    "ActionStateGetInfo",
+    "ActionHandle",
+    "ActionSetCreateInfo",
+    "ActionSetHandle",
+    "ActionSet_T",
+    "ActionSpaceCreateInfo",
     "ActionStateBoolean",
     "ActionStateFloat",
-    "Vector2f",
-    "ActionStateVector2f",
+    "ActionStateGetInfo",
     "ActionStatePose",
-    "ActiveActionSet",
+    "ActionStateVector2f",
+    "ActionSuggestedBinding",
+    "Action_T",
     "ActionsSyncInfo",
-    "BoundSourcesForActionEnumerateInfo",
-    "InputSourceLocalizedNameGetInfo",
-    "HapticActionInfo",
-    "HapticBaseHeader",
+    "ActiveActionSet",
+    "ApiLayerProperties",
+    "ApplicationInfo",
     "BaseInStructure",
     "BaseOutStructure",
-    "Offset2Di",
-    "Extent2Di",
-    "Rect2Di",
-    "SwapchainSubImage",
-    "CompositionLayerProjectionView",
-    "CompositionLayerProjection",
-    "CompositionLayerQuad",
-    "EventDataBaseHeader",
-    "EventDataEventsLost",
-    "EventDataInstanceLossPending",
-    "EventDataSessionStateChanged",
-    "EventDataReferenceSpaceChangePending",
-    "EventDataInteractionProfileChanged",
-    "HapticVibration",
-    "Offset2Df",
-    "Rect2Df",
-    "Vector4f",
-    "Color4f",
-    "PFN_xrGetInstanceProcAddr",
-    "PFN_xrEnumerateApiLayerProperties",
-    "PFN_xrEnumerateInstanceExtensionProperties",
-    "PFN_xrCreateInstance",
-    "PFN_xrDestroyInstance",
-    "PFN_xrGetInstanceProperties",
-    "PFN_xrPollEvent",
-    "PFN_xrResultToString",
-    "PFN_xrStructureTypeToString",
-    "PFN_xrGetSystem",
-    "PFN_xrGetSystemProperties",
-    "PFN_xrEnumerateEnvironmentBlendModes",
-    "PFN_xrCreateSession",
-    "PFN_xrDestroySession",
-    "PFN_xrEnumerateReferenceSpaces",
-    "PFN_xrCreateReferenceSpace",
-    "PFN_xrGetReferenceSpaceBoundsRect",
-    "PFN_xrCreateActionSpace",
-    "PFN_xrLocateSpace",
-    "PFN_xrDestroySpace",
-    "PFN_xrEnumerateViewConfigurations",
-    "PFN_xrGetViewConfigurationProperties",
-    "PFN_xrEnumerateViewConfigurationViews",
-    "PFN_xrEnumerateSwapchainFormats",
-    "PFN_xrCreateSwapchain",
-    "PFN_xrDestroySwapchain",
-    "PFN_xrEnumerateSwapchainImages",
-    "PFN_xrAcquireSwapchainImage",
-    "PFN_xrWaitSwapchainImage",
-    "PFN_xrReleaseSwapchainImage",
-    "PFN_xrBeginSession",
-    "PFN_xrEndSession",
-    "PFN_xrRequestExitSession",
-    "PFN_xrWaitFrame",
-    "PFN_xrBeginFrame",
-    "PFN_xrEndFrame",
-    "PFN_xrLocateViews",
-    "PFN_xrStringToPath",
-    "PFN_xrPathToString",
-    "PFN_xrCreateActionSet",
-    "PFN_xrDestroyActionSet",
-    "PFN_xrCreateAction",
-    "PFN_xrDestroyAction",
-    "PFN_xrSuggestInteractionProfileBindings",
-    "PFN_xrAttachSessionActionSets",
-    "PFN_xrGetCurrentInteractionProfile",
-    "PFN_xrGetActionStateBoolean",
-    "PFN_xrGetActionStateFloat",
-    "PFN_xrGetActionStateVector2f",
-    "PFN_xrGetActionStatePose",
-    "PFN_xrSyncActions",
-    "PFN_xrEnumerateBoundSourcesForAction",
-    "PFN_xrGetInputSourceLocalizedName",
-    "PFN_xrApplyHapticFeedback",
-    "PFN_xrStopHapticFeedback",
-    "CompositionLayerCubeKHR",
-    "CompositionLayerDepthInfoKHR",
-    "CompositionLayerCylinderKHR",
-    "CompositionLayerEquirectKHR",
-    "VisibilityMaskKHR",
-    "EventDataVisibilityMaskChangedKHR",
-    "PFN_xrGetVisibilityMaskKHR",
-    "CompositionLayerColorScaleBiasKHR",
-    "LoaderInitInfoBaseHeaderKHR",
-    "PFN_xrInitializeLoaderKHR",
-    "CompositionLayerEquirect2KHR",
     "BindingModificationBaseHeaderKHR",
     "BindingModificationsKHR",
-    "EventDataPerfSettingsEXT",
-    "PFN_xrPerfSettingsSetPerformanceLevelEXT",
-    "PFN_xrThermalGetTemperatureTrendEXT",
-    "DebugUtilsMessengerEXT_T",
-    "DebugUtilsMessengerEXTHandle",
-    "DebugUtilsMessageSeverityFlagsEXT",
-    "DebugUtilsMessageTypeFlagsEXT",
-    "DebugUtilsObjectNameInfoEXT",
-    "DebugUtilsLabelEXT",
-    "DebugUtilsMessengerCallbackDataEXT",
-    "PFN_xrDebugUtilsMessengerCallbackEXT",
-    "DebugUtilsMessengerCreateInfoEXT",
-    "PFN_xrSetDebugUtilsObjectNameEXT",
-    "PFN_xrCreateDebugUtilsMessengerEXT",
-    "PFN_xrDestroyDebugUtilsMessengerEXT",
-    "PFN_xrSubmitDebugUtilsMessageEXT",
-    "PFN_xrSessionBeginDebugUtilsLabelRegionEXT",
-    "PFN_xrSessionEndDebugUtilsLabelRegionEXT",
-    "PFN_xrSessionInsertDebugUtilsLabelEXT",
-    "SystemEyeGazeInteractionPropertiesEXT",
-    "EyeGazeSampleTimeEXT",
-    "OverlaySessionCreateFlagsEXTX",
-    "OverlayMainSessionFlagsEXTX",
-    "SessionCreateInfoOverlayEXTX",
-    "EventDataMainSessionVisibilityChangedEXTX",
-    "SpatialAnchorMSFT_T",
-    "SpatialAnchorMSFTHandle",
-    "SpatialAnchorCreateInfoMSFT",
-    "SpatialAnchorSpaceCreateInfoMSFT",
-    "PFN_xrCreateSpatialAnchorMSFT",
-    "PFN_xrCreateSpatialAnchorSpaceMSFT",
-    "PFN_xrDestroySpatialAnchorMSFT",
-    "CompositionLayerImageLayoutFlagsFB",
-    "CompositionLayerImageLayoutFB",
+    "Bool32",
+    "BoundSourcesForActionEnumerateInfo",
+    "Color4f",
     "CompositionLayerAlphaBlendFB",
-    "ViewConfigurationDepthRangeEXT",
-    "PFN_xrSetInputDeviceActiveEXT",
-    "PFN_xrSetInputDeviceStateBoolEXT",
-    "PFN_xrSetInputDeviceStateFloatEXT",
-    "PFN_xrSetInputDeviceStateVector2fEXT",
-    "PFN_xrSetInputDeviceLocationEXT",
-    "SpatialGraphNodeSpaceCreateInfoMSFT",
-    "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
-    "HandTrackerEXT_T",
-    "HandTrackerEXTHandle",
-    "SystemHandTrackingPropertiesEXT",
-    "HandTrackerCreateInfoEXT",
-    "HandJointsLocateInfoEXT",
-    "HandJointLocationEXT",
-    "HandJointVelocityEXT",
-    "HandJointLocationsEXT",
-    "HandJointVelocitiesEXT",
-    "PFN_xrCreateHandTrackerEXT",
-    "PFN_xrDestroyHandTrackerEXT",
-    "PFN_xrLocateHandJointsEXT",
-    "SystemHandTrackingMeshPropertiesMSFT",
-    "HandMeshSpaceCreateInfoMSFT",
-    "HandMeshUpdateInfoMSFT",
-    "HandMeshIndexBufferMSFT",
-    "HandMeshVertexMSFT",
-    "HandMeshVertexBufferMSFT",
-    "HandMeshMSFT",
-    "HandPoseTypeInfoMSFT",
-    "PFN_xrCreateHandMeshSpaceMSFT",
-    "PFN_xrUpdateHandMeshMSFT",
-    "SecondaryViewConfigurationSessionBeginInfoMSFT",
-    "SecondaryViewConfigurationStateMSFT",
-    "SecondaryViewConfigurationFrameStateMSFT",
-    "SecondaryViewConfigurationLayerInfoMSFT",
-    "SecondaryViewConfigurationFrameEndInfoMSFT",
-    "SecondaryViewConfigurationSwapchainCreateInfoMSFT",
+    "CompositionLayerBaseHeader",
+    "CompositionLayerColorScaleBiasKHR",
+    "CompositionLayerCubeKHR",
+    "CompositionLayerCylinderKHR",
+    "CompositionLayerDepthInfoKHR",
+    "CompositionLayerDepthTestVARJO",
+    "CompositionLayerEquirect2KHR",
+    "CompositionLayerEquirectKHR",
+    "CompositionLayerFlagsCInt",
+    "CompositionLayerImageLayoutFB",
+    "CompositionLayerImageLayoutFlagsFBCInt",
+    "CompositionLayerProjection",
+    "CompositionLayerProjectionView",
+    "CompositionLayerQuad",
+    "CompositionLayerReprojectionInfoMSFT",
+    "CompositionLayerReprojectionPlaneOverrideMSFT",
+    "CompositionLayerSecureContentFB",
+    "CompositionLayerSecureContentFlagsFBCInt",
+    "CompositionLayerSpaceWarpInfoFB",
+    "CompositionLayerSpaceWarpInfoFlagsFBCInt",
     "ControllerModelKeyMSFT",
     "ControllerModelKeyStateMSFT",
     "ControllerModelNodePropertiesMSFT",
-    "ControllerModelPropertiesMSFT",
     "ControllerModelNodeStateMSFT",
+    "ControllerModelPropertiesMSFT",
     "ControllerModelStateMSFT",
-    "PFN_xrGetControllerModelKeyMSFT",
-    "PFN_xrLoadControllerModelMSFT",
-    "PFN_xrGetControllerModelPropertiesMSFT",
-    "PFN_xrGetControllerModelStateMSFT",
-    "ViewConfigurationViewFovEPIC",
-    "CompositionLayerReprojectionInfoMSFT",
-    "CompositionLayerReprojectionPlaneOverrideMSFT",
-    "PFN_xrEnumerateReprojectionModesMSFT",
-    "SwapchainStateBaseHeaderFB",
-    "PFN_xrUpdateSwapchainFB",
-    "PFN_xrGetSwapchainStateFB",
-    "CompositionLayerSecureContentFlagsFB",
-    "CompositionLayerSecureContentFB",
-    "InteractionProfileAnalogThresholdVALVE",
-    "HandJointsMotionRangeInfoEXT",
-    "SceneObserverMSFT_T",
-    "SceneObserverMSFTHandle",
-    "SceneMSFT_T",
-    "SceneMSFTHandle",
-    "UuidMSFT",
-    "SceneObserverCreateInfoMSFT",
-    "SceneCreateInfoMSFT",
-    "SceneSphereBoundMSFT",
-    "SceneOrientedBoxBoundMSFT",
-    "SceneFrustumBoundMSFT",
-    "SceneBoundsMSFT",
-    "NewSceneComputeInfoMSFT",
-    "VisualMeshComputeLodInfoMSFT",
-    "SceneComponentMSFT",
-    "SceneComponentsMSFT",
-    "SceneComponentsGetInfoMSFT",
-    "SceneComponentLocationMSFT",
-    "SceneComponentLocationsMSFT",
-    "SceneComponentsLocateInfoMSFT",
-    "SceneObjectMSFT",
-    "SceneObjectsMSFT",
-    "SceneComponentParentFilterInfoMSFT",
-    "SceneObjectTypesFilterInfoMSFT",
-    "ScenePlaneMSFT",
-    "ScenePlanesMSFT",
-    "ScenePlaneAlignmentFilterInfoMSFT",
-    "SceneMeshMSFT",
-    "SceneMeshesMSFT",
-    "SceneMeshBuffersGetInfoMSFT",
-    "SceneMeshBuffersMSFT",
-    "SceneMeshVertexBufferMSFT",
-    "SceneMeshIndicesUint32MSFT",
-    "SceneMeshIndicesUint16MSFT",
-    "PFN_xrEnumerateSceneComputeFeaturesMSFT",
-    "PFN_xrCreateSceneObserverMSFT",
-    "PFN_xrDestroySceneObserverMSFT",
-    "PFN_xrCreateSceneMSFT",
-    "PFN_xrDestroySceneMSFT",
-    "PFN_xrComputeNewSceneMSFT",
-    "PFN_xrGetSceneComputeStateMSFT",
-    "PFN_xrGetSceneComponentsMSFT",
-    "PFN_xrLocateSceneComponentsMSFT",
-    "PFN_xrGetSceneMeshBuffersMSFT",
-    "SerializedSceneFragmentDataGetInfoMSFT",
+    "DebugUtilsLabelEXT",
+    "DebugUtilsMessageSeverityFlagsEXTCInt",
+    "DebugUtilsMessageTypeFlagsEXTCInt",
+    "DebugUtilsMessengerCallbackDataEXT",
+    "DebugUtilsMessengerCreateInfoEXT",
+    "DebugUtilsMessengerEXTHandle",
+    "DebugUtilsMessengerEXT_T",
+    "DebugUtilsObjectNameInfoEXT",
     "DeserializeSceneFragmentMSFT",
-    "SceneDeserializeInfoMSFT",
-    "PFN_xrDeserializeSceneMSFT",
-    "PFN_xrGetSerializedSceneFragmentDataMSFT",
+    "Duration",
+    "EventDataBaseHeader",
+    "EventDataBuffer",
     "EventDataDisplayRefreshRateChangedFB",
-    "PFN_xrEnumerateDisplayRefreshRatesFB",
-    "PFN_xrGetDisplayRefreshRateFB",
-    "PFN_xrRequestDisplayRefreshRateFB",
-    "SystemColorSpacePropertiesFB",
-    "PFN_xrEnumerateColorSpacesFB",
-    "PFN_xrSetColorSpaceFB",
-    "Vector4sFB",
+    "EventDataEventsLost",
+    "EventDataInstanceLossPending",
+    "EventDataInteractionProfileChanged",
+    "EventDataMainSessionVisibilityChangedEXTX",
+    "EventDataPerfSettingsEXT",
+    "EventDataReferenceSpaceChangePending",
+    "EventDataSessionStateChanged",
+    "EventDataVisibilityMaskChangedKHR",
+    "ExtensionProperties",
+    "Extent2Df",
+    "Extent2Di",
+    "EyeGazeSampleTimeEXT",
+    "Flags64",
+    "FoveatedViewConfigurationViewVARJO",
+    "FoveationLevelProfileCreateInfoFB",
+    "FoveationProfileCreateInfoFB",
+    "FoveationProfileFBHandle",
+    "FoveationProfileFB_T",
+    "Fovf",
+    "FrameBeginInfo",
+    "FrameEndInfo",
+    "FrameState",
+    "FrameWaitInfo",
+    "HandCapsuleFB",
+    "HandJointLocationEXT",
+    "HandJointLocationsEXT",
+    "HandJointVelocitiesEXT",
+    "HandJointVelocityEXT",
+    "HandJointsLocateInfoEXT",
+    "HandJointsMotionRangeInfoEXT",
+    "HandMeshIndexBufferMSFT",
+    "HandMeshMSFT",
+    "HandMeshSpaceCreateInfoMSFT",
+    "HandMeshUpdateInfoMSFT",
+    "HandMeshVertexBufferMSFT",
+    "HandMeshVertexMSFT",
+    "HandPoseTypeInfoMSFT",
+    "HandTrackerCreateInfoEXT",
+    "HandTrackerEXTHandle",
+    "HandTrackerEXT_T",
+    "HandTrackingAimFlagsFBCInt",
+    "HandTrackingAimStateFB",
+    "HandTrackingCapsulesStateFB",
     "HandTrackingMeshFB",
     "HandTrackingScaleFB",
-    "PFN_xrGetHandMeshFB",
-    "HandTrackingAimFlagsFB",
-    "HandTrackingAimStateFB",
-    "HandCapsuleFB",
-    "HandTrackingCapsulesStateFB",
-    "FoveationProfileFB_T",
-    "FoveationProfileFBHandle",
-    "SwapchainCreateFoveationFlagsFB",
-    "SwapchainStateFoveationFlagsFB",
-    "FoveationProfileCreateInfoFB",
-    "SwapchainCreateInfoFoveationFB",
-    "SwapchainStateFoveationFB",
-    "PFN_xrCreateFoveationProfileFB",
-    "PFN_xrDestroyFoveationProfileFB",
-    "FoveationLevelProfileCreateInfoFB",
-    "ViewLocateFoveatedRenderingVARJO",
-    "FoveatedViewConfigurationViewVARJO",
-    "SystemFoveatedRenderingPropertiesVARJO",
-    "CompositionLayerDepthTestVARJO",
-    "PFN_xrSetEnvironmentDepthEstimationVARJO",
-    "SpatialAnchorStoreConnectionMSFT_T",
-    "SpatialAnchorStoreConnectionMSFTHandle",
-    "SpatialAnchorPersistenceNameMSFT",
-    "SpatialAnchorPersistenceInfoMSFT",
-    "SpatialAnchorFromPersistedAnchorCreateInfoMSFT",
-    "PFN_xrCreateSpatialAnchorStoreConnectionMSFT",
-    "PFN_xrDestroySpatialAnchorStoreConnectionMSFT",
-    "PFN_xrPersistSpatialAnchorMSFT",
-    "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
-    "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
-    "PFN_xrUnpersistSpatialAnchorMSFT",
+    "HapticActionInfo",
+    "HapticBaseHeader",
+    "HapticVibration",
+    "InputSourceLocalizedNameFlagsCInt",
+    "InputSourceLocalizedNameGetInfo",
+    "InstanceCreateFlagsCInt",
+    "InstanceCreateInfo",
+    "InstanceHandle",
+    "InstanceProperties",
+    "Instance_T",
+    "InteractionProfileAnalogThresholdVALVE",
+    "InteractionProfileState",
+    "InteractionProfileSuggestedBinding",
+    "LoaderInitInfoBaseHeaderKHR",
+    "NewSceneComputeInfoMSFT",
+    "Offset2Df",
+    "Offset2Di",
+    "OverlayMainSessionFlagsEXTXCInt",
+    "OverlaySessionCreateFlagsEXTXCInt",
+    "PFN_xrAcquireSwapchainImage",
+    "PFN_xrApplyHapticFeedback",
+    "PFN_xrAttachSessionActionSets",
+    "PFN_xrBeginFrame",
+    "PFN_xrBeginSession",
     "PFN_xrClearSpatialAnchorStoreMSFT",
-    "CompositionLayerSpaceWarpInfoFlagsFB",
-    "CompositionLayerSpaceWarpInfoFB",
+    "PFN_xrComputeNewSceneMSFT",
+    "PFN_xrCreateAction",
+    "PFN_xrCreateActionSet",
+    "PFN_xrCreateActionSpace",
+    "PFN_xrCreateDebugUtilsMessengerEXT",
+    "PFN_xrCreateFoveationProfileFB",
+    "PFN_xrCreateHandMeshSpaceMSFT",
+    "PFN_xrCreateHandTrackerEXT",
+    "PFN_xrCreateInstance",
+    "PFN_xrCreateReferenceSpace",
+    "PFN_xrCreateSceneMSFT",
+    "PFN_xrCreateSceneObserverMSFT",
+    "PFN_xrCreateSession",
+    "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
+    "PFN_xrCreateSpatialAnchorMSFT",
+    "PFN_xrCreateSpatialAnchorSpaceMSFT",
+    "PFN_xrCreateSpatialAnchorStoreConnectionMSFT",
+    "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
+    "PFN_xrCreateSwapchain",
+    "PFN_xrDebugUtilsMessengerCallbackEXT",
+    "PFN_xrDeserializeSceneMSFT",
+    "PFN_xrDestroyAction",
+    "PFN_xrDestroyActionSet",
+    "PFN_xrDestroyDebugUtilsMessengerEXT",
+    "PFN_xrDestroyFoveationProfileFB",
+    "PFN_xrDestroyHandTrackerEXT",
+    "PFN_xrDestroyInstance",
+    "PFN_xrDestroySceneMSFT",
+    "PFN_xrDestroySceneObserverMSFT",
+    "PFN_xrDestroySession",
+    "PFN_xrDestroySpace",
+    "PFN_xrDestroySpatialAnchorMSFT",
+    "PFN_xrDestroySpatialAnchorStoreConnectionMSFT",
+    "PFN_xrDestroySwapchain",
+    "PFN_xrEndFrame",
+    "PFN_xrEndSession",
+    "PFN_xrEnumerateApiLayerProperties",
+    "PFN_xrEnumerateBoundSourcesForAction",
+    "PFN_xrEnumerateColorSpacesFB",
+    "PFN_xrEnumerateDisplayRefreshRatesFB",
+    "PFN_xrEnumerateEnvironmentBlendModes",
+    "PFN_xrEnumerateInstanceExtensionProperties",
+    "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
+    "PFN_xrEnumerateReferenceSpaces",
+    "PFN_xrEnumerateReprojectionModesMSFT",
+    "PFN_xrEnumerateSceneComputeFeaturesMSFT",
+    "PFN_xrEnumerateSwapchainFormats",
+    "PFN_xrEnumerateSwapchainImages",
+    "PFN_xrEnumerateViewConfigurationViews",
+    "PFN_xrEnumerateViewConfigurations",
+    "PFN_xrGetActionStateBoolean",
+    "PFN_xrGetActionStateFloat",
+    "PFN_xrGetActionStatePose",
+    "PFN_xrGetActionStateVector2f",
+    "PFN_xrGetControllerModelKeyMSFT",
+    "PFN_xrGetControllerModelPropertiesMSFT",
+    "PFN_xrGetControllerModelStateMSFT",
+    "PFN_xrGetCurrentInteractionProfile",
+    "PFN_xrGetDisplayRefreshRateFB",
+    "PFN_xrGetHandMeshFB",
+    "PFN_xrGetInputSourceLocalizedName",
+    "PFN_xrGetInstanceProcAddr",
+    "PFN_xrGetInstanceProperties",
+    "PFN_xrGetReferenceSpaceBoundsRect",
+    "PFN_xrGetSceneComponentsMSFT",
+    "PFN_xrGetSceneComputeStateMSFT",
+    "PFN_xrGetSceneMeshBuffersMSFT",
+    "PFN_xrGetSerializedSceneFragmentDataMSFT",
+    "PFN_xrGetSwapchainStateFB",
+    "PFN_xrGetSystem",
+    "PFN_xrGetSystemProperties",
+    "PFN_xrGetViewConfigurationProperties",
+    "PFN_xrGetVisibilityMaskKHR",
+    "PFN_xrInitializeLoaderKHR",
+    "PFN_xrLoadControllerModelMSFT",
+    "PFN_xrLocateHandJointsEXT",
+    "PFN_xrLocateSceneComponentsMSFT",
+    "PFN_xrLocateSpace",
+    "PFN_xrLocateViews",
+    "PFN_xrPathToString",
+    "PFN_xrPerfSettingsSetPerformanceLevelEXT",
+    "PFN_xrPersistSpatialAnchorMSFT",
+    "PFN_xrPollEvent",
+    "PFN_xrReleaseSwapchainImage",
+    "PFN_xrRequestDisplayRefreshRateFB",
+    "PFN_xrRequestExitSession",
+    "PFN_xrResultToString",
+    "PFN_xrSessionBeginDebugUtilsLabelRegionEXT",
+    "PFN_xrSessionEndDebugUtilsLabelRegionEXT",
+    "PFN_xrSessionInsertDebugUtilsLabelEXT",
+    "PFN_xrSetColorSpaceFB",
+    "PFN_xrSetDebugUtilsObjectNameEXT",
+    "PFN_xrSetEnvironmentDepthEstimationVARJO",
+    "PFN_xrSetInputDeviceActiveEXT",
+    "PFN_xrSetInputDeviceLocationEXT",
+    "PFN_xrSetInputDeviceStateBoolEXT",
+    "PFN_xrSetInputDeviceStateFloatEXT",
+    "PFN_xrSetInputDeviceStateVector2fEXT",
+    "PFN_xrStopHapticFeedback",
+    "PFN_xrStringToPath",
+    "PFN_xrStructureTypeToString",
+    "PFN_xrSubmitDebugUtilsMessageEXT",
+    "PFN_xrSuggestInteractionProfileBindings",
+    "PFN_xrSyncActions",
+    "PFN_xrThermalGetTemperatureTrendEXT",
+    "PFN_xrUnpersistSpatialAnchorMSFT",
+    "PFN_xrUpdateHandMeshMSFT",
+    "PFN_xrUpdateSwapchainFB",
+    "PFN_xrVoidFunction",
+    "PFN_xrWaitFrame",
+    "PFN_xrWaitSwapchainImage",
+    "Path",
+    "Posef",
+    "Quaternionf",
+    "Rect2Df",
+    "Rect2Di",
+    "ReferenceSpaceCreateInfo",
+    "SceneBoundsMSFT",
+    "SceneComponentLocationMSFT",
+    "SceneComponentLocationsMSFT",
+    "SceneComponentMSFT",
+    "SceneComponentParentFilterInfoMSFT",
+    "SceneComponentsGetInfoMSFT",
+    "SceneComponentsLocateInfoMSFT",
+    "SceneComponentsMSFT",
+    "SceneCreateInfoMSFT",
+    "SceneDeserializeInfoMSFT",
+    "SceneFrustumBoundMSFT",
+    "SceneMSFTHandle",
+    "SceneMSFT_T",
+    "SceneMeshBuffersGetInfoMSFT",
+    "SceneMeshBuffersMSFT",
+    "SceneMeshIndicesUint16MSFT",
+    "SceneMeshIndicesUint32MSFT",
+    "SceneMeshMSFT",
+    "SceneMeshVertexBufferMSFT",
+    "SceneMeshesMSFT",
+    "SceneObjectMSFT",
+    "SceneObjectTypesFilterInfoMSFT",
+    "SceneObjectsMSFT",
+    "SceneObserverCreateInfoMSFT",
+    "SceneObserverMSFTHandle",
+    "SceneObserverMSFT_T",
+    "SceneOrientedBoxBoundMSFT",
+    "ScenePlaneAlignmentFilterInfoMSFT",
+    "ScenePlaneMSFT",
+    "ScenePlanesMSFT",
+    "SceneSphereBoundMSFT",
+    "SecondaryViewConfigurationFrameEndInfoMSFT",
+    "SecondaryViewConfigurationFrameStateMSFT",
+    "SecondaryViewConfigurationLayerInfoMSFT",
+    "SecondaryViewConfigurationSessionBeginInfoMSFT",
+    "SecondaryViewConfigurationStateMSFT",
+    "SecondaryViewConfigurationSwapchainCreateInfoMSFT",
+    "SerializedSceneFragmentDataGetInfoMSFT",
+    "SessionActionSetsAttachInfo",
+    "SessionBeginInfo",
+    "SessionCreateFlagsCInt",
+    "SessionCreateInfo",
+    "SessionCreateInfoOverlayEXTX",
+    "SessionHandle",
+    "Session_T",
+    "SpaceHandle",
+    "SpaceLocation",
+    "SpaceLocationFlagsCInt",
+    "SpaceVelocity",
+    "SpaceVelocityFlagsCInt",
+    "Space_T",
+    "SpatialAnchorCreateInfoMSFT",
+    "SpatialAnchorFromPersistedAnchorCreateInfoMSFT",
+    "SpatialAnchorMSFTHandle",
+    "SpatialAnchorMSFT_T",
+    "SpatialAnchorPersistenceInfoMSFT",
+    "SpatialAnchorPersistenceNameMSFT",
+    "SpatialAnchorSpaceCreateInfoMSFT",
+    "SpatialAnchorStoreConnectionMSFTHandle",
+    "SpatialAnchorStoreConnectionMSFT_T",
+    "SpatialGraphNodeSpaceCreateInfoMSFT",
+    "SwapchainCreateFlagsCInt",
+    "SwapchainCreateFoveationFlagsFBCInt",
+    "SwapchainCreateInfo",
+    "SwapchainCreateInfoFoveationFB",
+    "SwapchainHandle",
+    "SwapchainImageAcquireInfo",
+    "SwapchainImageBaseHeader",
+    "SwapchainImageReleaseInfo",
+    "SwapchainImageWaitInfo",
+    "SwapchainStateBaseHeaderFB",
+    "SwapchainStateFoveationFB",
+    "SwapchainStateFoveationFlagsFBCInt",
+    "SwapchainSubImage",
+    "SwapchainUsageFlagsCInt",
+    "Swapchain_T",
+    "SystemColorSpacePropertiesFB",
+    "SystemEyeGazeInteractionPropertiesEXT",
+    "SystemFoveatedRenderingPropertiesVARJO",
+    "SystemGetInfo",
+    "SystemGraphicsProperties",
+    "SystemHandTrackingMeshPropertiesMSFT",
+    "SystemHandTrackingPropertiesEXT",
+    "SystemId",
+    "SystemProperties",
     "SystemSpaceWarpPropertiesFB",
+    "SystemTrackingProperties",
+    "Time",
+    "UuidMSFT",
+    "Vector2f",
+    "Vector3f",
+    "Vector4f",
+    "Vector4sFB",
+    "VersionNumber",
+    "View",
+    "ViewConfigurationDepthRangeEXT",
+    "ViewConfigurationProperties",
+    "ViewConfigurationView",
+    "ViewConfigurationViewFovEPIC",
+    "ViewLocateFoveatedRenderingVARJO",
+    "ViewLocateInfo",
+    "ViewState",
+    "ViewStateFlagsCInt",
+    "VisibilityMaskKHR",
+    "VisualMeshComputeLodInfoMSFT",
 ]
