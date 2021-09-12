@@ -4,6 +4,7 @@ import inspect
 from clang.cindex import CursorKind
 
 import xrg
+from xrg.declarations import FlagsItem
 
 
 def main():
@@ -13,6 +14,7 @@ def main():
         ]
     )
     cg.print_header()
+    cg.ctypes_names.add("c_uint64")
     print(inspect.cleandoc('''
     import enum
 
@@ -30,20 +32,35 @@ def main():
                 # Assume the first enum is default
                 return next(iter(cls))
             return super().__call__(value, *args, **kwargs)
-    
-    
-    class SpaceVelocityFlags(enum.Flag, metaclass=DefaultEnumMeta):
-        NONE = 0x00000000
-        LINEAR_VALID = 0x00000001
-        ANGULAR_VALID = 0x00000002
 
 
-    class EnumBase(enum.Enum):
+    class EnumBase(enum.Enum, metaclass=DefaultEnumMeta):
         @staticmethod
         def ctype():
             return c_int
+            
+
+    class FlagBase(enum.Flag, metaclass=DefaultEnumMeta):
+        @staticmethod
+        def ctype():
+            return c_uint64
     '''))
     cg.print_items()
+
+    # Flag types
+    cg2 = xrg.CodeGenerator([
+        CursorKind.TYPEDEF_DECL,
+        CursorKind.VAR_DECL,
+    ])
+    for item in cg2.items:
+        if not isinstance(item, FlagsItem):
+            continue
+        print("\n")
+        print(item.code())
+        cg.all_list.add(item.name())
+
+    cg.all_list.add("EnumBase")
+    cg.all_list.add("FlagBase")
     cg.print_all_list()
 
 

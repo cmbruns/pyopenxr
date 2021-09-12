@@ -277,10 +277,10 @@ class TypedefType(TypeBase):
         if self._capi_name in PlatformType.type_map:
             self._ctypes_name = self._py_name = PlatformType.type_map[self._ctypes_name]
         if self.underlying_type.name() == "Flags64":
-            self._py_name = self._ctypes_name = self._py_name + "CInt"
+            self._ctypes_name += "CInt"
         # Special case for typedef whose name is used by a pythonic class
         if self._ctypes_name == "Version":
-            self._ctypes_name = self._py_name = "VersionNumber"
+            self._ctypes_name = "VersionNumber"
 
     def name(self, api=Api.PYTHON) -> str:
         if api == Api.C:

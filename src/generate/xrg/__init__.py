@@ -14,7 +14,7 @@ import platform
 from typing import Generator, List
 
 import clang.cindex
-from clang.cindex import Cursor, CursorKind, Index, TranslationUnit
+from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 
 from .types import *
 from .declarations import *
@@ -53,6 +53,8 @@ class CodeGenerator(object):
         self.compiler_args = compiler_args
         self.ctypes_names = set()
         self.header_preamble = header_preamble
+        self.all_list = set()
+        self._flag_types = {}
 
     @property
     def items(self) -> List[CodeItem]:
@@ -66,9 +68,11 @@ class CodeGenerator(object):
         return self._items
 
     def print_all_list(self, api=Api.PYTHON) -> None:
-        print("\n\n__all__ = [")
         for t in self.items:
-            print(f'    "{t.name(api)}",')
+            self.all_list.add(t.name(api))
+        print("\n\n__all__ = [")
+        for t in sorted(self.all_list):
+            print(f'    "{t}",')
         print("]")
 
     def print_header(self, api=Api.PYTHON) -> None:
@@ -131,6 +135,30 @@ def generate_code_items(
     compiler_args=None,
     header_preamble=None,
 ) -> Generator[CodeItem, None, None]:
+    # Separate pass to assemble Flag types
+    flag_types = {}
+    # Which are accumulated from TYPEDEF and VAR_DECL cursors
+    if kinds is None or len(kinds) == 0 or (
+            CursorKind.TYPEDEF_DECL in kinds
+            and CursorKind.VAR_DECL in kinds):
+        for cursor in generate_cursors(
+                header=header,
+                compiler_args=compiler_args,
+                header_preamble=header_preamble,
+        ):
+            if cursor.kind == CursorKind.TYPEDEF_DECL:
+                ut = cursor.underlying_typedef_type
+                if ut.spelling != "XrFlags64":
+                    continue
+                flag_types[cursor.spelling] = FlagsItem(cursor)
+            elif cursor.kind == CursorKind.VAR_DECL:
+                if cursor.type.kind != TypeKind.TYPEDEF:
+                    continue
+                ut = cursor.type.get_declaration().underlying_typedef_type
+                if ut.spelling != "XrFlags64":
+                    continue
+                flags_type_name = cursor.type.spelling.replace("const ", "")
+                flag_types[flags_type_name].add_value(cursor)
     for cursor in generate_cursors(
             header=header,
             compiler_args=compiler_args,
@@ -142,7 +170,12 @@ def generate_code_items(
         if handler is None:
             continue
         try:
-            yield handler(cursor)
+            item = handler(cursor)
+            yield item
+            if cursor.kind == CursorKind.TYPEDEF_DECL:
+                if cursor.underlying_typedef_type.spelling == "XrFlags64":
+                    if cursor.spelling in flag_types:
+                        yield flag_types[cursor.spelling]
         except SkippableCodeItemException:
             continue
 

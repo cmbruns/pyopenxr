@@ -17,28 +17,28 @@ class TestFlags(unittest.TestCase):
         pass
 
     def test_flags(self):
-        flags = xr.SpaceVelocityFlagBits.LINEAR_VALID | xr.SpaceVelocityFlagBits.ANGULAR_VALID
-        self.assertEqual(xr.SpaceVelocityFlagBits.LINEAR_VALID, flags & xr.SpaceVelocityFlagBits.LINEAR_VALID)
-        self.assertTrue(xr.SpaceVelocityFlagBits.LINEAR_VALID)
-        self.assertEqual(xr.SpaceVelocityFlagBits.ANGULAR_VALID, flags & xr.SpaceVelocityFlagBits.ANGULAR_VALID)
-        self.assertTrue(xr.SpaceVelocityFlagBits.ANGULAR_VALID)
-        cflags = xr.SpaceVelocityFlags(flags.value)  # c_uint64
+        flags = xr.SpaceVelocityFlags.LINEAR_VALID_BIT | xr.SpaceVelocityFlags.ANGULAR_VALID_BIT
+        self.assertEqual(xr.SpaceVelocityFlags.LINEAR_VALID_BIT, flags & xr.SpaceVelocityFlags.LINEAR_VALID_BIT)
+        self.assertTrue(xr.SpaceVelocityFlags.LINEAR_VALID_BIT)
+        self.assertEqual(xr.SpaceVelocityFlags.ANGULAR_VALID_BIT, flags & xr.SpaceVelocityFlags.ANGULAR_VALID_BIT)
+        self.assertTrue(xr.SpaceVelocityFlags.ANGULAR_VALID_BIT)
+        cflags = xr.SpaceVelocityFlagsCInt(flags.value)  # c_uint64
         self.assertEqual(
             cflags.value,
-            (xr.SpaceVelocityFlagBits.LINEAR_VALID | xr.SpaceVelocityFlagBits.ANGULAR_VALID).value,
+            (xr.SpaceVelocityFlags.LINEAR_VALID_BIT | xr.SpaceVelocityFlags.ANGULAR_VALID_BIT).value,
         )
 
-        flags = xr.SpaceVelocityFlagBits.LINEAR_VALID
-        self.assertEqual(flags & xr.SpaceVelocityFlagBits.LINEAR_VALID, xr.SpaceVelocityFlagBits.LINEAR_VALID)
-        self.assertEqual(bool(flags & xr.SpaceVelocityFlagBits.LINEAR_VALID), True)
-        self.assertEqual(flags & xr.SpaceVelocityFlagBits.ANGULAR_VALID, xr.SpaceVelocityFlagBits.NONE)
-        self.assertEqual(bool(flags & xr.SpaceVelocityFlagBits.ANGULAR_VALID), False)
-        cflags = xr.SpaceVelocityFlags(flags.value)  # c_uint64
+        flags = xr.SpaceVelocityFlags.LINEAR_VALID_BIT
+        self.assertEqual(flags & xr.SpaceVelocityFlags.LINEAR_VALID_BIT, xr.SpaceVelocityFlags.LINEAR_VALID_BIT)
+        self.assertEqual(bool(flags & xr.SpaceVelocityFlags.LINEAR_VALID_BIT), True)
+        self.assertEqual(flags & xr.SpaceVelocityFlags.ANGULAR_VALID_BIT, xr.SpaceVelocityFlags.NONE)
+        self.assertEqual(bool(flags & xr.SpaceVelocityFlags.ANGULAR_VALID_BIT), False)
+        cflags = xr.SpaceVelocityFlagsCInt(flags.value)  # c_uint64
         self.assertEqual(cflags.value, xr.SPACE_VELOCITY_LINEAR_VALID_BIT)
 
-        flags = xr.SpaceVelocityFlagBits()
-        self.assertEqual(flags.value, xr.SpaceVelocityFlagBits.NONE.value)
-        cflags = xr.SpaceVelocityFlags(flags.value)
+        flags = xr.SpaceVelocityFlags()
+        self.assertEqual(flags.value, xr.SpaceVelocityFlags.NONE.value)
+        cflags = xr.SpaceVelocityFlagsCInt(flags.value)
         self.assertEqual(0, cflags.value)
 
 

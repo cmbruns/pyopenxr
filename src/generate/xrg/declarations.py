@@ -217,6 +217,56 @@ class EnumValueItem(CodeItem):
         }
 
 
+class FlagsItem(CodeItem):
+    def __init__(self, cursor: Cursor) -> None:
+        super().__init__(cursor)
+        assert cursor.kind == CursorKind.TYPEDEF_DECL
+        self._capi_name = cursor.spelling
+        self._py_name = py_type_name(self._capi_name)
+        match = re.match(r"^Xr(\S+)Flags(\S*)$", self._capi_name)
+        assert match
+        self.core_name = match.group(1)
+        self.vendor = match.group(2)
+        self.value_prefix = snake_from_camel(self.core_name).upper() + "_"
+        self.values = []
+
+    def add_value(self, cursor: Cursor) -> None:
+        assert cursor.kind == CursorKind.VAR_DECL
+        item = VariableItem(cursor)
+        assert item.name().startswith(self.value_prefix)
+        item_name = item.name()[len(self.value_prefix):]
+        if len(self.vendor) > 0:
+            assert item_name.endswith("_" + self.vendor)
+            item_name = item_name[:-len(self.vendor) - 1]
+        self.values.append([item_name, item.value])
+
+    def name(self, api=Api.PYTHON) -> str:
+        if api == api.PYTHON:
+            return self._py_name
+        elif api == api.C:
+            return self._capi_name
+        elif api == api.CTYPES:
+            return self._py_name
+        else:
+            raise NotImplementedError
+
+    def code(self, api=Api.PYTHON) -> str:
+        if api == api.CTYPES:
+            raise NotImplementedError
+        elif api == api.PYTHON:
+            result = f"class {self.name(api)}(FlagBase):\n    NONE = 0x00000000"
+            for name, value in self.values:
+                result += f"\n    {name} = {value}"
+            return result
+        elif api == api.C:
+            raise NotImplementedError
+
+    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+        return {
+            "c_uint64",
+        }
+
+
 class FunctionItem(CodeItem):
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -1088,8 +1138,10 @@ __all__ = [
     "CodeItem",
     "DefinitionItem",
     "EnumItem",
+    "FlagsItem",
     "FunctionItem",
     "SkippableCodeItemException",
+    "snake_from_camel",
     "StructItem",
     "TypeDefItem",
     "VariableItem",
