@@ -4,6 +4,27 @@ from ctypes import c_int
 import enum
 
 
+class DefaultEnumMeta(enum.EnumMeta):
+    """
+    Metaclass to allow default values in enumerations.
+
+    https://stackoverflow.com/questions/44867597/is-there-a-way-to-specify-a-default-value-for-python-enums
+    """
+    default = object()
+
+    def __call__(cls, value=default, *args, **kwargs):
+        if value is DefaultEnumMeta.default:
+            # Assume the first enum is default
+            return next(iter(cls))
+        return super().__call__(value, *args, **kwargs)
+
+
+class SpaceVelocityFlagBits(enum.Flag, metaclass=DefaultEnumMeta):
+    NONE = 0x00000000
+    LINEAR_VALID = 0x00000001
+    ANGULAR_VALID = 0x00000002
+
+
 class EnumBase(enum.Enum):
     @staticmethod
     def ctype():
@@ -506,6 +527,7 @@ class FoveationDynamicFB(EnumBase):
 
 
 __all__ = [
+    "SpaceVelocityFlagBits",
     "Result",
     "StructureType",
     "FormFactor",
