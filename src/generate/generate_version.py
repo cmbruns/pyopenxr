@@ -10,6 +10,11 @@ try:
 except ValueError:
     pyopenxr_patch = 1
 
+try:
+    pyopenxr_suffix = "@PYOPENXR_VERSION_SUFFIX@"
+except ValueError:
+    pyopenxr_suffix = ""
+
 file_string = xrg.get_header_as_string()
 
 # We expect a line in openxr.h like
@@ -41,7 +46,8 @@ print(
     PYOPENXR_VERSION_MINOR = {minor}
     PYOPENXR_VERSION_PATCH = {patch2}
     PYOPENXR_VERSION_PATCH_INCREMENTAL = {pyopenxr_patch}
-    PYOPENXR_VERSION = "{major}.{minor}.{patch2}"
+    PYOPENXR_VERSION_SUFFIX = "{pyopenxr_suffix}"
+    PYOPENXR_VERSION = "{major}.{minor}.{patch2}{pyopenxr_suffix}"
 
 
     class Version(object):
@@ -83,6 +89,7 @@ print(
         "PYOPENXR_VERSION_MINOR",
         "PYOPENXR_VERSION_PATCH",
         "PYOPENXR_VERSION_PATCH_INCREMENTAL",
+        "PYOPENXR_VERSION_SUFFIX",
         "PYOPENXR_VERSION",
         "Version",
         "XR_CURRENT_API_VERSION",

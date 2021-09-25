@@ -4,8 +4,11 @@ cmake_minimum_required(VERSION 2.8.12)
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")
 
 option(PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES "Overwrite current source files?" OFF)
+
 set(PYOPENXR_VERSION_PATCH_INCREMENTAL 1
     CACHE STRING "PyOpenXR incremental patch version (usually 1)")
+set(PYOPENXR_VERSION_SUFFIX "a"
+    CACHE STRING "PyOpenXR version suffix (empty string for official releases, 'a' for pre-releases)")
 
 # Keep extraneous variables out of the cmake interface
 mark_as_advanced(
