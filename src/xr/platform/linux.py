@@ -25,7 +25,7 @@ KHR_vulkan_swapchain_format_list = 1
 KHR_vulkan_swapchain_format_list_SPEC_VERSION = 4
 KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME = "XR_KHR_vulkan_swapchain_format_list"
 KHR_opengl_enable = 1
-KHR_opengl_enable_SPEC_VERSION = 9
+KHR_opengl_enable_SPEC_VERSION = 10
 KHR_OPENGL_ENABLE_EXTENSION_NAME = "XR_KHR_opengl_enable"
 KHR_vulkan_enable = 1
 KHR_vulkan_enable_SPEC_VERSION = 8
@@ -341,16 +341,22 @@ PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, P
 
 PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(timespec))
 
-VulkanInstanceCreateFlagsKHR = Flags64
+VulkanInstanceCreateFlagsKHRCInt = Flags64
 
-VulkanDeviceCreateFlagsKHR = Flags64
+class VulkanInstanceCreateFlagsKHR(FlagBase):
+    NONE = 0x00000000
+
+VulkanDeviceCreateFlagsKHRCInt = Flags64
+
+class VulkanDeviceCreateFlagsKHR(FlagBase):
+    NONE = 0x00000000
 
 
 class VulkanInstanceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanInstanceCreateFlagsKHR = 0,
+        create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR(),
         pfn_get_instance_proc_addr: int = 0,
         vulkan_create_info: POINTER(c_int) = None,
         vulkan_allocator: POINTER(c_int) = None,
@@ -359,7 +365,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=create_flags,
+            create_flags=VulkanInstanceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
@@ -377,7 +383,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("system_id", SystemId),
-        ("create_flags", VulkanInstanceCreateFlagsKHR),
+        ("create_flags", VulkanInstanceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", c_int),
         ("vulkan_create_info", POINTER(c_int)),
         ("vulkan_allocator", POINTER(c_int)),
@@ -388,7 +394,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanDeviceCreateFlagsKHR = 0,
+        create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR(),
         pfn_get_instance_proc_addr: int = 0,
         vulkan_physical_device: int = 0,
         vulkan_create_info: POINTER(c_int) = None,
@@ -398,7 +404,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=create_flags,
+            create_flags=VulkanDeviceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_physical_device=vulkan_physical_device,
             vulkan_create_info=vulkan_create_info,
@@ -417,7 +423,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("system_id", SystemId),
-        ("create_flags", VulkanDeviceCreateFlagsKHR),
+        ("create_flags", VulkanDeviceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", c_int),
         ("vulkan_physical_device", c_int),
         ("vulkan_create_info", POINTER(c_int)),
@@ -561,55 +567,57 @@ class SwapchainStateSamplerVulkanFB(Structure):
 
 
 __all__ = [
-    "KHR_vulkan_swapchain_format_list",
-    "KHR_vulkan_swapchain_format_list_SPEC_VERSION",
-    "KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME",
-    "KHR_opengl_enable",
-    "KHR_opengl_enable_SPEC_VERSION",
-    "KHR_OPENGL_ENABLE_EXTENSION_NAME",
-    "KHR_vulkan_enable",
-    "KHR_vulkan_enable_SPEC_VERSION",
-    "KHR_VULKAN_ENABLE_EXTENSION_NAME",
-    "KHR_convert_timespec_time",
-    "KHR_convert_timespec_time_SPEC_VERSION",
-    "KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME",
-    "KHR_vulkan_enable2",
-    "KHR_vulkan_enable2_SPEC_VERSION",
-    "KHR_VULKAN_ENABLE2_EXTENSION_NAME",
+    "FB_FOVEATION_VULKAN_EXTENSION_NAME",
+    "FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME",
     "FB_foveation_vulkan",
     "FB_foveation_vulkan_SPEC_VERSION",
-    "FB_FOVEATION_VULKAN_EXTENSION_NAME",
     "FB_swapchain_update_state_vulkan",
     "FB_swapchain_update_state_vulkan_SPEC_VERSION",
-    "FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME",
-    "VulkanSwapchainFormatListCreateInfoKHR",
-    "GraphicsBindingOpenGLXlibKHR",
-    "GraphicsBindingOpenGLXcbKHR",
     "GraphicsBindingOpenGLWaylandKHR",
-    "SwapchainImageOpenGLKHR",
-    "GraphicsRequirementsOpenGLKHR",
-    "PFN_xrGetOpenGLGraphicsRequirementsKHR",
-    "GraphicsBindingVulkanKHR",
-    "SwapchainImageVulkanKHR",
-    "GraphicsRequirementsVulkanKHR",
-    "PFN_xrGetVulkanInstanceExtensionsKHR",
-    "PFN_xrGetVulkanDeviceExtensionsKHR",
-    "PFN_xrGetVulkanGraphicsDeviceKHR",
-    "PFN_xrGetVulkanGraphicsRequirementsKHR",
-    "PFN_xrConvertTimespecTimeToTimeKHR",
-    "PFN_xrConvertTimeToTimespecTimeKHR",
-    "VulkanInstanceCreateFlagsKHR",
-    "VulkanDeviceCreateFlagsKHR",
-    "VulkanInstanceCreateInfoKHR",
-    "VulkanDeviceCreateInfoKHR",
+    "GraphicsBindingOpenGLXcbKHR",
+    "GraphicsBindingOpenGLXlibKHR",
     "GraphicsBindingVulkan2KHR",
-    "VulkanGraphicsDeviceGetInfoKHR",
-    "SwapchainImageVulkan2KHR",
+    "GraphicsBindingVulkanKHR",
+    "GraphicsRequirementsOpenGLKHR",
     "GraphicsRequirementsVulkan2KHR",
-    "PFN_xrCreateVulkanInstanceKHR",
+    "GraphicsRequirementsVulkanKHR",
+    "KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME",
+    "KHR_OPENGL_ENABLE_EXTENSION_NAME",
+    "KHR_VULKAN_ENABLE2_EXTENSION_NAME",
+    "KHR_VULKAN_ENABLE_EXTENSION_NAME",
+    "KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME",
+    "KHR_convert_timespec_time",
+    "KHR_convert_timespec_time_SPEC_VERSION",
+    "KHR_opengl_enable",
+    "KHR_opengl_enable_SPEC_VERSION",
+    "KHR_vulkan_enable",
+    "KHR_vulkan_enable2",
+    "KHR_vulkan_enable2_SPEC_VERSION",
+    "KHR_vulkan_enable_SPEC_VERSION",
+    "KHR_vulkan_swapchain_format_list",
+    "KHR_vulkan_swapchain_format_list_SPEC_VERSION",
+    "PFN_xrConvertTimeToTimespecTimeKHR",
+    "PFN_xrConvertTimespecTimeToTimeKHR",
     "PFN_xrCreateVulkanDeviceKHR",
+    "PFN_xrCreateVulkanInstanceKHR",
+    "PFN_xrGetOpenGLGraphicsRequirementsKHR",
+    "PFN_xrGetVulkanDeviceExtensionsKHR",
     "PFN_xrGetVulkanGraphicsDevice2KHR",
+    "PFN_xrGetVulkanGraphicsDeviceKHR",
     "PFN_xrGetVulkanGraphicsRequirements2KHR",
+    "PFN_xrGetVulkanGraphicsRequirementsKHR",
+    "PFN_xrGetVulkanInstanceExtensionsKHR",
     "SwapchainImageFoveationVulkanFB",
+    "SwapchainImageOpenGLKHR",
+    "SwapchainImageVulkan2KHR",
+    "SwapchainImageVulkanKHR",
     "SwapchainStateSamplerVulkanFB",
+    "VulkanDeviceCreateFlagsKHR",
+    "VulkanDeviceCreateFlagsKHRCInt",
+    "VulkanDeviceCreateInfoKHR",
+    "VulkanGraphicsDeviceGetInfoKHR",
+    "VulkanInstanceCreateFlagsKHR",
+    "VulkanInstanceCreateFlagsKHRCInt",
+    "VulkanInstanceCreateInfoKHR",
+    "VulkanSwapchainFormatListCreateInfoKHR",
 ]

@@ -165,8 +165,11 @@ FB_DISPLAY_REFRESH_RATE_EXTENSION_NAME = "XR_FB_display_refresh_rate"
 HTC_vive_cosmos_controller_interaction = 1
 HTC_vive_cosmos_controller_interaction_SPEC_VERSION = 1
 HTC_VIVE_COSMOS_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_HTC_vive_cosmos_controller_interaction"
+HTCX_vive_tracker_interaction = 1
+HTCX_vive_tracker_interaction_SPEC_VERSION = 1
+HTCX_VIVE_TRACKER_INTERACTION_EXTENSION_NAME = "XR_HTCX_vive_tracker_interaction"
 FB_color_space = 1
-FB_color_space_SPEC_VERSION = 1
+FB_color_space_SPEC_VERSION = 2
 FB_COLOR_SPACE_EXTENSION_NAME = "XR_FB_color_space"
 FB_hand_tracking_mesh = 1
 FB_hand_tracking_mesh_SPEC_VERSION = 1
@@ -185,6 +188,13 @@ FB_FOVEATION_EXTENSION_NAME = "XR_FB_foveation"
 FB_foveation_configuration = 1
 FB_foveation_configuration_SPEC_VERSION = 1
 FB_FOVEATION_CONFIGURATION_EXTENSION_NAME = "XR_FB_foveation_configuration"
+FB_triangle_mesh = 1
+FB_triangle_mesh_SPEC_VERSION = 1
+FB_TRIANGLE_MESH_EXTENSION_NAME = "XR_FB_triangle_mesh"
+FB_passthrough = 1
+FB_passthrough_SPEC_VERSION = 1
+FB_PASSTHROUGH_EXTENSION_NAME = "XR_FB_passthrough"
+PASSTHROUGH_COLOR_MAP_MONO_SIZE_FB = 256
 VARJO_foveated_rendering = 1
 VARJO_foveated_rendering_SPEC_VERSION = 2
 VARJO_FOVEATED_RENDERING_EXTENSION_NAME = "XR_VARJO_foveated_rendering"
@@ -194,6 +204,9 @@ VARJO_COMPOSITION_LAYER_DEPTH_TEST_EXTENSION_NAME = "XR_VARJO_composition_layer_
 VARJO_environment_depth_estimation = 1
 VARJO_environment_depth_estimation_SPEC_VERSION = 1
 VARJO_ENVIRONMENT_DEPTH_ESTIMATION_EXTENSION_NAME = "XR_VARJO_environment_depth_estimation"
+VARJO_marker_tracking = 1
+VARJO_marker_tracking_SPEC_VERSION = 1
+VARJO_MARKER_TRACKING_EXTENSION_NAME = "XR_VARJO_marker_tracking"
 MSFT_spatial_anchor_persistence = 1
 MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT = 256
 MSFT_spatial_anchor_persistence_SPEC_VERSION = 2
@@ -251,6 +264,12 @@ HAND_TRACKING_AIM_DOMINANT_HAND_BIT_FB = 0x00000080
 HAND_TRACKING_AIM_MENU_PRESSED_BIT_FB = 0x00000100
 SWAPCHAIN_CREATE_FOVEATION_SCALED_BIN_BIT_FB = 0x00000001
 SWAPCHAIN_CREATE_FOVEATION_FRAGMENT_DENSITY_MAP_BIT_FB = 0x00000002
+TRIANGLE_MESH_MUTABLE_BIT_FB = 0x00000001
+PASSTHROUGH_IS_RUNNING_AT_CREATION_BIT_FB = 0x00000001
+PASSTHROUGH_STATE_CHANGED_REINIT_REQUIRED_BIT_FB = 0x00000001
+PASSTHROUGH_STATE_CHANGED_NON_RECOVERABLE_ERROR_BIT_FB = 0x00000002
+PASSTHROUGH_STATE_CHANGED_RECOVERABLE_ERROR_BIT_FB = 0x00000004
+PASSTHROUGH_STATE_CHANGED_RESTORED_ERROR_BIT_FB = 0x00000008
 
 
 __all__ = [
@@ -320,8 +339,10 @@ __all__ = [
     "FB_HAND_TRACKING_CAPSULE_COUNT",
     "FB_HAND_TRACKING_CAPSULE_POINT_COUNT",
     "FB_HAND_TRACKING_MESH_EXTENSION_NAME",
+    "FB_PASSTHROUGH_EXTENSION_NAME",
     "FB_SPACE_WARP_EXTENSION_NAME",
     "FB_SWAPCHAIN_UPDATE_STATE_EXTENSION_NAME",
+    "FB_TRIANGLE_MESH_EXTENSION_NAME",
     "FB_color_space",
     "FB_color_space_SPEC_VERSION",
     "FB_composition_layer_alpha_blend",
@@ -342,10 +363,14 @@ __all__ = [
     "FB_hand_tracking_capsules_SPEC_VERSION",
     "FB_hand_tracking_mesh",
     "FB_hand_tracking_mesh_SPEC_VERSION",
+    "FB_passthrough",
+    "FB_passthrough_SPEC_VERSION",
     "FB_space_warp",
     "FB_space_warp_SPEC_VERSION",
     "FB_swapchain_update_state",
     "FB_swapchain_update_state_SPEC_VERSION",
+    "FB_triangle_mesh",
+    "FB_triangle_mesh_SPEC_VERSION",
     "FREQUENCY_UNSPECIFIED",
     "HAND_JOINT_COUNT_EXT",
     "HAND_TRACKING_AIM_COMPUTED_BIT_FB",
@@ -357,6 +382,9 @@ __all__ = [
     "HAND_TRACKING_AIM_RING_PINCHING_BIT_FB",
     "HAND_TRACKING_AIM_SYSTEM_GESTURE_BIT_FB",
     "HAND_TRACKING_AIM_VALID_BIT_FB",
+    "HTCX_VIVE_TRACKER_INTERACTION_EXTENSION_NAME",
+    "HTCX_vive_tracker_interaction",
+    "HTCX_vive_tracker_interaction_SPEC_VERSION",
     "HTC_VIVE_COSMOS_CONTROLLER_INTERACTION_EXTENSION_NAME",
     "HTC_vive_cosmos_controller_interaction",
     "HTC_vive_cosmos_controller_interaction_SPEC_VERSION",
@@ -465,6 +493,12 @@ __all__ = [
     "OCULUS_android_session_state_enable",
     "OCULUS_android_session_state_enable_SPEC_VERSION",
     "OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX",
+    "PASSTHROUGH_COLOR_MAP_MONO_SIZE_FB",
+    "PASSTHROUGH_IS_RUNNING_AT_CREATION_BIT_FB",
+    "PASSTHROUGH_STATE_CHANGED_NON_RECOVERABLE_ERROR_BIT_FB",
+    "PASSTHROUGH_STATE_CHANGED_RECOVERABLE_ERROR_BIT_FB",
+    "PASSTHROUGH_STATE_CHANGED_REINIT_REQUIRED_BIT_FB",
+    "PASSTHROUGH_STATE_CHANGED_RESTORED_ERROR_BIT_FB",
     "SPACE_LOCATION_ORIENTATION_TRACKED_BIT",
     "SPACE_LOCATION_ORIENTATION_VALID_BIT",
     "SPACE_LOCATION_POSITION_TRACKED_BIT",
@@ -484,6 +518,7 @@ __all__ = [
     "SWAPCHAIN_USAGE_TRANSFER_DST_BIT",
     "SWAPCHAIN_USAGE_TRANSFER_SRC_BIT",
     "SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT",
+    "TRIANGLE_MESH_MUTABLE_BIT_FB",
     "TRUE",
     "VALVE_ANALOG_THRESHOLD_EXTENSION_NAME",
     "VALVE_analog_threshold",
@@ -491,6 +526,7 @@ __all__ = [
     "VARJO_COMPOSITION_LAYER_DEPTH_TEST_EXTENSION_NAME",
     "VARJO_ENVIRONMENT_DEPTH_ESTIMATION_EXTENSION_NAME",
     "VARJO_FOVEATED_RENDERING_EXTENSION_NAME",
+    "VARJO_MARKER_TRACKING_EXTENSION_NAME",
     "VARJO_QUAD_VIEWS_EXTENSION_NAME",
     "VARJO_composition_layer_depth_test",
     "VARJO_composition_layer_depth_test_SPEC_VERSION",
@@ -498,6 +534,8 @@ __all__ = [
     "VARJO_environment_depth_estimation_SPEC_VERSION",
     "VARJO_foveated_rendering",
     "VARJO_foveated_rendering_SPEC_VERSION",
+    "VARJO_marker_tracking",
+    "VARJO_marker_tracking_SPEC_VERSION",
     "VARJO_quad_views",
     "VARJO_quad_views_SPEC_VERSION",
     "VERSION_1_0",

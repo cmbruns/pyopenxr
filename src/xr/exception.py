@@ -1006,6 +1006,54 @@ class ColorSpaceUnsupportedFBError(ErrorResult):
         return Result.ERROR_COLOR_SPACE_UNSUPPORTED_FB
 
 
+class UnexpectedStatePassthroughFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_UNEXPECTED_STATE_PASSTHROUGH_FB
+
+
+class FeatureAlreadyCreatedPassthroughFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_FEATURE_ALREADY_CREATED_PASSTHROUGH_FB
+
+
+class FeatureRequiredPassthroughFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_FEATURE_REQUIRED_PASSTHROUGH_FB
+
+
+class NotPermittedPassthroughFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_NOT_PERMITTED_PASSTHROUGH_FB
+
+
+class InsufficientResourcesPassthroughFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_INSUFFICIENT_RESOURCES_PASSTHROUGH_FB
+
+
+class UnknownPassthroughFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_UNKNOWN_PASSTHROUGH_FB
+
+
+class MarkerNotTrackedVarjoError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MARKER_NOT_TRACKED_VARJO
+
+
+class MarkerIdInvalidVarjoError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MARKER_ID_INVALID_VARJO
+
+
 class SpatialAnchorNameNotFoundMSFTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1088,6 +1136,14 @@ _exception_map = {
     Result.ERROR_SCENE_COMPUTE_CONSISTENCY_MISMATCH_MSFT: SceneComputeConsistencyMismatchMSFTError,
     Result.ERROR_DISPLAY_REFRESH_RATE_UNSUPPORTED_FB: DisplayRefreshRateUnsupportedFBError,
     Result.ERROR_COLOR_SPACE_UNSUPPORTED_FB: ColorSpaceUnsupportedFBError,
+    Result.ERROR_UNEXPECTED_STATE_PASSTHROUGH_FB: UnexpectedStatePassthroughFBError,
+    Result.ERROR_FEATURE_ALREADY_CREATED_PASSTHROUGH_FB: FeatureAlreadyCreatedPassthroughFBError,
+    Result.ERROR_FEATURE_REQUIRED_PASSTHROUGH_FB: FeatureRequiredPassthroughFBError,
+    Result.ERROR_NOT_PERMITTED_PASSTHROUGH_FB: NotPermittedPassthroughFBError,
+    Result.ERROR_INSUFFICIENT_RESOURCES_PASSTHROUGH_FB: InsufficientResourcesPassthroughFBError,
+    Result.ERROR_UNKNOWN_PASSTHROUGH_FB: UnknownPassthroughFBError,
+    Result.ERROR_MARKER_NOT_TRACKED_VARJO: MarkerNotTrackedVarjoError,
+    Result.ERROR_MARKER_ID_INVALID_VARJO: MarkerIdInvalidVarjoError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT: SpatialAnchorNameNotFoundMSFTError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT: SpatialAnchorNameInvalidMSFTError,
 }
@@ -1130,6 +1186,8 @@ __all__ = [
     "ErrorResult",
     "EventUnavailable",
     "ExtensionNotPresentError",
+    "FeatureAlreadyCreatedPassthroughFBError",
+    "FeatureRequiredPassthroughFBError",
     "FeatureUnsupportedError",
     "FileAccessErrorError",
     "FileContentsInvalidError",
@@ -1143,13 +1201,17 @@ __all__ = [
     "IndexOutOfRangeError",
     "InitializationFailedError",
     "InstanceLostError",
+    "InsufficientResourcesPassthroughFBError",
     "LayerInvalidError",
     "LayerLimitExceededError",
     "LimitReachedError",
     "LocalizedNameDuplicatedError",
     "LocalizedNameInvalidError",
+    "MarkerIdInvalidVarjoError",
+    "MarkerNotTrackedVarjoError",
     "NameDuplicatedError",
     "NameInvalidError",
+    "NotPermittedPassthroughFBError",
     "OutOfMemoryError",
     "PathCountExceededError",
     "PathFormatInvalidError",
@@ -1185,6 +1247,8 @@ __all__ = [
     "SystemInvalidError",
     "TimeInvalidError",
     "TimeoutExpired",
+    "UnexpectedStatePassthroughFBError",
+    "UnknownPassthroughFBError",
     "ValidationFailureError",
     "ViewConfigurationTypeUnsupportedError",
     "XrException",

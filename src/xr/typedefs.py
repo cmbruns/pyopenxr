@@ -5532,6 +5532,64 @@ PFN_xrGetDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER
 PFN_xrRequestDisplayRefreshRateFB = CFUNCTYPE(Result.ctype(), SessionHandle, c_float)
 
 
+class ViveTrackerPathsHTCX(Structure):
+    def __init__(
+        self,
+        persistent_path: Path = 0,
+        role_path: Path = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.VIVE_TRACKER_PATHS_HTCX,
+    ) -> None:
+        super().__init__(
+            persistent_path=persistent_path,
+            role_path=role_path,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ViveTrackerPathsHTCX(persistent_path={repr(self.persistent_path)}, role_path={repr(self.role_path)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ViveTrackerPathsHTCX(persistent_path={self.persistent_path}, role_path={self.role_path}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("persistent_path", Path),
+        ("role_path", Path),
+    ]
+
+
+class EventDataViveTrackerConnectedHTCX(Structure):
+    def __init__(
+        self,
+        paths: POINTER(ViveTrackerPathsHTCX) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX,
+    ) -> None:
+        super().__init__(
+            paths=paths,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataViveTrackerConnectedHTCX(paths={repr(self.paths)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataViveTrackerConnectedHTCX(paths={self.paths}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("paths", POINTER(ViveTrackerPathsHTCX)),
+    ]
+
+
+PFN_xrEnumerateViveTrackerPathsHTCX = CFUNCTYPE(Result.ctype(), InstanceHandle, c_uint32, POINTER(c_uint32), POINTER(ViveTrackerPathsHTCX))
+
+
 class SystemColorSpacePropertiesFB(Structure):
     def __init__(
         self,
@@ -5917,6 +5975,425 @@ class FoveationLevelProfileCreateInfoFB(Structure):
     ]
 
 
+class TriangleMeshFB_T(Structure):
+    pass
+
+
+TriangleMeshFBHandle = POINTER(TriangleMeshFB_T)
+
+TriangleMeshFlagsFBCInt = Flags64
+
+
+class TriangleMeshCreateInfoFB(Structure):
+    def __init__(
+        self,
+        flags: TriangleMeshFlagsFB = TriangleMeshFlagsFB(),
+        winding_order: WindingOrderFB = WindingOrderFB(),
+        vertex_count: int = 0,
+        vertex_buffer: POINTER(Vector3f) = None,
+        triangle_count: int = 0,
+        index_buffer: POINTER(c_uint32) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.TRIANGLE_MESH_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            flags=TriangleMeshFlagsFB(flags).value,
+            winding_order=WindingOrderFB(winding_order).value,
+            vertex_count=vertex_count,
+            vertex_buffer=vertex_buffer,
+            triangle_count=triangle_count,
+            index_buffer=index_buffer,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TriangleMeshCreateInfoFB(flags={repr(self.flags)}, winding_order={repr(self.winding_order)}, vertex_count={repr(self.vertex_count)}, vertex_buffer={repr(self.vertex_buffer)}, triangle_count={repr(self.triangle_count)}, index_buffer={repr(self.index_buffer)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TriangleMeshCreateInfoFB(flags={self.flags}, winding_order={self.winding_order}, vertex_count={self.vertex_count}, vertex_buffer={self.vertex_buffer}, triangle_count={self.triangle_count}, index_buffer={self.index_buffer}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", TriangleMeshFlagsFBCInt),
+        ("winding_order", WindingOrderFB.ctype()),
+        ("vertex_count", c_uint32),
+        ("vertex_buffer", POINTER(Vector3f)),
+        ("triangle_count", c_uint32),
+        ("index_buffer", POINTER(c_uint32)),
+    ]
+
+
+PFN_xrCreateTriangleMeshFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(TriangleMeshCreateInfoFB), POINTER(TriangleMeshFBHandle))
+
+PFN_xrDestroyTriangleMeshFB = CFUNCTYPE(Result.ctype(), TriangleMeshFBHandle)
+
+PFN_xrTriangleMeshGetVertexBufferFB = CFUNCTYPE(Result.ctype(), TriangleMeshFBHandle, POINTER(POINTER(Vector3f)))
+
+PFN_xrTriangleMeshGetIndexBufferFB = CFUNCTYPE(Result.ctype(), TriangleMeshFBHandle, POINTER(POINTER(c_uint32)))
+
+PFN_xrTriangleMeshBeginUpdateFB = CFUNCTYPE(Result.ctype(), TriangleMeshFBHandle)
+
+PFN_xrTriangleMeshEndUpdateFB = CFUNCTYPE(Result.ctype(), TriangleMeshFBHandle, c_uint32, c_uint32)
+
+PFN_xrTriangleMeshBeginVertexBufferUpdateFB = CFUNCTYPE(Result.ctype(), TriangleMeshFBHandle, POINTER(c_uint32))
+
+PFN_xrTriangleMeshEndVertexBufferUpdateFB = CFUNCTYPE(Result.ctype(), TriangleMeshFBHandle)
+
+
+class PassthroughFB_T(Structure):
+    pass
+
+
+PassthroughFBHandle = POINTER(PassthroughFB_T)
+
+
+class PassthroughLayerFB_T(Structure):
+    pass
+
+
+PassthroughLayerFBHandle = POINTER(PassthroughLayerFB_T)
+
+
+class GeometryInstanceFB_T(Structure):
+    pass
+
+
+GeometryInstanceFBHandle = POINTER(GeometryInstanceFB_T)
+
+PassthroughFlagsFBCInt = Flags64
+
+PassthroughStateChangedFlagsFBCInt = Flags64
+
+
+class SystemPassthroughPropertiesFB(Structure):
+    def __init__(
+        self,
+        supports_passthrough: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SYSTEM_PASSTHROUGH_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            supports_passthrough=supports_passthrough,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPassthroughPropertiesFB(supports_passthrough={repr(self.supports_passthrough)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPassthroughPropertiesFB(supports_passthrough={self.supports_passthrough}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_passthrough", Bool32),
+    ]
+
+
+class PassthroughCreateInfoFB(Structure):
+    def __init__(
+        self,
+        flags: PassthroughFlagsFB = PassthroughFlagsFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PASSTHROUGH_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            flags=PassthroughFlagsFB(flags).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughCreateInfoFB(flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughCreateInfoFB(flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", PassthroughFlagsFBCInt),
+    ]
+
+
+class PassthroughLayerCreateInfoFB(Structure):
+    def __init__(
+        self,
+        passthrough: PassthroughFBHandle = None,
+        flags: PassthroughFlagsFB = PassthroughFlagsFB(),
+        purpose: PassthroughLayerPurposeFB = PassthroughLayerPurposeFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PASSTHROUGH_LAYER_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            passthrough=passthrough,
+            flags=PassthroughFlagsFB(flags).value,
+            purpose=PassthroughLayerPurposeFB(purpose).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughLayerCreateInfoFB(passthrough={repr(self.passthrough)}, flags={repr(self.flags)}, purpose={repr(self.purpose)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughLayerCreateInfoFB(passthrough={self.passthrough}, flags={self.flags}, purpose={self.purpose}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("passthrough", PassthroughFBHandle),
+        ("flags", PassthroughFlagsFBCInt),
+        ("purpose", PassthroughLayerPurposeFB.ctype()),
+    ]
+
+
+class CompositionLayerPassthroughFB(Structure):
+    def __init__(
+        self,
+        flags: CompositionLayerFlags = CompositionLayerFlags(),
+        space: SpaceHandle = None,
+        layer_handle: PassthroughLayerFBHandle = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.COMPOSITION_LAYER_PASSTHROUGH_FB,
+    ) -> None:
+        super().__init__(
+            flags=CompositionLayerFlags(flags).value,
+            space=space,
+            layer_handle=layer_handle,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CompositionLayerPassthroughFB(flags={repr(self.flags)}, space={repr(self.space)}, layer_handle={repr(self.layer_handle)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CompositionLayerPassthroughFB(flags={self.flags}, space={self.space}, layer_handle={self.layer_handle}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", CompositionLayerFlagsCInt),
+        ("space", SpaceHandle),
+        ("layer_handle", PassthroughLayerFBHandle),
+    ]
+
+
+class GeometryInstanceCreateInfoFB(Structure):
+    def __init__(
+        self,
+        layer: PassthroughLayerFBHandle = None,
+        mesh: TriangleMeshFBHandle = None,
+        base_space: SpaceHandle = None,
+        pose: Posef = None,
+        scale: Vector3f = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.GEOMETRY_INSTANCE_CREATE_INFO_FB,
+    ) -> None:
+        if pose is None:
+            pose = Posef()
+        if scale is None:
+            scale = Vector3f()
+        super().__init__(
+            layer=layer,
+            mesh=mesh,
+            base_space=base_space,
+            pose=pose,
+            scale=scale,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeometryInstanceCreateInfoFB(layer={repr(self.layer)}, mesh={repr(self.mesh)}, base_space={repr(self.base_space)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeometryInstanceCreateInfoFB(layer={self.layer}, mesh={self.mesh}, base_space={self.base_space}, pose={self.pose}, scale={self.scale}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("layer", PassthroughLayerFBHandle),
+        ("mesh", TriangleMeshFBHandle),
+        ("base_space", SpaceHandle),
+        ("pose", Posef),
+        ("scale", Vector3f),
+    ]
+
+
+class GeometryInstanceTransformFB(Structure):
+    def __init__(
+        self,
+        base_space: SpaceHandle = None,
+        time: Time = 0,
+        pose: Posef = None,
+        scale: Vector3f = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.GEOMETRY_INSTANCE_TRANSFORM_FB,
+    ) -> None:
+        if pose is None:
+            pose = Posef()
+        if scale is None:
+            scale = Vector3f()
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            pose=pose,
+            scale=scale,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeometryInstanceTransformFB(base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeometryInstanceTransformFB(base_space={self.base_space}, time={self.time}, pose={self.pose}, scale={self.scale}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", SpaceHandle),
+        ("time", Time),
+        ("pose", Posef),
+        ("scale", Vector3f),
+    ]
+
+
+class PassthroughStyleFB(Structure):
+    def __init__(
+        self,
+        texture_opacity_factor: float = 0,
+        edge_color: Color4f = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PASSTHROUGH_STYLE_FB,
+    ) -> None:
+        if edge_color is None:
+            edge_color = Color4f()
+        super().__init__(
+            texture_opacity_factor=texture_opacity_factor,
+            edge_color=edge_color,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughStyleFB(texture_opacity_factor={repr(self.texture_opacity_factor)}, edge_color={repr(self.edge_color)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughStyleFB(texture_opacity_factor={self.texture_opacity_factor:.3f}, edge_color={self.edge_color}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("texture_opacity_factor", c_float),
+        ("edge_color", Color4f),
+    ]
+
+
+class PassthroughColorMapMonoToRgbaFB(Structure):
+    def __init__(
+        self,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_MONO_TO_RGBA_FB,
+    ) -> None:
+        super().__init__(
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorMapMonoToRgbaFB(texture_color_map={repr(self.texture_color_map)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorMapMonoToRgbaFB(next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("texture_color_map", (Color4f * 256)),
+    ]
+
+
+class PassthroughColorMapMonoToMonoFB(Structure):
+    def __init__(
+        self,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_MONO_TO_MONO_FB,
+    ) -> None:
+        super().__init__(
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorMapMonoToMonoFB(texture_color_map={repr(self.texture_color_map)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorMapMonoToMonoFB(next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("texture_color_map", (c_uint8 * 256)),
+    ]
+
+
+class EventDataPassthroughStateChangedFB(Structure):
+    def __init__(
+        self,
+        flags: PassthroughStateChangedFlagsFB = PassthroughStateChangedFlagsFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_PASSTHROUGH_STATE_CHANGED_FB,
+    ) -> None:
+        super().__init__(
+            flags=PassthroughStateChangedFlagsFB(flags).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataPassthroughStateChangedFB(flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataPassthroughStateChangedFB(flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", PassthroughStateChangedFlagsFBCInt),
+    ]
+
+
+PFN_xrCreatePassthroughFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(PassthroughCreateInfoFB), POINTER(PassthroughFBHandle))
+
+PFN_xrDestroyPassthroughFB = CFUNCTYPE(Result.ctype(), PassthroughFBHandle)
+
+PFN_xrPassthroughStartFB = CFUNCTYPE(Result.ctype(), PassthroughFBHandle)
+
+PFN_xrPassthroughPauseFB = CFUNCTYPE(Result.ctype(), PassthroughFBHandle)
+
+PFN_xrCreatePassthroughLayerFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(PassthroughLayerCreateInfoFB), POINTER(PassthroughLayerFBHandle))
+
+PFN_xrDestroyPassthroughLayerFB = CFUNCTYPE(Result.ctype(), PassthroughLayerFBHandle)
+
+PFN_xrPassthroughLayerPauseFB = CFUNCTYPE(Result.ctype(), PassthroughLayerFBHandle)
+
+PFN_xrPassthroughLayerResumeFB = CFUNCTYPE(Result.ctype(), PassthroughLayerFBHandle)
+
+PFN_xrPassthroughLayerSetStyleFB = CFUNCTYPE(Result.ctype(), PassthroughLayerFBHandle, POINTER(PassthroughStyleFB))
+
+PFN_xrCreateGeometryInstanceFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(GeometryInstanceCreateInfoFB), POINTER(GeometryInstanceFBHandle))
+
+PFN_xrDestroyGeometryInstanceFB = CFUNCTYPE(Result.ctype(), GeometryInstanceFBHandle)
+
+PFN_xrGeometryInstanceSetTransformFB = CFUNCTYPE(Result.ctype(), GeometryInstanceFBHandle, POINTER(GeometryInstanceTransformFB))
+
+
 class ViewLocateFoveatedRenderingVARJO(Structure):
     def __init__(
         self,
@@ -6025,6 +6502,109 @@ class CompositionLayerDepthTestVARJO(Structure):
 
 
 PFN_xrSetEnvironmentDepthEstimationVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, Bool32)
+
+
+class SystemMarkerTrackingPropertiesVARJO(Structure):
+    def __init__(
+        self,
+        supports_marker_tracking: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SYSTEM_MARKER_TRACKING_PROPERTIES_VARJO,
+    ) -> None:
+        super().__init__(
+            supports_marker_tracking=supports_marker_tracking,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemMarkerTrackingPropertiesVARJO(supports_marker_tracking={repr(self.supports_marker_tracking)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemMarkerTrackingPropertiesVARJO(supports_marker_tracking={self.supports_marker_tracking}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_marker_tracking", Bool32),
+    ]
+
+
+class EventDataMarkerTrackingUpdateVARJO(Structure):
+    def __init__(
+        self,
+        marker_id: int = 0,
+        is_active: Bool32 = 0,
+        is_predicted: Bool32 = 0,
+        time: Time = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_MARKER_TRACKING_UPDATE_VARJO,
+    ) -> None:
+        super().__init__(
+            marker_id=marker_id,
+            is_active=is_active,
+            is_predicted=is_predicted,
+            time=time,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataMarkerTrackingUpdateVARJO(marker_id={repr(self.marker_id)}, is_active={repr(self.is_active)}, is_predicted={repr(self.is_predicted)}, time={repr(self.time)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataMarkerTrackingUpdateVARJO(marker_id={self.marker_id}, is_active={self.is_active}, is_predicted={self.is_predicted}, time={self.time}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("marker_id", c_uint64),
+        ("is_active", Bool32),
+        ("is_predicted", Bool32),
+        ("time", Time),
+    ]
+
+
+class MarkerSpaceCreateInfoVARJO(Structure):
+    def __init__(
+        self,
+        marker_id: int = 0,
+        pose_in_marker_space: Posef = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.MARKER_SPACE_CREATE_INFO_VARJO,
+    ) -> None:
+        if pose_in_marker_space is None:
+            pose_in_marker_space = Posef()
+        super().__init__(
+            marker_id=marker_id,
+            pose_in_marker_space=pose_in_marker_space,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerSpaceCreateInfoVARJO(marker_id={repr(self.marker_id)}, pose_in_marker_space={repr(self.pose_in_marker_space)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerSpaceCreateInfoVARJO(marker_id={self.marker_id}, pose_in_marker_space={self.pose_in_marker_space}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("marker_id", c_uint64),
+        ("pose_in_marker_space", Posef),
+    ]
+
+
+PFN_xrSetMarkerTrackingVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, Bool32)
+
+PFN_xrSetMarkerTrackingTimeoutVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint64, Duration)
+
+PFN_xrSetMarkerTrackingPredictionVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint64, Bool32)
+
+PFN_xrGetMarkerSizeVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint64, POINTER(Extent2Df))
+
+PFN_xrCreateMarkerSpaceVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(MarkerSpaceCreateInfoVARJO), POINTER(SpaceHandle))
 
 
 class SpatialAnchorStoreConnectionMSFT_T(Structure):
@@ -6252,6 +6832,7 @@ __all__ = [
     "CompositionLayerFlagsCInt",
     "CompositionLayerImageLayoutFB",
     "CompositionLayerImageLayoutFlagsFBCInt",
+    "CompositionLayerPassthroughFB",
     "CompositionLayerProjection",
     "CompositionLayerProjectionView",
     "CompositionLayerQuad",
@@ -6284,10 +6865,13 @@ __all__ = [
     "EventDataInstanceLossPending",
     "EventDataInteractionProfileChanged",
     "EventDataMainSessionVisibilityChangedEXTX",
+    "EventDataMarkerTrackingUpdateVARJO",
+    "EventDataPassthroughStateChangedFB",
     "EventDataPerfSettingsEXT",
     "EventDataReferenceSpaceChangePending",
     "EventDataSessionStateChanged",
     "EventDataVisibilityMaskChangedKHR",
+    "EventDataViveTrackerConnectedHTCX",
     "ExtensionProperties",
     "Extent2Df",
     "Extent2Di",
@@ -6303,6 +6887,10 @@ __all__ = [
     "FrameEndInfo",
     "FrameState",
     "FrameWaitInfo",
+    "GeometryInstanceCreateInfoFB",
+    "GeometryInstanceFBHandle",
+    "GeometryInstanceFB_T",
+    "GeometryInstanceTransformFB",
     "HandCapsuleFB",
     "HandJointLocationEXT",
     "HandJointLocationsEXT",
@@ -6339,6 +6927,7 @@ __all__ = [
     "InteractionProfileState",
     "InteractionProfileSuggestedBinding",
     "LoaderInitInfoBaseHeaderKHR",
+    "MarkerSpaceCreateInfoVARJO",
     "NewSceneComputeInfoMSFT",
     "Offset2Df",
     "Offset2Di",
@@ -6356,9 +6945,13 @@ __all__ = [
     "PFN_xrCreateActionSpace",
     "PFN_xrCreateDebugUtilsMessengerEXT",
     "PFN_xrCreateFoveationProfileFB",
+    "PFN_xrCreateGeometryInstanceFB",
     "PFN_xrCreateHandMeshSpaceMSFT",
     "PFN_xrCreateHandTrackerEXT",
     "PFN_xrCreateInstance",
+    "PFN_xrCreateMarkerSpaceVARJO",
+    "PFN_xrCreatePassthroughFB",
+    "PFN_xrCreatePassthroughLayerFB",
     "PFN_xrCreateReferenceSpace",
     "PFN_xrCreateSceneMSFT",
     "PFN_xrCreateSceneObserverMSFT",
@@ -6369,14 +6962,18 @@ __all__ = [
     "PFN_xrCreateSpatialAnchorStoreConnectionMSFT",
     "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
     "PFN_xrCreateSwapchain",
+    "PFN_xrCreateTriangleMeshFB",
     "PFN_xrDebugUtilsMessengerCallbackEXT",
     "PFN_xrDeserializeSceneMSFT",
     "PFN_xrDestroyAction",
     "PFN_xrDestroyActionSet",
     "PFN_xrDestroyDebugUtilsMessengerEXT",
     "PFN_xrDestroyFoveationProfileFB",
+    "PFN_xrDestroyGeometryInstanceFB",
     "PFN_xrDestroyHandTrackerEXT",
     "PFN_xrDestroyInstance",
+    "PFN_xrDestroyPassthroughFB",
+    "PFN_xrDestroyPassthroughLayerFB",
     "PFN_xrDestroySceneMSFT",
     "PFN_xrDestroySceneObserverMSFT",
     "PFN_xrDestroySession",
@@ -6384,6 +6981,7 @@ __all__ = [
     "PFN_xrDestroySpatialAnchorMSFT",
     "PFN_xrDestroySpatialAnchorStoreConnectionMSFT",
     "PFN_xrDestroySwapchain",
+    "PFN_xrDestroyTriangleMeshFB",
     "PFN_xrEndFrame",
     "PFN_xrEndSession",
     "PFN_xrEnumerateApiLayerProperties",
@@ -6400,6 +6998,8 @@ __all__ = [
     "PFN_xrEnumerateSwapchainImages",
     "PFN_xrEnumerateViewConfigurationViews",
     "PFN_xrEnumerateViewConfigurations",
+    "PFN_xrEnumerateViveTrackerPathsHTCX",
+    "PFN_xrGeometryInstanceSetTransformFB",
     "PFN_xrGetActionStateBoolean",
     "PFN_xrGetActionStateFloat",
     "PFN_xrGetActionStatePose",
@@ -6413,6 +7013,7 @@ __all__ = [
     "PFN_xrGetInputSourceLocalizedName",
     "PFN_xrGetInstanceProcAddr",
     "PFN_xrGetInstanceProperties",
+    "PFN_xrGetMarkerSizeVARJO",
     "PFN_xrGetReferenceSpaceBoundsRect",
     "PFN_xrGetSceneComponentsMSFT",
     "PFN_xrGetSceneComputeStateMSFT",
@@ -6429,6 +7030,11 @@ __all__ = [
     "PFN_xrLocateSceneComponentsMSFT",
     "PFN_xrLocateSpace",
     "PFN_xrLocateViews",
+    "PFN_xrPassthroughLayerPauseFB",
+    "PFN_xrPassthroughLayerResumeFB",
+    "PFN_xrPassthroughLayerSetStyleFB",
+    "PFN_xrPassthroughPauseFB",
+    "PFN_xrPassthroughStartFB",
     "PFN_xrPathToString",
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
     "PFN_xrPersistSpatialAnchorMSFT",
@@ -6448,6 +7054,9 @@ __all__ = [
     "PFN_xrSetInputDeviceStateBoolEXT",
     "PFN_xrSetInputDeviceStateFloatEXT",
     "PFN_xrSetInputDeviceStateVector2fEXT",
+    "PFN_xrSetMarkerTrackingPredictionVARJO",
+    "PFN_xrSetMarkerTrackingTimeoutVARJO",
+    "PFN_xrSetMarkerTrackingVARJO",
     "PFN_xrStopHapticFeedback",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
@@ -6455,12 +7064,29 @@ __all__ = [
     "PFN_xrSuggestInteractionProfileBindings",
     "PFN_xrSyncActions",
     "PFN_xrThermalGetTemperatureTrendEXT",
+    "PFN_xrTriangleMeshBeginUpdateFB",
+    "PFN_xrTriangleMeshBeginVertexBufferUpdateFB",
+    "PFN_xrTriangleMeshEndUpdateFB",
+    "PFN_xrTriangleMeshEndVertexBufferUpdateFB",
+    "PFN_xrTriangleMeshGetIndexBufferFB",
+    "PFN_xrTriangleMeshGetVertexBufferFB",
     "PFN_xrUnpersistSpatialAnchorMSFT",
     "PFN_xrUpdateHandMeshMSFT",
     "PFN_xrUpdateSwapchainFB",
     "PFN_xrVoidFunction",
     "PFN_xrWaitFrame",
     "PFN_xrWaitSwapchainImage",
+    "PassthroughColorMapMonoToMonoFB",
+    "PassthroughColorMapMonoToRgbaFB",
+    "PassthroughCreateInfoFB",
+    "PassthroughFBHandle",
+    "PassthroughFB_T",
+    "PassthroughFlagsFBCInt",
+    "PassthroughLayerCreateInfoFB",
+    "PassthroughLayerFBHandle",
+    "PassthroughLayerFB_T",
+    "PassthroughStateChangedFlagsFBCInt",
+    "PassthroughStyleFB",
     "Path",
     "Posef",
     "Quaternionf",
@@ -6551,10 +7177,16 @@ __all__ = [
     "SystemHandTrackingMeshPropertiesMSFT",
     "SystemHandTrackingPropertiesEXT",
     "SystemId",
+    "SystemMarkerTrackingPropertiesVARJO",
+    "SystemPassthroughPropertiesFB",
     "SystemProperties",
     "SystemSpaceWarpPropertiesFB",
     "SystemTrackingProperties",
     "Time",
+    "TriangleMeshCreateInfoFB",
+    "TriangleMeshFBHandle",
+    "TriangleMeshFB_T",
+    "TriangleMeshFlagsFBCInt",
     "UuidMSFT",
     "Vector2f",
     "Vector3f",
@@ -6572,4 +7204,5 @@ __all__ = [
     "ViewStateFlagsCInt",
     "VisibilityMaskKHR",
     "VisualMeshComputeLodInfoMSFT",
+    "ViveTrackerPathsHTCX",
 ]
