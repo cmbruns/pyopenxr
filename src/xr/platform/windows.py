@@ -1,6 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, wintypes
 import ctypes
 
 from OpenGL import WGL
@@ -23,16 +23,16 @@ KHR_vulkan_swapchain_format_list = 1
 KHR_vulkan_swapchain_format_list_SPEC_VERSION = 4
 KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME = "XR_KHR_vulkan_swapchain_format_list"
 KHR_opengl_enable = 1
-KHR_opengl_enable_SPEC_VERSION = 9
+KHR_opengl_enable_SPEC_VERSION = 10
 KHR_OPENGL_ENABLE_EXTENSION_NAME = "XR_KHR_opengl_enable"
 KHR_vulkan_enable = 1
 KHR_vulkan_enable_SPEC_VERSION = 8
 KHR_VULKAN_ENABLE_EXTENSION_NAME = "XR_KHR_vulkan_enable"
 KHR_D3D11_enable = 1
-KHR_D3D11_enable_SPEC_VERSION = 5
+KHR_D3D11_enable_SPEC_VERSION = 8
 KHR_D3D11_ENABLE_EXTENSION_NAME = "XR_KHR_D3D11_enable"
 KHR_D3D12_enable = 1
-KHR_D3D12_enable_SPEC_VERSION = 7
+KHR_D3D12_enable_SPEC_VERSION = 8
 KHR_D3D12_ENABLE_EXTENSION_NAME = "XR_KHR_D3D12_enable"
 KHR_win32_convert_performance_counter_time = 1
 KHR_win32_convert_performance_counter_time_SPEC_VERSION = 1
@@ -93,8 +93,8 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 class GraphicsBindingOpenGLWin32KHR(Structure):
     def __init__(
         self,
-        h_dc: int = 0,
-        h_glrc: int = 0,
+        h_dc: wintypes.HDC = 0,
+        h_glrc: WGL.HGLRC = 0,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_WIN32_KHR,
     ) -> None:
@@ -114,8 +114,8 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("h_dc", c_int),
-        ("h_glrc", c_int),
+        ("h_dc", wintypes.HDC),
+        ("h_glrc", WGL.HGLRC),
     ]
 
 
@@ -334,7 +334,7 @@ class SwapchainImageD3D11KHR(Structure):
 class GraphicsRequirementsD3D11KHR(Structure):
     def __init__(
         self,
-        adapter_luid: int = 0,
+        adapter_luid: _LUID = 0,
         min_feature_level: int = 0,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_D3D11_KHR,
@@ -355,7 +355,7 @@ class GraphicsRequirementsD3D11KHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("adapter_luid", c_int),
+        ("adapter_luid", _LUID),
         ("min_feature_level", c_int),
     ]
 
@@ -421,7 +421,7 @@ class SwapchainImageD3D12KHR(Structure):
 class GraphicsRequirementsD3D12KHR(Structure):
     def __init__(
         self,
-        adapter_luid: int = 0,
+        adapter_luid: _LUID = 0,
         min_feature_level: int = 0,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_D3D12_KHR,
@@ -442,16 +442,16 @@ class GraphicsRequirementsD3D12KHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("adapter_luid", c_int),
+        ("adapter_luid", _LUID),
         ("min_feature_level", c_int),
     ]
 
 
 PFN_xrGetD3D12GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, SystemId, POINTER(GraphicsRequirementsD3D12KHR))
 
-PFN_xrConvertWin32PerformanceCounterToTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(c_int), POINTER(Time))
+PFN_xrConvertWin32PerformanceCounterToTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, POINTER(_LARGE_INTEGER), POINTER(Time))
 
-PFN_xrConvertTimeToWin32PerformanceCounterKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(c_int))
+PFN_xrConvertTimeToWin32PerformanceCounterKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(_LARGE_INTEGER))
 
 
 class timespec(Structure):
@@ -467,16 +467,22 @@ class timespec(Structure):
 
 PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), InstanceHandle, Time, POINTER(timespec))
 
-VulkanInstanceCreateFlagsKHR = Flags64
+VulkanInstanceCreateFlagsKHRCInt = Flags64
 
-VulkanDeviceCreateFlagsKHR = Flags64
+class VulkanInstanceCreateFlagsKHR(FlagBase):
+    NONE = 0x00000000
+
+VulkanDeviceCreateFlagsKHRCInt = Flags64
+
+class VulkanDeviceCreateFlagsKHR(FlagBase):
+    NONE = 0x00000000
 
 
 class VulkanInstanceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanInstanceCreateFlagsKHR = 0,
+        create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR(),
         pfn_get_instance_proc_addr: int = 0,
         vulkan_create_info: POINTER(c_int) = None,
         vulkan_allocator: POINTER(c_int) = None,
@@ -485,7 +491,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=create_flags,
+            create_flags=VulkanInstanceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
@@ -503,7 +509,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("system_id", SystemId),
-        ("create_flags", VulkanInstanceCreateFlagsKHR),
+        ("create_flags", VulkanInstanceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", c_int),
         ("vulkan_create_info", POINTER(c_int)),
         ("vulkan_allocator", POINTER(c_int)),
@@ -514,7 +520,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanDeviceCreateFlagsKHR = 0,
+        create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR(),
         pfn_get_instance_proc_addr: int = 0,
         vulkan_physical_device: int = 0,
         vulkan_create_info: POINTER(c_int) = None,
@@ -524,7 +530,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=create_flags,
+            create_flags=VulkanDeviceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_physical_device=vulkan_physical_device,
             vulkan_create_info=vulkan_create_info,
@@ -543,7 +549,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("system_id", SystemId),
-        ("create_flags", VulkanDeviceCreateFlagsKHR),
+        ("create_flags", VulkanDeviceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", c_int),
         ("vulkan_physical_device", c_int),
         ("vulkan_create_info", POINTER(c_int)),
@@ -725,89 +731,90 @@ class SwapchainStateSamplerVulkanFB(Structure):
 
 
 __all__ = [
-    "KHR_vulkan_swapchain_format_list",
-    "KHR_vulkan_swapchain_format_list_SPEC_VERSION",
-    "KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME",
-    "KHR_opengl_enable",
-    "KHR_opengl_enable_SPEC_VERSION",
-    "KHR_OPENGL_ENABLE_EXTENSION_NAME",
-    "KHR_vulkan_enable",
-    "KHR_vulkan_enable_SPEC_VERSION",
-    "KHR_VULKAN_ENABLE_EXTENSION_NAME",
+    "FB_FOVEATION_VULKAN_EXTENSION_NAME",
+    "FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME",
+    "FB_foveation_vulkan",
+    "FB_foveation_vulkan_SPEC_VERSION",
+    "FB_swapchain_update_state_vulkan",
+    "FB_swapchain_update_state_vulkan_SPEC_VERSION",
+    "GraphicsBindingD3D11KHR",
+    "GraphicsBindingD3D12KHR",
+    "GraphicsBindingOpenGLWin32KHR",
+    "GraphicsBindingVulkan2KHR",
+    "GraphicsBindingVulkanKHR",
+    "GraphicsRequirementsD3D11KHR",
+    "GraphicsRequirementsD3D12KHR",
+    "GraphicsRequirementsOpenGLKHR",
+    "GraphicsRequirementsVulkan2KHR",
+    "GraphicsRequirementsVulkanKHR",
+    "HolographicWindowAttachmentMSFT",
+    "KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME",
+    "KHR_D3D11_ENABLE_EXTENSION_NAME",
     "KHR_D3D11_enable",
     "KHR_D3D11_enable_SPEC_VERSION",
-    "KHR_D3D11_ENABLE_EXTENSION_NAME",
+    "KHR_D3D12_ENABLE_EXTENSION_NAME",
     "KHR_D3D12_enable",
     "KHR_D3D12_enable_SPEC_VERSION",
-    "KHR_D3D12_ENABLE_EXTENSION_NAME",
-    "KHR_win32_convert_performance_counter_time",
-    "KHR_win32_convert_performance_counter_time_SPEC_VERSION",
+    "KHR_OPENGL_ENABLE_EXTENSION_NAME",
+    "KHR_VULKAN_ENABLE2_EXTENSION_NAME",
+    "KHR_VULKAN_ENABLE_EXTENSION_NAME",
+    "KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME",
     "KHR_WIN32_CONVERT_PERFORMANCE_COUNTER_TIME_EXTENSION_NAME",
     "KHR_convert_timespec_time",
     "KHR_convert_timespec_time_SPEC_VERSION",
-    "KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME",
+    "KHR_opengl_enable",
+    "KHR_opengl_enable_SPEC_VERSION",
+    "KHR_vulkan_enable",
     "KHR_vulkan_enable2",
     "KHR_vulkan_enable2_SPEC_VERSION",
-    "KHR_VULKAN_ENABLE2_EXTENSION_NAME",
-    "MSFT_perception_anchor_interop",
-    "MSFT_perception_anchor_interop_SPEC_VERSION",
+    "KHR_vulkan_enable_SPEC_VERSION",
+    "KHR_vulkan_swapchain_format_list",
+    "KHR_vulkan_swapchain_format_list_SPEC_VERSION",
+    "KHR_win32_convert_performance_counter_time",
+    "KHR_win32_convert_performance_counter_time_SPEC_VERSION",
+    "MAX_AUDIO_DEVICE_STR_SIZE_OCULUS",
+    "MSFT_HOLOGRAPHIC_WINDOW_ATTACHMENT_EXTENSION_NAME",
     "MSFT_PERCEPTION_ANCHOR_INTEROP_EXTENSION_NAME",
     "MSFT_holographic_window_attachment",
     "MSFT_holographic_window_attachment_SPEC_VERSION",
-    "MSFT_HOLOGRAPHIC_WINDOW_ATTACHMENT_EXTENSION_NAME",
+    "MSFT_perception_anchor_interop",
+    "MSFT_perception_anchor_interop_SPEC_VERSION",
+    "OCULUS_AUDIO_DEVICE_GUID_EXTENSION_NAME",
     "OCULUS_audio_device_guid",
     "OCULUS_audio_device_guid_SPEC_VERSION",
-    "OCULUS_AUDIO_DEVICE_GUID_EXTENSION_NAME",
-    "MAX_AUDIO_DEVICE_STR_SIZE_OCULUS",
-    "FB_foveation_vulkan",
-    "FB_foveation_vulkan_SPEC_VERSION",
-    "FB_FOVEATION_VULKAN_EXTENSION_NAME",
-    "FB_swapchain_update_state_vulkan",
-    "FB_swapchain_update_state_vulkan_SPEC_VERSION",
-    "FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME",
-    "VulkanSwapchainFormatListCreateInfoKHR",
-    "GraphicsBindingOpenGLWin32KHR",
-    "SwapchainImageOpenGLKHR",
-    "GraphicsRequirementsOpenGLKHR",
-    "PFN_xrGetOpenGLGraphicsRequirementsKHR",
-    "GraphicsBindingVulkanKHR",
-    "SwapchainImageVulkanKHR",
-    "GraphicsRequirementsVulkanKHR",
-    "PFN_xrGetVulkanInstanceExtensionsKHR",
-    "PFN_xrGetVulkanDeviceExtensionsKHR",
-    "PFN_xrGetVulkanGraphicsDeviceKHR",
-    "PFN_xrGetVulkanGraphicsRequirementsKHR",
-    "GraphicsBindingD3D11KHR",
-    "SwapchainImageD3D11KHR",
-    "GraphicsRequirementsD3D11KHR",
-    "PFN_xrGetD3D11GraphicsRequirementsKHR",
-    "GraphicsBindingD3D12KHR",
-    "SwapchainImageD3D12KHR",
-    "GraphicsRequirementsD3D12KHR",
-    "PFN_xrGetD3D12GraphicsRequirementsKHR",
-    "PFN_xrConvertWin32PerformanceCounterToTimeKHR",
-    "PFN_xrConvertTimeToWin32PerformanceCounterKHR",
-    "timespec",
-    "PFN_xrConvertTimespecTimeToTimeKHR",
-    "timespec",
     "PFN_xrConvertTimeToTimespecTimeKHR",
-    "VulkanInstanceCreateFlagsKHR",
-    "VulkanDeviceCreateFlagsKHR",
-    "VulkanInstanceCreateInfoKHR",
-    "VulkanDeviceCreateInfoKHR",
-    "GraphicsBindingVulkan2KHR",
-    "VulkanGraphicsDeviceGetInfoKHR",
-    "SwapchainImageVulkan2KHR",
-    "GraphicsRequirementsVulkan2KHR",
-    "PFN_xrCreateVulkanInstanceKHR",
-    "PFN_xrCreateVulkanDeviceKHR",
-    "PFN_xrGetVulkanGraphicsDevice2KHR",
-    "PFN_xrGetVulkanGraphicsRequirements2KHR",
+    "PFN_xrConvertTimeToWin32PerformanceCounterKHR",
+    "PFN_xrConvertTimespecTimeToTimeKHR",
+    "PFN_xrConvertWin32PerformanceCounterToTimeKHR",
     "PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT",
-    "PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT",
-    "HolographicWindowAttachmentMSFT",
-    "PFN_xrGetAudioOutputDeviceGuidOculus",
+    "PFN_xrCreateVulkanDeviceKHR",
+    "PFN_xrCreateVulkanInstanceKHR",
     "PFN_xrGetAudioInputDeviceGuidOculus",
+    "PFN_xrGetAudioOutputDeviceGuidOculus",
+    "PFN_xrGetD3D11GraphicsRequirementsKHR",
+    "PFN_xrGetD3D12GraphicsRequirementsKHR",
+    "PFN_xrGetOpenGLGraphicsRequirementsKHR",
+    "PFN_xrGetVulkanDeviceExtensionsKHR",
+    "PFN_xrGetVulkanGraphicsDevice2KHR",
+    "PFN_xrGetVulkanGraphicsDeviceKHR",
+    "PFN_xrGetVulkanGraphicsRequirements2KHR",
+    "PFN_xrGetVulkanGraphicsRequirementsKHR",
+    "PFN_xrGetVulkanInstanceExtensionsKHR",
+    "PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT",
+    "SwapchainImageD3D11KHR",
+    "SwapchainImageD3D12KHR",
     "SwapchainImageFoveationVulkanFB",
+    "SwapchainImageOpenGLKHR",
+    "SwapchainImageVulkan2KHR",
+    "SwapchainImageVulkanKHR",
     "SwapchainStateSamplerVulkanFB",
+    "VulkanDeviceCreateFlagsKHR",
+    "VulkanDeviceCreateFlagsKHRCInt",
+    "VulkanDeviceCreateInfoKHR",
+    "VulkanGraphicsDeviceGetInfoKHR",
+    "VulkanInstanceCreateFlagsKHR",
+    "VulkanInstanceCreateFlagsKHRCInt",
+    "VulkanInstanceCreateInfoKHR",
+    "VulkanSwapchainFormatListCreateInfoKHR",
+    "timespec",
 ]
