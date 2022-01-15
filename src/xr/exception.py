@@ -1042,6 +1042,18 @@ class UnknownPassthroughFBError(ErrorResult):
         return Result.ERROR_UNKNOWN_PASSTHROUGH_FB
 
 
+class RenderModelKeyInvalidFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_RENDER_MODEL_KEY_INVALID_FB
+
+
+class RenderModelUnavailableFB(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.RENDER_MODEL_UNAVAILABLE_FB
+
+
 class MarkerNotTrackedVarjoError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1142,6 +1154,8 @@ _exception_map = {
     Result.ERROR_NOT_PERMITTED_PASSTHROUGH_FB: NotPermittedPassthroughFBError,
     Result.ERROR_INSUFFICIENT_RESOURCES_PASSTHROUGH_FB: InsufficientResourcesPassthroughFBError,
     Result.ERROR_UNKNOWN_PASSTHROUGH_FB: UnknownPassthroughFBError,
+    Result.ERROR_RENDER_MODEL_KEY_INVALID_FB: RenderModelKeyInvalidFBError,
+    Result.RENDER_MODEL_UNAVAILABLE_FB: RenderModelUnavailableFB,
     Result.ERROR_MARKER_NOT_TRACKED_VARJO: MarkerNotTrackedVarjoError,
     Result.ERROR_MARKER_ID_INVALID_VARJO: MarkerIdInvalidVarjoError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT: SpatialAnchorNameNotFoundMSFTError,
@@ -1220,6 +1234,8 @@ __all__ = [
     "PoseInvalidError",
     "QualifiedSuccessResult",
     "ReferenceSpaceUnsupportedError",
+    "RenderModelKeyInvalidFBError",
+    "RenderModelUnavailableFB",
     "ReprojectionModeUnsupportedMSFTError",
     "ResultException",
     "RuntimeFailureError",

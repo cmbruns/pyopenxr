@@ -5590,6 +5590,110 @@ class EventDataViveTrackerConnectedHTCX(Structure):
 PFN_xrEnumerateViveTrackerPathsHTCX = CFUNCTYPE(Result.ctype(), InstanceHandle, c_uint32, POINTER(c_uint32), POINTER(ViveTrackerPathsHTCX))
 
 
+class FacialTrackerHTC_T(Structure):
+    pass
+
+
+FacialTrackerHTCHandle = POINTER(FacialTrackerHTC_T)
+
+
+class SystemFacialTrackingPropertiesHTC(Structure):
+    def __init__(
+        self,
+        support_eye_facial_tracking: Bool32 = 0,
+        support_lip_facial_tracking: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SYSTEM_FACIAL_TRACKING_PROPERTIES_HTC,
+    ) -> None:
+        super().__init__(
+            support_eye_facial_tracking=support_eye_facial_tracking,
+            support_lip_facial_tracking=support_lip_facial_tracking,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemFacialTrackingPropertiesHTC(support_eye_facial_tracking={repr(self.support_eye_facial_tracking)}, support_lip_facial_tracking={repr(self.support_lip_facial_tracking)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemFacialTrackingPropertiesHTC(support_eye_facial_tracking={self.support_eye_facial_tracking}, support_lip_facial_tracking={self.support_lip_facial_tracking}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("support_eye_facial_tracking", Bool32),
+        ("support_lip_facial_tracking", Bool32),
+    ]
+
+
+class FacialExpressionsHTC(Structure):
+    def __init__(
+        self,
+        is_active: Bool32 = 0,
+        sample_time: Time = 0,
+        expression_count: int = 0,
+        expression_weightings: POINTER(c_float) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
+    ) -> None:
+        super().__init__(
+            is_active=is_active,
+            sample_time=sample_time,
+            expression_count=expression_count,
+            expression_weightings=expression_weightings,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FacialExpressionsHTC(is_active={repr(self.is_active)}, sample_time={repr(self.sample_time)}, expression_count={repr(self.expression_count)}, expression_weightings={repr(self.expression_weightings)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FacialExpressionsHTC(is_active={self.is_active}, sample_time={self.sample_time}, expression_count={self.expression_count}, expression_weightings={self.expression_weightings}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("is_active", Bool32),
+        ("sample_time", Time),
+        ("expression_count", c_uint32),
+        ("expression_weightings", POINTER(c_float)),
+    ]
+
+
+class FacialTrackerCreateInfoHTC(Structure):
+    def __init__(
+        self,
+        facial_tracking_type: FacialTrackingTypeHTC = FacialTrackingTypeHTC(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.FACIAL_TRACKER_CREATE_INFO_HTC,
+    ) -> None:
+        super().__init__(
+            facial_tracking_type=FacialTrackingTypeHTC(facial_tracking_type).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FacialTrackerCreateInfoHTC(facial_tracking_type={repr(self.facial_tracking_type)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FacialTrackerCreateInfoHTC(facial_tracking_type={self.facial_tracking_type}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("facial_tracking_type", FacialTrackingTypeHTC.ctype()),
+    ]
+
+
+PFN_xrCreateFacialTrackerHTC = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(FacialTrackerCreateInfoHTC), POINTER(FacialTrackerHTCHandle))
+
+PFN_xrDestroyFacialTrackerHTC = CFUNCTYPE(Result.ctype(), FacialTrackerHTCHandle)
+
+PFN_xrGetFacialExpressionsHTC = CFUNCTYPE(Result.ctype(), FacialTrackerHTCHandle, POINTER(FacialExpressionsHTC))
+
+
 class SystemColorSpacePropertiesFB(Structure):
     def __init__(
         self,
@@ -5973,6 +6077,125 @@ class FoveationLevelProfileCreateInfoFB(Structure):
         ("vertical_offset", c_float),
         ("dynamic", FoveationDynamicFB.ctype()),
     ]
+
+
+KeyboardTrackingFlagsFBCInt = Flags64
+
+KeyboardTrackingQueryFlagsFBCInt = Flags64
+
+
+class SystemKeyboardTrackingPropertiesFB(Structure):
+    def __init__(
+        self,
+        supports_keyboard_tracking: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SYSTEM_KEYBOARD_TRACKING_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            supports_keyboard_tracking=supports_keyboard_tracking,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemKeyboardTrackingPropertiesFB(supports_keyboard_tracking={repr(self.supports_keyboard_tracking)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemKeyboardTrackingPropertiesFB(supports_keyboard_tracking={self.supports_keyboard_tracking}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_keyboard_tracking", Bool32),
+    ]
+
+
+class KeyboardTrackingDescriptionFB(Structure):
+    def __init__(
+        self,
+        tracked_keyboard_id: int = 0,
+        size: Vector3f = None,
+        flags: KeyboardTrackingFlagsFB = KeyboardTrackingFlagsFB(),
+        name: str = "",
+    ) -> None:
+        if size is None:
+            size = Vector3f()
+        super().__init__(
+            tracked_keyboard_id=tracked_keyboard_id,
+            size=size,
+            flags=KeyboardTrackingFlagsFB(flags).value,
+            name=name.encode(),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.KeyboardTrackingDescriptionFB(tracked_keyboard_id={repr(self.tracked_keyboard_id)}, size={repr(self.size)}, flags={repr(self.flags)}, name={repr(self.name)})"
+
+    def __str__(self) -> str:
+        return f"xr.KeyboardTrackingDescriptionFB(tracked_keyboard_id={self.tracked_keyboard_id}, size={self.size}, flags={self.flags}, name={self.name})"
+
+    _fields_ = [
+        ("tracked_keyboard_id", c_uint64),
+        ("size", Vector3f),
+        ("flags", KeyboardTrackingFlagsFBCInt),
+        ("name", (c_char * 128)),
+    ]
+
+
+class KeyboardSpaceCreateInfoFB(Structure):
+    def __init__(
+        self,
+        tracked_keyboard_id: int = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.KEYBOARD_SPACE_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            tracked_keyboard_id=tracked_keyboard_id,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.KeyboardSpaceCreateInfoFB(tracked_keyboard_id={repr(self.tracked_keyboard_id)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.KeyboardSpaceCreateInfoFB(tracked_keyboard_id={self.tracked_keyboard_id}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("tracked_keyboard_id", c_uint64),
+    ]
+
+
+class KeyboardTrackingQueryFB(Structure):
+    def __init__(
+        self,
+        flags: KeyboardTrackingQueryFlagsFB = KeyboardTrackingQueryFlagsFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.KEYBOARD_TRACKING_QUERY_FB,
+    ) -> None:
+        super().__init__(
+            flags=KeyboardTrackingQueryFlagsFB(flags).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.KeyboardTrackingQueryFB(flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.KeyboardTrackingQueryFB(flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", KeyboardTrackingQueryFlagsFBCInt),
+    ]
+
+
+PFN_xrQuerySystemTrackedKeyboardFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(KeyboardTrackingQueryFB), POINTER(KeyboardTrackingDescriptionFB))
+
+PFN_xrCreateKeyboardSpaceFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(KeyboardSpaceCreateInfoFB), POINTER(SpaceHandle))
 
 
 class TriangleMeshFB_T(Structure):
@@ -6393,6 +6616,165 @@ PFN_xrDestroyGeometryInstanceFB = CFUNCTYPE(Result.ctype(), GeometryInstanceFBHa
 
 PFN_xrGeometryInstanceSetTransformFB = CFUNCTYPE(Result.ctype(), GeometryInstanceFBHandle, POINTER(GeometryInstanceTransformFB))
 
+RenderModelKeyFB = c_uint64
+
+RenderModelFlagsFBCInt = Flags64
+
+
+class RenderModelPathInfoFB(Structure):
+    def __init__(
+        self,
+        path: Path = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.RENDER_MODEL_PATH_INFO_FB,
+    ) -> None:
+        super().__init__(
+            path=path,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelPathInfoFB(path={repr(self.path)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelPathInfoFB(path={self.path}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("path", Path),
+    ]
+
+
+class RenderModelPropertiesFB(Structure):
+    def __init__(
+        self,
+        vendor_id: int = 0,
+        model_name: str = "",
+        model_key: RenderModelKeyFB = 0,
+        model_version: int = 0,
+        flags: RenderModelFlagsFB = RenderModelFlagsFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            vendor_id=vendor_id,
+            model_name=model_name.encode(),
+            model_key=model_key,
+            model_version=model_version,
+            flags=RenderModelFlagsFB(flags).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelPropertiesFB(vendor_id={repr(self.vendor_id)}, model_name={repr(self.model_name)}, model_key={repr(self.model_key)}, model_version={repr(self.model_version)}, flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelPropertiesFB(vendor_id={self.vendor_id}, model_name={self.model_name}, model_key={self.model_key}, model_version={self.model_version}, flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("vendor_id", c_uint32),
+        ("model_name", (c_char * 64)),
+        ("model_key", RenderModelKeyFB),
+        ("model_version", c_uint32),
+        ("flags", RenderModelFlagsFBCInt),
+    ]
+
+
+class RenderModelBufferFB(Structure):
+    def __init__(
+        self,
+        buffer_capacity_input: int = 0,
+        buffer_count_output: int = 0,
+        buffer: POINTER(c_uint8) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.RENDER_MODEL_BUFFER_FB,
+    ) -> None:
+        super().__init__(
+            buffer_capacity_input=buffer_capacity_input,
+            buffer_count_output=buffer_count_output,
+            buffer=buffer,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelBufferFB(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelBufferFB(buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("buffer_capacity_input", c_uint32),
+        ("buffer_count_output", c_uint32),
+        ("buffer", POINTER(c_uint8)),
+    ]
+
+
+class RenderModelLoadInfoFB(Structure):
+    def __init__(
+        self,
+        model_key: RenderModelKeyFB = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.RENDER_MODEL_LOAD_INFO_FB,
+    ) -> None:
+        super().__init__(
+            model_key=model_key,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelLoadInfoFB(model_key={repr(self.model_key)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelLoadInfoFB(model_key={self.model_key}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("model_key", RenderModelKeyFB),
+    ]
+
+
+class SystemRenderModelPropertiesFB(Structure):
+    def __init__(
+        self,
+        supports_render_model_loading: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SYSTEM_RENDER_MODEL_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            supports_render_model_loading=supports_render_model_loading,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemRenderModelPropertiesFB(supports_render_model_loading={repr(self.supports_render_model_loading)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemRenderModelPropertiesFB(supports_render_model_loading={self.supports_render_model_loading}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_render_model_loading", Bool32),
+    ]
+
+
+PFN_xrEnumerateRenderModelPathsFB = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint32, POINTER(c_uint32), POINTER(RenderModelPathInfoFB))
+
+PFN_xrGetRenderModelPropertiesFB = CFUNCTYPE(Result.ctype(), SessionHandle, Path, POINTER(RenderModelPropertiesFB))
+
+PFN_xrLoadRenderModelFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(RenderModelLoadInfoFB), POINTER(RenderModelBufferFB))
+
 
 class ViewLocateFoveatedRenderingVARJO(Structure):
     def __init__(
@@ -6795,6 +7177,88 @@ class SystemSpaceWarpPropertiesFB(Structure):
     ]
 
 
+DigitalLensControlFlagsALMALENCECInt = Flags64
+
+
+class DigitalLensControlALMALENCE(Structure):
+    def __init__(
+        self,
+        flags: DigitalLensControlFlagsALMALENCE = DigitalLensControlFlagsALMALENCE(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.DIGITAL_LENS_CONTROL_ALMALENCE,
+    ) -> None:
+        super().__init__(
+            flags=DigitalLensControlFlagsALMALENCE(flags).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.DigitalLensControlALMALENCE(flags={repr(self.flags)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.DigitalLensControlALMALENCE(flags={self.flags}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", DigitalLensControlFlagsALMALENCECInt),
+    ]
+
+
+PFN_xrSetDigitalLensControlALMALENCE = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(DigitalLensControlALMALENCE))
+
+
+class PassthroughKeyboardHandsIntensityFB(Structure):
+    def __init__(
+        self,
+        left_hand_intensity: float = 0,
+        right_hand_intensity: float = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PASSTHROUGH_KEYBOARD_HANDS_INTENSITY_FB,
+    ) -> None:
+        super().__init__(
+            left_hand_intensity=left_hand_intensity,
+            right_hand_intensity=right_hand_intensity,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughKeyboardHandsIntensityFB(left_hand_intensity={repr(self.left_hand_intensity)}, right_hand_intensity={repr(self.right_hand_intensity)}, next_structure={repr(self.next_structure)}, structure_type={repr(self.structure_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughKeyboardHandsIntensityFB(left_hand_intensity={self.left_hand_intensity:.3f}, right_hand_intensity={self.right_hand_intensity:.3f}, next_structure={self.next_structure}, structure_type={self.structure_type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("left_hand_intensity", c_float),
+        ("right_hand_intensity", c_float),
+    ]
+
+
+PFN_xrPassthroughLayerSetKeyboardHandsIntensityFB = CFUNCTYPE(Result.ctype(), PassthroughLayerFBHandle, POINTER(PassthroughKeyboardHandsIntensityFB))
+
+
+class UuidEXT(Structure):
+    def __init__(
+        self,
+    ) -> None:
+        super().__init__(
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.UuidEXT(data={repr(self.data)})"
+
+    def __str__(self) -> str:
+        return f"xr.UuidEXT()"
+
+    _fields_ = [
+        ("data", (c_uint8 * 16)),
+    ]
+
+
 __all__ = [
     "ActionCreateInfo",
     "ActionHandle",
@@ -6857,6 +7321,8 @@ __all__ = [
     "DebugUtilsMessengerEXT_T",
     "DebugUtilsObjectNameInfoEXT",
     "DeserializeSceneFragmentMSFT",
+    "DigitalLensControlALMALENCE",
+    "DigitalLensControlFlagsALMALENCECInt",
     "Duration",
     "EventDataBaseHeader",
     "EventDataBuffer",
@@ -6876,6 +7342,10 @@ __all__ = [
     "Extent2Df",
     "Extent2Di",
     "EyeGazeSampleTimeEXT",
+    "FacialExpressionsHTC",
+    "FacialTrackerCreateInfoHTC",
+    "FacialTrackerHTCHandle",
+    "FacialTrackerHTC_T",
     "Flags64",
     "FoveatedViewConfigurationViewVARJO",
     "FoveationLevelProfileCreateInfoFB",
@@ -6926,6 +7396,11 @@ __all__ = [
     "InteractionProfileAnalogThresholdVALVE",
     "InteractionProfileState",
     "InteractionProfileSuggestedBinding",
+    "KeyboardSpaceCreateInfoFB",
+    "KeyboardTrackingDescriptionFB",
+    "KeyboardTrackingFlagsFBCInt",
+    "KeyboardTrackingQueryFB",
+    "KeyboardTrackingQueryFlagsFBCInt",
     "LoaderInitInfoBaseHeaderKHR",
     "MarkerSpaceCreateInfoVARJO",
     "NewSceneComputeInfoMSFT",
@@ -6944,11 +7419,13 @@ __all__ = [
     "PFN_xrCreateActionSet",
     "PFN_xrCreateActionSpace",
     "PFN_xrCreateDebugUtilsMessengerEXT",
+    "PFN_xrCreateFacialTrackerHTC",
     "PFN_xrCreateFoveationProfileFB",
     "PFN_xrCreateGeometryInstanceFB",
     "PFN_xrCreateHandMeshSpaceMSFT",
     "PFN_xrCreateHandTrackerEXT",
     "PFN_xrCreateInstance",
+    "PFN_xrCreateKeyboardSpaceFB",
     "PFN_xrCreateMarkerSpaceVARJO",
     "PFN_xrCreatePassthroughFB",
     "PFN_xrCreatePassthroughLayerFB",
@@ -6968,6 +7445,7 @@ __all__ = [
     "PFN_xrDestroyAction",
     "PFN_xrDestroyActionSet",
     "PFN_xrDestroyDebugUtilsMessengerEXT",
+    "PFN_xrDestroyFacialTrackerHTC",
     "PFN_xrDestroyFoveationProfileFB",
     "PFN_xrDestroyGeometryInstanceFB",
     "PFN_xrDestroyHandTrackerEXT",
@@ -6992,6 +7470,7 @@ __all__ = [
     "PFN_xrEnumerateInstanceExtensionProperties",
     "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
     "PFN_xrEnumerateReferenceSpaces",
+    "PFN_xrEnumerateRenderModelPathsFB",
     "PFN_xrEnumerateReprojectionModesMSFT",
     "PFN_xrEnumerateSceneComputeFeaturesMSFT",
     "PFN_xrEnumerateSwapchainFormats",
@@ -7009,12 +7488,14 @@ __all__ = [
     "PFN_xrGetControllerModelStateMSFT",
     "PFN_xrGetCurrentInteractionProfile",
     "PFN_xrGetDisplayRefreshRateFB",
+    "PFN_xrGetFacialExpressionsHTC",
     "PFN_xrGetHandMeshFB",
     "PFN_xrGetInputSourceLocalizedName",
     "PFN_xrGetInstanceProcAddr",
     "PFN_xrGetInstanceProperties",
     "PFN_xrGetMarkerSizeVARJO",
     "PFN_xrGetReferenceSpaceBoundsRect",
+    "PFN_xrGetRenderModelPropertiesFB",
     "PFN_xrGetSceneComponentsMSFT",
     "PFN_xrGetSceneComputeStateMSFT",
     "PFN_xrGetSceneMeshBuffersMSFT",
@@ -7026,12 +7507,14 @@ __all__ = [
     "PFN_xrGetVisibilityMaskKHR",
     "PFN_xrInitializeLoaderKHR",
     "PFN_xrLoadControllerModelMSFT",
+    "PFN_xrLoadRenderModelFB",
     "PFN_xrLocateHandJointsEXT",
     "PFN_xrLocateSceneComponentsMSFT",
     "PFN_xrLocateSpace",
     "PFN_xrLocateViews",
     "PFN_xrPassthroughLayerPauseFB",
     "PFN_xrPassthroughLayerResumeFB",
+    "PFN_xrPassthroughLayerSetKeyboardHandsIntensityFB",
     "PFN_xrPassthroughLayerSetStyleFB",
     "PFN_xrPassthroughPauseFB",
     "PFN_xrPassthroughStartFB",
@@ -7039,6 +7522,7 @@ __all__ = [
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
     "PFN_xrPersistSpatialAnchorMSFT",
     "PFN_xrPollEvent",
+    "PFN_xrQuerySystemTrackedKeyboardFB",
     "PFN_xrReleaseSwapchainImage",
     "PFN_xrRequestDisplayRefreshRateFB",
     "PFN_xrRequestExitSession",
@@ -7048,6 +7532,7 @@ __all__ = [
     "PFN_xrSessionInsertDebugUtilsLabelEXT",
     "PFN_xrSetColorSpaceFB",
     "PFN_xrSetDebugUtilsObjectNameEXT",
+    "PFN_xrSetDigitalLensControlALMALENCE",
     "PFN_xrSetEnvironmentDepthEstimationVARJO",
     "PFN_xrSetInputDeviceActiveEXT",
     "PFN_xrSetInputDeviceLocationEXT",
@@ -7082,6 +7567,7 @@ __all__ = [
     "PassthroughFBHandle",
     "PassthroughFB_T",
     "PassthroughFlagsFBCInt",
+    "PassthroughKeyboardHandsIntensityFB",
     "PassthroughLayerCreateInfoFB",
     "PassthroughLayerFBHandle",
     "PassthroughLayerFB_T",
@@ -7093,6 +7579,12 @@ __all__ = [
     "Rect2Df",
     "Rect2Di",
     "ReferenceSpaceCreateInfo",
+    "RenderModelBufferFB",
+    "RenderModelFlagsFBCInt",
+    "RenderModelKeyFB",
+    "RenderModelLoadInfoFB",
+    "RenderModelPathInfoFB",
+    "RenderModelPropertiesFB",
     "SceneBoundsMSFT",
     "SceneComponentLocationMSFT",
     "SceneComponentLocationsMSFT",
@@ -7171,15 +7663,18 @@ __all__ = [
     "Swapchain_T",
     "SystemColorSpacePropertiesFB",
     "SystemEyeGazeInteractionPropertiesEXT",
+    "SystemFacialTrackingPropertiesHTC",
     "SystemFoveatedRenderingPropertiesVARJO",
     "SystemGetInfo",
     "SystemGraphicsProperties",
     "SystemHandTrackingMeshPropertiesMSFT",
     "SystemHandTrackingPropertiesEXT",
     "SystemId",
+    "SystemKeyboardTrackingPropertiesFB",
     "SystemMarkerTrackingPropertiesVARJO",
     "SystemPassthroughPropertiesFB",
     "SystemProperties",
+    "SystemRenderModelPropertiesFB",
     "SystemSpaceWarpPropertiesFB",
     "SystemTrackingProperties",
     "Time",
@@ -7187,6 +7682,7 @@ __all__ = [
     "TriangleMeshFBHandle",
     "TriangleMeshFB_T",
     "TriangleMeshFlagsFBCInt",
+    "UuidEXT",
     "UuidMSFT",
     "Vector2f",
     "Vector3f",

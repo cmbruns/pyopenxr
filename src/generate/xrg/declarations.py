@@ -57,6 +57,8 @@ class DefinitionItem(CodeItem):
         self._py_name = self._capi_name[3:]
         if self.value.endswith("LL"):
             self.value = self.value[:-2]
+        if self.value.startswith("XR_"):
+            self.value = self.value[3:]
 
     @staticmethod
     def blank_lines_before():
@@ -168,7 +170,7 @@ class EnumValueItem(CodeItem):
         n = n[3:]  # Strip off initial "XR_"
         prefix = self.parent.name(Api.PYTHON)
         postfix = ""
-        for postfix1 in ["EXT", "FB", "KHR", "MSFT"]:
+        for postfix1 in ["EXT", "FB", "HTC", "KHR", "MSFT"]:
             if prefix.endswith(postfix1):
                 prefix = prefix[: -len(postfix1)]
                 postfix = f"_{postfix1}"
@@ -178,7 +180,8 @@ class EnumValueItem(CodeItem):
             return f"_MAX_ENUM"  # private enum value
         if prefix in self._PREFIX_TABLE:
             prefix = self._PREFIX_TABLE[prefix]
-        assert n.startswith(prefix)
+        if not n.startswith(prefix):
+            assert(False)
         n = n[len(prefix):]
         if len(postfix) > 0:
             n = n[: -len(postfix)]  # It's already in the parent enum name

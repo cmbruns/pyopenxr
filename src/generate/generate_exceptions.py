@@ -12,7 +12,7 @@ from xrg.registry import xr_registry
 
 def camel_word(word: re.Match) -> str:
     s = word.group(1) + word.group(2)
-    if s in ("FB", "KHR", "MSFT", ):  # TODO more vendor tags
+    if s in ("EXT", "FB", "HTC", "KHR", "MSFT", ):  # TODO more vendor tags
         return s
     result = word.group(1).upper() + word.group(2).lower()
     return result
