@@ -430,10 +430,10 @@ class OpenXrExample(object):
         GL.glScissor(w // 2, 0, w // 2, h)
         GL.glClearColor(0, 0, 1, 1)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        GL.glDisable(GL.GL_SCISSOR_TEST)
 
         if self.mirror_window:
             # fast blit from the fbo to the window surface
-            GL.glDisable(GL.GL_SCISSOR_TEST)
             GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
             GL.glBlitFramebuffer(
                 0, 0, w, h, 0, 0,
