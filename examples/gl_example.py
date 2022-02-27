@@ -468,7 +468,10 @@ class OpenXrExample(object):
             self.window = None
         self.system_id = None
         if self.instance is not None:
-            xr.destroy_instance(self.instance)
+            # Workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422
+            # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
+            if platform.system() != 'Linux':
+                xr.destroy_instance(self.instance)
             self.instance = None
         glfw.terminate()
 
