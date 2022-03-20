@@ -888,6 +888,7 @@ class FieldCoder(object):
     def __init__(self, field: StructFieldItem, default=0, rename=None):
         self.field = field
         self.name = self.field.name(Api.PYTHON)
+        self.inner_name = self.name
         if rename is not None:
             self.name = rename
         self.default = default
@@ -904,13 +905,13 @@ class FieldCoder(object):
 
     def str_code(self) -> Generator[str, None, None]:
         if self.field.type.name(Api.CTYPES) == "c_float":
-            value = f"{{self.{self.name}:.3f}}"
+            value = f"{{self.{self.inner_name}:.3f}}"
         else:
-            value = f"{{self.{self.name}}}"
+            value = f"{{self.{self.inner_name}}}"
         yield f"{self.name}={value}"
 
     def repr_code(self) -> Generator[str, None, None]:
-        yield f"{self.name}={{repr(self.{self.name})}}"
+        yield f"{self.name}={{repr(self.{self.inner_name})}}"
 
 
 class EnumFieldCoder(FieldCoder):
