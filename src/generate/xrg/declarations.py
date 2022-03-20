@@ -491,10 +491,9 @@ class StructItem(CodeItem):
                         self._numpy = numpy.ctypeslib.as_array(buffer)
                     return self._numpy
             """), "    ")
-            result += "\n"
+            result += "\n\n"
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
-            result += "\n"
             # This structure is sort of equivalent to a string
             string_field = "extension_name"
             result += textwrap.indent(inspect.cleandoc(f"""
@@ -515,6 +514,7 @@ class StructItem(CodeItem):
             result += "\n"
         else:
             result += structure_coder.generate_repr_str()
+        result += structure_coder.generate_properties()
         # Recursive structures require two separate stanzas
         if self.is_recursive:
             # Structure containing self-reference must be declared in two stanzas
@@ -903,6 +903,12 @@ class FieldCoder(object):
     def call_code(self) -> Generator[str, None, None]:
         yield f"{self.field.name()}={self.name}"
 
+    def property_code(self) -> Generator[str, None, None]:
+        if self.inner_name != self.name:
+            yield "@property"
+            yield f"def {self.name}(self):"
+            yield f"    return self.{self.inner_name}"
+
     def str_code(self) -> Generator[str, None, None]:
         if self.field.type.name(Api.CTYPES) == "c_float":
             value = f"{{self.{self.inner_name}:.3f}}"
@@ -1091,6 +1097,18 @@ class StructureCoder(object):
             for s in fc.call_code():
                 result += f"{i12}{s},\n"
         result += f"{i8})\n"
+        return result
+
+    def generate_properties(self) -> str:
+        result = ""
+        for fc in self.field_coders:
+            prop_strings = []
+            for s in fc.property_code():
+                prop_strings.append(s)
+            if len(prop_strings) > 0:
+                result += "\n"
+                for s in prop_strings:
+                    result += f"    {s}\n"
         return result
 
     def generate_repr_str(self) -> str:
