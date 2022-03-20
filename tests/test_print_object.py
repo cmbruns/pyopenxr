@@ -10,7 +10,7 @@ class TestPrintObject(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_bool(self):
+    def test_print_object(self):
         apl = xr.ApiLayerProperties()
         print(apl)
 
