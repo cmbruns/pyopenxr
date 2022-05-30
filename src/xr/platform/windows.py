@@ -29,10 +29,10 @@ KHR_vulkan_enable = 1
 KHR_vulkan_enable_SPEC_VERSION = 8
 KHR_VULKAN_ENABLE_EXTENSION_NAME = "XR_KHR_vulkan_enable"
 KHR_D3D11_enable = 1
-KHR_D3D11_enable_SPEC_VERSION = 8
+KHR_D3D11_enable_SPEC_VERSION = 9
 KHR_D3D11_ENABLE_EXTENSION_NAME = "XR_KHR_D3D11_enable"
 KHR_D3D12_enable = 1
-KHR_D3D12_enable_SPEC_VERSION = 8
+KHR_D3D12_enable_SPEC_VERSION = 9
 KHR_D3D12_ENABLE_EXTENSION_NAME = "XR_KHR_D3D12_enable"
 KHR_win32_convert_performance_counter_time = 1
 KHR_win32_convert_performance_counter_time_SPEC_VERSION = 1
@@ -59,6 +59,9 @@ FB_FOVEATION_VULKAN_EXTENSION_NAME = "XR_FB_foveation_vulkan"
 FB_swapchain_update_state_vulkan = 1
 FB_swapchain_update_state_vulkan_SPEC_VERSION = 1
 FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME = "XR_FB_swapchain_update_state_vulkan"
+META_vulkan_swapchain_create_info = 1
+META_vulkan_swapchain_create_info_SPEC_VERSION = 1
+META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME = "XR_META_vulkan_swapchain_create_info"
 
 
 class VulkanSwapchainFormatListCreateInfoKHR(Structure):
@@ -882,6 +885,43 @@ class SwapchainStateSamplerVulkanFB(Structure):
     ]
 
 
+class VulkanSwapchainCreateInfoMETA(Structure):
+    def __init__(
+        self,
+        additional_create_flags: int = 0,
+        additional_usage_flags: int = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.VULKAN_SWAPCHAIN_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            additional_create_flags=additional_create_flags,
+            additional_usage_flags=additional_usage_flags,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={repr(self.additional_create_flags)}, additional_usage_flags={repr(self.additional_usage_flags)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={self.additional_create_flags}, additional_usage_flags={self.additional_usage_flags}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("additional_create_flags", c_int),
+        ("additional_usage_flags", c_int),
+    ]
+
+
 __all__ = [
     "FB_FOVEATION_VULKAN_EXTENSION_NAME",
     "FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME",
@@ -925,6 +965,9 @@ __all__ = [
     "KHR_win32_convert_performance_counter_time",
     "KHR_win32_convert_performance_counter_time_SPEC_VERSION",
     "MAX_AUDIO_DEVICE_STR_SIZE_OCULUS",
+    "META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME",
+    "META_vulkan_swapchain_create_info",
+    "META_vulkan_swapchain_create_info_SPEC_VERSION",
     "MSFT_HOLOGRAPHIC_WINDOW_ATTACHMENT_EXTENSION_NAME",
     "MSFT_PERCEPTION_ANCHOR_INTEROP_EXTENSION_NAME",
     "MSFT_holographic_window_attachment",
@@ -967,6 +1010,7 @@ __all__ = [
     "VulkanInstanceCreateFlagsKHR",
     "VulkanInstanceCreateFlagsKHRCInt",
     "VulkanInstanceCreateInfoKHR",
+    "VulkanSwapchainCreateInfoMETA",
     "VulkanSwapchainFormatListCreateInfoKHR",
     "timespec",
 ]

@@ -182,7 +182,7 @@ class EnumValueItem(CodeItem):
         if prefix in self._PREFIX_TABLE:
             prefix = self._PREFIX_TABLE[prefix]
         if not n.startswith(prefix):
-            assert(False)
+            assert False  # We might need to add a new vendor tag to vendor_tags.py
         n = n[len(prefix):]
         if len(postfix) > 0:
             n = n[: -len(postfix)]  # It's already in the parent enum name
