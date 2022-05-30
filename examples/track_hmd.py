@@ -3,11 +3,10 @@ import xr
 
 # Once XR_KHR_headless extension is ratified and adopted, we
 # should be able to avoid the Window and frame stuff here.
-with (xr.Instance(application_name="track_hmd") as instance,
-      xr.System(instance) as system,
-      xr.GlfwWindow(system) as window,
-      xr.Session(system, graphics_binding=window.graphics_binding) as session
-      ):
+with xr.Instance(application_name="track_hmd") as instance, \
+      xr.System(instance) as system, \
+      xr.GlfwWindow(system) as window, \
+      xr.Session(system, graphics_binding=window.graphics_binding) as session:
     for _ in range(50):
         session.poll_xr_events()
         if session.state in (
