@@ -8,11 +8,12 @@ from clang.cindex import CursorKind
 import xrg
 from xrg import Api
 from xrg.registry import xr_registry
+from xrg.vendor_tags import vendor_tags
 
 
 def camel_word(word: re.Match) -> str:
     s = word.group(1) + word.group(2)
-    if s in ("EXT", "FB", "HTC", "KHR", "MSFT", ):  # TODO more vendor tags
+    if s in vendor_tags:
         return s
     result = word.group(1).upper() + word.group(2).lower()
     return result

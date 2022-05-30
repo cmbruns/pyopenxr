@@ -8,6 +8,7 @@ from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
 from .types import *
 from .registry import xr_registry
+from .vendor_tags import vendor_tags
 
 
 class SkippableCodeItemException(Exception):
@@ -170,7 +171,7 @@ class EnumValueItem(CodeItem):
         n = n[3:]  # Strip off initial "XR_"
         prefix = self.parent.name(Api.PYTHON)
         postfix = ""
-        for postfix1 in ["EXT", "FB", "HTC", "KHR", "MSFT"]:
+        for postfix1 in vendor_tags:
             if prefix.endswith(postfix1):
                 prefix = prefix[: -len(postfix1)]
                 postfix = f"_{postfix1}"
