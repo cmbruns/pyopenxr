@@ -11,6 +11,11 @@ class TestExtent2Di(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_setter(self):
+        e = xr.Extent2Di(2, 1)
+        e[:] = [100, 99]
+        self.assertEqual(e.height, 99)
+
 
 if __name__ == '__main__':
     unittest.main()
