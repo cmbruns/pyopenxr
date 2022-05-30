@@ -7,6 +7,8 @@ import platform
 from typing import Sequence
 
 # TODO: separate package for opengl stuff
+import xr
+
 if platform.system() == "Windows":
     from OpenGL import WGL
 elif platform.system() == "Linux":
@@ -84,6 +86,9 @@ class Instance(object):
             destroy_instance(self.handle)
             self.handle = None
 
+    def get_properties(self) -> InstanceProperties:
+        return xr.get_instance_properties(instance=self.handle)
+
 
 class System(object):
     def __init__(
@@ -110,21 +115,6 @@ class System(object):
             view_config_views[0].recommended_image_rect_width * len(view_config_views),
             view_config_views[0].recommended_image_rect_height
         )
-        self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(
-            get_instance_proc_addr(
-                self.instance.handle,
-                "xrGetOpenGLGraphicsRequirementsKHR",
-            ),
-            PFN_xrGetOpenGLGraphicsRequirementsKHR
-        )
-        self.graphics_requirements = GraphicsRequirementsOpenGLKHR()  # TODO: others
-        result = self.pxrGetOpenGLGraphicsRequirementsKHR(
-            self.instance.handle,
-            self.id,
-            ctypes.byref(self.graphics_requirements))  # TODO: pythonic wrapper
-        result = check_result(Result(result))
-        if result.is_exception():
-            raise result
 
     def __enter__(self):
         return self
@@ -149,6 +139,22 @@ class GlfwWindow(object):
         else:
             self.window_size = (64, 64)
             glfw.window_hint(glfw.VISIBLE, False)
+        self.system = system
+        self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(
+            get_instance_proc_addr(
+                self.system.instance.handle,
+                "xrGetOpenGLGraphicsRequirementsKHR",
+            ),
+            PFN_xrGetOpenGLGraphicsRequirementsKHR
+        )
+        self.graphics_requirements = GraphicsRequirementsOpenGLKHR()  # TODO: others
+        result = self.pxrGetOpenGLGraphicsRequirementsKHR(
+            self.system.instance.handle,
+            self.system.id,
+            ctypes.byref(self.graphics_requirements))  # TODO: pythonic wrapper
+        result = check_result(Result(result))
+        if result.is_exception():
+            raise result
         glfw.window_hint(glfw.DOUBLEBUFFER, False)
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
@@ -160,6 +166,22 @@ class GlfwWindow(object):
         # Attempt to disable vsync on the desktop window or
         # it will interfere with the OpenXR frame loop timing
         glfw.swap_interval(0)
+        self.graphics_binding = None
+        if platform.system() == "Windows":
+            self.graphics_binding = GraphicsBindingOpenGLWin32KHR()
+            self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
+            self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
+        elif platform.system() == "Linux":
+            drawable = GLX.glXGetCurrentDrawable()
+            context = GLX.glXGetCurrentContext()
+            display = GLX.glXGetCurrentDisplay()
+            self.graphics_binding = GraphicsBindingOpenGLXlibKHR(
+                x_display=display,
+                glx_drawable=drawable,
+                glx_context=context,
+            )
+        else:
+            raise NotImplementedError
 
     def __enter__(self):
         return self
@@ -169,26 +191,12 @@ class GlfwWindow(object):
 
 
 class Session(object):
-    def __init__(self, system: System, graphics_binding=None):
-        if graphics_binding is None:
-            if platform.system() == "Windows":
-                graphics_binding = GraphicsBindingOpenGLWin32KHR()
-                graphics_binding.h_dc = WGL.wglGetCurrentDC()
-                graphics_binding.h_glrc = WGL.wglGetCurrentContext()
-            elif platform.system() == "Linux":
-                drawable = GLX.glXGetCurrentDrawable()
-                context = GLX.glXGetCurrentContext()
-                display = GLX.glXGetCurrentDisplay()
-                graphics_binding = GraphicsBindingOpenGLXlibKHR(
-                    x_display=display,
-                    glx_drawable=drawable,
-                    glx_context=context,
-                )
-            else:
-                raise NotImplementedError  # Linux
-        graphics_binding_pointer = ctypes.cast(
-            ctypes.pointer(graphics_binding),
-            ctypes.c_void_p)
+    def __init__(self, system: System, graphics_binding):
+        graphics_binding_pointer = None
+        if graphics_binding is not None:
+            graphics_binding_pointer = ctypes.cast(
+                ctypes.pointer(graphics_binding),
+                ctypes.c_void_p)
         session_create_info = SessionCreateInfo(
             next_structure=graphics_binding_pointer,
             create_flags=SessionCreateFlags(),

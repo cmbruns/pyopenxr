@@ -1006,6 +1006,30 @@ class ColorSpaceUnsupportedFBError(ErrorResult):
         return Result.ERROR_COLOR_SPACE_UNSUPPORTED_FB
 
 
+class SpaceComponentNotSupportedFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_COMPONENT_NOT_SUPPORTED_FB
+
+
+class SpaceComponentNotEnabledFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_COMPONENT_NOT_ENABLED_FB
+
+
+class SpaceComponentStatusPendingFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_COMPONENT_STATUS_PENDING_FB
+
+
+class SpaceComponentStatusAlreadySetFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_COMPONENT_STATUS_ALREADY_SET_FB
+
+
 class UnexpectedStatePassthroughFBError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1148,6 +1172,10 @@ _exception_map = {
     Result.ERROR_SCENE_COMPUTE_CONSISTENCY_MISMATCH_MSFT: SceneComputeConsistencyMismatchMSFTError,
     Result.ERROR_DISPLAY_REFRESH_RATE_UNSUPPORTED_FB: DisplayRefreshRateUnsupportedFBError,
     Result.ERROR_COLOR_SPACE_UNSUPPORTED_FB: ColorSpaceUnsupportedFBError,
+    Result.ERROR_SPACE_COMPONENT_NOT_SUPPORTED_FB: SpaceComponentNotSupportedFBError,
+    Result.ERROR_SPACE_COMPONENT_NOT_ENABLED_FB: SpaceComponentNotEnabledFBError,
+    Result.ERROR_SPACE_COMPONENT_STATUS_PENDING_FB: SpaceComponentStatusPendingFBError,
+    Result.ERROR_SPACE_COMPONENT_STATUS_ALREADY_SET_FB: SpaceComponentStatusAlreadySetFBError,
     Result.ERROR_UNEXPECTED_STATE_PASSTHROUGH_FB: UnexpectedStatePassthroughFBError,
     Result.ERROR_FEATURE_ALREADY_CREATED_PASSTHROUGH_FB: FeatureAlreadyCreatedPassthroughFBError,
     Result.ERROR_FEATURE_REQUIRED_PASSTHROUGH_FB: FeatureRequiredPassthroughFBError,
@@ -1255,6 +1283,10 @@ __all__ = [
     "SessionRunningError",
     "SizeInsufficientError",
     "SpaceBoundsUnavailable",
+    "SpaceComponentNotEnabledFBError",
+    "SpaceComponentNotSupportedFBError",
+    "SpaceComponentStatusAlreadySetFBError",
+    "SpaceComponentStatusPendingFBError",
     "SpatialAnchorNameInvalidMSFTError",
     "SpatialAnchorNameNotFoundMSFTError",
     "Success",

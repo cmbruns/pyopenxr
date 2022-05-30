@@ -507,7 +507,6 @@ class Vector3f(Structure):
             y=y,
             z=z,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -518,11 +517,14 @@ class Vector3f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 3
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -600,7 +602,6 @@ class Quaternionf(Structure):
             z=z,
             w=w,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -612,11 +613,14 @@ class Quaternionf(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -713,7 +717,6 @@ class Extent2Df(Structure):
             width=width,
             height=height,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -723,11 +726,14 @@ class Extent2Df(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 2
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -1402,7 +1408,6 @@ class Fovf(Structure):
             angle_up=angle_up,
             angle_down=angle_down,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -1414,11 +1419,14 @@ class Fovf(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -1833,7 +1841,6 @@ class Vector2f(Structure):
             x=x,
             y=y,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -1843,11 +1850,14 @@ class Vector2f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 2
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -2222,6 +2232,28 @@ class Offset2Di(Structure):
             x=x,
             y=y,
         )
+        self._numpy = None
+
+    def __iter__(self) -> Generator[int, None, None]:
+        yield self.x
+        yield self.y
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 2
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_int32 * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
 
     def __repr__(self) -> str:
         return f"xr.Offset2Di(x={repr(self.x)}, y={repr(self.y)})"
@@ -2245,6 +2277,28 @@ class Extent2Di(Structure):
             width=width,
             height=height,
         )
+        self._numpy = None
+
+    def __iter__(self) -> Generator[int, None, None]:
+        yield self.width
+        yield self.height
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 2
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_int32 * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
 
     def __repr__(self) -> str:
         return f"xr.Extent2Di(width={repr(self.width)}, height={repr(self.height)})"
@@ -2728,7 +2782,6 @@ class Offset2Df(Structure):
             x=x,
             y=y,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -2738,11 +2791,14 @@ class Offset2Df(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 2
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -2802,7 +2858,6 @@ class Vector4f(Structure):
             z=z,
             w=w,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -2814,11 +2869,14 @@ class Vector4f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -2853,7 +2911,6 @@ class Color4f(Structure):
             b=b,
             a=a,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -2865,11 +2922,14 @@ class Color4f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -4140,6 +4200,13 @@ PFN_xrSetInputDeviceStateVector2fEXT = CFUNCTYPE(Result.ctype(), SessionHandle, 
 PFN_xrSetInputDeviceLocationEXT = CFUNCTYPE(Result.ctype(), SessionHandle, Path, Path, SpaceHandle, Posef)
 
 
+class SpatialGraphNodeBindingMSFT_T(Structure):
+    pass
+
+
+SpatialGraphNodeBindingMSFTHandle = POINTER(SpatialGraphNodeBindingMSFT_T)
+
+
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     def __init__(
         self,
@@ -4180,7 +4247,123 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     ]
 
 
+class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
+    def __init__(
+        self,
+        space: SpaceHandle = None,
+        pose_in_space: Posef = None,
+        time: Time = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPATIAL_GRAPH_STATIC_NODE_BINDING_CREATE_INFO_MSFT,
+    ) -> None:
+        if pose_in_space is None:
+            pose_in_space = Posef()
+        super().__init__(
+            space=space,
+            pose_in_space=pose_in_space,
+            time=time,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialGraphStaticNodeBindingCreateInfoMSFT(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, time={repr(self.time)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialGraphStaticNodeBindingCreateInfoMSFT(space={self.space}, pose_in_space={self.pose_in_space}, time={self.time}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", SpaceHandle),
+        ("pose_in_space", Posef),
+        ("time", Time),
+    ]
+
+
+class SpatialGraphNodeBindingPropertiesGetInfoMSFT(Structure):
+    def __init__(
+        self,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPATIAL_GRAPH_NODE_BINDING_PROPERTIES_GET_INFO_MSFT,
+    ) -> None:
+        super().__init__(
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SpatialGraphNodeBindingPropertiesMSFT(Structure):
+    def __init__(
+        self,
+        pose_in_node_space: Posef = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPATIAL_GRAPH_NODE_BINDING_PROPERTIES_MSFT,
+    ) -> None:
+        if pose_in_node_space is None:
+            pose_in_node_space = Posef()
+        super().__init__(
+            pose_in_node_space=pose_in_node_space,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialGraphNodeBindingPropertiesMSFT(node_id={repr(self.node_id)}, pose_in_node_space={repr(self.pose_in_node_space)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialGraphNodeBindingPropertiesMSFT(pose_in_node_space={self.pose_in_node_space}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("node_id", (c_uint8 * 16)),
+        ("pose_in_node_space", Posef),
+    ]
+
+
 PFN_xrCreateSpatialGraphNodeSpaceMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialGraphNodeSpaceCreateInfoMSFT), POINTER(SpaceHandle))
+
+PFN_xrTryCreateSpatialGraphStaticNodeBindingMSFT = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialGraphStaticNodeBindingCreateInfoMSFT), POINTER(SpatialGraphNodeBindingMSFTHandle))
+
+PFN_xrDestroySpatialGraphNodeBindingMSFT = CFUNCTYPE(Result.ctype(), SpatialGraphNodeBindingMSFTHandle)
+
+PFN_xrGetSpatialGraphNodeBindingPropertiesMSFT = CFUNCTYPE(Result.ctype(), SpatialGraphNodeBindingMSFTHandle, POINTER(SpatialGraphNodeBindingPropertiesGetInfoMSFT), POINTER(SpatialGraphNodeBindingPropertiesMSFT))
 
 
 class HandTrackerEXT_T(Structure):
@@ -5347,6 +5530,64 @@ class CompositionLayerSecureContentFB(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("flags", CompositionLayerSecureContentFlagsFBCInt),
+    ]
+
+
+class InteractionProfileDpadBindingEXT(Structure):
+    def __init__(
+        self,
+        binding: Path = 0,
+        action_set: ActionSetHandle = None,
+        force_threshold: float = 0,
+        force_threshold_released: float = 0,
+        center_region: float = 0,
+        wedge_angle: float = 0,
+        is_sticky: Bool32 = 0,
+        on_haptic: POINTER(HapticBaseHeader) = None,
+        off_haptic: POINTER(HapticBaseHeader) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.INTERACTION_PROFILE_DPAD_BINDING_EXT,
+    ) -> None:
+        super().__init__(
+            binding=binding,
+            action_set=action_set,
+            force_threshold=force_threshold,
+            force_threshold_released=force_threshold_released,
+            center_region=center_region,
+            wedge_angle=wedge_angle,
+            is_sticky=is_sticky,
+            on_haptic=on_haptic,
+            off_haptic=off_haptic,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.InteractionProfileDpadBindingEXT(binding={repr(self.binding)}, action_set={repr(self.action_set)}, force_threshold={repr(self.force_threshold)}, force_threshold_released={repr(self.force_threshold_released)}, center_region={repr(self.center_region)}, wedge_angle={repr(self.wedge_angle)}, is_sticky={repr(self.is_sticky)}, on_haptic={repr(self.on_haptic)}, off_haptic={repr(self.off_haptic)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.InteractionProfileDpadBindingEXT(binding={self.binding}, action_set={self.action_set}, force_threshold={self.force_threshold:.3f}, force_threshold_released={self.force_threshold_released:.3f}, center_region={self.center_region:.3f}, wedge_angle={self.wedge_angle:.3f}, is_sticky={self.is_sticky}, on_haptic={self.on_haptic}, off_haptic={self.off_haptic}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("binding", Path),
+        ("action_set", ActionSetHandle),
+        ("force_threshold", c_float),
+        ("force_threshold_released", c_float),
+        ("center_region", c_float),
+        ("wedge_angle", c_float),
+        ("is_sticky", Bool32),
+        ("on_haptic", POINTER(HapticBaseHeader)),
+        ("off_haptic", POINTER(HapticBaseHeader)),
     ]
 
 
@@ -7088,6 +7329,287 @@ class HandTrackingCapsulesStateFB(Structure):
     ]
 
 
+AsyncRequestIdFB = c_uint64
+
+
+class SystemSpatialEntityPropertiesFB(Structure):
+    def __init__(
+        self,
+        supports_spatial_entity: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SYSTEM_SPATIAL_ENTITY_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            supports_spatial_entity=supports_spatial_entity,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialEntityPropertiesFB(supports_spatial_entity={repr(self.supports_spatial_entity)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialEntityPropertiesFB(supports_spatial_entity={self.supports_spatial_entity}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_spatial_entity", Bool32),
+    ]
+
+
+class SpatialAnchorCreateInfoFB(Structure):
+    def __init__(
+        self,
+        space: SpaceHandle = None,
+        pose_in_space: Posef = None,
+        time: Time = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_FB,
+    ) -> None:
+        if pose_in_space is None:
+            pose_in_space = Posef()
+        super().__init__(
+            space=space,
+            pose_in_space=pose_in_space,
+            time=time,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoFB(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, time={repr(self.time)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoFB(space={self.space}, pose_in_space={self.pose_in_space}, time={self.time}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", SpaceHandle),
+        ("pose_in_space", Posef),
+        ("time", Time),
+    ]
+
+
+class SpaceComponentStatusSetInfoFB(Structure):
+    def __init__(
+        self,
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),
+        enabled: Bool32 = 0,
+        timeout: Duration = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_COMPONENT_STATUS_SET_INFO_FB,
+    ) -> None:
+        super().__init__(
+            component_type=SpaceComponentTypeFB(component_type).value,
+            enabled=enabled,
+            timeout=timeout,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceComponentStatusSetInfoFB(component_type={repr(self.component_type)}, enabled={repr(self.enabled)}, timeout={repr(self.timeout)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceComponentStatusSetInfoFB(component_type={self.component_type}, enabled={self.enabled}, timeout={self.timeout}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("component_type", SpaceComponentTypeFB.ctype()),
+        ("enabled", Bool32),
+        ("timeout", Duration),
+    ]
+
+
+class SpaceComponentStatusFB(Structure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        change_pending: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_COMPONENT_STATUS_FB,
+    ) -> None:
+        super().__init__(
+            enabled=enabled,
+            change_pending=change_pending,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceComponentStatusFB(enabled={repr(self.enabled)}, change_pending={repr(self.change_pending)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceComponentStatusFB(enabled={self.enabled}, change_pending={self.change_pending}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("enabled", Bool32),
+        ("change_pending", Bool32),
+    ]
+
+
+class UuidEXT(Structure):
+    def __init__(
+        self,
+    ) -> None:
+        super().__init__(
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.UuidEXT(data={repr(self.data)})"
+
+    def __str__(self) -> str:
+        return f"xr.UuidEXT()"
+
+    _fields_ = [
+        ("data", (c_uint8 * 16)),
+    ]
+
+
+class EventDataSpatialAnchorCreateCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        space: SpaceHandle = None,
+        uuid: UuidEXT = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_SPATIAL_ANCHOR_CREATE_COMPLETE_FB,
+    ) -> None:
+        if uuid is None:
+            uuid = UuidEXT()
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            space=space,
+            uuid=uuid,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialAnchorCreateCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialAnchorCreateCompleteFB(request_id={self.request_id}, result={self.result}, space={self.space}, uuid={self.uuid}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+        ("space", SpaceHandle),
+        ("uuid", UuidEXT),
+    ]
+
+
+class EventDataSpaceSetStatusCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        space: SpaceHandle = None,
+        uuid: UuidEXT = None,
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),
+        enabled: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_SPACE_SET_STATUS_COMPLETE_FB,
+    ) -> None:
+        if uuid is None:
+            uuid = UuidEXT()
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            space=space,
+            uuid=uuid,
+            component_type=SpaceComponentTypeFB(component_type).value,
+            enabled=enabled,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceSetStatusCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, component_type={repr(self.component_type)}, enabled={repr(self.enabled)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceSetStatusCompleteFB(request_id={self.request_id}, result={self.result}, space={self.space}, uuid={self.uuid}, component_type={self.component_type}, enabled={self.enabled}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+        ("space", SpaceHandle),
+        ("uuid", UuidEXT),
+        ("component_type", SpaceComponentTypeFB.ctype()),
+        ("enabled", Bool32),
+    ]
+
+
+PFN_xrCreateSpatialAnchorFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpatialAnchorCreateInfoFB), POINTER(AsyncRequestIdFB))
+
+PFN_xrGetSpaceUuidFB = CFUNCTYPE(Result.ctype(), SpaceHandle, POINTER(UuidEXT))
+
+PFN_xrEnumerateSpaceSupportedComponentsFB = CFUNCTYPE(Result.ctype(), SpaceHandle, c_uint32, POINTER(c_uint32), POINTER(SpaceComponentTypeFB.ctype()))
+
+PFN_xrSetSpaceComponentStatusFB = CFUNCTYPE(Result.ctype(), SpaceHandle, POINTER(SpaceComponentStatusSetInfoFB), POINTER(AsyncRequestIdFB))
+
+PFN_xrGetSpaceComponentStatusFB = CFUNCTYPE(Result.ctype(), SpaceHandle, SpaceComponentTypeFB.ctype(), POINTER(SpaceComponentStatusFB))
+
+
 class FoveationProfileFB_T(Structure):
     pass
 
@@ -7837,6 +8359,46 @@ class PassthroughColorMapMonoToMonoFB(Structure):
     ]
 
 
+class PassthroughBrightnessContrastSaturationFB(Structure):
+    def __init__(
+        self,
+        brightness: float = 0,
+        contrast: float = 0,
+        saturation: float = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PASSTHROUGH_BRIGHTNESS_CONTRAST_SATURATION_FB,
+    ) -> None:
+        super().__init__(
+            brightness=brightness,
+            contrast=contrast,
+            saturation=saturation,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughBrightnessContrastSaturationFB(brightness={repr(self.brightness)}, contrast={repr(self.contrast)}, saturation={repr(self.saturation)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughBrightnessContrastSaturationFB(brightness={self.brightness:.3f}, contrast={self.contrast:.3f}, saturation={self.saturation:.3f}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("brightness", c_float),
+        ("contrast", c_float),
+        ("saturation", c_float),
+    ]
+
+
 class EventDataPassthroughStateChangedFB(Structure):
     def __init__(
         self,
@@ -8085,6 +8647,40 @@ class SystemRenderModelPropertiesFB(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("supports_render_model_loading", Bool32),
+    ]
+
+
+class RenderModelCapabilitiesRequestFB(Structure):
+    def __init__(
+        self,
+        flags: RenderModelFlagsFB = RenderModelFlagsFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.RENDER_MODEL_CAPABILITIES_REQUEST_FB,
+    ) -> None:
+        super().__init__(
+            flags=RenderModelFlagsFB(flags).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelCapabilitiesRequestFB(flags={repr(self.flags)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelCapabilitiesRequestFB(flags={self.flags}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", RenderModelFlagsFBCInt),
     ]
 
 
@@ -8363,6 +8959,8 @@ PFN_xrGetMarkerSizeVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, c_uint64, PO
 
 PFN_xrCreateMarkerSpaceVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(MarkerSpaceCreateInfoVARJO), POINTER(SpaceHandle))
 
+PFN_xrSetViewOffsetVARJO = CFUNCTYPE(Result.ctype(), SessionHandle, c_float)
+
 
 class SpatialAnchorStoreConnectionMSFT_T(Structure):
     pass
@@ -8482,6 +9080,538 @@ PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result.ctype(), Sessi
 PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle, POINTER(SpatialAnchorPersistenceNameMSFT))
 
 PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFTHandle)
+
+
+class SpaceQueryInfoBaseHeaderFB(Structure):
+    def __init__(
+        self,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.UNKNOWN,
+    ) -> None:
+        super().__init__(
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceQueryInfoBaseHeaderFB(next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceQueryInfoBaseHeaderFB(next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SpaceFilterInfoBaseHeaderFB(Structure):
+    def __init__(
+        self,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.UNKNOWN,
+    ) -> None:
+        super().__init__(
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceFilterInfoBaseHeaderFB(next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceFilterInfoBaseHeaderFB(next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SpaceQueryInfoFB(Structure):
+    def __init__(
+        self,
+        query_action: SpaceQueryActionFB = SpaceQueryActionFB(),
+        max_result_count: int = 0,
+        timeout: Duration = 0,
+        filter: POINTER(SpaceFilterInfoBaseHeaderFB) = None,
+        exclude_filter: POINTER(SpaceFilterInfoBaseHeaderFB) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_QUERY_INFO_FB,
+    ) -> None:
+        super().__init__(
+            query_action=SpaceQueryActionFB(query_action).value,
+            max_result_count=max_result_count,
+            timeout=timeout,
+            filter=filter,
+            exclude_filter=exclude_filter,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceQueryInfoFB(query_action={repr(self.query_action)}, max_result_count={repr(self.max_result_count)}, timeout={repr(self.timeout)}, filter={repr(self.filter)}, exclude_filter={repr(self.exclude_filter)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceQueryInfoFB(query_action={self.query_action}, max_result_count={self.max_result_count}, timeout={self.timeout}, filter={self.filter}, exclude_filter={self.exclude_filter}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("query_action", SpaceQueryActionFB.ctype()),
+        ("max_result_count", c_uint32),
+        ("timeout", Duration),
+        ("filter", POINTER(SpaceFilterInfoBaseHeaderFB)),
+        ("exclude_filter", POINTER(SpaceFilterInfoBaseHeaderFB)),
+    ]
+
+
+class SpaceStorageLocationFilterInfoFB(Structure):
+    def __init__(
+        self,
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_STORAGE_LOCATION_FILTER_INFO_FB,
+    ) -> None:
+        super().__init__(
+            location=SpaceStorageLocationFB(location).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceStorageLocationFilterInfoFB(location={repr(self.location)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceStorageLocationFilterInfoFB(location={self.location}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location", SpaceStorageLocationFB.ctype()),
+    ]
+
+
+class SpaceUuidFilterInfoFB(Structure):
+    def __init__(
+        self,
+        uuid_count: int = 0,
+        uuids: POINTER(UuidEXT) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_UUID_FILTER_INFO_FB,
+    ) -> None:
+        super().__init__(
+            uuid_count=uuid_count,
+            uuids=uuids,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceUuidFilterInfoFB(uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceUuidFilterInfoFB(uuid_count={self.uuid_count}, uuids={self.uuids}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("uuid_count", c_uint32),
+        ("uuids", POINTER(UuidEXT)),
+    ]
+
+
+class SpaceComponentFilterInfoFB(Structure):
+    def __init__(
+        self,
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_COMPONENT_FILTER_INFO_FB,
+    ) -> None:
+        super().__init__(
+            component_type=SpaceComponentTypeFB(component_type).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceComponentFilterInfoFB(component_type={repr(self.component_type)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceComponentFilterInfoFB(component_type={self.component_type}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("component_type", SpaceComponentTypeFB.ctype()),
+    ]
+
+
+class SpaceQueryResultFB(Structure):
+    def __init__(
+        self,
+        space: SpaceHandle = None,
+        uuid: UuidEXT = None,
+    ) -> None:
+        if uuid is None:
+            uuid = UuidEXT()
+        super().__init__(
+            space=space,
+            uuid=uuid,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceQueryResultFB(space={repr(self.space)}, uuid={repr(self.uuid)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceQueryResultFB(space={self.space}, uuid={self.uuid})"
+
+    _fields_ = [
+        ("space", SpaceHandle),
+        ("uuid", UuidEXT),
+    ]
+
+
+class SpaceQueryResultsFB(Structure):
+    def __init__(
+        self,
+        result_capacity_input: int = 0,
+        result_count_output: int = 0,
+        results: POINTER(SpaceQueryResultFB) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_QUERY_RESULTS_FB,
+    ) -> None:
+        super().__init__(
+            result_capacity_input=result_capacity_input,
+            result_count_output=result_count_output,
+            results=results,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceQueryResultsFB(result_capacity_input={repr(self.result_capacity_input)}, result_count_output={repr(self.result_count_output)}, results={repr(self.results)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceQueryResultsFB(result_capacity_input={self.result_capacity_input}, result_count_output={self.result_count_output}, results={self.results}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("result_capacity_input", c_uint32),
+        ("result_count_output", c_uint32),
+        ("results", POINTER(SpaceQueryResultFB)),
+    ]
+
+
+class EventDataSpaceQueryResultsAvailableFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_SPACE_QUERY_RESULTS_AVAILABLE_FB,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceQueryResultsAvailableFB(request_id={repr(self.request_id)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceQueryResultsAvailableFB(request_id={self.request_id}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+    ]
+
+
+class EventDataSpaceQueryCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_SPACE_QUERY_COMPLETE_FB,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceQueryCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceQueryCompleteFB(request_id={self.request_id}, result={self.result}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+    ]
+
+
+PFN_xrQuerySpacesFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpaceQueryInfoBaseHeaderFB), POINTER(AsyncRequestIdFB))
+
+PFN_xrRetrieveSpaceQueryResultsFB = CFUNCTYPE(Result.ctype(), SessionHandle, AsyncRequestIdFB, POINTER(SpaceQueryResultsFB))
+
+
+class SpaceSaveInfoFB(Structure):
+    def __init__(
+        self,
+        space: SpaceHandle = None,
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
+        persistence_mode: SpacePersistenceModeFB = SpacePersistenceModeFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_SAVE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            space=space,
+            location=SpaceStorageLocationFB(location).value,
+            persistence_mode=SpacePersistenceModeFB(persistence_mode).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceSaveInfoFB(space={repr(self.space)}, location={repr(self.location)}, persistence_mode={repr(self.persistence_mode)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceSaveInfoFB(space={self.space}, location={self.location}, persistence_mode={self.persistence_mode}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", SpaceHandle),
+        ("location", SpaceStorageLocationFB.ctype()),
+        ("persistence_mode", SpacePersistenceModeFB.ctype()),
+    ]
+
+
+class SpaceEraseInfoFB(Structure):
+    def __init__(
+        self,
+        space: SpaceHandle = None,
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_ERASE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            space=space,
+            location=SpaceStorageLocationFB(location).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceEraseInfoFB(space={repr(self.space)}, location={repr(self.location)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceEraseInfoFB(space={self.space}, location={self.location}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", SpaceHandle),
+        ("location", SpaceStorageLocationFB.ctype()),
+    ]
+
+
+class EventDataSpaceSaveCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        space: SpaceHandle = None,
+        uuid: UuidEXT = None,
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_SPACE_SAVE_COMPLETE_FB,
+    ) -> None:
+        if uuid is None:
+            uuid = UuidEXT()
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            space=space,
+            uuid=uuid,
+            location=SpaceStorageLocationFB(location).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceSaveCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, location={repr(self.location)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceSaveCompleteFB(request_id={self.request_id}, result={self.result}, space={self.space}, uuid={self.uuid}, location={self.location}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+        ("space", SpaceHandle),
+        ("uuid", UuidEXT),
+        ("location", SpaceStorageLocationFB.ctype()),
+    ]
+
+
+class EventDataSpaceEraseCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        space: SpaceHandle = None,
+        uuid: UuidEXT = None,
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.EVENT_DATA_SPACE_ERASE_COMPLETE_FB,
+    ) -> None:
+        if uuid is None:
+            uuid = UuidEXT()
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            space=space,
+            uuid=uuid,
+            location=SpaceStorageLocationFB(location).value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceEraseCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, location={repr(self.location)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceEraseCompleteFB(request_id={self.request_id}, result={self.result}, space={self.space}, uuid={self.uuid}, location={self.location}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+        ("space", SpaceHandle),
+        ("uuid", UuidEXT),
+        ("location", SpaceStorageLocationFB.ctype()),
+    ]
+
+
+PFN_xrSaveSpaceFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpaceSaveInfoFB), POINTER(AsyncRequestIdFB))
+
+PFN_xrEraseSpaceFB = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(SpaceEraseInfoFB), POINTER(AsyncRequestIdFB))
 
 CompositionLayerSpaceWarpInfoFlagsFBCInt = Flags64
 
@@ -8624,6 +9754,49 @@ class DigitalLensControlALMALENCE(Structure):
 PFN_xrSetDigitalLensControlALMALENCE = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(DigitalLensControlALMALENCE))
 
 
+class SpaceContainerFB(Structure):
+    def __init__(
+        self,
+        uuid_capacity_input: int = 0,
+        uuid_count_output: POINTER(c_uint32) = None,
+        uuids: POINTER(UuidEXT) = None,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.SPACE_CONTAINER_FB,
+    ) -> None:
+        super().__init__(
+            uuid_capacity_input=uuid_capacity_input,
+            uuid_count_output=uuid_count_output,
+            uuids=uuids,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceContainerFB(uuid_capacity_input={repr(self.uuid_capacity_input)}, uuid_count_output={repr(self.uuid_count_output)}, uuids={repr(self.uuids)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceContainerFB(uuid_capacity_input={self.uuid_capacity_input}, uuid_count_output={self.uuid_count_output}, uuids={self.uuids}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("uuid_capacity_input", c_uint32),
+        ("uuid_count_output", POINTER(c_uint32)),
+        ("uuids", POINTER(UuidEXT)),
+    ]
+
+
+PFN_xrGetSpaceContainerFB = CFUNCTYPE(Result.ctype(), SessionHandle, SpaceHandle, POINTER(SpaceContainerFB))
+
+
 class PassthroughKeyboardHandsIntensityFB(Structure):
     def __init__(
         self,
@@ -8663,23 +9836,130 @@ class PassthroughKeyboardHandsIntensityFB(Structure):
 
 PFN_xrPassthroughLayerSetKeyboardHandsIntensityFB = CFUNCTYPE(Result.ctype(), PassthroughLayerFBHandle, POINTER(PassthroughKeyboardHandsIntensityFB))
 
+CompositionLayerSettingsFlagsFBCInt = Flags64
 
-class UuidEXT(Structure):
+
+class CompositionLayerSettingsFB(Structure):
     def __init__(
         self,
+        layer_flags: CompositionLayerSettingsFlagsFB = CompositionLayerSettingsFlagsFB(),
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.COMPOSITION_LAYER_SETTINGS_FB,
     ) -> None:
         super().__init__(
+            layer_flags=CompositionLayerSettingsFlagsFB(layer_flags).value,
+            next=next_structure,
+            type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.UuidEXT(data={repr(self.data)})"
+        return f"xr.CompositionLayerSettingsFB(layer_flags={repr(self.layer_flags)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.UuidEXT()"
+        return f"xr.CompositionLayerSettingsFB(layer_flags={self.layer_flags}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
 
     _fields_ = [
-        ("data", (c_uint8 * 16)),
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("layer_flags", CompositionLayerSettingsFlagsFBCInt),
     ]
+
+
+PerformanceMetricsCounterFlagsMETACInt = Flags64
+
+
+class PerformanceMetricsStateMETA(Structure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PERFORMANCE_METRICS_STATE_META,
+    ) -> None:
+        super().__init__(
+            enabled=enabled,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PerformanceMetricsStateMETA(enabled={repr(self.enabled)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PerformanceMetricsStateMETA(enabled={self.enabled}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("enabled", Bool32),
+    ]
+
+
+class PerformanceMetricsCounterMETA(Structure):
+    def __init__(
+        self,
+        counter_flags: PerformanceMetricsCounterFlagsMETA = PerformanceMetricsCounterFlagsMETA(),
+        counter_unit: PerformanceMetricsCounterUnitMETA = PerformanceMetricsCounterUnitMETA(),
+        uint_value: int = 0,
+        float_value: float = 0,
+        next_structure: c_void_p = None,
+        structure_type: StructureType = StructureType.PERFORMANCE_METRICS_COUNTER_META,
+    ) -> None:
+        super().__init__(
+            counter_flags=PerformanceMetricsCounterFlagsMETA(counter_flags).value,
+            counter_unit=PerformanceMetricsCounterUnitMETA(counter_unit).value,
+            uint_value=uint_value,
+            float_value=float_value,
+            next=next_structure,
+            type=structure_type.value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PerformanceMetricsCounterMETA(counter_flags={repr(self.counter_flags)}, counter_unit={repr(self.counter_unit)}, uint_value={repr(self.uint_value)}, float_value={repr(self.float_value)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PerformanceMetricsCounterMETA(counter_flags={self.counter_flags}, counter_unit={self.counter_unit}, uint_value={self.uint_value}, float_value={self.float_value:.3f}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def next_structure(self):
+        return self.next
+
+    @property
+    def structure_type(self):
+        return self.type
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("counter_flags", PerformanceMetricsCounterFlagsMETACInt),
+        ("counter_unit", PerformanceMetricsCounterUnitMETA.ctype()),
+        ("uint_value", c_uint32),
+        ("float_value", c_float),
+    ]
+
+
+PFN_xrEnumeratePerformanceMetricsCounterPathsMETA = CFUNCTYPE(Result.ctype(), InstanceHandle, c_uint32, POINTER(c_uint32), POINTER(Path))
+
+PFN_xrSetPerformanceMetricsStateMETA = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(PerformanceMetricsStateMETA))
+
+PFN_xrGetPerformanceMetricsStateMETA = CFUNCTYPE(Result.ctype(), SessionHandle, POINTER(PerformanceMetricsStateMETA))
+
+PFN_xrQueryPerformanceMetricsCounterMETA = CFUNCTYPE(Result.ctype(), SessionHandle, Path, POINTER(PerformanceMetricsCounterMETA))
 
 
 __all__ = [
@@ -8700,6 +9980,7 @@ __all__ = [
     "ActiveActionSet",
     "ApiLayerProperties",
     "ApplicationInfo",
+    "AsyncRequestIdFB",
     "BaseInStructure",
     "BaseOutStructure",
     "BindingModificationBaseHeaderKHR",
@@ -8727,6 +10008,8 @@ __all__ = [
     "CompositionLayerReprojectionPlaneOverrideMSFT",
     "CompositionLayerSecureContentFB",
     "CompositionLayerSecureContentFlagsFBCInt",
+    "CompositionLayerSettingsFB",
+    "CompositionLayerSettingsFlagsFBCInt",
     "CompositionLayerSpaceWarpInfoFB",
     "CompositionLayerSpaceWarpInfoFlagsFBCInt",
     "ControllerModelKeyMSFT",
@@ -8759,6 +10042,12 @@ __all__ = [
     "EventDataPerfSettingsEXT",
     "EventDataReferenceSpaceChangePending",
     "EventDataSessionStateChanged",
+    "EventDataSpaceEraseCompleteFB",
+    "EventDataSpaceQueryCompleteFB",
+    "EventDataSpaceQueryResultsAvailableFB",
+    "EventDataSpaceSaveCompleteFB",
+    "EventDataSpaceSetStatusCompleteFB",
+    "EventDataSpatialAnchorCreateCompleteFB",
     "EventDataVisibilityMaskChangedKHR",
     "EventDataViveTrackerConnectedHTCX",
     "ExtensionProperties",
@@ -8817,6 +10106,7 @@ __all__ = [
     "InstanceProperties",
     "Instance_T",
     "InteractionProfileAnalogThresholdVALVE",
+    "InteractionProfileDpadBindingEXT",
     "InteractionProfileState",
     "InteractionProfileSuggestedBinding",
     "KeyboardSpaceCreateInfoFB",
@@ -8856,6 +10146,7 @@ __all__ = [
     "PFN_xrCreateSceneMSFT",
     "PFN_xrCreateSceneObserverMSFT",
     "PFN_xrCreateSession",
+    "PFN_xrCreateSpatialAnchorFB",
     "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
     "PFN_xrCreateSpatialAnchorMSFT",
     "PFN_xrCreateSpatialAnchorSpaceMSFT",
@@ -8881,6 +10172,7 @@ __all__ = [
     "PFN_xrDestroySpace",
     "PFN_xrDestroySpatialAnchorMSFT",
     "PFN_xrDestroySpatialAnchorStoreConnectionMSFT",
+    "PFN_xrDestroySpatialGraphNodeBindingMSFT",
     "PFN_xrDestroySwapchain",
     "PFN_xrDestroyTriangleMeshFB",
     "PFN_xrEndFrame",
@@ -8891,16 +10183,19 @@ __all__ = [
     "PFN_xrEnumerateDisplayRefreshRatesFB",
     "PFN_xrEnumerateEnvironmentBlendModes",
     "PFN_xrEnumerateInstanceExtensionProperties",
+    "PFN_xrEnumeratePerformanceMetricsCounterPathsMETA",
     "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
     "PFN_xrEnumerateReferenceSpaces",
     "PFN_xrEnumerateRenderModelPathsFB",
     "PFN_xrEnumerateReprojectionModesMSFT",
     "PFN_xrEnumerateSceneComputeFeaturesMSFT",
+    "PFN_xrEnumerateSpaceSupportedComponentsFB",
     "PFN_xrEnumerateSwapchainFormats",
     "PFN_xrEnumerateSwapchainImages",
     "PFN_xrEnumerateViewConfigurationViews",
     "PFN_xrEnumerateViewConfigurations",
     "PFN_xrEnumerateViveTrackerPathsHTCX",
+    "PFN_xrEraseSpaceFB",
     "PFN_xrGeometryInstanceSetTransformFB",
     "PFN_xrGetActionStateBoolean",
     "PFN_xrGetActionStateFloat",
@@ -8917,12 +10212,17 @@ __all__ = [
     "PFN_xrGetInstanceProcAddr",
     "PFN_xrGetInstanceProperties",
     "PFN_xrGetMarkerSizeVARJO",
+    "PFN_xrGetPerformanceMetricsStateMETA",
     "PFN_xrGetReferenceSpaceBoundsRect",
     "PFN_xrGetRenderModelPropertiesFB",
     "PFN_xrGetSceneComponentsMSFT",
     "PFN_xrGetSceneComputeStateMSFT",
     "PFN_xrGetSceneMeshBuffersMSFT",
     "PFN_xrGetSerializedSceneFragmentDataMSFT",
+    "PFN_xrGetSpaceComponentStatusFB",
+    "PFN_xrGetSpaceContainerFB",
+    "PFN_xrGetSpaceUuidFB",
+    "PFN_xrGetSpatialGraphNodeBindingPropertiesMSFT",
     "PFN_xrGetSwapchainStateFB",
     "PFN_xrGetSystem",
     "PFN_xrGetSystemProperties",
@@ -8945,11 +10245,15 @@ __all__ = [
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
     "PFN_xrPersistSpatialAnchorMSFT",
     "PFN_xrPollEvent",
+    "PFN_xrQueryPerformanceMetricsCounterMETA",
+    "PFN_xrQuerySpacesFB",
     "PFN_xrQuerySystemTrackedKeyboardFB",
     "PFN_xrReleaseSwapchainImage",
     "PFN_xrRequestDisplayRefreshRateFB",
     "PFN_xrRequestExitSession",
     "PFN_xrResultToString",
+    "PFN_xrRetrieveSpaceQueryResultsFB",
+    "PFN_xrSaveSpaceFB",
     "PFN_xrSessionBeginDebugUtilsLabelRegionEXT",
     "PFN_xrSessionEndDebugUtilsLabelRegionEXT",
     "PFN_xrSessionInsertDebugUtilsLabelEXT",
@@ -8965,6 +10269,9 @@ __all__ = [
     "PFN_xrSetMarkerTrackingPredictionVARJO",
     "PFN_xrSetMarkerTrackingTimeoutVARJO",
     "PFN_xrSetMarkerTrackingVARJO",
+    "PFN_xrSetPerformanceMetricsStateMETA",
+    "PFN_xrSetSpaceComponentStatusFB",
+    "PFN_xrSetViewOffsetVARJO",
     "PFN_xrStopHapticFeedback",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
@@ -8978,12 +10285,14 @@ __all__ = [
     "PFN_xrTriangleMeshEndVertexBufferUpdateFB",
     "PFN_xrTriangleMeshGetIndexBufferFB",
     "PFN_xrTriangleMeshGetVertexBufferFB",
+    "PFN_xrTryCreateSpatialGraphStaticNodeBindingMSFT",
     "PFN_xrUnpersistSpatialAnchorMSFT",
     "PFN_xrUpdateHandMeshMSFT",
     "PFN_xrUpdateSwapchainFB",
     "PFN_xrVoidFunction",
     "PFN_xrWaitFrame",
     "PFN_xrWaitSwapchainImage",
+    "PassthroughBrightnessContrastSaturationFB",
     "PassthroughColorMapMonoToMonoFB",
     "PassthroughColorMapMonoToRgbaFB",
     "PassthroughCreateInfoFB",
@@ -8997,12 +10306,16 @@ __all__ = [
     "PassthroughStateChangedFlagsFBCInt",
     "PassthroughStyleFB",
     "Path",
+    "PerformanceMetricsCounterFlagsMETACInt",
+    "PerformanceMetricsCounterMETA",
+    "PerformanceMetricsStateMETA",
     "Posef",
     "Quaternionf",
     "Rect2Df",
     "Rect2Di",
     "ReferenceSpaceCreateInfo",
     "RenderModelBufferFB",
+    "RenderModelCapabilitiesRequestFB",
     "RenderModelFlagsFBCInt",
     "RenderModelKeyFB",
     "RenderModelLoadInfoFB",
@@ -9053,12 +10366,26 @@ __all__ = [
     "SessionCreateInfoOverlayEXTX",
     "SessionHandle",
     "Session_T",
+    "SpaceComponentFilterInfoFB",
+    "SpaceComponentStatusFB",
+    "SpaceComponentStatusSetInfoFB",
+    "SpaceContainerFB",
+    "SpaceEraseInfoFB",
+    "SpaceFilterInfoBaseHeaderFB",
     "SpaceHandle",
     "SpaceLocation",
     "SpaceLocationFlagsCInt",
+    "SpaceQueryInfoBaseHeaderFB",
+    "SpaceQueryInfoFB",
+    "SpaceQueryResultFB",
+    "SpaceQueryResultsFB",
+    "SpaceSaveInfoFB",
+    "SpaceStorageLocationFilterInfoFB",
+    "SpaceUuidFilterInfoFB",
     "SpaceVelocity",
     "SpaceVelocityFlagsCInt",
     "Space_T",
+    "SpatialAnchorCreateInfoFB",
     "SpatialAnchorCreateInfoMSFT",
     "SpatialAnchorFromPersistedAnchorCreateInfoMSFT",
     "SpatialAnchorMSFTHandle",
@@ -9068,7 +10395,12 @@ __all__ = [
     "SpatialAnchorSpaceCreateInfoMSFT",
     "SpatialAnchorStoreConnectionMSFTHandle",
     "SpatialAnchorStoreConnectionMSFT_T",
+    "SpatialGraphNodeBindingMSFTHandle",
+    "SpatialGraphNodeBindingMSFT_T",
+    "SpatialGraphNodeBindingPropertiesGetInfoMSFT",
+    "SpatialGraphNodeBindingPropertiesMSFT",
     "SpatialGraphNodeSpaceCreateInfoMSFT",
+    "SpatialGraphStaticNodeBindingCreateInfoMSFT",
     "SwapchainCreateFlagsCInt",
     "SwapchainCreateFoveationFlagsFBCInt",
     "SwapchainCreateInfo",
@@ -9099,6 +10431,7 @@ __all__ = [
     "SystemProperties",
     "SystemRenderModelPropertiesFB",
     "SystemSpaceWarpPropertiesFB",
+    "SystemSpatialEntityPropertiesFB",
     "SystemTrackingProperties",
     "Time",
     "TriangleMeshCreateInfoFB",

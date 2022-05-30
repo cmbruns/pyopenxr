@@ -6,15 +6,15 @@
 
 XR_VERSION_MAJOR = 1
 XR_VERSION_MINOR = 0
-XR_VERSION_PATCH = 22
-XR_CURRENT_API_VERSION_STRING = "1.0.22"
+XR_VERSION_PATCH = 23
+XR_CURRENT_API_VERSION_STRING = "1.0.23"
 
 PYOPENXR_VERSION_MAJOR = 1
 PYOPENXR_VERSION_MINOR = 0
-PYOPENXR_VERSION_PATCH = 2203
-PYOPENXR_VERSION_PATCH_INCREMENTAL = 3
+PYOPENXR_VERSION_PATCH = 2301
+PYOPENXR_VERSION_PATCH_INCREMENTAL = 1
 PYOPENXR_VERSION_SUFFIX = ""
-PYOPENXR_VERSION = "1.0.2203"
+PYOPENXR_VERSION = "1.0.2301"
 
 
 class Version(object):
@@ -32,9 +32,15 @@ class Version(object):
         self.minor = minor
         self.patch = patch
 
+    def __index__(self) -> int:
+        """Packed xr.VersionNumber"""
+        return (((int(self.major) & 0xffff) << 48) 
+                | ((int(self.minor) & 0xffff) << 32) 
+                | (int(self.patch) & 0xffffffff))
+
     def number(self) -> int:
         """Packed xr.VersionNumber"""
-        return ((self.major & 0xffff) << 48) | ((self.minor & 0xffff) << 32) | (self.patch & 0xffffffff)
+        return self.__index__()
 
     def __str__(self):
         return f"{self.major}.{self.minor}.{self.patch}"
