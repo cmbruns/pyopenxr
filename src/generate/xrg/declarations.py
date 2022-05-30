@@ -48,9 +48,12 @@ class DefinitionItem(CodeItem):
         if self._capi_name.endswith("_"):
             raise SkippableCodeItemException  # OPENVR_H_
         tokens = list(cursor.get_tokens())[1:]
-        if len(tokens) > 1:
-            raise SkippableCodeItemException  # We only want simple #define values
         self.c_value = tokens[0].spelling
+        if len(tokens) > 1:
+            if tokens[0].spelling == "-" and len(tokens) == 2:
+                self.c_value += tokens[1].spelling  # Don't skip simple negative values
+            else:
+                raise SkippableCodeItemException  # We only want simple #define values
         self.value = self.c_value
         if self.value is None:
             raise SkippableCodeItemException  # #define with no value
