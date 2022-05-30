@@ -32,6 +32,7 @@ class TestFlags(unittest.TestCase):
         self.assertEqual(3, v.major)
         self.assertEqual(2, v.minor)
         self.assertEqual(1, v.patch)
+        self.assertEqual(self.version_123, xr.Version(1, 2, 3).number())
 
 
 if __name__ == '__main__':

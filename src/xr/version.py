@@ -32,9 +32,15 @@ class Version(object):
         self.minor = minor
         self.patch = patch
 
+    def __index__(self) -> int:
+        """Packed xr.VersionNumber"""
+        return (((int(self.major) & 0xffff) << 48) 
+                | ((int(self.minor) & 0xffff) << 32) 
+                | (int(self.patch) & 0xffffffff))
+
     def number(self) -> int:
         """Packed xr.VersionNumber"""
-        return ((self.major & 0xffff) << 48) | ((self.minor & 0xffff) << 32) | (self.patch & 0xffffffff)
+        return self.__index__()
 
     def __str__(self):
         return f"{self.major}.{self.minor}.{self.patch}"

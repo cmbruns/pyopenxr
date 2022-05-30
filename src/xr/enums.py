@@ -19,7 +19,7 @@ class DefaultEnumMeta(enum.EnumMeta):
         return super().__call__(value, *args, **kwargs)
 
 
-class EnumBase(enum.Enum, metaclass=DefaultEnumMeta):
+class EnumBase(enum.IntEnum, metaclass=DefaultEnumMeta):
     @staticmethod
     def ctype():
         return c_int
