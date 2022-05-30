@@ -455,6 +455,50 @@ class StructItem(CodeItem):
         else:
             raise NotImplementedError
 
+    def _sequence_code(self) -> str:
+        # Add special container methods for structures whose fields are all floats or ints
+        result = ""
+        if len(self.fields) < 2:
+            return ""  # One field is not enough for a sequence
+        field_ctype = None
+        if self.fields[0].type.name(Api.CTYPES) == "c_float":
+            field_ctype = "c_float"
+            field_pytype = "float"
+        elif self.fields[0].type.name(Api.CTYPES) == "c_int32":
+            field_ctype = "c_int32"
+            field_pytype = "int"
+        for field in self.fields:
+            if field.type.name(Api.CTYPES) != field_ctype:
+                return ""  # All fields must be the same type
+        # Finish constructor
+        result += "        self._numpy = None\n"
+        # Iterator
+        result += f"\n    def __iter__(self) -> Generator[{field_pytype}, None, None]:\n"
+        for f in self.fields:
+            result += f"        yield self.{f.name()}\n"
+        result += "\n"
+        # Other container methods
+        result += textwrap.indent(inspect.cleandoc(f"""
+            def __getitem__(self, key):
+                return tuple(self)[key]
+
+            def __setitem__(self, key, value):
+                self.as_numpy()[key] = value
+
+            def __len__(self) -> int:
+                return {len(self.fields)}
+
+            def as_numpy(self):
+                if not hasattr(self, "_numpy") or self._numpy is None:
+                    # Just in time construction
+                    buffer = ({field_ctype} * len(self)).from_address(addressof(self))
+                    buffer._wrapper = self  # To link lifetime of buffer to self
+                    self._numpy = numpy.ctypeslib.as_array(buffer)
+                return self._numpy
+        """), "    ")
+        result += "\n"
+        return result
+
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
@@ -465,37 +509,8 @@ class StructItem(CodeItem):
             return result
         structure_coder = StructureCoder(self)
         result += structure_coder.generate_constructor()
+        result += self._sequence_code()
         result += "\n"
-        # Add special container methods for structures whose fields are all floats
-        float_count = 0
-        for field in self.fields:
-            if field.type.name(Api.CTYPES) == "c_float":
-                float_count += 1
-        if float_count > 1 and float_count == len(self.fields):
-            # Constructor
-            result += "        self._numpy = None\n"
-            # Iterator
-            result += "\n    def __iter__(self) -> Generator[float, None, None]:\n"
-            for f in self.fields:
-                result += f"        yield self.{f.name()}\n"
-            result += "\n"
-            # Other container methods
-            result += textwrap.indent(inspect.cleandoc(f"""
-                def __getitem__(self, key):
-                    return tuple(self)[key]
-            
-                def __len__(self) -> int:
-                    return {float_count}
-            
-                def as_numpy(self):
-                    if self._numpy is None:
-                        # Just in time construction
-                        buffer = (c_float * len(self)).from_address(addressof(self))
-                        buffer._wrapper = self  # To link lifetime of buffer to self
-                        self._numpy = numpy.ctypeslib.as_array(buffer)
-                    return self._numpy
-            """), "    ")
-            result += "\n\n"
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
             # This structure is sort of equivalent to a string

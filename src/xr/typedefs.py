@@ -507,7 +507,6 @@ class Vector3f(Structure):
             y=y,
             z=z,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -518,11 +517,14 @@ class Vector3f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 3
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -600,7 +602,6 @@ class Quaternionf(Structure):
             z=z,
             w=w,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -612,11 +613,14 @@ class Quaternionf(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -713,7 +717,6 @@ class Extent2Df(Structure):
             width=width,
             height=height,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -723,11 +726,14 @@ class Extent2Df(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 2
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -1402,7 +1408,6 @@ class Fovf(Structure):
             angle_up=angle_up,
             angle_down=angle_down,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -1414,11 +1419,14 @@ class Fovf(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -1833,7 +1841,6 @@ class Vector2f(Structure):
             x=x,
             y=y,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -1843,11 +1850,14 @@ class Vector2f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 2
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -2222,6 +2232,28 @@ class Offset2Di(Structure):
             x=x,
             y=y,
         )
+        self._numpy = None
+
+    def __iter__(self) -> Generator[int, None, None]:
+        yield self.x
+        yield self.y
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 2
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_int32 * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
 
     def __repr__(self) -> str:
         return f"xr.Offset2Di(x={repr(self.x)}, y={repr(self.y)})"
@@ -2245,6 +2277,28 @@ class Extent2Di(Structure):
             width=width,
             height=height,
         )
+        self._numpy = None
+
+    def __iter__(self) -> Generator[int, None, None]:
+        yield self.width
+        yield self.height
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 2
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_int32 * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
 
     def __repr__(self) -> str:
         return f"xr.Extent2Di(width={repr(self.width)}, height={repr(self.height)})"
@@ -2728,7 +2782,6 @@ class Offset2Df(Structure):
             x=x,
             y=y,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -2738,11 +2791,14 @@ class Offset2Df(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 2
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -2802,7 +2858,6 @@ class Vector4f(Structure):
             z=z,
             w=w,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -2814,11 +2869,14 @@ class Vector4f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self
@@ -2853,7 +2911,6 @@ class Color4f(Structure):
             b=b,
             a=a,
         )
-
         self._numpy = None
 
     def __iter__(self) -> Generator[float, None, None]:
@@ -2865,11 +2922,14 @@ class Color4f(Structure):
     def __getitem__(self, key):
         return tuple(self)[key]
 
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
     def __len__(self) -> int:
         return 4
 
     def as_numpy(self):
-        if self._numpy is None:
+        if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
             buffer._wrapper = self  # To link lifetime of buffer to self

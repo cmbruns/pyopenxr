@@ -29,6 +29,14 @@ class TestVector3f(unittest.TestCase):
         v = xr.Vector3f()
         self.assertTrue(v.x == v.y == v.z == 0)
 
+    def test_sequence(self):
+        self.assertEqual(3, len(self.v))
+
+    def test_setter(self):
+        v2 = xr.Vector3f(3, 2, 1)
+        v2[:] = [9, 8, 7]
+        self.assertEqual(v2.z, 7)
+
 
 if __name__ == '__main__':
     unittest.main()
