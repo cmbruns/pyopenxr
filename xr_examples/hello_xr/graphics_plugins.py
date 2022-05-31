@@ -1,5 +1,6 @@
 import abc
-from ctypes import c_void_p, cast, sizeof, Structure
+import ctypes
+from ctypes import byref, c_void_p, cast, sizeof, Structure, POINTER
 import inspect
 import logging
 import platform
@@ -13,7 +14,8 @@ import glfw
 
 import xr
 
-from hello_xr.geometry import c_cubeVertices, c_cubeIndices, Vertex
+from .geometry import c_cubeVertices, c_cubeIndices, Vertex
+from .linear import GraphicsAPI, Matrix4x4f
 
 logger = logging.getLogger("hello_xr.graphics_plugins")
 
@@ -67,7 +69,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         elif platform.system() == "Linux":
             # TODO more nuance on Linux: Xlib, Xcb, Wayland
             self._graphics_binding = xr.GraphicsBindingOpenGLXlibKHR()
-        self.swapchain_image_buffers = None
+        self.swapchain_image_buffers = []  # To keep the swapchain images in scope
         self.swapchain_framebuffer = None
         self.program = None
         self.vao = None
@@ -77,6 +79,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         self.vertex_attrib_coords = 0
         self.vertex_attrib_color = 0
         self.debug_message_proc = None
+        self.every_other = 0  # for swapping every other frame
         self.vertex_shader_glsl = inspect.cleandoc("""
             #version 410
         
@@ -107,6 +110,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        glfw.make_context_current(self.window)
         if self.swapchain_framebuffer is not None:
             GL.glDeleteFramebuffers(1, [self.swapchain_framebuffer])
         if self.program is not None:
@@ -124,7 +128,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         self.cube_index_buffer = None
         for color, depth in self.color_to_depth_map.items():
             if depth is not None:
-                GL.glDeleteTextures(1, depth)
+                GL.glDeleteTextures(1, [depth])
         self.color_to_depth_map = {}
         glfw.terminate()
 
@@ -198,6 +202,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         self.initialize_resources()
 
     def initialize_resources(self):
+        glfw.make_context_current(self.window)
         self.swapchain_framebuffer = GL.glGenFramebuffers(1)
         vertex_shader = GL.glCreateShader(GL.GL_VERTEX_SHADER)
         GL.glShaderSource(vertex_shader, self.vertex_shader_glsl)
@@ -263,127 +268,92 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
                     return sf
         raise RuntimeError("No runtime swapchain format supported for color swapchain")
 
-    """
-
-    const XrBaseInStructure* GetGraphicsBinding() const:
-        return reinterpret_cast<const XrBaseInStructure*>(self.graphicsBinding)
-    
-
-    std::vector<XrSwapchainImageBaseHeader*> AllocateSwapchainImageStructs(
-        uint32_t capacity, const XrSwapchainCreateInfo /*swapchainCreateInfo*/):
+    def allocate_swapchain_image_structs(self, capacity: int, swapchain_create_info):
+        """
         # Allocate and initialize the buffer of image structs (must be sequential in memory for xrEnumerateSwapchainImages).
         # Return back an array of pointers to each swapchain image struct so the consumer doesn't need to know the type/size.
-        std::vector<XrSwapchainImageOpenGLKHR> swapchainImageBuffer(capacity)
-        std::vector<XrSwapchainImageBaseHeader*> swapchainImageBase
-        for (XrSwapchainImageOpenGLKHR image : swapchainImageBuffer):
-            image.type = XR_TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR
-            swapchainImageBase.push_back(reinterpret_cast<XrSwapchainImageBaseHeader*>(image))
-        
-
+        """
+        swapchain_image_buffer = (xr.SwapchainImageOpenGLKHR * capacity)(
+            *([xr.SwapchainImageOpenGLKHR()] * capacity)
+        )
+        swapchain_image_base = (POINTER(xr.SwapchainImageBaseHeader) * capacity)()
+        for i in range(capacity):
+            swapchain_image_base[i] = cast(byref(swapchain_image_buffer[i]), POINTER(xr.SwapchainImageBaseHeader))
         # Keep the buffer alive by moving it into the list of buffers.
-        self.swapchainImageBuffers.push_back(std::move(swapchainImageBuffer))
+        self.swapchain_image_buffers.append(swapchain_image_buffer)
+        return swapchain_image_base
 
-        return swapchainImageBase
-    
-
-    uint32_t GetDepthTexture(uint32_t colorTexture):
+    def get_depth_texture(self, color_texture):
         # If a depth-stencil view has already been created for this back-buffer, use it.
-        auto depthBufferIt = self.color_to_depth_map.find(colorTexture)
-        if depthBufferIt != self.color_to_depth_map.end()):
-            return depthBufferIt->second
-        
-
+        if color_texture in self.color_to_depth_map:
+            return self.color_to_depth_map[color_texture]
         # This back-buffer has no corresponding depth-stencil texture, so create one with matching dimensions.
+        GL.glBindTexture(GL.GL_TEXTURE_2D, color_texture)
+        width = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_WIDTH)
+        height = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_HEIGHT)
 
-        GLint width
-        GLint height
-        GL.glBindTexture(GL.GL_TEXTURE_2D, colorTexture)
-        GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_WIDTH, width)
-        GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_HEIGHT, height)
-
-        uint32_t depthTexture
-        depthTexture = GL.glGenTextures(1)
-        GL.glBindTexture(GL.GL_TEXTURE_2D, depthTexture)
+        depth_texture = GL.glGenTextures(1)
+        GL.glBindTexture(GL.GL_TEXTURE_2D, depth_texture)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
         GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
         GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT32, width, height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_FLOAT, None)
+        self.color_to_depth_map[color_texture] = depth_texture
+        return depth_texture
 
-        self.color_to_depth_map.insert(std::make_pair(colorTexture, depthTexture))
-
-        return depthTexture
-    
-
-    void RenderView(const XrCompositionLayerProjectionView layerView, const XrSwapchainImageBaseHeader* swapchainImage,
-                    int64_t swapchainFormat, const std::vector<Cube> cubes):
-        CHECK(layerView.subImage.imageArrayIndex == 0)  # exture arrays not supported.
-        UNUSED_PARM(swapchainFormat)                    # ot used in this function for now.
-
+    def render_view(self, layer_view, swapchain_image_base, _swapchain_format, cubes):
+        glfw.make_context_current(self.window)
+        assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
+        # UNUSED_PARM(swapchain_format)                    # not used in this function for now.
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
-
-        const uint32_t colorTexture = reinterpret_cast<const XrSwapchainImageOpenGLKHR*>(swapchainImage)->image
-
-        GL.glViewport(static_cast<GLint>(layerView.subImage.imageRect.offset.x),
-                   static_cast<GLint>(layerView.subImage.imageRect.offset.y),
-                   static_cast<GLsizei>(layerView.subImage.imageRect.extent.width),
-                   static_cast<GLsizei>(layerView.subImage.imageRect.extent.height))
-
+        swapchain_image = cast(byref(swapchain_image_base), POINTER(xr.SwapchainImageOpenGLKHR)).contents
+        color_texture = swapchain_image.image
+        GL.glViewport(layer_view.sub_image.image_rect.offset.x,
+                      layer_view.sub_image.image_rect.offset.y,
+                      layer_view.sub_image.image_rect.extent.width,
+                      layer_view.sub_image.image_rect.extent.height)
         GL.glFrontFace(GL.GL_CW)
         GL.glCullFace(GL.GL_BACK)
         GL.glEnable(GL.GL_CULL_FACE)
         GL.glEnable(GL.GL_DEPTH_TEST)
-
-        const uint32_t depthTexture = GetDepthTexture(colorTexture)
-
-        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, colorTexture, 0)
-        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depthTexture, 0)
-
+        depth_texture = self.get_depth_texture(color_texture)
+        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, color_texture, 0)
+        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
         # Clear swapchain and depth buffer.
-        GL.glClearColor(dark_slate_gray[0], dark_slate_gray[1], dark_slate_gray[2], dark_slate_gray[3])
+        GL.glClearColor(*self.dark_slate_gray)
         GL.glClearDepth(1.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
-
         # Set shaders and uniform variables.
         GL.glUseProgram(self.program)
-
-        const auto pose = layerView.pose
-        XrMatrix4x4f proj
-        XrMatrix4x4f_CreateProjectionFov(proj, GRAPHICS_OPENGL, layerView.fov, 0.05, 100.0)
-        XrMatrix4x4f toView
-        XrVector3f scale{1.f, 1.f, 1.f}
-        XrMatrix4x4f_CreateTranslationRotationScale(toView, pose.position, pose.orientation, scale)
-        XrMatrix4x4f view
-        XrMatrix4x4f_InvertRigidBody(view, toView)
-        XrMatrix4x4f vp
-        XrMatrix4x4f_Multiply(vp, proj, view)
-
+        pose = layer_view.pose
+        proj = Matrix4x4f.create_projection_fov(GraphicsAPI.OPENGL, layer_view.fov, 0.05, 100.0)
+        scale = xr.Vector3f(1, 1, 1)
+        to_view = Matrix4x4f.create_translation_rotation_scale(pose.position, pose.orientation, scale)
+        view = Matrix4x4f.invert_rigid_body(to_view)
+        vp = proj @ view
         # Set cube primitive data.
         GL.glBindVertexArray(self.vao)
-
         # Render each cube
-        for (const Cube cube : cubes):
-            # ompute the model-view-projection transform and set it..
-            XrMatrix4x4f model
-            XrMatrix4x4f_CreateTranslationRotationScale(model, cube.Pose.position, cube.Pose.orientation, cube.Scale)
-            XrMatrix4x4f mvp
-            XrMatrix4x4f_Multiply(mvp, vp, model)
-            GL.glUniformMatrix4fv(self.model_view_projection_uniform_location, 1, False, reinterpret_cast<const GLfloat*>(mvp))
-
+        for cube in cubes:
+            # Compute the model-view-projection transform and set it..
+            model = Matrix4x4f.create_translation_rotation_scale(cube.Pose.position, cube.Pose.orientation, cube.Scale)
+            mvp = vp @ model
+            GL.glUniformMatrix4fv(self.model_view_projection_uniform_location, 1, False, mvp.as_numpy())
             # Draw the cube.
-            GL.glDrawElements(GL.GL_TRIANGLES, static_cast<GLsizei>(ArraySize(Geometry::c_cubeIndices)), GL.GL_UNSIGNED_SHORT, None)
-        
-
+            GL.glDrawElements(GL.GL_TRIANGLES, len(c_cubeIndices), GL.GL_UNSIGNED_SHORT, None)
         GL.glBindVertexArray(0)
         GL.glUseProgram(0)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
 
         # Swap our window every other eye for RenderDoc
-        static int everyOther = 0
-        if (everyOther++  1) is not None:
-            ksGpuWindow_SwapBuffers(window)
-    """
+        self.every_other += 1
+        if self.every_other & 1 == 0:
+            glfw.swap_buffers(self.window)
 
     @staticmethod
     def get_supported_swapchain_sample_count(xr_view_configuration_view):
         return 1
+
+    def window_should_close(self):
+        return glfw.window_should_close(self.window)

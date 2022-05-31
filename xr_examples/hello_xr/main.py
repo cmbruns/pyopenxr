@@ -6,9 +6,9 @@ import threading
 import time
 
 import xr
-from .program import OpenXRProgram
-from .graphics_plugins import OpenGLGraphicsPlugin
-from .platform_plugins import Win32PlatformPlugin
+from xr_examples.hello_xr.program import OpenXRProgram
+from xr_examples.hello_xr.graphics_plugins import OpenGLGraphicsPlugin
+from xr_examples.hello_xr.platform_plugins import Win32PlatformPlugin
 
 key_press_event = threading.Event()
 logger = logging.getLogger("hello_xr.main")
@@ -105,3 +105,7 @@ def update_options_from_command_line():
     if options.verbose:
         logging.getLogger("hello_xr").setLevel(logging.DEBUG)
     return options
+
+
+if __name__ == "__main__":
+    main()
