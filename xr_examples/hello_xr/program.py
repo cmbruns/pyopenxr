@@ -793,10 +793,10 @@ class OpenXRProgram(object):
             projection_layer_views[i].sub_image.image_rect.offset[:] = [0, 0]
             projection_layer_views[i].sub_image.image_rect.extent[:] = [
                 view_swap_chain.width, view_swap_chain.height, ]
-            swap_chain_image = self.swapchain_images[ctypes.addressof(view_swap_chain.handle)][swapchain_image_index]
+            swap_chain_image_ptr = self.swapchain_images[ctypes.addressof(view_swap_chain.handle)][swapchain_image_index]
             self.graphics_plugin.render_view(
                 projection_layer_views[i],
-                swap_chain_image,
+                swap_chain_image_ptr,
                 self.color_swapchain_format,
                 cubes,
             )

@@ -302,12 +302,12 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         self.color_to_depth_map[color_texture] = depth_texture
         return depth_texture
 
-    def render_view(self, layer_view, swapchain_image_base, _swapchain_format, cubes):
+    def render_view(self, layer_view, swapchain_image_base_ptr, _swapchain_format, cubes):
         glfw.make_context_current(self.window)
         assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
         # UNUSED_PARM(swapchain_format)                    # not used in this function for now.
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
-        swapchain_image = cast(byref(swapchain_image_base), POINTER(xr.SwapchainImageOpenGLKHR)).contents
+        swapchain_image = cast(swapchain_image_base_ptr, POINTER(xr.SwapchainImageOpenGLKHR)).contents
         color_texture = swapchain_image.image
         GL.glViewport(layer_view.sub_image.image_rect.offset.x,
                       layer_view.sub_image.image_rect.offset.y,
