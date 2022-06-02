@@ -796,7 +796,7 @@ class OpenXRProgram(object):
             xr.release_swapchain_image(view_swap_chain.handle, xr.SwapchainImageReleaseInfo())
         layer.space = self.app_space
         layer.view_count = len(self.projection_layer_views)
-        layer.views = pointer(self.projection_layer_views[0])
+        layer.views = self.projection_layer_views
         return True
 
     @staticmethod
