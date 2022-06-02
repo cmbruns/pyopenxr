@@ -12,7 +12,7 @@ import enum
 import logging
 import math
 
-import xr
+import xr.raw_functions
 
 from .graphics_plugins import Cube
 
@@ -295,12 +295,13 @@ class OpenXRProgram(object):
         logger.info(f"XrEventDataSessionStateChanged: "
                     f"state {str(old_state)}->{str(self.session_state)} "
                     f"session={hex(addressof(self.session.handle))} time={event.time}")
+        # TODO: this comparison is failing in python but not in C++
         if False and event.session is not None and event.session != self.session.handle:
-            logger.error(f"XrEventDataSessionStateChanged for unknown session")
+            logger.error(f"XrEventDataSessionStateChanged for unknown session {event.session} {self.session.handle}")
             return exit_render_loop, request_restart
 
         if self.session_state == xr.SessionState.READY:
-            assert self.session is not None
+            assert self.session.handle is not None
             xr.begin_session(
                 session=self.session.handle,
                 begin_info=xr.SessionBeginInfo(
@@ -578,7 +579,7 @@ class OpenXRProgram(object):
         assert self.instance.handle is not None
         assert self.system.id is not None
         view_config_types = xr.enumerate_view_configurations(self.instance.handle, self.system.id)
-        logger.debug(f"Available View Configuration Types: ({len(view_config_types)})")
+        logger.info(f"Available View Configuration Types: ({len(view_config_types)})")
         for view_config_type_value in view_config_types:
             view_config_type = xr.ViewConfigurationType(view_config_type_value)
             logger.debug(
@@ -667,34 +668,44 @@ class OpenXRProgram(object):
         if quit_value.is_active and quit_value.changed_since_last_sync and quit_value.current_state:
             xr.request_exit_session(self.session.handle)
 
+    def try_read_next_event(self):
+        base_header = self.event_data_buffer
+        base_header.structure_type = xr.StructureType.EVENT_DATA_BUFFER
+        result = xr.raw_functions.xrPollEvent(self.instance.handle, byref(self.event_data_buffer))
+        if result == xr.Result.SUCCESS:
+            if base_header.structure_type == xr.StructureType.EVENT_DATA_EVENTS_LOST:
+                events_lost = cast(base_header, POINTER(xr.EventDataEventsLost))
+                logger.warning(f"{events_lost} events lost")
+            return base_header
+        if result == xr.Result.EVENT_UNAVAILABLE:
+            return None
+        result2 = xr.check_result(result)
+        raise result2
+
     def poll_events(self):
         exit_render_loop = False
         request_restart = False
         # Process all pending messages.
         while True:
-            try:
-                event = xr.poll_event(self.instance.handle)
-                assert event is not None
-                event_type = xr.StructureType(event.type)
-                if event_type == xr.StructureType.EVENT_DATA_EVENTS_LOST:
-                    logger.warning(f"{event} events lost.")
-                if event_type == xr.StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
-                    logger.warning(f"XrEventDataInstanceLossPending by {event.loss_time}")
-                    return True, True
-                elif event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED:
-                    exit_render_loop, request_restart = self.handle_session_state_changed_event(
-                        event, exit_render_loop, request_restart)
-                elif event_type == xr.StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED:
-                    self.log_action_source_name(self.input.grab_action, "Grab")
-                    self.log_action_source_name(self.input.quit_action, "Quit")
-                    self.log_action_source_name(self.input.pose_action, "Pose")
-                    self.log_action_source_name(self.input.vibrate_action, "Vibrate")
-                elif event_type == xr.StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING:
-                    logger.debug(f"Ignoring event type {str(event_type)}")
-                else:
-                    logger.debug(f"Ignoring event type {str(event_type)}")
-            except xr.EventUnavailable:
-                break  # no more events in queue
+            event = self.try_read_next_event()
+            if event is None:
+                break
+            event_type = event.structure_type
+            if event_type == xr.StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
+                logger.warning(f"XrEventDataInstanceLossPending by {event.loss_time}")
+                return True, True
+            elif event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED:
+                exit_render_loop, request_restart = self.handle_session_state_changed_event(
+                    event, exit_render_loop, request_restart)
+            elif event_type == xr.StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED:
+                self.log_action_source_name(self.input.grab_action, "Grab")
+                self.log_action_source_name(self.input.quit_action, "Quit")
+                self.log_action_source_name(self.input.pose_action, "Pose")
+                self.log_action_source_name(self.input.vibrate_action, "Vibrate")
+            elif event_type == xr.StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING:
+                logger.debug(f"Ignoring event type {str(event_type)}")
+            else:
+                logger.debug(f"Ignoring event type {str(event_type)}")
         return exit_render_loop, request_restart
 
     def render_frame(self):
@@ -709,14 +720,18 @@ class OpenXRProgram(object):
             display_time=frame_state.predicted_display_time,
             environment_blend_mode=self.environment_blend_mode,
         )
-        layer = xr.CompositionLayerProjection()
+        layer = xr.CompositionLayerProjection(
+            layer_flags=xr.CompositionLayerFlags.NONE,
+        )
+        p_layer_projection = cast(
+            byref(layer),
+            POINTER(xr.CompositionLayerBaseHeader))
         if frame_state.should_render:
             if self.render_layer(frame_state.predicted_display_time, layer):
-                frame_end_info.layer_count = 1
-                p_layer_projection = cast(
-                    byref(layer),
-                    POINTER(xr.CompositionLayerBaseHeader))
-                frame_end_info.layers = pointer(p_layer_projection)
+                skip_layers = False  # for debugging end_frame problem
+                if not skip_layers:
+                    frame_end_info.layer_count = 1
+                    frame_end_info.layers = pointer(p_layer_projection)
         xr.end_frame(
             session=self.session.handle,
             frame_end_info=frame_end_info,
@@ -783,6 +798,7 @@ class OpenXRProgram(object):
             )
             self.projection_layer_views[i].pose = self.views[i].pose
             self.projection_layer_views[i].fov = self.views[i].fov
+            self.projection_layer_views[i].sub_image.swap_chain = view_swap_chain.handle
             self.projection_layer_views[i].sub_image.image_rect.offset[:] = [0, 0]
             self.projection_layer_views[i].sub_image.image_rect.extent[:] = [
                 view_swap_chain.width, view_swap_chain.height, ]
@@ -793,10 +809,22 @@ class OpenXRProgram(object):
                 self.color_swapchain_format,
                 cubes,
             )
-            xr.release_swapchain_image(view_swap_chain.handle, xr.SwapchainImageReleaseInfo())
+            xr.release_swapchain_image(
+                swapchain=view_swap_chain.handle,
+                release_info=xr.SwapchainImageReleaseInfo()
+            )
         layer.space = self.app_space
-        layer.view_count = len(self.projection_layer_views)
-        layer.views = self.projection_layer_views
+        logger.debug(layer.space)
+        skip_views = False  # For debugging -
+        if skip_views:
+            # not useful - different error
+            # xr.exception.ValidationFailureError: The function usage was invalid in some way.
+            layer.view_count = 0
+            layer.views = None
+        else:
+            layer.view_count = len(self.projection_layer_views)
+            assert layer.view_count == 2
+            layer.views = self.projection_layer_views
         return True
 
     @staticmethod
