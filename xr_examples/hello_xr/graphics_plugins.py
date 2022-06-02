@@ -37,10 +37,6 @@ class IGraphicsPlugin(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_instance_extensions(self):
-        pass
-
-    @abc.abstractmethod
     def get_supported_swapchain_sample_count(xr_view_configuration_view):
         pass
 
@@ -53,8 +49,18 @@ class IGraphicsPlugin(abc.ABC):
     def initialize_device(self, instance_handle, system_id):
         pass
 
+    @property
+    @abc.abstractmethod
+    def instance_extensions(self):
+        pass
+
     @abc.abstractmethod
     def select_color_swapchain_format(self, runtime_formats):
+        pass
+
+    @property
+    @abc.abstractmethod
+    def swapchain_image_type(self):
         pass
 
 
@@ -142,11 +148,12 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         glfw.focus_window(self.window)
         glfw.make_context_current(self.window)
 
-    def get_instance_extensions(self):
+    @property
+    def instance_extensions(self):
         return [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
 
-    @staticmethod
-    def get_swapchain_image_type():
+    @property
+    def swapchain_image_type(self):
         return xr.SwapchainImageOpenGLKHR
 
     @property
@@ -240,6 +247,10 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
                                  sizeof(Vertex),
                                  cast(sizeof(xr.Vector3f), c_void_p))
 
+    def poll_events(self):
+        glfw.poll_events()
+        return glfw.window_should_close(self.window)
+
     @staticmethod
     def check_shader(shader):
         result = GL.glGetShaderiv(shader, GL.GL_COMPILE_STATUS)
@@ -267,21 +278,6 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
                 if rf == sf:
                     return sf
         raise RuntimeError("No runtime swapchain format supported for color swapchain")
-
-    def allocate_swapchain_image_structs(self, capacity: int, swapchain_create_info):
-        """
-        # Allocate and initialize the buffer of image structs (must be sequential in memory for xrEnumerateSwapchainImages).
-        # Return back an array of pointers to each swapchain image struct so the consumer doesn't need to know the type/size.
-        """
-        swapchain_image_buffer = (xr.SwapchainImageOpenGLKHR * capacity)(
-            *([xr.SwapchainImageOpenGLKHR()] * capacity)
-        )
-        swapchain_image_base = (POINTER(xr.SwapchainImageBaseHeader) * capacity)()
-        for i in range(capacity):
-            swapchain_image_base[i] = cast(byref(swapchain_image_buffer[i]), POINTER(xr.SwapchainImageBaseHeader))
-        # Keep the buffer alive by moving it into the list of buffers.
-        self.swapchain_image_buffers.append(swapchain_image_buffer)
-        return swapchain_image_base
 
     def get_depth_texture(self, color_texture):
         # If a depth-stencil view has already been created for this back-buffer, use it.

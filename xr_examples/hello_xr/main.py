@@ -62,6 +62,9 @@ def main():
             program.create_swapchains()
             graphics_plugin.focus_window()
             while not key_press_event.is_set():
+                exit_render_loop = graphics_plugin.poll_events()
+                if exit_render_loop:
+                    break
                 exit_render_loop, request_restart = program.poll_events()
                 if exit_render_loop:
                     break

@@ -1,10 +1,18 @@
-import ctypes
+from ctypes import (
+    addressof,
+    byref,
+    c_float,
+    c_int32,
+    cast,
+    pointer,
+    POINTER,
+    Structure,
+)
 import enum
 import logging
 import math
 
 import xr
-from xr import raw_functions
 
 from .graphics_plugins import Cube
 
@@ -41,15 +49,15 @@ class Side(enum.IntEnum):
     RIGHT = 1
 
 
-class SwapChain(ctypes.Structure):
+class SwapChain(Structure):
     _fields_ = [
         ("handle", xr.SwapchainHandle),
-        ("width", ctypes.c_int32),
-        ("height", ctypes.c_int32),
+        ("width", c_int32),
+        ("height", c_int32),
     ]
 
 
-class InputState(ctypes.Structure):
+class InputState(Structure):
     def __init__(self):
         super().__init__()
         self.hand_scale[:] = [1, 1]
@@ -62,7 +70,7 @@ class InputState(ctypes.Structure):
         ("quit_action", xr.ActionHandle),
         ("hand_subaction_path", xr.Path * len(Side)),
         ("hand_space", xr.SpaceHandle * len(Side)),
-        ("hand_scale", ctypes.c_float * len(Side)),
+        ("hand_scale", c_float * len(Side)),
         ("hand_active", xr.Bool32 * len(Side)),
     ]
 
@@ -82,7 +90,8 @@ class OpenXRProgram(object):
 
         self.config_views = []
         self.swapchains = []
-        self.swapchain_images = {}
+        self.swapchain_image_buffers = []  # to keep objects alive
+        self.swapchain_image_ptr_buffers = {}  # m_swapchainImages
         self.views = []
         self.color_swapchain_format = -1
 
@@ -94,9 +103,8 @@ class OpenXRProgram(object):
 
         self.event_data_buffer = xr.EventDataBuffer()
         self.input = InputState()
-        self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
-            *([xr.CompositionLayerProjectionView()] * 2))
-        self.projection_layer = xr.CompositionLayerProjection(view_count=2, views=self.projection_layer_views)
+
+        self.projection_layer_views = None
 
     def __enter__(self):
         return self
@@ -132,9 +140,13 @@ class OpenXRProgram(object):
 
     def create_instance_internal(self):
         extensions = []
-        extensions.extend(self.platform_plugin.get_instance_extensions())
-        extensions.extend(self.graphics_plugin.get_instance_extensions())
-        self.instance = xr.Instance(extensions)
+        extensions.extend(self.platform_plugin.instance_extensions)
+        extensions.extend(self.graphics_plugin.instance_extensions)
+        self.instance = xr.Instance(
+            requested_extensions=extensions,
+            application_name="HelloXR",
+            application_version=xr.Version(0, 0, 1),
+        )
 
     def create_swapchains(self):
         assert self.session.handle is not None
@@ -211,30 +223,19 @@ class OpenXRProgram(object):
                     swapchain_create_info.height,
                 )
                 self.swapchains.append(swapchain)
-                # Use the two call paradigm manually so we can allocate swapchains correctly
-                # First call of two, gets the number of swapchain images
-                image_count = ctypes.c_uint32()
-                result = xr.check_result(raw_functions.xrEnumerateSwapchainImages(
-                    swapchain.handle,
-                    0,
-                    ctypes.byref(image_count),
-                    None,
-                ))
-                if result.is_exception():
-                    raise result
-                swapchain_images = self.graphics_plugin.allocate_swapchain_image_structs(
-                    image_count.value,
-                    swapchain_create_info,
+                swapchain_image_buffer = xr.enumerate_swapchain_images(
+                    swapchain=swapchain.handle,
+                    element_type=self.graphics_plugin.swapchain_image_type,
                 )
-                result = xr.check_result(raw_functions.xrEnumerateSwapchainImages(
-                    swapchain.handle,
-                    image_count,
-                    ctypes.byref(image_count),
-                    swapchain_images[0],
-                ))
-                if result.is_exception():
-                    raise result
-                self.swapchain_images[ctypes.addressof(swapchain.handle)] = swapchain_images
+                # Keep the buffer alive by moving it into the list of buffers.
+                self.swapchain_image_buffers.append(swapchain_image_buffer)
+                capacity = len(swapchain_image_buffer)
+                swapchain_image_ptr_buffer = (POINTER(xr.SwapchainImageBaseHeader) * capacity)()
+                for ix in range(capacity):
+                    swapchain_image_ptr_buffer[ix] = cast(
+                        byref(swapchain_image_buffer[ix]),
+                        POINTER(xr.SwapchainImageBaseHeader))
+                self.swapchain_image_ptr_buffers[addressof(swapchain.handle)] = swapchain_image_ptr_buffer
 
     def create_visualized_spaces(self):
         assert self.session is not None
@@ -288,17 +289,13 @@ class OpenXRProgram(object):
 
     def handle_session_state_changed_event(self, state_changed_event, exit_render_loop, request_restart):
         # TODO: avoid this ugly cast
-        event = ctypes.cast(ctypes.byref(state_changed_event), ctypes.POINTER(xr.EventDataSessionStateChanged)).contents
+        event = cast(byref(state_changed_event), POINTER(xr.EventDataSessionStateChanged)).contents
         old_state = self.session_state
         self.session_state = xr.SessionState(event.state)
         logger.info(f"XrEventDataSessionStateChanged: "
                     f"state {str(old_state)}->{str(self.session_state)} "
-                    f"session={hex(ctypes.addressof(self.session.handle))} time={event.time}")
-        # TODO: The session handles don't match in python but they do in C++...
+                    f"session={hex(addressof(self.session.handle))} time={event.time}")
         if False and event.session is not None and event.session != self.session.handle:
-            a1 = self.session.handle
-            a2 = event.session
-            a3 = xr.NULL_HANDLE
             logger.error(f"XrEventDataSessionStateChanged for unknown session")
             return exit_render_loop, request_restart
 
@@ -460,11 +457,6 @@ class OpenXRProgram(object):
             ),
         )
         # TODO the other controller types in openxr_programs.cpp
-        info = xr.ActionSpaceCreateInfo(
-            action=self.input.pose_action,
-            # pose_in_action_space # w already defaults to 1 in python...
-            subaction_path=self.input.hand_subaction_path[Side.LEFT],
-        )
         self.input.hand_space[Side.LEFT] = xr.create_action_space(
             session=self.session.handle,
             create_info=xr.ActionSpaceCreateInfo(
@@ -643,17 +635,18 @@ class OpenXRProgram(object):
                 # Scale the rendered hand by 1.0f (open) to 0.5f (fully squeezed).
                 self.input.hand_scale[hand] = 1 - 0.5 * grab_value.current_state
                 if grab_value.current_state > 0.9:
+                    vibration = xr.HapticVibration(
+                        amplitude=0.5,
+                        duration=xr.MIN_HAPTIC_DURATION,
+                        frequency=xr.FREQUENCY_UNSPECIFIED,
+                    )
                     xr.apply_haptic_feedback(
                         session=self.session.handle,
                         haptic_action_info=xr.HapticActionInfo(
                             action=self.input.vibrate_action,
                             subaction_path=self.input.hand_subaction_path[hand],
                         ),
-                        vibration=xr.HapticVibration(
-                            amplitude=0.5,
-                            duration=-1,  # TODO: XR_MIN_HAPTIC_DURATION is undefined for some reason
-                            frequency=xr.FREQUENCY_UNSPECIFIED,
-                        ),
+                        haptic_feedback=cast(byref(vibration), POINTER(xr.HapticBaseHeader)),
                     )
             pose_state = xr.get_action_state_pose(
                 session=self.session.handle,
@@ -712,25 +705,24 @@ class OpenXRProgram(object):
             frame_wait_info=xr.FrameWaitInfo(),
         )
         xr.begin_frame(self.session.handle, xr.FrameBeginInfo())
-        projection_layer = None
-        projection_layer_ptr = None
-        projection_layer_count = 0
+        frame_end_info = xr.FrameEndInfo(
+            display_time=frame_state.predicted_display_time,
+            environment_blend_mode=self.environment_blend_mode,
+        )
+        layer = xr.CompositionLayerProjection()
         if frame_state.should_render:
-            self.render_layer(frame_state.predicted_display_time, self.projection_layer_views)
-        p_layer_projection = ctypes.cast(
-            ctypes.byref(self.projection_layer),
-            ctypes.POINTER(xr.CompositionLayerBaseHeader))
+            if self.render_layer(frame_state.predicted_display_time, layer):
+                frame_end_info.layer_count = 1
+                p_layer_projection = cast(
+                    byref(layer),
+                    POINTER(xr.CompositionLayerBaseHeader))
+                frame_end_info.layers = pointer(p_layer_projection)
         xr.end_frame(
             session=self.session.handle,
-            frame_end_info=xr.FrameEndInfo(
-                display_time=frame_state.predicted_display_time,
-                environment_blend_mode=self.environment_blend_mode,
-                layer_count=projection_layer_count,
-                layers=ctypes.pointer(p_layer_projection),
-            ),
+            frame_end_info=frame_end_info,
         )
 
-    def render_layer(self, predicted_display_time, projection_layer_views):
+    def render_layer(self, predicted_display_time, layer):
         view_capacity_input = len(self.views)
         view_state, self.views = xr.locate_views(
             session=self.session.handle,
@@ -743,12 +735,17 @@ class OpenXRProgram(object):
         view_count_output = len(self.views)
         vsf = view_state.view_state_flags
         if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
-                or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0
-        ):
-            return None  # There are no valid tracking poses for the views.
+                or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0):
+            return False  # There are no valid tracking poses for the views.
         assert view_count_output == view_capacity_input
         assert view_count_output == len(self.config_views)
         assert view_count_output == len(self.swapchains)
+
+        if self.projection_layer_views is None or len(self.projection_layer_views) != view_count_output:
+            self.projection_layer_views = (xr.CompositionLayerProjectionView * view_count_output)(
+                *([xr.CompositionLayerProjectionView()] * view_count_output)
+            )
+
         # For each locatable space that we want to visualize, render a 25cm cube.
         cubes = []
         for visualized_space in self.visualized_spaces:
@@ -759,8 +756,7 @@ class OpenXRProgram(object):
             )
             loc_flags = space_location.location_flags
             if (loc_flags & xr.SPACE_LOCATION_POSITION_VALID_BIT != 0
-                    and loc_flags & xr.SPACE_LOCATION_ORIENTATION_VALID_BIT != 0
-            ):
+                    and loc_flags & xr.SPACE_LOCATION_ORIENTATION_VALID_BIT != 0):
                 cubes.append(Cube(space_location.pose, xr.Vector3f(0.25, 0.25, 0.25)))
         # Render a 10cm cube scaled by grabAction for each hand. Note renderHand will only be
         # true when the application has focus.
@@ -772,8 +768,7 @@ class OpenXRProgram(object):
             )
             loc_flags = space_location.location_flags
             if (loc_flags & xr.SPACE_LOCATION_POSITION_VALID_BIT != 0
-                    and loc_flags & xr.SPACE_LOCATION_ORIENTATION_VALID_BIT != 0
-            ):
+                    and loc_flags & xr.SPACE_LOCATION_ORIENTATION_VALID_BIT != 0):
                 scale = 0.1 * self.input.hand_scale[hand]
                 cubes.append(Cube(space_location.pose, xr.Vector3f(scale, scale, scale)))
         # Render view to the appropriate part of the swapchain image.
@@ -786,21 +781,23 @@ class OpenXRProgram(object):
                 swapchain=view_swap_chain.handle,
                 wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
             )
-            projection_layer_views[i].pose = self.views[i].pose
-            projection_layer_views[i].fov = self.views[i].fov
-            x = self.views[i].fov
-            y = projection_layer_views[i].fov
-            projection_layer_views[i].sub_image.image_rect.offset[:] = [0, 0]
-            projection_layer_views[i].sub_image.image_rect.extent[:] = [
+            self.projection_layer_views[i].pose = self.views[i].pose
+            self.projection_layer_views[i].fov = self.views[i].fov
+            self.projection_layer_views[i].sub_image.image_rect.offset[:] = [0, 0]
+            self.projection_layer_views[i].sub_image.image_rect.extent[:] = [
                 view_swap_chain.width, view_swap_chain.height, ]
-            swap_chain_image_ptr = self.swapchain_images[ctypes.addressof(view_swap_chain.handle)][swapchain_image_index]
+            swapchain_image_ptr = self.swapchain_image_ptr_buffers[addressof(view_swap_chain.handle)][swapchain_image_index]
             self.graphics_plugin.render_view(
-                projection_layer_views[i],
-                swap_chain_image_ptr,
+                self.projection_layer_views[i],
+                swapchain_image_ptr,
                 self.color_swapchain_format,
                 cubes,
             )
             xr.release_swapchain_image(view_swap_chain.handle, xr.SwapchainImageReleaseInfo())
+        layer.space = self.app_space
+        layer.view_count = len(self.projection_layer_views)
+        layer.views = pointer(self.projection_layer_views[0])
+        return True
 
     @staticmethod
     def xr_version_string():

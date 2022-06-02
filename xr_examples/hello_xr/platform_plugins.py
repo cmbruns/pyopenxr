@@ -2,11 +2,13 @@ import abc
 
 
 class IPlatformPlugin(abc.ABC):
+    @property
     @abc.abstractmethod
-    def get_instance_extensions(self):
+    def instance_extensions(self):
         pass
 
 
 class Win32PlatformPlugin(IPlatformPlugin):
-    def get_instance_extensions(self):
+    @property
+    def instance_extensions(self):
         return []
