@@ -54,6 +54,8 @@ class Instance(object):
             engine_version = PYOPENXR_CURRENT_API_VERSION
         if engine_version is None:
             engine_version = Version()
+        if application_version is None:
+            application_version = xr.Version(0, 0, 0)
         application_info = ApplicationInfo(
             application_name=application_name,
             application_version=application_version.number(),

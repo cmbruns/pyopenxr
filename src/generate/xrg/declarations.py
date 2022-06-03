@@ -924,9 +924,15 @@ class FieldCoder(object):
 
     def property_code(self) -> Generator[str, None, None]:
         if self.inner_name != self.name:
+            # getter
             yield "@property"
             yield f"def {self.name}(self):"
             yield f"    return self.{self.inner_name}"
+            # setter
+            yield ""
+            yield f"@{self.name}.setter"
+            yield f"def {self.name}(self, value):"
+            yield f"    self.{self.inner_name} = value"
 
     def str_code(self) -> Generator[str, None, None]:
         if self.field.type.name(Api.CTYPES) == "c_float":

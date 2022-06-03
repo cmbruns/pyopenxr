@@ -113,10 +113,18 @@ class ApiLayerProperties(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -160,10 +168,18 @@ class ExtensionProperties(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -239,10 +255,18 @@ class InstanceCreateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -280,10 +304,18 @@ class InstanceProperties(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -313,10 +345,18 @@ class EventDataBuffer(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -347,10 +387,18 @@ class SystemGetInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -442,10 +490,18 @@ class SystemProperties(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -482,10 +538,18 @@ class SessionCreateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -574,10 +638,18 @@ class SpaceVelocity(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -694,10 +766,18 @@ class ReferenceSpaceCreateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -780,10 +860,18 @@ class ActionSpaceCreateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -820,10 +908,18 @@ class SpaceLocation(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -857,10 +953,18 @@ class ViewConfigurationProperties(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -902,10 +1006,18 @@ class ViewConfigurationView(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -957,10 +1069,18 @@ class SwapchainCreateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -997,10 +1117,18 @@ class SwapchainImageBaseHeader(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1028,10 +1156,18 @@ class SwapchainImageAcquireInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1061,10 +1197,18 @@ class SwapchainImageWaitInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1093,10 +1237,18 @@ class SwapchainImageReleaseInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1126,10 +1278,18 @@ class SessionBeginInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1158,10 +1318,18 @@ class FrameWaitInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1195,10 +1363,18 @@ class FrameState(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1229,10 +1405,18 @@ class FrameBeginInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1264,10 +1448,18 @@ class CompositionLayerBaseHeader(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1305,10 +1497,18 @@ class FrameEndInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1346,10 +1546,18 @@ class ViewLocateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1382,10 +1590,18 @@ class ViewState(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1475,10 +1691,18 @@ class View(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1514,10 +1738,18 @@ class ActionSetCreateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1558,10 +1790,18 @@ class ActionCreateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1623,10 +1863,18 @@ class InteractionProfileSuggestedBinding(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1661,10 +1909,18 @@ class SessionActionSetsAttachInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1696,10 +1952,18 @@ class InteractionProfileState(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1732,10 +1996,18 @@ class ActionStateGetInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1773,10 +2045,18 @@ class ActionStateBoolean(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1816,10 +2096,18 @@ class ActionStateFloat(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1906,10 +2194,18 @@ class ActionStateVector2f(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1943,10 +2239,18 @@ class ActionStatePose(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2002,10 +2306,18 @@ class ActionsSyncInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2037,10 +2349,18 @@ class BoundSourcesForActionEnumerateInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2073,10 +2393,18 @@ class InputSourceLocalizedNameGetInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2110,10 +2438,18 @@ class HapticActionInfo(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2143,10 +2479,18 @@ class HapticBaseHeader(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2174,10 +2518,18 @@ class BaseInStructure(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     pass
 
@@ -2208,10 +2560,18 @@ class BaseOutStructure(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     pass
 
@@ -2399,10 +2759,18 @@ class CompositionLayerProjectionView(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2441,10 +2809,18 @@ class CompositionLayerProjection(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2494,10 +2870,18 @@ class CompositionLayerQuad(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2531,10 +2915,18 @@ class EventDataBaseHeader(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2564,10 +2956,18 @@ class EventDataEventsLost(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2598,10 +2998,18 @@ class EventDataInstanceLossPending(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2636,10 +3044,18 @@ class EventDataSessionStateChanged(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2682,10 +3098,18 @@ class EventDataReferenceSpaceChangePending(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2720,10 +3144,18 @@ class EventDataInteractionProfileChanged(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -2758,10 +3190,18 @@ class HapticVibration(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3095,10 +3535,18 @@ class CompositionLayerCubeKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3144,10 +3592,18 @@ class CompositionLayerDepthInfoKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3200,10 +3656,18 @@ class CompositionLayerCylinderKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3263,10 +3727,18 @@ class CompositionLayerEquirectKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3314,10 +3786,18 @@ class VisibilityMaskKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3357,10 +3837,18 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3402,10 +3890,18 @@ class CompositionLayerColorScaleBiasKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3435,10 +3931,18 @@ class LoaderInitInfoBaseHeaderKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3491,10 +3995,18 @@ class CompositionLayerEquirect2KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3531,10 +4043,18 @@ class BindingModificationBaseHeaderKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3566,10 +4086,18 @@ class BindingModificationsKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3607,10 +4135,18 @@ class EventDataPerfSettingsEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3664,10 +4200,18 @@ class DebugUtilsObjectNameInfoEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3700,10 +4244,18 @@ class DebugUtilsLabelEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3746,10 +4298,18 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3795,10 +4355,18 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3847,10 +4415,18 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3881,10 +4457,18 @@ class EyeGazeSampleTimeEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3922,10 +4506,18 @@ class SessionCreateInfoOverlayEXTX(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3959,10 +4551,18 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4007,10 +4607,18 @@ class SpatialAnchorCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4047,10 +4655,18 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4091,10 +4707,18 @@ class CompositionLayerImageLayoutFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4131,10 +4755,18 @@ class CompositionLayerAlphaBlendFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4174,10 +4806,18 @@ class ViewConfigurationDepthRangeEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4233,10 +4873,18 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4275,10 +4923,18 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4309,10 +4965,18 @@ class SpatialGraphNodeBindingPropertiesGetInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4344,10 +5008,18 @@ class SpatialGraphNodeBindingPropertiesMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4395,10 +5067,18 @@ class SystemHandTrackingPropertiesEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4431,10 +5111,18 @@ class HandTrackerCreateInfoEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4468,10 +5156,18 @@ class HandJointsLocateInfoEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4565,10 +5261,18 @@ class HandJointLocationsEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4603,10 +5307,18 @@ class HandJointVelocitiesEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4649,10 +5361,18 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4689,10 +5409,18 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4726,10 +5454,18 @@ class HandMeshUpdateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4858,10 +5594,18 @@ class HandMeshMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4896,10 +5640,18 @@ class HandPoseTypeInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4937,10 +5689,18 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4974,10 +5734,18 @@ class SecondaryViewConfigurationStateMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5011,10 +5779,18 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5052,10 +5828,18 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5091,10 +5875,18 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5126,10 +5918,18 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5163,10 +5963,18 @@ class ControllerModelKeyStateMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5199,10 +6007,18 @@ class ControllerModelNodePropertiesMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5238,10 +6054,18 @@ class ControllerModelPropertiesMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5276,10 +6100,18 @@ class ControllerModelNodeStateMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5314,10 +6146,18 @@ class ControllerModelStateMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5365,10 +6205,18 @@ class ViewConfigurationViewFovEPIC(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5400,10 +6248,18 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5444,10 +6300,18 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5481,10 +6345,18 @@ class SwapchainStateBaseHeaderFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5521,10 +6393,18 @@ class CompositionLayerSecureContentFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5571,10 +6451,18 @@ class InteractionProfileDpadBindingEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5623,10 +6511,18 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5662,10 +6558,18 @@ class HandJointsMotionRangeInfoEXT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5726,10 +6630,18 @@ class SceneObserverCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5757,10 +6669,18 @@ class SceneCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5921,10 +6841,18 @@ class NewSceneComputeInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -5958,10 +6886,18 @@ class VisualMeshComputeLodInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6029,10 +6965,18 @@ class SceneComponentsMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6065,10 +7009,18 @@ class SceneComponentsGetInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6126,10 +7078,18 @@ class SceneComponentLocationsMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6167,10 +7127,18 @@ class SceneComponentsLocateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6226,10 +7194,18 @@ class SceneObjectsMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6263,10 +7239,18 @@ class SceneComponentParentFilterInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6299,10 +7283,18 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6367,10 +7359,18 @@ class ScenePlanesMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6404,10 +7404,18 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6464,10 +7472,18 @@ class SceneMeshesMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6499,10 +7515,18 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6531,10 +7555,18 @@ class SceneMeshBuffersMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6568,10 +7600,18 @@ class SceneMeshVertexBufferMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6608,10 +7648,18 @@ class SceneMeshIndicesUint32MSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6648,10 +7696,18 @@ class SceneMeshIndicesUint16MSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6707,10 +7763,18 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6766,10 +7830,18 @@ class SceneDeserializeInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6808,10 +7880,18 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6852,10 +7932,18 @@ class ViveTrackerPathsHTCX(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6887,10 +7975,18 @@ class EventDataViveTrackerConnectedHTCX(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6933,10 +8029,18 @@ class SystemFacialTrackingPropertiesHTC(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -6974,10 +8078,18 @@ class FacialExpressionsHTC(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7011,10 +8123,18 @@ class FacialTrackerCreateInfoHTC(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7052,10 +8172,18 @@ class SystemColorSpacePropertiesFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7148,10 +8276,18 @@ class HandTrackingMeshFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7202,10 +8338,18 @@ class HandTrackingScaleFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7256,10 +8400,18 @@ class HandTrackingAimStateFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7317,10 +8469,18 @@ class HandTrackingCapsulesStateFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7354,10 +8514,18 @@ class SystemSpatialEntityPropertiesFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7394,10 +8562,18 @@ class SpatialAnchorCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7434,10 +8610,18 @@ class SpaceComponentStatusSetInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7472,10 +8656,18 @@ class SpaceComponentStatusFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7533,10 +8725,18 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7582,10 +8782,18 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7641,10 +8849,18 @@ class FoveationProfileCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7674,10 +8890,18 @@ class SwapchainCreateInfoFoveationFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7710,10 +8934,18 @@ class SwapchainStateFoveationFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7754,10 +8986,18 @@ class FoveationLevelProfileCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7795,10 +9035,18 @@ class SystemKeyboardTrackingPropertiesFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7860,10 +9108,18 @@ class KeyboardSpaceCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7894,10 +9150,18 @@ class KeyboardTrackingQueryFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -7952,10 +9216,18 @@ class TriangleMeshCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8033,10 +9305,18 @@ class SystemPassthroughPropertiesFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8067,10 +9347,18 @@ class PassthroughCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8105,10 +9393,18 @@ class PassthroughLayerCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8145,10 +9441,18 @@ class CompositionLayerPassthroughFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8193,10 +9497,18 @@ class GeometryInstanceCreateInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8241,10 +9553,18 @@ class GeometryInstanceTransformFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8282,10 +9602,18 @@ class PassthroughStyleFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8315,10 +9643,18 @@ class PassthroughColorMapMonoToRgbaFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8347,10 +9683,18 @@ class PassthroughColorMapMonoToMonoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8385,10 +9729,18 @@ class PassthroughBrightnessContrastSaturationFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8421,10 +9773,18 @@ class EventDataPassthroughStateChangedFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8484,10 +9844,18 @@ class RenderModelPathInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8526,10 +9894,18 @@ class RenderModelPropertiesFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8568,10 +9944,18 @@ class RenderModelBufferFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8604,10 +9988,18 @@ class RenderModelLoadInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8638,10 +10030,18 @@ class SystemRenderModelPropertiesFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8672,10 +10072,18 @@ class RenderModelCapabilitiesRequestFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8713,10 +10121,18 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8747,10 +10163,18 @@ class FoveatedViewConfigurationViewVARJO(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8781,10 +10205,18 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8817,10 +10249,18 @@ class CompositionLayerDepthTestVARJO(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8855,10 +10295,18 @@ class SystemMarkerTrackingPropertiesVARJO(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8895,10 +10343,18 @@ class EventDataMarkerTrackingUpdateVARJO(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -8936,10 +10392,18 @@ class MarkerSpaceCreateInfoVARJO(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9015,10 +10479,18 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9054,10 +10526,18 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9102,10 +10582,18 @@ class SpaceQueryInfoBaseHeaderFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9133,10 +10621,18 @@ class SpaceFilterInfoBaseHeaderFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9174,10 +10670,18 @@ class SpaceQueryInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9212,10 +10716,18 @@ class SpaceStorageLocationFilterInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9248,10 +10760,18 @@ class SpaceUuidFilterInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9283,10 +10803,18 @@ class SpaceComponentFilterInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9346,10 +10874,18 @@ class SpaceQueryResultsFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9382,10 +10918,18 @@ class EventDataSpaceQueryResultsAvailableFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9418,10 +10962,18 @@ class EventDataSpaceQueryCompleteFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9462,10 +11014,18 @@ class SpaceSaveInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9500,10 +11060,18 @@ class SpaceEraseInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9545,10 +11113,18 @@ class EventDataSpaceSaveCompleteFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9593,10 +11169,18 @@ class EventDataSpaceEraseCompleteFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9658,10 +11242,18 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9701,10 +11293,18 @@ class SystemSpaceWarpPropertiesFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9739,10 +11339,18 @@ class DigitalLensControlALMALENCE(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9780,10 +11388,18 @@ class SpaceContainerFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9821,10 +11437,18 @@ class PassthroughKeyboardHandsIntensityFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9861,10 +11485,18 @@ class CompositionLayerSettingsFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9898,10 +11530,18 @@ class PerformanceMetricsStateMETA(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -9938,10 +11578,18 @@ class PerformanceMetricsCounterMETA(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),

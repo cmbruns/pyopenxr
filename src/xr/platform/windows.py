@@ -88,10 +88,18 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -125,10 +133,18 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -160,10 +176,18 @@ class SwapchainImageOpenGLKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -196,10 +220,18 @@ class GraphicsRequirementsOpenGLKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -242,10 +274,18 @@ class GraphicsBindingVulkanKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -280,10 +320,18 @@ class SwapchainImageVulkanKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -316,10 +364,18 @@ class GraphicsRequirementsVulkanKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -360,10 +416,18 @@ class GraphicsBindingD3D11KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -394,10 +458,18 @@ class SwapchainImageD3D11KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -430,10 +502,18 @@ class GraphicsRequirementsD3D11KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -470,10 +550,18 @@ class GraphicsBindingD3D12KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -505,10 +593,18 @@ class SwapchainImageD3D12KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -541,10 +637,18 @@ class GraphicsRequirementsD3D12KHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -615,10 +719,18 @@ class VulkanInstanceCreateInfoKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -663,10 +775,18 @@ class VulkanDeviceCreateInfoKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -707,10 +827,18 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -761,10 +889,18 @@ class HolographicWindowAttachmentMSFT(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -805,10 +941,18 @@ class SwapchainImageFoveationVulkanFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -863,10 +1007,18 @@ class SwapchainStateSamplerVulkanFB(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -909,10 +1061,18 @@ class VulkanSwapchainCreateInfoMETA(Structure):
     @property
     def next_structure(self):
         return self.next
+    
+    @next_structure.setter
+    def next_structure(self, value):
+        self.next = value
 
     @property
     def structure_type(self):
         return self.type
+    
+    @structure_type.setter
+    def structure_type(self, value):
+        self.type = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
