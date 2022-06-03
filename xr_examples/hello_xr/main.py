@@ -1,3 +1,7 @@
+"""
+
+"""
+
 import argparse
 import logging
 import platform
@@ -6,15 +10,19 @@ import threading
 import time
 
 import xr
-from xr_examples.hello_xr.program import OpenXRProgram
-from xr_examples.hello_xr.graphics_plugins import OpenGLGraphicsPlugin
-from xr_examples.hello_xr.platform_plugins import Win32PlatformPlugin
+
+from xr_examples.hello_xr.graphics_plugin import IGraphicsPlugin
+from xr_examples.hello_xr.platform_plugin import IPlatformPlugin
+from xr_examples.hello_xr.openxr_program import OpenXRProgram
+from xr_examples.hello_xr.graphics_plugin_opengl import OpenGLGraphicsPlugin
+from xr_examples.hello_xr.platform_plugin_win32 import Win32PlatformPlugin
 
 key_press_event = threading.Event()
 logger = logging.getLogger("hello_xr.main")
 
 
-def create_graphics_plugin(options):
+def create_graphics_plugin(options: argparse.Namespace) -> IGraphicsPlugin:
+    """Create a graphics plugin for the graphics API specified in the options."""
     graphics_plugin_map = {
         "OpenGL": OpenGLGraphicsPlugin,
     }
@@ -23,7 +31,7 @@ def create_graphics_plugin(options):
     return graphics_plugin_map[options.graphics]()
 
 
-def create_platform_plugin(options):
+def create_platform_plugin(_options: argparse.Namespace) -> IPlatformPlugin:
     if platform.system() == "Windows":
         return Win32PlatformPlugin()
     raise NotImplementedError
@@ -35,7 +43,7 @@ def poll_keyboard():
         sys.stdin.read(1)
         key_press_event.set()
         logger.debug("A key was pressed")
-    except:
+    finally:
         pass
 
 
@@ -52,16 +60,17 @@ def main():
 
     request_restart = False
     while True:
+        # Create platform-specific implementation.
         platform_plugin = create_platform_plugin(options)
-        with (create_graphics_plugin(options) as graphics_plugin,
-              OpenXRProgram(options, platform_plugin, graphics_plugin) as program,
-              ):
+        # Create graphics API implementation.
+        with create_graphics_plugin(options) as graphics_plugin, \
+             OpenXRProgram(options, platform_plugin, graphics_plugin) as program:
             program.create_instance()
             program.initialize_system()
-            program.initialize_session()  # TODO: keep translating
+            program.initialize_session()
             program.create_swapchains()
-            graphics_plugin.focus_window()
             while not key_press_event.is_set():
+                # glfw notices when you click the close button
                 exit_render_loop = graphics_plugin.poll_events()
                 if exit_render_loop:
                     break
@@ -69,6 +78,7 @@ def main():
                 if exit_render_loop:
                     break
                 if program.session_running:
+                    # TODO: C++ code does not need this conditional. Why does python?
                     if program.session_state == xr.SessionState.FOCUSED:
                         program.poll_actions()
                     program.render_frame()
@@ -79,7 +89,7 @@ def main():
                 break
 
 
-def update_options_from_command_line():
+def update_options_from_command_line() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--graphics", "-g", required=True,

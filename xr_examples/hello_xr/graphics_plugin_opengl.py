@@ -1,11 +1,14 @@
-import abc
-import ctypes
-from ctypes import byref, c_void_p, cast, sizeof, Structure, POINTER
+from ctypes import byref, c_void_p, cast, sizeof, POINTER, Structure
 import inspect
 import logging
 import platform
+from typing import Dict, List, Optional
 
+import numpy
 from OpenGL import GL
+
+from .graphics_plugin import Cube, IGraphicsPlugin
+
 if platform.system() == "Windows":
     from OpenGL import WGL
 elif platform.system() == "Linux":
@@ -17,106 +20,70 @@ import xr
 from .geometry import c_cubeVertices, c_cubeIndices, Vertex
 from .linear import GraphicsAPI, Matrix4x4f
 
-logger = logging.getLogger("hello_xr.graphics_plugins")
+logger = logging.getLogger("hello_xr.graphics_plugin_opengl")
 
 
-class Cube(Structure):
-    _fields_ = [
-        ("Pose", xr.Posef),
-        ("Scale", xr.Vector3f),
-    ]
+dark_slate_gray = numpy.array([0.184313729, 0.309803933, 0.309803933, 1.0], dtype=numpy.float32)
 
+vertex_shader_glsl = inspect.cleandoc("""
+    #version 410
 
-class IGraphicsPlugin(abc.ABC):
-    @abc.abstractmethod
-    def __enter__(self):
-        pass
+    in vec3 VertexPos;
+    in vec3 VertexColor;
 
-    @abc.abstractmethod
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+    out vec3 PSVertexColor;
 
-    @abc.abstractmethod
-    def get_supported_swapchain_sample_count(xr_view_configuration_view):
-        pass
+    uniform mat4 ModelViewProjection;
 
-    @property
-    @abc.abstractmethod
-    def graphics_binding(self):
-        pass
+    void main() {
+       gl_Position = ModelViewProjection * vec4(VertexPos, 1.0);
+       PSVertexColor = VertexColor;
+    }
+""")
 
-    @abc.abstractmethod
-    def initialize_device(self, instance_handle, system_id):
-        pass
+fragment_shader_glsl = inspect.cleandoc("""
+    #version 410
 
-    @property
-    @abc.abstractmethod
-    def instance_extensions(self):
-        pass
+    in vec3 PSVertexColor;
+    out vec4 FragColor;
 
-    @abc.abstractmethod
-    def select_color_swapchain_format(self, runtime_formats):
-        pass
-
-    @property
-    @abc.abstractmethod
-    def swapchain_image_type(self):
-        pass
+    void main() {
+       FragColor = vec4(PSVertexColor, 1);
+    }
+""")
 
 
 class OpenGLGraphicsPlugin(IGraphicsPlugin):
     def __init__(self):
-        self.dark_slate_gray = (0.184313729, 0.309803933, 0.309803933, 1.0)
-        # Map color buffer to associated depth buffer. This map is populated on demand.
-        self.color_to_depth_map = {}
+        super().__init__()
         self.window = None
+
         if platform.system() == "Windows":
             self._graphics_binding = xr.GraphicsBindingOpenGLWin32KHR()
         elif platform.system() == "Linux":
             # TODO more nuance on Linux: Xlib, Xcb, Wayland
             self._graphics_binding = xr.GraphicsBindingOpenGLXlibKHR()
-        self.swapchain_image_buffers = []  # To keep the swapchain images in scope
-        self.swapchain_framebuffer = None
+        self.swapchain_image_buffers: List[xr.SwapchainImageOpenGLKHR] = []  # To keep the swapchain images alive
+        self.swapchain_framebuffer: Optional[int] = None
         self.program = None
-        self.vao = None
-        self.cube_vertex_buffer = None
-        self.cube_index_buffer = None
         self.model_view_projection_uniform_location = 0
         self.vertex_attrib_coords = 0
         self.vertex_attrib_color = 0
+        self.vao = None
+        self.cube_vertex_buffer = None
+        self.cube_index_buffer = None
+        # Map color buffer to associated depth buffer. This map is populated on demand.
+        self.color_to_depth_map: Dict[int, int] = {}
+
         self.debug_message_proc = None
         self.every_other = 0  # for swapping every other frame
-        self.vertex_shader_glsl = inspect.cleandoc("""
-            #version 410
-        
-            in vec3 VertexPos;
-            in vec3 VertexColor;
-        
-            out vec3 PSVertexColor;
-        
-            uniform mat4 ModelViewProjection;
-        
-            void main() {
-               gl_Position = ModelViewProjection * vec4(VertexPos, 1.0);
-               PSVertexColor = VertexColor;
-            }
-        """)
-        self.fragment_shader_glsl = inspect.cleandoc("""
-            #version 410
-        
-            in vec3 PSVertexColor;
-            out vec4 FragColor;
-        
-            void main() {
-               FragColor = vec4(PSVertexColor, 1);
-            }
-        """)
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        glfw.make_context_current(self.window)
+        if self.window:
+            glfw.make_context_current(self.window)
         if self.swapchain_framebuffer is not None:
             GL.glDeleteFramebuffers(1, [self.swapchain_framebuffer])
         if self.program is not None:
@@ -139,7 +106,19 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         glfw.terminate()
 
     @staticmethod
-    def debug_message_callback(source, msg_type, msg_id, severity, length, raw, user):
+    def check_shader(shader):
+        result = GL.glGetShaderiv(shader, GL.GL_COMPILE_STATUS)
+        if not result:
+            raise RuntimeError(f"Compile shader failed: {GL.glGetShaderInfoLog(shader)}")
+
+    @staticmethod
+    def check_program(prog):
+        result = GL.glGetProgramiv(prog, GL.GL_LINK_STATUS)
+        if not result:
+            raise RuntimeError(f"Link program failed: {GL.glGetProgramInfoLog(prog)}")
+
+    @staticmethod
+    def debug_message_callback(_source, _msg_type, _msg_id, _severity, length, raw, _user):
         """Redirect OpenGL debug messages"""
         msg = raw[0:length]
         logger.info(f"GL Debug: {msg.decode()}")
@@ -148,8 +127,30 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         glfw.focus_window(self.window)
         glfw.make_context_current(self.window)
 
+    def get_depth_texture(self, color_texture) -> int:
+        # If a depth-stencil view has already been created for this back-buffer, use it.
+        if color_texture in self.color_to_depth_map:
+            return self.color_to_depth_map[color_texture]
+        # This back-buffer has no corresponding depth-stencil texture, so create one with matching dimensions.
+        GL.glBindTexture(GL.GL_TEXTURE_2D, color_texture)
+        width = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_WIDTH)
+        height = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_HEIGHT)
+
+        depth_texture = GL.glGenTextures(1)
+        GL.glBindTexture(GL.GL_TEXTURE_2D, depth_texture)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
+        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT32, width, height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_FLOAT, None)
+        self.color_to_depth_map[color_texture] = depth_texture
+        return depth_texture
+
+    def get_supported_swapchain_sample_count(self, _xr_view_configuration_view: xr.ViewConfigurationView):
+        return 1
+
     @property
-    def instance_extensions(self):
+    def instance_extensions(self) -> List[str]:
         return [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
 
     @property
@@ -157,12 +158,12 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         return xr.SwapchainImageOpenGLKHR
 
     @property
-    def graphics_binding(self):
+    def graphics_binding(self) -> Structure:
         return self._graphics_binding
 
-    def initialize_device(self, instance_handle, system_id):
+    def initialize_device(self, instance_handle: xr.InstanceHandle, system_id: xr.SystemId):
         # extension function must be loaded by name
-        pfnGetOpenGLGraphicsRequirementsKHR = cast(
+        pfn_get_open_gl_graphics_requirements_khr = cast(
             xr.get_instance_proc_addr(
                 instance_handle,
                 "xrGetOpenGLGraphicsRequirementsKHR",
@@ -170,10 +171,11 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
         )
         graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
-        result = pfnGetOpenGLGraphicsRequirementsKHR(instance_handle, system_id, graphics_requirements)
+        result = pfn_get_open_gl_graphics_requirements_khr(instance_handle, system_id, byref(graphics_requirements))
         result = xr.check_result(xr.Result(result))
         if result.is_exception():
             raise result
+        # Initialize the gl extensions. Note we have to open a window.
         if not glfw.init():
             raise xr.XrException("GLFW initialization failed")
         # glfw.window_hint(glfw.VISIBLE, False)
@@ -181,11 +183,20 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-        self.window = glfw.create_window(64, 64, "GLFW Window", None, None)
+        glfw.window_hint(glfw.REFRESH_RATE, 60)
+        glfw.window_hint(glfw.DEPTH_BITS, 24)
+        glfw.window_hint(glfw.SAMPLES, 1)
+        glfw.window_hint(glfw.RED_BITS, 8)
+        glfw.window_hint(glfw.GREEN_BITS, 8)
+        glfw.window_hint(glfw.BLUE_BITS, 8)
+        glfw.window_hint(glfw.ALPHA_BITS, 8)
+        self.window = glfw.create_window(640, 480, "GLFW Window", None, None)
         if self.window is None:
             raise xr.XrException("Failed to create GLFW window")
         glfw.make_context_current(self.window)
-        glfw.swap_interval(0)
+        glfw.show_window(self.window)
+        glfw.swap_interval(1)
+        glfw.focus_window(self.window)
         major = GL.glGetIntegerv(GL.GL_MAJOR_VERSION)
         minor = GL.glGetIntegerv(GL.GL_MINOR_VERSION)
         logger.debug(f"OpenGL version {major}.{minor}")
@@ -209,14 +220,13 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         self.initialize_resources()
 
     def initialize_resources(self):
-        glfw.make_context_current(self.window)
         self.swapchain_framebuffer = GL.glGenFramebuffers(1)
         vertex_shader = GL.glCreateShader(GL.GL_VERTEX_SHADER)
-        GL.glShaderSource(vertex_shader, self.vertex_shader_glsl)
+        GL.glShaderSource(vertex_shader, vertex_shader_glsl)
         GL.glCompileShader(vertex_shader)
         self.check_shader(vertex_shader)
         fragment_shader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER)
-        GL.glShaderSource(fragment_shader, self.fragment_shader_glsl)
+        GL.glShaderSource(fragment_shader, fragment_shader_glsl)
         GL.glCompileShader(fragment_shader)
         self.check_shader(fragment_shader)
         self.program = GL.glCreateProgram()
@@ -247,59 +257,16 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
                                  sizeof(Vertex),
                                  cast(sizeof(xr.Vector3f), c_void_p))
 
-    def poll_events(self):
+    def poll_events(self) -> bool:
         glfw.poll_events()
         return glfw.window_should_close(self.window)
 
-    @staticmethod
-    def check_shader(shader):
-        result = GL.glGetShaderiv(shader, GL.GL_COMPILE_STATUS)
-        if not result:
-            raise RuntimeError(f"Compile shader failed: {GL.glGetShaderInfoLog(shader)}")
-
-    @staticmethod
-    def check_program(prog):
-        result = GL.glGetProgramiv(prog, GL.GL_LINK_STATUS)
-        if not result:
-            raise RuntimeError(f"Link program failed: {GL.glGetProgramInfoLog(prog)}")
-
-    def select_color_swapchain_format(self, runtime_formats):
-        # List of supported color swapchain formats.
-        supported_color_swapchain_formats = [
-            GL.GL_RGB10_A2,
-            GL.GL_RGBA16F,
-            # The two below should only be used as a fallback, as they are linear color formats without enough bits for color
-            # depth, thus leading to banding.
-            GL.GL_RGBA8,
-            GL.GL_RGBA8_SNORM,
-        ]
-        for rf in runtime_formats:
-            for sf in supported_color_swapchain_formats:
-                if rf == sf:
-                    return sf
-        raise RuntimeError("No runtime swapchain format supported for color swapchain")
-
-    def get_depth_texture(self, color_texture):
-        # If a depth-stencil view has already been created for this back-buffer, use it.
-        if color_texture in self.color_to_depth_map:
-            return self.color_to_depth_map[color_texture]
-        # This back-buffer has no corresponding depth-stencil texture, so create one with matching dimensions.
-        GL.glBindTexture(GL.GL_TEXTURE_2D, color_texture)
-        width = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_WIDTH)
-        height = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_HEIGHT)
-
-        depth_texture = GL.glGenTextures(1)
-        GL.glBindTexture(GL.GL_TEXTURE_2D, depth_texture)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
-        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT32, width, height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_FLOAT, None)
-        self.color_to_depth_map[color_texture] = depth_texture
-        return depth_texture
-
-    def render_view(self, layer_view, swapchain_image_base_ptr, _swapchain_format, cubes):
-        glfw.make_context_current(self.window)
+    def render_view(
+            self,
+            layer_view: xr.CompositionLayerProjectionView,
+            swapchain_image_base_ptr: POINTER(xr.SwapchainImageBaseHeader),
+            _swapchain_format: int,
+            cubes: List[Cube]):
         assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
         # UNUSED_PARM(swapchain_format)                    # not used in this function for now.
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
@@ -317,7 +284,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, color_texture, 0)
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
         # Clear swapchain and depth buffer.
-        GL.glClearColor(*self.dark_slate_gray)
+        GL.glClearColor(*dark_slate_gray)
         GL.glClearDepth(1.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
         # Set shaders and uniform variables.
@@ -332,7 +299,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         GL.glBindVertexArray(self.vao)
         # Render each cube
         for cube in cubes:
-            # Compute the model-view-projection transform and set it..
+            # Compute the model-view-projection transform and set it.
             model = Matrix4x4f.create_translation_rotation_scale(cube.Pose.position, cube.Pose.orientation, cube.Scale)
             mvp = vp @ model
             GL.glUniformMatrix4fv(self.model_view_projection_uniform_location, 1, False, mvp.as_numpy())
@@ -347,9 +314,21 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         if self.every_other & 1 == 0:
             glfw.swap_buffers(self.window)
 
-    @staticmethod
-    def get_supported_swapchain_sample_count(xr_view_configuration_view):
-        return 1
+    def select_color_swapchain_format(self, runtime_formats):
+        # List of supported color swapchain formats.
+        supported_color_swapchain_formats = [
+            GL.GL_RGB10_A2,
+            GL.GL_RGBA16F,
+            # The two below should only be used as a fallback, as they are linear color formats without enough bits for color
+            # depth, thus leading to banding.
+            GL.GL_RGBA8,
+            GL.GL_RGBA8_SNORM,
+        ]
+        for rf in runtime_formats:
+            for sf in supported_color_swapchain_formats:
+                if rf == sf:
+                    return sf
+        raise RuntimeError("No runtime swapchain format supported for color swapchain")
 
     def window_should_close(self):
         return glfw.window_should_close(self.window)

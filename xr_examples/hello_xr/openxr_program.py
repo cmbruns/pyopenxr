@@ -1,3 +1,8 @@
+"""
+
+"""
+
+import argparse
 from ctypes import (
     addressof,
     byref,
@@ -11,10 +16,12 @@ from ctypes import (
 import enum
 import logging
 import math
+from typing import List
 
 import xr.raw_functions
 
-from .graphics_plugins import Cube
+from .graphics_plugin import Cube, IGraphicsPlugin
+from .platform_plugin import IPlatformPlugin
 
 logger = logging.getLogger("hello_xr.program")
 
@@ -28,18 +35,18 @@ class Math(object):
             return t
 
         @staticmethod
-        def translation(vec3):
+        def translation(translation: List[float]):
             t = Math.Pose.identity()
-            t.position[:] = vec3[:]
+            t.position[:] = translation[:]
             return t
 
         @staticmethod
-        def rotate_ccw_about_y_axis(radians, translation):
+        def rotate_ccw_about_y_axis(radians: float, translation: List[float]):
             t = Math.Pose.identity()
             t.orientation.x = 0
             t.orientation.y = math.sin(radians * 0.5)
-            t.orientation.z = math.cos(radians * 0.5)
-            t.orientation.w = 0
+            t.orientation.z = 0
+            t.orientation.w = math.cos(radians * 0.5)
             t.position[:] = translation[:]
             return t
 
@@ -76,7 +83,7 @@ class InputState(Structure):
 
 
 class OpenXRProgram(object):
-    def __init__(self, options, platform_plugin, graphics_plugin):
+    def __init__(self, options: argparse.Namespace, platform_plugin: IPlatformPlugin, graphics_plugin: IGraphicsPlugin):
         self.options = options
         self.platform_plugin = platform_plugin
         self.graphics_plugin = graphics_plugin
@@ -133,7 +140,8 @@ class OpenXRProgram(object):
             self.instance.destroy()
         self.instance = None
 
-    def create_instance(self):
+    def create_instance(self) -> None:
+        """Create an Instance and other basic instance-level initialization."""
         self.log_layers_and_extensions()
         self.create_instance_internal()
         self.log_instance_info()
@@ -144,11 +152,15 @@ class OpenXRProgram(object):
         extensions.extend(self.graphics_plugin.instance_extensions)
         self.instance = xr.Instance(
             requested_extensions=extensions,
-            application_name="HelloXR",
+            application_name="hello_xr.py",
             application_version=xr.Version(0, 0, 1),
         )
 
-    def create_swapchains(self):
+    def create_swapchains(self) -> None:
+        """
+        Create a Swapchain which requires coordinating with the graphics plugin to select the format, getting the system graphics
+        properties, getting the view configuration and grabbing the resulting swapchain images.
+        """
         assert self.session.handle is not None
         assert len(self.swapchains) == 0
         assert len(self.config_views) == 0
@@ -248,44 +260,11 @@ class OpenXRProgram(object):
             try:
                 space = xr.create_reference_space(
                     session=self.session.handle,
-                    create_info=self.get_xr_reference_space_create_info(visualized_space)
+                    create_info=get_xr_reference_space_create_info(visualized_space)
                 )
                 self.visualized_spaces.append(space)
             except xr.XrException as exc:
                 logger.warning(f"Failed to create reference space {visualized_space} with error {exc}")
-
-    @staticmethod
-    def get_xr_reference_space_create_info(reference_space_type_string):
-        identity = xr.Posef()
-        assert identity.orientation.w == 1
-        create_info = xr.ReferenceSpaceCreateInfo(
-            pose_in_reference_space=identity,
-        )
-        if reference_space_type_string.lower() == "View".lower():
-            create_info.reference_space_type = xr.ReferenceSpaceType.VIEW
-        elif reference_space_type_string.lower() == "ViewFront".lower():
-            # Render head-locked 2m in front of device.
-            create_info.pose_in_reference_space = Math.Pose.translation(vec3=[0, 0, -2])
-            create_info.reference_space_type = xr.ReferenceSpaceType.VIEW
-        elif reference_space_type_string.lower() == "Local".lower():
-            create_info.reference_space_type = xr.ReferenceSpaceType.LOCAL
-        elif reference_space_type_string.lower() == "Stage".lower():
-            create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
-        elif reference_space_type_string.lower() == "StageLeft".lower():
-            create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
-            create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(0, [-2, 0, -2])
-        elif reference_space_type_string.lower() == "StageRight".lower():
-            create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
-            create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(0, [2, 0, -2])
-        elif reference_space_type_string.lower() == "StageLeftRotated".lower():
-            create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
-            create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(math.pi / 3, [-2, 0.5, -2])
-        elif reference_space_type_string.lower() == "StageRightRotated".lower():
-            create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
-            create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(-math.pi / 3, [2, 0.5, -2])
-        else:
-            raise ValueError(f"Unknown reference space type '{reference_space_type_string}'")
-        return create_info
 
     def handle_session_state_changed_event(self, state_changed_event, exit_render_loop, request_restart):
         # TODO: avoid this ugly cast
@@ -388,13 +367,13 @@ class OpenXRProgram(object):
         select_path = [
             xr.string_to_path(self.instance.handle, "/user/hand/left/input/select/click"),
             xr.string_to_path(self.instance.handle, "/user/hand/right/input/select/click")]
-        squeeze_value_path = [
+        _squeeze_value_path = [
             xr.string_to_path(self.instance.handle, "/user/hand/left/input/squeeze/value"),
             xr.string_to_path(self.instance.handle, "/user/hand/right/input/squeeze/value")]
-        squeeze_force_path = [
+        _squeeze_force_path = [
             xr.string_to_path(self.instance.handle, "/user/hand/left/input/squeeze/force"),
             xr.string_to_path(self.instance.handle, "/user/hand/right/input/squeeze/force")]
-        squeeze_click_path = [
+        _squeeze_click_path = [
             xr.string_to_path(self.instance.handle, "/user/hand/left/input/squeeze/click"),
             xr.string_to_path(self.instance.handle, "/user/hand/right/input/squeeze/click")]
         pose_path = [
@@ -406,7 +385,7 @@ class OpenXRProgram(object):
         menu_click_path = [
             xr.string_to_path(self.instance.handle, "/user/hand/left/input/menu/click"),
             xr.string_to_path(self.instance.handle, "/user/hand/right/input/menu/click")]
-        b_click_path = [
+        _b_click_path = [
             xr.string_to_path(self.instance.handle, "/user/hand/left/input/b/click"),
             xr.string_to_path(self.instance.handle, "/user/hand/right/input/b/click")]
         trigger_value_path = [
@@ -482,7 +461,8 @@ class OpenXRProgram(object):
             ),
         )
 
-    def initialize_session(self):
+    def initialize_session(self) -> None:
+        """Create a Session and other basic session-level initialization."""
         assert self.instance is not None
         assert self.instance.handle != xr.NULL_HANDLE
         assert self.session is None
@@ -496,10 +476,14 @@ class OpenXRProgram(object):
         self.create_visualized_spaces()
         self.app_space = xr.create_reference_space(
             session=self.session.handle,
-            create_info=self.get_xr_reference_space_create_info(self.options.space),
+            create_info=get_xr_reference_space_create_info(self.options.space),
         )
 
-    def initialize_system(self):
+    def initialize_system(self) -> None:
+        """
+        Select a System for the view configuration specified in the Options and initialize the graphics device for the selected
+        system.
+        """
         assert self.instance is not None
         assert self.system is None
         form_factor = get_xr_form_factor(self.options.formfactor)
@@ -612,7 +596,8 @@ class OpenXRProgram(object):
             logger.debug(
                 f"{indent_str}  Name={extension.extension_name.decode()} SpecVersion={extension.extension_version}")
 
-    def poll_actions(self):
+    def poll_actions(self) -> None:
+        """Sample input actions and generate haptic feedback."""
         self.input.hand_active[:] = [xr.FALSE, xr.FALSE]
         # Sync actions
         active_action_set = xr.ActiveActionSet(self.input.action_set, xr.NULL_PATH)
@@ -647,7 +632,7 @@ class OpenXRProgram(object):
                             action=self.input.vibrate_action,
                             subaction_path=self.input.hand_subaction_path[hand],
                         ),
-                        haptic_feedback=cast(byref(vibration), POINTER(xr.HapticBaseHeader)),
+                        haptic_feedback=cast(byref(vibration), POINTER(xr.HapticBaseHeader)).contents,
                     )
             pose_state = xr.get_action_state_pose(
                 session=self.session.handle,
@@ -682,7 +667,8 @@ class OpenXRProgram(object):
         result2 = xr.check_result(result)
         raise result2
 
-    def poll_events(self):
+    def poll_events(self) -> (bool, bool):
+        """Process any events in the event queue."""
         exit_render_loop = False
         request_restart = False
         # Process all pending messages.
@@ -708,7 +694,8 @@ class OpenXRProgram(object):
                 logger.debug(f"Ignoring event type {str(event_type)}")
         return exit_render_loop, request_restart
 
-    def render_frame(self):
+    def render_frame(self) -> None:
+        """Create and submit a frame."""
         assert self.session is not None
         assert self.session.handle != xr.NULL_HANDLE
         frame_state = xr.wait_frame(
@@ -737,7 +724,7 @@ class OpenXRProgram(object):
             frame_end_info=frame_end_info,
         )
 
-    def render_layer(self, predicted_display_time, layer):
+    def render_layer(self, predicted_display_time, layer) -> bool:
         view_capacity_input = len(self.views)
         view_state, self.views = xr.locate_views(
             session=self.session.handle,
@@ -845,7 +832,39 @@ def get_xr_form_factor(form_factor_string):
         return xr.FormFactor.HEAD_MOUNTED_DISPLAY
     elif form_factor_string == "Handheld":
         return xr.FormFactor.HANDHELD_DISPLAY
-    raise ValueError
+    raise ValueError(f"Unknown form factor '{form_factor_string}'")
+
+
+def get_xr_reference_space_create_info(reference_space_type_string: str) -> xr.ReferenceSpaceCreateInfo:
+    create_info = xr.ReferenceSpaceCreateInfo(
+        pose_in_reference_space=Math.Pose.identity(),
+    )
+    space_type = reference_space_type_string.lower()
+    if space_type == "View".lower():
+        create_info.reference_space_type = xr.ReferenceSpaceType.VIEW
+    elif space_type == "ViewFront".lower():
+        # Render head-locked 2m in front of device.
+        create_info.pose_in_reference_space = Math.Pose.translation(translation=[0, 0, -2])
+        create_info.reference_space_type = xr.ReferenceSpaceType.VIEW
+    elif space_type == "Local".lower():
+        create_info.reference_space_type = xr.ReferenceSpaceType.LOCAL
+    elif space_type == "Stage".lower():
+        create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
+    elif space_type == "StageLeft".lower():
+        create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
+        create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(0, [-2, 0, -2])
+    elif space_type == "StageRight".lower():
+        create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
+        create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(0, [2, 0, -2])
+    elif space_type == "StageLeftRotated".lower():
+        create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
+        create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(math.pi / 3, [-2, 0.5, -2])
+    elif space_type == "StageRightRotated".lower():
+        create_info.reference_space_type = xr.ReferenceSpaceType.STAGE
+        create_info.pose_in_reference_space = Math.Pose.rotate_ccw_about_y_axis(-math.pi / 3, [2, 0.5, -2])
+    else:
+        raise ValueError(f"Unknown reference space type '{reference_space_type_string}'")
+    return create_info
 
 
 def get_xr_view_configuration_type(view_configuration_string):
@@ -853,4 +872,4 @@ def get_xr_view_configuration_type(view_configuration_string):
         return xr.ViewConfigurationType.PRIMARY_MONO
     elif view_configuration_string == "Stereo":
         return xr.ViewConfigurationType.PRIMARY_STEREO
-    raise ValueError
+    raise ValueError(f"Unknown view configuration '{view_configuration_string}'")

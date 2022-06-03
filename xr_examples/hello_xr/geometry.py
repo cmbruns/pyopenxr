@@ -1,6 +1,7 @@
-# Copyright (c) 2017-2022, The Khronos Group Inc.
-#
-# SPDX-License-Identifier: Apache-2.0
+"""
+Copyright (c) 2017-2022, The Khronos Group Inc.
+SPDX-License-Identifier: Apache-2.0
+"""
 
 import ctypes
 import numpy
@@ -9,8 +10,8 @@ import xr
 
 class Vertex(ctypes.Structure):
     _fields_ = [
-        ("Position", xr.Vector3f),
-        ("Color", xr.Vector3f),
+        ("position", xr.Vector3f),
+        ("color", xr.Vector3f),
     ]
 
 
