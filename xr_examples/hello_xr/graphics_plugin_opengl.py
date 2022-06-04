@@ -266,6 +266,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
     ):
         assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
         # UNUSED_PARM(swapchain_format)                    # not used in this function for now.
+        glfw.make_context_current(self.window)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
         swapchain_image = cast(swapchain_image_base_ptr, POINTER(xr.SwapchainImageOpenGLKHR)).contents
         color_texture = swapchain_image.image

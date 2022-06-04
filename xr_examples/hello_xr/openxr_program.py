@@ -17,6 +17,7 @@ from ctypes import (
 import enum
 import logging
 import math
+import platform
 from typing import List, Optional
 
 import xr.raw_functions
@@ -129,7 +130,9 @@ class OpenXRProgram(object):
             xr.destroy_session(self.session_handle)
             self.session_handle = None
         if self.instance is not None:
-            self.instance.destroy()
+            # Workaround for bug https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422
+            if platform.system() != "Linux":
+                self.instance.destroy()
             self.instance = None
 
     def create_instance(self) -> None:
