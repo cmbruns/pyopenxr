@@ -775,6 +775,8 @@ class OpenXRProgram(object):
         # For each locatable space that we want to visualize, render a 25cm cube.
         cubes = []
         for visualized_space in self.visualized_spaces:
+            # TODO: sometimes xr.locate_space() raises xr.exception.TimeInvalidError
+            # Maybe try skipping a few frames instead of crashing
             space_location = xr.locate_space(
                 space=visualized_space,
                 base_space=self.app_space,
@@ -822,6 +824,8 @@ class OpenXRProgram(object):
                 swapchain_image_ptr,
                 self.color_swapchain_format,
                 cubes,
+                mirror=i == Side.LEFT,  # mirror left eye only
+                # mirror=False,
             )
             xr.release_swapchain_image(
                 swapchain=view_swapchain.handle,

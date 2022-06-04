@@ -55,7 +55,7 @@ class IGraphicsPlugin(abc.ABC):
 
     @abc.abstractmethod
     def render_view(self, layer_view: xr.CompositionLayerProjectionView, swapchain_image: xr.SwapchainImageBaseHeader,
-                    swapchain_format: int, cubes: List[Cube]):
+                    swapchain_format: int, cubes: List[Cube], mirror=False):
         """Render to a swapchain image for a projection view."""
 
     @abc.abstractmethod

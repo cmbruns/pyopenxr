@@ -74,9 +74,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         self.cube_index_buffer = None
         # Map color buffer to associated depth buffer. This map is populated on demand.
         self.color_to_depth_map: Dict[int, int] = {}
-
-        self.debug_message_proc = None
-        self.every_other = 0  # for swapping every other frame
+        self.debug_message_proc = None  # To keep the callback alive
 
     def __enter__(self):
         return self
@@ -183,18 +181,10 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         # Initialize the gl extensions. Note we have to open a window.
         if not glfw.init():
             raise xr.XrException("GLFW initialization failed")
-        glfw.window_hint(glfw.VISIBLE, False)
         glfw.window_hint(glfw.DOUBLEBUFFER, False)
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-        glfw.window_hint(glfw.REFRESH_RATE, 60)
-        glfw.window_hint(glfw.DEPTH_BITS, 24)
-        glfw.window_hint(glfw.SAMPLES, 1)
-        glfw.window_hint(glfw.RED_BITS, 8)
-        glfw.window_hint(glfw.GREEN_BITS, 8)
-        glfw.window_hint(glfw.BLUE_BITS, 8)
-        glfw.window_hint(glfw.ALPHA_BITS, 8)
         self.window = glfw.create_window(640, 480, "GLFW Window", None, None)
         if self.window is None:
             raise xr.XrException("Failed to create GLFW window")
@@ -271,7 +261,9 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             layer_view: xr.CompositionLayerProjectionView,
             swapchain_image_base_ptr: POINTER(xr.SwapchainImageBaseHeader),
             _swapchain_format: int,
-            cubes: List[Cube]):
+            cubes: List[Cube],
+            mirror=False,
+    ):
         assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
         # UNUSED_PARM(swapchain_format)                    # not used in this function for now.
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
@@ -311,25 +303,20 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             # Draw the cube.
             GL.glDrawElements(GL.GL_TRIANGLES, len(c_cubeIndices), GL.GL_UNSIGNED_SHORT, None)
 
-        # Mirror
-        # fast blit from the fbo to the window surface
-        GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
-        w, h = layer_view.sub_image.image_rect.extent.width, layer_view.sub_image.image_rect.extent.height
-        GL.glBlitFramebuffer(
-            0, 0, w, h, 0, 0,
-            640, 480,
-            GL.GL_COLOR_BUFFER_BIT,
-            GL.GL_NEAREST
-        )
+        if mirror:
+            # fast blit from the fbo to the window surface
+            GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
+            w, h = layer_view.sub_image.image_rect.extent.width, layer_view.sub_image.image_rect.extent.height
+            GL.glBlitFramebuffer(
+                0, 0, w, h, 0, 0,
+                640, 480,
+                GL.GL_COLOR_BUFFER_BIT,
+                GL.GL_NEAREST
+            )
 
         GL.glBindVertexArray(0)
         GL.glUseProgram(0)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
-
-        # Swap our window every other eye for RenderDoc
-        self.every_other += 1
-        if self.every_other & 1 == 0:
-            glfw.swap_buffers(self.window)
 
     def select_color_swapchain_format(self, runtime_formats):
         # List of supported color swapchain formats.
