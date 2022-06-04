@@ -201,6 +201,7 @@ class Session(object):
         self.frame_state = FrameState()
         self.system = system
         self.space = Space(self)
+        self.view_configuration_type = ViewConfigurationType.PRIMARY_STEREO
 
     def __enter__(self):
         return self
@@ -229,7 +230,7 @@ class Session(object):
         end_frame(self.handle, frame_end_info)
 
     def locate_views(self) -> (ViewState, Array[View]):
-        view_configuration_type = self.system.view_configuration_type
+        view_configuration_type = self.view_configuration_type
         # TODO: put this someplace else
         # TODO: if self.state....
         display_time = self.frame_state.predicted_display_time
@@ -252,7 +253,7 @@ class Session(object):
         self.state = SessionState(event.state)
         if self.state == SessionState.READY:
             if self.handle is not None:
-                sbi = SessionBeginInfo(self.system.view_configuration_type)
+                sbi = SessionBeginInfo(self.view_configuration_type)
                 begin_session(self.handle, sbi)
         elif self.state == SessionState.STOPPING:
             self.destroy()
