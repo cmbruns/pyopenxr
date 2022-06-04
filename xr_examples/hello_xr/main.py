@@ -78,9 +78,11 @@ def main():
                 if exit_render_loop:
                     break
                 if program.session_running:
-                    # TODO: C++ code does not need this conditional. Why does python?
-                    if program.session_state == xr.SessionState.FOCUSED:
+                    try:
                         program.poll_actions()
+                    except xr.exception.SessionNotFocused:
+                        # TODO: C++ code does not need this conditional. Why does python?
+                        pass
                     program.render_frame()
                 else:
                     # Throttle loop since xrWaitFrame won't be called.

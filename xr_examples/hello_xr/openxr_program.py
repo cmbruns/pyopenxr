@@ -8,6 +8,7 @@ from ctypes import (
     byref,
     c_float,
     c_int32,
+    c_void_p,
     cast,
     pointer,
     POINTER,
@@ -16,7 +17,7 @@ from ctypes import (
 import enum
 import logging
 import math
-from typing import List
+from typing import List, Optional
 
 import xr.raw_functions
 
@@ -64,24 +65,6 @@ class SwapChain(Structure):
     ]
 
 
-class InputState(Structure):
-    def __init__(self):
-        super().__init__()
-        self.hand_scale[:] = [1, 1]
-
-    _fields_ = [
-        ("action_set", xr.ActionSetHandle),
-        ("grab_action", xr.ActionHandle),
-        ("pose_action", xr.ActionHandle),
-        ("vibrate_action", xr.ActionHandle),
-        ("quit_action", xr.ActionHandle),
-        ("hand_subaction_path", xr.Path * len(Side)),
-        ("hand_space", xr.SpaceHandle * len(Side)),
-        ("hand_scale", c_float * len(Side)),
-        ("hand_active", xr.Bool32 * len(Side)),
-    ]
-
-
 class OpenXRProgram(object):
     def __init__(self, options: argparse.Namespace, platform_plugin: IPlatformPlugin, graphics_plugin: IGraphicsPlugin):
         self.options = options
@@ -109,7 +92,7 @@ class OpenXRProgram(object):
         self.session_running = False
 
         self.event_data_buffer = xr.EventDataBuffer()
-        self.input = InputState()
+        self.input = OpenXRProgram.InputState()
 
         self.projection_layer_views = None
 
@@ -138,7 +121,7 @@ class OpenXRProgram(object):
             self.session.handle = None
         if self.instance is not None:
             self.instance.destroy()
-        self.instance = None
+            self.instance = None
 
     def create_instance(self) -> None:
         """Create an Instance and other basic instance-level initialization."""
@@ -147,13 +130,16 @@ class OpenXRProgram(object):
         self.log_instance_info()
 
     def create_instance_internal(self):
+        assert self.instance is None
+        # Create union of extensions required by platform and graphics plugins.
         extensions = []
         extensions.extend(self.platform_plugin.instance_extensions)
         extensions.extend(self.graphics_plugin.instance_extensions)
         self.instance = xr.Instance(
-            requested_extensions=extensions,
+            enabled_extensions=extensions,
             application_name="hello_xr.py",
             application_version=xr.Version(0, 0, 1),
+            next_structure=self.platform_plugin.instance_create_extension,
         )
 
     def create_swapchains(self) -> None:
@@ -180,7 +166,7 @@ class OpenXRProgram(object):
         # Note: No other view configurations exist at the time this (C++) code was written. If this
         # condition is not met, the project will need to be audited to see how support should be
         # added.
-        if not self.view_config_type == xr.ViewConfigurationType.PRIMARY_STEREO:
+        if self.view_config_type != xr.ViewConfigurationType.PRIMARY_STEREO:
             raise RuntimeError("Unsupported view configuration type")
         # Query and cache view configuration views.
         self.config_views = xr.enumerate_view_configuration_views(
@@ -197,6 +183,7 @@ class OpenXRProgram(object):
             # Select a swapchain format.
             swapchain_formats = xr.enumerate_swapchain_formats(self.session.handle)
             self.color_swapchain_format = self.graphics_plugin.select_color_swapchain_format(swapchain_formats)
+            # Print swapchain formats and the selected one.
             formats_string = ""
             for sc_format in swapchain_formats:
                 selected = sc_format == self.color_swapchain_format
@@ -247,7 +234,7 @@ class OpenXRProgram(object):
                     swapchain_image_ptr_buffer[ix] = cast(
                         byref(swapchain_image_buffer[ix]),
                         POINTER(xr.SwapchainImageBaseHeader))
-                self.swapchain_image_ptr_buffers[addressof(swapchain.handle)] = swapchain_image_ptr_buffer
+                self.swapchain_image_ptr_buffers[handle_key(swapchain.handle)] = swapchain_image_ptr_buffer
 
     def create_visualized_spaces(self):
         assert self.session is not None
@@ -266,16 +253,17 @@ class OpenXRProgram(object):
             except xr.XrException as exc:
                 logger.warning(f"Failed to create reference space {visualized_space} with error {exc}")
 
-    def handle_session_state_changed_event(self, state_changed_event, exit_render_loop, request_restart):
+    def handle_session_state_changed_event(
+            self, state_changed_event, exit_render_loop, request_restart) -> (bool, bool):
         # TODO: avoid this ugly cast
         event = cast(byref(state_changed_event), POINTER(xr.EventDataSessionStateChanged)).contents
         old_state = self.session_state
         self.session_state = xr.SessionState(event.state)
+        key = cast(self.session.handle, c_void_p).value
         logger.info(f"XrEventDataSessionStateChanged: "
                     f"state {str(old_state)}->{str(self.session_state)} "
-                    f"session={hex(addressof(self.session.handle))} time={event.time}")
-        # TODO: this comparison is failing in python but not in C++
-        if False and event.session is not None and event.session != self.session.handle:
+                    f"session={hex(key)} time={event.time}")
+        if event.session is not None and handle_key(event.session) != handle_key(self.session.handle):
             logger.error(f"XrEventDataSessionStateChanged for unknown session {event.session} {self.session.handle}")
             return exit_render_loop, request_restart
 
@@ -437,27 +425,27 @@ class OpenXRProgram(object):
             ),
         )
         # TODO the other controller types in openxr_programs.cpp
+
+        action_space_info = xr.ActionSpaceCreateInfo(
+            action=self.input.pose_action,
+            # pose_in_action_space # w already defaults to 1 in python...
+            subaction_path=self.input.hand_subaction_path[Side.LEFT],
+        )
+        assert action_space_info.pose_in_action_space.orientation.w == 1
         self.input.hand_space[Side.LEFT] = xr.create_action_space(
             session=self.session.handle,
-            create_info=xr.ActionSpaceCreateInfo(
-                action=self.input.pose_action,
-                # pose_in_action_space # w already defaults to 1 in python...
-                subaction_path=self.input.hand_subaction_path[Side.LEFT],
-            ),
+            create_info=action_space_info,
         )
+        action_space_info.subaction_path = self.input.hand_subaction_path[Side.RIGHT]
         self.input.hand_space[Side.RIGHT] = xr.create_action_space(
             session=self.session.handle,
-            create_info=xr.ActionSpaceCreateInfo(
-                action=self.input.pose_action,
-                # pose_in_action_space # w already defaults to 1 in python...
-                subaction_path=self.input.hand_subaction_path[Side.RIGHT],
-            ),
+            create_info=action_space_info,
         )
         xr.attach_session_action_sets(
             session=self.session.handle,
             attach_info=xr.SessionActionSetsAttachInfo(
                 count_action_sets=1,
-                action_sets=(xr.ActionSetHandle * 1)(self.input.action_set),
+                action_sets=pointer(self.input.action_set),
             ),
         )
 
@@ -489,8 +477,7 @@ class OpenXRProgram(object):
         form_factor = get_xr_form_factor(self.options.formfactor)
         self.view_config_type = get_xr_view_configuration_type(self.options.viewconfig)
         self.environment_blend_mode = get_xr_environment_blend_mode(self.options.blendmode)
-        self.system = xr.System(instance=self.instance, form_factor=form_factor,
-                                view_configuration_type=self.view_config_type)
+        self.system = xr.System(instance=self.instance, form_factor=form_factor)
         logger.debug(f"Using system {hex(self.system.id.value)} for form factor {str(form_factor)}")
         assert self.instance.handle is not None
         assert self.system.id is not None
@@ -518,6 +505,8 @@ class OpenXRProgram(object):
                     which_components=all_flags,
                 ),
             )
+            if len(grab_source) < 1:
+                continue
             if len(source_name) > 0:
                 source_name += " and "
             source_name += f"'{grab_source}'"
@@ -532,24 +521,32 @@ class OpenXRProgram(object):
         for mode_value in blend_modes:
             mode = xr.EnvironmentBlendMode(mode_value)
             blend_mode_match = mode == self.environment_blend_mode
-            logger.info(f"Environment Blend Mode ({str(mode)}) : {'(Selected)' if blend_mode_match else ''}")
+            logger.info(f"Environment Blend Mode ({str(mode)}) : "
+                        f"{'(Selected)' if blend_mode_match else ''}")
             blend_mode_found |= blend_mode_match
         assert blend_mode_found
 
     def log_instance_info(self):
+        assert self.instance is not None
+        assert self.instance.handle is not None
         instance_properties = self.instance.get_properties()
         logger.info(
-            f"Instance RuntimeName={instance_properties.runtime_name.decode()} RuntimeVersion={xr.Version(instance_properties.runtime_version)}")
+            f"Instance RuntimeName={instance_properties.runtime_name.decode()} "
+            f"RuntimeVersion={xr.Version(instance_properties.runtime_version)}")
 
     def log_layers_and_extensions(self):
         # Log non-layer extensions
         self._log_extensions(layer_name=None)
         # Log layers and any of their extensions
-        layer_properties = xr.enumerate_api_layer_properties()
-        logger.info(f"Available Layers: ({len(layer_properties)})")
-        for layer in layer_properties:
+        layers = xr.enumerate_api_layer_properties()
+        logger.info(f"Available Layers: ({len(layers)})")
+        for layer in layers:
             logger.debug(
-                f"  Name={layer.layer_name.decode()} SpecVersion={self.xr_version_string()} LayerVersion={layer.layer_version} Description={layer.description}")
+                f"  Name={layer.layer_name.decode()} "
+                f"SpecVersion={self.xr_version_string()} "
+                f"LayerVersion={layer.layer_version} "
+                f"Description={layer.description.decode()}")
+            self._log_extensions(layer_name=layer.layer_name.decode(), indent=4)
 
     def log_reference_spaces(self):
         assert self.session is not None
@@ -567,7 +564,8 @@ class OpenXRProgram(object):
         for view_config_type_value in view_config_types:
             view_config_type = xr.ViewConfigurationType(view_config_type_value)
             logger.debug(
-                f"  View Configuration Type: {str(view_config_type)} {'(Selected)' if view_config_type == self.view_config_type else ''}")
+                f"  View Configuration Type: {str(view_config_type)} "
+                f"{'(Selected)' if view_config_type == self.view_config_type else ''}")
             view_config_properties = xr.get_view_configuration_properties(
                 instance=self.instance.handle,
                 system_id=self.system.id,
@@ -581,9 +579,13 @@ class OpenXRProgram(object):
             else:
                 for i, view in enumerate(configuration_views):
                     logger.debug(
-                        f"    View [{i}]: Recommended Width={view.recommended_image_rect_width} Height={view.recommended_image_rect_height} SampleCount={view.recommended_swapchain_sample_count}")
+                        f"    View [{i}]: Recommended Width={view.recommended_image_rect_width} "
+                        f"Height={view.recommended_image_rect_height} "
+                        f"SampleCount={view.recommended_swapchain_sample_count}")
                     logger.debug(
-                        f"    View [{i}]:     Maximum Width={view.max_image_rect_width} Height={view.max_image_rect_height} SampleCount={view.max_swapchain_sample_count}")
+                        f"    View [{i}]:     Maximum Width={view.max_image_rect_width} "
+                        f"Height={view.max_image_rect_height} "
+                        f"SampleCount={view.max_swapchain_sample_count}")
             self.log_environment_blend_mode(view_config_type)
 
     @staticmethod
@@ -605,7 +607,7 @@ class OpenXRProgram(object):
             self.session.handle,
             xr.ActionsSyncInfo(
                 count_active_action_sets=1,
-                active_action_sets=(xr.ActiveActionSet * 1)(active_action_set)
+                active_action_sets=pointer(active_action_set)
             ),
         )
         # Get pose and grab action state and start haptic vibrate when hand is 90% squeezed.
@@ -653,20 +655,6 @@ class OpenXRProgram(object):
         if quit_value.is_active and quit_value.changed_since_last_sync and quit_value.current_state:
             xr.request_exit_session(self.session.handle)
 
-    def try_read_next_event(self):
-        base_header = self.event_data_buffer
-        base_header.structure_type = xr.StructureType.EVENT_DATA_BUFFER
-        result = xr.raw_functions.xrPollEvent(self.instance.handle, byref(self.event_data_buffer))
-        if result == xr.Result.SUCCESS:
-            if base_header.structure_type == xr.StructureType.EVENT_DATA_EVENTS_LOST:
-                events_lost = cast(base_header, POINTER(xr.EventDataEventsLost))
-                logger.warning(f"{events_lost} events lost")
-            return base_header
-        if result == xr.Result.EVENT_UNAVAILABLE:
-            return None
-        result2 = xr.check_result(result)
-        raise result2
-
     def poll_events(self) -> (bool, bool):
         """Process any events in the event queue."""
         exit_render_loop = False
@@ -703,28 +691,34 @@ class OpenXRProgram(object):
             frame_wait_info=xr.FrameWaitInfo(),
         )
         xr.begin_frame(self.session.handle, xr.FrameBeginInfo())
-        frame_end_info = xr.FrameEndInfo(
-            display_time=frame_state.predicted_display_time,
-            environment_blend_mode=self.environment_blend_mode,
-        )
         layer = xr.CompositionLayerProjection(
             layer_flags=xr.CompositionLayerFlags.NONE,
         )
         p_layer_projection = cast(
             byref(layer),
             POINTER(xr.CompositionLayerBaseHeader))
+        layers = pointer(p_layer_projection)
+        layer_count = 0
         if frame_state.should_render:
             if self.render_layer(frame_state.predicted_display_time, layer):
-                skip_layers = False  # for debugging end_frame problem
+                # Debugging
+                a = layer.views[0].sub_image.swapchain
+                b = layer.views[1].sub_image.swapchain
+                skip_layers = True  # for debugging end_frame problem
                 if not skip_layers:
-                    frame_end_info.layer_count = 1
-                    frame_end_info.layers = pointer(p_layer_projection)
+                    layer_count = 1
+        frame_end_info = xr.FrameEndInfo(
+            display_time=frame_state.predicted_display_time,
+            environment_blend_mode=self.environment_blend_mode,
+            layer_count=layer_count,
+            layers=layers,
+        )
         xr.end_frame(
             session=self.session.handle,
             frame_end_info=frame_end_info,
         )
 
-    def render_layer(self, predicted_display_time, layer) -> bool:
+    def render_layer(self, predicted_display_time: xr.Time, layer: xr.CompositionLayerProjection) -> bool:
         view_capacity_input = len(self.views)
         view_state, self.views = xr.locate_views(
             session=self.session.handle,
@@ -774,7 +768,9 @@ class OpenXRProgram(object):
                 scale = 0.1 * self.input.hand_scale[hand]
                 cubes.append(Cube(space_location.pose, xr.Vector3f(scale, scale, scale)))
         # Render view to the appropriate part of the swapchain image.
-        for i, view_swap_chain in enumerate(self.swapchains):
+        for i in range(view_count_output):
+            src = self.swapchains[i]
+            view_swap_chain = SwapChain(src.handle, src.width, src.height)
             swapchain_image_index = xr.acquire_swapchain_image(
                 swapchain=view_swap_chain.handle,
                 acquire_info=xr.SwapchainImageAcquireInfo(),
@@ -783,13 +779,14 @@ class OpenXRProgram(object):
                 swapchain=view_swap_chain.handle,
                 wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
             )
+            assert self.projection_layer_views[i].structure_type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
             self.projection_layer_views[i].pose = self.views[i].pose
             self.projection_layer_views[i].fov = self.views[i].fov
             self.projection_layer_views[i].sub_image.swap_chain = view_swap_chain.handle
             self.projection_layer_views[i].sub_image.image_rect.offset[:] = [0, 0]
             self.projection_layer_views[i].sub_image.image_rect.extent[:] = [
                 view_swap_chain.width, view_swap_chain.height, ]
-            swapchain_image_ptr = self.swapchain_image_ptr_buffers[addressof(view_swap_chain.handle)][swapchain_image_index]
+            swapchain_image_ptr = self.swapchain_image_ptr_buffers[handle_key(view_swap_chain.handle)][swapchain_image_index]
             self.graphics_plugin.render_view(
                 self.projection_layer_views[i],
                 swapchain_image_ptr,
@@ -801,7 +798,7 @@ class OpenXRProgram(object):
                 release_info=xr.SwapchainImageReleaseInfo()
             )
         layer.space = self.app_space
-        logger.debug(layer.space)
+        # logger.debug(f"app_space = {handle_key(layer.space)}")
         skip_views = False  # For debugging -
         if skip_views:
             # not useful - different error
@@ -814,9 +811,42 @@ class OpenXRProgram(object):
             layer.views = self.projection_layer_views
         return True
 
+    def try_read_next_event(self) -> Optional[Structure]:
+        #  It is sufficient to clear the just the XrEventDataBuffer header to
+        #  XR_TYPE_EVENT_DATA_BUFFER
+        base_header = self.event_data_buffer
+        base_header.structure_type = xr.StructureType.EVENT_DATA_BUFFER
+        result = xr.raw_functions.xrPollEvent(self.instance.handle, byref(self.event_data_buffer))
+        if result == xr.Result.SUCCESS:
+            if base_header.structure_type == xr.StructureType.EVENT_DATA_EVENTS_LOST:
+                events_lost = cast(base_header, POINTER(xr.EventDataEventsLost))
+                logger.warning(f"{events_lost} events lost")
+            return base_header
+        if result == xr.Result.EVENT_UNAVAILABLE:
+            return None
+        result2 = xr.check_result(result)
+        raise result2
+
     @staticmethod
     def xr_version_string():
         return xr.XR_CURRENT_API_VERSION
+
+    class InputState(Structure):
+        def __init__(self):
+            super().__init__()
+            self.hand_scale[:] = [1, 1]
+
+        _fields_ = [
+            ("action_set", xr.ActionSetHandle),
+            ("grab_action", xr.ActionHandle),
+            ("pose_action", xr.ActionHandle),
+            ("vibrate_action", xr.ActionHandle),
+            ("quit_action", xr.ActionHandle),
+            ("hand_subaction_path", xr.Path * len(Side)),
+            ("hand_space", xr.SpaceHandle * len(Side)),
+            ("hand_scale", c_float * len(Side)),
+            ("hand_active", xr.Bool32 * len(Side)),
+        ]
 
 
 def get_xr_environment_blend_mode(environment_blend_mode_string):
@@ -873,3 +903,7 @@ def get_xr_view_configuration_type(view_configuration_string):
     elif view_configuration_string == "Stereo":
         return xr.ViewConfigurationType.PRIMARY_STEREO
     raise ValueError(f"Unknown view configuration '{view_configuration_string}'")
+
+
+def handle_key(handle):
+    return hex(cast(handle, c_void_p).value)
