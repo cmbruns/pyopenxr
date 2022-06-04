@@ -31,19 +31,20 @@ class Eye(enum.Enum):
 class Instance(object):
     def __init__(
             self,
-            requested_extensions: Sequence[str] = None,
+            enabled_extensions: Sequence[str] = None,
             application_name: str = None,
             application_version: Version = None,
             engine_name: str = None,
             engine_version: Version = None,
+            next_structure = None,
     ) -> None:
-        if requested_extensions is None:
+        if enabled_extensions is None:
             discovered_extensions = enumerate_instance_extension_properties()
             # Use the most reasonable default
             if KHR_OPENGL_ENABLE_EXTENSION_NAME in discovered_extensions:
-                requested_extensions = [KHR_OPENGL_ENABLE_EXTENSION_NAME, ]
+                enabled_extensions = [KHR_OPENGL_ENABLE_EXTENSION_NAME, ]
             else:
-                requested_extensions = []
+                enabled_extensions = []
         if application_name is None:
             application_name = "Unknown application"
         self.application_name = application_name
@@ -63,7 +64,7 @@ class Instance(object):
             engine_version=engine_version.number(),
             api_version=XR_CURRENT_API_VERSION,
         )
-        encoded_extensions = [s.encode() for s in requested_extensions]
+        encoded_extensions = [s.encode() for s in enabled_extensions]
         extension_names = (ctypes.c_char_p * len(encoded_extensions))()
         for i, s in enumerate(encoded_extensions):
             extension_names[i] = s
@@ -72,8 +73,9 @@ class Instance(object):
             application_info=application_info,
             enabled_api_layer_count=0,  # TODO:
             enabled_api_layer_names=None,
-            enabled_extension_count=len(requested_extensions),
+            enabled_extension_count=len(enabled_extensions),
             enabled_extension_names=extension_names,
+            next_structure=next_structure,
         )
         self.handle = create_instance(instance_create_info)
 
@@ -97,7 +99,6 @@ class System(object):
             self,
             instance: Instance,
             form_factor: FormFactor = FormFactor.HEAD_MOUNTED_DISPLAY,
-            view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO
     ) -> None:
         # TODO: default managed value for instance
         system_get_info = SystemGetInfo(
@@ -105,18 +106,6 @@ class System(object):
         )
         self.id = get_system(instance.handle, system_get_info)
         self.instance = instance
-        self.view_configuration_type = view_configuration_type
-        view_configs = enumerate_view_configurations(self.instance.handle, self.id)
-        assert view_configuration_type.value in view_configs
-        view_config_views = enumerate_view_configuration_views(
-            self.instance.handle, self.id, view_configuration_type)
-        for vcv in view_config_views:
-            assert view_config_views[0].recommended_image_rect_height == vcv.recommended_image_rect_height
-        assert view_config_views[0].recommended_image_rect_height == view_config_views[1].recommended_image_rect_height
-        self.render_target_size = (
-            view_config_views[0].recommended_image_rect_width * len(view_config_views),
-            view_config_views[0].recommended_image_rect_height
-        )
 
     def __enter__(self):
         return self
