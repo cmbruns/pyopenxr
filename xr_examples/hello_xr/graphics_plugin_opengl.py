@@ -118,10 +118,15 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             raise RuntimeError(f"Link program failed: {GL.glGetProgramInfoLog(prog)}")
 
     @staticmethod
-    def debug_message_callback(_source, _msg_type, _msg_id, _severity, length, raw, _user):
+    def opengl_debug_message_callback(_source, _msg_type, _msg_id, severity, length, raw, _user):
         """Redirect OpenGL debug messages"""
-        msg = raw[0:length]
-        logger.info(f"GL Debug: {msg.decode()}")
+        log_level = {
+            GL.GL_DEBUG_SEVERITY_HIGH: logging.ERROR,
+            GL.GL_DEBUG_SEVERITY_MEDIUM: logging.WARNING,
+            GL.GL_DEBUG_SEVERITY_LOW: logging.INFO,
+            GL.GL_DEBUG_SEVERITY_NOTIFICATION: logging.DEBUG,
+        }[severity]
+        logger.log(log_level, f"OpenGL Message: {raw[0:length].decode()}")
 
     def focus_window(self):
         glfw.focus_window(self.window)
@@ -178,8 +183,8 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         # Initialize the gl extensions. Note we have to open a window.
         if not glfw.init():
             raise xr.XrException("GLFW initialization failed")
-        # glfw.window_hint(glfw.VISIBLE, False)
-        # glfw.window_hint(glfw.DOUBLEBUFFER, False)
+        glfw.window_hint(glfw.VISIBLE, False)
+        glfw.window_hint(glfw.DOUBLEBUFFER, False)
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
@@ -215,7 +220,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         GL.glEnable(GL.GL_DEBUG_OUTPUT)
         # Store the debug callback function pointer, so it won't get garbage collected;
         # ...otherwise mysterious GL crashes will ensue.
-        self.debug_message_proc = GL.GLDEBUGPROC(self.debug_message_callback)
+        self.debug_message_proc = GL.GLDEBUGPROC(self.opengl_debug_message_callback)
         GL.glDebugMessageCallback(self.debug_message_proc, None)
         self.initialize_resources()
 

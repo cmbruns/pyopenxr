@@ -70,6 +70,9 @@ class OpenXRProgram(object):
         self.options = options
         self.platform_plugin = platform_plugin
         self.graphics_plugin = graphics_plugin
+
+        self.debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(xr_debug_callback)
+
         self.instance = None
         self.session = None
         self.app_space = None
@@ -133,13 +136,42 @@ class OpenXRProgram(object):
         assert self.instance is None
         # Create union of extensions required by platform and graphics plugins.
         extensions = []
+        # Enable debug messaging
+        discovered_extensions = xr.enumerate_instance_extension_properties()
+        dumci = xr.DebugUtilsMessengerCreateInfoEXT()
+        next_structure = self.platform_plugin.instance_create_extension
+        ALL_SEVERITIES = (
+                xr.DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+                | xr.DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+                | xr.DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+                | xr.DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+        )
+
+        ALL_TYPES = (
+                xr.DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
+                | xr.DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
+                | xr.DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+                | xr.DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+        )
+        if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in discovered_extensions:
+            extensions.append(xr.EXT_DEBUG_UTILS_EXTENSION_NAME)
+            dumci.message_severities = ALL_SEVERITIES
+            dumci.message_types = ALL_TYPES
+            dumci.user_data = None
+            dumci.user_callback = self.debug_callback
+            if next_structure is None:
+                next_structure = cast(pointer(dumci), c_void_p)
+            else:
+                next_structure.next_structure = cast(pointer(dumci), c_void_p)
+        #
         extensions.extend(self.platform_plugin.instance_extensions)
         extensions.extend(self.graphics_plugin.instance_extensions)
+
         self.instance = xr.Instance(
             enabled_extensions=extensions,
             application_name="hello_xr.py",
             application_version=xr.Version(0, 0, 1),
-            next_structure=self.platform_plugin.instance_create_extension,
+            next_structure=next_structure,
         )
 
     def create_swapchains(self) -> None:
@@ -769,8 +801,7 @@ class OpenXRProgram(object):
                 cubes.append(Cube(space_location.pose, xr.Vector3f(scale, scale, scale)))
         # Render view to the appropriate part of the swapchain image.
         for i in range(view_count_output):
-            src = self.swapchains[i]
-            view_swap_chain = SwapChain(src.handle, src.width, src.height)
+            view_swap_chain = self.swapchains[i]
             swapchain_image_index = xr.acquire_swapchain_image(
                 swapchain=view_swap_chain.handle,
                 acquire_info=xr.SwapchainImageAcquireInfo(),
@@ -907,3 +938,25 @@ def get_xr_view_configuration_type(view_configuration_string):
 
 def handle_key(handle):
     return hex(cast(handle, c_void_p).value)
+
+
+def openxr_log_level(severity_flags: int) -> int:
+    if severity_flags & xr.DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+        return logging.ERROR
+    elif severity_flags & xr.DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+        return logging.WARNING
+    elif severity_flags & xr.DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+        return logging.INFO
+    else:
+        return logging.DEBUG
+
+
+def xr_debug_callback(
+            severity: xr.DebugUtilsMessageSeverityFlagsEXT,
+            _type: xr.DebugUtilsMessageTypeFlagsEXT,
+            data: POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
+            _user_data: c_void_p) -> bool:
+    d = data.contents
+    # TODO structure properties to return unicode strings
+    logger.log(openxr_log_level(severity), f"OpenXR: {d.function_name.decode()}: {d.message.decode()}")
+    return True
