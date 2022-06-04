@@ -200,7 +200,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             raise xr.XrException("Failed to create GLFW window")
         glfw.make_context_current(self.window)
         glfw.show_window(self.window)
-        glfw.swap_interval(1)
+        glfw.swap_interval(0)
         glfw.focus_window(self.window)
         major = GL.glGetIntegerv(GL.GL_MAJOR_VERSION)
         minor = GL.glGetIntegerv(GL.GL_MINOR_VERSION)
@@ -310,6 +310,18 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             GL.glUniformMatrix4fv(self.model_view_projection_uniform_location, 1, False, mvp.as_numpy())
             # Draw the cube.
             GL.glDrawElements(GL.GL_TRIANGLES, len(c_cubeIndices), GL.GL_UNSIGNED_SHORT, None)
+
+        # Mirror
+        # fast blit from the fbo to the window surface
+        GL.glBindFramebuffer(GL.GL_DRAW_FRAMEBUFFER, 0)
+        w, h = layer_view.sub_image.image_rect.extent.width, layer_view.sub_image.image_rect.extent.height
+        GL.glBlitFramebuffer(
+            0, 0, w, h, 0, 0,
+            640, 480,
+            GL.GL_COLOR_BUFFER_BIT,
+            GL.GL_NEAREST
+        )
+
         GL.glBindVertexArray(0)
         GL.glUseProgram(0)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
