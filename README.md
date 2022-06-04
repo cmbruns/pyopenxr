@@ -1,6 +1,9 @@
 # pyopenxr
 ### Unofficial python bindings for the [OpenXR SDK](https://github.com/KhronosGroup/OpenXR-SDK) to access VR and AR devices
 
+![hello_xr1](https://user-images.githubusercontent.com/2649705/172025969-5cf276bd-2a6c-42a2-852a-0605fe72a716.PNG)
+
+
 ## Installing pyopenxr
 
 ``pip install pyopenxr``
@@ -19,6 +22,8 @@ required = [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME, ]
 for prop in required:
     assert prop in available
 ```
+
+Study the complete working `hello_xr.py` example at https://github.com/cmbruns/pyopenxr_examples
 
 ## Pythonic naming conventions in pyopenxr
 
