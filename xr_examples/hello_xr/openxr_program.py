@@ -58,7 +58,7 @@ class Side(enum.IntEnum):
     RIGHT = 1
 
 
-class SwapChain(Structure):
+class Swapchain(Structure):
     _fields_ = [
         ("handle", xr.SwapchainHandle),
         ("width", c_int32),
@@ -254,7 +254,7 @@ class OpenXRProgram(object):
                     sample_count=self.graphics_plugin.get_supported_swapchain_sample_count(vp),
                     usage_flags=xr.SwapchainUsageFlags.SAMPLED_BIT | xr.SwapchainUsageFlags.COLOR_ATTACHMENT_BIT,
                 )
-                swapchain = SwapChain(
+                swapchain = Swapchain(
                     xr.create_swapchain(
                         session=self.session_handle,
                         create_info=swapchain_create_info,
