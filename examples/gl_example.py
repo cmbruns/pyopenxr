@@ -145,6 +145,7 @@ class OpenXrExample(object):
         self.eye_view_states = None
         self.window_size = None
         self.enable_debug = True
+        self.linux_steamvr_broken_destroy_instance = False
         self.linux_steamvr_broken_context = False
 
     def debug_callback_py(
@@ -211,10 +212,17 @@ class OpenXrExample(object):
         )
         instance_props = xr.get_instance_properties(self.instance)
         if platform.system() == 'Linux' and instance_props.runtime_name == b"SteamVR/OpenXR":
+            print("SteamVR/OpenXR on Linux detected, enabling workarounds")
             # Enabling workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/421
             # OpenGL context must be manually restored after some OpenXR calls when using SteamVR on Linux
-            print("SteamVR/OpenXR on Linux detected, enabling GLX context workaround")
+            # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422,
+            # https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
+            # 
             self.linux_steamvr_broken_context = True
+            # Enabling workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422,
+            # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
+            # destroy_instance() causes SteamVR to hang and never recover
+            self.linux_steamvr_broken_destroy_instance = True
 
     def prepare_xr_system(self):
         get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY)
@@ -502,7 +510,7 @@ class OpenXrExample(object):
         if self.instance is not None:
             # Workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422
             # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
-            if platform.system() != 'Linux':
+            if not self.linux_steamvr_broken_destroy_instance:
                 xr.destroy_instance(self.instance)
             self.instance = None
         glfw.terminate()
