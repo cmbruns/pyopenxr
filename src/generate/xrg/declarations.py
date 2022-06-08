@@ -652,6 +652,7 @@ class VariableItem(CodeItem):
 
 
 class NothingParameterCoder(object):
+    """Parameter that generates no code. Used as a base for other parameter types."""
     def __init__(self, parameter: FunctionParameterItem):
         self.parameter = parameter
 
@@ -730,6 +731,11 @@ class OutputParameterCoder(ParameterCoderBase):
 
 
 class BufferCoder(ParameterCoderBase):
+    """
+    Output array parameter designed to use the two-call idiom in C.
+    Be we want to use just one call in python.
+    https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
+    """
     def __init__(
             self,
             cap_in: FunctionParameterItem,
@@ -801,7 +807,8 @@ class FunctionCoder(object):
     def __init__(self, function: FunctionItem):
         self.function = function
         self.param_coders = [[p, None] for p in self.function.parameters]
-        # First pass: Buffer size arguments
+        # One pass to find buffer-size arguments
+        # https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
         self._needs_two_calls = False
         for ix, pc in enumerate(self.param_coders):
             p, c = pc
@@ -945,6 +952,39 @@ class FieldCoder(object):
         yield f"{self.name}={{repr(self.{self.inner_name})}}"
 
 
+class ArrayCountFieldCoder(FieldCoder):
+    """
+    Collapse count/pointer field pairs into a single sequence constructor parameter.
+    """
+    def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
+        super().__init__(count_field)
+        self.array_field = array_field
+
+    def param_code(self) -> Generator[str, None, None]:
+        yield from []  # Exclude count field from constructor
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.field.name()}=len({self.array_field.name()})"
+
+
+class ArrayPointerFieldCoder(FieldCoder):
+    """
+    Collapse count/pointer field pairs into a single sequence constructor parameter.
+    """
+    def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
+        super().__init__(array_field)
+        self.element_type_name = self.field.type.pointee.name(Api.PYTHON)
+
+    def param_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}] = []"
+
+    def call_code(self) -> Generator[str, None, None]:
+        if self.field.type.pointee.name(Api.PYTHON) == "str":
+            yield f"{self.field.name()}=(c_char_p * len({self.name}))(*[s.encode() for s in {self.name}])"
+        else:
+            yield f"{self.field.name()}=({self.field.type.pointee.name(Api.CTYPES)} * len({self.name}))(*{self.name})"
+
+
 class EnumFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
@@ -1052,7 +1092,11 @@ class StructureCoder(object):
     def __init__(self, struct: StructItem):
         self.struct = struct
         self.field_coders = []
-        for field in self.struct.fields:
+        skip_next_field = False
+        for ix, field in enumerate(self.struct.fields):
+            if skip_next_field:
+                skip_next_field = False
+                continue
             if field.name() == "next":
                 self.field_coders.append(NextFieldCoder(field))
             elif field.type.name(Api.CTYPES) == "c_void_p":
@@ -1084,6 +1128,20 @@ class StructureCoder(object):
                 self.field_coders.append(FieldCoder(field, default=None))
             elif field.type.name().endswith("GLXContext"):
                 self.field_coders.append(FieldCoder(field, default=None))
+            elif (field.name().endswith("_count")  # e.g. "enabled_api_layer_count"
+                and field.type.name(Api.PYTHON) == "int"
+                and ix + 1 < len(struct.fields)  # not the final field
+            ):
+                # this field might be an input array pointer size
+                stem = field.name()[:6]  # e.g. "enabled_api_layer"
+                f2 = struct.fields[ix + 1]
+                f2n = f2.name()  # e.g. "enabled_api_layers"
+                if stem in f2n and f2n.endswith("s") and f2.type.name().startswith("POINTER("):
+                    skip_next_field = True
+                    self.field_coders.append(ArrayCountFieldCoder(count_field=field, array_field=f2))
+                    self.field_coders.append(ArrayPointerFieldCoder(count_field=field, array_field=f2))
+                else:
+                    self.field_coders.append(FieldCoder(field))
             elif isinstance(field.type, TypedefType) and isinstance(field.type.underlying_type, EnumType):
                 self.field_coders.append(EnumFieldCoder(field))
             elif isinstance(field.type, TypedefType) and field.type.underlying_type.name() == "Flags64":

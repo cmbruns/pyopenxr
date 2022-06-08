@@ -36,7 +36,7 @@ class Instance(object):
             application_version: Version = None,
             engine_name: str = None,
             engine_version: Version = None,
-            next_structure = None,
+            next_structure=None,
     ) -> None:
         if enabled_extensions is None:
             discovered_extensions = enumerate_instance_extension_properties()
@@ -64,17 +64,12 @@ class Instance(object):
             engine_version=engine_version.number(),
             api_version=XR_CURRENT_API_VERSION,
         )
-        encoded_extensions = [s.encode() for s in enabled_extensions]
-        extension_names = (ctypes.c_char_p * len(encoded_extensions))()
-        for i, s in enumerate(encoded_extensions):
-            extension_names[i] = s
+
         instance_create_info = InstanceCreateInfo(
             create_flags=InstanceCreateFlags(),
             application_info=application_info,
-            enabled_api_layer_count=0,  # TODO:
-            enabled_api_layer_names=None,
-            enabled_extension_count=len(enabled_extensions),
-            enabled_extension_names=extension_names,
+            enabled_api_layer_names=[],
+            enabled_extension_names=enabled_extensions,
             next_structure=next_structure,
         )
         self.handle = create_instance(instance_create_info)
@@ -154,7 +149,7 @@ class GlfwWindow(object):
         if self.window is None:
             raise XrException("Failed to create GLFW window")
         glfw.make_context_current(self.window)
-        # Attempt to disable vsync on the desktop window or
+        # Attempt to disable vsync on the desktop window, or
         # it will interfere with the OpenXR frame loop timing
         glfw.swap_interval(0)
         self.graphics_binding = None

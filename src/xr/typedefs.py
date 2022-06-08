@@ -1,7 +1,7 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p, cast
-from typing import Generator
+from typing import Generator, Sequence
 
 import numpy
 
@@ -226,10 +226,8 @@ class InstanceCreateInfo(Structure):
         self,
         create_flags: InstanceCreateFlags = InstanceCreateFlags(),
         application_info: ApplicationInfo = None,
-        enabled_api_layer_count: int = 0,
-        enabled_api_layer_names: POINTER(c_char_p) = None,
-        enabled_extension_count: int = 0,
-        enabled_extension_names: POINTER(c_char_p) = None,
+        enabled_api_layer_names: Sequence[str] = [],
+        enabled_extension_names: Sequence[str] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.INSTANCE_CREATE_INFO,
     ) -> None:
@@ -238,10 +236,10 @@ class InstanceCreateInfo(Structure):
         super().__init__(
             create_flags=InstanceCreateFlags(create_flags).value,
             application_info=application_info,
-            enabled_api_layer_count=enabled_api_layer_count,
-            enabled_api_layer_names=enabled_api_layer_names,
-            enabled_extension_count=enabled_extension_count,
-            enabled_extension_names=enabled_extension_names,
+            enabled_api_layer_count=len(enabled_api_layer_names),
+            enabled_api_layer_names=(c_char_p * len(enabled_api_layer_names))(*[s.encode() for s in enabled_api_layer_names]),
+            enabled_extension_count=len(enabled_extension_names),
+            enabled_extension_names=(c_char_p * len(enabled_extension_names))(*[s.encode() for s in enabled_extension_names]),
             next=next_structure,
             type=structure_type.value,
         )
@@ -4065,14 +4063,13 @@ class BindingModificationBaseHeaderKHR(Structure):
 class BindingModificationsKHR(Structure):
     def __init__(
         self,
-        binding_modification_count: int = 0,
-        binding_modifications: POINTER(POINTER(BindingModificationBaseHeaderKHR)) = None,
+        binding_modifications: Sequence[POINTER(BindingModificationBaseHeaderKHR)] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.BINDING_MODIFICATIONS_KHR,
     ) -> None:
         super().__init__(
-            binding_modification_count=binding_modification_count,
-            binding_modifications=binding_modifications,
+            binding_modification_count=len(binding_modifications),
+            binding_modifications=(POINTER(BindingModificationBaseHeaderKHR) * len(binding_modifications))(*binding_modifications),
             next=next_structure,
             type=structure_type.value,
         )
@@ -4270,10 +4267,8 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         message_id: str = "",
         function_name: str = "",
         message: str = "",
-        object_count: int = 0,
-        objects: POINTER(DebugUtilsObjectNameInfoEXT) = None,
-        session_label_count: int = 0,
-        session_labels: POINTER(DebugUtilsLabelEXT) = None,
+        objects: Sequence[DebugUtilsObjectNameInfoEXT] = [],
+        session_labels: Sequence[DebugUtilsLabelEXT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
     ) -> None:
@@ -4281,10 +4276,10 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
             message_id=message_id.encode(),
             function_name=function_name.encode(),
             message=message.encode(),
-            object_count=object_count,
-            objects=objects,
-            session_label_count=session_label_count,
-            session_labels=session_labels,
+            object_count=len(objects),
+            objects=(DebugUtilsObjectNameInfoEXT * len(objects))(*objects),
+            session_label_count=len(session_labels),
+            session_labels=(DebugUtilsLabelEXT * len(session_labels))(*session_labels),
             next=next_structure,
             type=structure_type.value,
         )
@@ -5239,15 +5234,14 @@ class HandJointLocationsEXT(Structure):
     def __init__(
         self,
         is_active: Bool32 = 0,
-        joint_count: int = 0,
-        joint_locations: POINTER(HandJointLocationEXT) = None,
+        joint_locations: Sequence[HandJointLocationEXT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_JOINT_LOCATIONS_EXT,
     ) -> None:
         super().__init__(
             is_active=is_active,
-            joint_count=joint_count,
-            joint_locations=joint_locations,
+            joint_count=len(joint_locations),
+            joint_locations=(HandJointLocationEXT * len(joint_locations))(*joint_locations),
             next=next_structure,
             type=structure_type.value,
         )
@@ -5286,14 +5280,13 @@ class HandJointLocationsEXT(Structure):
 class HandJointVelocitiesEXT(Structure):
     def __init__(
         self,
-        joint_count: int = 0,
-        joint_velocities: POINTER(HandJointVelocityEXT) = None,
+        joint_velocities: Sequence[HandJointVelocityEXT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_JOINT_VELOCITIES_EXT,
     ) -> None:
         super().__init__(
-            joint_count=joint_count,
-            joint_velocities=joint_velocities,
+            joint_count=len(joint_velocities),
+            joint_velocities=(HandJointVelocityEXT * len(joint_velocities))(*joint_velocities),
             next=next_structure,
             type=structure_type.value,
         )
@@ -5668,14 +5661,13 @@ PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINT
 class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_count: int = 0,
-        enabled_view_configuration_types: POINTER(c_int) = None,
+        enabled_view_configuration_types: Sequence[c_int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT,
     ) -> None:
         super().__init__(
-            view_configuration_count=view_configuration_count,
-            enabled_view_configuration_types=enabled_view_configuration_types,
+            view_configuration_count=len(enabled_view_configuration_types),
+            enabled_view_configuration_types=(c_int * len(enabled_view_configuration_types))(*enabled_view_configuration_types),
             next=next_structure,
             type=structure_type.value,
         )
@@ -5758,14 +5750,13 @@ class SecondaryViewConfigurationStateMSFT(Structure):
 class SecondaryViewConfigurationFrameStateMSFT(Structure):
     def __init__(
         self,
-        view_configuration_count: int = 0,
-        view_configuration_states: POINTER(SecondaryViewConfigurationStateMSFT) = None,
+        view_configuration_states: Sequence[SecondaryViewConfigurationStateMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT,
     ) -> None:
         super().__init__(
-            view_configuration_count=view_configuration_count,
-            view_configuration_states=view_configuration_states,
+            view_configuration_count=len(view_configuration_states),
+            view_configuration_states=(SecondaryViewConfigurationStateMSFT * len(view_configuration_states))(*view_configuration_states),
             next=next_structure,
             type=structure_type.value,
         )
@@ -6775,22 +6766,20 @@ class SceneBoundsMSFT(Structure):
         self,
         space: SpaceHandle = None,
         time: Time = 0,
-        sphere_count: int = 0,
-        spheres: POINTER(SceneSphereBoundMSFT) = None,
+        spheres: Sequence[SceneSphereBoundMSFT] = [],
         box_count: int = 0,
         boxes: POINTER(SceneOrientedBoxBoundMSFT) = None,
-        frustum_count: int = 0,
-        frustums: POINTER(SceneFrustumBoundMSFT) = None,
+        frustums: Sequence[SceneFrustumBoundMSFT] = [],
     ) -> None:
         super().__init__(
             space=space,
             time=time,
-            sphere_count=sphere_count,
-            spheres=spheres,
+            sphere_count=len(spheres),
+            spheres=(SceneSphereBoundMSFT * len(spheres))(*spheres),
             box_count=box_count,
             boxes=boxes,
-            frustum_count=frustum_count,
-            frustums=frustums,
+            frustum_count=len(frustums),
+            frustums=(SceneFrustumBoundMSFT * len(frustums))(*frustums),
         )
 
     def __repr__(self) -> str:
@@ -6814,8 +6803,7 @@ class SceneBoundsMSFT(Structure):
 class NewSceneComputeInfoMSFT(Structure):
     def __init__(
         self,
-        requested_feature_count: int = 0,
-        requested_features: POINTER(c_int) = None,
+        requested_features: Sequence[c_int] = [],
         consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT(),
         bounds: SceneBoundsMSFT = None,
         next_structure: c_void_p = None,
@@ -6824,8 +6812,8 @@ class NewSceneComputeInfoMSFT(Structure):
         if bounds is None:
             bounds = SceneBoundsMSFT()
         super().__init__(
-            requested_feature_count=requested_feature_count,
-            requested_features=requested_features,
+            requested_feature_count=len(requested_features),
+            requested_features=(c_int * len(requested_features))(*requested_features),
             consistency=SceneComputeConsistencyMSFT(consistency).value,
             bounds=bounds,
             next=next_structure,
@@ -7057,14 +7045,13 @@ class SceneComponentLocationMSFT(Structure):
 class SceneComponentLocationsMSFT(Structure):
     def __init__(
         self,
-        location_count: int = 0,
-        locations: POINTER(SceneComponentLocationMSFT) = None,
+        locations: Sequence[SceneComponentLocationMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_COMPONENT_LOCATIONS_MSFT,
     ) -> None:
         super().__init__(
-            location_count=location_count,
-            locations=locations,
+            location_count=len(locations),
+            locations=(SceneComponentLocationMSFT * len(locations))(*locations),
             next=next_structure,
             type=structure_type.value,
         )
@@ -7104,16 +7091,15 @@ class SceneComponentsLocateInfoMSFT(Structure):
         self,
         base_space: SpaceHandle = None,
         time: Time = 0,
-        component_id_count: int = 0,
-        component_ids: POINTER(UuidMSFT) = None,
+        component_ids: Sequence[UuidMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_COMPONENTS_LOCATE_INFO_MSFT,
     ) -> None:
         super().__init__(
             base_space=base_space,
             time=time,
-            component_id_count=component_id_count,
-            component_ids=component_ids,
+            component_id_count=len(component_ids),
+            component_ids=(UuidMSFT * len(component_ids))(*component_ids),
             next=next_structure,
             type=structure_type.value,
         )
@@ -7173,14 +7159,13 @@ class SceneObjectMSFT(Structure):
 class SceneObjectsMSFT(Structure):
     def __init__(
         self,
-        scene_object_count: int = 0,
-        scene_objects: POINTER(SceneObjectMSFT) = None,
+        scene_objects: Sequence[SceneObjectMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_OBJECTS_MSFT,
     ) -> None:
         super().__init__(
-            scene_object_count=scene_object_count,
-            scene_objects=scene_objects,
+            scene_object_count=len(scene_objects),
+            scene_objects=(SceneObjectMSFT * len(scene_objects))(*scene_objects),
             next=next_structure,
             type=structure_type.value,
         )
@@ -7262,14 +7247,13 @@ class SceneComponentParentFilterInfoMSFT(Structure):
 class SceneObjectTypesFilterInfoMSFT(Structure):
     def __init__(
         self,
-        object_type_count: int = 0,
-        object_types: POINTER(c_int) = None,
+        object_types: Sequence[c_int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_MSFT,
     ) -> None:
         super().__init__(
-            object_type_count=object_type_count,
-            object_types=object_types,
+            object_type_count=len(object_types),
+            object_types=(c_int * len(object_types))(*object_types),
             next=next_structure,
             type=structure_type.value,
         )
@@ -7338,14 +7322,13 @@ class ScenePlaneMSFT(Structure):
 class ScenePlanesMSFT(Structure):
     def __init__(
         self,
-        scene_plane_count: int = 0,
-        scene_planes: POINTER(ScenePlaneMSFT) = None,
+        scene_planes: Sequence[ScenePlaneMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_PLANES_MSFT,
     ) -> None:
         super().__init__(
-            scene_plane_count=scene_plane_count,
-            scene_planes=scene_planes,
+            scene_plane_count=len(scene_planes),
+            scene_planes=(ScenePlaneMSFT * len(scene_planes))(*scene_planes),
             next=next_structure,
             type=structure_type.value,
         )
@@ -7383,14 +7366,13 @@ class ScenePlanesMSFT(Structure):
 class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     def __init__(
         self,
-        alignment_count: int = 0,
-        alignments: POINTER(c_int) = None,
+        alignments: Sequence[c_int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT,
     ) -> None:
         super().__init__(
-            alignment_count=alignment_count,
-            alignments=alignments,
+            alignment_count=len(alignments),
+            alignments=(c_int * len(alignments))(*alignments),
             next=next_structure,
             type=structure_type.value,
         )
@@ -7451,14 +7433,13 @@ class SceneMeshMSFT(Structure):
 class SceneMeshesMSFT(Structure):
     def __init__(
         self,
-        scene_mesh_count: int = 0,
-        scene_meshes: POINTER(SceneMeshMSFT) = None,
+        scene_meshes: Sequence[SceneMeshMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_MESHES_MSFT,
     ) -> None:
         super().__init__(
-            scene_mesh_count=scene_mesh_count,
-            scene_meshes=scene_meshes,
+            scene_mesh_count=len(scene_meshes),
+            scene_meshes=(SceneMeshMSFT * len(scene_meshes))(*scene_meshes),
             next=next_structure,
             type=structure_type.value,
         )
@@ -7809,14 +7790,13 @@ class DeserializeSceneFragmentMSFT(Structure):
 class SceneDeserializeInfoMSFT(Structure):
     def __init__(
         self,
-        fragment_count: int = 0,
-        fragments: POINTER(DeserializeSceneFragmentMSFT) = None,
+        fragments: Sequence[DeserializeSceneFragmentMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_DESERIALIZE_INFO_MSFT,
     ) -> None:
         super().__init__(
-            fragment_count=fragment_count,
-            fragments=fragments,
+            fragment_count=len(fragments),
+            fragments=(DeserializeSceneFragmentMSFT * len(fragments))(*fragments),
             next=next_structure,
             type=structure_type.value,
         )
@@ -8055,16 +8035,15 @@ class FacialExpressionsHTC(Structure):
         self,
         is_active: Bool32 = 0,
         sample_time: Time = 0,
-        expression_count: int = 0,
-        expression_weightings: POINTER(c_float) = None,
+        expression_weightings: Sequence[float] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
     ) -> None:
         super().__init__(
             is_active=is_active,
             sample_time=sample_time,
-            expression_count=expression_count,
-            expression_weightings=expression_weightings,
+            expression_count=len(expression_weightings),
+            expression_weightings=(c_float * len(expression_weightings))(*expression_weightings),
             next=next_structure,
             type=structure_type.value,
         )

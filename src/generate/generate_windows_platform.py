@@ -29,6 +29,7 @@ def main():
     cg.print_header()
     print(inspect.cleandoc("""
         import ctypes
+        from typing import Sequence
 
         from OpenGL import WGL
         

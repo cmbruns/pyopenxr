@@ -2,6 +2,7 @@
 
 from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, wintypes
 import ctypes
+from typing import Sequence
 
 from OpenGL import WGL
 
@@ -67,14 +68,13 @@ META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME = "XR_META_vulkan_swapchain_cre
 class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     def __init__(
         self,
-        view_format_count: int = 0,
-        view_formats: POINTER(c_int) = None,
+        view_formats: Sequence[int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
         super().__init__(
-            view_format_count=view_format_count,
-            view_formats=view_formats,
+            view_format_count=len(view_formats),
+            view_formats=(c_int * len(view_formats))(*view_formats),
             next=next_structure,
             type=structure_type.value,
         )
