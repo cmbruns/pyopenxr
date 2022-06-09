@@ -133,7 +133,8 @@ class OpenXrExample(object):
         self.session = None
         self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
             *([xr.CompositionLayerProjectionView()] * 2))
-        self.projection_layer = xr.CompositionLayerProjection(0, None, 2, self.projection_layer_views)
+        self.projection_layer = xr.CompositionLayerProjection(
+            views=self.projection_layer_views)
         self.swapchain_create_info = xr.SwapchainCreateInfo()
         self.swapchain = None
         self.swapchain_images = None
@@ -187,13 +188,10 @@ class OpenXrExample(object):
         for extension in requested_extensions:
             assert extension in discovered_extensions
         app_info = xr.ApplicationInfo("gl_example", 0, "pyopenxr", 0, xr.XR_CURRENT_API_VERSION)
-        # TODO: buffer
-        bs = [s.encode() for s in requested_extensions]
-        arr_type = ctypes.c_char_p * len(bs)
-        str_arr = arr_type()
-        for i, s in enumerate(bs):
-            str_arr[i] = s
-        ici = xr.InstanceCreateInfo(0, app_info, 0, None, 1, str_arr)
+        ici = xr.InstanceCreateInfo(
+            application_info=app_info,
+            enabled_extension_names=requested_extensions,
+        )
         dumci = xr.DebugUtilsMessengerCreateInfoEXT()
         if self.enable_debug:
             dumci.message_severities = ALL_SEVERITIES
@@ -408,11 +406,7 @@ class OpenXrExample(object):
                 eye_view = self.eye_view_states[eye_index]
                 layer_view.fov = eye_view.fov
                 layer_view.pose = eye_view.pose
-            frame_end_info.layer_count = 1  # len(self.layer_pointers)
-            p_layer_projection = ctypes.cast(
-                ctypes.byref(self.projection_layer),
-                ctypes.POINTER(xr.CompositionLayerBaseHeader))
-            frame_end_info.layers = ctypes.pointer(p_layer_projection)
+            frame_end_info.layers = [ctypes.byref(self.projection_layer), ]
         xr.end_frame(self.session, frame_end_info)
         if self.linux_steamvr_broken_context:
             GLX.glXMakeCurrent(

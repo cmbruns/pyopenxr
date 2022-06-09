@@ -15,6 +15,7 @@ def main():
     cg.ctypes_names.add("addressof")
     cg.ctypes_names.add("cast")
     cg.print_header()
+    print("import ctypes\n")
     print("from typing import Generator, Sequence\n")
     print("import numpy\n")
     print("from .enums import *")

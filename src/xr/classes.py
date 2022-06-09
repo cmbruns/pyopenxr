@@ -64,7 +64,6 @@ class Instance(object):
             engine_version=engine_version.number(),
             api_version=XR_CURRENT_API_VERSION,
         )
-
         instance_create_info = InstanceCreateInfo(
             create_flags=InstanceCreateFlags(),
             application_info=application_info,
@@ -215,11 +214,10 @@ class Session(object):
         finally:
             self.handle = None
 
-    def end_frame(self, layer_count=0, layers=None):
+    def end_frame(self, layers=None):
         frame_end_info = FrameEndInfo(
             display_time=self.frame_state.predicted_display_time,
             environment_blend_mode=EnvironmentBlendMode.OPAQUE,
-            layer_count=layer_count,
             layers=layers,
         )
         end_frame(self.handle, frame_end_info)
