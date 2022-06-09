@@ -3,6 +3,7 @@
 """
 
 import argparse
+import ctypes
 from ctypes import (
     addressof,
     byref,
@@ -97,14 +98,6 @@ class OpenXRProgram(object):
 
         self.event_data_buffer = xr.EventDataBuffer()
         self.input = OpenXRProgram.InputState()
-
-        self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
-            *([xr.CompositionLayerProjectionView()] * 2))
-        self.projection_layer = xr.CompositionLayerProjection(
-            layer_flags=0,
-            view_count=2,
-            views=self.projection_layer_views,
-        )
 
     def __enter__(self):
         return self
@@ -513,7 +506,6 @@ class OpenXRProgram(object):
             session=self.session_handle,
             create_info=get_xr_reference_space_create_info(self.options.space),
         )
-        self.projection_layer.space = self.app_space
 
     def initialize_system(self) -> None:
         """
@@ -737,25 +729,29 @@ class OpenXRProgram(object):
             frame_wait_info=xr.FrameWaitInfo(),
         )
         xr.begin_frame(self.session_handle, xr.FrameBeginInfo())
-        layer_count = 0
+
+        layers = []
+        layer = xr.CompositionLayerProjection(space=self.app_space)
+        projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
         if frame_state.should_render:
-            if self.render_layer(frame_state.predicted_display_time):
-                layer_count = 1
-        p_layer_projection = cast(
-            byref(self.projection_layer),
-            POINTER(xr.CompositionLayerBaseHeader))
-        frame_end_info = xr.FrameEndInfo(
-            display_time=frame_state.predicted_display_time,
-            environment_blend_mode=self.environment_blend_mode,
-            layer_count=layer_count,
-            layers=pointer(p_layer_projection),
-        )
+            if self.render_layer(frame_state.predicted_display_time, projection_layer_views, layer):
+                layers.append(byref(layer))
+
         xr.end_frame(
             session=self.session_handle,
-            frame_end_info=frame_end_info,
+            frame_end_info=xr.FrameEndInfo(
+                display_time=frame_state.predicted_display_time,
+                environment_blend_mode=self.environment_blend_mode,
+                layers=layers,
+            ),
         )
 
-    def render_layer(self, predicted_display_time: xr.Time) -> bool:
+    def render_layer(
+            self,
+            predicted_display_time: xr.Time,
+            projection_layer_views: ctypes.Array,
+            layer: xr.CompositionLayerProjection,
+    ) -> bool:
         view_capacity_input = len(self.views)
         view_state, self.views = xr.locate_views(
             session=self.session_handle,
@@ -773,7 +769,7 @@ class OpenXRProgram(object):
         assert view_count_output == view_capacity_input
         assert view_count_output == len(self.config_views)
         assert view_count_output == len(self.swapchains)
-        assert view_count_output == len(self.projection_layer_views)
+        assert view_count_output == len(projection_layer_views)
 
         # For each locatable space that we want to visualize, render a 25cm cube.
         cubes = []
@@ -813,7 +809,7 @@ class OpenXRProgram(object):
                 swapchain=view_swapchain.handle,
                 wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
             )
-            view = self.projection_layer_views[i]
+            view = projection_layer_views[i]
             assert view.structure_type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
             view.pose = self.views[i].pose
             view.fov = self.views[i].fov
@@ -834,6 +830,7 @@ class OpenXRProgram(object):
                 swapchain=view_swapchain.handle,
                 release_info=xr.SwapchainImageReleaseInfo()
             )
+        layer.views = projection_layer_views
         return True
 
     def try_read_next_event(self) -> Optional[Structure]:
