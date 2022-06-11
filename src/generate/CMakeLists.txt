@@ -1,4 +1,4 @@
-project(GeneratePyOpenXr LANGUAGES NONE)
+project(BuildPyOpenXr LANGUAGES CXX)
 cmake_minimum_required(VERSION 2.8.12)
 
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")
@@ -32,6 +32,8 @@ find_path(OPENXR_INCLUDE_DIR
     PATH_SUFFIXES include
     DOC "The file location of the OpenXR C header files"
 )
+
+include_directories(${OPENXR_INCLUDE_DIR})
 
 set(OPENXR_INCLUDE_FILE "${OPENXR_INCLUDE_DIR}/openxr/openxr.h")
 if (EXISTS "${OPENXR_INCLUDE_FILE}")
@@ -216,3 +218,5 @@ if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
    message(WARNING "Warning: Overwriting contents of source xr package.")
    file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/../xr/")
 endif()
+
+add_subdirectory(py_api_layer)
