@@ -2,7 +2,6 @@ import os
 import pkg_resources
 import platform
 
-
 # Expose symbolic names for packaged api layers
 XR_APILAYER_LUNARG_api_dump_NAME = "XR_APILAYER_LUNARG_api_dump"
 XR_APILAYER_LUNARG_core_validation_NAME = "XR_APILAYER_LUNARG_core_validation"

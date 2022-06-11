@@ -10,7 +10,7 @@ if(LOADER_INTERFACES_H)
     file(COPY ${LOADER_INTERFACES_H} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
-add_library(XrApiLayer_python SHARED py_api_layer.cpp)
+add_library(XrApiLayer_python SHARED py_api_layer.cpp loader_interfaces.h)
 
 if (WIN32)
     install(TARGETS XrApiLayer_python DESTINATION ${CMAKE_SOURCE_DIR}/../xr/api_layer/windows)
