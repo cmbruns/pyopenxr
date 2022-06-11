@@ -3,6 +3,7 @@
 from ctypes import CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p, cast
 import ctypes
 
+import sys
 from typing import Generator, Sequence
 
 import numpy
@@ -194,11 +195,11 @@ class ExtensionProperties(Structure):
 class ApplicationInfo(Structure):
     def __init__(
         self,
-        application_name: str = "",
-        application_version: int = 0,
-        engine_name: str = "",
-        engine_version: int = 0,
-        api_version: Version = Version(),
+        application_name: str = sys.argv[0],
+        application_version: int = Version(0),
+        engine_name: str = "pyopenxr",
+        engine_version: int = PYOPENXR_CURRENT_API_VERSION,
+        api_version: Version = XR_CURRENT_API_VERSION,
     ) -> None:
         super().__init__(
             application_name=application_name.encode(),
@@ -227,7 +228,7 @@ class InstanceCreateInfo(Structure):
     def __init__(
         self,
         create_flags: InstanceCreateFlags = InstanceCreateFlags(),
-        application_info: ApplicationInfo = None,
+        application_info: ApplicationInfo = ApplicationInfo(),
         enabled_api_layer_names: Sequence[str] = [],
         enabled_extension_names: Sequence[str] = [],
         next_structure: c_void_p = None,
