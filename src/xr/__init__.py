@@ -8,6 +8,7 @@ from .functions import *
 from .platform import *
 from .exception import *
 from .classes import *
+from .api_layer import *
 
 # from .experiment import *
 

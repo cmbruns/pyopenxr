@@ -8,7 +8,7 @@ XR_APILAYER_LUNARG_api_dump_NAME = "XR_APILAYER_LUNARG_api_dump"
 XR_APILAYER_LUNARG_core_validation_NAME = "XR_APILAYER_LUNARG_core_validation"
 
 
-def expose_layers():
+def expose_packaged_api_layers():
     """
     Make pre-packaged layers available to the openxr loader
     """
@@ -22,15 +22,15 @@ def expose_layers():
     elif local_path in starting_api_path:
         pass  # It's already there
     else:
-        # pro tip: os.pathsep is very different from os.path.sep
+        # pro-tip: os.pathsep is very different from os.path.sep
         os.environ["XR_API_LAYER_PATH"] += f"{os.pathsep}{local_path}"
 
 
 # Automatically expose packaged API layers for supported platforms
 if platform.system() in ["Windows", ]:
-    expose_layers()
+    expose_packaged_api_layers()
 
 
 __all__ = [
-    "expose_layers",
+    "expose_packaged_api_layers",
 ]
