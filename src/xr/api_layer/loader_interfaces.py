@@ -166,7 +166,7 @@ class ILoaderDynamicApiLayer(abc.ABC):
             layer_name: c_char_p,
             api_layer_request: POINTER(NegotiateApiLayerRequest),
     ) -> int:
-        """Lower-level function to be passed to the C loader library."""
+        """Lower-level function that will be passed to the C loader library."""
         result = self.negotiate_loader_api_layer_interface(
             loader_info,
             layer_name.decode(),
@@ -180,26 +180,26 @@ class ILoaderDynamicApiLayer(abc.ABC):
             loader_info: NegotiateLoaderInfo,
             layer_name: str,
             api_layer_request: NegotiateApiLayerRequest,
-    ) -> ResultException:
-        return InitializationFailedError()
+    ) -> Result:
+        """
+        Override this method in a derived class to create your own temporary dynamic OpenXR API layer.
 
+        If this layer is able to support the request, it must: return xr.Result.SUCCESS and:
+            Fill in pname:layerRequest→pname:layerInterfaceVersion with the API layer interface version it desires to support.
+            Fill in pname:layerRequest→pname:layerApiVersion with the API version of OpenXR it will execute under.
+            Fill in pname:layerRequest→pname:getInstanceProcAddr with a valid function pointer so that the loader can query function pointers to the remaining OpenXR commands supported by the API layer.
+            Fill in pname:layerRequest→pname:createLayerInstance with a valid function pointer so that the loader can create the instance through the API layer call chain.
 
-class DynamicLayerExample(ILoaderDynamicApiLayer):
-    def __init__(self, name):
-        super().__init__(name)
+        Otherwise, it must: return XR_ERROR_INITIALIZATION_FAILED
 
-    def negotiate_loader_api_layer_interface(
-            self,
-            loader_info: NegotiateLoaderInfo,
-            layer_name: str,
-            api_layer_request: NegotiateApiLayerRequest,
-    ) -> ResultException:
-        print(f"The loader called my negotiate function! '{layer_name}'")
-        print(f"{api_layer_request}")
-        return InitializationFailedError()
+        :param loader_info: must be a valid pointer to a constant xr.NegotiateLoaderInfo structure.
+        :param layer_name: must be a string listing the name of an API layer which the loader is attempting to negotiate with.
+        :param api_layer_request: must be a valid pointer to a xr.NegotiateApiLayerRequest structure.
+        :return: xr.Result.SUCCESS or xr.Result.ERROR_INITIALIZATION_FAILED
+        """
+        return Result.ERROR_INITIALIZATION_FAILED
 
 
 __all__ = [
-    "DynamicLayerExample",
     "ILoaderDynamicApiLayer",
 ]

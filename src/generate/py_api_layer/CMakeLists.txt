@@ -13,5 +13,9 @@ endif()
 add_library(XrApiLayer_python SHARED py_api_layer.cpp loader_interfaces.h)
 
 if (WIN32)
-    install(TARGETS XrApiLayer_python DESTINATION ${CMAKE_SOURCE_DIR}/../xr/api_layer/windows)
+    install(
+        TARGETS XrApiLayer_python
+        RUNTIME  # dll only?
+        DESTINATION ${CMAKE_SOURCE_DIR}/../xr/api_layer/windows
+    )
 endif()
