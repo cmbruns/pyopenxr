@@ -107,11 +107,19 @@ class ApiLayerProperties(Structure):
             type=structure_type.value,
         )
 
-    def __repr__(self) -> str:
-        return f"xr.ApiLayerProperties(layer_name={repr(self.layer_name)}, spec_version={repr(self.spec_version)}, layer_version={repr(self.layer_version)}, description={repr(self.description)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+    def __bytes__(self):
+        return self.layer_name
 
-    def __str__(self) -> str:
-        return f"xr.ApiLayerProperties(layer_name={self.layer_name}, spec_version={self.spec_version}, layer_version={self.layer_version}, description={self.description}, next_structure={self.next}, structure_type={self.type})"
+    def __eq__(self, other):
+        try:
+            if other.type != self.type:
+                return False
+        except AttributeError:
+            pass  # That's OK, objects without those attributes can use string comparison
+        return str(other) == str(self)
+
+    def __str__(self):
+        return self.layer_name.decode()      
 
     @property
     def next_structure(self):

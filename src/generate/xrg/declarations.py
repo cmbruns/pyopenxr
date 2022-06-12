@@ -530,6 +530,29 @@ class StructItem(CodeItem):
         result += "\n"
         return result
 
+    def field_as_string_code(self, string_field: str):
+        """
+        This structure is sort of equivalent to a string.
+        So use one of its fields as a string proxy.
+        """
+        result = textwrap.indent(inspect.cleandoc(f"""
+            def __bytes__(self):
+                return self.{string_field}
+
+            def __eq__(self, other):
+                try:
+                    if other.type != self.type:
+                        return False
+                except AttributeError:
+                    pass  # That's OK, objects without those attributes can use string comparison
+                return str(other) == str(self)
+
+            def __str__(self):
+                return self.{string_field}.decode()      
+        """), "    ")
+        result += "\n"
+        return result
+
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
@@ -544,24 +567,9 @@ class StructItem(CodeItem):
         result += "\n"
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
-            # This structure is sort of equivalent to a string
-            string_field = "extension_name"
-            result += textwrap.indent(inspect.cleandoc(f"""
-                def __bytes__(self):
-                    return self.extension_name
-            
-                def __eq__(self, other):
-                    try:
-                        if other.type != self.type:
-                            return False
-                    except AttributeError:
-                        pass  # That's OK, objects without those attributes can use string comparison
-                    return str(other) == str(self)
-            
-                def __str__(self):
-                    return self.{string_field}.decode()      
-            """), "    ")
-            result += "\n"
+            result += self.field_as_string_code("extension_name")
+        elif self.name() == "ApiLayerProperties":
+            result += self.field_as_string_code("layer_name")
         else:
             result += structure_coder.generate_repr_str()
         result += structure_coder.generate_properties()

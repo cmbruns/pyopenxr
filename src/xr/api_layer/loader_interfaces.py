@@ -1,8 +1,12 @@
 import abc
 import ctypes
 from ctypes import c_char, c_char_p, c_int, c_uint32, c_void_p, CFUNCTYPE, POINTER, c_size_t
+import json
+import os
+import pathlib
 import pkg_resources
 import platform
+import tempfile
 
 from ..enums import EnumBase
 from ..exception import InitializationFailedError, ResultException, Result
@@ -13,9 +17,11 @@ from ..typedefs import (
     VersionNumber
 )
 from ..version import Version
+from .layer_path import add_folder_to_api_layer_path
 
 
-def _load_python_layer_library():
+def py_layer_library_path() -> str:
+    """Path to a shared library file used for dynamic API layer dispatch."""
     if platform.system() == "Windows":
         package = "xr.api_layer.windows"
         name = "XrApiLayer_python.dll"
@@ -25,11 +31,11 @@ def _load_python_layer_library():
     else:
         raise NotImplementedError
     path = pkg_resources.resource_filename(package, name)
-    library = ctypes.cdll.LoadLibrary(path)
-    return library
+    return path
 
 
-_python_layer_library = _load_python_layer_library()
+_python_layer_library = ctypes.cdll.LoadLibrary(py_layer_library_path())
+_temp_json_path = None
 
 
 MAX_API_LAYER_NAME_SIZE = 256
@@ -147,14 +153,41 @@ insertXrApiLayer.argtypes = [
 class ILoaderDynamicApiLayer(abc.ABC):
     """Base class for temporary dynamic runtime python OpenXR API layers."""
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, description: str = "", json_path=None) -> None:
         self._name = name
+        self.description = description
         # store pointer to keep it alive
         self.p_negotiate_fn = PFN_xrNegotiateLoaderApiLayerInterface(
             self._negotiate_loader_api_layer_interface)
         print(self.p_negotiate_fn)
         insertXrApiLayer(self.name.encode(), len(self.name), self.p_negotiate_fn)
-        # TODO: store json file
+        # Store json file in temporary folder
+        global _temp_json_path
+        if json_path is None:
+            if _temp_json_path is None:
+                _temp_json_path = tempfile.TemporaryDirectory().name
+                if not os.path.exists(_temp_json_path):
+                    os.mkdir(_temp_json_path)
+                add_folder_to_api_layer_path(_temp_json_path)
+                print(_temp_json_path)
+            json_path = _temp_json_path
+        json_file_name = f"{json_path}/{self.name}.json"
+        # Use special dynamic shared library in pyopenxr
+        library_path = py_layer_library_path()
+        library_dir = pathlib.Path(library_path).parent.absolute()
+        with open(json_file_name, "w") as layer_json:
+            layer_json.write(json.dumps(
+                {
+                    "file_format_version": "1.0.0",
+                    "api_layer": {
+                        "name": f"{self.name}",
+                        "library_path": f"{library_dir}",
+                        "api_version": "1.0",
+                        "implementation_version": "1",
+                        "description": f"{self.description}"
+                    }
+                }, indent=4))
+            layer_json.write("\n")
 
     @property
     def name(self) -> str:
