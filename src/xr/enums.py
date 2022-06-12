@@ -4,6 +4,18 @@ from ctypes import c_int, c_uint64
 import enum
 
 
+def succeeded(result) -> bool:
+    return result >= 0
+
+
+def failed(result) -> bool:
+    return result < 0
+
+
+def unqualified_success(result) -> bool:
+    return result == 0
+
+
 class DefaultEnumMeta(enum.EnumMeta):
     """
     Metaclass to allow default values in enumerations.
@@ -923,6 +935,9 @@ class PerformanceMetricsCounterFlagsMETA(FlagBase):
 
 
 __all__ = [
+    "succeeded",
+    "failed",
+    "unqualified_success",
     "ActionType",
     "BlendFactorFB",
     "ColorSpaceFB",

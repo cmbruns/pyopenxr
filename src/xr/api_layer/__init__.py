@@ -1,24 +1,14 @@
-import os
-import pkg_resources
 import platform
 
-# Expose symbolic names for packaged api layers
-from .layer_path import add_folder_to_api_layer_path
+from .layer_path import add_folder_to_api_layer_path, expose_packaged_api_layers
 
+from .loader_interfaces import *
+from .py_layer_base import *
+from . import loader_interfaces, py_layer_base  # For __all__ handling
+
+# Expose symbolic names for packaged api layers
 XR_APILAYER_LUNARG_api_dump_NAME = "XR_APILAYER_LUNARG_api_dump"
 XR_APILAYER_LUNARG_core_validation_NAME = "XR_APILAYER_LUNARG_core_validation"
-
-
-def expose_packaged_api_layers():
-    """
-    Make pre-packaged layers available to the openxr loader
-    """
-    if platform.system() == "Windows":
-        local_path = os.path.abspath(pkg_resources.resource_filename(__name__, "windows"))
-    else:
-        raise NotImplementedError
-    add_folder_to_api_layer_path(local_path)
-
 
 # Automatically expose packaged API layers for supported platforms
 if platform.system() in ["Windows", ]:
@@ -26,5 +16,6 @@ if platform.system() in ["Windows", ]:
 
 
 __all__ = [
-    "expose_packaged_api_layers",
 ]
+__all__ += loader_interfaces.__all__
+__all__ += py_layer_base.__all__

@@ -1,4 +1,4 @@
-from . import version, constants, enums, typedefs, functions, platform, exception
+from . import version, constants, enums, typedefs, functions, platform, exception, api_layer
 
 from .version import *
 from .constants import *
@@ -22,6 +22,7 @@ for subpackage in (
     platform,
     exception,
     classes,
+    api_layer,
 ):
     __all__ += subpackage.__all__
 
