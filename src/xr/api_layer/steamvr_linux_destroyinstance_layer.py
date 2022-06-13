@@ -55,6 +55,7 @@ class SteamVrLinuxDestroyInstanceLayer(xr.DynamicApiLayerBase):
     ) -> xr.Result:
         # Intercept calls to xrDestroyInstance
         if name == b"xrDestroyInstance":
+            # TODO: Is there a neater way than memmove?
             memmove(function, byref(self.p_xrDestroyInstance), sizeof(xr.PFN_xrVoidFunction))
             return xr.Result.SUCCESS
         # Delegate all other function calls to the subsequent API layer
@@ -95,6 +96,13 @@ if __name__ == "__main__":
     dle = SteamVrLinuxDestroyInstanceLayer()
     assert dle.name in xr.enumerate_api_layer_properties()
     instance_handle = xr.create_instance(xr.InstanceCreateInfo(
-        enabled_api_layer_names=[dle.name],
+        enabled_api_layer_names=[
+            # xr.XR_APILAYER_LUNARG_api_dump_NAME,
+            # xr.XR_APILAYER_LUNARG_core_validation_NAME,
+            dle.name,
+            # TODO: adding layers after causes problems
+            # xr.XR_APILAYER_LUNARG_core_validation_NAME,
+            # xr.XR_APILAYER_LUNARG_api_dump_NAME,
+        ],
     ))
     xr.destroy_instance(instance_handle)  # Should be no-op on Linux/SteamVR with layer active
