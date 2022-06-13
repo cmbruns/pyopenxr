@@ -26,4 +26,7 @@ for subpackage in (
 ):
     __all__ += subpackage.__all__
 
+from .api_layer.steamvr_linux_destroyinstance_layer import SteamVrLinuxDestroyInstanceLayer
+__all__ += "SteamVrLinuxDestroyInstanceLayer"
+
 __version__ = version.PYOPENXR_VERSION  # Not in __all__, right?

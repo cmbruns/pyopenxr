@@ -16,6 +16,7 @@ if platform.system() in ["Windows", ]:
 
 
 __all__ = [
+    "expose_packaged_api_layers",
     "XR_APILAYER_LUNARG_api_dump_NAME",
     "XR_APILAYER_LUNARG_core_validation_NAME",
 ]

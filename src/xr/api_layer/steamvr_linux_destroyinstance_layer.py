@@ -106,3 +106,8 @@ if __name__ == "__main__":
         ],
     ))
     xr.destroy_instance(instance_handle)  # Should be no-op on Linux/SteamVR with layer active
+
+
+__all__ = [
+    "SteamVrLinuxDestroyInstanceLayer",
+]
