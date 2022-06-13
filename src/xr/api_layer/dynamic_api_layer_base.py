@@ -11,7 +11,7 @@ from .loader_interfaces import PFN_xrNegotiateLoaderApiLayerInterface, Negotiate
 from .raw_functions import insertXrApiLayer
 
 
-class ILoaderDynamicApiLayer(abc.ABC):
+class DynamicApiLayerBase(abc.ABC):
     """Base class for temporary dynamic runtime python OpenXR API layers."""
 
     def __init__(self, name: str, description: str = "", json_path=None) -> None:
@@ -25,7 +25,7 @@ class ILoaderDynamicApiLayer(abc.ABC):
         # Store json file in temporary folder
         if self.json_path is None:
             self.json_dir = tempfile.TemporaryDirectory()
-            self.json_dir.cleanup()  # So it will be deleted later
+            self.json_dir.cleanup()  # So it will be deleted later  TODO: those folders remain
             self.json_path = self.json_dir.name
         os.mkdir(self.json_path)
         add_folder_to_api_layer_path(self.json_path)
@@ -93,5 +93,5 @@ class ILoaderDynamicApiLayer(abc.ABC):
 
 
 __all__ = [
-    "ILoaderDynamicApiLayer",
+    "DynamicApiLayerBase",
 ]
