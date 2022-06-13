@@ -7,6 +7,7 @@ from typing import Generator, Set
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
+from .default_values import default_values
 from .types import *
 from .registry import xr_registry
 from .vendor_tags import vendor_tags
@@ -399,6 +400,7 @@ class StructFieldItem(CodeItem):
         self._py_name = snake_from_camel(self._capi_name)
         self.type = parse_type(cursor.type)
         self.kind = StructFieldItem.Kind.NORMAL
+        self.default_value = None
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -467,6 +469,12 @@ class StructItem(CodeItem):
                     # OK at this point we know it's a matching count/pointer pair
                     f.kind = StructFieldItem.Kind.ARRAY_COUNT
                     f2.kind = StructFieldItem.Kind.ARRAY_POINTER
+        # Insert default values
+        if self.name() in default_values["Structure"]:
+            fd = default_values["Structure"][self.name()]["Field"]
+            for field in self.fields:
+                if field.name() in fd:
+                    field.default_value = fd[field.name()]
 
     @staticmethod
     def blank_lines_before():
@@ -951,7 +959,10 @@ class FieldCoder(object):
         self.inner_name = self.field.inner_name(Api.PYTHON)
         if rename is not None:
             self.name = rename
-        self.default = default
+        if self.field.default_value is not None:
+            self.default = self.field.default_value  # Overrides argument
+        else:
+            self.default = default
 
     def field_code(self) -> Generator[str, None, None]:
         """
@@ -1128,7 +1139,10 @@ class VoidPointerFieldCoder(FieldCoder):
 
 class StringFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
-        yield f'{self.name}: str = ""'
+        default = '""'
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f'{self.name}: str = {default}'
 
     def call_code(self) -> Generator[str, None, None]:
         yield f"{self.field.name()}={self.name}.encode()"
@@ -1136,7 +1150,10 @@ class StringFieldCoder(FieldCoder):
 
 class VersionFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
-        yield f'{self.name}: Version = Version()'
+        default = "Version()"
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f'{self.name}: Version = {default}'
 
     def call_code(self) -> Generator[str, None, None]:
         yield f"{self.field.name()}={self.name}.number()"
@@ -1227,7 +1244,6 @@ class StructureCoder(object):
             n1 = fields[1].type.name(Api.CTYPES)
             assert n1 == "c_void_p" or n1.startswith("POINTER(Base")
             self.field_coders = self.field_coders[2:] + [self.field_coders[1]] + [self.field_coders[0]]
-            x = 3
 
     """Creates __init__(...) method for Structure types"""
     def generate_constructor(self) -> str:

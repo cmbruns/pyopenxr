@@ -19,6 +19,18 @@ def main():
     import enum
 
 
+    def succeeded(result) -> bool:
+        return result >= 0
+    
+    
+    def failed(result) -> bool:
+        return result < 0
+    
+    
+    def unqualified_success(result) -> bool:
+        return result == 0
+
+
     class DefaultEnumMeta(enum.EnumMeta):
         """
         Metaclass to allow default values in enumerations.
@@ -59,6 +71,13 @@ def main():
         print(item.code())
         cg.all_list.add(item.name())
 
+    cg.all_list.update([
+        "succeeded",
+        "failed",
+        "unqualified_success",
+        "EnumBase",
+        "FlagBase",
+    ])
     cg.all_list.add("EnumBase")
     cg.all_list.add("FlagBase")
     cg.print_all_list()

@@ -935,9 +935,6 @@ class PerformanceMetricsCounterFlagsMETA(FlagBase):
 
 
 __all__ = [
-    "succeeded",
-    "failed",
-    "unqualified_success",
     "ActionType",
     "BlendFactorFB",
     "ColorSpaceFB",
@@ -1012,4 +1009,7 @@ __all__ = [
     "ViewStateFlags",
     "VisibilityMaskTypeKHR",
     "WindingOrderFB",
+    "failed",
+    "succeeded",
+    "unqualified_success",
 ]
