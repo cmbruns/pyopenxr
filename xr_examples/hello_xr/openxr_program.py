@@ -575,7 +575,7 @@ class OpenXRProgram(object):
             f"RuntimeVersion={xr.Version(instance_properties.runtime_version)}")
 
     def log_layers_and_extensions(self):
-        # Log non-layer extensions
+        # Log non-api_layer extensions
         self._log_extensions(layer_name=None)
         # Log layers and any of their extensions
         layers = xr.enumerate_api_layer_properties()
@@ -629,7 +629,7 @@ class OpenXRProgram(object):
 
     @staticmethod
     def _log_extensions(layer_name, indent: int = 0):
-        """Write out extension properties for a given layer."""
+        """Write out extension properties for a given api_layer."""
         extension_properties = xr.enumerate_instance_extension_properties(layer_name)
         indent_str = " " * indent
         logger.debug(f"{indent_str}Available Extensions ({len(extension_properties)})")

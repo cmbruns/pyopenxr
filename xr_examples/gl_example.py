@@ -133,7 +133,8 @@ class OpenXrExample(object):
         self.session = None
         self.projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
             *([xr.CompositionLayerProjectionView()] * 2))
-        self.projection_layer = xr.CompositionLayerProjection(0, None, 2, self.projection_layer_views)
+        self.projection_layer = xr.CompositionLayerProjection(
+            views=self.projection_layer_views)
         self.swapchain_create_info = xr.SwapchainCreateInfo()
         self.swapchain = None
         self.swapchain_images = None
@@ -145,6 +146,7 @@ class OpenXrExample(object):
         self.eye_view_states = None
         self.window_size = None
         self.enable_debug = True
+        self.linux_steamvr_broken_destroy_instance = False
         self.linux_steamvr_broken_context = False
 
     def debug_callback_py(
@@ -186,13 +188,10 @@ class OpenXrExample(object):
         for extension in requested_extensions:
             assert extension in discovered_extensions
         app_info = xr.ApplicationInfo("gl_example", 0, "pyopenxr", 0, xr.XR_CURRENT_API_VERSION)
-        # TODO: buffer
-        bs = [s.encode() for s in requested_extensions]
-        arr_type = ctypes.c_char_p * len(bs)
-        str_arr = arr_type()
-        for i, s in enumerate(bs):
-            str_arr[i] = s
-        ici = xr.InstanceCreateInfo(0, app_info, 0, None, 1, str_arr)
+        ici = xr.InstanceCreateInfo(
+            application_info=app_info,
+            enabled_extension_names=requested_extensions,
+        )
         dumci = xr.DebugUtilsMessengerCreateInfoEXT()
         if self.enable_debug:
             dumci.message_severities = ALL_SEVERITIES
@@ -211,10 +210,17 @@ class OpenXrExample(object):
         )
         instance_props = xr.get_instance_properties(self.instance)
         if platform.system() == 'Linux' and instance_props.runtime_name == b"SteamVR/OpenXR":
+            print("SteamVR/OpenXR on Linux detected, enabling workarounds")
             # Enabling workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/421
             # OpenGL context must be manually restored after some OpenXR calls when using SteamVR on Linux
-            print("SteamVR/OpenXR on Linux detected, enabling GLX context workaround")
+            # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422,
+            # https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
+            # 
             self.linux_steamvr_broken_context = True
+            # Enabling workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422,
+            # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
+            # destroy_instance() causes SteamVR to hang and never recover
+            self.linux_steamvr_broken_destroy_instance = True
 
     def prepare_xr_system(self):
         get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY)
@@ -400,11 +406,7 @@ class OpenXrExample(object):
                 eye_view = self.eye_view_states[eye_index]
                 layer_view.fov = eye_view.fov
                 layer_view.pose = eye_view.pose
-            frame_end_info.layer_count = 1  # len(self.layer_pointers)
-            p_layer_projection = ctypes.cast(
-                ctypes.byref(self.projection_layer),
-                ctypes.POINTER(xr.CompositionLayerBaseHeader))
-            frame_end_info.layers = ctypes.pointer(p_layer_projection)
+            frame_end_info.layers = [ctypes.byref(self.projection_layer), ]
         xr.end_frame(self.session, frame_end_info)
         if self.linux_steamvr_broken_context:
             GLX.glXMakeCurrent(
@@ -502,7 +504,7 @@ class OpenXrExample(object):
         if self.instance is not None:
             # Workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422
             # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
-            if platform.system() != 'Linux':
+            if not self.linux_steamvr_broken_destroy_instance:
                 xr.destroy_instance(self.instance)
             self.instance = None
         glfw.terminate()
