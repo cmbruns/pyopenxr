@@ -1,4 +1,4 @@
-project(GeneratePyOpenXr LANGUAGES NONE)
+project(PyOpenXr LANGUAGES CXX)
 cmake_minimum_required(VERSION 2.8.12)
 
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")
@@ -19,15 +19,21 @@ mark_as_advanced(
     LIBRARY_OUTPUT_PATH
 )
 
+# Workaround for trouble parsing $ENV{ProgramFiles(x86)}
+set(PF86 "ProgramFiles(x86)")
+
 # TODO: add more hints for Mac and Linux
 find_path(OPENXR_INCLUDE_DIR
     NAMES openxr/openxr.h
     HINTS
+        "$ENV{${PF86}}/OPENXR"
         "$ENV{ProgramW6432}/OPENXR"
         "$ENV{ProgramFiles}/OPENXR"
     PATH_SUFFIXES include
     DOC "The file location of the OpenXR C header files"
 )
+
+include_directories(${OPENXR_INCLUDE_DIR})
 
 set(OPENXR_INCLUDE_FILE "${OPENXR_INCLUDE_DIR}/openxr/openxr.h")
 if (EXISTS "${OPENXR_INCLUDE_FILE}")
@@ -41,7 +47,7 @@ find_file(OPENXR_REGISTRY_FILE
     HINTS
         "$ENV{USERPROFILE}/Documents/git"
         "$ENV{HOME}/git"
-    PATH_SUFFIXES OpenXR-SDK/specification/registry
+    PATH_SUFFIXES OpenXR-SDK-Source/specification/registry
     DOC "The file location of the OpenXR registry file (xr.xml)"
 )
 if (OPENXR_REGISTRY_FILE)
@@ -97,15 +103,56 @@ find_file(OPENXR_LOADER_SHARED_LIBRARY
     NAMES openxr_loader.dll libopenxr_loader.so libopenxr_loader.dylib
     HINTS
         "${OPENXR_INCLUDE_DIR}/.."
+        "$ENV{${PF86}}/OPENXR"
         "$ENV{ProgramW6432}/OPENXR"
         "$ENV{ProgramFiles}/OPENXR"
-    PATH_SUFFIXES bin lib
+    PATH_SUFFIXES x64/bin bin lib
     DOC "The openxr_loader shared library file"
 )
 if (OPENXR_LOADER_SHARED_LIBRARY)
     file(MAKE_DIRECTORY "${STAGING_DIR}/library")
     configure_file("${OPENXR_LOADER_SHARED_LIBRARY}" "${STAGING_DIR}/library" COPYONLY)
     message(STATUS "Copied openxr_loader shared library to ${STAGING_DIR}/library/")
+endif()
+
+############################
+# Copy prebuilt api layers #
+############################
+
+find_file(OPENXR_VALIDATION_LAYER_JSON
+    NAMES XrApiLayer_core_validation.json
+    HINTS
+        "${OPENXR_INCLUDE_DIR}/.."
+        "$ENV{${PF86}}/OPENXR"
+        "$ENV{ProgramW6432}/OPENXR"
+        "$ENV{ProgramFiles}/OPENXR"
+    PATH_SUFFIXES x64/bin/api_layers bin/api_layers lib
+    DOC "Pre-built validation API layer for packaging"
+)
+if (OPENXR_VALIDATION_LAYER_JSON)
+    file(MAKE_DIRECTORY "${STAGING_DIR}/api_layer")
+    if (WIN32)
+        set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/windows")
+    else()
+        set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/linux")
+    endif()
+    get_filename_component(LAYERS_INPUT ${OPENXR_VALIDATION_LAYER_JSON} DIRECTORY)
+    file(GLOB API_LAYER_JSONS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/*.json")
+    if (WIN32)
+        file(GLOB API_LAYER_LIBS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/*.dll")
+    else()
+        file(GLOB API_LAYER_LIBS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/*.so")
+    endif()
+    file(MAKE_DIRECTORY "${API_LAYER_OUTPUT_FOLDER}")
+    foreach(F ${API_LAYER_JSONS})
+        file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+    endforeach()
+    foreach(F ${API_LAYER_LIBS})
+        file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+    endforeach()
+    # file(COPY "${API_LAYER_JSONS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+    # file(COPY "${API_LAYER_LIBS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+    message(STATUS "Copied api layer files to ${API_LAYER_OUTPUT_FOLDER}")
 endif()
 
 ##################################
@@ -171,3 +218,5 @@ if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
    message(WARNING "Warning: Overwriting contents of source xr package.")
    file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/../xr/")
 endif()
+
+add_subdirectory(py_api_layer)

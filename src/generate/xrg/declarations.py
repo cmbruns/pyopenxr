@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import enum
 import inspect
 import re
 import textwrap
@@ -6,6 +7,7 @@ from typing import Generator, Set
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
+from .default_values import default_values
 from .types import *
 from .registry import xr_registry
 from .vendor_tags import vendor_tags
@@ -384,16 +386,21 @@ class FunctionParameterItem(CodeItem):
 
 
 class StructFieldItem(CodeItem):
+    """Represents one field/member in a ctypes Structure"""
+
+    class Kind(enum.Enum):
+        NORMAL = 1,
+        ARRAY_COUNT = 2,
+        ARRAY_POINTER = 3,
+
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
         assert cursor.kind == CursorKind.FIELD_DECL
         self._capi_name = cursor.spelling
         self._py_name = snake_from_camel(self._capi_name)
-        if False and self.cursor.type.kind == TypeKind.INT:
-            possible_type = tuple(self.cursor.get_tokens())[0].spelling
-            if possible_type in PlatformType.type_map:
-                self._py_name = PlatformType.type_map[possible_type]
         self.type = parse_type(cursor.type)
+        self.kind = StructFieldItem.Kind.NORMAL
+        self.default_value = None
 
     def name(self, api=Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -405,10 +412,18 @@ class StructFieldItem(CodeItem):
         else:
             raise NotImplementedError
 
+    def inner_name(self, api=Api.PYTHON) -> str:
+        """Sometimes we hide the inner field name so we can wrap it."""
+        n = self.name(api)
+        if self.kind in [StructFieldItem.Kind.ARRAY_POINTER, StructFieldItem.Kind.ARRAY_COUNT]:
+            return f"_{n}"  # Prepend with underscore
+        else:
+            return n
+
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
-        return f'\n        ("{self.name(api)}", {self.type.name(api)}),'
+        return f'\n        ("{self.inner_name(api)}", {self.type.name(api)}),'
 
     def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(api)
@@ -432,10 +447,34 @@ class StructItem(CodeItem):
             else:
                 assert False
         self.is_recursive = False
+        # Special treatment for classes that refer to themselves
         for f in self.fields:
             m = re.search(fr"\b{self.name(Api.CTYPES)}\b", f.type.name(Api.CTYPES))
             if m:
                 self.is_recursive = True
+        # Make a note of sequential count/pointer field pairs describing and input array
+        # For example CompositionLayerProjection.view_count/views
+        for ix, f in enumerate(self.fields):
+            if (f.name().endswith("_count")  # It's named like a count
+                and f.type.name(Api.PYTHON) == "int"  # It's typed like a count
+                and ix + 1 < len(self.fields)  # It's not the final field
+            ):
+                stem = f.name()[:-6]  # Remove the final "_count"
+                f2 = self.fields[ix + 1]  # Fetch the subsequent field to see if it matches
+                f2n = f2.name()  # e.g. "values"
+                if (f2n.endswith("s")   # It's plural
+                    and stem in f2n  # Field names are similar
+                    and f2.type.name().startswith("POINTER(")
+                ):
+                    # OK at this point we know it's a matching count/pointer pair
+                    f.kind = StructFieldItem.Kind.ARRAY_COUNT
+                    f2.kind = StructFieldItem.Kind.ARRAY_POINTER
+        # Insert default values
+        if self.name() in default_values["Structure"]:
+            fd = default_values["Structure"][self.name()]["Field"]
+            for field in self.fields:
+                if field.name() in fd:
+                    field.default_value = fd[field.name()]
 
     @staticmethod
     def blank_lines_before():
@@ -499,6 +538,29 @@ class StructItem(CodeItem):
         result += "\n"
         return result
 
+    def field_as_string_code(self, string_field: str):
+        """
+        This structure is sort of equivalent to a string.
+        So use one of its fields as a string proxy.
+        """
+        result = textwrap.indent(inspect.cleandoc(f"""
+            def __bytes__(self):
+                return self.{string_field}
+
+            def __eq__(self, other):
+                try:
+                    if other.type != self.type:
+                        return False
+                except AttributeError:
+                    pass  # That's OK, objects without those attributes can use string comparison
+                return str(other) == str(self)
+
+            def __str__(self):
+                return self.{string_field}.decode()      
+        """), "    ")
+        result += "\n"
+        return result
+
     def code(self, api=Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
@@ -513,36 +575,16 @@ class StructItem(CodeItem):
         result += "\n"
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
-            # This structure is sort of equivalent to a string
-            string_field = "extension_name"
-            result += textwrap.indent(inspect.cleandoc(f"""
-                def __bytes__(self):
-                    return self.extension_name
-            
-                def __eq__(self, other):
-                    try:
-                        if other.type != self.type:
-                            return False
-                    except AttributeError:
-                        pass  # That's OK, objects without those attributes can use string comparison
-                    return str(other) == str(self)
-            
-                def __str__(self):
-                    return self.{string_field}.decode()      
-            """), "    ")
-            result += "\n"
+            result += self.field_as_string_code("extension_name")
+        elif self.name() == "ApiLayerProperties":
+            result += self.field_as_string_code("layer_name")
         else:
             result += structure_coder.generate_repr_str()
         result += structure_coder.generate_properties()
-        # Recursive structures require two separate stanzas
-        if self.is_recursive:
-            # Structure containing self-reference must be declared in two stanzas
-            result += "\n    pass"
-            result += f"\n\n\n{self.name(api)}._fields_ = ["
-        else:
-            result += "\n    _fields_ = ["
-        result += "".join([f.code(Api.CTYPES) for f in self.fields])
-        result += "\n    ]"
+
+        result += structure_coder.generate_fields(api)
+
+
         return result
 
     def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
@@ -652,6 +694,7 @@ class VariableItem(CodeItem):
 
 
 class NothingParameterCoder(object):
+    """Parameter that generates no code. Used as a base for other parameter types."""
     def __init__(self, parameter: FunctionParameterItem):
         self.parameter = parameter
 
@@ -730,6 +773,11 @@ class OutputParameterCoder(ParameterCoderBase):
 
 
 class BufferCoder(ParameterCoderBase):
+    """
+    Output array parameter designed to use the two-call idiom in C.
+    Be we want to use just one call in python.
+    https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
+    """
     def __init__(
             self,
             cap_in: FunctionParameterItem,
@@ -801,7 +849,8 @@ class FunctionCoder(object):
     def __init__(self, function: FunctionItem):
         self.function = function
         self.param_coders = [[p, None] for p in self.function.parameters]
-        # First pass: Buffer size arguments
+        # One pass to find buffer-size arguments
+        # https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
         self._needs_two_calls = False
         for ix, pc in enumerate(self.param_coders):
             p, c = pc
@@ -907,10 +956,19 @@ class FieldCoder(object):
     def __init__(self, field: StructFieldItem, default=0, rename=None):
         self.field = field
         self.name = self.field.name(Api.PYTHON)
-        self.inner_name = self.name
+        self.inner_name = self.field.inner_name(Api.PYTHON)
         if rename is not None:
             self.name = rename
-        self.default = default
+        if self.field.default_value is not None:
+            self.default = self.field.default_value  # Overrides argument
+        else:
+            self.default = default
+
+    def field_code(self) -> Generator[str, None, None]:
+        """
+        Generates field declaration strings for one field inside "_fields_ = [" stanza
+        """
+        yield self.field.code(Api.CTYPES)
 
     def param_code(self) -> Generator[str, None, None]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = {self.default}"
@@ -920,7 +978,7 @@ class FieldCoder(object):
         yield from []
 
     def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}={self.name}"
+        yield f"{self.inner_name}={self.name}"
 
     def property_code(self) -> Generator[str, None, None]:
         if self.inner_name != self.name:
@@ -943,6 +1001,85 @@ class FieldCoder(object):
 
     def repr_code(self) -> Generator[str, None, None]:
         yield f"{self.name}={{repr(self.{self.inner_name})}}"
+
+
+class ArrayCountFieldCoder(FieldCoder):
+    """
+    Collapse count/pointer field pairs into a single sequence constructor parameter.
+    """
+    def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
+        super().__init__(count_field)
+        self.array_field = array_field
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.inner_name}={self.name}"
+
+    def param_code(self) -> Generator[str, None, None]:
+        yield from []  # Exclude count field from constructor
+
+    def pre_call_code(self) -> Generator[str, None, None]:
+        yield f"{self.name} = 0"
+
+    def property_code(self) -> Generator[str, None, None]:
+        yield from []
+
+
+class ArrayPointerFieldCoder(FieldCoder):
+    """
+    Collapse count/pointer field pairs into a single sequence constructor parameter.
+    """
+    def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
+        super().__init__(array_field)
+        self.count_field = count_field
+
+    def param_code(self) -> Generator[str, None, None]:
+        yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}] = []"
+
+    def pre_call_code(self) -> Generator[str, None, None]:
+        # Create a ctypes array if one does not already exist
+        n = self.name
+        p = self.field.type.pointee
+        pname = p.name(Api.PYTHON)
+        yield f"if {n} is not None and not isinstance({n}, ctypes.Array):"
+        if pname == "str":
+            yield f"    {n} = (c_char_p * len({n}))("
+            yield f"        *[s.encode() for s in {n}])"
+        else:
+            yield f"    {n} = ({p.name(Api.CTYPES)} * len({n}))("
+            if "BaseHeader" in pname:
+                yield f"        *[cast(p, {pname}) for p in {n}])"
+            else:
+                yield f"        *{n})"
+        yield f"    {self.count_field.name(Api.CTYPES)} = len({n})"
+        # Store a reference to the ctypes array
+        yield f"self._{n}_ctypes_array = {n}"  # Maybe if needed...
+
+    def property_code(self) -> Generator[str, None, None]:
+        n = self.name
+        p = self.field.type.pointee
+        pname = p.name(Api.PYTHON)
+        # getter
+        yield "@property"
+        yield f"def {n}(self):"
+        yield f"    self._{n}_ctypes_array"
+        # setter
+        yield ""
+        yield f"@{n}.setter"
+        yield f"def {n}(self, value):"
+        yield f"    if not isinstance(value, ctypes.Array):"
+        if pname == "str":
+            yield f"        value = (c_char_p * len(value))("
+            yield f"            *[s.encode() for s in value])"
+        else:
+            yield f"        value = ({p.name(Api.CTYPES)} * len(value))("
+            if "BaseHeader" in pname:
+                yield f"            *[cast(p, {pname}) for p in value])"
+            else:
+                yield f"            *value)"
+        # Store a reference to the ctypes array
+        yield f"    self._{n}_ctypes_array = value"  # Maybe if needed...
+        yield f"    self.{self.inner_name} = value"
+        yield f"    self.{self.count_field.inner_name(Api.CTYPES)} = len(value)"
 
 
 class EnumFieldCoder(FieldCoder):
@@ -1002,7 +1139,10 @@ class VoidPointerFieldCoder(FieldCoder):
 
 class StringFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
-        yield f'{self.name}: str = ""'
+        default = '""'
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f'{self.name}: str = {default}'
 
     def call_code(self) -> Generator[str, None, None]:
         yield f"{self.field.name()}={self.name}.encode()"
@@ -1010,7 +1150,10 @@ class StringFieldCoder(FieldCoder):
 
 class VersionFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
-        yield f'{self.name}: Version = Version()'
+        default = "Version()"
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f'{self.name}: Version = {default}'
 
     def call_code(self) -> Generator[str, None, None]:
         yield f"{self.field.name()}={self.name}.number()"
@@ -1052,7 +1195,7 @@ class StructureCoder(object):
     def __init__(self, struct: StructItem):
         self.struct = struct
         self.field_coders = []
-        for field in self.struct.fields:
+        for ix, field in enumerate(self.struct.fields):
             if field.name() == "next":
                 self.field_coders.append(NextFieldCoder(field))
             elif field.type.name(Api.CTYPES) == "c_void_p":
@@ -1076,6 +1219,10 @@ class StructureCoder(object):
                 self.field_coders.append(ArrayFieldCoder(field))
             elif field.type.name().endswith("Handle"):
                 self.field_coders.append(FieldCoder(field, default=None))
+            elif field.kind == StructFieldItem.Kind.ARRAY_COUNT:
+                self.field_coders.append(ArrayCountFieldCoder(field, self.struct.fields[ix + 1]))
+            elif field.kind == StructFieldItem.Kind.ARRAY_POINTER:
+                self.field_coders.append(ArrayPointerFieldCoder(self.struct.fields[ix - 1], field))
             elif field.type.name().startswith("PFN_xr"):
                 self.field_coders.append(FunctionPointerFieldCoder(field))
             elif field.type.name().startswith("POINTER("):
@@ -1097,7 +1244,6 @@ class StructureCoder(object):
             n1 = fields[1].type.name(Api.CTYPES)
             assert n1 == "c_void_p" or n1.startswith("POINTER(Base")
             self.field_coders = self.field_coders[2:] + [self.field_coders[1]] + [self.field_coders[0]]
-            x = 3
 
     """Creates __init__(...) method for Structure types"""
     def generate_constructor(self) -> str:
@@ -1122,6 +1268,21 @@ class StructureCoder(object):
             for s in fc.call_code():
                 result += f"{i12}{s},\n"
         result += f"{i8})\n"
+        return result
+
+    def generate_fields(self, api=Api.PYTHON) -> str:
+        result = ""
+        # Recursive structures require two separate stanzas
+        if self.struct.is_recursive:
+            # Structure containing self-reference must be declared in two stanzas
+            result += "\n    pass"
+            result += f"\n\n\n{self.struct.name(api)}._fields_ = ["
+        else:
+            result += "\n    _fields_ = ["
+        for f in self.struct.fields:
+            result += f.code(api.CTYPES)
+        # result += "".join([f.code(Api.CTYPES) for f in self.fields])
+        result += "\n    ]"
         return result
 
     def generate_properties(self) -> str:

@@ -2,6 +2,7 @@
 
 from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, wintypes
 import ctypes
+from typing import Sequence
 
 from OpenGL import WGL
 
@@ -67,23 +68,41 @@ META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME = "XR_META_vulkan_swapchain_cre
 class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     def __init__(
         self,
-        view_format_count: int = 0,
-        view_formats: POINTER(c_int) = None,
+        view_formats: Sequence[int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
+        view_format_count = 0
+        if view_formats is not None and not isinstance(view_formats, ctypes.Array):
+            view_formats = (c_int * len(view_formats))(
+                *view_formats)
+            view_format_count = len(view_formats)
+        self._view_formats_ctypes_array = view_formats
         super().__init__(
-            view_format_count=view_format_count,
-            view_formats=view_formats,
+            _view_format_count=view_format_count,
+            _view_formats=view_formats,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self.view_format_count)}, view_formats={repr(self.view_formats)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self._view_format_count)}, view_formats={repr(self._view_formats)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self.view_format_count}, view_formats={self.view_formats}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self._view_format_count}, view_formats={self._view_formats}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def view_formats(self):
+        self._view_formats_ctypes_array
+    
+    @view_formats.setter
+    def view_formats(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_int * len(value))(
+                *value)
+        self._view_formats_ctypes_array = value
+        self._view_formats = value
+        self._view_format_count = len(value)
 
     @property
     def next_structure(self):
@@ -104,8 +123,8 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_format_count", c_uint32),
-        ("view_formats", POINTER(c_int)),
+        ("_view_format_count", c_uint32),
+        ("_view_formats", POINTER(c_int)),
     ]
 
 

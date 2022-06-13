@@ -1,7 +1,10 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p, cast
-from typing import Generator
+import ctypes
+
+import sys
+from typing import Generator, Sequence
 
 import numpy
 
@@ -104,11 +107,19 @@ class ApiLayerProperties(Structure):
             type=structure_type.value,
         )
 
-    def __repr__(self) -> str:
-        return f"xr.ApiLayerProperties(layer_name={repr(self.layer_name)}, spec_version={repr(self.spec_version)}, layer_version={repr(self.layer_version)}, description={repr(self.description)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+    def __bytes__(self):
+        return self.layer_name
 
-    def __str__(self) -> str:
-        return f"xr.ApiLayerProperties(layer_name={self.layer_name}, spec_version={self.spec_version}, layer_version={self.layer_version}, description={self.description}, next_structure={self.next}, structure_type={self.type})"
+    def __eq__(self, other):
+        try:
+            if other.type != self.type:
+                return False
+        except AttributeError:
+            pass  # That's OK, objects without those attributes can use string comparison
+        return str(other) == str(self)
+
+    def __str__(self):
+        return self.layer_name.decode()      
 
     @property
     def next_structure(self):
@@ -192,11 +203,11 @@ class ExtensionProperties(Structure):
 class ApplicationInfo(Structure):
     def __init__(
         self,
-        application_name: str = "",
-        application_version: int = 0,
-        engine_name: str = "",
-        engine_version: int = 0,
-        api_version: Version = Version(),
+        application_name: str = sys.argv[0],
+        application_version: int = Version(0),
+        engine_name: str = "pyopenxr",
+        engine_version: int = PYOPENXR_CURRENT_API_VERSION,
+        api_version: Version = XR_CURRENT_API_VERSION,
     ) -> None:
         super().__init__(
             application_name=application_name.encode(),
@@ -225,32 +236,68 @@ class InstanceCreateInfo(Structure):
     def __init__(
         self,
         create_flags: InstanceCreateFlags = InstanceCreateFlags(),
-        application_info: ApplicationInfo = None,
-        enabled_api_layer_count: int = 0,
-        enabled_api_layer_names: POINTER(c_char_p) = None,
-        enabled_extension_count: int = 0,
-        enabled_extension_names: POINTER(c_char_p) = None,
+        application_info: ApplicationInfo = ApplicationInfo(),
+        enabled_api_layer_names: Sequence[str] = [],
+        enabled_extension_names: Sequence[str] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.INSTANCE_CREATE_INFO,
     ) -> None:
         if application_info is None:
             application_info = ApplicationInfo()
+        enabled_api_layer_count = 0
+        if enabled_api_layer_names is not None and not isinstance(enabled_api_layer_names, ctypes.Array):
+            enabled_api_layer_names = (c_char_p * len(enabled_api_layer_names))(
+                *[s.encode() for s in enabled_api_layer_names])
+            enabled_api_layer_count = len(enabled_api_layer_names)
+        self._enabled_api_layer_names_ctypes_array = enabled_api_layer_names
+        enabled_extension_count = 0
+        if enabled_extension_names is not None and not isinstance(enabled_extension_names, ctypes.Array):
+            enabled_extension_names = (c_char_p * len(enabled_extension_names))(
+                *[s.encode() for s in enabled_extension_names])
+            enabled_extension_count = len(enabled_extension_names)
+        self._enabled_extension_names_ctypes_array = enabled_extension_names
         super().__init__(
             create_flags=InstanceCreateFlags(create_flags).value,
             application_info=application_info,
-            enabled_api_layer_count=enabled_api_layer_count,
-            enabled_api_layer_names=enabled_api_layer_names,
-            enabled_extension_count=enabled_extension_count,
-            enabled_extension_names=enabled_extension_names,
+            _enabled_api_layer_count=enabled_api_layer_count,
+            _enabled_api_layer_names=enabled_api_layer_names,
+            _enabled_extension_count=enabled_extension_count,
+            _enabled_extension_names=enabled_extension_names,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceCreateInfo(create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self.enabled_api_layer_count)}, enabled_api_layer_names={repr(self.enabled_api_layer_names)}, enabled_extension_count={repr(self.enabled_extension_count)}, enabled_extension_names={repr(self.enabled_extension_names)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.InstanceCreateInfo(create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self._enabled_api_layer_count)}, enabled_api_layer_names={repr(self._enabled_api_layer_names)}, enabled_extension_count={repr(self._enabled_extension_count)}, enabled_extension_names={repr(self._enabled_extension_names)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.InstanceCreateInfo(create_flags={self.create_flags}, application_info={self.application_info}, enabled_api_layer_count={self.enabled_api_layer_count}, enabled_api_layer_names={self.enabled_api_layer_names}, enabled_extension_count={self.enabled_extension_count}, enabled_extension_names={self.enabled_extension_names}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.InstanceCreateInfo(create_flags={self.create_flags}, application_info={self.application_info}, enabled_api_layer_count={self._enabled_api_layer_count}, enabled_api_layer_names={self._enabled_api_layer_names}, enabled_extension_count={self._enabled_extension_count}, enabled_extension_names={self._enabled_extension_names}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def enabled_api_layer_names(self):
+        self._enabled_api_layer_names_ctypes_array
+    
+    @enabled_api_layer_names.setter
+    def enabled_api_layer_names(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_char_p * len(value))(
+                *[s.encode() for s in value])
+        self._enabled_api_layer_names_ctypes_array = value
+        self._enabled_api_layer_names = value
+        self._enabled_api_layer_count = len(value)
+
+    @property
+    def enabled_extension_names(self):
+        self._enabled_extension_names_ctypes_array
+    
+    @enabled_extension_names.setter
+    def enabled_extension_names(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_char_p * len(value))(
+                *[s.encode() for s in value])
+        self._enabled_extension_names_ctypes_array = value
+        self._enabled_extension_names = value
+        self._enabled_extension_count = len(value)
 
     @property
     def next_structure(self):
@@ -273,10 +320,10 @@ class InstanceCreateInfo(Structure):
         ("next", c_void_p),
         ("create_flags", InstanceCreateFlagsCInt),
         ("application_info", ApplicationInfo),
-        ("enabled_api_layer_count", c_uint32),
-        ("enabled_api_layer_names", POINTER(c_char_p)),
-        ("enabled_extension_count", c_uint32),
-        ("enabled_extension_names", POINTER(c_char_p)),
+        ("_enabled_api_layer_count", c_uint32),
+        ("_enabled_api_layer_names", POINTER(c_char_p)),
+        ("_enabled_extension_count", c_uint32),
+        ("_enabled_extension_names", POINTER(c_char_p)),
     ]
 
 
@@ -1474,25 +1521,43 @@ class FrameEndInfo(Structure):
         self,
         display_time: Time = 0,
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),
-        layer_count: int = 0,
-        layers: POINTER(POINTER(CompositionLayerBaseHeader)) = None,
+        layers: Sequence[POINTER(CompositionLayerBaseHeader)] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.FRAME_END_INFO,
     ) -> None:
+        layer_count = 0
+        if layers is not None and not isinstance(layers, ctypes.Array):
+            layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
+                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
+            layer_count = len(layers)
+        self._layers_ctypes_array = layers
         super().__init__(
             display_time=display_time,
             environment_blend_mode=EnvironmentBlendMode(environment_blend_mode).value,
-            layer_count=layer_count,
-            layers=layers,
+            _layer_count=layer_count,
+            _layers=layers,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameEndInfo(display_time={repr(self.display_time)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.FrameEndInfo(display_time={repr(self.display_time)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self._layer_count)}, layers={repr(self._layers)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.FrameEndInfo(display_time={self.display_time}, environment_blend_mode={self.environment_blend_mode}, layer_count={self.layer_count}, layers={self.layers}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.FrameEndInfo(display_time={self.display_time}, environment_blend_mode={self.environment_blend_mode}, layer_count={self._layer_count}, layers={self._layers}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def layers(self):
+        self._layers_ctypes_array
+    
+    @layers.setter
+    def layers(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (POINTER(CompositionLayerBaseHeader) * len(value))(
+                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in value])
+        self._layers_ctypes_array = value
+        self._layers = value
+        self._layer_count = len(value)
 
     @property
     def next_structure(self):
@@ -1515,8 +1580,8 @@ class FrameEndInfo(Structure):
         ("next", c_void_p),
         ("display_time", Time),
         ("environment_blend_mode", EnvironmentBlendMode.ctype()),
-        ("layer_count", c_uint32),
-        ("layers", POINTER(POINTER(CompositionLayerBaseHeader))),
+        ("_layer_count", c_uint32),
+        ("_layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
 
@@ -2786,25 +2851,43 @@ class CompositionLayerProjection(Structure):
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
         space: SpaceHandle = None,
-        view_count: int = 0,
-        views: POINTER(CompositionLayerProjectionView) = None,
+        views: Sequence[CompositionLayerProjectionView] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION,
     ) -> None:
+        view_count = 0
+        if views is not None and not isinstance(views, ctypes.Array):
+            views = (CompositionLayerProjectionView * len(views))(
+                *views)
+            view_count = len(views)
+        self._views_ctypes_array = views
         super().__init__(
             layer_flags=CompositionLayerFlags(layer_flags).value,
             space=space,
-            view_count=view_count,
-            views=views,
+            _view_count=view_count,
+            _views=views,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerProjection(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self.view_count)}, views={repr(self.views)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.CompositionLayerProjection(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self._view_count)}, views={repr(self._views)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerProjection(layer_flags={self.layer_flags}, space={self.space}, view_count={self.view_count}, views={self.views}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.CompositionLayerProjection(layer_flags={self.layer_flags}, space={self.space}, view_count={self._view_count}, views={self._views}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def views(self):
+        self._views_ctypes_array
+    
+    @views.setter
+    def views(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (CompositionLayerProjectionView * len(value))(
+                *value)
+        self._views_ctypes_array = value
+        self._views = value
+        self._view_count = len(value)
 
     @property
     def next_structure(self):
@@ -2827,8 +2910,8 @@ class CompositionLayerProjection(Structure):
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlagsCInt),
         ("space", SpaceHandle),
-        ("view_count", c_uint32),
-        ("views", POINTER(CompositionLayerProjectionView)),
+        ("_view_count", c_uint32),
+        ("_views", POINTER(CompositionLayerProjectionView)),
     ]
 
 
@@ -4065,23 +4148,41 @@ class BindingModificationBaseHeaderKHR(Structure):
 class BindingModificationsKHR(Structure):
     def __init__(
         self,
-        binding_modification_count: int = 0,
-        binding_modifications: POINTER(POINTER(BindingModificationBaseHeaderKHR)) = None,
+        binding_modifications: Sequence[POINTER(BindingModificationBaseHeaderKHR)] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.BINDING_MODIFICATIONS_KHR,
     ) -> None:
+        binding_modification_count = 0
+        if binding_modifications is not None and not isinstance(binding_modifications, ctypes.Array):
+            binding_modifications = (POINTER(BindingModificationBaseHeaderKHR) * len(binding_modifications))(
+                *[cast(p, POINTER(BindingModificationBaseHeaderKHR)) for p in binding_modifications])
+            binding_modification_count = len(binding_modifications)
+        self._binding_modifications_ctypes_array = binding_modifications
         super().__init__(
-            binding_modification_count=binding_modification_count,
-            binding_modifications=binding_modifications,
+            _binding_modification_count=binding_modification_count,
+            _binding_modifications=binding_modifications,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.BindingModificationsKHR(binding_modification_count={repr(self.binding_modification_count)}, binding_modifications={repr(self.binding_modifications)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.BindingModificationsKHR(binding_modification_count={repr(self._binding_modification_count)}, binding_modifications={repr(self._binding_modifications)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.BindingModificationsKHR(binding_modification_count={self.binding_modification_count}, binding_modifications={self.binding_modifications}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.BindingModificationsKHR(binding_modification_count={self._binding_modification_count}, binding_modifications={self._binding_modifications}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def binding_modifications(self):
+        self._binding_modifications_ctypes_array
+    
+    @binding_modifications.setter
+    def binding_modifications(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (POINTER(BindingModificationBaseHeaderKHR) * len(value))(
+                *[cast(p, POINTER(BindingModificationBaseHeaderKHR)) for p in value])
+        self._binding_modifications_ctypes_array = value
+        self._binding_modifications = value
+        self._binding_modification_count = len(value)
 
     @property
     def next_structure(self):
@@ -4102,8 +4203,8 @@ class BindingModificationsKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("binding_modification_count", c_uint32),
-        ("binding_modifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
+        ("_binding_modification_count", c_uint32),
+        ("_binding_modifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
     ]
 
 
@@ -4270,30 +4371,66 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         message_id: str = "",
         function_name: str = "",
         message: str = "",
-        object_count: int = 0,
-        objects: POINTER(DebugUtilsObjectNameInfoEXT) = None,
-        session_label_count: int = 0,
-        session_labels: POINTER(DebugUtilsLabelEXT) = None,
+        objects: Sequence[DebugUtilsObjectNameInfoEXT] = [],
+        session_labels: Sequence[DebugUtilsLabelEXT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
     ) -> None:
+        object_count = 0
+        if objects is not None and not isinstance(objects, ctypes.Array):
+            objects = (DebugUtilsObjectNameInfoEXT * len(objects))(
+                *objects)
+            object_count = len(objects)
+        self._objects_ctypes_array = objects
+        session_label_count = 0
+        if session_labels is not None and not isinstance(session_labels, ctypes.Array):
+            session_labels = (DebugUtilsLabelEXT * len(session_labels))(
+                *session_labels)
+            session_label_count = len(session_labels)
+        self._session_labels_ctypes_array = session_labels
         super().__init__(
             message_id=message_id.encode(),
             function_name=function_name.encode(),
             message=message.encode(),
-            object_count=object_count,
-            objects=objects,
-            session_label_count=session_label_count,
-            session_labels=session_labels,
+            _object_count=object_count,
+            _objects=objects,
+            _session_label_count=session_label_count,
+            _session_labels=session_labels,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self.object_count)}, objects={repr(self.objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self.session_labels)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self._object_count)}, objects={repr(self._objects)}, session_label_count={repr(self._session_label_count)}, session_labels={repr(self._session_labels)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self.message_id}, function_name={self.function_name}, message={self.message}, object_count={self.object_count}, objects={self.objects}, session_label_count={self.session_label_count}, session_labels={self.session_labels}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self.message_id}, function_name={self.function_name}, message={self.message}, object_count={self._object_count}, objects={self._objects}, session_label_count={self._session_label_count}, session_labels={self._session_labels}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def objects(self):
+        self._objects_ctypes_array
+    
+    @objects.setter
+    def objects(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (DebugUtilsObjectNameInfoEXT * len(value))(
+                *value)
+        self._objects_ctypes_array = value
+        self._objects = value
+        self._object_count = len(value)
+
+    @property
+    def session_labels(self):
+        self._session_labels_ctypes_array
+    
+    @session_labels.setter
+    def session_labels(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (DebugUtilsLabelEXT * len(value))(
+                *value)
+        self._session_labels_ctypes_array = value
+        self._session_labels = value
+        self._session_label_count = len(value)
 
     @property
     def next_structure(self):
@@ -4317,10 +4454,10 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         ("message_id", c_char_p),
         ("function_name", c_char_p),
         ("message", c_char_p),
-        ("object_count", c_uint32),
-        ("objects", POINTER(DebugUtilsObjectNameInfoEXT)),
-        ("session_label_count", c_uint32),
-        ("session_labels", POINTER(DebugUtilsLabelEXT)),
+        ("_object_count", c_uint32),
+        ("_objects", POINTER(DebugUtilsObjectNameInfoEXT)),
+        ("_session_label_count", c_uint32),
+        ("_session_labels", POINTER(DebugUtilsLabelEXT)),
     ]
 
 
@@ -5239,24 +5376,42 @@ class HandJointLocationsEXT(Structure):
     def __init__(
         self,
         is_active: Bool32 = 0,
-        joint_count: int = 0,
-        joint_locations: POINTER(HandJointLocationEXT) = None,
+        joint_locations: Sequence[HandJointLocationEXT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_JOINT_LOCATIONS_EXT,
     ) -> None:
+        joint_count = 0
+        if joint_locations is not None and not isinstance(joint_locations, ctypes.Array):
+            joint_locations = (HandJointLocationEXT * len(joint_locations))(
+                *joint_locations)
+            joint_count = len(joint_locations)
+        self._joint_locations_ctypes_array = joint_locations
         super().__init__(
             is_active=is_active,
-            joint_count=joint_count,
-            joint_locations=joint_locations,
+            _joint_count=joint_count,
+            _joint_locations=joint_locations,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointLocationsEXT(is_active={repr(self.is_active)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self.joint_locations)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.HandJointLocationsEXT(is_active={repr(self.is_active)}, joint_count={repr(self._joint_count)}, joint_locations={repr(self._joint_locations)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointLocationsEXT(is_active={self.is_active}, joint_count={self.joint_count}, joint_locations={self.joint_locations}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.HandJointLocationsEXT(is_active={self.is_active}, joint_count={self._joint_count}, joint_locations={self._joint_locations}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def joint_locations(self):
+        self._joint_locations_ctypes_array
+    
+    @joint_locations.setter
+    def joint_locations(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (HandJointLocationEXT * len(value))(
+                *value)
+        self._joint_locations_ctypes_array = value
+        self._joint_locations = value
+        self._joint_count = len(value)
 
     @property
     def next_structure(self):
@@ -5278,31 +5433,49 @@ class HandJointLocationsEXT(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("is_active", Bool32),
-        ("joint_count", c_uint32),
-        ("joint_locations", POINTER(HandJointLocationEXT)),
+        ("_joint_count", c_uint32),
+        ("_joint_locations", POINTER(HandJointLocationEXT)),
     ]
 
 
 class HandJointVelocitiesEXT(Structure):
     def __init__(
         self,
-        joint_count: int = 0,
-        joint_velocities: POINTER(HandJointVelocityEXT) = None,
+        joint_velocities: Sequence[HandJointVelocityEXT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_JOINT_VELOCITIES_EXT,
     ) -> None:
+        joint_count = 0
+        if joint_velocities is not None and not isinstance(joint_velocities, ctypes.Array):
+            joint_velocities = (HandJointVelocityEXT * len(joint_velocities))(
+                *joint_velocities)
+            joint_count = len(joint_velocities)
+        self._joint_velocities_ctypes_array = joint_velocities
         super().__init__(
-            joint_count=joint_count,
-            joint_velocities=joint_velocities,
+            _joint_count=joint_count,
+            _joint_velocities=joint_velocities,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointVelocitiesEXT(joint_count={repr(self.joint_count)}, joint_velocities={repr(self.joint_velocities)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.HandJointVelocitiesEXT(joint_count={repr(self._joint_count)}, joint_velocities={repr(self._joint_velocities)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointVelocitiesEXT(joint_count={self.joint_count}, joint_velocities={self.joint_velocities}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.HandJointVelocitiesEXT(joint_count={self._joint_count}, joint_velocities={self._joint_velocities}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def joint_velocities(self):
+        self._joint_velocities_ctypes_array
+    
+    @joint_velocities.setter
+    def joint_velocities(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (HandJointVelocityEXT * len(value))(
+                *value)
+        self._joint_velocities_ctypes_array = value
+        self._joint_velocities = value
+        self._joint_count = len(value)
 
     @property
     def next_structure(self):
@@ -5323,8 +5496,8 @@ class HandJointVelocitiesEXT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("joint_count", c_uint32),
-        ("joint_velocities", POINTER(HandJointVelocityEXT)),
+        ("_joint_count", c_uint32),
+        ("_joint_velocities", POINTER(HandJointVelocityEXT)),
     ]
 
 
@@ -5668,23 +5841,41 @@ PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINT
 class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_count: int = 0,
-        enabled_view_configuration_types: POINTER(c_int) = None,
+        enabled_view_configuration_types: Sequence[c_int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT,
     ) -> None:
+        view_configuration_count = 0
+        if enabled_view_configuration_types is not None and not isinstance(enabled_view_configuration_types, ctypes.Array):
+            enabled_view_configuration_types = (c_int * len(enabled_view_configuration_types))(
+                *enabled_view_configuration_types)
+            view_configuration_count = len(enabled_view_configuration_types)
+        self._enabled_view_configuration_types_ctypes_array = enabled_view_configuration_types
         super().__init__(
-            view_configuration_count=view_configuration_count,
-            enabled_view_configuration_types=enabled_view_configuration_types,
+            _view_configuration_count=view_configuration_count,
+            _enabled_view_configuration_types=enabled_view_configuration_types,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, enabled_view_configuration_types={repr(self.enabled_view_configuration_types)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={repr(self._view_configuration_count)}, enabled_view_configuration_types={repr(self._enabled_view_configuration_types)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={self.view_configuration_count}, enabled_view_configuration_types={self.enabled_view_configuration_types}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={self._view_configuration_count}, enabled_view_configuration_types={self._enabled_view_configuration_types}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def enabled_view_configuration_types(self):
+        self._enabled_view_configuration_types_ctypes_array
+    
+    @enabled_view_configuration_types.setter
+    def enabled_view_configuration_types(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_int * len(value))(
+                *value)
+        self._enabled_view_configuration_types_ctypes_array = value
+        self._enabled_view_configuration_types = value
+        self._view_configuration_count = len(value)
 
     @property
     def next_structure(self):
@@ -5705,8 +5896,8 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_configuration_count", c_uint32),
-        ("enabled_view_configuration_types", POINTER(c_int)),
+        ("_view_configuration_count", c_uint32),
+        ("_enabled_view_configuration_types", POINTER(c_int)),
     ]
 
 
@@ -5758,23 +5949,41 @@ class SecondaryViewConfigurationStateMSFT(Structure):
 class SecondaryViewConfigurationFrameStateMSFT(Structure):
     def __init__(
         self,
-        view_configuration_count: int = 0,
-        view_configuration_states: POINTER(SecondaryViewConfigurationStateMSFT) = None,
+        view_configuration_states: Sequence[SecondaryViewConfigurationStateMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT,
     ) -> None:
+        view_configuration_count = 0
+        if view_configuration_states is not None and not isinstance(view_configuration_states, ctypes.Array):
+            view_configuration_states = (SecondaryViewConfigurationStateMSFT * len(view_configuration_states))(
+                *view_configuration_states)
+            view_configuration_count = len(view_configuration_states)
+        self._view_configuration_states_ctypes_array = view_configuration_states
         super().__init__(
-            view_configuration_count=view_configuration_count,
-            view_configuration_states=view_configuration_states,
+            _view_configuration_count=view_configuration_count,
+            _view_configuration_states=view_configuration_states,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_states={repr(self.view_configuration_states)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={repr(self._view_configuration_count)}, view_configuration_states={repr(self._view_configuration_states)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={self.view_configuration_count}, view_configuration_states={self.view_configuration_states}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={self._view_configuration_count}, view_configuration_states={self._view_configuration_states}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def view_configuration_states(self):
+        self._view_configuration_states_ctypes_array
+    
+    @view_configuration_states.setter
+    def view_configuration_states(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (SecondaryViewConfigurationStateMSFT * len(value))(
+                *value)
+        self._view_configuration_states_ctypes_array = value
+        self._view_configuration_states = value
+        self._view_configuration_count = len(value)
 
     @property
     def next_structure(self):
@@ -5795,8 +6004,8 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("view_configuration_count", c_uint32),
-        ("view_configuration_states", POINTER(SecondaryViewConfigurationStateMSFT)),
+        ("_view_configuration_count", c_uint32),
+        ("_view_configuration_states", POINTER(SecondaryViewConfigurationStateMSFT)),
     ]
 
 
@@ -5805,25 +6014,43 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         self,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),
-        layer_count: int = 0,
-        layers: POINTER(POINTER(CompositionLayerBaseHeader)) = None,
+        layers: Sequence[POINTER(CompositionLayerBaseHeader)] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT,
     ) -> None:
+        layer_count = 0
+        if layers is not None and not isinstance(layers, ctypes.Array):
+            layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
+                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
+            layer_count = len(layers)
+        self._layers_ctypes_array = layers
         super().__init__(
             view_configuration_type=ViewConfigurationType(view_configuration_type).value,
             environment_blend_mode=EnvironmentBlendMode(environment_blend_mode).value,
-            layer_count=layer_count,
-            layers=layers,
+            _layer_count=layer_count,
+            _layers=layers,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self._layer_count)}, layers={repr(self._layers)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={self.view_configuration_type}, environment_blend_mode={self.environment_blend_mode}, layer_count={self.layer_count}, layers={self.layers}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={self.view_configuration_type}, environment_blend_mode={self.environment_blend_mode}, layer_count={self._layer_count}, layers={self._layers}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def layers(self):
+        self._layers_ctypes_array
+    
+    @layers.setter
+    def layers(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (POINTER(CompositionLayerBaseHeader) * len(value))(
+                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in value])
+        self._layers_ctypes_array = value
+        self._layers = value
+        self._layer_count = len(value)
 
     @property
     def next_structure(self):
@@ -5846,8 +6073,8 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         ("next", c_void_p),
         ("view_configuration_type", ViewConfigurationType.ctype()),
         ("environment_blend_mode", EnvironmentBlendMode.ctype()),
-        ("layer_count", c_uint32),
-        ("layers", POINTER(POINTER(CompositionLayerBaseHeader))),
+        ("_layer_count", c_uint32),
+        ("_layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
 
@@ -6775,57 +7002,116 @@ class SceneBoundsMSFT(Structure):
         self,
         space: SpaceHandle = None,
         time: Time = 0,
-        sphere_count: int = 0,
-        spheres: POINTER(SceneSphereBoundMSFT) = None,
-        box_count: int = 0,
-        boxes: POINTER(SceneOrientedBoxBoundMSFT) = None,
-        frustum_count: int = 0,
-        frustums: POINTER(SceneFrustumBoundMSFT) = None,
+        spheres: Sequence[SceneSphereBoundMSFT] = [],
+        boxes: Sequence[SceneOrientedBoxBoundMSFT] = [],
+        frustums: Sequence[SceneFrustumBoundMSFT] = [],
     ) -> None:
+        sphere_count = 0
+        if spheres is not None and not isinstance(spheres, ctypes.Array):
+            spheres = (SceneSphereBoundMSFT * len(spheres))(
+                *spheres)
+            sphere_count = len(spheres)
+        self._spheres_ctypes_array = spheres
+        box_count = 0
+        if boxes is not None and not isinstance(boxes, ctypes.Array):
+            boxes = (SceneOrientedBoxBoundMSFT * len(boxes))(
+                *boxes)
+            box_count = len(boxes)
+        self._boxes_ctypes_array = boxes
+        frustum_count = 0
+        if frustums is not None and not isinstance(frustums, ctypes.Array):
+            frustums = (SceneFrustumBoundMSFT * len(frustums))(
+                *frustums)
+            frustum_count = len(frustums)
+        self._frustums_ctypes_array = frustums
         super().__init__(
             space=space,
             time=time,
-            sphere_count=sphere_count,
-            spheres=spheres,
-            box_count=box_count,
-            boxes=boxes,
-            frustum_count=frustum_count,
-            frustums=frustums,
+            _sphere_count=sphere_count,
+            _spheres=spheres,
+            _box_count=box_count,
+            _boxes=boxes,
+            _frustum_count=frustum_count,
+            _frustums=frustums,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneBoundsMSFT(space={repr(self.space)}, time={repr(self.time)}, sphere_count={repr(self.sphere_count)}, spheres={repr(self.spheres)}, box_count={repr(self.box_count)}, boxes={repr(self.boxes)}, frustum_count={repr(self.frustum_count)}, frustums={repr(self.frustums)})"
+        return f"xr.SceneBoundsMSFT(space={repr(self.space)}, time={repr(self.time)}, sphere_count={repr(self._sphere_count)}, spheres={repr(self._spheres)}, box_count={repr(self._box_count)}, boxes={repr(self._boxes)}, frustum_count={repr(self._frustum_count)}, frustums={repr(self._frustums)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneBoundsMSFT(space={self.space}, time={self.time}, sphere_count={self.sphere_count}, spheres={self.spheres}, box_count={self.box_count}, boxes={self.boxes}, frustum_count={self.frustum_count}, frustums={self.frustums})"
+        return f"xr.SceneBoundsMSFT(space={self.space}, time={self.time}, sphere_count={self._sphere_count}, spheres={self._spheres}, box_count={self._box_count}, boxes={self._boxes}, frustum_count={self._frustum_count}, frustums={self._frustums})"
+
+    @property
+    def spheres(self):
+        self._spheres_ctypes_array
+    
+    @spheres.setter
+    def spheres(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (SceneSphereBoundMSFT * len(value))(
+                *value)
+        self._spheres_ctypes_array = value
+        self._spheres = value
+        self._sphere_count = len(value)
+
+    @property
+    def boxes(self):
+        self._boxes_ctypes_array
+    
+    @boxes.setter
+    def boxes(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (SceneOrientedBoxBoundMSFT * len(value))(
+                *value)
+        self._boxes_ctypes_array = value
+        self._boxes = value
+        self._box_count = len(value)
+
+    @property
+    def frustums(self):
+        self._frustums_ctypes_array
+    
+    @frustums.setter
+    def frustums(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (SceneFrustumBoundMSFT * len(value))(
+                *value)
+        self._frustums_ctypes_array = value
+        self._frustums = value
+        self._frustum_count = len(value)
 
     _fields_ = [
         ("space", SpaceHandle),
         ("time", Time),
-        ("sphere_count", c_uint32),
-        ("spheres", POINTER(SceneSphereBoundMSFT)),
-        ("box_count", c_uint32),
-        ("boxes", POINTER(SceneOrientedBoxBoundMSFT)),
-        ("frustum_count", c_uint32),
-        ("frustums", POINTER(SceneFrustumBoundMSFT)),
+        ("_sphere_count", c_uint32),
+        ("_spheres", POINTER(SceneSphereBoundMSFT)),
+        ("_box_count", c_uint32),
+        ("_boxes", POINTER(SceneOrientedBoxBoundMSFT)),
+        ("_frustum_count", c_uint32),
+        ("_frustums", POINTER(SceneFrustumBoundMSFT)),
     ]
 
 
 class NewSceneComputeInfoMSFT(Structure):
     def __init__(
         self,
-        requested_feature_count: int = 0,
-        requested_features: POINTER(c_int) = None,
+        requested_features: Sequence[c_int] = [],
         consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT(),
         bounds: SceneBoundsMSFT = None,
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.NEW_SCENE_COMPUTE_INFO_MSFT,
     ) -> None:
+        requested_feature_count = 0
+        if requested_features is not None and not isinstance(requested_features, ctypes.Array):
+            requested_features = (c_int * len(requested_features))(
+                *requested_features)
+            requested_feature_count = len(requested_features)
+        self._requested_features_ctypes_array = requested_features
         if bounds is None:
             bounds = SceneBoundsMSFT()
         super().__init__(
-            requested_feature_count=requested_feature_count,
-            requested_features=requested_features,
+            _requested_feature_count=requested_feature_count,
+            _requested_features=requested_features,
             consistency=SceneComputeConsistencyMSFT(consistency).value,
             bounds=bounds,
             next=next_structure,
@@ -6833,10 +7119,23 @@ class NewSceneComputeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={repr(self.requested_feature_count)}, requested_features={repr(self.requested_features)}, consistency={repr(self.consistency)}, bounds={repr(self.bounds)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={repr(self._requested_feature_count)}, requested_features={repr(self._requested_features)}, consistency={repr(self.consistency)}, bounds={repr(self.bounds)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={self.requested_feature_count}, requested_features={self.requested_features}, consistency={self.consistency}, bounds={self.bounds}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={self._requested_feature_count}, requested_features={self._requested_features}, consistency={self.consistency}, bounds={self.bounds}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def requested_features(self):
+        self._requested_features_ctypes_array
+    
+    @requested_features.setter
+    def requested_features(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_int * len(value))(
+                *value)
+        self._requested_features_ctypes_array = value
+        self._requested_features = value
+        self._requested_feature_count = len(value)
 
     @property
     def next_structure(self):
@@ -6857,8 +7156,8 @@ class NewSceneComputeInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("requested_feature_count", c_uint32),
-        ("requested_features", POINTER(c_int)),
+        ("_requested_feature_count", c_uint32),
+        ("_requested_features", POINTER(c_int)),
         ("consistency", SceneComputeConsistencyMSFT.ctype()),
         ("bounds", SceneBoundsMSFT),
     ]
@@ -7057,23 +7356,41 @@ class SceneComponentLocationMSFT(Structure):
 class SceneComponentLocationsMSFT(Structure):
     def __init__(
         self,
-        location_count: int = 0,
-        locations: POINTER(SceneComponentLocationMSFT) = None,
+        locations: Sequence[SceneComponentLocationMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_COMPONENT_LOCATIONS_MSFT,
     ) -> None:
+        location_count = 0
+        if locations is not None and not isinstance(locations, ctypes.Array):
+            locations = (SceneComponentLocationMSFT * len(locations))(
+                *locations)
+            location_count = len(locations)
+        self._locations_ctypes_array = locations
         super().__init__(
-            location_count=location_count,
-            locations=locations,
+            _location_count=location_count,
+            _locations=locations,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentLocationsMSFT(location_count={repr(self.location_count)}, locations={repr(self.locations)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SceneComponentLocationsMSFT(location_count={repr(self._location_count)}, locations={repr(self._locations)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentLocationsMSFT(location_count={self.location_count}, locations={self.locations}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SceneComponentLocationsMSFT(location_count={self._location_count}, locations={self._locations}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def locations(self):
+        self._locations_ctypes_array
+    
+    @locations.setter
+    def locations(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (SceneComponentLocationMSFT * len(value))(
+                *value)
+        self._locations_ctypes_array = value
+        self._locations = value
+        self._location_count = len(value)
 
     @property
     def next_structure(self):
@@ -7094,8 +7411,8 @@ class SceneComponentLocationsMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("location_count", c_uint32),
-        ("locations", POINTER(SceneComponentLocationMSFT)),
+        ("_location_count", c_uint32),
+        ("_locations", POINTER(SceneComponentLocationMSFT)),
     ]
 
 
@@ -7104,25 +7421,43 @@ class SceneComponentsLocateInfoMSFT(Structure):
         self,
         base_space: SpaceHandle = None,
         time: Time = 0,
-        component_id_count: int = 0,
-        component_ids: POINTER(UuidMSFT) = None,
+        component_ids: Sequence[UuidMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_COMPONENTS_LOCATE_INFO_MSFT,
     ) -> None:
+        component_id_count = 0
+        if component_ids is not None and not isinstance(component_ids, ctypes.Array):
+            component_ids = (UuidMSFT * len(component_ids))(
+                *component_ids)
+            component_id_count = len(component_ids)
+        self._component_ids_ctypes_array = component_ids
         super().__init__(
             base_space=base_space,
             time=time,
-            component_id_count=component_id_count,
-            component_ids=component_ids,
+            _component_id_count=component_id_count,
+            _component_ids=component_ids,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsLocateInfoMSFT(base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self.component_id_count)}, component_ids={repr(self.component_ids)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SceneComponentsLocateInfoMSFT(base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self._component_id_count)}, component_ids={repr(self._component_ids)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentsLocateInfoMSFT(base_space={self.base_space}, time={self.time}, component_id_count={self.component_id_count}, component_ids={self.component_ids}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SceneComponentsLocateInfoMSFT(base_space={self.base_space}, time={self.time}, component_id_count={self._component_id_count}, component_ids={self._component_ids}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def component_ids(self):
+        self._component_ids_ctypes_array
+    
+    @component_ids.setter
+    def component_ids(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (UuidMSFT * len(value))(
+                *value)
+        self._component_ids_ctypes_array = value
+        self._component_ids = value
+        self._component_id_count = len(value)
 
     @property
     def next_structure(self):
@@ -7145,8 +7480,8 @@ class SceneComponentsLocateInfoMSFT(Structure):
         ("next", c_void_p),
         ("base_space", SpaceHandle),
         ("time", Time),
-        ("component_id_count", c_uint32),
-        ("component_ids", POINTER(UuidMSFT)),
+        ("_component_id_count", c_uint32),
+        ("_component_ids", POINTER(UuidMSFT)),
     ]
 
 
@@ -7173,23 +7508,41 @@ class SceneObjectMSFT(Structure):
 class SceneObjectsMSFT(Structure):
     def __init__(
         self,
-        scene_object_count: int = 0,
-        scene_objects: POINTER(SceneObjectMSFT) = None,
+        scene_objects: Sequence[SceneObjectMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_OBJECTS_MSFT,
     ) -> None:
+        scene_object_count = 0
+        if scene_objects is not None and not isinstance(scene_objects, ctypes.Array):
+            scene_objects = (SceneObjectMSFT * len(scene_objects))(
+                *scene_objects)
+            scene_object_count = len(scene_objects)
+        self._scene_objects_ctypes_array = scene_objects
         super().__init__(
-            scene_object_count=scene_object_count,
-            scene_objects=scene_objects,
+            _scene_object_count=scene_object_count,
+            _scene_objects=scene_objects,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectsMSFT(scene_object_count={repr(self.scene_object_count)}, scene_objects={repr(self.scene_objects)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SceneObjectsMSFT(scene_object_count={repr(self._scene_object_count)}, scene_objects={repr(self._scene_objects)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObjectsMSFT(scene_object_count={self.scene_object_count}, scene_objects={self.scene_objects}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SceneObjectsMSFT(scene_object_count={self._scene_object_count}, scene_objects={self._scene_objects}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def scene_objects(self):
+        self._scene_objects_ctypes_array
+    
+    @scene_objects.setter
+    def scene_objects(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (SceneObjectMSFT * len(value))(
+                *value)
+        self._scene_objects_ctypes_array = value
+        self._scene_objects = value
+        self._scene_object_count = len(value)
 
     @property
     def next_structure(self):
@@ -7210,8 +7563,8 @@ class SceneObjectsMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("scene_object_count", c_uint32),
-        ("scene_objects", POINTER(SceneObjectMSFT)),
+        ("_scene_object_count", c_uint32),
+        ("_scene_objects", POINTER(SceneObjectMSFT)),
     ]
 
 
@@ -7262,23 +7615,41 @@ class SceneComponentParentFilterInfoMSFT(Structure):
 class SceneObjectTypesFilterInfoMSFT(Structure):
     def __init__(
         self,
-        object_type_count: int = 0,
-        object_types: POINTER(c_int) = None,
+        object_types: Sequence[c_int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_MSFT,
     ) -> None:
+        object_type_count = 0
+        if object_types is not None and not isinstance(object_types, ctypes.Array):
+            object_types = (c_int * len(object_types))(
+                *object_types)
+            object_type_count = len(object_types)
+        self._object_types_ctypes_array = object_types
         super().__init__(
-            object_type_count=object_type_count,
-            object_types=object_types,
+            _object_type_count=object_type_count,
+            _object_types=object_types,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={repr(self.object_type_count)}, object_types={repr(self.object_types)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={repr(self._object_type_count)}, object_types={repr(self._object_types)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={self.object_type_count}, object_types={self.object_types}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={self._object_type_count}, object_types={self._object_types}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def object_types(self):
+        self._object_types_ctypes_array
+    
+    @object_types.setter
+    def object_types(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_int * len(value))(
+                *value)
+        self._object_types_ctypes_array = value
+        self._object_types = value
+        self._object_type_count = len(value)
 
     @property
     def next_structure(self):
@@ -7299,8 +7670,8 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("object_type_count", c_uint32),
-        ("object_types", POINTER(c_int)),
+        ("_object_type_count", c_uint32),
+        ("_object_types", POINTER(c_int)),
     ]
 
 
@@ -7338,23 +7709,41 @@ class ScenePlaneMSFT(Structure):
 class ScenePlanesMSFT(Structure):
     def __init__(
         self,
-        scene_plane_count: int = 0,
-        scene_planes: POINTER(ScenePlaneMSFT) = None,
+        scene_planes: Sequence[ScenePlaneMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_PLANES_MSFT,
     ) -> None:
+        scene_plane_count = 0
+        if scene_planes is not None and not isinstance(scene_planes, ctypes.Array):
+            scene_planes = (ScenePlaneMSFT * len(scene_planes))(
+                *scene_planes)
+            scene_plane_count = len(scene_planes)
+        self._scene_planes_ctypes_array = scene_planes
         super().__init__(
-            scene_plane_count=scene_plane_count,
-            scene_planes=scene_planes,
+            _scene_plane_count=scene_plane_count,
+            _scene_planes=scene_planes,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlanesMSFT(scene_plane_count={repr(self.scene_plane_count)}, scene_planes={repr(self.scene_planes)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.ScenePlanesMSFT(scene_plane_count={repr(self._scene_plane_count)}, scene_planes={repr(self._scene_planes)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.ScenePlanesMSFT(scene_plane_count={self.scene_plane_count}, scene_planes={self.scene_planes}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.ScenePlanesMSFT(scene_plane_count={self._scene_plane_count}, scene_planes={self._scene_planes}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def scene_planes(self):
+        self._scene_planes_ctypes_array
+    
+    @scene_planes.setter
+    def scene_planes(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (ScenePlaneMSFT * len(value))(
+                *value)
+        self._scene_planes_ctypes_array = value
+        self._scene_planes = value
+        self._scene_plane_count = len(value)
 
     @property
     def next_structure(self):
@@ -7375,31 +7764,49 @@ class ScenePlanesMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("scene_plane_count", c_uint32),
-        ("scene_planes", POINTER(ScenePlaneMSFT)),
+        ("_scene_plane_count", c_uint32),
+        ("_scene_planes", POINTER(ScenePlaneMSFT)),
     ]
 
 
 class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     def __init__(
         self,
-        alignment_count: int = 0,
-        alignments: POINTER(c_int) = None,
+        alignments: Sequence[c_int] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT,
     ) -> None:
+        alignment_count = 0
+        if alignments is not None and not isinstance(alignments, ctypes.Array):
+            alignments = (c_int * len(alignments))(
+                *alignments)
+            alignment_count = len(alignments)
+        self._alignments_ctypes_array = alignments
         super().__init__(
-            alignment_count=alignment_count,
-            alignments=alignments,
+            _alignment_count=alignment_count,
+            _alignments=alignments,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={repr(self.alignment_count)}, alignments={repr(self.alignments)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={repr(self._alignment_count)}, alignments={repr(self._alignments)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={self.alignment_count}, alignments={self.alignments}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={self._alignment_count}, alignments={self._alignments}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def alignments(self):
+        self._alignments_ctypes_array
+    
+    @alignments.setter
+    def alignments(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_int * len(value))(
+                *value)
+        self._alignments_ctypes_array = value
+        self._alignments = value
+        self._alignment_count = len(value)
 
     @property
     def next_structure(self):
@@ -7420,8 +7827,8 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("alignment_count", c_uint32),
-        ("alignments", POINTER(c_int)),
+        ("_alignment_count", c_uint32),
+        ("_alignments", POINTER(c_int)),
     ]
 
 
@@ -7451,23 +7858,41 @@ class SceneMeshMSFT(Structure):
 class SceneMeshesMSFT(Structure):
     def __init__(
         self,
-        scene_mesh_count: int = 0,
-        scene_meshes: POINTER(SceneMeshMSFT) = None,
+        scene_meshes: Sequence[SceneMeshMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_MESHES_MSFT,
     ) -> None:
+        scene_mesh_count = 0
+        if scene_meshes is not None and not isinstance(scene_meshes, ctypes.Array):
+            scene_meshes = (SceneMeshMSFT * len(scene_meshes))(
+                *scene_meshes)
+            scene_mesh_count = len(scene_meshes)
+        self._scene_meshes_ctypes_array = scene_meshes
         super().__init__(
-            scene_mesh_count=scene_mesh_count,
-            scene_meshes=scene_meshes,
+            _scene_mesh_count=scene_mesh_count,
+            _scene_meshes=scene_meshes,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshesMSFT(scene_mesh_count={repr(self.scene_mesh_count)}, scene_meshes={repr(self.scene_meshes)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SceneMeshesMSFT(scene_mesh_count={repr(self._scene_mesh_count)}, scene_meshes={repr(self._scene_meshes)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshesMSFT(scene_mesh_count={self.scene_mesh_count}, scene_meshes={self.scene_meshes}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SceneMeshesMSFT(scene_mesh_count={self._scene_mesh_count}, scene_meshes={self._scene_meshes}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def scene_meshes(self):
+        self._scene_meshes_ctypes_array
+    
+    @scene_meshes.setter
+    def scene_meshes(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (SceneMeshMSFT * len(value))(
+                *value)
+        self._scene_meshes_ctypes_array = value
+        self._scene_meshes = value
+        self._scene_mesh_count = len(value)
 
     @property
     def next_structure(self):
@@ -7488,8 +7913,8 @@ class SceneMeshesMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("scene_mesh_count", c_uint32),
-        ("scene_meshes", POINTER(SceneMeshMSFT)),
+        ("_scene_mesh_count", c_uint32),
+        ("_scene_meshes", POINTER(SceneMeshMSFT)),
     ]
 
 
@@ -7809,23 +8234,41 @@ class DeserializeSceneFragmentMSFT(Structure):
 class SceneDeserializeInfoMSFT(Structure):
     def __init__(
         self,
-        fragment_count: int = 0,
-        fragments: POINTER(DeserializeSceneFragmentMSFT) = None,
+        fragments: Sequence[DeserializeSceneFragmentMSFT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_DESERIALIZE_INFO_MSFT,
     ) -> None:
+        fragment_count = 0
+        if fragments is not None and not isinstance(fragments, ctypes.Array):
+            fragments = (DeserializeSceneFragmentMSFT * len(fragments))(
+                *fragments)
+            fragment_count = len(fragments)
+        self._fragments_ctypes_array = fragments
         super().__init__(
-            fragment_count=fragment_count,
-            fragments=fragments,
+            _fragment_count=fragment_count,
+            _fragments=fragments,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneDeserializeInfoMSFT(fragment_count={repr(self.fragment_count)}, fragments={repr(self.fragments)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SceneDeserializeInfoMSFT(fragment_count={repr(self._fragment_count)}, fragments={repr(self._fragments)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneDeserializeInfoMSFT(fragment_count={self.fragment_count}, fragments={self.fragments}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SceneDeserializeInfoMSFT(fragment_count={self._fragment_count}, fragments={self._fragments}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def fragments(self):
+        self._fragments_ctypes_array
+    
+    @fragments.setter
+    def fragments(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (DeserializeSceneFragmentMSFT * len(value))(
+                *value)
+        self._fragments_ctypes_array = value
+        self._fragments = value
+        self._fragment_count = len(value)
 
     @property
     def next_structure(self):
@@ -7846,8 +8289,8 @@ class SceneDeserializeInfoMSFT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("fragment_count", c_uint32),
-        ("fragments", POINTER(DeserializeSceneFragmentMSFT)),
+        ("_fragment_count", c_uint32),
+        ("_fragments", POINTER(DeserializeSceneFragmentMSFT)),
     ]
 
 
@@ -8055,25 +8498,43 @@ class FacialExpressionsHTC(Structure):
         self,
         is_active: Bool32 = 0,
         sample_time: Time = 0,
-        expression_count: int = 0,
-        expression_weightings: POINTER(c_float) = None,
+        expression_weightings: Sequence[float] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
     ) -> None:
+        expression_count = 0
+        if expression_weightings is not None and not isinstance(expression_weightings, ctypes.Array):
+            expression_weightings = (c_float * len(expression_weightings))(
+                *expression_weightings)
+            expression_count = len(expression_weightings)
+        self._expression_weightings_ctypes_array = expression_weightings
         super().__init__(
             is_active=is_active,
             sample_time=sample_time,
-            expression_count=expression_count,
-            expression_weightings=expression_weightings,
+            _expression_count=expression_count,
+            _expression_weightings=expression_weightings,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialExpressionsHTC(is_active={repr(self.is_active)}, sample_time={repr(self.sample_time)}, expression_count={repr(self.expression_count)}, expression_weightings={repr(self.expression_weightings)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.FacialExpressionsHTC(is_active={repr(self.is_active)}, sample_time={repr(self.sample_time)}, expression_count={repr(self._expression_count)}, expression_weightings={repr(self._expression_weightings)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.FacialExpressionsHTC(is_active={self.is_active}, sample_time={self.sample_time}, expression_count={self.expression_count}, expression_weightings={self.expression_weightings}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.FacialExpressionsHTC(is_active={self.is_active}, sample_time={self.sample_time}, expression_count={self._expression_count}, expression_weightings={self._expression_weightings}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def expression_weightings(self):
+        self._expression_weightings_ctypes_array
+    
+    @expression_weightings.setter
+    def expression_weightings(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (c_float * len(value))(
+                *value)
+        self._expression_weightings_ctypes_array = value
+        self._expression_weightings = value
+        self._expression_count = len(value)
 
     @property
     def next_structure(self):
@@ -8096,8 +8557,8 @@ class FacialExpressionsHTC(Structure):
         ("next", c_void_p),
         ("is_active", Bool32),
         ("sample_time", Time),
-        ("expression_count", c_uint32),
-        ("expression_weightings", POINTER(c_float)),
+        ("_expression_count", c_uint32),
+        ("_expression_weightings", POINTER(c_float)),
     ]
 
 
@@ -10739,23 +11200,41 @@ class SpaceStorageLocationFilterInfoFB(Structure):
 class SpaceUuidFilterInfoFB(Structure):
     def __init__(
         self,
-        uuid_count: int = 0,
-        uuids: POINTER(UuidEXT) = None,
+        uuids: Sequence[UuidEXT] = [],
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SPACE_UUID_FILTER_INFO_FB,
     ) -> None:
+        uuid_count = 0
+        if uuids is not None and not isinstance(uuids, ctypes.Array):
+            uuids = (UuidEXT * len(uuids))(
+                *uuids)
+            uuid_count = len(uuids)
+        self._uuids_ctypes_array = uuids
         super().__init__(
-            uuid_count=uuid_count,
-            uuids=uuids,
+            _uuid_count=uuid_count,
+            _uuids=uuids,
             next=next_structure,
             type=structure_type.value,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceUuidFilterInfoFB(uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
+        return f"xr.SpaceUuidFilterInfoFB(uuid_count={repr(self._uuid_count)}, uuids={repr(self._uuids)}, next_structure={repr(self.next)}, structure_type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpaceUuidFilterInfoFB(uuid_count={self.uuid_count}, uuids={self.uuids}, next_structure={self.next}, structure_type={self.type})"
+        return f"xr.SpaceUuidFilterInfoFB(uuid_count={self._uuid_count}, uuids={self._uuids}, next_structure={self.next}, structure_type={self.type})"
+
+    @property
+    def uuids(self):
+        self._uuids_ctypes_array
+    
+    @uuids.setter
+    def uuids(self, value):
+        if not isinstance(value, ctypes.Array):
+            value = (UuidEXT * len(value))(
+                *value)
+        self._uuids_ctypes_array = value
+        self._uuids = value
+        self._uuid_count = len(value)
 
     @property
     def next_structure(self):
@@ -10776,8 +11255,8 @@ class SpaceUuidFilterInfoFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("uuid_count", c_uint32),
-        ("uuids", POINTER(UuidEXT)),
+        ("_uuid_count", c_uint32),
+        ("_uuids", POINTER(UuidEXT)),
     ]
 
 
