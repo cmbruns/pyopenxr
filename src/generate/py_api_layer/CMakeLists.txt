@@ -19,6 +19,7 @@ if (WIN32)
         DESTINATION ${CMAKE_SOURCE_DIR}/../xr/api_layer/windows
     )
 else()
+    set_target_properties(XrApiLayer_python PROPERTIES LINK_FLAGS "-Wl,-Bsymbolic,--exclude-libs,ALL")
     install(
         TARGETS XrApiLayer_python
         DESTINATION ${CMAKE_SOURCE_DIR}/../xr/api_layer/linux

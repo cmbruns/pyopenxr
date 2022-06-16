@@ -1,12 +1,20 @@
-#include "loader_interfaces.h"
 #include <string>
 #include <map>
+#include <iostream>
+
+#include <openxr/openxr.h>
+#include "loader_interfaces.h"
+
 // #pragma warning(disable : 26812)
 
-#ifdef _WIN32
-#  define MODULE_API __declspec(dllexport)
+using namespace std;
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+#define LAYER_EXPORT __attribute__((visibility("default")))
+#elif defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590)
+#define LAYER_EXPORT __attribute__((visibility("default")))
 #else
-#  define MODULE_API
+#define LAYER_EXPORT __declspec(dllexport)
 #endif
 
 extern "C" {
@@ -14,11 +22,12 @@ extern "C" {
 // storage for pure python api layers
 static std::map<std::string, PFN_xrNegotiateLoaderApiLayerInterface> s_LayerTable;
 
-// xrNegotiateLoaderApiLayerInterface is the function the loader looks for in the DLL
-MODULE_API XrResult xrNegotiateLoaderApiLayerInterface(
-	const XrNegotiateLoaderInfo* loaderInfo,
-	const char* cLayerName,
-	XrNegotiateApiLayerRequest* apiLayerRequest)
+// Function used to negotiate an interface betewen the loader and a layer.  Each library exposing one or
+// more layers needs to expose at least this function.
+LAYER_EXPORT XrResult xrNegotiateLoaderApiLayerInterface(
+    const XrNegotiateLoaderInfo *loaderInfo,
+    const char *cLayerName,
+    XrNegotiateApiLayerRequest *apiLayerRequest)
 {
 	// Check whether the named api layer has been registered.
 	std::string sLayerName(cLayerName);
@@ -31,7 +40,7 @@ MODULE_API XrResult xrNegotiateLoaderApiLayerInterface(
 	return result;
 }
 
-MODULE_API void insertXrApiLayer(const char* pName, int nameLength, PFN_xrNegotiateLoaderApiLayerInterface negotiateFunction)
+LAYER_EXPORT void insertXrApiLayer(const char* pName, int nameLength, PFN_xrNegotiateLoaderApiLayerInterface negotiateFunction)
 {
 	std::string layerName(pName, nameLength);
 	s_LayerTable[layerName] = negotiateFunction;
