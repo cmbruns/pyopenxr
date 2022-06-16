@@ -11,7 +11,7 @@ XR_APILAYER_LUNARG_api_dump_NAME = "XR_APILAYER_LUNARG_api_dump"
 XR_APILAYER_LUNARG_core_validation_NAME = "XR_APILAYER_LUNARG_core_validation"
 
 # Automatically expose packaged API layers for supported platforms
-if platform.system() in ["Windows", ]:
+if platform.system() in ["Windows", "Linux"]:
     expose_packaged_api_layers()
 
 

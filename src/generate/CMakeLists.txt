@@ -67,6 +67,7 @@ find_file(LIBCLANG_SHARED_LIBRARY
     HINTS
         "$ENV{ProgramW6432}/LLVM"
         "$ENV{ProgramFiles}/LLVM"
+        "/usr/lib/llvm-10/lib"
     PATH_SUFFIXES bin
     DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
 )
@@ -126,34 +127,48 @@ find_file(OPENXR_VALIDATION_LAYER_JSON
         "$ENV{${PF86}}/OPENXR"
         "$ENV{ProgramW6432}/OPENXR"
         "$ENV{ProgramFiles}/OPENXR"
+        "/usr/local/share/openxr/1/api_layers/explicit.d/"
     PATH_SUFFIXES x64/bin/api_layers bin/api_layers lib
     DOC "Pre-built validation API layer for packaging"
 )
-if (OPENXR_VALIDATION_LAYER_JSON)
-    file(MAKE_DIRECTORY "${STAGING_DIR}/api_layer")
-    if (WIN32)
-        set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/windows")
-    else()
-        set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/linux")
+find_file(OPENXR_VALIDATION_LAYER_LIB
+    NAMES libXrApiLayer_core_validation.so XrApiLayer_core_validation.dll
+    HINTS
+        "${OPENXR_INCLUDE_DIR}/.."
+        "$ENV{${PF86}}/OPENXR"
+        "$ENV{ProgramW6432}/OPENXR"
+        "$ENV{ProgramFiles}/OPENXR"
+        "/usr/local/lib"
+    PATH_SUFFIXES x64/bin/api_layers bin/api_layers lib
+    DOC "Pre-built validation API layer for packaging"
+)
+foreach (LAYER_FILE ${OPENXR_VALIDATION_LAYER_JSON} ${OPENXR_VALIDATION_LAYER_LIB})
+    if (LAYER_FILE)
+        file(MAKE_DIRECTORY "${STAGING_DIR}/api_layer")
+        if (WIN32)
+            set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/windows")
+        else()
+            set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/linux")
+        endif()
+        get_filename_component(LAYERS_INPUT ${LAYER_FILE} DIRECTORY)
+        file(GLOB API_LAYER_JSONS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/XrApiLayer*.json")
+        if (WIN32)
+            file(GLOB API_LAYER_LIBS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/XrApiLayer*.dll")
+        else()
+            file(GLOB API_LAYER_LIBS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/libXrApiLayer*.so")
+        endif()
+        file(MAKE_DIRECTORY "${API_LAYER_OUTPUT_FOLDER}")
+        foreach(F ${API_LAYER_JSONS})
+            file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+        endforeach()
+        foreach(F ${API_LAYER_LIBS})
+            file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+        endforeach()
+        # file(COPY "${API_LAYER_JSONS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+        # file(COPY "${API_LAYER_LIBS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+        message(STATUS "Copied api layer files to ${API_LAYER_OUTPUT_FOLDER}")
     endif()
-    get_filename_component(LAYERS_INPUT ${OPENXR_VALIDATION_LAYER_JSON} DIRECTORY)
-    file(GLOB API_LAYER_JSONS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/*.json")
-    if (WIN32)
-        file(GLOB API_LAYER_LIBS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/*.dll")
-    else()
-        file(GLOB API_LAYER_LIBS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/*.so")
-    endif()
-    file(MAKE_DIRECTORY "${API_LAYER_OUTPUT_FOLDER}")
-    foreach(F ${API_LAYER_JSONS})
-        file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
-    endforeach()
-    foreach(F ${API_LAYER_LIBS})
-        file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
-    endforeach()
-    # file(COPY "${API_LAYER_JSONS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
-    # file(COPY "${API_LAYER_LIBS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
-    message(STATUS "Copied api layer files to ${API_LAYER_OUTPUT_FOLDER}")
-endif()
+endforeach()
 
 ##################################
 ### Generate enums source file ###

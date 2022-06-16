@@ -28,6 +28,7 @@ def main():
     cg.print_header()
     print("")
     print(inspect.cleandoc("""
+        from typing import Sequence
         from OpenGL import GLX
 
         from ..enums import *

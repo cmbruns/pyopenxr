@@ -18,4 +18,9 @@ if (WIN32)
         RUNTIME  # dll only?
         DESTINATION ${CMAKE_SOURCE_DIR}/../xr/api_layer/windows
     )
+else()
+    install(
+        TARGETS XrApiLayer_python
+        DESTINATION ${CMAKE_SOURCE_DIR}/../xr/api_layer/linux
+    )
 endif()
