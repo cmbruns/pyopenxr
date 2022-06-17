@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 import enum
 import inspect
+from numbers import Number
 import re
 import textwrap
-from typing import Generator, Set
+from typing import Generator, Set, Union
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
@@ -413,7 +414,7 @@ class StructFieldItem(CodeItem):
             raise NotImplementedError
 
     def inner_name(self, api=Api.PYTHON) -> str:
-        """Sometimes we hide the inner field name so we can wrap it."""
+        """Sometimes we hide the inner field name, so we can wrap it."""
         n = self.name(api)
         if self.kind in [StructFieldItem.Kind.ARRAY_POINTER, StructFieldItem.Kind.ARRAY_COUNT]:
             return f"_{n}"  # Prepend with underscore
@@ -538,7 +539,8 @@ class StructItem(CodeItem):
         result += "\n"
         return result
 
-    def field_as_string_code(self, string_field: str):
+    @staticmethod
+    def field_as_string_code(string_field: str):
         """
         This structure is sort of equivalent to a string.
         So use one of its fields as a string proxy.
@@ -583,8 +585,6 @@ class StructItem(CodeItem):
         result += structure_coder.generate_properties()
 
         result += structure_coder.generate_fields(api)
-
-
         return result
 
     def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
@@ -754,10 +754,12 @@ class StringInputParameterCoder(InputParameterCoder):
 
 class OutputParameterCoder(ParameterCoderBase):
     def result_type_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         yield f"{rtype.name(api)}"
 
     def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         yield f"{self.parameter.name(api)} = {rtype.name(Api.CTYPES)}()"
 
@@ -765,6 +767,7 @@ class OutputParameterCoder(ParameterCoderBase):
         yield f"byref({self.parameter.name(api)})"
 
     def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         if rtype.name(Api.PYTHON) == "int":
             yield f"{self.parameter.name(api)}.value"
@@ -794,6 +797,7 @@ class BufferCoder(ParameterCoderBase):
             assert not self.array.type.clang_type.get_pointee().is_const_qualified()
             self.array_type_name = "str"
         else:
+            # noinspection PyUnresolvedReferences
             self.array_type = self.array.type.pointee
             self.array_type_name: str = self.array_type.name(Api.CTYPES)
         if self.use_element_type_arg:
@@ -816,13 +820,13 @@ class BufferCoder(ParameterCoderBase):
     def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         name = f"{self.array.name()}"
         n = f"{self.cap_in.name(api)}.value"
-        etype = self.array_type_name_internal
+        e_type = self.array_type_name_internal
         if self.array_type_name == "str":
             yield f"{name} = create_string_buffer({n})"
         else:
             # Use the default constructor to initialize each array member
             # initialized_array = (MyStructure * N)(*([MyStructure()] * N))
-            yield f"{name} = ({etype} * {n})(*([{etype}()] * {n}))"
+            yield f"{name} = ({e_type} * {n})(*([{e_type}()] * {n}))"
 
     def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
@@ -860,6 +864,7 @@ class FunctionCoder(object):
                 p2 = self.param_coders[ix + 1][0]
                 assert p2.name().endswith("_count_output")
                 assert p2.type.clang_type.kind == TypeKind.POINTER
+                # noinspection PyUnresolvedReferences
                 assert "int" in p2.type.pointee.name()
                 p3 = self.param_coders[ix + 2][0]
                 assert p2.type.clang_type.kind == TypeKind.POINTER
@@ -953,7 +958,7 @@ class FunctionCoder(object):
 
 class FieldCoder(object):
     """Code generator helper for a single field in a ctypes.Structure constructor"""
-    def __init__(self, field: StructFieldItem, default=0, rename=None):
+    def __init__(self, field: StructFieldItem, default: Union[Number, str, None] = 0, rename=None):
         self.field = field
         self.name = self.field.name(Api.PYTHON)
         self.inner_name = self.field.inner_name(Api.PYTHON)
@@ -1034,11 +1039,13 @@ class ArrayPointerFieldCoder(FieldCoder):
         self.count_field = count_field
 
     def param_code(self) -> Generator[str, None, None]:
+        # noinspection PyUnresolvedReferences
         yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}] = ()"
 
     def pre_call_code(self) -> Generator[str, None, None]:
         # Create a ctypes array if one does not already exist
         n = self.name
+        # noinspection PyUnresolvedReferences
         p = self.field.type.pointee
         pname = p.name(Api.PYTHON)
         yield f"if {n} is not None and not isinstance({n}, ctypes.Array):"
@@ -1057,6 +1064,7 @@ class ArrayPointerFieldCoder(FieldCoder):
 
     def property_code(self) -> Generator[str, None, None]:
         n = self.name
+        # noinspection PyUnresolvedReferences
         p = self.field.type.pointee
         pname = p.name(Api.PYTHON)
         # getter
