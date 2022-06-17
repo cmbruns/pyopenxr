@@ -7,7 +7,12 @@ find_file(LOADER_INTERFACES_H
     DOC "Header file for C API layer development"
 )
 if(LOADER_INTERFACES_H)
-    file(COPY ${LOADER_INTERFACES_H} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
+    configure_file(
+        "${LOADER_INTERFACES_H}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/"
+        @ONLY
+        NEWLINE_STYLE LF  # Even/especially on windows...
+    )
 endif()
 
 add_library(XrApiLayer_python SHARED py_api_layer.cpp loader_interfaces.h)

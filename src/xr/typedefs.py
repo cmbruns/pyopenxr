@@ -790,8 +790,8 @@ class Posef(Structure):
 class ReferenceSpaceCreateInfo(Structure):
     def __init__(
         self,
-        reference_space_type: ReferenceSpaceType = ReferenceSpaceType(),
-        pose_in_reference_space: Posef = None,
+        reference_space_type: ReferenceSpaceType = ReferenceSpaceType.STAGE,
+        pose_in_reference_space: Posef = Posef(),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.REFERENCE_SPACE_CREATE_INFO,
     ) -> None:

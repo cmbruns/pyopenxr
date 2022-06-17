@@ -23,7 +23,7 @@ from .version import *
 from .exception import *
 
 
-class Eye(enum.Enum):
+class Eye(enum.IntEnum):
     LEFT = 0
     RIGHT = 1
 

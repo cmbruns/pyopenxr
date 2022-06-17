@@ -9,10 +9,17 @@ from .platform import *
 from .exception import *
 from .classes import *
 from .api_layer import *
+from .context_object import *
+
+# Use submodule name for extension
+import xr.extension as extension
 
 # from .experiment import *
 
-__all__ = []
+__all__ = [
+    "extension",
+]
+
 for subpackage in (
     version,
     constants,
@@ -23,6 +30,7 @@ for subpackage in (
     exception,
     classes,
     api_layer,
+    context_object,
 ):
     __all__ += subpackage.__all__
 

@@ -1033,7 +1033,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         self.count_field = count_field
 
     def param_code(self) -> Generator[str, None, None]:
-        yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}] = []"
+        yield f"{self.name}: None | Sequence[{self.field.type.pointee.name(Api.PYTHON)}]] = ()"
 
     def pre_call_code(self) -> Generator[str, None, None]:
         # Create a ctypes array if one does not already exist
