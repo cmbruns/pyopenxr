@@ -93,7 +93,6 @@ class ContextObject(object):
 
                 yield self.frame_state
 
-                time.sleep(0.5)
                 end_frame(
                     self.session_handle,
                     frame_end_info=FrameEndInfo(

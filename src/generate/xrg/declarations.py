@@ -1033,7 +1033,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         self.count_field = count_field
 
     def param_code(self) -> Generator[str, None, None]:
-        yield f"{self.name}: None | Sequence[{self.field.type.pointee.name(Api.PYTHON)}]] = ()"
+        yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}]] = ()"
 
     def pre_call_code(self) -> Generator[str, None, None]:
         # Create a ctypes array if one does not already exist
@@ -1085,7 +1085,10 @@ class ArrayPointerFieldCoder(FieldCoder):
 class EnumFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        yield f"{self.name}: {enum_name} = {enum_name}()"
+        default = f"{enum_name}()"
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f"{self.name}: {enum_name} = {default}"
 
     def call_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
@@ -1102,6 +1105,14 @@ class NoDefaultFieldCoder(FieldCoder):
     """There is no reasonable default"""
     def param_code(self) -> Generator[str, None, None]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)}"
+
+
+class PosefFieldCoder(FieldCoder):
+    def param_code(self) -> Generator[str, None, None]:
+        default = "Posef()"
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f'{self.name}: Posef = {default}'
 
 
 class ArrayFieldCoder(FieldCoder):
@@ -1209,6 +1220,8 @@ class StructureCoder(object):
                 self.field_coders.append(StringFieldCoder(field))
             elif field.type.name(Api.PYTHON).startswith("(c_char * "):
                 self.field_coders.append(StringFieldCoder(field))
+            elif field.type.name(Api.PYTHON) == "Posef":
+                self.field_coders.append(PosefFieldCoder(field))
             elif field.type.name(Api.CTYPES) == "VersionNumber":
                 self.field_coders.append(VersionFieldCoder(field))
             elif struct.name() == "Quaternionf" and field.name() == "w":
