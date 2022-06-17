@@ -127,6 +127,7 @@ class ApiLayerProperties(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -135,6 +136,7 @@ class ApiLayerProperties(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -182,6 +184,7 @@ class ExtensionProperties(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -190,6 +193,7 @@ class ExtensionProperties(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -237,8 +241,8 @@ class InstanceCreateInfo(Structure):
         self,
         create_flags: InstanceCreateFlags = InstanceCreateFlags(),
         application_info: ApplicationInfo = ApplicationInfo(),
-        enabled_api_layer_names: Sequence[str]] = (),
-        enabled_extension_names: Sequence[str]] = (),
+        enabled_api_layer_names: Sequence[str] = (),
+        enabled_extension_names: Sequence[str] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.INSTANCE_CREATE_INFO,
     ) -> None:
@@ -275,8 +279,9 @@ class InstanceCreateInfo(Structure):
 
     @property
     def enabled_api_layer_names(self):
-        self._enabled_api_layer_names_ctypes_array
+        return self._enabled_api_layer_names_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @enabled_api_layer_names.setter
     def enabled_api_layer_names(self, value):
         if not isinstance(value, ctypes.Array):
@@ -288,8 +293,9 @@ class InstanceCreateInfo(Structure):
 
     @property
     def enabled_extension_names(self):
-        self._enabled_extension_names_ctypes_array
+        return self._enabled_extension_names_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @enabled_extension_names.setter
     def enabled_extension_names(self, value):
         if not isinstance(value, ctypes.Array):
@@ -305,6 +311,7 @@ class InstanceCreateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -313,6 +320,7 @@ class InstanceCreateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -354,6 +362,7 @@ class InstanceProperties(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -362,6 +371,7 @@ class InstanceProperties(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -395,6 +405,7 @@ class EventDataBuffer(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -403,6 +414,7 @@ class EventDataBuffer(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -437,6 +449,7 @@ class SystemGetInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -445,6 +458,7 @@ class SystemGetInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -540,6 +554,7 @@ class SystemProperties(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -548,6 +563,7 @@ class SystemProperties(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -588,6 +604,7 @@ class SessionCreateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -596,6 +613,7 @@ class SessionCreateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -688,6 +706,7 @@ class SpaceVelocity(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -696,6 +715,7 @@ class SpaceVelocity(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -814,6 +834,7 @@ class ReferenceSpaceCreateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -822,6 +843,7 @@ class ReferenceSpaceCreateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -906,6 +928,7 @@ class ActionSpaceCreateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -914,6 +937,7 @@ class ActionSpaceCreateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -952,6 +976,7 @@ class SpaceLocation(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -960,6 +985,7 @@ class SpaceLocation(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -997,6 +1023,7 @@ class ViewConfigurationProperties(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1005,6 +1032,7 @@ class ViewConfigurationProperties(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1050,6 +1078,7 @@ class ViewConfigurationView(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1058,6 +1087,7 @@ class ViewConfigurationView(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1113,6 +1143,7 @@ class SwapchainCreateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1121,6 +1152,7 @@ class SwapchainCreateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1161,6 +1193,7 @@ class SwapchainImageBaseHeader(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1169,6 +1202,7 @@ class SwapchainImageBaseHeader(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1200,6 +1234,7 @@ class SwapchainImageAcquireInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1208,6 +1243,7 @@ class SwapchainImageAcquireInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1241,6 +1277,7 @@ class SwapchainImageWaitInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1249,6 +1286,7 @@ class SwapchainImageWaitInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1281,6 +1319,7 @@ class SwapchainImageReleaseInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1289,6 +1328,7 @@ class SwapchainImageReleaseInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1322,6 +1362,7 @@ class SessionBeginInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1330,6 +1371,7 @@ class SessionBeginInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1362,6 +1404,7 @@ class FrameWaitInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1370,6 +1413,7 @@ class FrameWaitInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1407,6 +1451,7 @@ class FrameState(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1415,6 +1460,7 @@ class FrameState(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1449,6 +1495,7 @@ class FrameBeginInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1457,6 +1504,7 @@ class FrameBeginInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1492,6 +1540,7 @@ class CompositionLayerBaseHeader(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1500,6 +1549,7 @@ class CompositionLayerBaseHeader(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1515,7 +1565,7 @@ class FrameEndInfo(Structure):
         self,
         display_time: Time = 0,
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),
-        layers: Sequence[POINTER(CompositionLayerBaseHeader)]] = (),
+        layers: Sequence[POINTER(CompositionLayerBaseHeader)] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.FRAME_END_INFO,
     ) -> None:
@@ -1542,8 +1592,9 @@ class FrameEndInfo(Structure):
 
     @property
     def layers(self):
-        self._layers_ctypes_array
+        return self._layers_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @layers.setter
     def layers(self, value):
         if not isinstance(value, ctypes.Array):
@@ -1559,6 +1610,7 @@ class FrameEndInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1567,6 +1619,7 @@ class FrameEndInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1608,6 +1661,7 @@ class ViewLocateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1616,6 +1670,7 @@ class ViewLocateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1652,6 +1707,7 @@ class ViewState(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1660,6 +1716,7 @@ class ViewState(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1751,6 +1808,7 @@ class View(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1759,6 +1817,7 @@ class View(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1798,6 +1857,7 @@ class ActionSetCreateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1806,6 +1866,7 @@ class ActionSetCreateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1850,6 +1911,7 @@ class ActionCreateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1858,6 +1920,7 @@ class ActionCreateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1923,6 +1986,7 @@ class InteractionProfileSuggestedBinding(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1931,6 +1995,7 @@ class InteractionProfileSuggestedBinding(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1969,6 +2034,7 @@ class SessionActionSetsAttachInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1977,6 +2043,7 @@ class SessionActionSetsAttachInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2012,6 +2079,7 @@ class InteractionProfileState(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2020,6 +2088,7 @@ class InteractionProfileState(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2056,6 +2125,7 @@ class ActionStateGetInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2064,6 +2134,7 @@ class ActionStateGetInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2105,6 +2176,7 @@ class ActionStateBoolean(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2113,6 +2185,7 @@ class ActionStateBoolean(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2156,6 +2229,7 @@ class ActionStateFloat(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2164,6 +2238,7 @@ class ActionStateFloat(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2254,6 +2329,7 @@ class ActionStateVector2f(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2262,6 +2338,7 @@ class ActionStateVector2f(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2299,6 +2376,7 @@ class ActionStatePose(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2307,6 +2385,7 @@ class ActionStatePose(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2366,6 +2445,7 @@ class ActionsSyncInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2374,6 +2454,7 @@ class ActionsSyncInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2409,6 +2490,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2417,6 +2499,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2453,6 +2536,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2461,6 +2545,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2498,6 +2583,7 @@ class HapticActionInfo(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2506,6 +2592,7 @@ class HapticActionInfo(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2539,6 +2626,7 @@ class HapticBaseHeader(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2547,6 +2635,7 @@ class HapticBaseHeader(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2578,6 +2667,7 @@ class BaseInStructure(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2586,6 +2676,7 @@ class BaseInStructure(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     pass
@@ -2620,6 +2711,7 @@ class BaseOutStructure(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2628,6 +2720,7 @@ class BaseOutStructure(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     pass
@@ -2817,6 +2910,7 @@ class CompositionLayerProjectionView(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2825,6 +2919,7 @@ class CompositionLayerProjectionView(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2841,7 +2936,7 @@ class CompositionLayerProjection(Structure):
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
         space: SpaceHandle = None,
-        views: Sequence[CompositionLayerProjectionView]] = (),
+        views: Sequence[CompositionLayerProjectionView] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION,
     ) -> None:
@@ -2868,8 +2963,9 @@ class CompositionLayerProjection(Structure):
 
     @property
     def views(self):
-        self._views_ctypes_array
+        return self._views_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @views.setter
     def views(self, value):
         if not isinstance(value, ctypes.Array):
@@ -2885,6 +2981,7 @@ class CompositionLayerProjection(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2893,6 +2990,7 @@ class CompositionLayerProjection(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2944,6 +3042,7 @@ class CompositionLayerQuad(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2952,6 +3051,7 @@ class CompositionLayerQuad(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -2989,6 +3089,7 @@ class EventDataBaseHeader(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -2997,6 +3098,7 @@ class EventDataBaseHeader(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3030,6 +3132,7 @@ class EventDataEventsLost(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3038,6 +3141,7 @@ class EventDataEventsLost(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3072,6 +3176,7 @@ class EventDataInstanceLossPending(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3080,6 +3185,7 @@ class EventDataInstanceLossPending(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3118,6 +3224,7 @@ class EventDataSessionStateChanged(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3126,6 +3233,7 @@ class EventDataSessionStateChanged(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3170,6 +3278,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3178,6 +3287,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3216,6 +3326,7 @@ class EventDataInteractionProfileChanged(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3224,6 +3335,7 @@ class EventDataInteractionProfileChanged(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3262,6 +3374,7 @@ class HapticVibration(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3270,6 +3383,7 @@ class HapticVibration(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3607,6 +3721,7 @@ class CompositionLayerCubeKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3615,6 +3730,7 @@ class CompositionLayerCubeKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3664,6 +3780,7 @@ class CompositionLayerDepthInfoKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3672,6 +3789,7 @@ class CompositionLayerDepthInfoKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3726,6 +3844,7 @@ class CompositionLayerCylinderKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3734,6 +3853,7 @@ class CompositionLayerCylinderKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3795,6 +3915,7 @@ class CompositionLayerEquirectKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3803,6 +3924,7 @@ class CompositionLayerEquirectKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3854,6 +3976,7 @@ class VisibilityMaskKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3862,6 +3985,7 @@ class VisibilityMaskKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3905,6 +4029,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3913,6 +4038,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3958,6 +4084,7 @@ class CompositionLayerColorScaleBiasKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -3966,6 +4093,7 @@ class CompositionLayerColorScaleBiasKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -3999,6 +4127,7 @@ class LoaderInitInfoBaseHeaderKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4007,6 +4136,7 @@ class LoaderInitInfoBaseHeaderKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4061,6 +4191,7 @@ class CompositionLayerEquirect2KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4069,6 +4200,7 @@ class CompositionLayerEquirect2KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4109,6 +4241,7 @@ class BindingModificationBaseHeaderKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4117,6 +4250,7 @@ class BindingModificationBaseHeaderKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4128,7 +4262,7 @@ class BindingModificationBaseHeaderKHR(Structure):
 class BindingModificationsKHR(Structure):
     def __init__(
         self,
-        binding_modifications: Sequence[POINTER(BindingModificationBaseHeaderKHR)]] = (),
+        binding_modifications: Sequence[POINTER(BindingModificationBaseHeaderKHR)] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.BINDING_MODIFICATIONS_KHR,
     ) -> None:
@@ -4153,8 +4287,9 @@ class BindingModificationsKHR(Structure):
 
     @property
     def binding_modifications(self):
-        self._binding_modifications_ctypes_array
+        return self._binding_modifications_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @binding_modifications.setter
     def binding_modifications(self, value):
         if not isinstance(value, ctypes.Array):
@@ -4170,6 +4305,7 @@ class BindingModificationsKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4178,6 +4314,7 @@ class BindingModificationsKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4219,6 +4356,7 @@ class EventDataPerfSettingsEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4227,6 +4365,7 @@ class EventDataPerfSettingsEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4284,6 +4423,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4292,6 +4432,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4328,6 +4469,7 @@ class DebugUtilsLabelEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4336,6 +4478,7 @@ class DebugUtilsLabelEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4351,8 +4494,8 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         message_id: str = "",
         function_name: str = "",
         message: str = "",
-        objects: Sequence[DebugUtilsObjectNameInfoEXT]] = (),
-        session_labels: Sequence[DebugUtilsLabelEXT]] = (),
+        objects: Sequence[DebugUtilsObjectNameInfoEXT] = (),
+        session_labels: Sequence[DebugUtilsLabelEXT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
     ) -> None:
@@ -4388,8 +4531,9 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
 
     @property
     def objects(self):
-        self._objects_ctypes_array
+        return self._objects_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @objects.setter
     def objects(self, value):
         if not isinstance(value, ctypes.Array):
@@ -4401,8 +4545,9 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
 
     @property
     def session_labels(self):
-        self._session_labels_ctypes_array
+        return self._session_labels_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @session_labels.setter
     def session_labels(self, value):
         if not isinstance(value, ctypes.Array):
@@ -4418,6 +4563,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4426,6 +4572,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4475,6 +4622,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4483,6 +4631,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4535,6 +4684,7 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4543,6 +4693,7 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4577,6 +4728,7 @@ class EyeGazeSampleTimeEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4585,6 +4737,7 @@ class EyeGazeSampleTimeEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4626,6 +4779,7 @@ class SessionCreateInfoOverlayEXTX(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4634,6 +4788,7 @@ class SessionCreateInfoOverlayEXTX(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4671,6 +4826,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4679,6 +4835,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4725,6 +4882,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4733,6 +4891,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4771,6 +4930,7 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4779,6 +4939,7 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4823,6 +4984,7 @@ class CompositionLayerImageLayoutFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4831,6 +4993,7 @@ class CompositionLayerImageLayoutFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4871,6 +5034,7 @@ class CompositionLayerAlphaBlendFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4879,6 +5043,7 @@ class CompositionLayerAlphaBlendFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4922,6 +5087,7 @@ class ViewConfigurationDepthRangeEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4930,6 +5096,7 @@ class ViewConfigurationDepthRangeEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -4987,6 +5154,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -4995,6 +5163,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5035,6 +5204,7 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5043,6 +5213,7 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5077,6 +5248,7 @@ class SpatialGraphNodeBindingPropertiesGetInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5085,6 +5257,7 @@ class SpatialGraphNodeBindingPropertiesGetInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5118,6 +5291,7 @@ class SpatialGraphNodeBindingPropertiesMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5126,6 +5300,7 @@ class SpatialGraphNodeBindingPropertiesMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5177,6 +5352,7 @@ class SystemHandTrackingPropertiesEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5185,6 +5361,7 @@ class SystemHandTrackingPropertiesEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5221,6 +5398,7 @@ class HandTrackerCreateInfoEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5229,6 +5407,7 @@ class HandTrackerCreateInfoEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5266,6 +5445,7 @@ class HandJointsLocateInfoEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5274,6 +5454,7 @@ class HandJointsLocateInfoEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5344,7 +5525,7 @@ class HandJointLocationsEXT(Structure):
     def __init__(
         self,
         is_active: Bool32 = 0,
-        joint_locations: Sequence[HandJointLocationEXT]] = (),
+        joint_locations: Sequence[HandJointLocationEXT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_JOINT_LOCATIONS_EXT,
     ) -> None:
@@ -5370,8 +5551,9 @@ class HandJointLocationsEXT(Structure):
 
     @property
     def joint_locations(self):
-        self._joint_locations_ctypes_array
+        return self._joint_locations_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @joint_locations.setter
     def joint_locations(self, value):
         if not isinstance(value, ctypes.Array):
@@ -5387,6 +5569,7 @@ class HandJointLocationsEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5395,6 +5578,7 @@ class HandJointLocationsEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5409,7 +5593,7 @@ class HandJointLocationsEXT(Structure):
 class HandJointVelocitiesEXT(Structure):
     def __init__(
         self,
-        joint_velocities: Sequence[HandJointVelocityEXT]] = (),
+        joint_velocities: Sequence[HandJointVelocityEXT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.HAND_JOINT_VELOCITIES_EXT,
     ) -> None:
@@ -5434,8 +5618,9 @@ class HandJointVelocitiesEXT(Structure):
 
     @property
     def joint_velocities(self):
-        self._joint_velocities_ctypes_array
+        return self._joint_velocities_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @joint_velocities.setter
     def joint_velocities(self, value):
         if not isinstance(value, ctypes.Array):
@@ -5451,6 +5636,7 @@ class HandJointVelocitiesEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5459,6 +5645,7 @@ class HandJointVelocitiesEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5505,6 +5692,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5513,6 +5701,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5551,6 +5740,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5559,6 +5749,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5596,6 +5787,7 @@ class HandMeshUpdateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5604,6 +5796,7 @@ class HandMeshUpdateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5736,6 +5929,7 @@ class HandMeshMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5744,6 +5938,7 @@ class HandMeshMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5782,6 +5977,7 @@ class HandPoseTypeInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5790,6 +5986,7 @@ class HandPoseTypeInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5807,7 +6004,7 @@ PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXTHandle, POINT
 class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     def __init__(
         self,
-        enabled_view_configuration_types: Sequence[c_int]] = (),
+        enabled_view_configuration_types: Sequence[c_int] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT,
     ) -> None:
@@ -5832,8 +6029,9 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
 
     @property
     def enabled_view_configuration_types(self):
-        self._enabled_view_configuration_types_ctypes_array
+        return self._enabled_view_configuration_types_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @enabled_view_configuration_types.setter
     def enabled_view_configuration_types(self, value):
         if not isinstance(value, ctypes.Array):
@@ -5849,6 +6047,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5857,6 +6056,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5894,6 +6094,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5902,6 +6103,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5915,7 +6117,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
 class SecondaryViewConfigurationFrameStateMSFT(Structure):
     def __init__(
         self,
-        view_configuration_states: Sequence[SecondaryViewConfigurationStateMSFT]] = (),
+        view_configuration_states: Sequence[SecondaryViewConfigurationStateMSFT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT,
     ) -> None:
@@ -5940,8 +6142,9 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
 
     @property
     def view_configuration_states(self):
-        self._view_configuration_states_ctypes_array
+        return self._view_configuration_states_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @view_configuration_states.setter
     def view_configuration_states(self, value):
         if not isinstance(value, ctypes.Array):
@@ -5957,6 +6160,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -5965,6 +6169,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -5980,7 +6185,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         self,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),
-        layers: Sequence[POINTER(CompositionLayerBaseHeader)]] = (),
+        layers: Sequence[POINTER(CompositionLayerBaseHeader)] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT,
     ) -> None:
@@ -6007,8 +6212,9 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
 
     @property
     def layers(self):
-        self._layers_ctypes_array
+        return self._layers_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @layers.setter
     def layers(self, value):
         if not isinstance(value, ctypes.Array):
@@ -6024,6 +6230,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6032,6 +6239,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6071,6 +6279,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6079,6 +6288,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6114,6 +6324,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6122,6 +6333,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6159,6 +6371,7 @@ class ControllerModelKeyStateMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6167,6 +6380,7 @@ class ControllerModelKeyStateMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6203,6 +6417,7 @@ class ControllerModelNodePropertiesMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6211,6 +6426,7 @@ class ControllerModelNodePropertiesMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6250,6 +6466,7 @@ class ControllerModelPropertiesMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6258,6 +6475,7 @@ class ControllerModelPropertiesMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6294,6 +6512,7 @@ class ControllerModelNodeStateMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6302,6 +6521,7 @@ class ControllerModelNodeStateMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6340,6 +6560,7 @@ class ControllerModelStateMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6348,6 +6569,7 @@ class ControllerModelStateMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6399,6 +6621,7 @@ class ViewConfigurationViewFovEPIC(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6407,6 +6630,7 @@ class ViewConfigurationViewFovEPIC(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6442,6 +6666,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6450,6 +6675,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6494,6 +6720,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6502,6 +6729,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6539,6 +6767,7 @@ class SwapchainStateBaseHeaderFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6547,6 +6776,7 @@ class SwapchainStateBaseHeaderFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6587,6 +6817,7 @@ class CompositionLayerSecureContentFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6595,6 +6826,7 @@ class CompositionLayerSecureContentFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6645,6 +6877,7 @@ class InteractionProfileDpadBindingEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6653,6 +6886,7 @@ class InteractionProfileDpadBindingEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6705,6 +6939,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6713,6 +6948,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6752,6 +6988,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6760,6 +6997,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6824,6 +7062,7 @@ class SceneObserverCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6832,6 +7071,7 @@ class SceneObserverCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6863,6 +7103,7 @@ class SceneCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -6871,6 +7112,7 @@ class SceneCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -6962,9 +7204,9 @@ class SceneBoundsMSFT(Structure):
         self,
         space: SpaceHandle = None,
         time: Time = 0,
-        spheres: Sequence[SceneSphereBoundMSFT]] = (),
-        boxes: Sequence[SceneOrientedBoxBoundMSFT]] = (),
-        frustums: Sequence[SceneFrustumBoundMSFT]] = (),
+        spheres: Sequence[SceneSphereBoundMSFT] = (),
+        boxes: Sequence[SceneOrientedBoxBoundMSFT] = (),
+        frustums: Sequence[SceneFrustumBoundMSFT] = (),
     ) -> None:
         sphere_count = 0
         if spheres is not None and not isinstance(spheres, ctypes.Array):
@@ -7003,8 +7245,9 @@ class SceneBoundsMSFT(Structure):
 
     @property
     def spheres(self):
-        self._spheres_ctypes_array
+        return self._spheres_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @spheres.setter
     def spheres(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7016,8 +7259,9 @@ class SceneBoundsMSFT(Structure):
 
     @property
     def boxes(self):
-        self._boxes_ctypes_array
+        return self._boxes_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @boxes.setter
     def boxes(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7029,8 +7273,9 @@ class SceneBoundsMSFT(Structure):
 
     @property
     def frustums(self):
-        self._frustums_ctypes_array
+        return self._frustums_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @frustums.setter
     def frustums(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7055,7 +7300,7 @@ class SceneBoundsMSFT(Structure):
 class NewSceneComputeInfoMSFT(Structure):
     def __init__(
         self,
-        requested_features: Sequence[c_int]] = (),
+        requested_features: Sequence[c_int] = (),
         consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT(),
         bounds: SceneBoundsMSFT = None,
         next_structure: c_void_p = None,
@@ -7086,8 +7331,9 @@ class NewSceneComputeInfoMSFT(Structure):
 
     @property
     def requested_features(self):
-        self._requested_features_ctypes_array
+        return self._requested_features_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @requested_features.setter
     def requested_features(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7103,6 +7349,7 @@ class NewSceneComputeInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7111,6 +7358,7 @@ class NewSceneComputeInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7148,6 +7396,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7156,6 +7405,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7227,6 +7477,7 @@ class SceneComponentsMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7235,6 +7486,7 @@ class SceneComponentsMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7271,6 +7523,7 @@ class SceneComponentsGetInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7279,6 +7532,7 @@ class SceneComponentsGetInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7314,7 +7568,7 @@ class SceneComponentLocationMSFT(Structure):
 class SceneComponentLocationsMSFT(Structure):
     def __init__(
         self,
-        locations: Sequence[SceneComponentLocationMSFT]] = (),
+        locations: Sequence[SceneComponentLocationMSFT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_COMPONENT_LOCATIONS_MSFT,
     ) -> None:
@@ -7339,8 +7593,9 @@ class SceneComponentLocationsMSFT(Structure):
 
     @property
     def locations(self):
-        self._locations_ctypes_array
+        return self._locations_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @locations.setter
     def locations(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7356,6 +7611,7 @@ class SceneComponentLocationsMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7364,6 +7620,7 @@ class SceneComponentLocationsMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7379,7 +7636,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
         self,
         base_space: SpaceHandle = None,
         time: Time = 0,
-        component_ids: Sequence[UuidMSFT]] = (),
+        component_ids: Sequence[UuidMSFT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_COMPONENTS_LOCATE_INFO_MSFT,
     ) -> None:
@@ -7406,8 +7663,9 @@ class SceneComponentsLocateInfoMSFT(Structure):
 
     @property
     def component_ids(self):
-        self._component_ids_ctypes_array
+        return self._component_ids_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @component_ids.setter
     def component_ids(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7423,6 +7681,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7431,6 +7690,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7466,7 +7726,7 @@ class SceneObjectMSFT(Structure):
 class SceneObjectsMSFT(Structure):
     def __init__(
         self,
-        scene_objects: Sequence[SceneObjectMSFT]] = (),
+        scene_objects: Sequence[SceneObjectMSFT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_OBJECTS_MSFT,
     ) -> None:
@@ -7491,8 +7751,9 @@ class SceneObjectsMSFT(Structure):
 
     @property
     def scene_objects(self):
-        self._scene_objects_ctypes_array
+        return self._scene_objects_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @scene_objects.setter
     def scene_objects(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7508,6 +7769,7 @@ class SceneObjectsMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7516,6 +7778,7 @@ class SceneObjectsMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7553,6 +7816,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7561,6 +7825,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7573,7 +7838,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
 class SceneObjectTypesFilterInfoMSFT(Structure):
     def __init__(
         self,
-        object_types: Sequence[c_int]] = (),
+        object_types: Sequence[c_int] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_MSFT,
     ) -> None:
@@ -7598,8 +7863,9 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
 
     @property
     def object_types(self):
-        self._object_types_ctypes_array
+        return self._object_types_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @object_types.setter
     def object_types(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7615,6 +7881,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7623,6 +7890,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7667,7 +7935,7 @@ class ScenePlaneMSFT(Structure):
 class ScenePlanesMSFT(Structure):
     def __init__(
         self,
-        scene_planes: Sequence[ScenePlaneMSFT]] = (),
+        scene_planes: Sequence[ScenePlaneMSFT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_PLANES_MSFT,
     ) -> None:
@@ -7692,8 +7960,9 @@ class ScenePlanesMSFT(Structure):
 
     @property
     def scene_planes(self):
-        self._scene_planes_ctypes_array
+        return self._scene_planes_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @scene_planes.setter
     def scene_planes(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7709,6 +7978,7 @@ class ScenePlanesMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7717,6 +7987,7 @@ class ScenePlanesMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7730,7 +8001,7 @@ class ScenePlanesMSFT(Structure):
 class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     def __init__(
         self,
-        alignments: Sequence[c_int]] = (),
+        alignments: Sequence[c_int] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT,
     ) -> None:
@@ -7755,8 +8026,9 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
 
     @property
     def alignments(self):
-        self._alignments_ctypes_array
+        return self._alignments_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @alignments.setter
     def alignments(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7772,6 +8044,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7780,6 +8053,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7816,7 +8090,7 @@ class SceneMeshMSFT(Structure):
 class SceneMeshesMSFT(Structure):
     def __init__(
         self,
-        scene_meshes: Sequence[SceneMeshMSFT]] = (),
+        scene_meshes: Sequence[SceneMeshMSFT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_MESHES_MSFT,
     ) -> None:
@@ -7841,8 +8115,9 @@ class SceneMeshesMSFT(Structure):
 
     @property
     def scene_meshes(self):
-        self._scene_meshes_ctypes_array
+        return self._scene_meshes_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @scene_meshes.setter
     def scene_meshes(self, value):
         if not isinstance(value, ctypes.Array):
@@ -7858,6 +8133,7 @@ class SceneMeshesMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7866,6 +8142,7 @@ class SceneMeshesMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7901,6 +8178,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7909,6 +8187,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7941,6 +8220,7 @@ class SceneMeshBuffersMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7949,6 +8229,7 @@ class SceneMeshBuffersMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -7986,6 +8267,7 @@ class SceneMeshVertexBufferMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -7994,6 +8276,7 @@ class SceneMeshVertexBufferMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8034,6 +8317,7 @@ class SceneMeshIndicesUint32MSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8042,6 +8326,7 @@ class SceneMeshIndicesUint32MSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8082,6 +8367,7 @@ class SceneMeshIndicesUint16MSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8090,6 +8376,7 @@ class SceneMeshIndicesUint16MSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8149,6 +8436,7 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8157,6 +8445,7 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8192,7 +8481,7 @@ class DeserializeSceneFragmentMSFT(Structure):
 class SceneDeserializeInfoMSFT(Structure):
     def __init__(
         self,
-        fragments: Sequence[DeserializeSceneFragmentMSFT]] = (),
+        fragments: Sequence[DeserializeSceneFragmentMSFT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SCENE_DESERIALIZE_INFO_MSFT,
     ) -> None:
@@ -8217,8 +8506,9 @@ class SceneDeserializeInfoMSFT(Structure):
 
     @property
     def fragments(self):
-        self._fragments_ctypes_array
+        return self._fragments_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @fragments.setter
     def fragments(self, value):
         if not isinstance(value, ctypes.Array):
@@ -8234,6 +8524,7 @@ class SceneDeserializeInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8242,6 +8533,7 @@ class SceneDeserializeInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8284,6 +8576,7 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8292,6 +8585,7 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8336,6 +8630,7 @@ class ViveTrackerPathsHTCX(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8344,6 +8639,7 @@ class ViveTrackerPathsHTCX(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8379,6 +8675,7 @@ class EventDataViveTrackerConnectedHTCX(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8387,6 +8684,7 @@ class EventDataViveTrackerConnectedHTCX(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8433,6 +8731,7 @@ class SystemFacialTrackingPropertiesHTC(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8441,6 +8740,7 @@ class SystemFacialTrackingPropertiesHTC(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8456,7 +8756,7 @@ class FacialExpressionsHTC(Structure):
         self,
         is_active: Bool32 = 0,
         sample_time: Time = 0,
-        expression_weightings: Sequence[float]] = (),
+        expression_weightings: Sequence[float] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
     ) -> None:
@@ -8483,8 +8783,9 @@ class FacialExpressionsHTC(Structure):
 
     @property
     def expression_weightings(self):
-        self._expression_weightings_ctypes_array
+        return self._expression_weightings_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @expression_weightings.setter
     def expression_weightings(self, value):
         if not isinstance(value, ctypes.Array):
@@ -8500,6 +8801,7 @@ class FacialExpressionsHTC(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8508,6 +8810,7 @@ class FacialExpressionsHTC(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8545,6 +8848,7 @@ class FacialTrackerCreateInfoHTC(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8553,6 +8857,7 @@ class FacialTrackerCreateInfoHTC(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8594,6 +8899,7 @@ class SystemColorSpacePropertiesFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8602,6 +8908,7 @@ class SystemColorSpacePropertiesFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8698,6 +9005,7 @@ class HandTrackingMeshFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8706,6 +9014,7 @@ class HandTrackingMeshFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8760,6 +9069,7 @@ class HandTrackingScaleFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8768,6 +9078,7 @@ class HandTrackingScaleFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8820,6 +9131,7 @@ class HandTrackingAimStateFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8828,6 +9140,7 @@ class HandTrackingAimStateFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8889,6 +9202,7 @@ class HandTrackingCapsulesStateFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8897,6 +9211,7 @@ class HandTrackingCapsulesStateFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8934,6 +9249,7 @@ class SystemSpatialEntityPropertiesFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8942,6 +9258,7 @@ class SystemSpatialEntityPropertiesFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -8980,6 +9297,7 @@ class SpatialAnchorCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -8988,6 +9306,7 @@ class SpatialAnchorCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9028,6 +9347,7 @@ class SpaceComponentStatusSetInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9036,6 +9356,7 @@ class SpaceComponentStatusSetInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9074,6 +9395,7 @@ class SpaceComponentStatusFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9082,6 +9404,7 @@ class SpaceComponentStatusFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9143,6 +9466,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9151,6 +9475,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9200,6 +9525,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9208,6 +9534,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9267,6 +9594,7 @@ class FoveationProfileCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9275,6 +9603,7 @@ class FoveationProfileCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9308,6 +9637,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9316,6 +9646,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9352,6 +9683,7 @@ class SwapchainStateFoveationFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9360,6 +9692,7 @@ class SwapchainStateFoveationFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9404,6 +9737,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9412,6 +9746,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9453,6 +9788,7 @@ class SystemKeyboardTrackingPropertiesFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9461,6 +9797,7 @@ class SystemKeyboardTrackingPropertiesFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9526,6 +9863,7 @@ class KeyboardSpaceCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9534,6 +9872,7 @@ class KeyboardSpaceCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9568,6 +9907,7 @@ class KeyboardTrackingQueryFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9576,6 +9916,7 @@ class KeyboardTrackingQueryFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9634,6 +9975,7 @@ class TriangleMeshCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9642,6 +9984,7 @@ class TriangleMeshCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9723,6 +10066,7 @@ class SystemPassthroughPropertiesFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9731,6 +10075,7 @@ class SystemPassthroughPropertiesFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9765,6 +10110,7 @@ class PassthroughCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9773,6 +10119,7 @@ class PassthroughCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9811,6 +10158,7 @@ class PassthroughLayerCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9819,6 +10167,7 @@ class PassthroughLayerCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9859,6 +10208,7 @@ class CompositionLayerPassthroughFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9867,6 +10217,7 @@ class CompositionLayerPassthroughFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9913,6 +10264,7 @@ class GeometryInstanceCreateInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9921,6 +10273,7 @@ class GeometryInstanceCreateInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -9967,6 +10320,7 @@ class GeometryInstanceTransformFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -9975,6 +10329,7 @@ class GeometryInstanceTransformFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10016,6 +10371,7 @@ class PassthroughStyleFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10024,6 +10380,7 @@ class PassthroughStyleFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10057,6 +10414,7 @@ class PassthroughColorMapMonoToRgbaFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10065,6 +10423,7 @@ class PassthroughColorMapMonoToRgbaFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10097,6 +10456,7 @@ class PassthroughColorMapMonoToMonoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10105,6 +10465,7 @@ class PassthroughColorMapMonoToMonoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10143,6 +10504,7 @@ class PassthroughBrightnessContrastSaturationFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10151,6 +10513,7 @@ class PassthroughBrightnessContrastSaturationFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10187,6 +10550,7 @@ class EventDataPassthroughStateChangedFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10195,6 +10559,7 @@ class EventDataPassthroughStateChangedFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10258,6 +10623,7 @@ class RenderModelPathInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10266,6 +10632,7 @@ class RenderModelPathInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10308,6 +10675,7 @@ class RenderModelPropertiesFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10316,6 +10684,7 @@ class RenderModelPropertiesFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10358,6 +10727,7 @@ class RenderModelBufferFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10366,6 +10736,7 @@ class RenderModelBufferFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10402,6 +10773,7 @@ class RenderModelLoadInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10410,6 +10782,7 @@ class RenderModelLoadInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10444,6 +10817,7 @@ class SystemRenderModelPropertiesFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10452,6 +10826,7 @@ class SystemRenderModelPropertiesFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10486,6 +10861,7 @@ class RenderModelCapabilitiesRequestFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10494,6 +10870,7 @@ class RenderModelCapabilitiesRequestFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10535,6 +10912,7 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10543,6 +10921,7 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10577,6 +10956,7 @@ class FoveatedViewConfigurationViewVARJO(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10585,6 +10965,7 @@ class FoveatedViewConfigurationViewVARJO(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10619,6 +11000,7 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10627,6 +11009,7 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10663,6 +11046,7 @@ class CompositionLayerDepthTestVARJO(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10671,6 +11055,7 @@ class CompositionLayerDepthTestVARJO(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10709,6 +11094,7 @@ class SystemMarkerTrackingPropertiesVARJO(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10717,6 +11103,7 @@ class SystemMarkerTrackingPropertiesVARJO(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10757,6 +11144,7 @@ class EventDataMarkerTrackingUpdateVARJO(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10765,6 +11153,7 @@ class EventDataMarkerTrackingUpdateVARJO(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10804,6 +11193,7 @@ class MarkerSpaceCreateInfoVARJO(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10812,6 +11202,7 @@ class MarkerSpaceCreateInfoVARJO(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10891,6 +11282,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10899,6 +11291,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10938,6 +11331,7 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -10946,6 +11340,7 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -10994,6 +11389,7 @@ class SpaceQueryInfoBaseHeaderFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11002,6 +11398,7 @@ class SpaceQueryInfoBaseHeaderFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11033,6 +11430,7 @@ class SpaceFilterInfoBaseHeaderFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11041,6 +11439,7 @@ class SpaceFilterInfoBaseHeaderFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11082,6 +11481,7 @@ class SpaceQueryInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11090,6 +11490,7 @@ class SpaceQueryInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11128,6 +11529,7 @@ class SpaceStorageLocationFilterInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11136,6 +11538,7 @@ class SpaceStorageLocationFilterInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11148,7 +11551,7 @@ class SpaceStorageLocationFilterInfoFB(Structure):
 class SpaceUuidFilterInfoFB(Structure):
     def __init__(
         self,
-        uuids: Sequence[UuidEXT]] = (),
+        uuids: Sequence[UuidEXT] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.SPACE_UUID_FILTER_INFO_FB,
     ) -> None:
@@ -11173,8 +11576,9 @@ class SpaceUuidFilterInfoFB(Structure):
 
     @property
     def uuids(self):
-        self._uuids_ctypes_array
+        return self._uuids_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @uuids.setter
     def uuids(self, value):
         if not isinstance(value, ctypes.Array):
@@ -11190,6 +11594,7 @@ class SpaceUuidFilterInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11198,6 +11603,7 @@ class SpaceUuidFilterInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11233,6 +11639,7 @@ class SpaceComponentFilterInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11241,6 +11648,7 @@ class SpaceComponentFilterInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11304,6 +11712,7 @@ class SpaceQueryResultsFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11312,6 +11721,7 @@ class SpaceQueryResultsFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11348,6 +11758,7 @@ class EventDataSpaceQueryResultsAvailableFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11356,6 +11767,7 @@ class EventDataSpaceQueryResultsAvailableFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11392,6 +11804,7 @@ class EventDataSpaceQueryCompleteFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11400,6 +11813,7 @@ class EventDataSpaceQueryCompleteFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11444,6 +11858,7 @@ class SpaceSaveInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11452,6 +11867,7 @@ class SpaceSaveInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11490,6 +11906,7 @@ class SpaceEraseInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11498,6 +11915,7 @@ class SpaceEraseInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11543,6 +11961,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11551,6 +11970,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11599,6 +12019,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11607,6 +12028,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11670,6 +12092,7 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11678,6 +12101,7 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11721,6 +12145,7 @@ class SystemSpaceWarpPropertiesFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11729,6 +12154,7 @@ class SystemSpaceWarpPropertiesFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11767,6 +12193,7 @@ class DigitalLensControlALMALENCE(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11775,6 +12202,7 @@ class DigitalLensControlALMALENCE(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11816,6 +12244,7 @@ class SpaceContainerFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11824,6 +12253,7 @@ class SpaceContainerFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11865,6 +12295,7 @@ class PassthroughKeyboardHandsIntensityFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11873,6 +12304,7 @@ class PassthroughKeyboardHandsIntensityFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11913,6 +12345,7 @@ class CompositionLayerSettingsFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11921,6 +12354,7 @@ class CompositionLayerSettingsFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -11958,6 +12392,7 @@ class PerformanceMetricsStateMETA(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -11966,6 +12401,7 @@ class PerformanceMetricsStateMETA(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -12006,6 +12442,7 @@ class PerformanceMetricsCounterMETA(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -12014,6 +12451,7 @@ class PerformanceMetricsCounterMETA(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [

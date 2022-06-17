@@ -990,6 +990,7 @@ class FieldCoder(object):
             yield ""
             yield f"@{self.name}.setter"
             yield f"def {self.name}(self, value):"
+            yield f"    # noinspection PyAttributeOutsideInit"
             yield f"    self.{self.inner_name} = value"
 
     def str_code(self) -> Generator[str, None, None]:
@@ -1033,7 +1034,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         self.count_field = count_field
 
     def param_code(self) -> Generator[str, None, None]:
-        yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}]] = ()"
+        yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}] = ()"
 
     def pre_call_code(self) -> Generator[str, None, None]:
         # Create a ctypes array if one does not already exist
@@ -1061,9 +1062,10 @@ class ArrayPointerFieldCoder(FieldCoder):
         # getter
         yield "@property"
         yield f"def {n}(self):"
-        yield f"    self._{n}_ctypes_array"
+        yield f"    return self._{n}_ctypes_array"
         # setter
         yield ""
+        yield "# noinspection PyAttributeOutsideInit"
         yield f"@{n}.setter"
         yield f"def {n}(self, value):"
         yield f"    if not isinstance(value, ctypes.Array):"

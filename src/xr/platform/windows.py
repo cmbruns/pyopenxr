@@ -68,7 +68,7 @@ META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME = "XR_META_vulkan_swapchain_cre
 class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     def __init__(
         self,
-        view_formats: Sequence[int]] = (),
+        view_formats: Sequence[int] = (),
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
@@ -93,8 +93,9 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 
     @property
     def view_formats(self):
-        self._view_formats_ctypes_array
+        return self._view_formats_ctypes_array
     
+    # noinspection PyAttributeOutsideInit
     @view_formats.setter
     def view_formats(self, value):
         if not isinstance(value, ctypes.Array):
@@ -110,6 +111,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -118,6 +120,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -155,6 +158,7 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -163,6 +167,7 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -198,6 +203,7 @@ class SwapchainImageOpenGLKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -206,6 +212,7 @@ class SwapchainImageOpenGLKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -242,6 +249,7 @@ class GraphicsRequirementsOpenGLKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -250,6 +258,7 @@ class GraphicsRequirementsOpenGLKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -296,6 +305,7 @@ class GraphicsBindingVulkanKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -304,6 +314,7 @@ class GraphicsBindingVulkanKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -342,6 +353,7 @@ class SwapchainImageVulkanKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -350,6 +362,7 @@ class SwapchainImageVulkanKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -386,6 +399,7 @@ class GraphicsRequirementsVulkanKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -394,6 +408,7 @@ class GraphicsRequirementsVulkanKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -438,6 +453,7 @@ class GraphicsBindingD3D11KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -446,6 +462,7 @@ class GraphicsBindingD3D11KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -480,6 +497,7 @@ class SwapchainImageD3D11KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -488,6 +506,7 @@ class SwapchainImageD3D11KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -524,6 +543,7 @@ class GraphicsRequirementsD3D11KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -532,6 +552,7 @@ class GraphicsRequirementsD3D11KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -572,6 +593,7 @@ class GraphicsBindingD3D12KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -580,6 +602,7 @@ class GraphicsBindingD3D12KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -615,6 +638,7 @@ class SwapchainImageD3D12KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -623,6 +647,7 @@ class SwapchainImageD3D12KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -659,6 +684,7 @@ class GraphicsRequirementsD3D12KHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -667,6 +693,7 @@ class GraphicsRequirementsD3D12KHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -741,6 +768,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -749,6 +777,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -797,6 +826,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -805,6 +835,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -849,6 +880,7 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -857,6 +889,7 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -911,6 +944,7 @@ class HolographicWindowAttachmentMSFT(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -919,6 +953,7 @@ class HolographicWindowAttachmentMSFT(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -963,6 +998,7 @@ class SwapchainImageFoveationVulkanFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -971,6 +1007,7 @@ class SwapchainImageFoveationVulkanFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1029,6 +1066,7 @@ class SwapchainStateSamplerVulkanFB(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1037,6 +1075,7 @@ class SwapchainStateSamplerVulkanFB(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
@@ -1083,6 +1122,7 @@ class VulkanSwapchainCreateInfoMETA(Structure):
     
     @next_structure.setter
     def next_structure(self, value):
+        # noinspection PyAttributeOutsideInit
         self.next = value
 
     @property
@@ -1091,6 +1131,7 @@ class VulkanSwapchainCreateInfoMETA(Structure):
     
     @structure_type.setter
     def structure_type(self, value):
+        # noinspection PyAttributeOutsideInit
         self.type = value
 
     _fields_ = [
