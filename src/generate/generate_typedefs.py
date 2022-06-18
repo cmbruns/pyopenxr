@@ -16,6 +16,7 @@ def main():
     cg.ctypes_names.add("cast")
     cg.print_header()
     print("import ctypes\n")
+    print("import os")
     print("import sys")
     print("from typing import Generator, Sequence\n")
     print("import numpy\n")

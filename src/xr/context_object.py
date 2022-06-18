@@ -1,5 +1,4 @@
 from ctypes import byref, c_void_p, cast, POINTER, pointer
-import time
 
 from .enums import *
 from .exception import *

@@ -3,6 +3,7 @@
 from ctypes import CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p, cast
 import ctypes
 
+import os
 import sys
 from typing import Generator, Sequence
 
@@ -207,7 +208,7 @@ class ExtensionProperties(Structure):
 class ApplicationInfo(Structure):
     def __init__(
         self,
-        application_name: str = sys.argv[0],
+        application_name: str = os.path.basename(sys.argv[0]),
         application_version: int = Version(0),
         engine_name: str = "pyopenxr",
         engine_version: int = PYOPENXR_CURRENT_API_VERSION,

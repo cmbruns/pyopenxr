@@ -4,7 +4,7 @@ default_values = {
     "Structure": {
         "ApplicationInfo": {
             "Field": {
-                "application_name": "sys.argv[0]",
+                "application_name": "os.path.basename(sys.argv[0])",
                 "application_version": "Version(0)",  # it's an int
                 "engine_name": '"pyopenxr"',
                 "engine_version": "PYOPENXR_CURRENT_API_VERSION",
