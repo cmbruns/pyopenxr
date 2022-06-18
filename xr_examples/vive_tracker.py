@@ -127,7 +127,7 @@ with xr.ContextObject(
             result = enumerateViveTrackerPathsHTCX(instance, n_paths, byref(n_paths), vive_tracker_paths)
             if xr.check_result(result).is_exception():
                 raise result
-            print(xr.Result(result), n_paths.value)
+            # print(xr.Result(result), n_paths.value)
             # print(*vive_tracker_paths)
 
             found_tracker_count = 0
