@@ -19,11 +19,11 @@ with xr.ContextObject(
     # Loop over the render frames
     for frame_index, frame_state in enumerate(context.frame_loop()):
         view_state, views = xr.locate_views(
-            session=context.session_handle,
+            session=context.session,
             view_locate_info=xr.ViewLocateInfo(
                 view_configuration_type=context.view_configuration_type,
                 display_time=frame_state.predicted_display_time,
-                space=context.space_handle,
+                space=context.space,
             )
         )
         flags = xr.ViewStateFlags(view_state.view_state_flags)

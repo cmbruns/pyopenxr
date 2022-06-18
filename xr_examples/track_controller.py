@@ -18,84 +18,90 @@ with xr.ContextObject(
     ),
 ) as context:
     # Set up the controller pose action
-    action_set = xr.create_action_set(
-        instance=context.instance_handle,
-        create_info=xr.ActionSetCreateInfo(
-            action_set_name="device_tracking",
-            localized_action_set_name="Device Tracking",
-            priority=0,
-        ),
+    controller_paths = (xr.Path * 2)(
+        xr.string_to_path(context.instance, "/user/hand/left"),
+        xr.string_to_path(context.instance, "/user/hand/right"),
     )
-    right_controller_path = xr.string_to_path(
-        instance=context.instance_handle,
-        path_string="/user/hand/right",
-    )
-    right_controller_pose_action = xr.create_action(
-        action_set=action_set,
+    controller_pose_action = xr.create_action(
+        action_set=context.default_action_set,
         create_info=xr.ActionCreateInfo(
             action_type=xr.ActionType.POSE_INPUT,
-            action_name="right_controller_pose",
-            localized_action_name="Right Controller Pose",
-            count_subaction_paths=1,
-            subaction_paths=ctypes.pointer(right_controller_path),
+            action_name="hand_pose",
+            localized_action_name="Hand Pose",
+            count_subaction_paths=len(controller_paths),
+            subaction_paths=controller_paths,
         ),
     )
-    suggested_binding = xr.ActionSuggestedBinding(
-        action=right_controller_pose_action,
-        binding=xr.string_to_path(
-            instance=context.instance_handle,
-            path_string="/user/hand/right/input/grip/pose",
+    suggested_bindings = (xr.ActionSuggestedBinding * 2)(
+        xr.ActionSuggestedBinding(
+            action=controller_pose_action,
+            binding=xr.string_to_path(
+                instance=context.instance,
+                path_string="/user/hand/left/input/grip/pose",
+            ),
+        ),
+        xr.ActionSuggestedBinding(
+            action=controller_pose_action,
+            binding=xr.string_to_path(
+                instance=context.instance,
+                path_string="/user/hand/right/input/grip/pose",
+            ),
         ),
     )
     xr.suggest_interaction_profile_bindings(
-        instance=context.instance_handle,
+        instance=context.instance,
         suggested_bindings=xr.InteractionProfileSuggestedBinding(
             interaction_profile=xr.string_to_path(
-                context.instance_handle,
+                context.instance,
                 "/interaction_profiles/khr/simple_controller",
             ),
-            count_suggested_bindings=1,
-            suggested_bindings=ctypes.pointer(suggested_binding),
+            count_suggested_bindings=len(suggested_bindings),
+            suggested_bindings=suggested_bindings,
         ),
     )
-    right_controller_action_space = xr.create_action_space(
-        session=context.session_handle,
-        create_info=xr.ActionSpaceCreateInfo(
-            action=right_controller_pose_action,
-            subaction_path=right_controller_path,
+    action_spaces = [
+        xr.create_action_space(
+            session=context.session,
+            create_info=xr.ActionSpaceCreateInfo(
+                action=controller_pose_action,
+                subaction_path=controller_paths[0],
+            ),
         ),
-    )
-    xr.attach_session_action_sets(
-        session=context.session_handle,
-        attach_info=xr.SessionActionSetsAttachInfo(
-            count_action_sets=1,
-            action_sets=ctypes.pointer(action_set),
+        xr.create_action_space(
+            session=context.session,
+            create_info=xr.ActionSpaceCreateInfo(
+                action=controller_pose_action,
+                subaction_path=controller_paths[1],
+            ),
         ),
-    )
+    ]
     # Loop over the render frames
     for frame_index, frame_state in enumerate(context.frame_loop()):
 
         if context.session_state == xr.SessionState.FOCUSED:
             active_action_set = xr.ActiveActionSet(
-                action_set=action_set,
+                action_set=context.default_action_set,
                 subaction_path=xr.NULL_PATH,
             )
             xr.sync_actions(
-                session=context.session_handle,
+                session=context.session,
                 sync_info=xr.ActionsSyncInfo(
                     count_active_action_sets=1,
                     active_action_sets=ctypes.pointer(active_action_set),
                 ),
             )
-            space_location = xr.locate_space(
-                space=right_controller_action_space,
-                base_space=context.space_handle,
-                time=frame_state.predicted_display_time,
-            )
-            if space_location.location_flags & xr.SPACE_LOCATION_POSITION_VALID_BIT:
-                print(space_location.pose)
-            else:
-                print("controller not active")
+            found_count = 0
+            for index, space in enumerate(action_spaces):
+                space_location = xr.locate_space(
+                    space=space,
+                    base_space=context.space,
+                    time=frame_state.predicted_display_time,
+                )
+                if space_location.location_flags & xr.SPACE_LOCATION_POSITION_VALID_BIT:
+                    print(index + 1, space_location.pose)
+                    found_count += 1
+            if found_count == 0:
+                print("no controllers active")
 
         # Slow things down, especially since we are not rendering anything
         time.sleep(0.5)
