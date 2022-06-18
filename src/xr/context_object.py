@@ -1,5 +1,6 @@
 from ctypes import byref, c_void_p, cast, POINTER, pointer
 
+import xr
 from .enums import *
 from .exception import *
 from .typedefs import *
@@ -18,9 +19,9 @@ class ContextObject(object):
             form_factor=FormFactor.HEAD_MOUNTED_DISPLAY,
     ):
         self._instance_create_info = instance_create_info
-        self.instance_handle = None
+        self.instance = None
         self._session_create_info = session_create_info
-        self.session_handle = None
+        self.session = None
         self.session_state = SessionState.IDLE
         self._reference_space_create_info = reference_space_create_info
         self.view_configuration_type = view_configuration_type
@@ -29,13 +30,15 @@ class ContextObject(object):
         self.form_factor = form_factor
         self.graphics = None
         self.graphics_binding_pointer = None
+        self.closing = False
+        self.action_sets = []
 
     def __enter__(self):
-        self.instance_handle = create_instance(
+        self.instance = create_instance(
             create_info=self._instance_create_info,
         )
         self.system_id = get_system(
-            instance=self.instance_handle,
+            instance=self.instance,
             get_info=SystemGetInfo(
                 form_factor=self.form_factor,
             ),
@@ -43,7 +46,7 @@ class ContextObject(object):
 
         if self._session_create_info.next_structure is None:
             self.graphics = OpenGLGraphics(
-                instance=self.instance_handle,
+                instance=self.instance,
                 system=self.system_id,
                 title=self._instance_create_info.application_info.application_name.decode()
             )
@@ -53,32 +56,49 @@ class ContextObject(object):
             self.graphics_binding_pointer = self._session_create_info.next_structure
 
         self._session_create_info.system_id = self.system_id
-        self.session_handle = create_session(
-            instance=self.instance_handle,
+        self.session = create_session(
+            instance=self.instance,
             create_info=self._session_create_info,
         )
-        self.space_handle = create_reference_space(
-            session=self.session_handle,
+        self.space = create_reference_space(
+            session=self.session,
             create_info=self._reference_space_create_info
         )
-
+        self.default_action_set = create_action_set(
+            instance=self.instance,
+            create_info=ActionSetCreateInfo(
+                action_set_name="default_action_set",
+                localized_action_set_name="Default Action Set",
+                priority=0,
+            ),
+        )
+        self.action_sets.append(self.default_action_set)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.space_handle is not None:
-            destroy_space(self.space_handle)
-            self.space_handle = None
-        if self.session_handle is not None:
-            destroy_session(self.session_handle)
-            self.session_handle = None
+        if self.space is not None:
+            destroy_space(self.space)
+            self.space = None
+        if self.session is not None:
+            destroy_session(self.session)
+            self.session = None
         if self.graphics is not None:
             self.graphics.destroy()
             self.graphics = None
-        if self.instance_handle is not None:
-            destroy_instance(self.instance_handle)
-            self.instance_handle = None
+        if self.instance is not None:
+            destroy_instance(self.instance)
+            self.instance = None
 
     def frame_loop(self):
+        attach_session_action_sets(
+            session=self.session,
+            attach_info=SessionActionSetsAttachInfo(
+                count_action_sets=len(self.action_sets),
+                action_sets=(ActionSetHandle * len(self.action_sets))(
+                    *self.action_sets
+                )
+            ),
+        )
         while True:
             self.poll_xr_events()
             if self.session_state in (
@@ -87,13 +107,13 @@ class ContextObject(object):
                     SessionState.VISIBLE,
                     SessionState.FOCUSED,
             ):
-                self.frame_state = wait_frame(self.session_handle)
-                begin_frame(self.session_handle)
+                self.frame_state = wait_frame(self.session)
+                begin_frame(self.session)
 
                 yield self.frame_state
 
                 end_frame(
-                    self.session_handle,
+                    self.session,
                     frame_end_info=FrameEndInfo(
                         display_time=self.frame_state.predicted_display_time,
                         environment_blend_mode=self.environment_blend_mode,
@@ -104,24 +124,41 @@ class ContextObject(object):
     def poll_xr_events(self):
         while True:
             try:
-                event_buffer = poll_event(self.instance_handle)
+                event_buffer = poll_event(self.instance)
                 event_type = StructureType(event_buffer.type)
-                if event_type == StructureType.EVENT_DATA_SESSION_STATE_CHANGED \
-                        and self.session_handle is not None:
+                if event_type == StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
+                    # still handle rest of the events instead of immediately quitting
+                    self.closing = True
+                elif event_type == StructureType.EVENT_DATA_SESSION_STATE_CHANGED \
+                        and self.session is not None:
                     event = cast(
                         byref(event_buffer),
                         POINTER(EventDataSessionStateChanged)).contents
                     self.session_state = SessionState(event.state)
-                    if self.session_state == SessionState.READY:
+                    if self.session_state == SessionState.READY and not self.closing:
                         begin_session(
-                            session=self.session_handle,
+                            session=self.session,
                             begin_info=SessionBeginInfo(
                                 self.view_configuration_type,
                             ),
                         )
                     elif self.session_state == SessionState.STOPPING:
-                        destroy_session(self.session_handle)
-                        self.session_handle = None
+                        self.closing = True
+                elif event_type == StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX:
+                    vive_tracker_connected = cast(byref(event_buffer), POINTER(EventDataViveTrackerConnectedHTCX)).contents
+                    paths = vive_tracker_connected.paths.contents
+                    persistent_path_str = xr.path_to_string(self.instance, paths.persistent_path)
+                    # print(f"Vive Tracker connected: {persistent_path_str}")
+                    if paths.role_path != xr.NULL_PATH:
+                        role_path_str = xr.path_to_string(self.instance, paths.role_path)
+                        # print(f" New role is: {role_path_str}")
+                    else:
+                        # print(f" No role path.")
+                        pass
+                elif event_type == StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED:
+                    # print("data interaction profile changed")
+                    # TODO:
+                    pass
             except EventUnavailable:
                 break
 
