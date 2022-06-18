@@ -97,7 +97,7 @@ def main():
 def update_options_from_command_line() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--graphics", "-g", required=True,
+        "--graphics", "-g", default="OpenGL",
         choices=["D3D11", "D3D12", "OpenGLES", "OpenGL", "Vulkan2", "Vulkan"],
     )
     parser.add_argument(
