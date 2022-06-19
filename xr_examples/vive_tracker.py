@@ -1,5 +1,5 @@
 """
-pyopenxr example program track_controller.py
+pyopenxr example program vive_tracker.py
 
 Prints the position and orientation of your vive trackers each frame.
 """
