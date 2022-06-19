@@ -1,4 +1,4 @@
-from ctypes import byref, c_void_p, cast, POINTER, pointer
+from ctypes import byref, c_int32, c_void_p, cast, POINTER, pointer, Structure
 
 import xr
 from .enums import *
@@ -6,6 +6,14 @@ from .exception import *
 from .typedefs import *
 from .functions import *
 from .opengl_graphics import OpenGLGraphics
+
+
+class Swapchain(Structure):
+    _fields_ = [
+        ("handle", xr.SwapchainHandle),
+        ("width", c_int32),
+        ("height", c_int32),
+    ]
 
 
 class ContextObject(object):
@@ -25,7 +33,6 @@ class ContextObject(object):
         self.session_state = SessionState.IDLE
         self._reference_space_create_info = reference_space_create_info
         self.view_configuration_type = view_configuration_type
-        self.frame_state = None
         self.environment_blend_mode = environment_blend_mode
         self.form_factor = form_factor
         self.graphics = None
@@ -33,6 +40,9 @@ class ContextObject(object):
         self.closing = False
         self.action_sets = []
         self.render_layers = []
+        self.swapchains = []
+        self.swapchain_image_ptr_buffers = []
+        self.swapchain_image_buffers = []  # Keep alive
 
     def __enter__(self):
         self.instance = create_instance(
@@ -74,6 +84,55 @@ class ContextObject(object):
             ),
         )
         self.action_sets.append(self.default_action_set)
+
+        # Create swapchains
+        config_views = xr.enumerate_view_configuration_views(
+            instance=self.instance,
+            system_id=self.system_id,
+            view_configuration_type=self.view_configuration_type,
+        )
+        self.graphics.initialize_resources()
+        swapchain_formats = xr.enumerate_swapchain_formats(self.session)
+        color_swapchain_format = self.graphics.select_color_swapchain_format(swapchain_formats)
+        # Create a swapchain for each view.
+        self.swapchains.clear()
+        self.swapchain_image_buffers.clear()
+        self.swapchain_image_ptr_buffers.clear()
+        for vp in config_views:
+            # Create the swapchain.
+            swapchain_create_info = xr.SwapchainCreateInfo(
+                array_size=1,
+                format=color_swapchain_format,
+                width=vp.recommended_image_rect_width,
+                height=vp.recommended_image_rect_height,
+                mip_count=1,
+                face_count=1,
+                sample_count=vp.recommended_swapchain_sample_count,
+                usage_flags=xr.SwapchainUsageFlags.SAMPLED_BIT | xr.SwapchainUsageFlags.COLOR_ATTACHMENT_BIT,
+            )
+            swapchain = Swapchain(
+                xr.create_swapchain(
+                    session=self.session,
+                    create_info=swapchain_create_info,
+                ),
+                swapchain_create_info.width,
+                swapchain_create_info.height,
+            )
+            self.swapchains.append(swapchain)
+            swapchain_image_buffer = xr.enumerate_swapchain_images(
+                swapchain=swapchain.handle,
+                element_type=self.graphics.swapchain_image_type,
+            )
+            # Keep the buffer alive by moving it into the list of buffers.
+            self.swapchain_image_buffers.append(swapchain_image_buffer)
+            capacity = len(swapchain_image_buffer)
+            swapchain_image_ptr_buffer = (POINTER(xr.SwapchainImageBaseHeader) * capacity)()
+            for ix in range(capacity):
+                swapchain_image_ptr_buffer[ix] = cast(
+                    byref(swapchain_image_buffer[ix]),
+                    POINTER(xr.SwapchainImageBaseHeader))
+            self.swapchain_image_ptr_buffers.append(swapchain_image_ptr_buffer)
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -108,16 +167,16 @@ class ContextObject(object):
                     SessionState.VISIBLE,
                     SessionState.FOCUSED,
             ):
-                self.frame_state = wait_frame(self.session)
+                frame_state = wait_frame(self.session)
                 begin_frame(self.session)
                 self.render_layers = []
 
-                yield self.frame_state
+                yield frame_state
 
                 end_frame(
                     self.session,
                     frame_end_info=FrameEndInfo(
-                        display_time=self.frame_state.predicted_display_time,
+                        display_time=frame_state.predicted_display_time,
                         environment_blend_mode=self.environment_blend_mode,
                         layers=self.render_layers,
                     )
@@ -163,6 +222,57 @@ class ContextObject(object):
                     pass
             except EventUnavailable:
                 break
+
+    def render_loop(self):
+        for frame_state in self.frame_loop():
+            if frame_state.should_render:
+                layer = xr.CompositionLayerProjection(space=self.space)
+                projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
+                view_state, views = xr.locate_views(
+                    session=self.session,
+                    view_locate_info=xr.ViewLocateInfo(
+                        view_configuration_type=self.view_configuration_type,
+                        display_time=frame_state.predicted_display_time,
+                        space=self.space,
+                    )
+                )
+                vsf = view_state.view_state_flags
+                if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
+                        or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0):
+                    continue  # There are no valid tracking poses for the views.
+                for view_index, view in enumerate(views):
+                    view_swapchain = self.swapchains[view_index]
+                    swapchain_image_index = xr.acquire_swapchain_image(
+                        swapchain=view_swapchain.handle,
+                        acquire_info=xr.SwapchainImageAcquireInfo(),
+                    )
+                    xr.wait_swapchain_image(
+                        swapchain=view_swapchain.handle,
+                        wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
+                    )
+                    layer_view = projection_layer_views[view_index]
+                    assert layer_view.structure_type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
+                    layer_view.pose = view.pose
+                    layer_view.fov = view.fov
+                    layer_view.sub_image.swapchain = view_swapchain.handle
+                    layer_view.sub_image.image_rect.offset[:] = [0, 0]
+                    layer_view.sub_image.image_rect.extent[:] = [
+                        view_swapchain.width, view_swapchain.height, ]
+                    swapchain_image_ptr = self.swapchain_image_ptr_buffers[view_index][swapchain_image_index]
+                    swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLKHR)).contents
+                    assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
+                    color_texture = swapchain_image.image
+                    self.graphics.begin_frame(layer_view, color_texture)
+
+                    yield view_index, view
+
+                    self.graphics.end_frame()
+                    xr.release_swapchain_image(
+                        swapchain=view_swapchain.handle,
+                        release_info=xr.SwapchainImageReleaseInfo()
+                    )
+                layer.views = projection_layer_views
+                self.render_layers.append(byref(layer))
 
 
 __all__ = [

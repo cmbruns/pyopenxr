@@ -69,6 +69,7 @@ class OpenGLGraphics(object):
             )
         else:
             raise NotImplementedError
+        self.swapchain_framebuffer = None
 
     def __enter__(self):
         return self
@@ -76,9 +77,29 @@ class OpenGLGraphics(object):
     def __exit__(self, exception_type, value, traceback):
         self.destroy()
 
-    @staticmethod
-    def destroy():
+    def begin_frame(self, layer_view, color_texture):
+        self.make_current()
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
+        GL.glViewport(layer_view.sub_image.image_rect.offset.x,
+                      layer_view.sub_image.image_rect.offset.y,
+                      layer_view.sub_image.image_rect.extent.width,
+                      layer_view.sub_image.image_rect.extent.height)
+        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D,
+                                  color_texture, 0)
+
+    def destroy(self):
+        self.make_current()
+        if self.swapchain_framebuffer is not None:
+            GL.glDeleteFramebuffers(1, [self.swapchain_framebuffer, ])
         glfw.terminate()
+
+    @staticmethod
+    def end_frame():
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
+
+    def initialize_resources(self):
+        self.make_current()
+        self.swapchain_framebuffer = GL.glGenFramebuffers(1)
 
     def make_current(self):
         glfw.make_context_current(self.window)
