@@ -8,6 +8,7 @@ if platform.system() == "Windows":
 elif platform.system() == "Linux":
     from OpenGL import GLX
     from .platform.linux import *
+from OpenGL import GL
 
 from .enums import *
 from .exception import *
@@ -78,6 +79,30 @@ class OpenGLGraphics(object):
     @staticmethod
     def destroy():
         glfw.terminate()
+
+    def make_current(self):
+        glfw.make_context_current(self.window)
+
+    @staticmethod
+    def select_color_swapchain_format(runtime_formats):
+        # List of supported color swapchain formats.
+        supported_color_swapchain_formats = [
+            GL.GL_RGB10_A2,
+            GL.GL_RGBA16F,
+            # The two below should only be used as a fallback, as they are linear color formats without enough bits for color
+            # depth, thus leading to banding.
+            GL.GL_RGBA8,
+            GL.GL_RGBA8_SNORM,
+        ]
+        for rf in runtime_formats:
+            for sf in supported_color_swapchain_formats:
+                if rf == sf:
+                    return sf
+        raise RuntimeError("No runtime swapchain format supported for color swapchain")
+
+    @property
+    def swapchain_image_type(self):
+        return SwapchainImageOpenGLKHR
 
 
 __all__ = [

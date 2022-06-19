@@ -32,6 +32,7 @@ class ContextObject(object):
         self.graphics_binding_pointer = None
         self.closing = False
         self.action_sets = []
+        self.render_layers = []
 
     def __enter__(self):
         self.instance = create_instance(
@@ -109,6 +110,7 @@ class ContextObject(object):
             ):
                 self.frame_state = wait_frame(self.session)
                 begin_frame(self.session)
+                self.render_layers = []
 
                 yield self.frame_state
 
@@ -117,7 +119,7 @@ class ContextObject(object):
                     frame_end_info=FrameEndInfo(
                         display_time=self.frame_state.predicted_display_time,
                         environment_blend_mode=self.environment_blend_mode,
-                        layers=(),  # TODO: what is layers?
+                        layers=self.render_layers,
                     )
                 )
 
