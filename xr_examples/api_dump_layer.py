@@ -25,6 +25,7 @@ print(foo_layer.name)
 # 2) The choice of layers can be specified in the instance constructor
 instance_handle = xr.create_instance(create_info=xr.InstanceCreateInfo(
     enabled_api_layer_names=[
+        xr.api_layer.XR_APILAYER_LUNARG_api_dump_NAME,
         foo_layer.name,
         # xr.api_layer.XR_APILAYER_LUNARG_core_validation_NAME,
         # xr.api_layer.XR_APILAYER_LUNARG_api_dump_NAME,

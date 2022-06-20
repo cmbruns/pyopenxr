@@ -9,6 +9,8 @@ from ctypes import cast, byref
 import time
 import xr
 
+print("Warning: trackers with role 'Handheld object' won't be detected.")
+
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
 with xr.ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
@@ -146,5 +148,5 @@ with xr.ContextObject(
         # Slow things down, especially since we are not rendering anything
         time.sleep(0.5)
         # Don't run forever
-        if frame_index > 3:
+        if frame_index > 30:
             break

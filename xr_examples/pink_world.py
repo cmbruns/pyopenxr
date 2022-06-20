@@ -1,10 +1,8 @@
 """
 pyopenxr example program pink_world.py
-
 This example renders a solid pink field to each eye.
 """
 
-import time
 from OpenGL import GL
 import xr
 
@@ -18,12 +16,9 @@ with xr.ContextObject(
         ],
     ),
 ) as context:
-    for frame_index, (view_index, view) in enumerate(context.render_loop()):
-        # set each eye to a different color (not working yet...)
-        GL.glClearColor(1, 0.7, 0.7, 1)  # pink
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT)
-        # Slow things down
-        time.sleep(0.010)
-        # Don't run forever
-        if frame_index > 2000:
+    for frame_index, frame_state in enumerate(context.frame_loop()):
+        for view in context.view_loop(frame_state):
+            GL.glClearColor(1, 0.7, 0.7, 1)  # pink
+            GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+        if frame_index > 500:  # Don't run forever
             break
