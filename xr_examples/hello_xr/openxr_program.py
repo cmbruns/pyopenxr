@@ -818,6 +818,10 @@ class OpenXRProgram(object):
             view.sub_image.image_rect.extent[:] = [
                 view_swapchain.width, view_swapchain.height, ]
             swapchain_image_ptr = self.swapchain_image_ptr_buffers[handle_key(view_swapchain.handle)][swapchain_image_index]
+            if i == 0:
+                color = (1, 0, 0, 1)
+            else:
+                color = (0, 1, 0, 1)
             self.graphics_plugin.render_view(
                 view,
                 swapchain_image_ptr,
@@ -825,6 +829,7 @@ class OpenXRProgram(object):
                 cubes,
                 mirror=i == Side.LEFT,  # mirror left eye only
                 # mirror=False,
+                color=color,
             )
             xr.release_swapchain_image(
                 swapchain=view_swapchain.handle,
