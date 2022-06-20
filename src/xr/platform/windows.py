@@ -73,10 +73,11 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         structure_type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
         view_format_count = 0
-        if view_formats is not None and not isinstance(view_formats, ctypes.Array):
-            view_formats = (c_int * len(view_formats))(
-                *view_formats)
+        if view_formats is not None:
             view_format_count = len(view_formats)
+            if not isinstance(view_formats, ctypes.Array):
+                view_formats = (c_int * len(view_formats))(
+                    *view_formats)
         self._view_formats_ctypes_array = view_formats
         super().__init__(
             _view_format_count=view_format_count,

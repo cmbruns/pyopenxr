@@ -250,16 +250,18 @@ class InstanceCreateInfo(Structure):
         if application_info is None:
             application_info = ApplicationInfo()
         enabled_api_layer_count = 0
-        if enabled_api_layer_names is not None and not isinstance(enabled_api_layer_names, ctypes.Array):
-            enabled_api_layer_names = (c_char_p * len(enabled_api_layer_names))(
-                *[s.encode() for s in enabled_api_layer_names])
+        if enabled_api_layer_names is not None:
             enabled_api_layer_count = len(enabled_api_layer_names)
+            if not isinstance(enabled_api_layer_names, ctypes.Array):
+                enabled_api_layer_names = (c_char_p * len(enabled_api_layer_names))(
+                    *[s.encode() for s in enabled_api_layer_names])
         self._enabled_api_layer_names_ctypes_array = enabled_api_layer_names
         enabled_extension_count = 0
-        if enabled_extension_names is not None and not isinstance(enabled_extension_names, ctypes.Array):
-            enabled_extension_names = (c_char_p * len(enabled_extension_names))(
-                *[s.encode() for s in enabled_extension_names])
+        if enabled_extension_names is not None:
             enabled_extension_count = len(enabled_extension_names)
+            if not isinstance(enabled_extension_names, ctypes.Array):
+                enabled_extension_names = (c_char_p * len(enabled_extension_names))(
+                    *[s.encode() for s in enabled_extension_names])
         self._enabled_extension_names_ctypes_array = enabled_extension_names
         super().__init__(
             create_flags=InstanceCreateFlags(create_flags).value,
@@ -1571,10 +1573,11 @@ class FrameEndInfo(Structure):
         structure_type: StructureType = StructureType.FRAME_END_INFO,
     ) -> None:
         layer_count = 0
-        if layers is not None and not isinstance(layers, ctypes.Array):
-            layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
-                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
+        if layers is not None:
             layer_count = len(layers)
+            if not isinstance(layers, ctypes.Array):
+                layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
+                    *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
         self._layers_ctypes_array = layers
         super().__init__(
             display_time=display_time,
@@ -2941,9 +2944,8 @@ class CompositionLayerProjection(Structure):
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION,
     ) -> None:
-        if views is None:
-            view_count = 0
-        else:
+        view_count = 0
+        if views is not None:
             view_count = len(views)
             if not isinstance(views, ctypes.Array):
                 views = (CompositionLayerProjectionView * len(views))(
@@ -4270,10 +4272,11 @@ class BindingModificationsKHR(Structure):
         structure_type: StructureType = StructureType.BINDING_MODIFICATIONS_KHR,
     ) -> None:
         binding_modification_count = 0
-        if binding_modifications is not None and not isinstance(binding_modifications, ctypes.Array):
-            binding_modifications = (POINTER(BindingModificationBaseHeaderKHR) * len(binding_modifications))(
-                *[cast(p, POINTER(BindingModificationBaseHeaderKHR)) for p in binding_modifications])
+        if binding_modifications is not None:
             binding_modification_count = len(binding_modifications)
+            if not isinstance(binding_modifications, ctypes.Array):
+                binding_modifications = (POINTER(BindingModificationBaseHeaderKHR) * len(binding_modifications))(
+                    *[cast(p, POINTER(BindingModificationBaseHeaderKHR)) for p in binding_modifications])
         self._binding_modifications_ctypes_array = binding_modifications
         super().__init__(
             _binding_modification_count=binding_modification_count,
@@ -4503,16 +4506,18 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         structure_type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
     ) -> None:
         object_count = 0
-        if objects is not None and not isinstance(objects, ctypes.Array):
-            objects = (DebugUtilsObjectNameInfoEXT * len(objects))(
-                *objects)
+        if objects is not None:
             object_count = len(objects)
+            if not isinstance(objects, ctypes.Array):
+                objects = (DebugUtilsObjectNameInfoEXT * len(objects))(
+                    *objects)
         self._objects_ctypes_array = objects
         session_label_count = 0
-        if session_labels is not None and not isinstance(session_labels, ctypes.Array):
-            session_labels = (DebugUtilsLabelEXT * len(session_labels))(
-                *session_labels)
+        if session_labels is not None:
             session_label_count = len(session_labels)
+            if not isinstance(session_labels, ctypes.Array):
+                session_labels = (DebugUtilsLabelEXT * len(session_labels))(
+                    *session_labels)
         self._session_labels_ctypes_array = session_labels
         super().__init__(
             message_id=message_id.encode(),
@@ -5533,10 +5538,11 @@ class HandJointLocationsEXT(Structure):
         structure_type: StructureType = StructureType.HAND_JOINT_LOCATIONS_EXT,
     ) -> None:
         joint_count = 0
-        if joint_locations is not None and not isinstance(joint_locations, ctypes.Array):
-            joint_locations = (HandJointLocationEXT * len(joint_locations))(
-                *joint_locations)
+        if joint_locations is not None:
             joint_count = len(joint_locations)
+            if not isinstance(joint_locations, ctypes.Array):
+                joint_locations = (HandJointLocationEXT * len(joint_locations))(
+                    *joint_locations)
         self._joint_locations_ctypes_array = joint_locations
         super().__init__(
             is_active=is_active,
@@ -5601,10 +5607,11 @@ class HandJointVelocitiesEXT(Structure):
         structure_type: StructureType = StructureType.HAND_JOINT_VELOCITIES_EXT,
     ) -> None:
         joint_count = 0
-        if joint_velocities is not None and not isinstance(joint_velocities, ctypes.Array):
-            joint_velocities = (HandJointVelocityEXT * len(joint_velocities))(
-                *joint_velocities)
+        if joint_velocities is not None:
             joint_count = len(joint_velocities)
+            if not isinstance(joint_velocities, ctypes.Array):
+                joint_velocities = (HandJointVelocityEXT * len(joint_velocities))(
+                    *joint_velocities)
         self._joint_velocities_ctypes_array = joint_velocities
         super().__init__(
             _joint_count=joint_count,
@@ -6012,10 +6019,11 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT,
     ) -> None:
         view_configuration_count = 0
-        if enabled_view_configuration_types is not None and not isinstance(enabled_view_configuration_types, ctypes.Array):
-            enabled_view_configuration_types = (c_int * len(enabled_view_configuration_types))(
-                *enabled_view_configuration_types)
+        if enabled_view_configuration_types is not None:
             view_configuration_count = len(enabled_view_configuration_types)
+            if not isinstance(enabled_view_configuration_types, ctypes.Array):
+                enabled_view_configuration_types = (c_int * len(enabled_view_configuration_types))(
+                    *enabled_view_configuration_types)
         self._enabled_view_configuration_types_ctypes_array = enabled_view_configuration_types
         super().__init__(
             _view_configuration_count=view_configuration_count,
@@ -6125,10 +6133,11 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT,
     ) -> None:
         view_configuration_count = 0
-        if view_configuration_states is not None and not isinstance(view_configuration_states, ctypes.Array):
-            view_configuration_states = (SecondaryViewConfigurationStateMSFT * len(view_configuration_states))(
-                *view_configuration_states)
+        if view_configuration_states is not None:
             view_configuration_count = len(view_configuration_states)
+            if not isinstance(view_configuration_states, ctypes.Array):
+                view_configuration_states = (SecondaryViewConfigurationStateMSFT * len(view_configuration_states))(
+                    *view_configuration_states)
         self._view_configuration_states_ctypes_array = view_configuration_states
         super().__init__(
             _view_configuration_count=view_configuration_count,
@@ -6193,10 +6202,11 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         structure_type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT,
     ) -> None:
         layer_count = 0
-        if layers is not None and not isinstance(layers, ctypes.Array):
-            layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
-                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
+        if layers is not None:
             layer_count = len(layers)
+            if not isinstance(layers, ctypes.Array):
+                layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
+                    *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
         self._layers_ctypes_array = layers
         super().__init__(
             view_configuration_type=ViewConfigurationType(view_configuration_type).value,
@@ -7212,22 +7222,25 @@ class SceneBoundsMSFT(Structure):
         frustums: Sequence[SceneFrustumBoundMSFT] = (),
     ) -> None:
         sphere_count = 0
-        if spheres is not None and not isinstance(spheres, ctypes.Array):
-            spheres = (SceneSphereBoundMSFT * len(spheres))(
-                *spheres)
+        if spheres is not None:
             sphere_count = len(spheres)
+            if not isinstance(spheres, ctypes.Array):
+                spheres = (SceneSphereBoundMSFT * len(spheres))(
+                    *spheres)
         self._spheres_ctypes_array = spheres
         box_count = 0
-        if boxes is not None and not isinstance(boxes, ctypes.Array):
-            boxes = (SceneOrientedBoxBoundMSFT * len(boxes))(
-                *boxes)
+        if boxes is not None:
             box_count = len(boxes)
+            if not isinstance(boxes, ctypes.Array):
+                boxes = (SceneOrientedBoxBoundMSFT * len(boxes))(
+                    *boxes)
         self._boxes_ctypes_array = boxes
         frustum_count = 0
-        if frustums is not None and not isinstance(frustums, ctypes.Array):
-            frustums = (SceneFrustumBoundMSFT * len(frustums))(
-                *frustums)
+        if frustums is not None:
             frustum_count = len(frustums)
+            if not isinstance(frustums, ctypes.Array):
+                frustums = (SceneFrustumBoundMSFT * len(frustums))(
+                    *frustums)
         self._frustums_ctypes_array = frustums
         super().__init__(
             space=space,
@@ -7310,10 +7323,11 @@ class NewSceneComputeInfoMSFT(Structure):
         structure_type: StructureType = StructureType.NEW_SCENE_COMPUTE_INFO_MSFT,
     ) -> None:
         requested_feature_count = 0
-        if requested_features is not None and not isinstance(requested_features, ctypes.Array):
-            requested_features = (c_int * len(requested_features))(
-                *requested_features)
+        if requested_features is not None:
             requested_feature_count = len(requested_features)
+            if not isinstance(requested_features, ctypes.Array):
+                requested_features = (c_int * len(requested_features))(
+                    *requested_features)
         self._requested_features_ctypes_array = requested_features
         if bounds is None:
             bounds = SceneBoundsMSFT()
@@ -7576,10 +7590,11 @@ class SceneComponentLocationsMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_COMPONENT_LOCATIONS_MSFT,
     ) -> None:
         location_count = 0
-        if locations is not None and not isinstance(locations, ctypes.Array):
-            locations = (SceneComponentLocationMSFT * len(locations))(
-                *locations)
+        if locations is not None:
             location_count = len(locations)
+            if not isinstance(locations, ctypes.Array):
+                locations = (SceneComponentLocationMSFT * len(locations))(
+                    *locations)
         self._locations_ctypes_array = locations
         super().__init__(
             _location_count=location_count,
@@ -7644,10 +7659,11 @@ class SceneComponentsLocateInfoMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_COMPONENTS_LOCATE_INFO_MSFT,
     ) -> None:
         component_id_count = 0
-        if component_ids is not None and not isinstance(component_ids, ctypes.Array):
-            component_ids = (UuidMSFT * len(component_ids))(
-                *component_ids)
+        if component_ids is not None:
             component_id_count = len(component_ids)
+            if not isinstance(component_ids, ctypes.Array):
+                component_ids = (UuidMSFT * len(component_ids))(
+                    *component_ids)
         self._component_ids_ctypes_array = component_ids
         super().__init__(
             base_space=base_space,
@@ -7734,10 +7750,11 @@ class SceneObjectsMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_OBJECTS_MSFT,
     ) -> None:
         scene_object_count = 0
-        if scene_objects is not None and not isinstance(scene_objects, ctypes.Array):
-            scene_objects = (SceneObjectMSFT * len(scene_objects))(
-                *scene_objects)
+        if scene_objects is not None:
             scene_object_count = len(scene_objects)
+            if not isinstance(scene_objects, ctypes.Array):
+                scene_objects = (SceneObjectMSFT * len(scene_objects))(
+                    *scene_objects)
         self._scene_objects_ctypes_array = scene_objects
         super().__init__(
             _scene_object_count=scene_object_count,
@@ -7846,10 +7863,11 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_MSFT,
     ) -> None:
         object_type_count = 0
-        if object_types is not None and not isinstance(object_types, ctypes.Array):
-            object_types = (c_int * len(object_types))(
-                *object_types)
+        if object_types is not None:
             object_type_count = len(object_types)
+            if not isinstance(object_types, ctypes.Array):
+                object_types = (c_int * len(object_types))(
+                    *object_types)
         self._object_types_ctypes_array = object_types
         super().__init__(
             _object_type_count=object_type_count,
@@ -7943,10 +7961,11 @@ class ScenePlanesMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_PLANES_MSFT,
     ) -> None:
         scene_plane_count = 0
-        if scene_planes is not None and not isinstance(scene_planes, ctypes.Array):
-            scene_planes = (ScenePlaneMSFT * len(scene_planes))(
-                *scene_planes)
+        if scene_planes is not None:
             scene_plane_count = len(scene_planes)
+            if not isinstance(scene_planes, ctypes.Array):
+                scene_planes = (ScenePlaneMSFT * len(scene_planes))(
+                    *scene_planes)
         self._scene_planes_ctypes_array = scene_planes
         super().__init__(
             _scene_plane_count=scene_plane_count,
@@ -8009,10 +8028,11 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT,
     ) -> None:
         alignment_count = 0
-        if alignments is not None and not isinstance(alignments, ctypes.Array):
-            alignments = (c_int * len(alignments))(
-                *alignments)
+        if alignments is not None:
             alignment_count = len(alignments)
+            if not isinstance(alignments, ctypes.Array):
+                alignments = (c_int * len(alignments))(
+                    *alignments)
         self._alignments_ctypes_array = alignments
         super().__init__(
             _alignment_count=alignment_count,
@@ -8098,10 +8118,11 @@ class SceneMeshesMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_MESHES_MSFT,
     ) -> None:
         scene_mesh_count = 0
-        if scene_meshes is not None and not isinstance(scene_meshes, ctypes.Array):
-            scene_meshes = (SceneMeshMSFT * len(scene_meshes))(
-                *scene_meshes)
+        if scene_meshes is not None:
             scene_mesh_count = len(scene_meshes)
+            if not isinstance(scene_meshes, ctypes.Array):
+                scene_meshes = (SceneMeshMSFT * len(scene_meshes))(
+                    *scene_meshes)
         self._scene_meshes_ctypes_array = scene_meshes
         super().__init__(
             _scene_mesh_count=scene_mesh_count,
@@ -8489,10 +8510,11 @@ class SceneDeserializeInfoMSFT(Structure):
         structure_type: StructureType = StructureType.SCENE_DESERIALIZE_INFO_MSFT,
     ) -> None:
         fragment_count = 0
-        if fragments is not None and not isinstance(fragments, ctypes.Array):
-            fragments = (DeserializeSceneFragmentMSFT * len(fragments))(
-                *fragments)
+        if fragments is not None:
             fragment_count = len(fragments)
+            if not isinstance(fragments, ctypes.Array):
+                fragments = (DeserializeSceneFragmentMSFT * len(fragments))(
+                    *fragments)
         self._fragments_ctypes_array = fragments
         super().__init__(
             _fragment_count=fragment_count,
@@ -8764,10 +8786,11 @@ class FacialExpressionsHTC(Structure):
         structure_type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
     ) -> None:
         expression_count = 0
-        if expression_weightings is not None and not isinstance(expression_weightings, ctypes.Array):
-            expression_weightings = (c_float * len(expression_weightings))(
-                *expression_weightings)
+        if expression_weightings is not None:
             expression_count = len(expression_weightings)
+            if not isinstance(expression_weightings, ctypes.Array):
+                expression_weightings = (c_float * len(expression_weightings))(
+                    *expression_weightings)
         self._expression_weightings_ctypes_array = expression_weightings
         super().__init__(
             is_active=is_active,
@@ -11559,10 +11582,11 @@ class SpaceUuidFilterInfoFB(Structure):
         structure_type: StructureType = StructureType.SPACE_UUID_FILTER_INFO_FB,
     ) -> None:
         uuid_count = 0
-        if uuids is not None and not isinstance(uuids, ctypes.Array):
-            uuids = (UuidEXT * len(uuids))(
-                *uuids)
+        if uuids is not None:
             uuid_count = len(uuids)
+            if not isinstance(uuids, ctypes.Array):
+                uuids = (UuidEXT * len(uuids))(
+                    *uuids)
         self._uuids_ctypes_array = uuids
         super().__init__(
             _uuid_count=uuid_count,

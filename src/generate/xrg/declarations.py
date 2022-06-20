@@ -1048,17 +1048,18 @@ class ArrayPointerFieldCoder(FieldCoder):
         # noinspection PyUnresolvedReferences
         p = self.field.type.pointee
         pname = p.name(Api.PYTHON)
-        yield f"if {n} is not None and not isinstance({n}, ctypes.Array):"
-        if pname == "str":
-            yield f"    {n} = (c_char_p * len({n}))("
-            yield f"        *[s.encode() for s in {n}])"
-        else:
-            yield f"    {n} = ({p.name(Api.CTYPES)} * len({n}))("
-            if "BaseHeader" in pname:
-                yield f"        *[cast(p, {pname}) for p in {n}])"
-            else:
-                yield f"        *{n})"
+        yield f"if {n} is not None:"
         yield f"    {self.count_field.name(Api.CTYPES)} = len({n})"
+        yield f"    if not isinstance({n}, ctypes.Array):"
+        if pname == "str":
+            yield f"        {n} = (c_char_p * len({n}))("
+            yield f"            *[s.encode() for s in {n}])"
+        else:
+            yield f"        {n} = ({p.name(Api.CTYPES)} * len({n}))("
+            if "BaseHeader" in pname:
+                yield f"            *[cast(p, {pname}) for p in {n}])"
+            else:
+                yield f"            *{n})"
         # Store a reference to the ctypes array
         yield f"self._{n}_ctypes_array = {n}"  # Maybe if needed...
 
