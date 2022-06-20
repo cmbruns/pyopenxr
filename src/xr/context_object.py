@@ -1,3 +1,4 @@
+import time
 from ctypes import byref, c_int32, c_void_p, cast, POINTER, pointer, Structure
 
 import xr
@@ -37,12 +38,15 @@ class ContextObject(object):
         self.form_factor = form_factor
         self.graphics = None
         self.graphics_binding_pointer = None
-        self.closing = False
         self.action_sets = []
         self.render_layers = []
         self.swapchains = []
         self.swapchain_image_ptr_buffers = []
         self.swapchain_image_buffers = []  # Keep alive
+        self.exit_render_loop = False
+        self.request_restart = False  # TODO: do like hello_xr
+        self.session_is_running = False
+        self.projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
 
     def __enter__(self):
         self.instance = create_instance(
@@ -160,51 +164,73 @@ class ContextObject(object):
             ),
         )
         while True:
+            window_closed = self.graphics.poll_events()
+            if window_closed:
+                self.exit_render_loop = True
+                break
+            self.exit_render_loop = False
             self.poll_xr_events()
-            if self.session_state in (
-                    SessionState.READY,
-                    SessionState.SYNCHRONIZED,
-                    SessionState.VISIBLE,
-                    SessionState.FOCUSED,
-            ):
-                frame_state = wait_frame(self.session)
-                begin_frame(self.session)
-                self.render_layers = []
+            if self.exit_render_loop:
+                break
+            if self.session_is_running:
+                if self.session_state in (
+                        SessionState.READY,
+                        SessionState.SYNCHRONIZED,
+                        SessionState.VISIBLE,
+                        SessionState.FOCUSED,
+                ):
+                    frame_state = wait_frame(self.session)
+                    result = begin_frame(self.session)
+                    self.render_layers = []
 
-                yield frame_state
+                    yield frame_state
 
-                end_frame(
-                    self.session,
-                    frame_end_info=FrameEndInfo(
-                        display_time=frame_state.predicted_display_time,
-                        environment_blend_mode=self.environment_blend_mode,
-                        layers=self.render_layers,
+                    end_frame(
+                        self.session,
+                        frame_end_info=FrameEndInfo(
+                            display_time=frame_state.predicted_display_time,
+                            environment_blend_mode=self.environment_blend_mode,
+                            layers=self.render_layers,
+                        )
                     )
-                )
+            else:
+                # Throttle loop since xrWaitFrame won't be called.
+                time.sleep(0.250)
 
     def poll_xr_events(self):
+        self.exit_render_loop = False
+        self.request_restart = False
         while True:
             try:
                 event_buffer = poll_event(self.instance)
                 event_type = StructureType(event_buffer.type)
                 if event_type == StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
                     # still handle rest of the events instead of immediately quitting
-                    self.closing = True
+                    self.exit_render_loop = True
+                    self.request_restart = True
                 elif event_type == StructureType.EVENT_DATA_SESSION_STATE_CHANGED \
                         and self.session is not None:
                     event = cast(
                         byref(event_buffer),
                         POINTER(EventDataSessionStateChanged)).contents
                     self.session_state = SessionState(event.state)
-                    if self.session_state == SessionState.READY and not self.closing:
+                    if self.session_state == SessionState.READY:
                         begin_session(
                             session=self.session,
                             begin_info=SessionBeginInfo(
                                 self.view_configuration_type,
                             ),
                         )
+                        self.session_is_running = True
                     elif self.session_state == SessionState.STOPPING:
-                        self.closing = True
+                        self.session_is_running = False
+                        xr.end_session(self.session)
+                    elif self.session_state == SessionState.EXITING:
+                        self.exit_render_loop = True
+                        self.request_restart = False
+                    elif self.session_state == SessionState.LOSS_PENDING:
+                        self.exit_render_loop = True
+                        self.request_restart = True
                 elif event_type == StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX:
                     vive_tracker_connected = cast(byref(event_buffer), POINTER(EventDataViveTrackerConnectedHTCX)).contents
                     paths = vive_tracker_connected.paths.contents
@@ -223,56 +249,55 @@ class ContextObject(object):
             except EventUnavailable:
                 break
 
-    def render_loop(self):
-        for frame_state in self.frame_loop():
-            if frame_state.should_render:
-                layer = xr.CompositionLayerProjection(space=self.space)
-                projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
-                view_state, views = xr.locate_views(
-                    session=self.session,
-                    view_locate_info=xr.ViewLocateInfo(
-                        view_configuration_type=self.view_configuration_type,
-                        display_time=frame_state.predicted_display_time,
-                        space=self.space,
-                    )
+    def view_loop(self, frame_state):
+        if frame_state.should_render:
+            layer = xr.CompositionLayerProjection(space=self.space)
+            projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
+            view_state, views = xr.locate_views(
+                session=self.session,
+                view_locate_info=xr.ViewLocateInfo(
+                    view_configuration_type=self.view_configuration_type,
+                    display_time=frame_state.predicted_display_time,
+                    space=self.space,
                 )
-                vsf = view_state.view_state_flags
-                if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
-                        or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0):
-                    continue  # There are no valid tracking poses for the views.
-                for view_index, view in enumerate(views):
-                    view_swapchain = self.swapchains[view_index]
-                    swapchain_image_index = xr.acquire_swapchain_image(
-                        swapchain=view_swapchain.handle,
-                        acquire_info=xr.SwapchainImageAcquireInfo(),
-                    )
-                    xr.wait_swapchain_image(
-                        swapchain=view_swapchain.handle,
-                        wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
-                    )
-                    layer_view = projection_layer_views[view_index]
-                    assert layer_view.structure_type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
-                    layer_view.pose = view.pose
-                    layer_view.fov = view.fov
-                    layer_view.sub_image.swapchain = view_swapchain.handle
-                    layer_view.sub_image.image_rect.offset[:] = [0, 0]
-                    layer_view.sub_image.image_rect.extent[:] = [
-                        view_swapchain.width, view_swapchain.height, ]
-                    swapchain_image_ptr = self.swapchain_image_ptr_buffers[view_index][swapchain_image_index]
-                    swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLKHR)).contents
-                    assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
-                    color_texture = swapchain_image.image
-                    self.graphics.begin_frame(layer_view, color_texture)
+            )
+            vsf = view_state.view_state_flags
+            if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
+                    or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0):
+                return  # There are no valid tracking poses for the views.
+            for view_index, view in enumerate(views):
+                view_swapchain = self.swapchains[view_index]
+                swapchain_image_index = xr.acquire_swapchain_image(
+                    swapchain=view_swapchain.handle,
+                    acquire_info=xr.SwapchainImageAcquireInfo(),
+                )
+                xr.wait_swapchain_image(
+                    swapchain=view_swapchain.handle,
+                    wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
+                )
+                layer_view = projection_layer_views[view_index]
+                assert layer_view.structure_type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
+                layer_view.pose = view.pose
+                layer_view.fov = view.fov
+                layer_view.sub_image.swapchain = view_swapchain.handle
+                layer_view.sub_image.image_rect.offset[:] = [0, 0]
+                layer_view.sub_image.image_rect.extent[:] = [
+                    view_swapchain.width, view_swapchain.height, ]
+                swapchain_image_ptr = self.swapchain_image_ptr_buffers[view_index][swapchain_image_index]
+                swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLKHR)).contents
+                assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
+                color_texture = swapchain_image.image
+                self.graphics.begin_frame(layer_view, color_texture)
 
-                    yield view_index, view
+                yield view
 
-                    self.graphics.end_frame()
-                    xr.release_swapchain_image(
-                        swapchain=view_swapchain.handle,
-                        release_info=xr.SwapchainImageReleaseInfo()
-                    )
-                layer.views = projection_layer_views
-                self.render_layers.append(byref(layer))
+                self.graphics.end_frame()
+                xr.release_swapchain_image(
+                    swapchain=view_swapchain.handle,
+                    release_info=xr.SwapchainImageReleaseInfo()
+                )
+            layer.views = projection_layer_views
+            self.render_layers.append(byref(layer))
 
 
 __all__ = [

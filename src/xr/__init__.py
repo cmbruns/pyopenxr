@@ -1,4 +1,14 @@
-from . import version, constants, enums, typedefs, functions, platform, exception, api_layer
+from . import (
+    version,
+    constants,
+    enums,
+    typedefs,
+    functions,
+    platform,
+    exception,
+    api_layer,
+    matrix4x4f,
+)
 
 from .version import *
 from .constants import *
@@ -10,6 +20,7 @@ from .exception import *
 from .classes import *
 from .api_layer import *
 from .context_object import *
+from .matrix4x4f import *
 
 # Use submodule name for extension
 import xr.extension as extension
@@ -31,6 +42,7 @@ for subpackage in (
     classes,
     api_layer,
     context_object,
+    matrix4x4f,
 ):
     __all__ += subpackage.__all__
 

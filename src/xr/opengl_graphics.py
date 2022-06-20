@@ -1,5 +1,6 @@
 import ctypes
 import platform
+from typing import Dict
 
 import glfw
 if platform.system() == "Windows":
@@ -70,6 +71,7 @@ class OpenGLGraphics(object):
         else:
             raise NotImplementedError
         self.swapchain_framebuffer = None
+        self.color_to_depth_map: Dict[int, int] = {}
 
     def __enter__(self):
         return self
@@ -84,8 +86,9 @@ class OpenGLGraphics(object):
                       layer_view.sub_image.image_rect.offset.y,
                       layer_view.sub_image.image_rect.extent.width,
                       layer_view.sub_image.image_rect.extent.height)
-        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D,
-                                  color_texture, 0)
+        depth_texture = self.get_depth_texture(color_texture)
+        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, color_texture, 0)
+        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
 
     def destroy(self):
         self.make_current()
@@ -97,12 +100,35 @@ class OpenGLGraphics(object):
     def end_frame():
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
 
+    def get_depth_texture(self, color_texture) -> int:
+        # If a depth-stencil view has already been created for this back-buffer, use it.
+        if color_texture in self.color_to_depth_map:
+            return self.color_to_depth_map[color_texture]
+        # This back-buffer has no corresponding depth-stencil texture, so create one with matching dimensions.
+        GL.glBindTexture(GL.GL_TEXTURE_2D, color_texture)
+        width = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_WIDTH)
+        height = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_HEIGHT)
+
+        depth_texture = GL.glGenTextures(1)
+        GL.glBindTexture(GL.GL_TEXTURE_2D, depth_texture)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
+        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT32, width, height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_FLOAT, None)
+        self.color_to_depth_map[color_texture] = depth_texture
+        return depth_texture
+
     def initialize_resources(self):
         self.make_current()
         self.swapchain_framebuffer = GL.glGenFramebuffers(1)
 
     def make_current(self):
         glfw.make_context_current(self.window)
+
+    def poll_events(self) -> bool:
+        glfw.poll_events()
+        return glfw.window_should_close(self.window)
 
     @staticmethod
     def select_color_swapchain_format(runtime_formats):

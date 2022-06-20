@@ -2941,11 +2941,13 @@ class CompositionLayerProjection(Structure):
         next_structure: c_void_p = None,
         structure_type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION,
     ) -> None:
-        view_count = 0
-        if views is not None and not isinstance(views, ctypes.Array):
-            views = (CompositionLayerProjectionView * len(views))(
-                *views)
+        if views is None:
+            view_count = 0
+        else:
             view_count = len(views)
+            if not isinstance(views, ctypes.Array):
+                views = (CompositionLayerProjectionView * len(views))(
+                    *views)
         self._views_ctypes_array = views
         super().__init__(
             layer_flags=CompositionLayerFlags(layer_flags).value,
