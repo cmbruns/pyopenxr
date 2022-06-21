@@ -263,7 +263,6 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             _swapchain_format: int,
             cubes: List[Cube],
             mirror=False,
-            color=dark_slate_gray,
     ):
         assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
         # UNUSED_PARM(swapchain_format)                    # not used in this function for now.
@@ -283,7 +282,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, color_texture, 0)
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
         # Clear swapchain and depth buffer.
-        GL.glClearColor(*color)
+        GL.glClearColor(*dark_slate_gray)
         GL.glClearDepth(1.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
         # Set shaders and uniform variables.

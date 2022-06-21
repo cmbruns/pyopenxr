@@ -100,7 +100,7 @@ with xr.ContextObject(
     vao = GL.glGenVertexArrays(1)
     GL.glBindVertexArray(vao)
     GL.glEnable(GL.GL_DEPTH_TEST)
-    GL.glClearColor(0.3, 0.3, 0.2, 1)
+    GL.glClearColor(0.2, 0.2, 0.2, 1)
     GL.glClearDepth(1.0)
     for frame_index, frame_state in enumerate(context.frame_loop()):
         for view_index, view in enumerate(context.view_loop(frame_state)):
@@ -120,12 +120,7 @@ with xr.ContextObject(
                 scale=(1, 1, 1),
             )
             view = xr.Matrix4x4f.invert_rigid_body(to_view)
-            if view_index == 0:
-                GL.glClearColor(1, 0.2, 0.2, 1)
-            elif view_index == 1:
-                GL.glClearColor(0.2, 1, 0.2, 1)
             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-            GL.glClearColor(0.2, 0.2, 0, 1)
             GL.glUseProgram(shader)
             GL.glUniformMatrix4fv(0, 1, False, projection.as_numpy())
             GL.glUniformMatrix4fv(4, 1, False, view.as_numpy())
