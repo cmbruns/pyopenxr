@@ -87,7 +87,7 @@ class OpenXRProgram(object):
         self.swapchains = []
         self.swapchain_image_buffers = []  # to keep objects alive
         self.swapchain_image_ptr_buffers = {}  # m_swapchainImages
-        self.views = []
+        self.views = (xr.View * 2)(xr.View(), xr.View())
         self.color_swapchain_format = -1
 
         self.visualized_spaces = []
@@ -112,10 +112,10 @@ class OpenXRProgram(object):
             self.input.action_set = None
         for swapchain in self.swapchains:
             xr.destroy_swapchain(swapchain.handle)
-            self.swapchains[:] = []
+        self.swapchains[:] = []
         for visualized_space in self.visualized_spaces:
             xr.destroy_space(visualized_space)
-            self.visualized_spaces[:] = []
+        self.visualized_spaces[:] = []
         if self.app_space is not None:
             xr.destroy_space(self.app_space)
             self.app_space = None
@@ -732,7 +732,9 @@ class OpenXRProgram(object):
 
         layers = []
         layer = xr.CompositionLayerProjection(space=self.app_space)
-        projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
+        projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
+            xr.CompositionLayerProjectionView(),
+            xr.CompositionLayerProjectionView())
         if frame_state.should_render:
             if self.render_layer(frame_state.predicted_display_time, projection_layer_views, layer):
                 layers.append(byref(layer))

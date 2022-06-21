@@ -25,12 +25,16 @@ logger.info("Hey, this logging thing works!")  # Test it out
 
 # Use API layers for debugging
 enabled_api_layers = []
+
 # 4) Core validation adds additional messages about correct use of the OpenXR api
 if xr.LUNARG_core_validation_APILAYER_NAME in xr.enumerate_api_layer_properties():
     enabled_api_layers.append(xr.LUNARG_core_validation_APILAYER_NAME)
+
 # 5) API dump shows the details of every OpenXR call. Use this for deep debugging only.
 if xr.LUNARG_api_dump_APILAYER_NAME in xr.enumerate_api_layer_properties():
     enabled_api_layers.append(xr.LUNARG_api_dump_APILAYER_NAME)
+    os.environ["XR_API_DUMP_EXPORT_TYPE"] = "text"  # or "html"
+    # os.environ["XR_API_DUMP_FILE_NAME"] = "/some/file/name"
 
 # Use extensions for debugging
 enabled_extensions = []
