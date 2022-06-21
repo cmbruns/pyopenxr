@@ -24,6 +24,7 @@ from ctypes import addressof, c_float, Structure
 import enum
 import math
 import numpy
+from typing import Sequence
 
 from .typedefs import *
 
@@ -213,7 +214,7 @@ class Matrix4x4f(Structure):
         return result
 
     @staticmethod
-    def create_translation_rotation_scale(translation: Vector3f, rotation: Quaternionf, scale: Vector3f) -> "Matrix4x4f":
+    def create_translation_rotation_scale(translation: Vector3f, rotation: Quaternionf, scale: Sequence[float]) -> "Matrix4x4f":
         """ Creates a combined translation(rotation(scale(object))) matrix. """
         scale_matrix = Matrix4x4f.create_scale(*scale)
         rotation_matrix = Matrix4x4f.create_from_quaternion(rotation)

@@ -46,7 +46,6 @@ class ContextObject(object):
         self.exit_render_loop = False
         self.request_restart = False  # TODO: do like hello_xr
         self.session_is_running = False
-        self.projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
 
     def __enter__(self):
         self.instance = create_instance(
@@ -252,7 +251,9 @@ class ContextObject(object):
     def view_loop(self, frame_state):
         if frame_state.should_render:
             layer = xr.CompositionLayerProjection(space=self.space)
-            projection_layer_views = [xr.CompositionLayerProjectionView()] * 2
+            projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
+                xr.CompositionLayerProjectionView(),
+                xr.CompositionLayerProjectionView())
             view_state, views = xr.locate_views(
                 session=self.session,
                 view_locate_info=xr.ViewLocateInfo(
