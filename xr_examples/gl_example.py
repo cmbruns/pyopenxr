@@ -147,7 +147,6 @@ class OpenXrExample(object):
         self.window_size = None
         self.enable_debug = True
         self.linux_steamvr_broken_destroy_instance = False
-        self.linux_steamvr_broken_context = False
 
     def debug_callback_py(
             self,
@@ -211,12 +210,6 @@ class OpenXrExample(object):
         instance_props = xr.get_instance_properties(self.instance)
         if platform.system() == 'Linux' and instance_props.runtime_name == b"SteamVR/OpenXR":
             print("SteamVR/OpenXR on Linux detected, enabling workarounds")
-            # Enabling workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/421
-            # OpenGL context must be manually restored after some OpenXR calls when using SteamVR on Linux
-            # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422,
-            # https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
-            # 
-            self.linux_steamvr_broken_context = True
             # Enabling workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422,
             # and https://github.com/ValveSoftware/SteamVR-for-Linux/issues/479
             # destroy_instance() causes SteamVR to hang and never recover
@@ -292,11 +285,6 @@ class OpenXrExample(object):
         self.swapchain_create_info.width = self.render_target_size[0]
         self.swapchain_create_info.height = self.render_target_size[1]
         self.swapchain = xr.create_swapchain(self.session, self.swapchain_create_info)
-        if self.linux_steamvr_broken_context:
-            GLX.glXMakeCurrent(
-                self.graphics_binding.x_display,
-                self.graphics_binding.glx_drawable,
-                self.graphics_binding.glx_context)
         self.swapchain_images = xr.enumerate_swapchain_images(self.swapchain, xr.SwapchainImageOpenGLKHR)
         for i, si in enumerate(self.swapchain_images):
             self.logger.debug(f"Swapchain image {i} type = {xr.StructureType(si.type)}")
@@ -315,6 +303,7 @@ class OpenXrExample(object):
                 layer_view.sub_image.image_rect.offset.x = layer_view.sub_image.image_rect.extent.width
 
     def prepare_gl_framebuffer(self):
+        glfw.make_context_current(self.window)
         self.fbo_depth_buffer = GL.glGenRenderbuffers(1)
         GL.glBindRenderbuffer(GL.GL_RENDERBUFFER, self.fbo_depth_buffer)
         if self.swapchain_create_info.sample_count == 1:
@@ -408,11 +397,6 @@ class OpenXrExample(object):
                 layer_view.pose = eye_view.pose
             frame_end_info.layers = [ctypes.byref(self.projection_layer), ]
         xr.end_frame(self.session, frame_end_info)
-        if self.linux_steamvr_broken_context:
-            GLX.glXMakeCurrent(
-                self.graphics_binding.x_display,
-                self.graphics_binding.glx_drawable,
-                self.graphics_binding.glx_context)
 
     def update_xr_views(self):
         vi = xr.ViewLocateInfo(
@@ -430,18 +414,9 @@ class OpenXrExample(object):
     def render(self):
         ai = xr.SwapchainImageAcquireInfo(None)
         swapchain_index = xr.acquire_swapchain_image(self.swapchain, ai)
-        if self.linux_steamvr_broken_context:
-            GLX.glXMakeCurrent(
-                self.graphics_binding.x_display,
-                self.graphics_binding.glx_drawable,
-                self.graphics_binding.glx_context)
         wi = xr.SwapchainImageWaitInfo(xr.INFINITE_DURATION)
         xr.wait_swapchain_image(self.swapchain, wi)
-        if self.linux_steamvr_broken_context:
-            GLX.glXMakeCurrent(
-                self.graphics_binding.x_display,
-                self.graphics_binding.glx_drawable,
-                self.graphics_binding.glx_context)
+        glfw.make_context_current(self.window)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.fbo_id)
         sw_image = self.swapchain_images[swapchain_index]
         GL.glFramebufferTexture(
@@ -474,32 +449,28 @@ class OpenXrExample(object):
             GL.glBindFramebuffer(GL.GL_READ_FRAMEBUFFER, 0)
         ri = xr.SwapchainImageReleaseInfo()
         xr.release_swapchain_image(self.swapchain, ri)
-        if self.linux_steamvr_broken_context:
-            GLX.glXMakeCurrent(
-                self.graphics_binding.x_display,
-                self.graphics_binding.glx_drawable,
-                self.graphics_binding.glx_context)
         # If we're mirror make sure to do the potentially blocking command
         # AFTER we've released the swapchain image
         if self.mirror_window:
             glfw.swap_buffers(self.window)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self.fbo_id is not None:
-            GL.glDeleteFramebuffers(1, [self.fbo_id])
-            self.fbo_id = None
-        if self.fbo_depth_buffer is not None:
-            GL.glDeleteRenderbuffers(1, [self.fbo_depth_buffer])
-            self.fbo_depth_buffer = None
+        if self.window is not None:
+            glfw.make_context_current(self.window)
+            if self.fbo_id is not None:
+                GL.glDeleteFramebuffers(1, [self.fbo_id])
+                self.fbo_id = None
+            if self.fbo_depth_buffer is not None:
+                GL.glDeleteRenderbuffers(1, [self.fbo_depth_buffer])
+                self.fbo_depth_buffer = None
+            glfw.terminate()
+            self.window = None
         if self.swapchain is not None:
             xr.destroy_swapchain(self.swapchain)
             self.swapchain = None
         if self.session is not None:
             xr.destroy_session(self.session)
             self.session = None
-        if self.window is not None:
-            glfw.terminate()  # TODO: raii
-            self.window = None
         self.system_id = None
         if self.instance is not None:
             # Workaround for https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422

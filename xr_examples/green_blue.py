@@ -18,7 +18,6 @@ with xr.ContextObject(
         ],
     ),
 ) as context:
-    context.graphics.make_current()
     eye_colors = [
         (0, 1, 0, 1),  # Left eye green
         (0, 0, 1, 1),  # Right eye blue
