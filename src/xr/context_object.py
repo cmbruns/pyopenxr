@@ -135,7 +135,7 @@ class ContextObject(object):
                     byref(swapchain_image_buffer[ix]),
                     POINTER(xr.SwapchainImageBaseHeader))
             self.swapchain_image_ptr_buffers.append(swapchain_image_ptr_buffer)
-
+        self.graphics.make_current()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -179,8 +179,9 @@ class ContextObject(object):
                         SessionState.FOCUSED,
                 ):
                     frame_state = wait_frame(self.session)
-                    result = begin_frame(self.session)
+                    begin_frame(self.session)
                     self.render_layers = []
+                    self.graphics.make_current()
 
                     yield frame_state
 
