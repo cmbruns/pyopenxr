@@ -2,11 +2,9 @@
 pyopenxr example program green_blue.py
 
 Different way to get similar display to the venerable gl_example.py
-
-TODO: why are both eye views blue?
-The same problem happens in hello_xr if you try difference glClearColors in each view.
 """
 
+import os
 from OpenGL import GL
 import xr
 
@@ -20,6 +18,7 @@ with xr.ContextObject(
         ],
     ),
 ) as context:
+    context.graphics.make_current()
     eye_colors = [
         (0, 1, 0, 1),  # Left eye green
         (0, 0, 1, 1),  # Right eye blue

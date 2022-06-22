@@ -18,6 +18,7 @@ with xr.ContextObject(
         ],
     ),
 ) as context:
+    context.graphics.make_current()
     vertex_shader = compileShader(
         inspect.cleandoc("""
         #version 430
