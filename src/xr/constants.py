@@ -261,11 +261,17 @@ FB_SPATIAL_ENTITY_STORAGE_EXTENSION_NAME = "XR_FB_spatial_entity_storage"
 FB_space_warp = 1
 FB_space_warp_SPEC_VERSION = 2
 FB_SPACE_WARP_EXTENSION_NAME = "XR_FB_space_warp"
+FB_scene = 1
+FB_scene_SPEC_VERSION = 1
+FB_SCENE_EXTENSION_NAME = "XR_FB_scene"
+EXT_palm_pose = 1
+EXT_palm_pose_SPEC_VERSION = 2
+EXT_PALM_POSE_EXTENSION_NAME = "XR_EXT_palm_pose"
 ALMALENCE_digital_lens_control = 1
 ALMALENCE_digital_lens_control_SPEC_VERSION = 1
 ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME = "XR_ALMALENCE_digital_lens_control"
 FB_spatial_entity_container = 1
-FB_spatial_entity_container_SPEC_VERSION = 1
+FB_spatial_entity_container_SPEC_VERSION = 2
 FB_SPATIAL_ENTITY_CONTAINER_EXTENSION_NAME = "XR_FB_spatial_entity_container"
 FB_passthrough_keyboard_hands = 1
 FB_passthrough_keyboard_hands_SPEC_VERSION = 2
@@ -391,6 +397,7 @@ __all__ = [
     "EXT_HAND_JOINTS_MOTION_RANGE_EXTENSION_NAME",
     "EXT_HAND_TRACKING_EXTENSION_NAME",
     "EXT_HP_MIXED_REALITY_CONTROLLER_EXTENSION_NAME",
+    "EXT_PALM_POSE_EXTENSION_NAME",
     "EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME",
     "EXT_SAMSUNG_ODYSSEY_CONTROLLER_EXTENSION_NAME",
     "EXT_THERMAL_QUERY_EXTENSION_NAME",
@@ -411,6 +418,8 @@ __all__ = [
     "EXT_hand_tracking_SPEC_VERSION",
     "EXT_hp_mixed_reality_controller",
     "EXT_hp_mixed_reality_controller_SPEC_VERSION",
+    "EXT_palm_pose",
+    "EXT_palm_pose_SPEC_VERSION",
     "EXT_performance_settings",
     "EXT_performance_settings_SPEC_VERSION",
     "EXT_samsung_odyssey_controller",
@@ -443,6 +452,7 @@ __all__ = [
     "FB_PASSTHROUGH_EXTENSION_NAME",
     "FB_PASSTHROUGH_KEYBOARD_HANDS_EXTENSION_NAME",
     "FB_RENDER_MODEL_EXTENSION_NAME",
+    "FB_SCENE_EXTENSION_NAME",
     "FB_SPACE_WARP_EXTENSION_NAME",
     "FB_SPATIAL_ENTITY_CONTAINER_EXTENSION_NAME",
     "FB_SPATIAL_ENTITY_EXTENSION_NAME",
@@ -480,6 +490,8 @@ __all__ = [
     "FB_passthrough_keyboard_hands_SPEC_VERSION",
     "FB_render_model",
     "FB_render_model_SPEC_VERSION",
+    "FB_scene",
+    "FB_scene_SPEC_VERSION",
     "FB_space_warp",
     "FB_space_warp_SPEC_VERSION",
     "FB_spatial_entity",

@@ -25,7 +25,7 @@ class SteamVrLinuxDestroyInstanceLayer(xr.DynamicApiLayerBase):
         self,
         info: POINTER(xr.InstanceCreateInfo),
         api_layer_info: POINTER(xr.ApiLayerCreateInfo),
-        instance: xr.InstanceHandle,
+        instance: xr.Instance,
     ) -> xr.Result:
         # Dereference the next_info field for easier calling.
         next_info = api_layer_info.contents.next_info.contents
@@ -49,7 +49,7 @@ class SteamVrLinuxDestroyInstanceLayer(xr.DynamicApiLayerBase):
 
     def get_instance_proc_addr(
         self,
-        instance: xr.InstanceHandle,
+        instance: xr.Instance,
         name: c_char_p,
         function: POINTER(xr.PFN_xrVoidFunction),
     ) -> xr.Result:
@@ -62,7 +62,7 @@ class SteamVrLinuxDestroyInstanceLayer(xr.DynamicApiLayerBase):
         return self.nextXrGetInstanceProcAddr(instance, name, function)
 
     # Signature must exactly match the low-level signature of xrDestroyInstance
-    def destroy_instance(self, instance: xr.InstanceHandle) -> xr.Result:
+    def destroy_instance(self, instance: xr.Instance) -> xr.Result:
         instance_properties = xr.InstanceProperties()
         xrGetInstanceProperties(instance, byref(instance_properties))
         is_steam_vr = instance_properties.runtime_name == b"SteamVR/OpenXR"

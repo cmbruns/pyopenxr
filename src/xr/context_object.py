@@ -9,9 +9,9 @@ from .functions import *
 from .opengl_graphics import OpenGLGraphics
 
 
-class Swapchain(Structure):
+class SwapchainStruct(Structure):
     _fields_ = [
-        ("handle", xr.SwapchainHandle),
+        ("handle", Swapchain),
         ("width", c_int32),
         ("height", c_int32),
     ]
@@ -113,7 +113,7 @@ class ContextObject(object):
                 sample_count=vp.recommended_swapchain_sample_count,
                 usage_flags=xr.SwapchainUsageFlags.SAMPLED_BIT | xr.SwapchainUsageFlags.COLOR_ATTACHMENT_BIT,
             )
-            swapchain = Swapchain(
+            swapchain = SwapchainStruct(
                 xr.create_swapchain(
                     session=self.session,
                     create_info=swapchain_create_info,
@@ -139,6 +139,9 @@ class ContextObject(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.default_action_set is not None:
+            destroy_action_set(self.default_action_set)
+            self.default_action_set = None
         if self.space is not None:
             destroy_space(self.space)
             self.space = None
@@ -157,7 +160,7 @@ class ContextObject(object):
             session=self.session,
             attach_info=SessionActionSetsAttachInfo(
                 count_action_sets=len(self.action_sets),
-                action_sets=(ActionSetHandle * len(self.action_sets))(
+                action_sets=(ActionSet * len(self.action_sets))(
                     *self.action_sets
                 )
             ),

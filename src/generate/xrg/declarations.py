@@ -614,7 +614,7 @@ class TypeDefItem(CodeItem):
             if pointee.kind == TypeKind.ELABORATED:
                 if pointee.spelling.endswith("_T"):
                     # This is a HANDLE type
-                    self._py_name += "Handle"  # To distinguish Instance from InstanceHandle
+                    # self._py_name += "Handle"  # To distinguish Instance from InstanceHandle
                     self._ctypes_name = self._py_name
         if self.type.name() == "Flags64":
             self._py_name = self._ctypes_name = self._py_name + "CInt"
@@ -1146,12 +1146,9 @@ class ArrayFieldCoder(FieldCoder):
 
 
 class NextFieldCoder(FieldCoder):
-    def __init__(self, *args, **kwargs):
-        super().__init__(rename="next_structure", *args, **kwargs)
-
     def param_code(self) -> Generator[str, None, None]:
         # Avoid self reference in BaseInStructure
-        yield f"next_structure: c_void_p = None"
+        yield f"{self.name}: c_void_p = None"
 
 
 class VoidPointerFieldCoder(FieldCoder):
@@ -1191,26 +1188,15 @@ class StructureTypeFieldCoder(FieldCoder):
     def __init__(self, field, struct):
         super().__init__(field)
         self.struct = struct
-        self.name = "structure_type"
 
     def param_code(self) -> Generator[str, None, None]:
         type_enum_name = structure_type_enum_name(self.struct)
-        yield f"structure_type: {self.field.type.name(Api.PYTHON)} = StructureType.{type_enum_name}"
-
-    def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}=structure_type.value"
+        yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = StructureType.{type_enum_name}"
 
 
 class BaseStructureTypeFieldCoder(FieldCoder):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.name = "structure_type"
-
     def param_code(self) -> Generator[str, None, None]:
-        yield f"structure_type: {self.field.type.name(Api.PYTHON)} = StructureType.UNKNOWN"
-
-    def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}=structure_type.value"
+        yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = StructureType.UNKNOWN"
 
 
 class StructureCoder(object):
@@ -1359,6 +1345,7 @@ def snake_from_camel(camel: str) -> str:
 def structure_type_enum_name(struct: StructItem):
     type_enum_name = snake_from_camel(struct.name()).upper()
     type_enum_name = type_enum_name.replace("D3_D", "D3D")
+    type_enum_name = type_enum_name.replace("2_D", "_2D_")  # BOUNDARY_2D_FB
     return type_enum_name
 
 

@@ -20,7 +20,7 @@ from .functions import *
 class OpenGLGraphics(object):
     def __init__(
             self,
-            instance: InstanceHandle,
+            instance: Instance,
             system: SystemId,
             title: str = "glfw OpenGL window",
     ) -> None:
@@ -92,8 +92,12 @@ class OpenGLGraphics(object):
 
     def destroy(self):
         self.make_current()
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
         if self.swapchain_framebuffer is not None:
             GL.glDeleteFramebuffers(1, [self.swapchain_framebuffer, ])
+            self.swapchain_framebuffer = None
+        glfw.destroy_window(self.window)
+        self.window = None
         glfw.terminate()
 
     @staticmethod

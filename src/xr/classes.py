@@ -28,7 +28,7 @@ class Eye(enum.IntEnum):
     RIGHT = 1
 
 
-class Instance(object):
+class InstanceObject(object):
     def __init__(
             self,
             enabled_extensions: Sequence[str] = None,
@@ -88,10 +88,10 @@ class Instance(object):
         return xr.get_instance_properties(instance=self.handle)
 
 
-class System(object):
+class SystemObject(object):
     def __init__(
             self,
-            instance: Instance,
+            instance: InstanceObject,
             form_factor: FormFactor = FormFactor.HEAD_MOUNTED_DISPLAY,
     ) -> None:
         # TODO: default managed value for instance
@@ -111,7 +111,7 @@ class System(object):
 class GlfwWindow(object):
     def __init__(
             self,
-            system: System,
+            system: SystemObject,
             title: str = None,
             mirror_window: bool = False
     ) -> None:
@@ -175,8 +175,8 @@ class GlfwWindow(object):
         glfw.terminate()
 
 
-class Session(object):
-    def __init__(self, system: System, graphics_binding):
+class SessionObject(object):
+    def __init__(self, system: SystemObject, graphics_binding):
         graphics_binding_pointer = None
         if graphics_binding is not None:
             graphics_binding_pointer = ctypes.cast(
@@ -194,7 +194,7 @@ class Session(object):
         self.state = SessionState.IDLE
         self.frame_state = FrameState()
         self.system = system
-        self.space = Space(self)
+        self.space = SpaceObject(self)
         self.view_configuration_type = ViewConfigurationType.PRIMARY_STEREO
 
     def __enter__(self):
@@ -265,10 +265,10 @@ class Session(object):
         self.frame_state = wait_frame(self.handle)
 
 
-class Space(object):
+class SpaceObject(object):
     def __init__(
             self,
-            session: Session,
+            session: SessionObject,
             reference_space_type: ReferenceSpaceType = ReferenceSpaceType.STAGE,
             pose_in_reference_space: Posef = None,
     ):
@@ -284,8 +284,8 @@ class Space(object):
 __all__ = [
     "Eye",
     "GlfwWindow",
-    "Instance",
-    "Session",
-    "Space",
-    "System",
+    "InstanceObject",
+    "SessionObject",
+    "SpaceObject",
+    "SystemObject",
 ]

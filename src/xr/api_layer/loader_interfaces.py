@@ -4,7 +4,7 @@ from ctypes import c_char, c_char_p, c_uint32, c_void_p, CFUNCTYPE, POINTER, c_s
 from ..enums import EnumBase, Result
 from ..typedefs import (
     InstanceCreateInfo,
-    InstanceHandle,
+    Instance,
     PFN_xrGetInstanceProcAddr,
     VersionNumber
 )
@@ -76,7 +76,7 @@ PFN_xrCreateApiLayerInstance = CFUNCTYPE(
     Result.ctype(),  # return value
     POINTER(InstanceCreateInfo),  # info
     POINTER(ApiLayerCreateInfo),  # apiLayerInfo
-    InstanceHandle,  # instance
+    Instance,  # instance
 )
 
 

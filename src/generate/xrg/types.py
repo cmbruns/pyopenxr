@@ -272,7 +272,7 @@ class TypedefType(TypeBase):
             pt = self.underlying_type.clang_type.get_pointee()
             if pt.kind == TypeKind.ELABORATED:
                 if pt.spelling.endswith("_T"):
-                    self._py_name = self._ctypes_name = self._py_name + "Handle"
+                    self._py_name = self._ctypes_name = self._py_name
         # Custom Windows types
         if self._capi_name in PlatformType.type_map:
             self._ctypes_name = self._py_name = PlatformType.type_map[self._ctypes_name]
