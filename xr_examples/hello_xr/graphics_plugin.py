@@ -41,7 +41,7 @@ class IGraphicsPlugin(abc.ABC):
         """Get the graphics binding header for session creation."""
 
     @abc.abstractmethod
-    def initialize_device(self, instance_handle: xr.InstanceHandle, system_id: xr.SystemId) -> None:
+    def initialize_device(self, instance: xr.Instance, system_id: xr.SystemId) -> None:
         """Create an instance of this graphics api for the provided instance and systemId."""
 
     @property
@@ -61,6 +61,10 @@ class IGraphicsPlugin(abc.ABC):
     @abc.abstractmethod
     def select_color_swapchain_format(self, runtime_formats: Union[List[int], ctypes.Array]) -> int:
         """Select the preferred swapchain format from the list of available formats."""
+
+    @abc.abstractmethod
+    def set_background_clear_color(self, color) -> None:
+        pass
 
     @property
     @abc.abstractmethod

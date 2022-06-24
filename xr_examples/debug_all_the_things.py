@@ -104,7 +104,7 @@ instance = xr.create_instance(
     xr.InstanceCreateInfo(
         enabled_api_layer_names=enabled_api_layers,
         enabled_extension_names=enabled_extensions,
-        next_structure=ptr_debug_messenger,
+        next=ptr_debug_messenger,
     )
 )
 

@@ -75,6 +75,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         # Map color buffer to associated depth buffer. This map is populated on demand.
         self.color_to_depth_map: Dict[int, int] = {}
         self.debug_message_proc = None  # To keep the callback alive
+        self.background_clear_color = (0, 0, 0.5, 0)  # blue
 
     def __enter__(self):
         return self
@@ -101,6 +102,9 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             if depth is not None:
                 GL.glDeleteTextures(1, [depth])
         self.color_to_depth_map = {}
+        if self.window is not None:
+            glfw.destroy_window(self.window)
+            self.window = None
         glfw.terminate()
 
     @staticmethod
@@ -164,17 +168,17 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
     def graphics_binding(self) -> Structure:
         return self._graphics_binding
 
-    def initialize_device(self, instance_handle: xr.InstanceHandle, system_id: xr.SystemId):
+    def initialize_device(self, instance: xr.Instance, system_id: xr.SystemId):
         # extension function must be loaded by name
         pfn_get_open_gl_graphics_requirements_khr = cast(
             xr.get_instance_proc_addr(
-                instance_handle,
+                instance,
                 "xrGetOpenGLGraphicsRequirementsKHR",
             ),
             xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
         )
         graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
-        result = pfn_get_open_gl_graphics_requirements_khr(instance_handle, system_id, byref(graphics_requirements))
+        result = pfn_get_open_gl_graphics_requirements_khr(instance, system_id, byref(graphics_requirements))
         result = xr.check_result(xr.Result(result))
         if result.is_exception():
             raise result
@@ -282,7 +286,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, color_texture, 0)
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
         # Clear swapchain and depth buffer.
-        GL.glClearColor(*dark_slate_gray)
+        GL.glClearColor(*self.background_clear_color)
         GL.glClearDepth(1.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
         # Set shaders and uniform variables.
@@ -334,6 +338,9 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
                 if rf == sf:
                     return sf
         raise RuntimeError("No runtime swapchain format supported for color swapchain")
+
+    def set_background_clear_color(self, color) -> None:
+        self.background_clear_color = color
 
     def window_should_close(self):
         return glfw.window_should_close(self.window)

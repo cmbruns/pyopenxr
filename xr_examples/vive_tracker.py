@@ -82,7 +82,7 @@ with xr.ContextObject(
         )
     )
     # Create action spaces for locating trackers in each role
-    tracker_action_spaces = (xr.SpaceHandle * len(role_paths))(
+    tracker_action_spaces = (xr.Space * len(role_paths))(
         *[xr.create_action_space(
             session=session,
             create_info=xr.ActionSpaceCreateInfo(

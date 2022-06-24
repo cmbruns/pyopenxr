@@ -260,7 +260,7 @@ class OpenXrExample(object):
             self.graphics_binding.glx_context = GLX.glXGetCurrentContext()
             self.graphics_binding.glx_drawable = GLX.glXGetCurrentDrawable()
         pp = ctypes.cast(ctypes.pointer(self.graphics_binding), ctypes.c_void_p)
-        sci = xr.SessionCreateInfo(0, self.system_id, next_structure=pp)
+        sci = xr.SessionCreateInfo(0, self.system_id, next=pp)
         self.session = xr.create_session(self.instance, sci)
         reference_spaces = xr.enumerate_reference_spaces(self.session)
         for rs in reference_spaces:

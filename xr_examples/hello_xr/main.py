@@ -57,6 +57,14 @@ def main():
         level=logging.INFO,
     )
     options = update_options_from_command_line()
+    if options.blendmode == "Opaque":
+        background_clear_color = (0.184313729, 0.309803933, 0.309803933, 1.0)  # SlateGrey
+    elif options.blendmode == "Additive":
+        background_clear_color = (0, 0, 0, 1)  # Black
+    elif options.blendmode == "AlphaBlend":
+        background_clear_color = (0, 0, 0, 0)  # TransparentBlack
+    else:
+        raise NotImplementedError
 
     # Install keyboard handler to exit on keypress
     threading.Thread(target=poll_keyboard, daemon=True).start()
@@ -68,6 +76,7 @@ def main():
         # Create graphics API implementation.
         with create_graphics_plugin(options) as graphics_plugin, \
              OpenXRProgram(options, platform_plugin, graphics_plugin) as program:
+            graphics_plugin.set_background_clear_color(background_clear_color)
             program.create_instance()
             program.initialize_system()
             program.initialize_session()
