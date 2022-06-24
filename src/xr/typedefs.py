@@ -725,7 +725,7 @@ class Extent2Df(Structure):
 class ActionSpaceCreateInfo(Structure):
     def __init__(
         self,
-        action: Action = 0,
+        action: Action = None,
         subaction_path: Path = 0,
         pose_in_action_space: Posef = Posef(),
         next: c_void_p = None,
@@ -1106,7 +1106,7 @@ class CompositionLayerBaseHeader(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
+        space: Space = None,
         next: c_void_p = None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
@@ -1191,7 +1191,7 @@ class ViewLocateInfo(Structure):
         self,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),
         display_time: Time = 0,
-        space: Space = 0,
+        space: Space = None,
         next: c_void_p = None,
         type: StructureType = StructureType.VIEW_LOCATE_INFO,
     ) -> None:
@@ -1401,7 +1401,7 @@ class ActionCreateInfo(Structure):
 class ActionSuggestedBinding(Structure):
     def __init__(
         self,
-        action: Action = 0,
+        action: Action = None,
         binding: Path = 0,
     ) -> None:
         super().__init__(
@@ -1511,7 +1511,7 @@ class InteractionProfileState(Structure):
 class ActionStateGetInfo(Structure):
     def __init__(
         self,
-        action: Action = 0,
+        action: Action = None,
         subaction_path: Path = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.ACTION_STATE_GET_INFO,
@@ -1718,7 +1718,7 @@ class ActionStatePose(Structure):
 class ActiveActionSet(Structure):
     def __init__(
         self,
-        action_set: ActionSet = 0,
+        action_set: ActionSet = None,
         subaction_path: Path = 0,
     ) -> None:
         super().__init__(
@@ -1770,7 +1770,7 @@ class ActionsSyncInfo(Structure):
 class BoundSourcesForActionEnumerateInfo(Structure):
     def __init__(
         self,
-        action: Action = 0,
+        action: Action = None,
         next: c_void_p = None,
         type: StructureType = StructureType.BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO,
     ) -> None:
@@ -1825,7 +1825,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
 class HapticActionInfo(Structure):
     def __init__(
         self,
-        action: Action = 0,
+        action: Action = None,
         subaction_path: Path = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.HAPTIC_ACTION_INFO,
@@ -2046,7 +2046,7 @@ class Rect2Di(Structure):
 class SwapchainSubImage(Structure):
     def __init__(
         self,
-        swapchain: Swapchain = 0,
+        swapchain: Swapchain = None,
         image_rect: Rect2Di = None,
         image_array_index: int = 0,
     ) -> None:
@@ -2111,7 +2111,7 @@ class CompositionLayerProjection(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
+        space: Space = None,
         views: Sequence[CompositionLayerProjectionView] = (),
         next: c_void_p = None,
         type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION,
@@ -2166,7 +2166,7 @@ class CompositionLayerQuad(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
+        space: Space = None,
         eye_visibility: EyeVisibility = EyeVisibility(),
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
@@ -2285,7 +2285,7 @@ class EventDataInstanceLossPending(Structure):
 class EventDataSessionStateChanged(Structure):
     def __init__(
         self,
-        session: Session = 0,
+        session: Session = None,
         state: SessionState = SessionState(),
         time: Time = 0,
         next: c_void_p = None,
@@ -2317,7 +2317,7 @@ class EventDataSessionStateChanged(Structure):
 class EventDataReferenceSpaceChangePending(Structure):
     def __init__(
         self,
-        session: Session = 0,
+        session: Session = None,
         reference_space_type: ReferenceSpaceType = ReferenceSpaceType(),
         change_time: Time = 0,
         pose_valid: Bool32 = 0,
@@ -2355,7 +2355,7 @@ class EventDataReferenceSpaceChangePending(Structure):
 class EventDataInteractionProfileChanged(Structure):
     def __init__(
         self,
-        session: Session = 0,
+        session: Session = None,
         next: c_void_p = None,
         type: StructureType = StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED,
     ) -> None:
@@ -2703,9 +2703,9 @@ class CompositionLayerCubeKHR(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
+        space: Space = None,
         eye_visibility: EyeVisibility = EyeVisibility(),
-        swapchain: Swapchain = 0,
+        swapchain: Swapchain = None,
         image_array_index: int = 0,
         orientation: Quaternionf = None,
         next: c_void_p = None,
@@ -2786,7 +2786,7 @@ class CompositionLayerCylinderKHR(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
+        space: Space = None,
         eye_visibility: EyeVisibility = EyeVisibility(),
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
@@ -2835,7 +2835,7 @@ class CompositionLayerEquirectKHR(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
+        space: Space = None,
         eye_visibility: EyeVisibility = EyeVisibility(),
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
@@ -2928,7 +2928,7 @@ class VisibilityMaskKHR(Structure):
 class EventDataVisibilityMaskChangedKHR(Structure):
     def __init__(
         self,
-        session: Session = 0,
+        session: Session = None,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),
         view_index: int = 0,
         next: c_void_p = None,
@@ -3023,7 +3023,7 @@ class CompositionLayerEquirect2KHR(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
+        space: Space = None,
         eye_visibility: EyeVisibility = EyeVisibility(),
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
@@ -3514,7 +3514,7 @@ SpatialAnchorMSFT = POINTER(SpatialAnchorMSFT_T)
 class SpatialAnchorCreateInfoMSFT(Structure):
     def __init__(
         self,
-        space: Space = 0,
+        space: Space = None,
         pose: Posef = Posef(),
         time: Time = 0,
         next: c_void_p = None,
@@ -3546,7 +3546,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
 class SpatialAnchorSpaceCreateInfoMSFT(Structure):
     def __init__(
         self,
-        anchor: SpatialAnchorMSFT = 0,
+        anchor: SpatialAnchorMSFT = None,
         pose_in_anchor_space: Posef = Posef(),
         next: c_void_p = None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_MSFT,
@@ -3728,7 +3728,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
 class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
     def __init__(
         self,
-        space: Space = 0,
+        space: Space = None,
         pose_in_space: Posef = Posef(),
         time: Time = 0,
         next: c_void_p = None,
@@ -3881,7 +3881,7 @@ class HandTrackerCreateInfoEXT(Structure):
 class HandJointsLocateInfoEXT(Structure):
     def __init__(
         self,
-        base_space: Space = 0,
+        base_space: Space = None,
         time: Time = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.HAND_JOINTS_LOCATE_INFO_EXT,
@@ -4873,7 +4873,7 @@ class InteractionProfileDpadBindingEXT(Structure):
     def __init__(
         self,
         binding: Path = 0,
-        action_set: ActionSet = 0,
+        action_set: ActionSet = None,
         force_threshold: float = 0,
         force_threshold_released: float = 0,
         center_region: float = 0,
@@ -4922,7 +4922,7 @@ class InteractionProfileDpadBindingEXT(Structure):
 class InteractionProfileAnalogThresholdVALVE(Structure):
     def __init__(
         self,
-        action: Action = 0,
+        action: Action = None,
         binding: Path = 0,
         on_threshold: float = 0,
         off_threshold: float = 0,
@@ -5145,7 +5145,7 @@ class SceneFrustumBoundMSFT(Structure):
 class SceneBoundsMSFT(Structure):
     def __init__(
         self,
-        space: Space = 0,
+        space: Space = None,
         time: Time = 0,
         spheres: Sequence[SceneSphereBoundMSFT] = (),
         boxes: Sequence[SceneOrientedBoxBoundMSFT] = (),
@@ -5492,7 +5492,7 @@ class SceneComponentLocationsMSFT(Structure):
 class SceneComponentsLocateInfoMSFT(Structure):
     def __init__(
         self,
-        base_space: Space = 0,
+        base_space: Space = None,
         time: Time = 0,
         component_ids: Sequence[UuidMSFT] = (),
         next: c_void_p = None,
@@ -6669,7 +6669,7 @@ class SystemSpatialEntityPropertiesFB(Structure):
 class SpatialAnchorCreateInfoFB(Structure):
     def __init__(
         self,
-        space: Space = 0,
+        space: Space = None,
         pose_in_space: Posef = Posef(),
         time: Time = 0,
         next: c_void_p = None,
@@ -6782,7 +6782,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
-        space: Space = 0,
+        space: Space = None,
         uuid: UuidEXT = None,
         next: c_void_p = None,
         type: StructureType = StructureType.EVENT_DATA_SPATIAL_ANCHOR_CREATE_COMPLETE_FB,
@@ -6819,7 +6819,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
-        space: Space = 0,
+        space: Space = None,
         uuid: UuidEXT = None,
         component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),
         enabled: Bool32 = 0,
@@ -6932,7 +6932,7 @@ class SwapchainStateFoveationFB(Structure):
     def __init__(
         self,
         flags: SwapchainStateFoveationFlagsFB = SwapchainStateFoveationFlagsFB(),
-        profile: FoveationProfileFB = 0,
+        profile: FoveationProfileFB = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_FOVEATION_FB,
     ) -> None:
@@ -7260,7 +7260,7 @@ class PassthroughCreateInfoFB(Structure):
 class PassthroughLayerCreateInfoFB(Structure):
     def __init__(
         self,
-        passthrough: PassthroughFB = 0,
+        passthrough: PassthroughFB = None,
         flags: PassthroughFlagsFB = PassthroughFlagsFB(),
         purpose: PassthroughLayerPurposeFB = PassthroughLayerPurposeFB(),
         next: c_void_p = None,
@@ -7293,8 +7293,8 @@ class CompositionLayerPassthroughFB(Structure):
     def __init__(
         self,
         flags: CompositionLayerFlags = CompositionLayerFlags(),
-        space: Space = 0,
-        layer_handle: PassthroughLayerFB = 0,
+        space: Space = None,
+        layer_handle: PassthroughLayerFB = None,
         next: c_void_p = None,
         type: StructureType = StructureType.COMPOSITION_LAYER_PASSTHROUGH_FB,
     ) -> None:
@@ -7324,9 +7324,9 @@ class CompositionLayerPassthroughFB(Structure):
 class GeometryInstanceCreateInfoFB(Structure):
     def __init__(
         self,
-        layer: PassthroughLayerFB = 0,
-        mesh: TriangleMeshFB = 0,
-        base_space: Space = 0,
+        layer: PassthroughLayerFB = None,
+        mesh: TriangleMeshFB = None,
+        base_space: Space = None,
         pose: Posef = Posef(),
         scale: Vector3f = None,
         next: c_void_p = None,
@@ -7364,7 +7364,7 @@ class GeometryInstanceCreateInfoFB(Structure):
 class GeometryInstanceTransformFB(Structure):
     def __init__(
         self,
-        base_space: Space = 0,
+        base_space: Space = None,
         time: Time = 0,
         pose: Posef = Posef(),
         scale: Vector3f = None,
@@ -7989,7 +7989,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
     def __init__(
         self,
         spatial_anchor_persistence_name: SpatialAnchorPersistenceNameMSFT = None,
-        spatial_anchor: SpatialAnchorMSFT = 0,
+        spatial_anchor: SpatialAnchorMSFT = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_MSFT,
     ) -> None:
@@ -8019,7 +8019,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
 class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     def __init__(
         self,
-        spatial_anchor_store: SpatialAnchorStoreConnectionMSFT = 0,
+        spatial_anchor_store: SpatialAnchorStoreConnectionMSFT = None,
         spatial_anchor_persistence_name: SpatialAnchorPersistenceNameMSFT = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_MSFT,
@@ -8250,7 +8250,7 @@ class SpaceComponentFilterInfoFB(Structure):
 class SpaceQueryResultFB(Structure):
     def __init__(
         self,
-        space: Space = 0,
+        space: Space = None,
         uuid: UuidEXT = None,
     ) -> None:
         if uuid is None:
@@ -8367,7 +8367,7 @@ PFN_xrRetrieveSpaceQueryResultsFB = CFUNCTYPE(Result.ctype(), Session, AsyncRequ
 class SpaceSaveInfoFB(Structure):
     def __init__(
         self,
-        space: Space = 0,
+        space: Space = None,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
         persistence_mode: SpacePersistenceModeFB = SpacePersistenceModeFB(),
         next: c_void_p = None,
@@ -8399,7 +8399,7 @@ class SpaceSaveInfoFB(Structure):
 class SpaceEraseInfoFB(Structure):
     def __init__(
         self,
-        space: Space = 0,
+        space: Space = None,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
         next: c_void_p = None,
         type: StructureType = StructureType.SPACE_ERASE_INFO_FB,
@@ -8430,7 +8430,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
-        space: Space = 0,
+        space: Space = None,
         uuid: UuidEXT = None,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
         next: c_void_p = None,
@@ -8470,7 +8470,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
-        space: Space = 0,
+        space: Space = None,
         uuid: UuidEXT = None,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
         next: c_void_p = None,

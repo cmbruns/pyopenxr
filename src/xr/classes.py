@@ -36,7 +36,7 @@ class InstanceObject(object):
             application_version: Version = None,
             engine_name: str = None,
             engine_version: Version = None,
-            next_structure=None,
+            next=None,
     ) -> None:
         if enabled_extensions is None:
             discovered_extensions = enumerate_instance_extension_properties()
@@ -69,7 +69,7 @@ class InstanceObject(object):
             application_info=application_info,
             enabled_api_layer_names=[],
             enabled_extension_names=enabled_extensions,
-            next_structure=next_structure,
+            next=next,
         )
         self.handle = create_instance(instance_create_info)
 
@@ -183,7 +183,7 @@ class SessionObject(object):
                 ctypes.pointer(graphics_binding),
                 ctypes.c_void_p)
         session_create_info = SessionCreateInfo(
-            next_structure=graphics_binding_pointer,
+            next=graphics_binding_pointer,
             create_flags=SessionCreateFlags(),
             system_id=system.id,
         )

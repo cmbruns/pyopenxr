@@ -16,6 +16,7 @@ class Api(enum.Enum):
 class TypeBase(ABC):
     def __init__(self, clang_type: clang.cindex.Type):
         self.clang_type = clang_type
+        self.is_handle = False
 
     @abstractmethod
     def name(self, api=Api.PYTHON) -> str:
@@ -273,6 +274,7 @@ class TypedefType(TypeBase):
             if pt.kind == TypeKind.ELABORATED:
                 if pt.spelling.endswith("_T"):
                     self._py_name = self._ctypes_name = self._py_name
+                    self.is_handle = True
         # Custom Windows types
         if self._capi_name in PlatformType.type_map:
             self._ctypes_name = self._py_name = PlatformType.type_map[self._ctypes_name]

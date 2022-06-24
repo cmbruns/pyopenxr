@@ -58,16 +58,16 @@ class ContextObject(object):
             ),
         )
 
-        if self._session_create_info.next_structure is None:
+        if self._session_create_info.next is None:
             self.graphics = OpenGLGraphics(
                 instance=self.instance,
                 system=self.system_id,
                 title=self._instance_create_info.application_info.application_name.decode()
             )
             self.graphics_binding_pointer = cast(pointer(self.graphics.graphics_binding), c_void_p)
-            self._session_create_info.next_structure = self.graphics_binding_pointer
+            self._session_create_info.next = self.graphics_binding_pointer
         else:
-            self.graphics_binding_pointer = self._session_create_info.next_structure
+            self.graphics_binding_pointer = self._session_create_info.next
 
         self._session_create_info.system_id = self.system_id
         self.session = create_session(
@@ -281,7 +281,7 @@ class ContextObject(object):
                     wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
                 )
                 layer_view = projection_layer_views[view_index]
-                assert layer_view.structure_type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
+                assert layer_view.type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
                 layer_view.pose = view.pose
                 layer_view.fov = view.fov
                 layer_view.sub_image.swapchain = view_swapchain.handle

@@ -1227,7 +1227,7 @@ class StructureCoder(object):
                 self.field_coders.append(StructureFieldCoder(field, None))
             elif re.match(r"^\(\S+ \* \d+\)$", field.type.name()):
                 self.field_coders.append(ArrayFieldCoder(field))
-            elif field.type.name().endswith("Handle"):
+            elif field.type.is_handle:
                 self.field_coders.append(FieldCoder(field, default=None))
             elif field.kind == StructFieldItem.Kind.ARRAY_COUNT:
                 self.field_coders.append(ArrayCountFieldCoder(field, self.struct.fields[ix + 1]))
