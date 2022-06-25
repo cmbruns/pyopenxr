@@ -5,10 +5,11 @@ import ctypes
 
 import os
 import sys
-from typing import Generator, Sequence
+from typing import Generator, Optional, Sequence, Union
 
 import numpy
 
+from .array_field import *
 from .enums import *
 from .version import *
 
@@ -2112,21 +2113,17 @@ class CompositionLayerProjection(Structure):
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
         space: Space = None,
-        views: Sequence[CompositionLayerProjectionView] = (),
+        view_count: Optional[int] = None,
+        views: ArrayFieldParamType[CompositionLayerProjectionView] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION,
     ) -> None:
-        view_count = 0
-        if views is not None:
-            view_count = len(views)
-            if not isinstance(views, ctypes.Array):
-                views = (CompositionLayerProjectionView * len(views))(
-                    *views)
-        self._views_ctypes_array = views
+        view_count, views = array_field_helper(
+            CompositionLayerProjectionView, view_count, views)
         super().__init__(
             layer_flags=CompositionLayerFlags(layer_flags).value,
             space=space,
-            _view_count=view_count,
+            view_count=view_count,
             _views=views,
             next=next,
             type=type,
@@ -2140,24 +2137,24 @@ class CompositionLayerProjection(Structure):
 
     @property
     def views(self):
-        return self._views_ctypes_array
+        if self.view_count == 0:
+            return (CompositionLayerProjectionView * 0)()
+        else:
+            return (CompositionLayerProjectionView * self.view_count).from_address(
+                ctypes.addressof(self._views.contents))
     
     # noinspection PyAttributeOutsideInit
     @views.setter
     def views(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (CompositionLayerProjectionView * len(value))(
-                *value)
-        self._views_ctypes_array = value
-        self._views = value
-        self._view_count = len(value)
+        self.view_count, self._views = array_field_helper(
+            CompositionLayerProjectionView, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_flags", CompositionLayerFlagsCInt),
         ("space", Space),
-        ("_view_count", c_uint32),
+        ("view_count", c_uint32),
         ("_views", POINTER(CompositionLayerProjectionView)),
     ]
 
