@@ -695,8 +695,9 @@ class VariableItem(CodeItem):
 
 class NothingParameterCoder(object):
     """Parameter that generates no code. Used as a base for other parameter types."""
-    def __init__(self, parameter: FunctionParameterItem):
+    def __init__(self, parameter: FunctionParameterItem, default=None):
         self.parameter = parameter
+        self.default = default
 
     @staticmethod
     def declaration_code(api=Api.PYTHON) -> Generator[str, None, None]:
@@ -731,6 +732,12 @@ class ParameterCoderBase(NothingParameterCoder):
 
 class InputParameterCoder(ParameterCoderBase):
     def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        if self.default is None:
+            yield f"{self.parameter.name(api)}: {self.type_string()}"
+        else:
+            yield f"{self.parameter.name(api)}: {self.type_string()} = {self.default}"
+
+    def type_string(self) -> str:
         p = self.parameter
         type_string = p.type.name(Api.PYTHON)
         # Pass structure types directly, even if C API says pointer
@@ -738,7 +745,16 @@ class InputParameterCoder(ParameterCoderBase):
             pt = p.type.pointee
             if pt.clang_type.kind == TypeKind.RECORD:  # struct
                 type_string = pt.name(Api.PYTHON)
-        yield f"{p.name(api)}: {type_string}"
+        return type_string
+
+
+class CreateInfoParameterCoder(InputParameterCoder):
+    def __init__(self, parameter: FunctionParameterItem):
+        super().__init__(parameter=parameter, default="None")
+
+    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+        yield f"if {self.parameter.name(api)} is None:"
+        yield f"    {self.parameter.name(api)} = {self.type_string()}()"
 
 
 class EnumParameterCoder(InputParameterCoder):
@@ -877,6 +893,9 @@ class FunctionCoder(object):
         for ix, pc in enumerate(self.param_coders):
             p, c = pc
             if c is not None:
+                continue
+            if p.name() == "create_info":
+                pc[1] = CreateInfoParameterCoder(p)
                 continue
             if isinstance(p.type, StringType):
                 pc[1] = StringInputParameterCoder(p)

@@ -88,9 +88,11 @@ def enumerate_instance_extension_properties(
 
 
 def create_instance(
-    create_info: InstanceCreateInfo,
+    create_info: InstanceCreateInfo = None,
 ) -> Instance:
     """"""
+    if create_info is None:
+        create_info = InstanceCreateInfo()
     instance = Instance()
     fxn = raw_functions.xrCreateInstance
     result = check_result(fxn(
@@ -245,9 +247,11 @@ def enumerate_environment_blend_modes(
 
 def create_session(
     instance: Instance,
-    create_info: SessionCreateInfo,
+    create_info: SessionCreateInfo = None,
 ) -> Session:
     """"""
+    if create_info is None:
+        create_info = SessionCreateInfo()
     session = Session()
     fxn = raw_functions.xrCreateSession
     result = check_result(fxn(
@@ -301,9 +305,11 @@ def enumerate_reference_spaces(
 
 def create_reference_space(
     session: Session,
-    create_info: ReferenceSpaceCreateInfo,
+    create_info: ReferenceSpaceCreateInfo = None,
 ) -> Space:
     """"""
+    if create_info is None:
+        create_info = ReferenceSpaceCreateInfo()
     space = Space()
     fxn = raw_functions.xrCreateReferenceSpace
     result = check_result(fxn(
@@ -335,9 +341,11 @@ def get_reference_space_bounds_rect(
 
 def create_action_space(
     session: Session,
-    create_info: ActionSpaceCreateInfo,
+    create_info: ActionSpaceCreateInfo = None,
 ) -> Space:
     """"""
+    if create_info is None:
+        create_info = ActionSpaceCreateInfo()
     space = Space()
     fxn = raw_functions.xrCreateActionSpace
     result = check_result(fxn(
@@ -492,9 +500,11 @@ def enumerate_swapchain_formats(
 
 def create_swapchain(
     session: Session,
-    create_info: SwapchainCreateInfo,
+    create_info: SwapchainCreateInfo = None,
 ) -> Swapchain:
     """"""
+    if create_info is None:
+        create_info = SwapchainCreateInfo()
     swapchain = Swapchain()
     fxn = raw_functions.xrCreateSwapchain
     result = check_result(fxn(
@@ -759,9 +769,11 @@ def path_to_string(
 
 def create_action_set(
     instance: Instance,
-    create_info: ActionSetCreateInfo,
+    create_info: ActionSetCreateInfo = None,
 ) -> ActionSet:
     """"""
+    if create_info is None:
+        create_info = ActionSetCreateInfo()
     action_set = ActionSet()
     fxn = raw_functions.xrCreateActionSet
     result = check_result(fxn(
@@ -788,9 +800,11 @@ def destroy_action_set(
 
 def create_action(
     action_set: ActionSet,
-    create_info: ActionCreateInfo,
+    create_info: ActionCreateInfo = None,
 ) -> Action:
     """"""
+    if create_info is None:
+        create_info = ActionCreateInfo()
     action = Action()
     fxn = raw_functions.xrCreateAction
     result = check_result(fxn(
