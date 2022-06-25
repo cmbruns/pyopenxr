@@ -29,9 +29,10 @@ def main():
     print("")
     print(inspect.cleandoc("""
         import ctypes
-        from typing import Sequence
+        from typing import Optional
         from OpenGL import GLX
 
+        from ..array_field import *
         from ..enums import *
         from ..typedefs import *
         from ..version import *

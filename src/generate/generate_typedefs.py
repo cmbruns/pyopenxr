@@ -1,5 +1,6 @@
 # This script creates an updated version of xr/typedefs.py
 
+import inspect
 from clang.cindex import CursorKind
 import xrg
 
@@ -15,13 +16,19 @@ def main():
     cg.ctypes_names.add("addressof")
     cg.ctypes_names.add("cast")
     cg.print_header()
-    print("import ctypes\n")
-    print("import os")
-    print("import sys")
-    print("from typing import Generator, Sequence\n")
-    print("import numpy\n")
-    print("from .enums import *")
-    print("from .version import *")
+    print(inspect.cleandoc("""
+        import ctypes
+        
+        import os
+        import sys
+        from typing import Generator, Optional, Sequence
+        
+        import numpy
+        
+        from .array_field import *
+        from .enums import *
+        from .version import *
+    """))
 
     cg.print_items()
     cg.print_all_list()

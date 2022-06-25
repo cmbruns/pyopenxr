@@ -416,7 +416,7 @@ class StructFieldItem(CodeItem):
     def inner_name(self, api=Api.PYTHON) -> str:
         """Sometimes we hide the inner field name, so we can wrap it."""
         n = self.name(api)
-        if self.kind in [StructFieldItem.Kind.ARRAY_POINTER, StructFieldItem.Kind.ARRAY_COUNT]:
+        if self.kind in [StructFieldItem.Kind.ARRAY_POINTER]:
             return f"_{n}"  # Prepend with underscore
         else:
             return n
@@ -1033,20 +1033,11 @@ class ArrayCountFieldCoder(FieldCoder):
     Collapse count/pointer field pairs into a single sequence constructor parameter.
     """
     def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
-        super().__init__(count_field)
+        super().__init__(field=count_field, default="None")
         self.array_field = array_field
 
-    def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.inner_name}={self.name}"
-
     def param_code(self) -> Generator[str, None, None]:
-        yield from []  # Exclude count field from constructor
-
-    def pre_call_code(self) -> Generator[str, None, None]:
-        yield f"{self.name} = 0"
-
-    def property_code(self) -> Generator[str, None, None]:
-        yield from []
+        yield f"{self.name}: Optional[int] = {self.default}"
 
 
 class ArrayPointerFieldCoder(FieldCoder):
@@ -1054,62 +1045,62 @@ class ArrayPointerFieldCoder(FieldCoder):
     Collapse count/pointer field pairs into a single sequence constructor parameter.
     """
     def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
-        super().__init__(array_field)
+        super().__init__(field=array_field, default="None")
         self.count_field = count_field
 
     def param_code(self) -> Generator[str, None, None]:
+        pn = self.field.type.pointee.name(Api.PYTHON)
+        if pn == "str":
+            pt = "StringArrayFieldParamType"
+        elif "BaseHeader" in pn:
+            pt = f"BaseArrayFieldParamType"
+        else:
+            pt = f"ArrayFieldParamType[{pn}]"
         # noinspection PyUnresolvedReferences
-        yield f"{self.name}: Sequence[{self.field.type.pointee.name(Api.PYTHON)}] = ()"
+        yield f"{self.name}: {pt} = {self.default}"
 
     def pre_call_code(self) -> Generator[str, None, None]:
         # Create a ctypes array if one does not already exist
-        n = self.name
-        # noinspection PyUnresolvedReferences
-        p = self.field.type.pointee
-        pname = p.name(Api.PYTHON)
-        yield f"if {n} is not None:"
-        yield f"    {self.count_field.name(Api.CTYPES)} = len({n})"
-        yield f"    if not isinstance({n}, ctypes.Array):"
-        if pname == "str":
-            yield f"        {n} = (c_char_p * len({n}))("
-            yield f"            *[s.encode() for s in {n}])"
+        array = self.name
+        count = self.count_field.name(Api.CTYPES)
+        element_type = self.field.type.pointee.name(Api.PYTHON)
+        if element_type == "str":
+            yield f"{count}, {array} = string_array_field_helper("
+            yield f"    {count}, {array})"
+        elif "BaseHeader" in element_type:
+            yield f"{count}, {array} = base_array_field_helper("
+            yield f"    {element_type}, {count}, {array})"
         else:
-            yield f"        {n} = ({p.name(Api.CTYPES)} * len({n}))("
-            if "BaseHeader" in pname:
-                yield f"            *[cast(p, {pname}) for p in {n}])"
-            else:
-                yield f"            *{n})"
-        # Store a reference to the ctypes array
-        yield f"self._{n}_ctypes_array = {n}"  # Maybe if needed...
+            yield f"{count}, {array} = array_field_helper("
+            yield f"    {element_type}, {count}, {array})"
 
     def property_code(self) -> Generator[str, None, None]:
-        n = self.name
-        # noinspection PyUnresolvedReferences
-        p = self.field.type.pointee
-        pname = p.name(Api.PYTHON)
+        count = self.count_field.name(Api.CTYPES)
+        element_type = self.field.type.pointee.name(Api.PYTHON)
+        if element_type == "str":
+            element_type = "c_char_p"
         # getter
         yield "@property"
-        yield f"def {n}(self):"
-        yield f"    return self._{n}_ctypes_array"
+        yield f"def {self.name}(self):"
+        yield f"    if self.{count} == 0:"
+        yield f"        return ({element_type} * 0)()"
+        yield f"    else:"
+        yield f"        return ({element_type} * self.{count}).from_address("
+        yield f"            ctypes.addressof(self.{self.inner_name}.contents))"
         # setter
         yield ""
-        yield "# noinspection PyAttributeOutsideInit"
-        yield f"@{n}.setter"
-        yield f"def {n}(self, value):"
-        yield f"    if not isinstance(value, ctypes.Array):"
-        if pname == "str":
-            yield f"        value = (c_char_p * len(value))("
-            yield f"            *[s.encode() for s in value])"
+        # yield "# noinspection PyAttributeOutsideInit"
+        yield f"@{self.name}.setter"
+        yield f"def {self.name}(self, value):"
+        if element_type == "c_char_p":
+            yield f"    self.{count}, self.{self.inner_name} = string_array_field_helper("
+            yield f"        None, value)"
+        elif "BaseHeader" in element_type:
+            yield f"    self.{count}, self.{self.inner_name} = base_array_field_helper("
+            yield f"        {element_type}, None, value)"
         else:
-            yield f"        value = ({p.name(Api.CTYPES)} * len(value))("
-            if "BaseHeader" in pname:
-                yield f"            *[cast(p, {pname}) for p in value])"
-            else:
-                yield f"            *value)"
-        # Store a reference to the ctypes array
-        yield f"    self._{n}_ctypes_array = value"  # Maybe if needed...
-        yield f"    self.{self.inner_name} = value"
-        yield f"    self.{self.count_field.inner_name(Api.CTYPES)} = len(value)"
+            yield f"    self.{count}, self.{self.inner_name} = array_field_helper("
+            yield f"        {element_type}, None, value)"
 
 
 class EnumFieldCoder(FieldCoder):

@@ -29,10 +29,11 @@ def main():
     cg.print_header()
     print(inspect.cleandoc("""
         import ctypes
-        from typing import Sequence
+        from typing import Optional
 
         from OpenGL import WGL
         
+        from ..array_field import *
         from ..enums import *
         from ..typedefs import *
         from ..version import *

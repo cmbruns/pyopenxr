@@ -207,80 +207,70 @@ class InstanceCreateInfo(Structure):
         self,
         create_flags: InstanceCreateFlags = InstanceCreateFlags(),
         application_info: ApplicationInfo = ApplicationInfo(),
-        enabled_api_layer_names: Sequence[str] = (),
-        enabled_extension_names: Sequence[str] = (),
+        enabled_api_layer_count: Optional[int] = None,
+        enabled_api_layer_names: StringArrayFieldParamType = None,
+        enabled_extension_count: Optional[int] = None,
+        enabled_extension_names: StringArrayFieldParamType = None,
         next: c_void_p = None,
         type: StructureType = StructureType.INSTANCE_CREATE_INFO,
     ) -> None:
         if application_info is None:
             application_info = ApplicationInfo()
-        enabled_api_layer_count = 0
-        if enabled_api_layer_names is not None:
-            enabled_api_layer_count = len(enabled_api_layer_names)
-            if not isinstance(enabled_api_layer_names, ctypes.Array):
-                enabled_api_layer_names = (c_char_p * len(enabled_api_layer_names))(
-                    *[s.encode() for s in enabled_api_layer_names])
-        self._enabled_api_layer_names_ctypes_array = enabled_api_layer_names
-        enabled_extension_count = 0
-        if enabled_extension_names is not None:
-            enabled_extension_count = len(enabled_extension_names)
-            if not isinstance(enabled_extension_names, ctypes.Array):
-                enabled_extension_names = (c_char_p * len(enabled_extension_names))(
-                    *[s.encode() for s in enabled_extension_names])
-        self._enabled_extension_names_ctypes_array = enabled_extension_names
+        enabled_api_layer_count, enabled_api_layer_names = string_array_field_helper(
+            enabled_api_layer_count, enabled_api_layer_names)
+        enabled_extension_count, enabled_extension_names = string_array_field_helper(
+            enabled_extension_count, enabled_extension_names)
         super().__init__(
             create_flags=InstanceCreateFlags(create_flags).value,
             application_info=application_info,
-            _enabled_api_layer_count=enabled_api_layer_count,
+            enabled_api_layer_count=enabled_api_layer_count,
             _enabled_api_layer_names=enabled_api_layer_names,
-            _enabled_extension_count=enabled_extension_count,
+            enabled_extension_count=enabled_extension_count,
             _enabled_extension_names=enabled_extension_names,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceCreateInfo(create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self._enabled_api_layer_count)}, enabled_api_layer_names={repr(self._enabled_api_layer_names)}, enabled_extension_count={repr(self._enabled_extension_count)}, enabled_extension_names={repr(self._enabled_extension_names)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.InstanceCreateInfo(create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self.enabled_api_layer_count)}, enabled_api_layer_names={repr(self._enabled_api_layer_names)}, enabled_extension_count={repr(self.enabled_extension_count)}, enabled_extension_names={repr(self._enabled_extension_names)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.InstanceCreateInfo(create_flags={self.create_flags}, application_info={self.application_info}, enabled_api_layer_count={self._enabled_api_layer_count}, enabled_api_layer_names={self._enabled_api_layer_names}, enabled_extension_count={self._enabled_extension_count}, enabled_extension_names={self._enabled_extension_names}, next={self.next}, type={self.type})"
+        return f"xr.InstanceCreateInfo(create_flags={self.create_flags}, application_info={self.application_info}, enabled_api_layer_count={self.enabled_api_layer_count}, enabled_api_layer_names={self._enabled_api_layer_names}, enabled_extension_count={self.enabled_extension_count}, enabled_extension_names={self._enabled_extension_names}, next={self.next}, type={self.type})"
 
     @property
     def enabled_api_layer_names(self):
-        return self._enabled_api_layer_names_ctypes_array
+        if self.enabled_api_layer_count == 0:
+            return (c_char_p * 0)()
+        else:
+            return (c_char_p * self.enabled_api_layer_count).from_address(
+                ctypes.addressof(self._enabled_api_layer_names.contents))
     
-    # noinspection PyAttributeOutsideInit
     @enabled_api_layer_names.setter
     def enabled_api_layer_names(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_char_p * len(value))(
-                *[s.encode() for s in value])
-        self._enabled_api_layer_names_ctypes_array = value
-        self._enabled_api_layer_names = value
-        self._enabled_api_layer_count = len(value)
+        self.enabled_api_layer_count, self._enabled_api_layer_names = string_array_field_helper(
+            None, value)
 
     @property
     def enabled_extension_names(self):
-        return self._enabled_extension_names_ctypes_array
+        if self.enabled_extension_count == 0:
+            return (c_char_p * 0)()
+        else:
+            return (c_char_p * self.enabled_extension_count).from_address(
+                ctypes.addressof(self._enabled_extension_names.contents))
     
-    # noinspection PyAttributeOutsideInit
     @enabled_extension_names.setter
     def enabled_extension_names(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_char_p * len(value))(
-                *[s.encode() for s in value])
-        self._enabled_extension_names_ctypes_array = value
-        self._enabled_extension_names = value
-        self._enabled_extension_count = len(value)
+        self.enabled_extension_count, self._enabled_extension_names = string_array_field_helper(
+            None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("create_flags", InstanceCreateFlagsCInt),
         ("application_info", ApplicationInfo),
-        ("_enabled_api_layer_count", c_uint32),
+        ("enabled_api_layer_count", c_uint32),
         ("_enabled_api_layer_names", POINTER(c_char_p)),
-        ("_enabled_extension_count", c_uint32),
+        ("enabled_extension_count", c_uint32),
         ("_enabled_extension_names", POINTER(c_char_p)),
     ]
 
@@ -1137,52 +1127,47 @@ class FrameEndInfo(Structure):
         self,
         display_time: Time = 0,
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),
-        layers: Sequence[POINTER(CompositionLayerBaseHeader)] = (),
+        layer_count: Optional[int] = None,
+        layers: BaseArrayFieldParamType = None,
         next: c_void_p = None,
         type: StructureType = StructureType.FRAME_END_INFO,
     ) -> None:
-        layer_count = 0
-        if layers is not None:
-            layer_count = len(layers)
-            if not isinstance(layers, ctypes.Array):
-                layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
-                    *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
-        self._layers_ctypes_array = layers
+        layer_count, layers = base_array_field_helper(
+            POINTER(CompositionLayerBaseHeader), layer_count, layers)
         super().__init__(
             display_time=display_time,
             environment_blend_mode=EnvironmentBlendMode(environment_blend_mode).value,
-            _layer_count=layer_count,
+            layer_count=layer_count,
             _layers=layers,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameEndInfo(display_time={repr(self.display_time)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self._layer_count)}, layers={repr(self._layers)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.FrameEndInfo(display_time={repr(self.display_time)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self._layers)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.FrameEndInfo(display_time={self.display_time}, environment_blend_mode={self.environment_blend_mode}, layer_count={self._layer_count}, layers={self._layers}, next={self.next}, type={self.type})"
+        return f"xr.FrameEndInfo(display_time={self.display_time}, environment_blend_mode={self.environment_blend_mode}, layer_count={self.layer_count}, layers={self._layers}, next={self.next}, type={self.type})"
 
     @property
     def layers(self):
-        return self._layers_ctypes_array
+        if self.layer_count == 0:
+            return (POINTER(CompositionLayerBaseHeader) * 0)()
+        else:
+            return (POINTER(CompositionLayerBaseHeader) * self.layer_count).from_address(
+                ctypes.addressof(self._layers.contents))
     
-    # noinspection PyAttributeOutsideInit
     @layers.setter
     def layers(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (POINTER(CompositionLayerBaseHeader) * len(value))(
-                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in value])
-        self._layers_ctypes_array = value
-        self._layers = value
-        self._layer_count = len(value)
+        self.layer_count, self._layers = base_array_field_helper(
+            POINTER(CompositionLayerBaseHeader), None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("display_time", Time),
         ("environment_blend_mode", EnvironmentBlendMode.ctype()),
-        ("_layer_count", c_uint32),
+        ("layer_count", c_uint32),
         ("_layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
@@ -2130,10 +2115,10 @@ class CompositionLayerProjection(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerProjection(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self._view_count)}, views={repr(self._views)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.CompositionLayerProjection(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self.view_count)}, views={repr(self._views)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.CompositionLayerProjection(layer_flags={self.layer_flags}, space={self.space}, view_count={self._view_count}, views={self._views}, next={self.next}, type={self.type})"
+        return f"xr.CompositionLayerProjection(layer_flags={self.layer_flags}, space={self.space}, view_count={self.view_count}, views={self._views}, next={self.next}, type={self.type})"
 
     @property
     def views(self):
@@ -2143,7 +2128,6 @@ class CompositionLayerProjection(Structure):
             return (CompositionLayerProjectionView * self.view_count).from_address(
                 ctypes.addressof(self._views.contents))
     
-    # noinspection PyAttributeOutsideInit
     @views.setter
     def views(self, value):
         self.view_count, self._views = array_field_helper(
@@ -3094,48 +3078,43 @@ class BindingModificationBaseHeaderKHR(Structure):
 class BindingModificationsKHR(Structure):
     def __init__(
         self,
-        binding_modifications: Sequence[POINTER(BindingModificationBaseHeaderKHR)] = (),
+        binding_modification_count: Optional[int] = None,
+        binding_modifications: BaseArrayFieldParamType = None,
         next: c_void_p = None,
         type: StructureType = StructureType.BINDING_MODIFICATIONS_KHR,
     ) -> None:
-        binding_modification_count = 0
-        if binding_modifications is not None:
-            binding_modification_count = len(binding_modifications)
-            if not isinstance(binding_modifications, ctypes.Array):
-                binding_modifications = (POINTER(BindingModificationBaseHeaderKHR) * len(binding_modifications))(
-                    *[cast(p, POINTER(BindingModificationBaseHeaderKHR)) for p in binding_modifications])
-        self._binding_modifications_ctypes_array = binding_modifications
+        binding_modification_count, binding_modifications = base_array_field_helper(
+            POINTER(BindingModificationBaseHeaderKHR), binding_modification_count, binding_modifications)
         super().__init__(
-            _binding_modification_count=binding_modification_count,
+            binding_modification_count=binding_modification_count,
             _binding_modifications=binding_modifications,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.BindingModificationsKHR(binding_modification_count={repr(self._binding_modification_count)}, binding_modifications={repr(self._binding_modifications)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.BindingModificationsKHR(binding_modification_count={repr(self.binding_modification_count)}, binding_modifications={repr(self._binding_modifications)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.BindingModificationsKHR(binding_modification_count={self._binding_modification_count}, binding_modifications={self._binding_modifications}, next={self.next}, type={self.type})"
+        return f"xr.BindingModificationsKHR(binding_modification_count={self.binding_modification_count}, binding_modifications={self._binding_modifications}, next={self.next}, type={self.type})"
 
     @property
     def binding_modifications(self):
-        return self._binding_modifications_ctypes_array
+        if self.binding_modification_count == 0:
+            return (POINTER(BindingModificationBaseHeaderKHR) * 0)()
+        else:
+            return (POINTER(BindingModificationBaseHeaderKHR) * self.binding_modification_count).from_address(
+                ctypes.addressof(self._binding_modifications.contents))
     
-    # noinspection PyAttributeOutsideInit
     @binding_modifications.setter
     def binding_modifications(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (POINTER(BindingModificationBaseHeaderKHR) * len(value))(
-                *[cast(p, POINTER(BindingModificationBaseHeaderKHR)) for p in value])
-        self._binding_modifications_ctypes_array = value
-        self._binding_modifications = value
-        self._binding_modification_count = len(value)
+        self.binding_modification_count, self._binding_modifications = base_array_field_helper(
+            POINTER(BindingModificationBaseHeaderKHR), None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_binding_modification_count", c_uint32),
+        ("binding_modification_count", c_uint32),
         ("_binding_modifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
     ]
 
@@ -3255,70 +3234,60 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         message_id: str = "",
         function_name: str = "",
         message: str = "",
-        objects: Sequence[DebugUtilsObjectNameInfoEXT] = (),
-        session_labels: Sequence[DebugUtilsLabelEXT] = (),
+        object_count: Optional[int] = None,
+        objects: ArrayFieldParamType[DebugUtilsObjectNameInfoEXT] = None,
+        session_label_count: Optional[int] = None,
+        session_labels: ArrayFieldParamType[DebugUtilsLabelEXT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
     ) -> None:
-        object_count = 0
-        if objects is not None:
-            object_count = len(objects)
-            if not isinstance(objects, ctypes.Array):
-                objects = (DebugUtilsObjectNameInfoEXT * len(objects))(
-                    *objects)
-        self._objects_ctypes_array = objects
-        session_label_count = 0
-        if session_labels is not None:
-            session_label_count = len(session_labels)
-            if not isinstance(session_labels, ctypes.Array):
-                session_labels = (DebugUtilsLabelEXT * len(session_labels))(
-                    *session_labels)
-        self._session_labels_ctypes_array = session_labels
+        object_count, objects = array_field_helper(
+            DebugUtilsObjectNameInfoEXT, object_count, objects)
+        session_label_count, session_labels = array_field_helper(
+            DebugUtilsLabelEXT, session_label_count, session_labels)
         super().__init__(
             message_id=message_id.encode(),
             function_name=function_name.encode(),
             message=message.encode(),
-            _object_count=object_count,
+            object_count=object_count,
             _objects=objects,
-            _session_label_count=session_label_count,
+            session_label_count=session_label_count,
             _session_labels=session_labels,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self._object_count)}, objects={repr(self._objects)}, session_label_count={repr(self._session_label_count)}, session_labels={repr(self._session_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self.object_count)}, objects={repr(self._objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self._session_labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self.message_id}, function_name={self.function_name}, message={self.message}, object_count={self._object_count}, objects={self._objects}, session_label_count={self._session_label_count}, session_labels={self._session_labels}, next={self.next}, type={self.type})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self.message_id}, function_name={self.function_name}, message={self.message}, object_count={self.object_count}, objects={self._objects}, session_label_count={self.session_label_count}, session_labels={self._session_labels}, next={self.next}, type={self.type})"
 
     @property
     def objects(self):
-        return self._objects_ctypes_array
+        if self.object_count == 0:
+            return (DebugUtilsObjectNameInfoEXT * 0)()
+        else:
+            return (DebugUtilsObjectNameInfoEXT * self.object_count).from_address(
+                ctypes.addressof(self._objects.contents))
     
-    # noinspection PyAttributeOutsideInit
     @objects.setter
     def objects(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (DebugUtilsObjectNameInfoEXT * len(value))(
-                *value)
-        self._objects_ctypes_array = value
-        self._objects = value
-        self._object_count = len(value)
+        self.object_count, self._objects = array_field_helper(
+            DebugUtilsObjectNameInfoEXT, None, value)
 
     @property
     def session_labels(self):
-        return self._session_labels_ctypes_array
+        if self.session_label_count == 0:
+            return (DebugUtilsLabelEXT * 0)()
+        else:
+            return (DebugUtilsLabelEXT * self.session_label_count).from_address(
+                ctypes.addressof(self._session_labels.contents))
     
-    # noinspection PyAttributeOutsideInit
     @session_labels.setter
     def session_labels(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (DebugUtilsLabelEXT * len(value))(
-                *value)
-        self._session_labels_ctypes_array = value
-        self._session_labels = value
-        self._session_label_count = len(value)
+        self.session_label_count, self._session_labels = array_field_helper(
+            DebugUtilsLabelEXT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -3326,9 +3295,9 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         ("message_id", c_char_p),
         ("function_name", c_char_p),
         ("message", c_char_p),
-        ("_object_count", c_uint32),
+        ("object_count", c_uint32),
         ("_objects", POINTER(DebugUtilsObjectNameInfoEXT)),
-        ("_session_label_count", c_uint32),
+        ("session_label_count", c_uint32),
         ("_session_labels", POINTER(DebugUtilsLabelEXT)),
     ]
 
@@ -3964,50 +3933,45 @@ class HandJointLocationsEXT(Structure):
     def __init__(
         self,
         is_active: Bool32 = 0,
-        joint_locations: Sequence[HandJointLocationEXT] = (),
+        joint_count: Optional[int] = None,
+        joint_locations: ArrayFieldParamType[HandJointLocationEXT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.HAND_JOINT_LOCATIONS_EXT,
     ) -> None:
-        joint_count = 0
-        if joint_locations is not None:
-            joint_count = len(joint_locations)
-            if not isinstance(joint_locations, ctypes.Array):
-                joint_locations = (HandJointLocationEXT * len(joint_locations))(
-                    *joint_locations)
-        self._joint_locations_ctypes_array = joint_locations
+        joint_count, joint_locations = array_field_helper(
+            HandJointLocationEXT, joint_count, joint_locations)
         super().__init__(
             is_active=is_active,
-            _joint_count=joint_count,
+            joint_count=joint_count,
             _joint_locations=joint_locations,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointLocationsEXT(is_active={repr(self.is_active)}, joint_count={repr(self._joint_count)}, joint_locations={repr(self._joint_locations)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.HandJointLocationsEXT(is_active={repr(self.is_active)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self._joint_locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointLocationsEXT(is_active={self.is_active}, joint_count={self._joint_count}, joint_locations={self._joint_locations}, next={self.next}, type={self.type})"
+        return f"xr.HandJointLocationsEXT(is_active={self.is_active}, joint_count={self.joint_count}, joint_locations={self._joint_locations}, next={self.next}, type={self.type})"
 
     @property
     def joint_locations(self):
-        return self._joint_locations_ctypes_array
+        if self.joint_count == 0:
+            return (HandJointLocationEXT * 0)()
+        else:
+            return (HandJointLocationEXT * self.joint_count).from_address(
+                ctypes.addressof(self._joint_locations.contents))
     
-    # noinspection PyAttributeOutsideInit
     @joint_locations.setter
     def joint_locations(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (HandJointLocationEXT * len(value))(
-                *value)
-        self._joint_locations_ctypes_array = value
-        self._joint_locations = value
-        self._joint_count = len(value)
+        self.joint_count, self._joint_locations = array_field_helper(
+            HandJointLocationEXT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("is_active", Bool32),
-        ("_joint_count", c_uint32),
+        ("joint_count", c_uint32),
         ("_joint_locations", POINTER(HandJointLocationEXT)),
     ]
 
@@ -4015,48 +3979,43 @@ class HandJointLocationsEXT(Structure):
 class HandJointVelocitiesEXT(Structure):
     def __init__(
         self,
-        joint_velocities: Sequence[HandJointVelocityEXT] = (),
+        joint_count: Optional[int] = None,
+        joint_velocities: ArrayFieldParamType[HandJointVelocityEXT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.HAND_JOINT_VELOCITIES_EXT,
     ) -> None:
-        joint_count = 0
-        if joint_velocities is not None:
-            joint_count = len(joint_velocities)
-            if not isinstance(joint_velocities, ctypes.Array):
-                joint_velocities = (HandJointVelocityEXT * len(joint_velocities))(
-                    *joint_velocities)
-        self._joint_velocities_ctypes_array = joint_velocities
+        joint_count, joint_velocities = array_field_helper(
+            HandJointVelocityEXT, joint_count, joint_velocities)
         super().__init__(
-            _joint_count=joint_count,
+            joint_count=joint_count,
             _joint_velocities=joint_velocities,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointVelocitiesEXT(joint_count={repr(self._joint_count)}, joint_velocities={repr(self._joint_velocities)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.HandJointVelocitiesEXT(joint_count={repr(self.joint_count)}, joint_velocities={repr(self._joint_velocities)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.HandJointVelocitiesEXT(joint_count={self._joint_count}, joint_velocities={self._joint_velocities}, next={self.next}, type={self.type})"
+        return f"xr.HandJointVelocitiesEXT(joint_count={self.joint_count}, joint_velocities={self._joint_velocities}, next={self.next}, type={self.type})"
 
     @property
     def joint_velocities(self):
-        return self._joint_velocities_ctypes_array
+        if self.joint_count == 0:
+            return (HandJointVelocityEXT * 0)()
+        else:
+            return (HandJointVelocityEXT * self.joint_count).from_address(
+                ctypes.addressof(self._joint_velocities.contents))
     
-    # noinspection PyAttributeOutsideInit
     @joint_velocities.setter
     def joint_velocities(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (HandJointVelocityEXT * len(value))(
-                *value)
-        self._joint_velocities_ctypes_array = value
-        self._joint_velocities = value
-        self._joint_count = len(value)
+        self.joint_count, self._joint_velocities = array_field_helper(
+            HandJointVelocityEXT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_joint_count", c_uint32),
+        ("joint_count", c_uint32),
         ("_joint_velocities", POINTER(HandJointVelocityEXT)),
     ]
 
@@ -4319,48 +4278,43 @@ PFN_xrUpdateHandMeshMSFT = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(Han
 class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     def __init__(
         self,
-        enabled_view_configuration_types: Sequence[c_int] = (),
+        view_configuration_count: Optional[int] = None,
+        enabled_view_configuration_types: ArrayFieldParamType[c_int] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT,
     ) -> None:
-        view_configuration_count = 0
-        if enabled_view_configuration_types is not None:
-            view_configuration_count = len(enabled_view_configuration_types)
-            if not isinstance(enabled_view_configuration_types, ctypes.Array):
-                enabled_view_configuration_types = (c_int * len(enabled_view_configuration_types))(
-                    *enabled_view_configuration_types)
-        self._enabled_view_configuration_types_ctypes_array = enabled_view_configuration_types
+        view_configuration_count, enabled_view_configuration_types = array_field_helper(
+            c_int, view_configuration_count, enabled_view_configuration_types)
         super().__init__(
-            _view_configuration_count=view_configuration_count,
+            view_configuration_count=view_configuration_count,
             _enabled_view_configuration_types=enabled_view_configuration_types,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={repr(self._view_configuration_count)}, enabled_view_configuration_types={repr(self._enabled_view_configuration_types)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, enabled_view_configuration_types={repr(self._enabled_view_configuration_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={self._view_configuration_count}, enabled_view_configuration_types={self._enabled_view_configuration_types}, next={self.next}, type={self.type})"
+        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={self.view_configuration_count}, enabled_view_configuration_types={self._enabled_view_configuration_types}, next={self.next}, type={self.type})"
 
     @property
     def enabled_view_configuration_types(self):
-        return self._enabled_view_configuration_types_ctypes_array
+        if self.view_configuration_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.view_configuration_count).from_address(
+                ctypes.addressof(self._enabled_view_configuration_types.contents))
     
-    # noinspection PyAttributeOutsideInit
     @enabled_view_configuration_types.setter
     def enabled_view_configuration_types(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_int * len(value))(
-                *value)
-        self._enabled_view_configuration_types_ctypes_array = value
-        self._enabled_view_configuration_types = value
-        self._view_configuration_count = len(value)
+        self.view_configuration_count, self._enabled_view_configuration_types = array_field_helper(
+            c_int, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_view_configuration_count", c_uint32),
+        ("view_configuration_count", c_uint32),
         ("_enabled_view_configuration_types", POINTER(c_int)),
     ]
 
@@ -4397,48 +4351,43 @@ class SecondaryViewConfigurationStateMSFT(Structure):
 class SecondaryViewConfigurationFrameStateMSFT(Structure):
     def __init__(
         self,
-        view_configuration_states: Sequence[SecondaryViewConfigurationStateMSFT] = (),
+        view_configuration_count: Optional[int] = None,
+        view_configuration_states: ArrayFieldParamType[SecondaryViewConfigurationStateMSFT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT,
     ) -> None:
-        view_configuration_count = 0
-        if view_configuration_states is not None:
-            view_configuration_count = len(view_configuration_states)
-            if not isinstance(view_configuration_states, ctypes.Array):
-                view_configuration_states = (SecondaryViewConfigurationStateMSFT * len(view_configuration_states))(
-                    *view_configuration_states)
-        self._view_configuration_states_ctypes_array = view_configuration_states
+        view_configuration_count, view_configuration_states = array_field_helper(
+            SecondaryViewConfigurationStateMSFT, view_configuration_count, view_configuration_states)
         super().__init__(
-            _view_configuration_count=view_configuration_count,
+            view_configuration_count=view_configuration_count,
             _view_configuration_states=view_configuration_states,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={repr(self._view_configuration_count)}, view_configuration_states={repr(self._view_configuration_states)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_states={repr(self._view_configuration_states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={self._view_configuration_count}, view_configuration_states={self._view_configuration_states}, next={self.next}, type={self.type})"
+        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={self.view_configuration_count}, view_configuration_states={self._view_configuration_states}, next={self.next}, type={self.type})"
 
     @property
     def view_configuration_states(self):
-        return self._view_configuration_states_ctypes_array
+        if self.view_configuration_count == 0:
+            return (SecondaryViewConfigurationStateMSFT * 0)()
+        else:
+            return (SecondaryViewConfigurationStateMSFT * self.view_configuration_count).from_address(
+                ctypes.addressof(self._view_configuration_states.contents))
     
-    # noinspection PyAttributeOutsideInit
     @view_configuration_states.setter
     def view_configuration_states(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (SecondaryViewConfigurationStateMSFT * len(value))(
-                *value)
-        self._view_configuration_states_ctypes_array = value
-        self._view_configuration_states = value
-        self._view_configuration_count = len(value)
+        self.view_configuration_count, self._view_configuration_states = array_field_helper(
+            SecondaryViewConfigurationStateMSFT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_view_configuration_count", c_uint32),
+        ("view_configuration_count", c_uint32),
         ("_view_configuration_states", POINTER(SecondaryViewConfigurationStateMSFT)),
     ]
 
@@ -4448,52 +4397,47 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         self,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),
-        layers: Sequence[POINTER(CompositionLayerBaseHeader)] = (),
+        layer_count: Optional[int] = None,
+        layers: BaseArrayFieldParamType = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT,
     ) -> None:
-        layer_count = 0
-        if layers is not None:
-            layer_count = len(layers)
-            if not isinstance(layers, ctypes.Array):
-                layers = (POINTER(CompositionLayerBaseHeader) * len(layers))(
-                    *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in layers])
-        self._layers_ctypes_array = layers
+        layer_count, layers = base_array_field_helper(
+            POINTER(CompositionLayerBaseHeader), layer_count, layers)
         super().__init__(
             view_configuration_type=ViewConfigurationType(view_configuration_type).value,
             environment_blend_mode=EnvironmentBlendMode(environment_blend_mode).value,
-            _layer_count=layer_count,
+            layer_count=layer_count,
             _layers=layers,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self._layer_count)}, layers={repr(self._layers)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self._layers)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={self.view_configuration_type}, environment_blend_mode={self.environment_blend_mode}, layer_count={self._layer_count}, layers={self._layers}, next={self.next}, type={self.type})"
+        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={self.view_configuration_type}, environment_blend_mode={self.environment_blend_mode}, layer_count={self.layer_count}, layers={self._layers}, next={self.next}, type={self.type})"
 
     @property
     def layers(self):
-        return self._layers_ctypes_array
+        if self.layer_count == 0:
+            return (POINTER(CompositionLayerBaseHeader) * 0)()
+        else:
+            return (POINTER(CompositionLayerBaseHeader) * self.layer_count).from_address(
+                ctypes.addressof(self._layers.contents))
     
-    # noinspection PyAttributeOutsideInit
     @layers.setter
     def layers(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (POINTER(CompositionLayerBaseHeader) * len(value))(
-                *[cast(p, POINTER(CompositionLayerBaseHeader)) for p in value])
-        self._layers_ctypes_array = value
-        self._layers = value
-        self._layer_count = len(value)
+        self.layer_count, self._layers = base_array_field_helper(
+            POINTER(CompositionLayerBaseHeader), None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("view_configuration_type", ViewConfigurationType.ctype()),
         ("environment_blend_mode", EnvironmentBlendMode.ctype()),
-        ("_layer_count", c_uint32),
+        ("layer_count", c_uint32),
         ("_layers", POINTER(POINTER(CompositionLayerBaseHeader))),
     ]
 
@@ -5144,98 +5088,83 @@ class SceneBoundsMSFT(Structure):
         self,
         space: Space = None,
         time: Time = 0,
-        spheres: Sequence[SceneSphereBoundMSFT] = (),
-        boxes: Sequence[SceneOrientedBoxBoundMSFT] = (),
-        frustums: Sequence[SceneFrustumBoundMSFT] = (),
+        sphere_count: Optional[int] = None,
+        spheres: ArrayFieldParamType[SceneSphereBoundMSFT] = None,
+        box_count: Optional[int] = None,
+        boxes: ArrayFieldParamType[SceneOrientedBoxBoundMSFT] = None,
+        frustum_count: Optional[int] = None,
+        frustums: ArrayFieldParamType[SceneFrustumBoundMSFT] = None,
     ) -> None:
-        sphere_count = 0
-        if spheres is not None:
-            sphere_count = len(spheres)
-            if not isinstance(spheres, ctypes.Array):
-                spheres = (SceneSphereBoundMSFT * len(spheres))(
-                    *spheres)
-        self._spheres_ctypes_array = spheres
-        box_count = 0
-        if boxes is not None:
-            box_count = len(boxes)
-            if not isinstance(boxes, ctypes.Array):
-                boxes = (SceneOrientedBoxBoundMSFT * len(boxes))(
-                    *boxes)
-        self._boxes_ctypes_array = boxes
-        frustum_count = 0
-        if frustums is not None:
-            frustum_count = len(frustums)
-            if not isinstance(frustums, ctypes.Array):
-                frustums = (SceneFrustumBoundMSFT * len(frustums))(
-                    *frustums)
-        self._frustums_ctypes_array = frustums
+        sphere_count, spheres = array_field_helper(
+            SceneSphereBoundMSFT, sphere_count, spheres)
+        box_count, boxes = array_field_helper(
+            SceneOrientedBoxBoundMSFT, box_count, boxes)
+        frustum_count, frustums = array_field_helper(
+            SceneFrustumBoundMSFT, frustum_count, frustums)
         super().__init__(
             space=space,
             time=time,
-            _sphere_count=sphere_count,
+            sphere_count=sphere_count,
             _spheres=spheres,
-            _box_count=box_count,
+            box_count=box_count,
             _boxes=boxes,
-            _frustum_count=frustum_count,
+            frustum_count=frustum_count,
             _frustums=frustums,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneBoundsMSFT(space={repr(self.space)}, time={repr(self.time)}, sphere_count={repr(self._sphere_count)}, spheres={repr(self._spheres)}, box_count={repr(self._box_count)}, boxes={repr(self._boxes)}, frustum_count={repr(self._frustum_count)}, frustums={repr(self._frustums)})"
+        return f"xr.SceneBoundsMSFT(space={repr(self.space)}, time={repr(self.time)}, sphere_count={repr(self.sphere_count)}, spheres={repr(self._spheres)}, box_count={repr(self.box_count)}, boxes={repr(self._boxes)}, frustum_count={repr(self.frustum_count)}, frustums={repr(self._frustums)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneBoundsMSFT(space={self.space}, time={self.time}, sphere_count={self._sphere_count}, spheres={self._spheres}, box_count={self._box_count}, boxes={self._boxes}, frustum_count={self._frustum_count}, frustums={self._frustums})"
+        return f"xr.SceneBoundsMSFT(space={self.space}, time={self.time}, sphere_count={self.sphere_count}, spheres={self._spheres}, box_count={self.box_count}, boxes={self._boxes}, frustum_count={self.frustum_count}, frustums={self._frustums})"
 
     @property
     def spheres(self):
-        return self._spheres_ctypes_array
+        if self.sphere_count == 0:
+            return (SceneSphereBoundMSFT * 0)()
+        else:
+            return (SceneSphereBoundMSFT * self.sphere_count).from_address(
+                ctypes.addressof(self._spheres.contents))
     
-    # noinspection PyAttributeOutsideInit
     @spheres.setter
     def spheres(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (SceneSphereBoundMSFT * len(value))(
-                *value)
-        self._spheres_ctypes_array = value
-        self._spheres = value
-        self._sphere_count = len(value)
+        self.sphere_count, self._spheres = array_field_helper(
+            SceneSphereBoundMSFT, None, value)
 
     @property
     def boxes(self):
-        return self._boxes_ctypes_array
+        if self.box_count == 0:
+            return (SceneOrientedBoxBoundMSFT * 0)()
+        else:
+            return (SceneOrientedBoxBoundMSFT * self.box_count).from_address(
+                ctypes.addressof(self._boxes.contents))
     
-    # noinspection PyAttributeOutsideInit
     @boxes.setter
     def boxes(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (SceneOrientedBoxBoundMSFT * len(value))(
-                *value)
-        self._boxes_ctypes_array = value
-        self._boxes = value
-        self._box_count = len(value)
+        self.box_count, self._boxes = array_field_helper(
+            SceneOrientedBoxBoundMSFT, None, value)
 
     @property
     def frustums(self):
-        return self._frustums_ctypes_array
+        if self.frustum_count == 0:
+            return (SceneFrustumBoundMSFT * 0)()
+        else:
+            return (SceneFrustumBoundMSFT * self.frustum_count).from_address(
+                ctypes.addressof(self._frustums.contents))
     
-    # noinspection PyAttributeOutsideInit
     @frustums.setter
     def frustums(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (SceneFrustumBoundMSFT * len(value))(
-                *value)
-        self._frustums_ctypes_array = value
-        self._frustums = value
-        self._frustum_count = len(value)
+        self.frustum_count, self._frustums = array_field_helper(
+            SceneFrustumBoundMSFT, None, value)
 
     _fields_ = [
         ("space", Space),
         ("time", Time),
-        ("_sphere_count", c_uint32),
+        ("sphere_count", c_uint32),
         ("_spheres", POINTER(SceneSphereBoundMSFT)),
-        ("_box_count", c_uint32),
+        ("box_count", c_uint32),
         ("_boxes", POINTER(SceneOrientedBoxBoundMSFT)),
-        ("_frustum_count", c_uint32),
+        ("frustum_count", c_uint32),
         ("_frustums", POINTER(SceneFrustumBoundMSFT)),
     ]
 
@@ -5243,23 +5172,19 @@ class SceneBoundsMSFT(Structure):
 class NewSceneComputeInfoMSFT(Structure):
     def __init__(
         self,
-        requested_features: Sequence[c_int] = (),
+        requested_feature_count: Optional[int] = None,
+        requested_features: ArrayFieldParamType[c_int] = None,
         consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT(),
         bounds: SceneBoundsMSFT = None,
         next: c_void_p = None,
         type: StructureType = StructureType.NEW_SCENE_COMPUTE_INFO_MSFT,
     ) -> None:
-        requested_feature_count = 0
-        if requested_features is not None:
-            requested_feature_count = len(requested_features)
-            if not isinstance(requested_features, ctypes.Array):
-                requested_features = (c_int * len(requested_features))(
-                    *requested_features)
-        self._requested_features_ctypes_array = requested_features
+        requested_feature_count, requested_features = array_field_helper(
+            c_int, requested_feature_count, requested_features)
         if bounds is None:
             bounds = SceneBoundsMSFT()
         super().__init__(
-            _requested_feature_count=requested_feature_count,
+            requested_feature_count=requested_feature_count,
             _requested_features=requested_features,
             consistency=SceneComputeConsistencyMSFT(consistency).value,
             bounds=bounds,
@@ -5268,29 +5193,28 @@ class NewSceneComputeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={repr(self._requested_feature_count)}, requested_features={repr(self._requested_features)}, consistency={repr(self.consistency)}, bounds={repr(self.bounds)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={repr(self.requested_feature_count)}, requested_features={repr(self._requested_features)}, consistency={repr(self.consistency)}, bounds={repr(self.bounds)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={self._requested_feature_count}, requested_features={self._requested_features}, consistency={self.consistency}, bounds={self.bounds}, next={self.next}, type={self.type})"
+        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={self.requested_feature_count}, requested_features={self._requested_features}, consistency={self.consistency}, bounds={self.bounds}, next={self.next}, type={self.type})"
 
     @property
     def requested_features(self):
-        return self._requested_features_ctypes_array
+        if self.requested_feature_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.requested_feature_count).from_address(
+                ctypes.addressof(self._requested_features.contents))
     
-    # noinspection PyAttributeOutsideInit
     @requested_features.setter
     def requested_features(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_int * len(value))(
-                *value)
-        self._requested_features_ctypes_array = value
-        self._requested_features = value
-        self._requested_feature_count = len(value)
+        self.requested_feature_count, self._requested_features = array_field_helper(
+            c_int, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_requested_feature_count", c_uint32),
+        ("requested_feature_count", c_uint32),
         ("_requested_features", POINTER(c_int)),
         ("consistency", SceneComputeConsistencyMSFT.ctype()),
         ("bounds", SceneBoundsMSFT),
@@ -5440,48 +5364,43 @@ class SceneComponentLocationMSFT(Structure):
 class SceneComponentLocationsMSFT(Structure):
     def __init__(
         self,
-        locations: Sequence[SceneComponentLocationMSFT] = (),
+        location_count: Optional[int] = None,
+        locations: ArrayFieldParamType[SceneComponentLocationMSFT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_COMPONENT_LOCATIONS_MSFT,
     ) -> None:
-        location_count = 0
-        if locations is not None:
-            location_count = len(locations)
-            if not isinstance(locations, ctypes.Array):
-                locations = (SceneComponentLocationMSFT * len(locations))(
-                    *locations)
-        self._locations_ctypes_array = locations
+        location_count, locations = array_field_helper(
+            SceneComponentLocationMSFT, location_count, locations)
         super().__init__(
-            _location_count=location_count,
+            location_count=location_count,
             _locations=locations,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentLocationsMSFT(location_count={repr(self._location_count)}, locations={repr(self._locations)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SceneComponentLocationsMSFT(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentLocationsMSFT(location_count={self._location_count}, locations={self._locations}, next={self.next}, type={self.type})"
+        return f"xr.SceneComponentLocationsMSFT(location_count={self.location_count}, locations={self._locations}, next={self.next}, type={self.type})"
 
     @property
     def locations(self):
-        return self._locations_ctypes_array
+        if self.location_count == 0:
+            return (SceneComponentLocationMSFT * 0)()
+        else:
+            return (SceneComponentLocationMSFT * self.location_count).from_address(
+                ctypes.addressof(self._locations.contents))
     
-    # noinspection PyAttributeOutsideInit
     @locations.setter
     def locations(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (SceneComponentLocationMSFT * len(value))(
-                *value)
-        self._locations_ctypes_array = value
-        self._locations = value
-        self._location_count = len(value)
+        self.location_count, self._locations = array_field_helper(
+            SceneComponentLocationMSFT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_location_count", c_uint32),
+        ("location_count", c_uint32),
         ("_locations", POINTER(SceneComponentLocationMSFT)),
     ]
 
@@ -5491,52 +5410,47 @@ class SceneComponentsLocateInfoMSFT(Structure):
         self,
         base_space: Space = None,
         time: Time = 0,
-        component_ids: Sequence[UuidMSFT] = (),
+        component_id_count: Optional[int] = None,
+        component_ids: ArrayFieldParamType[UuidMSFT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_COMPONENTS_LOCATE_INFO_MSFT,
     ) -> None:
-        component_id_count = 0
-        if component_ids is not None:
-            component_id_count = len(component_ids)
-            if not isinstance(component_ids, ctypes.Array):
-                component_ids = (UuidMSFT * len(component_ids))(
-                    *component_ids)
-        self._component_ids_ctypes_array = component_ids
+        component_id_count, component_ids = array_field_helper(
+            UuidMSFT, component_id_count, component_ids)
         super().__init__(
             base_space=base_space,
             time=time,
-            _component_id_count=component_id_count,
+            component_id_count=component_id_count,
             _component_ids=component_ids,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsLocateInfoMSFT(base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self._component_id_count)}, component_ids={repr(self._component_ids)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SceneComponentsLocateInfoMSFT(base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self.component_id_count)}, component_ids={repr(self._component_ids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneComponentsLocateInfoMSFT(base_space={self.base_space}, time={self.time}, component_id_count={self._component_id_count}, component_ids={self._component_ids}, next={self.next}, type={self.type})"
+        return f"xr.SceneComponentsLocateInfoMSFT(base_space={self.base_space}, time={self.time}, component_id_count={self.component_id_count}, component_ids={self._component_ids}, next={self.next}, type={self.type})"
 
     @property
     def component_ids(self):
-        return self._component_ids_ctypes_array
+        if self.component_id_count == 0:
+            return (UuidMSFT * 0)()
+        else:
+            return (UuidMSFT * self.component_id_count).from_address(
+                ctypes.addressof(self._component_ids.contents))
     
-    # noinspection PyAttributeOutsideInit
     @component_ids.setter
     def component_ids(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (UuidMSFT * len(value))(
-                *value)
-        self._component_ids_ctypes_array = value
-        self._component_ids = value
-        self._component_id_count = len(value)
+        self.component_id_count, self._component_ids = array_field_helper(
+            UuidMSFT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("base_space", Space),
         ("time", Time),
-        ("_component_id_count", c_uint32),
+        ("component_id_count", c_uint32),
         ("_component_ids", POINTER(UuidMSFT)),
     ]
 
@@ -5564,48 +5478,43 @@ class SceneObjectMSFT(Structure):
 class SceneObjectsMSFT(Structure):
     def __init__(
         self,
-        scene_objects: Sequence[SceneObjectMSFT] = (),
+        scene_object_count: Optional[int] = None,
+        scene_objects: ArrayFieldParamType[SceneObjectMSFT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_OBJECTS_MSFT,
     ) -> None:
-        scene_object_count = 0
-        if scene_objects is not None:
-            scene_object_count = len(scene_objects)
-            if not isinstance(scene_objects, ctypes.Array):
-                scene_objects = (SceneObjectMSFT * len(scene_objects))(
-                    *scene_objects)
-        self._scene_objects_ctypes_array = scene_objects
+        scene_object_count, scene_objects = array_field_helper(
+            SceneObjectMSFT, scene_object_count, scene_objects)
         super().__init__(
-            _scene_object_count=scene_object_count,
+            scene_object_count=scene_object_count,
             _scene_objects=scene_objects,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectsMSFT(scene_object_count={repr(self._scene_object_count)}, scene_objects={repr(self._scene_objects)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SceneObjectsMSFT(scene_object_count={repr(self.scene_object_count)}, scene_objects={repr(self._scene_objects)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObjectsMSFT(scene_object_count={self._scene_object_count}, scene_objects={self._scene_objects}, next={self.next}, type={self.type})"
+        return f"xr.SceneObjectsMSFT(scene_object_count={self.scene_object_count}, scene_objects={self._scene_objects}, next={self.next}, type={self.type})"
 
     @property
     def scene_objects(self):
-        return self._scene_objects_ctypes_array
+        if self.scene_object_count == 0:
+            return (SceneObjectMSFT * 0)()
+        else:
+            return (SceneObjectMSFT * self.scene_object_count).from_address(
+                ctypes.addressof(self._scene_objects.contents))
     
-    # noinspection PyAttributeOutsideInit
     @scene_objects.setter
     def scene_objects(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (SceneObjectMSFT * len(value))(
-                *value)
-        self._scene_objects_ctypes_array = value
-        self._scene_objects = value
-        self._scene_object_count = len(value)
+        self.scene_object_count, self._scene_objects = array_field_helper(
+            SceneObjectMSFT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_scene_object_count", c_uint32),
+        ("scene_object_count", c_uint32),
         ("_scene_objects", POINTER(SceneObjectMSFT)),
     ]
 
@@ -5641,48 +5550,43 @@ class SceneComponentParentFilterInfoMSFT(Structure):
 class SceneObjectTypesFilterInfoMSFT(Structure):
     def __init__(
         self,
-        object_types: Sequence[c_int] = (),
+        object_type_count: Optional[int] = None,
+        object_types: ArrayFieldParamType[c_int] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_MSFT,
     ) -> None:
-        object_type_count = 0
-        if object_types is not None:
-            object_type_count = len(object_types)
-            if not isinstance(object_types, ctypes.Array):
-                object_types = (c_int * len(object_types))(
-                    *object_types)
-        self._object_types_ctypes_array = object_types
+        object_type_count, object_types = array_field_helper(
+            c_int, object_type_count, object_types)
         super().__init__(
-            _object_type_count=object_type_count,
+            object_type_count=object_type_count,
             _object_types=object_types,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={repr(self._object_type_count)}, object_types={repr(self._object_types)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={repr(self.object_type_count)}, object_types={repr(self._object_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={self._object_type_count}, object_types={self._object_types}, next={self.next}, type={self.type})"
+        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={self.object_type_count}, object_types={self._object_types}, next={self.next}, type={self.type})"
 
     @property
     def object_types(self):
-        return self._object_types_ctypes_array
+        if self.object_type_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.object_type_count).from_address(
+                ctypes.addressof(self._object_types.contents))
     
-    # noinspection PyAttributeOutsideInit
     @object_types.setter
     def object_types(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_int * len(value))(
-                *value)
-        self._object_types_ctypes_array = value
-        self._object_types = value
-        self._object_type_count = len(value)
+        self.object_type_count, self._object_types = array_field_helper(
+            c_int, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_object_type_count", c_uint32),
+        ("object_type_count", c_uint32),
         ("_object_types", POINTER(c_int)),
     ]
 
@@ -5721,48 +5625,43 @@ class ScenePlaneMSFT(Structure):
 class ScenePlanesMSFT(Structure):
     def __init__(
         self,
-        scene_planes: Sequence[ScenePlaneMSFT] = (),
+        scene_plane_count: Optional[int] = None,
+        scene_planes: ArrayFieldParamType[ScenePlaneMSFT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_PLANES_MSFT,
     ) -> None:
-        scene_plane_count = 0
-        if scene_planes is not None:
-            scene_plane_count = len(scene_planes)
-            if not isinstance(scene_planes, ctypes.Array):
-                scene_planes = (ScenePlaneMSFT * len(scene_planes))(
-                    *scene_planes)
-        self._scene_planes_ctypes_array = scene_planes
+        scene_plane_count, scene_planes = array_field_helper(
+            ScenePlaneMSFT, scene_plane_count, scene_planes)
         super().__init__(
-            _scene_plane_count=scene_plane_count,
+            scene_plane_count=scene_plane_count,
             _scene_planes=scene_planes,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlanesMSFT(scene_plane_count={repr(self._scene_plane_count)}, scene_planes={repr(self._scene_planes)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.ScenePlanesMSFT(scene_plane_count={repr(self.scene_plane_count)}, scene_planes={repr(self._scene_planes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.ScenePlanesMSFT(scene_plane_count={self._scene_plane_count}, scene_planes={self._scene_planes}, next={self.next}, type={self.type})"
+        return f"xr.ScenePlanesMSFT(scene_plane_count={self.scene_plane_count}, scene_planes={self._scene_planes}, next={self.next}, type={self.type})"
 
     @property
     def scene_planes(self):
-        return self._scene_planes_ctypes_array
+        if self.scene_plane_count == 0:
+            return (ScenePlaneMSFT * 0)()
+        else:
+            return (ScenePlaneMSFT * self.scene_plane_count).from_address(
+                ctypes.addressof(self._scene_planes.contents))
     
-    # noinspection PyAttributeOutsideInit
     @scene_planes.setter
     def scene_planes(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (ScenePlaneMSFT * len(value))(
-                *value)
-        self._scene_planes_ctypes_array = value
-        self._scene_planes = value
-        self._scene_plane_count = len(value)
+        self.scene_plane_count, self._scene_planes = array_field_helper(
+            ScenePlaneMSFT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_scene_plane_count", c_uint32),
+        ("scene_plane_count", c_uint32),
         ("_scene_planes", POINTER(ScenePlaneMSFT)),
     ]
 
@@ -5770,48 +5669,43 @@ class ScenePlanesMSFT(Structure):
 class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     def __init__(
         self,
-        alignments: Sequence[c_int] = (),
+        alignment_count: Optional[int] = None,
+        alignments: ArrayFieldParamType[c_int] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT,
     ) -> None:
-        alignment_count = 0
-        if alignments is not None:
-            alignment_count = len(alignments)
-            if not isinstance(alignments, ctypes.Array):
-                alignments = (c_int * len(alignments))(
-                    *alignments)
-        self._alignments_ctypes_array = alignments
+        alignment_count, alignments = array_field_helper(
+            c_int, alignment_count, alignments)
         super().__init__(
-            _alignment_count=alignment_count,
+            alignment_count=alignment_count,
             _alignments=alignments,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={repr(self._alignment_count)}, alignments={repr(self._alignments)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={repr(self.alignment_count)}, alignments={repr(self._alignments)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={self._alignment_count}, alignments={self._alignments}, next={self.next}, type={self.type})"
+        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={self.alignment_count}, alignments={self._alignments}, next={self.next}, type={self.type})"
 
     @property
     def alignments(self):
-        return self._alignments_ctypes_array
+        if self.alignment_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.alignment_count).from_address(
+                ctypes.addressof(self._alignments.contents))
     
-    # noinspection PyAttributeOutsideInit
     @alignments.setter
     def alignments(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_int * len(value))(
-                *value)
-        self._alignments_ctypes_array = value
-        self._alignments = value
-        self._alignment_count = len(value)
+        self.alignment_count, self._alignments = array_field_helper(
+            c_int, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_alignment_count", c_uint32),
+        ("alignment_count", c_uint32),
         ("_alignments", POINTER(c_int)),
     ]
 
@@ -5842,48 +5736,43 @@ class SceneMeshMSFT(Structure):
 class SceneMeshesMSFT(Structure):
     def __init__(
         self,
-        scene_meshes: Sequence[SceneMeshMSFT] = (),
+        scene_mesh_count: Optional[int] = None,
+        scene_meshes: ArrayFieldParamType[SceneMeshMSFT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_MESHES_MSFT,
     ) -> None:
-        scene_mesh_count = 0
-        if scene_meshes is not None:
-            scene_mesh_count = len(scene_meshes)
-            if not isinstance(scene_meshes, ctypes.Array):
-                scene_meshes = (SceneMeshMSFT * len(scene_meshes))(
-                    *scene_meshes)
-        self._scene_meshes_ctypes_array = scene_meshes
+        scene_mesh_count, scene_meshes = array_field_helper(
+            SceneMeshMSFT, scene_mesh_count, scene_meshes)
         super().__init__(
-            _scene_mesh_count=scene_mesh_count,
+            scene_mesh_count=scene_mesh_count,
             _scene_meshes=scene_meshes,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshesMSFT(scene_mesh_count={repr(self._scene_mesh_count)}, scene_meshes={repr(self._scene_meshes)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SceneMeshesMSFT(scene_mesh_count={repr(self.scene_mesh_count)}, scene_meshes={repr(self._scene_meshes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneMeshesMSFT(scene_mesh_count={self._scene_mesh_count}, scene_meshes={self._scene_meshes}, next={self.next}, type={self.type})"
+        return f"xr.SceneMeshesMSFT(scene_mesh_count={self.scene_mesh_count}, scene_meshes={self._scene_meshes}, next={self.next}, type={self.type})"
 
     @property
     def scene_meshes(self):
-        return self._scene_meshes_ctypes_array
+        if self.scene_mesh_count == 0:
+            return (SceneMeshMSFT * 0)()
+        else:
+            return (SceneMeshMSFT * self.scene_mesh_count).from_address(
+                ctypes.addressof(self._scene_meshes.contents))
     
-    # noinspection PyAttributeOutsideInit
     @scene_meshes.setter
     def scene_meshes(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (SceneMeshMSFT * len(value))(
-                *value)
-        self._scene_meshes_ctypes_array = value
-        self._scene_meshes = value
-        self._scene_mesh_count = len(value)
+        self.scene_mesh_count, self._scene_meshes = array_field_helper(
+            SceneMeshMSFT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_scene_mesh_count", c_uint32),
+        ("scene_mesh_count", c_uint32),
         ("_scene_meshes", POINTER(SceneMeshMSFT)),
     ]
 
@@ -6108,48 +5997,43 @@ class DeserializeSceneFragmentMSFT(Structure):
 class SceneDeserializeInfoMSFT(Structure):
     def __init__(
         self,
-        fragments: Sequence[DeserializeSceneFragmentMSFT] = (),
+        fragment_count: Optional[int] = None,
+        fragments: ArrayFieldParamType[DeserializeSceneFragmentMSFT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SCENE_DESERIALIZE_INFO_MSFT,
     ) -> None:
-        fragment_count = 0
-        if fragments is not None:
-            fragment_count = len(fragments)
-            if not isinstance(fragments, ctypes.Array):
-                fragments = (DeserializeSceneFragmentMSFT * len(fragments))(
-                    *fragments)
-        self._fragments_ctypes_array = fragments
+        fragment_count, fragments = array_field_helper(
+            DeserializeSceneFragmentMSFT, fragment_count, fragments)
         super().__init__(
-            _fragment_count=fragment_count,
+            fragment_count=fragment_count,
             _fragments=fragments,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneDeserializeInfoMSFT(fragment_count={repr(self._fragment_count)}, fragments={repr(self._fragments)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SceneDeserializeInfoMSFT(fragment_count={repr(self.fragment_count)}, fragments={repr(self._fragments)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneDeserializeInfoMSFT(fragment_count={self._fragment_count}, fragments={self._fragments}, next={self.next}, type={self.type})"
+        return f"xr.SceneDeserializeInfoMSFT(fragment_count={self.fragment_count}, fragments={self._fragments}, next={self.next}, type={self.type})"
 
     @property
     def fragments(self):
-        return self._fragments_ctypes_array
+        if self.fragment_count == 0:
+            return (DeserializeSceneFragmentMSFT * 0)()
+        else:
+            return (DeserializeSceneFragmentMSFT * self.fragment_count).from_address(
+                ctypes.addressof(self._fragments.contents))
     
-    # noinspection PyAttributeOutsideInit
     @fragments.setter
     def fragments(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (DeserializeSceneFragmentMSFT * len(value))(
-                *value)
-        self._fragments_ctypes_array = value
-        self._fragments = value
-        self._fragment_count = len(value)
+        self.fragment_count, self._fragments = array_field_helper(
+            DeserializeSceneFragmentMSFT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_fragment_count", c_uint32),
+        ("fragment_count", c_uint32),
         ("_fragments", POINTER(DeserializeSceneFragmentMSFT)),
     ]
 
@@ -6294,52 +6178,47 @@ class FacialExpressionsHTC(Structure):
         self,
         is_active: Bool32 = 0,
         sample_time: Time = 0,
-        expression_weightings: Sequence[float] = (),
+        expression_count: Optional[int] = None,
+        expression_weightings: ArrayFieldParamType[float] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
     ) -> None:
-        expression_count = 0
-        if expression_weightings is not None:
-            expression_count = len(expression_weightings)
-            if not isinstance(expression_weightings, ctypes.Array):
-                expression_weightings = (c_float * len(expression_weightings))(
-                    *expression_weightings)
-        self._expression_weightings_ctypes_array = expression_weightings
+        expression_count, expression_weightings = array_field_helper(
+            float, expression_count, expression_weightings)
         super().__init__(
             is_active=is_active,
             sample_time=sample_time,
-            _expression_count=expression_count,
+            expression_count=expression_count,
             _expression_weightings=expression_weightings,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialExpressionsHTC(is_active={repr(self.is_active)}, sample_time={repr(self.sample_time)}, expression_count={repr(self._expression_count)}, expression_weightings={repr(self._expression_weightings)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.FacialExpressionsHTC(is_active={repr(self.is_active)}, sample_time={repr(self.sample_time)}, expression_count={repr(self.expression_count)}, expression_weightings={repr(self._expression_weightings)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.FacialExpressionsHTC(is_active={self.is_active}, sample_time={self.sample_time}, expression_count={self._expression_count}, expression_weightings={self._expression_weightings}, next={self.next}, type={self.type})"
+        return f"xr.FacialExpressionsHTC(is_active={self.is_active}, sample_time={self.sample_time}, expression_count={self.expression_count}, expression_weightings={self._expression_weightings}, next={self.next}, type={self.type})"
 
     @property
     def expression_weightings(self):
-        return self._expression_weightings_ctypes_array
+        if self.expression_count == 0:
+            return (float * 0)()
+        else:
+            return (float * self.expression_count).from_address(
+                ctypes.addressof(self._expression_weightings.contents))
     
-    # noinspection PyAttributeOutsideInit
     @expression_weightings.setter
     def expression_weightings(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_float * len(value))(
-                *value)
-        self._expression_weightings_ctypes_array = value
-        self._expression_weightings = value
-        self._expression_count = len(value)
+        self.expression_count, self._expression_weightings = array_field_helper(
+            float, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("is_active", Bool32),
         ("sample_time", Time),
-        ("_expression_count", c_uint32),
+        ("expression_count", c_uint32),
         ("_expression_weightings", POINTER(c_float)),
     ]
 
@@ -8172,48 +8051,43 @@ class SpaceStorageLocationFilterInfoFB(Structure):
 class SpaceUuidFilterInfoFB(Structure):
     def __init__(
         self,
-        uuids: Sequence[UuidEXT] = (),
+        uuid_count: Optional[int] = None,
+        uuids: ArrayFieldParamType[UuidEXT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SPACE_UUID_FILTER_INFO_FB,
     ) -> None:
-        uuid_count = 0
-        if uuids is not None:
-            uuid_count = len(uuids)
-            if not isinstance(uuids, ctypes.Array):
-                uuids = (UuidEXT * len(uuids))(
-                    *uuids)
-        self._uuids_ctypes_array = uuids
+        uuid_count, uuids = array_field_helper(
+            UuidEXT, uuid_count, uuids)
         super().__init__(
-            _uuid_count=uuid_count,
+            uuid_count=uuid_count,
             _uuids=uuids,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceUuidFilterInfoFB(uuid_count={repr(self._uuid_count)}, uuids={repr(self._uuids)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SpaceUuidFilterInfoFB(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpaceUuidFilterInfoFB(uuid_count={self._uuid_count}, uuids={self._uuids}, next={self.next}, type={self.type})"
+        return f"xr.SpaceUuidFilterInfoFB(uuid_count={self.uuid_count}, uuids={self._uuids}, next={self.next}, type={self.type})"
 
     @property
     def uuids(self):
-        return self._uuids_ctypes_array
+        if self.uuid_count == 0:
+            return (UuidEXT * 0)()
+        else:
+            return (UuidEXT * self.uuid_count).from_address(
+                ctypes.addressof(self._uuids.contents))
     
-    # noinspection PyAttributeOutsideInit
     @uuids.setter
     def uuids(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (UuidEXT * len(value))(
-                *value)
-        self._uuids_ctypes_array = value
-        self._uuids = value
-        self._uuid_count = len(value)
+        self.uuid_count, self._uuids = array_field_helper(
+            UuidEXT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_uuid_count", c_uint32),
+        ("uuid_count", c_uint32),
         ("_uuids", POINTER(UuidEXT)),
     ]
 
