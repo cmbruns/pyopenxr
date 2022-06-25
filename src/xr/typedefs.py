@@ -5,7 +5,7 @@ import ctypes
 
 import os
 import sys
-from typing import Generator, Sequence
+from typing import Generator, Optional, Sequence
 
 import numpy
 
