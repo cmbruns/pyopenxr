@@ -1347,16 +1347,22 @@ class StructureCoder(object):
 
 def snake_from_camel(camel: str) -> str:
     snake = f"{camel}"
+    # Pre-adjust capitalization of known words: OpenGL, 2D, 3D
+    words = {
+        "2D": "_2d",
+        "D3D11": "D3d11",
+        "D3D12": "D3d12",
+        "OpenGL": "Opengl",
+    }
+    for up, down in words.items():
+        snake = re.sub(up, down, snake)
     snake = re.sub(r"([^A-Z])([A-Z])", r"\1_\2", snake)
     snake = snake.lower()
-    snake = re.sub(r"open_gl", "opengl_", snake)
     return snake
 
 
 def structure_type_enum_name(struct: StructItem):
     type_enum_name = snake_from_camel(struct.name()).upper()
-    type_enum_name = type_enum_name.replace("D3_D", "D3D")
-    type_enum_name = type_enum_name.replace("2_D", "_2D_")  # BOUNDARY_2D_FB
     return type_enum_name
 
 
