@@ -2,6 +2,10 @@
 pyopenxr example program vive_tracker.py
 
 Prints the position and orientation of your vive trackers each frame.
+
+Helpful instructions for getting trackers working on Linux are at
+https://gist.github.com/DanielArnett/c9a56c9c7cc0def20648480bca1f6772
+The udev symbolic link trick was crucial in my case.
 """
 
 import ctypes

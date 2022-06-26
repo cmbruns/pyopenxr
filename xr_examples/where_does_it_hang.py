@@ -16,13 +16,15 @@ import os
 import platform
 import time
 
-import glfw
 if platform.system() == "Windows":
     from OpenGL import WGL
 elif platform.system() == "Linux":
     from OpenGL import GLX
 from OpenGL import GL
 import xr
+
+
+run_frame_loop = True
 
 
 class Swapchain(Structure):
@@ -248,95 +250,99 @@ xr.attach_session_action_sets(
 )
 session_is_running = False
 frame_count = 0
-while True:
-    frame_count += 1
-    window_closed = graphics.poll_events()
-    if window_closed:
-        xr.request_exit_session(session)
-    # poll_xr_events
-    exit_render_loop = False
+
+if run_frame_loop:
     while True:
-        try:
-            event_buffer = xr.poll_event(instance)
-            event_type = xr.StructureType(event_buffer.type)
-            if event_type == xr.StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
-                # still handle rest of the events instead of immediately quitting
-                pass
-            elif event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED \
-                    and session is not None:
-                event = cast(
-                    byref(event_buffer),
-                    POINTER(xr.EventDataSessionStateChanged)).contents
-                session_state = xr.SessionState(event.state)
-                logger.info(f"Session state changed to {str(session_state)}")
-                if session_state == xr.SessionState.IDLE:
-                    pass
-                elif session_state == xr.SessionState.READY:
-                    xr.begin_session(
-                        session=session,
-                        begin_info=xr.SessionBeginInfo(
-                            view_configuration_type,
-                        ),
-                    )
-                    session_is_running = True
-                elif session_state == xr.SessionState.STOPPING:
-                    session_is_running = False
-                    xr.end_session(session)
-                elif session_state == xr.SessionState.EXITING:
-                    exit_render_loop = True
-                elif session_state == xr.SessionState.LOSS_PENDING:
-                    exit_render_loop = True
-                elif event_type == xr.StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX:
-                    vive_tracker_connected = cast(byref(event_buffer), POINTER(xr.EventDataViveTrackerConnectedHTCX)).contents
-                    paths = vive_tracker_connected.paths.contents
-                    persistent_path_str = xr.path_to_string(instance, paths.persistent_path)
-                    # print(f"Vive Tracker connected: {persistent_path_str}")
-                    if paths.role_path != xr.NULL_PATH:
-                        role_path_str = xr.path_to_string(instance, paths.role_path)
-                        # print(f" New role is: {role_path_str}")
-                    else:
-                        # print(f" No role path.")
-                        pass
-                elif event_type == xr.StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED:
-                    # print("data interaction profile changed")
-                    # TODO:
-                    pass
-        except xr.EventUnavailable:
-            break
-        # end of poll_xr_events
-    if exit_render_loop:
-        break
-    if session_is_running:
-        if session_state in (
-                xr.SessionState.READY,
-                xr.SessionState.SYNCHRONIZED,
-                xr.SessionState.VISIBLE,
-                xr.SessionState.FOCUSED,
-        ):
-            # Something about begin/wait/end_frame is making it hang at the end.
-            frame_state = xr.wait_frame(session, xr.FrameWaitInfo())
-            xr.begin_frame(session, xr.FrameBeginInfo())
-            render_layers = []
-            if frame_state.should_render:
-                graphics.make_current()
-                GL.glClearColor(1, 0.6, 0.6, 1)
-                GL.glClear(GL.GL_COLOR_BUFFER_BIT)
-                time.sleep(0.02)
-
-            xr.end_frame(
-                session,
-                frame_end_info=xr.FrameEndInfo(
-                    display_time=frame_state.predicted_display_time,
-                    environment_blend_mode=xr.EnvironmentBlendMode.OPAQUE,
-                    layers=render_layers,
-                )
-            )
-        if frame_count > 100:
+        frame_count += 1
+        window_closed = graphics.poll_events()
+        if window_closed:
             xr.request_exit_session(session)
-
-    else:
-        time.sleep(0.02)
+        # poll_xr_events
+        exit_render_loop = False
+        while True:
+            try:
+                event_buffer = xr.poll_event(instance)
+                event_type = xr.StructureType(event_buffer.type)
+                if event_type == xr.StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
+                    # still handle rest of the events instead of immediately quitting
+                    pass
+                elif event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED \
+                        and session is not None:
+                    event = cast(
+                        byref(event_buffer),
+                        POINTER(xr.EventDataSessionStateChanged)).contents
+                    session_state = xr.SessionState(event.state)
+                    logger.info(f"Session state changed to {str(session_state)}")
+                    if session_state == xr.SessionState.IDLE:
+                        pass
+                    elif session_state == xr.SessionState.READY:
+                        xr.begin_session(
+                            session=session,
+                            begin_info=xr.SessionBeginInfo(
+                                view_configuration_type,
+                            ),
+                        )
+                        session_is_running = True
+                    elif session_state == xr.SessionState.STOPPING:
+                        session_is_running = False
+                        xr.end_session(session)
+                    elif session_state == xr.SessionState.EXITING:
+                        exit_render_loop = True
+                    elif session_state == xr.SessionState.LOSS_PENDING:
+                        exit_render_loop = True
+                    elif event_type == xr.StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX:
+                        vive_tracker_connected = cast(byref(event_buffer), POINTER(xr.EventDataViveTrackerConnectedHTCX)).contents
+                        paths = vive_tracker_connected.paths.contents
+                        persistent_path_str = xr.path_to_string(instance, paths.persistent_path)
+                        # print(f"Vive Tracker connected: {persistent_path_str}")
+                        if paths.role_path != xr.NULL_PATH:
+                            role_path_str = xr.path_to_string(instance, paths.role_path)
+                            # print(f" New role is: {role_path_str}")
+                        else:
+                            # print(f" No role path.")
+                            pass
+                    elif event_type == xr.StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED:
+                        # print("data interaction profile changed")
+                        # TODO:
+                        pass
+            except xr.EventUnavailable:
+                break
+            # end of poll_xr_events
+        if exit_render_loop:
+            break
+        if session_is_running:
+            if session_state in (
+                    xr.SessionState.READY,
+                    xr.SessionState.SYNCHRONIZED,
+                    xr.SessionState.VISIBLE,
+                    xr.SessionState.FOCUSED,
+            ):
+                # xr.request_exit_session(session)  # Request exit here allows clean exit
+                # Something about begin/wait/end_frame is making it hang at the end.
+                frame_state = xr.wait_frame(session, xr.FrameWaitInfo())
+                xr.begin_frame(session, xr.FrameBeginInfo())
+                render_layers = []
+                if frame_state.should_render:
+                    graphics.make_current()
+                    GL.glClearColor(1, 0.6, 0.6, 1)
+                    GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+                    time.sleep(0.02)
+                xr.end_frame(
+                    session,
+                    frame_end_info=xr.FrameEndInfo(
+                        display_time=frame_state.predicted_display_time,
+                        environment_blend_mode=xr.EnvironmentBlendMode.OPAQUE,
+                        layers=render_layers,
+                    )
+                )
+                # xr.request_exit_session(session)  # Request exit here allows clean exit but steamvr is hosed.
+            if frame_count > 100:
+                xr.request_exit_session(session)
+        else:
+            time.sleep(0.02)
 
 # Clean up
 graphics.destroy()
+logger.info("About to call xr.destroy_instance()...")
 xr.destroy_instance(instance)
+logger.info("... called xr.destroy_instance().")
