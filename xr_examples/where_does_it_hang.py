@@ -3,6 +3,10 @@ This is a work in progress...
 
 The goal here is to create the simplest case to demonstrate the hang that occurs
 in xr.destroy_instance() on Linux with SteamVR.
+
+The hang does not occur on Windows; it *does* occur on linux.
+The hang does not occur when calling xr.destroy_instance() without out any frame loop calls.
+  it *does* occur when calling xr.destroy_instance after running a frame loop.
 """
 
 import ctypes
@@ -36,7 +40,7 @@ pyopenxr_logger = logging.getLogger("pyopenxr")
 pyopenxr_logger.setLevel(logging.INFO)  # Modify argument according to your current needs
 
 # 3) Create a child logger for this particular program
-logger = logging.getLogger("pyopenxr.debug_all_the_things")
+logger = logging.getLogger("pyopenxr.where_does_it_hang")
 logger.info("Hey, this logging thing works!")  # Test it out
 
 # Use API layers for debugging
