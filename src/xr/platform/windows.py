@@ -70,12 +70,12 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     def __init__(
         self,
         view_format_count: Optional[int] = None,
-        view_formats: ArrayFieldParamType[int] = None,
+        view_formats: ArrayFieldParamType[c_int] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
         view_format_count, view_formats = array_field_helper(
-            int, view_format_count, view_formats)
+            c_int, view_format_count, view_formats)
         super().__init__(
             view_format_count=view_format_count,
             _view_formats=view_formats,
@@ -92,15 +92,15 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     @property
     def view_formats(self):
         if self.view_format_count == 0:
-            return (int * 0)()
+            return (c_int * 0)()
         else:
-            return (int * self.view_format_count).from_address(
+            return (c_int * self.view_format_count).from_address(
                 ctypes.addressof(self._view_formats.contents))
     
     @view_formats.setter
     def view_formats(self, value):
         self.view_format_count, self._view_formats = array_field_helper(
-            int, None, value)
+            c_int, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),

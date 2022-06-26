@@ -456,11 +456,14 @@ class StructItem(CodeItem):
         # Make a note of sequential count/pointer field pairs describing and input array
         # For example CompositionLayerProjection.view_count/views
         for ix, f in enumerate(self.fields):
-            if (f.name().endswith("_count")  # It's named like a count
+            if ((f.name().endswith("_count") or f.name().startswith("count_"))  # It's named like a count
                 and f.type.name(Api.PYTHON) == "int"  # It's typed like a count
                 and ix + 1 < len(self.fields)  # It's not the final field
             ):
-                stem = f.name()[:-6]  # Remove the final "_count"
+                if f.name().endswith("_count"):
+                    stem = f.name()[:-6]  # Remove the final "_count"
+                elif f.name().startswith("count_"):
+                    stem = f.name()[6:]  # Remove the initial "count_"
                 f2 = self.fields[ix + 1]  # Fetch the subsequent field to see if it matches
                 f2n = f2.name()  # e.g. "values"
                 if (f2n.endswith("s")   # It's plural
@@ -1049,8 +1052,8 @@ class ArrayPointerFieldCoder(FieldCoder):
         self.count_field = count_field
 
     def param_code(self) -> Generator[str, None, None]:
-        pn = self.field.type.pointee.name(Api.PYTHON)
-        if pn == "str":
+        pn = self.field.type.pointee.name(Api.CTYPES)
+        if pn == "c_char_p":
             pt = "StringArrayFieldParamType"
         elif "BaseHeader" in pn:
             pt = f"BaseArrayFieldParamType"
@@ -1063,8 +1066,8 @@ class ArrayPointerFieldCoder(FieldCoder):
         # Create a ctypes array if one does not already exist
         array = self.name
         count = self.count_field.name(Api.CTYPES)
-        element_type = self.field.type.pointee.name(Api.PYTHON)
-        if element_type == "str":
+        element_type = self.field.type.pointee.name(Api.CTYPES)
+        if element_type == "c_char_p":
             yield f"{count}, {array} = string_array_field_helper("
             yield f"    {count}, {array})"
         elif "BaseHeader" in element_type:
@@ -1076,9 +1079,7 @@ class ArrayPointerFieldCoder(FieldCoder):
 
     def property_code(self) -> Generator[str, None, None]:
         count = self.count_field.name(Api.CTYPES)
-        element_type = self.field.type.pointee.name(Api.PYTHON)
-        if element_type == "str":
-            element_type = "c_char_p"
+        element_type = self.field.type.pointee.name(Api.CTYPES)
         # getter
         yield "@property"
         yield f"def {self.name}(self):"

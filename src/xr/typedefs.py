@@ -1351,27 +1351,42 @@ class ActionCreateInfo(Structure):
         self,
         action_name: str = "",
         action_type: ActionType = ActionType(),
-        count_subaction_paths: int = 0,
-        subaction_paths: POINTER(c_uint64) = None,
+        count_subaction_paths: Optional[int] = None,
+        subaction_paths: ArrayFieldParamType[c_uint64] = None,
         localized_action_name: str = "",
         next: c_void_p = None,
         type: StructureType = StructureType.ACTION_CREATE_INFO,
     ) -> None:
+        count_subaction_paths, subaction_paths = array_field_helper(
+            c_uint64, count_subaction_paths, subaction_paths)
         super().__init__(
             action_name=action_name.encode(),
             action_type=ActionType(action_type).value,
             count_subaction_paths=count_subaction_paths,
-            subaction_paths=subaction_paths,
+            _subaction_paths=subaction_paths,
             localized_action_name=localized_action_name.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionCreateInfo(action_name={repr(self.action_name)}, action_type={repr(self.action_type)}, count_subaction_paths={repr(self.count_subaction_paths)}, subaction_paths={repr(self.subaction_paths)}, localized_action_name={repr(self.localized_action_name)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.ActionCreateInfo(action_name={repr(self.action_name)}, action_type={repr(self.action_type)}, count_subaction_paths={repr(self.count_subaction_paths)}, subaction_paths={repr(self._subaction_paths)}, localized_action_name={repr(self.localized_action_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionCreateInfo(action_name={self.action_name}, action_type={self.action_type}, count_subaction_paths={self.count_subaction_paths}, subaction_paths={self.subaction_paths}, localized_action_name={self.localized_action_name}, next={self.next}, type={self.type})"
+        return f"xr.ActionCreateInfo(action_name={self.action_name}, action_type={self.action_type}, count_subaction_paths={self.count_subaction_paths}, subaction_paths={self._subaction_paths}, localized_action_name={self.localized_action_name}, next={self.next}, type={self.type})"
+
+    @property
+    def subaction_paths(self):
+        if self.count_subaction_paths == 0:
+            return (c_uint64 * 0)()
+        else:
+            return (c_uint64 * self.count_subaction_paths).from_address(
+                ctypes.addressof(self._subaction_paths.contents))
+    
+    @subaction_paths.setter
+    def subaction_paths(self, value):
+        self.count_subaction_paths, self._subaction_paths = array_field_helper(
+            c_uint64, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -1379,7 +1394,7 @@ class ActionCreateInfo(Structure):
         ("action_name", (c_char * 64)),
         ("action_type", ActionType.ctype()),
         ("count_subaction_paths", c_uint32),
-        ("subaction_paths", POINTER(c_uint64)),
+        ("_subaction_paths", POINTER(c_uint64)),
         ("localized_action_name", (c_char * 128)),
     ]
 
@@ -1411,60 +1426,90 @@ class InteractionProfileSuggestedBinding(Structure):
     def __init__(
         self,
         interaction_profile: Path = 0,
-        count_suggested_bindings: int = 0,
-        suggested_bindings: POINTER(ActionSuggestedBinding) = None,
+        count_suggested_bindings: Optional[int] = None,
+        suggested_bindings: ArrayFieldParamType[ActionSuggestedBinding] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.INTERACTION_PROFILE_SUGGESTED_BINDING,
     ) -> None:
+        count_suggested_bindings, suggested_bindings = array_field_helper(
+            ActionSuggestedBinding, count_suggested_bindings, suggested_bindings)
         super().__init__(
             interaction_profile=interaction_profile,
             count_suggested_bindings=count_suggested_bindings,
-            suggested_bindings=suggested_bindings,
+            _suggested_bindings=suggested_bindings,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={repr(self.interaction_profile)}, count_suggested_bindings={repr(self.count_suggested_bindings)}, suggested_bindings={repr(self.suggested_bindings)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={repr(self.interaction_profile)}, count_suggested_bindings={repr(self.count_suggested_bindings)}, suggested_bindings={repr(self._suggested_bindings)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={self.interaction_profile}, count_suggested_bindings={self.count_suggested_bindings}, suggested_bindings={self.suggested_bindings}, next={self.next}, type={self.type})"
+        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={self.interaction_profile}, count_suggested_bindings={self.count_suggested_bindings}, suggested_bindings={self._suggested_bindings}, next={self.next}, type={self.type})"
+
+    @property
+    def suggested_bindings(self):
+        if self.count_suggested_bindings == 0:
+            return (ActionSuggestedBinding * 0)()
+        else:
+            return (ActionSuggestedBinding * self.count_suggested_bindings).from_address(
+                ctypes.addressof(self._suggested_bindings.contents))
+    
+    @suggested_bindings.setter
+    def suggested_bindings(self, value):
+        self.count_suggested_bindings, self._suggested_bindings = array_field_helper(
+            ActionSuggestedBinding, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("interaction_profile", Path),
         ("count_suggested_bindings", c_uint32),
-        ("suggested_bindings", POINTER(ActionSuggestedBinding)),
+        ("_suggested_bindings", POINTER(ActionSuggestedBinding)),
     ]
 
 
 class SessionActionSetsAttachInfo(Structure):
     def __init__(
         self,
-        count_action_sets: int = 0,
-        action_sets: POINTER(POINTER(ActionSet_T)) = None,
+        count_action_sets: Optional[int] = None,
+        action_sets: ArrayFieldParamType[POINTER(ActionSet_T)] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SESSION_ACTION_SETS_ATTACH_INFO,
     ) -> None:
+        count_action_sets, action_sets = array_field_helper(
+            POINTER(ActionSet_T), count_action_sets, action_sets)
         super().__init__(
             count_action_sets=count_action_sets,
-            action_sets=action_sets,
+            _action_sets=action_sets,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionActionSetsAttachInfo(count_action_sets={repr(self.count_action_sets)}, action_sets={repr(self.action_sets)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SessionActionSetsAttachInfo(count_action_sets={repr(self.count_action_sets)}, action_sets={repr(self._action_sets)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SessionActionSetsAttachInfo(count_action_sets={self.count_action_sets}, action_sets={self.action_sets}, next={self.next}, type={self.type})"
+        return f"xr.SessionActionSetsAttachInfo(count_action_sets={self.count_action_sets}, action_sets={self._action_sets}, next={self.next}, type={self.type})"
+
+    @property
+    def action_sets(self):
+        if self.count_action_sets == 0:
+            return (POINTER(ActionSet_T) * 0)()
+        else:
+            return (POINTER(ActionSet_T) * self.count_action_sets).from_address(
+                ctypes.addressof(self._action_sets.contents))
+    
+    @action_sets.setter
+    def action_sets(self, value):
+        self.count_action_sets, self._action_sets = array_field_helper(
+            POINTER(ActionSet_T), None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("count_action_sets", c_uint32),
-        ("action_sets", POINTER(POINTER(ActionSet_T))),
+        ("_action_sets", POINTER(POINTER(ActionSet_T))),
     ]
 
 
@@ -1727,29 +1772,44 @@ class ActiveActionSet(Structure):
 class ActionsSyncInfo(Structure):
     def __init__(
         self,
-        count_active_action_sets: int = 0,
-        active_action_sets: POINTER(ActiveActionSet) = None,
+        count_active_action_sets: Optional[int] = None,
+        active_action_sets: ArrayFieldParamType[ActiveActionSet] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.ACTIONS_SYNC_INFO,
     ) -> None:
+        count_active_action_sets, active_action_sets = array_field_helper(
+            ActiveActionSet, count_active_action_sets, active_action_sets)
         super().__init__(
             count_active_action_sets=count_active_action_sets,
-            active_action_sets=active_action_sets,
+            _active_action_sets=active_action_sets,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionsSyncInfo(count_active_action_sets={repr(self.count_active_action_sets)}, active_action_sets={repr(self.active_action_sets)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.ActionsSyncInfo(count_active_action_sets={repr(self.count_active_action_sets)}, active_action_sets={repr(self._active_action_sets)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.ActionsSyncInfo(count_active_action_sets={self.count_active_action_sets}, active_action_sets={self.active_action_sets}, next={self.next}, type={self.type})"
+        return f"xr.ActionsSyncInfo(count_active_action_sets={self.count_active_action_sets}, active_action_sets={self._active_action_sets}, next={self.next}, type={self.type})"
+
+    @property
+    def active_action_sets(self):
+        if self.count_active_action_sets == 0:
+            return (ActiveActionSet * 0)()
+        else:
+            return (ActiveActionSet * self.count_active_action_sets).from_address(
+                ctypes.addressof(self._active_action_sets.contents))
+    
+    @active_action_sets.setter
+    def active_action_sets(self, value):
+        self.count_active_action_sets, self._active_action_sets = array_field_helper(
+            ActiveActionSet, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("count_active_action_sets", c_uint32),
-        ("active_action_sets", POINTER(ActiveActionSet)),
+        ("_active_action_sets", POINTER(ActiveActionSet)),
     ]
 
 
@@ -6179,12 +6239,12 @@ class FacialExpressionsHTC(Structure):
         is_active: Bool32 = 0,
         sample_time: Time = 0,
         expression_count: Optional[int] = None,
-        expression_weightings: ArrayFieldParamType[float] = None,
+        expression_weightings: ArrayFieldParamType[c_float] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
     ) -> None:
         expression_count, expression_weightings = array_field_helper(
-            float, expression_count, expression_weightings)
+            c_float, expression_count, expression_weightings)
         super().__init__(
             is_active=is_active,
             sample_time=sample_time,
@@ -6203,15 +6263,15 @@ class FacialExpressionsHTC(Structure):
     @property
     def expression_weightings(self):
         if self.expression_count == 0:
-            return (float * 0)()
+            return (c_float * 0)()
         else:
-            return (float * self.expression_count).from_address(
+            return (c_float * self.expression_count).from_address(
                 ctypes.addressof(self._expression_weightings.contents))
     
     @expression_weightings.setter
     def expression_weightings(self, value):
         self.expression_count, self._expression_weightings = array_field_helper(
-            float, None, value)
+            c_float, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
