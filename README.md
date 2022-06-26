@@ -35,4 +35,4 @@ Study the complete working `hello_xr.py` example at https://github.com/cmbruns/p
 | type alias  | `xr.Version`                         | `XrVersion`                           |
 | enum type   | `xr.FormFactor`                      | `xrFormFactor`                        |
 | enum value  | `xr.FormFactor.HEAD_MOUNTED_DISPLAY` | `XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY` |
-| handle      | `xr.InstanceHandle`                  | `XrInstance`                          |
+| handle      | `xr.Instance`                        | `XrInstance`                          |
