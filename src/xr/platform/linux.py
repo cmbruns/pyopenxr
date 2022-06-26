@@ -3,9 +3,10 @@
 from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_void_p
 
 import ctypes
-from typing import Sequence
+from typing import Optional
 from OpenGL import GLX
 
+from ..array_field import *
 from ..enums import *
 from ..typedefs import *
 from ..version import *
@@ -52,48 +53,43 @@ META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME = "XR_META_vulkan_swapchain_cre
 class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     def __init__(
         self,
-        view_formats: Sequence[int] = (),
+        view_format_count: Optional[int] = None,
+        view_formats: ArrayFieldParamType[c_int] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
-        view_format_count = 0
-        if view_formats is not None:
-            view_format_count = len(view_formats)
-            if not isinstance(view_formats, ctypes.Array):
-                view_formats = (c_int * len(view_formats))(
-                    *view_formats)
-        self._view_formats_ctypes_array = view_formats
+        view_format_count, view_formats = array_field_helper(
+            c_int, view_format_count, view_formats)
         super().__init__(
-            _view_format_count=view_format_count,
+            view_format_count=view_format_count,
             _view_formats=view_formats,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self._view_format_count)}, view_formats={repr(self._view_formats)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self.view_format_count)}, view_formats={repr(self._view_formats)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self._view_format_count}, view_formats={self._view_formats}, next={self.next}, type={self.type})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self.view_format_count}, view_formats={self._view_formats}, next={self.next}, type={self.type})"
 
     @property
     def view_formats(self):
-        return self._view_formats_ctypes_array
+        if self.view_format_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.view_format_count).from_address(
+                ctypes.addressof(self._view_formats.contents))
     
-    # noinspection PyAttributeOutsideInit
     @view_formats.setter
     def view_formats(self, value):
-        if not isinstance(value, ctypes.Array):
-            value = (c_int * len(value))(
-                *value)
-        self._view_formats_ctypes_array = value
-        self._view_formats = value
-        self._view_format_count = len(value)
+        self.view_format_count, self._view_formats = array_field_helper(
+            c_int, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("_view_format_count", c_uint32),
+        ("view_format_count", c_uint32),
         ("_view_formats", POINTER(c_int)),
     ]
 
