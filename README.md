@@ -1,6 +1,8 @@
 # pyopenxr
 ### Unofficial python bindings for the [OpenXR SDK](https://github.com/KhronosGroup/OpenXR-SDK) to access VR and AR devices
 
+pyopenxr is a python developer SDK with features for device tracking and rapid virtual reality prototyping using the headset-agnostic OpenXR API.
+
 ![hello_xr1](https://user-images.githubusercontent.com/2649705/172025969-5cf276bd-2a6c-42a2-852a-0605fe72a716.PNG)
 
 
@@ -35,4 +37,4 @@ Study the complete working `hello_xr.py` example at https://github.com/cmbruns/p
 | type alias  | `xr.Version`                         | `XrVersion`                           |
 | enum type   | `xr.FormFactor`                      | `xrFormFactor`                        |
 | enum value  | `xr.FormFactor.HEAD_MOUNTED_DISPLAY` | `XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY` |
-| handle      | `xr.InstanceHandle`                  | `XrInstance`                          |
+| handle      | `xr.Instance`                        | `XrInstance`                          |
