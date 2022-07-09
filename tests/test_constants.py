@@ -12,8 +12,8 @@ class TestConstants(unittest.TestCase):
 
     def test_constants(self):
         # Ensure presence of certain constants
-        a = xr.NO_DURATION
-        a = xr.MIN_HAPTIC_DURATION  # Constant missing in 1.0.2203
+        xr.NO_DURATION
+        xr.MIN_HAPTIC_DURATION  # Constant missing in 1.0.2203
 
 
 if __name__ == '__main__':
