@@ -11,6 +11,7 @@ from . import (
     context_object,
     opengl_graphics,
     matrix4x4f,
+    extension,
 )
 
 from .version import *
@@ -26,8 +27,6 @@ from .context_object import *
 from .opengl_graphics import *
 from .matrix4x4f import *
 
-# Use submodule name for extension
-import xr.extension as extension
 
 # from .experiment import *
 

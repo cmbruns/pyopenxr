@@ -1,5 +1,3 @@
-from __future__ import annotations  # To support python 3.9+ style array type annotations
-
 import ctypes
 from ctypes import Array
 import enum
@@ -222,7 +220,7 @@ class SessionObject(object):
         )
         end_frame(self.handle, frame_end_info)
 
-    def locate_views(self) -> (ViewState, Array[View]):
+    def locate_views(self) -> (ViewState, Array):
         view_configuration_type = self.view_configuration_type
         # TODO: put this someplace else
         # TODO: if self.state....

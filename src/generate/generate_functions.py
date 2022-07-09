@@ -19,7 +19,6 @@ def main():
 
     functions.ctypes_names.update(["Array", "byref", "cast", "create_string_buffer", ])
 
-    print("from __future__ import annotations  # To support python 3.9+ style array type annotations")
     functions.print_header(api=xrg.Api.PYTHON)
     print("")
 

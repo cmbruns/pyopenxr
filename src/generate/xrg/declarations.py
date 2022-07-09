@@ -859,7 +859,8 @@ class BufferCoder(ParameterCoderBase):
         if self.array_type_name == "str":
             yield "str"
         else:  # array case
-            yield f"Array[{self.array_type_name}]"
+            # yield f"Array[{self.array_type_name}]"  # Not in python 3.6
+            yield f"Array"
 
     def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
         if self.array_type_name == "str":

@@ -1,4 +1,3 @@
-from __future__ import annotations  # To support python 3.9+ style array type annotations
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import Array, POINTER, byref, c_char, c_int64, c_uint32, cast, create_string_buffer
@@ -35,7 +34,7 @@ def get_instance_proc_addr(
 
 
 def enumerate_api_layer_properties(
-) -> Array[ApiLayerProperties]:
+) -> Array:
     """"""
     property_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateApiLayerProperties
@@ -60,7 +59,7 @@ def enumerate_api_layer_properties(
 
 def enumerate_instance_extension_properties(
     layer_name: str = None,
-) -> Array[ExtensionProperties]:
+) -> Array:
     """"""
     if layer_name is not None:
         layer_name = layer_name.encode()
@@ -216,7 +215,7 @@ def enumerate_environment_blend_modes(
     instance: Instance,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
-) -> Array[EnvironmentBlendMode.ctype()]:
+) -> Array:
     """"""
     environment_blend_mode_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateEnvironmentBlendModes
@@ -278,7 +277,7 @@ def destroy_session(
 
 def enumerate_reference_spaces(
     session: Session,
-) -> Array[ReferenceSpaceType.ctype()]:
+) -> Array:
     """"""
     space_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateReferenceSpaces
@@ -392,7 +391,7 @@ def destroy_space(
 def enumerate_view_configurations(
     instance: Instance,
     system_id: SystemId,
-) -> Array[ViewConfigurationType.ctype()]:
+) -> Array:
     """"""
     view_configuration_type_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateViewConfigurations
@@ -442,7 +441,7 @@ def enumerate_view_configuration_views(
     instance: Instance,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
-) -> Array[ViewConfigurationView]:
+) -> Array:
     """"""
     view_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateViewConfigurationViews
@@ -473,7 +472,7 @@ def enumerate_view_configuration_views(
 
 def enumerate_swapchain_formats(
     session: Session,
-) -> Array[c_int64]:
+) -> Array:
     """"""
     format_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainFormats
@@ -532,7 +531,7 @@ def destroy_swapchain(
 def enumerate_swapchain_images(
     swapchain: Swapchain,
     element_type: type,
-) -> Array[SwapchainImageBaseHeader]:
+) -> Array:
     """"""
     image_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainImages
@@ -688,7 +687,7 @@ def end_frame(
 def locate_views(
     session: Session,
     view_locate_info: ViewLocateInfo,
-) -> (ViewState, Array[View]):
+) -> (ViewState, Array):
     """"""
     view_state = ViewState()
     view_capacity_input = c_uint32(0)
@@ -959,7 +958,7 @@ def sync_actions(
 def enumerate_bound_sources_for_action(
     session: Session,
     enumerate_info: BoundSourcesForActionEnumerateInfo,
-) -> Array[Path]:
+) -> Array:
     """"""
     source_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateBoundSourcesForAction
