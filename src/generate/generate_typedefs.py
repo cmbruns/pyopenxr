@@ -21,7 +21,7 @@ def main():
         
         import os
         import sys
-        from typing import Generator, Optional, Sequence
+        from typing import Generator, Optional
         
         import numpy
         

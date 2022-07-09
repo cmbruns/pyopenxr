@@ -561,7 +561,7 @@ class StructItem(CodeItem):
                 return str(other) == str(self)
 
             def __str__(self):
-                return self.{string_field}.decode()      
+                return self.{string_field}.decode()
         """), "    ")
         result += "\n"
         return result
@@ -1088,9 +1088,9 @@ class ArrayPointerFieldCoder(FieldCoder):
         yield f"        return ({element_type} * 0)()"
         yield f"    else:"
         yield f"        return ({element_type} * self.{count}).from_address("
-        yield f"            ctypes.addressof(self.{self.inner_name}.contents))"
+        yield f"            ctypes.addressof(self.{self.inner_name}.contents))\n"
         # setter
-        yield ""
+        # yield ""
         # yield "# noinspection PyAttributeOutsideInit"
         yield f"@{self.name}.setter"
         yield f"def {self.name}(self, value):"
@@ -1299,12 +1299,14 @@ class StructureCoder(object):
             # Structure containing self-reference must be declared in two stanzas
             result += "\n    pass"
             result += f"\n\n\n{self.struct.name(api)}._fields_ = ["
+            for f in self.struct.fields:
+                result += f.code(api.CTYPES).replace("    ", "", 1)
+            result += "\n]"
         else:
             result += "\n    _fields_ = ["
-        for f in self.struct.fields:
-            result += f.code(api.CTYPES)
-        # result += "".join([f.code(Api.CTYPES) for f in self.fields])
-        result += "\n    ]"
+            for f in self.struct.fields:
+                result += f.code(api.CTYPES)
+            result += "\n    ]"
         return result
 
     def generate_properties(self) -> str:

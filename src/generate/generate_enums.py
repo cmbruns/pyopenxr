@@ -50,7 +50,7 @@ def main():
         @staticmethod
         def ctype():
             return c_int
-            
+    
 
     class FlagBase(enum.Flag, metaclass=DefaultEnumMeta):
         @staticmethod

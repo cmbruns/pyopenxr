@@ -5,7 +5,7 @@ import ctypes
 
 import os
 import sys
-from typing import Generator, Optional, Sequence
+from typing import Generator, Optional
 
 import numpy
 
@@ -121,7 +121,7 @@ class ApiLayerProperties(Structure):
         return str(other) == str(self)
 
     def __str__(self):
-        return self.layer_name.decode()      
+        return self.layer_name.decode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -160,7 +160,7 @@ class ExtensionProperties(Structure):
         return str(other) == str(self)
 
     def __str__(self):
-        return self.extension_name.decode()      
+        return self.extension_name.decode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -244,7 +244,7 @@ class InstanceCreateInfo(Structure):
         else:
             return (c_char_p * self.enabled_api_layer_count).from_address(
                 ctypes.addressof(self._enabled_api_layer_names.contents))
-    
+
     @enabled_api_layer_names.setter
     def enabled_api_layer_names(self, value):
         self.enabled_api_layer_count, self._enabled_api_layer_names = string_array_field_helper(
@@ -257,7 +257,7 @@ class InstanceCreateInfo(Structure):
         else:
             return (c_char_p * self.enabled_extension_count).from_address(
                 ctypes.addressof(self._enabled_extension_names.contents))
-    
+
     @enabled_extension_names.setter
     def enabled_extension_names(self, value):
         self.enabled_extension_count, self._enabled_extension_names = string_array_field_helper(
@@ -1156,7 +1156,7 @@ class FrameEndInfo(Structure):
         else:
             return (POINTER(CompositionLayerBaseHeader) * self.layer_count).from_address(
                 ctypes.addressof(self._layers.contents))
-    
+
     @layers.setter
     def layers(self, value):
         self.layer_count, self._layers = base_array_field_helper(
@@ -1382,7 +1382,7 @@ class ActionCreateInfo(Structure):
         else:
             return (c_uint64 * self.count_subaction_paths).from_address(
                 ctypes.addressof(self._subaction_paths.contents))
-    
+
     @subaction_paths.setter
     def subaction_paths(self, value):
         self.count_subaction_paths, self._subaction_paths = array_field_helper(
@@ -1454,7 +1454,7 @@ class InteractionProfileSuggestedBinding(Structure):
         else:
             return (ActionSuggestedBinding * self.count_suggested_bindings).from_address(
                 ctypes.addressof(self._suggested_bindings.contents))
-    
+
     @suggested_bindings.setter
     def suggested_bindings(self, value):
         self.count_suggested_bindings, self._suggested_bindings = array_field_helper(
@@ -1499,7 +1499,7 @@ class SessionActionSetsAttachInfo(Structure):
         else:
             return (POINTER(ActionSet_T) * self.count_action_sets).from_address(
                 ctypes.addressof(self._action_sets.contents))
-    
+
     @action_sets.setter
     def action_sets(self, value):
         self.count_action_sets, self._action_sets = array_field_helper(
@@ -1799,7 +1799,7 @@ class ActionsSyncInfo(Structure):
         else:
             return (ActiveActionSet * self.count_active_action_sets).from_address(
                 ctypes.addressof(self._active_action_sets.contents))
-    
+
     @active_action_sets.setter
     def active_action_sets(self, value):
         self.count_active_action_sets, self._active_action_sets = array_field_helper(
@@ -1941,9 +1941,9 @@ class BaseInStructure(Structure):
 
 
 BaseInStructure._fields_ = [
-        ("type", StructureType.ctype()),
-        ("next", POINTER(BaseInStructure)),
-    ]
+    ("type", StructureType.ctype()),
+    ("next", POINTER(BaseInStructure)),
+]
 
 
 class BaseOutStructure(Structure):
@@ -1967,9 +1967,9 @@ class BaseOutStructure(Structure):
 
 
 BaseOutStructure._fields_ = [
-        ("type", StructureType.ctype()),
-        ("next", POINTER(BaseOutStructure)),
-    ]
+    ("type", StructureType.ctype()),
+    ("next", POINTER(BaseOutStructure)),
+]
 
 
 class Offset2Di(Structure):
@@ -2187,7 +2187,7 @@ class CompositionLayerProjection(Structure):
         else:
             return (CompositionLayerProjectionView * self.view_count).from_address(
                 ctypes.addressof(self._views.contents))
-    
+
     @views.setter
     def views(self, value):
         self.view_count, self._views = array_field_helper(
@@ -3165,7 +3165,7 @@ class BindingModificationsKHR(Structure):
         else:
             return (POINTER(BindingModificationBaseHeaderKHR) * self.binding_modification_count).from_address(
                 ctypes.addressof(self._binding_modifications.contents))
-    
+
     @binding_modifications.setter
     def binding_modifications(self, value):
         self.binding_modification_count, self._binding_modifications = base_array_field_helper(
@@ -3330,7 +3330,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         else:
             return (DebugUtilsObjectNameInfoEXT * self.object_count).from_address(
                 ctypes.addressof(self._objects.contents))
-    
+
     @objects.setter
     def objects(self, value):
         self.object_count, self._objects = array_field_helper(
@@ -3343,7 +3343,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         else:
             return (DebugUtilsLabelEXT * self.session_label_count).from_address(
                 ctypes.addressof(self._session_labels.contents))
-    
+
     @session_labels.setter
     def session_labels(self, value):
         self.session_label_count, self._session_labels = array_field_helper(
@@ -4021,7 +4021,7 @@ class HandJointLocationsEXT(Structure):
         else:
             return (HandJointLocationEXT * self.joint_count).from_address(
                 ctypes.addressof(self._joint_locations.contents))
-    
+
     @joint_locations.setter
     def joint_locations(self, value):
         self.joint_count, self._joint_locations = array_field_helper(
@@ -4066,7 +4066,7 @@ class HandJointVelocitiesEXT(Structure):
         else:
             return (HandJointVelocityEXT * self.joint_count).from_address(
                 ctypes.addressof(self._joint_velocities.contents))
-    
+
     @joint_velocities.setter
     def joint_velocities(self, value):
         self.joint_count, self._joint_velocities = array_field_helper(
@@ -4365,7 +4365,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
         else:
             return (c_int * self.view_configuration_count).from_address(
                 ctypes.addressof(self._enabled_view_configuration_types.contents))
-    
+
     @enabled_view_configuration_types.setter
     def enabled_view_configuration_types(self, value):
         self.view_configuration_count, self._enabled_view_configuration_types = array_field_helper(
@@ -4438,7 +4438,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
         else:
             return (SecondaryViewConfigurationStateMSFT * self.view_configuration_count).from_address(
                 ctypes.addressof(self._view_configuration_states.contents))
-    
+
     @view_configuration_states.setter
     def view_configuration_states(self, value):
         self.view_configuration_count, self._view_configuration_states = array_field_helper(
@@ -4486,7 +4486,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         else:
             return (POINTER(CompositionLayerBaseHeader) * self.layer_count).from_address(
                 ctypes.addressof(self._layers.contents))
-    
+
     @layers.setter
     def layers(self, value):
         self.layer_count, self._layers = base_array_field_helper(
@@ -5185,7 +5185,7 @@ class SceneBoundsMSFT(Structure):
         else:
             return (SceneSphereBoundMSFT * self.sphere_count).from_address(
                 ctypes.addressof(self._spheres.contents))
-    
+
     @spheres.setter
     def spheres(self, value):
         self.sphere_count, self._spheres = array_field_helper(
@@ -5198,7 +5198,7 @@ class SceneBoundsMSFT(Structure):
         else:
             return (SceneOrientedBoxBoundMSFT * self.box_count).from_address(
                 ctypes.addressof(self._boxes.contents))
-    
+
     @boxes.setter
     def boxes(self, value):
         self.box_count, self._boxes = array_field_helper(
@@ -5211,7 +5211,7 @@ class SceneBoundsMSFT(Structure):
         else:
             return (SceneFrustumBoundMSFT * self.frustum_count).from_address(
                 ctypes.addressof(self._frustums.contents))
-    
+
     @frustums.setter
     def frustums(self, value):
         self.frustum_count, self._frustums = array_field_helper(
@@ -5265,7 +5265,7 @@ class NewSceneComputeInfoMSFT(Structure):
         else:
             return (c_int * self.requested_feature_count).from_address(
                 ctypes.addressof(self._requested_features.contents))
-    
+
     @requested_features.setter
     def requested_features(self, value):
         self.requested_feature_count, self._requested_features = array_field_helper(
@@ -5451,7 +5451,7 @@ class SceneComponentLocationsMSFT(Structure):
         else:
             return (SceneComponentLocationMSFT * self.location_count).from_address(
                 ctypes.addressof(self._locations.contents))
-    
+
     @locations.setter
     def locations(self, value):
         self.location_count, self._locations = array_field_helper(
@@ -5499,7 +5499,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
         else:
             return (UuidMSFT * self.component_id_count).from_address(
                 ctypes.addressof(self._component_ids.contents))
-    
+
     @component_ids.setter
     def component_ids(self, value):
         self.component_id_count, self._component_ids = array_field_helper(
@@ -5565,7 +5565,7 @@ class SceneObjectsMSFT(Structure):
         else:
             return (SceneObjectMSFT * self.scene_object_count).from_address(
                 ctypes.addressof(self._scene_objects.contents))
-    
+
     @scene_objects.setter
     def scene_objects(self, value):
         self.scene_object_count, self._scene_objects = array_field_helper(
@@ -5637,7 +5637,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
         else:
             return (c_int * self.object_type_count).from_address(
                 ctypes.addressof(self._object_types.contents))
-    
+
     @object_types.setter
     def object_types(self, value):
         self.object_type_count, self._object_types = array_field_helper(
@@ -5712,7 +5712,7 @@ class ScenePlanesMSFT(Structure):
         else:
             return (ScenePlaneMSFT * self.scene_plane_count).from_address(
                 ctypes.addressof(self._scene_planes.contents))
-    
+
     @scene_planes.setter
     def scene_planes(self, value):
         self.scene_plane_count, self._scene_planes = array_field_helper(
@@ -5756,7 +5756,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
         else:
             return (c_int * self.alignment_count).from_address(
                 ctypes.addressof(self._alignments.contents))
-    
+
     @alignments.setter
     def alignments(self, value):
         self.alignment_count, self._alignments = array_field_helper(
@@ -5823,7 +5823,7 @@ class SceneMeshesMSFT(Structure):
         else:
             return (SceneMeshMSFT * self.scene_mesh_count).from_address(
                 ctypes.addressof(self._scene_meshes.contents))
-    
+
     @scene_meshes.setter
     def scene_meshes(self, value):
         self.scene_mesh_count, self._scene_meshes = array_field_helper(
@@ -6084,7 +6084,7 @@ class SceneDeserializeInfoMSFT(Structure):
         else:
             return (DeserializeSceneFragmentMSFT * self.fragment_count).from_address(
                 ctypes.addressof(self._fragments.contents))
-    
+
     @fragments.setter
     def fragments(self, value):
         self.fragment_count, self._fragments = array_field_helper(
@@ -6267,7 +6267,7 @@ class FacialExpressionsHTC(Structure):
         else:
             return (c_float * self.expression_count).from_address(
                 ctypes.addressof(self._expression_weightings.contents))
-    
+
     @expression_weightings.setter
     def expression_weightings(self, value):
         self.expression_count, self._expression_weightings = array_field_helper(
@@ -8138,7 +8138,7 @@ class SpaceUuidFilterInfoFB(Structure):
         else:
             return (UuidEXT * self.uuid_count).from_address(
                 ctypes.addressof(self._uuids.contents))
-    
+
     @uuids.setter
     def uuids(self, value):
         self.uuid_count, self._uuids = array_field_helper(

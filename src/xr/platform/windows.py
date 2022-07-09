@@ -96,7 +96,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         else:
             return (c_int * self.view_format_count).from_address(
                 ctypes.addressof(self._view_formats.contents))
-    
+
     @view_formats.setter
     def view_formats(self, value):
         self.view_format_count, self._view_formats = array_field_helper(
