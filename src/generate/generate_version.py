@@ -70,6 +70,9 @@ print(
             return (((int(self.major) & 0xffff) << 48) 
                     | ((int(self.minor) & 0xffff) << 32) 
                     | (int(self.patch) & 0xffffffff))
+    
+        def __int__(self) -> int:
+            return self.__index__()
 
         def number(self) -> int:
             """Packed xr.VersionNumber"""
