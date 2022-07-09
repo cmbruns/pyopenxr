@@ -20,7 +20,12 @@ class TestCreateInfo(unittest.TestCase):
         xr.SwapchainCreateInfo()
 
     def test_default_constructible2(self):
-        xr.create_instance()  # But *not* TypeError
+        try:
+            xr.create_instance()
+        except xr.RuntimeUnavailableError:
+            # Pass test on machine with no OpenXR runtime running.
+            # But *not* TypeError
+            pass
 
 
 if __name__ == '__main__':
