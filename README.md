@@ -38,3 +38,8 @@ Study the complete working `hello_xr.py` example at https://github.com/cmbruns/p
 | enum type   | `xr.FormFactor`                      | `xrFormFactor`                        |
 | enum value  | `xr.FormFactor.HEAD_MOUNTED_DISPLAY` | `XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY` |
 | handle      | `xr.Instance`                        | `XrInstance`                          |
+
+### Build Status
+
+![Build Status](https://github.com/cmbruns/pyopenxr/actions/workflows/python-package.yml/badge.svg)
+
