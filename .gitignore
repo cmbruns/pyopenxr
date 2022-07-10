@@ -11,3 +11,4 @@ build_cmake/
 /src/generate/xrg/headers/xr.xml
 /src/generate/xrg/headers/*.h
 src/generate/xrg/libclang*.so
+/doc/build
