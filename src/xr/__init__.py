@@ -1,3 +1,8 @@
+"""
+`xr` is the top level module of the pyopenxr unofficial python bindings for the
+OpenXR SDK to access VR and AR devices.
+"""
+
 from . import (
     version,
     constants,
