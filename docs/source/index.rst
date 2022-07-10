@@ -7,7 +7,7 @@ Welcome to pyopenxr's documentation!
 
    install
    support
-   api
+   xr
 
 
 Indices and tables
