@@ -3,6 +3,9 @@
 
 pyopenxr is a python developer SDK with features for device tracking and rapid virtual reality prototyping using the headset-agnostic OpenXR API.
 
+![Build Status](https://github.com/cmbruns/pyopenxr/actions/workflows/python-package.yml/badge.svg)
+[![Documentation Status](https://readthedocs.org/projects/pyopenxr/badge/?version=latest)](https://pyopenxr.readthedocs.io/en/latest/?badge=latest)
+
 ![hello_xr1](https://user-images.githubusercontent.com/2649705/172025969-5cf276bd-2a6c-42a2-852a-0605fe72a716.PNG)
 
 
@@ -39,7 +42,4 @@ Study the complete working `hello_xr.py` example at https://github.com/cmbruns/p
 | enum value  | `xr.FormFactor.HEAD_MOUNTED_DISPLAY` | `XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY` |
 | handle      | `xr.Instance`                        | `XrInstance`                          |
 
-### Build Status
-
-![Build Status](https://github.com/cmbruns/pyopenxr/actions/workflows/python-package.yml/badge.svg)
 
