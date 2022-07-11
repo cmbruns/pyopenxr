@@ -11,7 +11,7 @@ from xrg.registry import xr_registry
 from xrg.vendor_tags import vendor_tags
 
 
-def camel_word(word: re.Match) -> str:
+def camel_word(word) -> str:
     s = word.group(1) + word.group(2)
     if s in vendor_tags:
         return s
