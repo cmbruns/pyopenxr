@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 import re
+import urllib.request
 
 
 class OpenXrDocstringParser(HTMLParser):
@@ -47,10 +48,12 @@ class OpenXrDocstringParser(HTMLParser):
 
 
 def create_docstring(function_name: str) -> str:
-    html_file_name = f"C:/Users/cmbruns/Documents/git/OpenXR-Registry/specs/1.0/man/html/{function_name}.html"
+    url = f"https://registry.khronos.org/OpenXR/specs/1.0/man/html/{function_name}.html"
+    headers = {"User-Agent": "Mozilla"}
     parser = OpenXrDocstringParser(function_name)
-    with open(html_file_name, "r") as fh:
-        page = fh.read()
+    request = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(request) as response:
+        page = response.read().decode()
     parser.feed(page)
     return parser.docstring
 
