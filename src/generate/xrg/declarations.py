@@ -12,6 +12,7 @@ from .default_values import default_values
 from .types import *
 from .registry import xr_registry
 from .vendor_tags import vendor_tags
+from .docstrings import create_docstring
 
 
 class SkippableCodeItemException(Exception):
@@ -321,9 +322,23 @@ class FunctionItem(CodeItem):
 
         if api == Api.CTYPES:
             # ctypes raw function definition
-            result = inspect.cleandoc(
+            result = ""
+            result += inspect.cleandoc(
                 f"""
                 {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
+                """)
+            docstring = create_docstring(self.name(Api.C))
+            if docstring is not None:
+                result += f'\n{self.name(Api.C)}.__doc__ = """\n'
+                result += "\n".join(textwrap.wrap(
+                    docstring,
+                    initial_indent="    ",
+                    subsequent_indent="    ",
+                ))
+                result += '\n"""'
+            result += "\n"
+            result += inspect.cleandoc(
+                f"""
                 {self.name(Api.C)}.restype = {self.return_type.name(Api.PYTHON)}
                 {self.name(Api.C)}.argtypes = [
                 """)
