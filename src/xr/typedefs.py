@@ -7136,6 +7136,8 @@ class GeometryInstanceFB_T(Structure):
 
 GeometryInstanceFB = POINTER(GeometryInstanceFB_T)
 
+PassthroughCapabilityFlagsFBCInt = Flags64
+
 PassthroughFlagsFBCInt = Flags64
 
 PassthroughStateChangedFlagsFBCInt = Flags64
@@ -7164,6 +7166,32 @@ class SystemPassthroughPropertiesFB(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("supports_passthrough", Bool32),
+    ]
+
+
+class SystemPassthroughProperties2FB(Structure):
+    def __init__(
+        self,
+        capabilities: PassthroughCapabilityFlagsFB = PassthroughCapabilityFlagsFB(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_PASSTHROUGH_PROPERTIES2_FB,
+    ) -> None:
+        super().__init__(
+            capabilities=PassthroughCapabilityFlagsFB(capabilities).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPassthroughProperties2FB(capabilities={repr(self.capabilities)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPassthroughProperties2FB(capabilities={self.capabilities}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capabilities", PassthroughCapabilityFlagsFBCInt),
     ]
 
 
@@ -9303,6 +9331,7 @@ __all__ = [
     "PFN_xrWaitFrame",
     "PFN_xrWaitSwapchainImage",
     "PassthroughBrightnessContrastSaturationFB",
+    "PassthroughCapabilityFlagsFBCInt",
     "PassthroughColorMapMonoToMonoFB",
     "PassthroughColorMapMonoToRgbaFB",
     "PassthroughCreateInfoFB",
@@ -9440,6 +9469,7 @@ __all__ = [
     "SystemId",
     "SystemKeyboardTrackingPropertiesFB",
     "SystemMarkerTrackingPropertiesVARJO",
+    "SystemPassthroughProperties2FB",
     "SystemPassthroughPropertiesFB",
     "SystemProperties",
     "SystemRenderModelPropertiesFB",

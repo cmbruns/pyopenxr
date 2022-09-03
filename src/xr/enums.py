@@ -315,6 +315,7 @@ class StructureType(EnumBase):
     COMPOSITION_LAYER_PASSTHROUGH_FB = 1000118003
     GEOMETRY_INSTANCE_CREATE_INFO_FB = 1000118004
     GEOMETRY_INSTANCE_TRANSFORM_FB = 1000118005
+    SYSTEM_PASSTHROUGH_PROPERTIES2_FB = 1000118006
     PASSTHROUGH_STYLE_FB = 1000118020
     PASSTHROUGH_COLOR_MAP_MONO_TO_RGBA_FB = 1000118021
     PASSTHROUGH_COLOR_MAP_MONO_TO_MONO_FB = 1000118022
@@ -897,9 +898,17 @@ class TriangleMeshFlagsFB(FlagBase):
     MUTABLE_BIT = 0x00000001
 
 
+class PassthroughCapabilityFlagsFB(FlagBase):
+    NONE = 0x00000000
+    BIT = 0x00000001
+    COLOR_BIT = 0x00000002
+    LAYER_DEPTH_BIT = 0x00000004
+
+
 class PassthroughFlagsFB(FlagBase):
     NONE = 0x00000000
     IS_RUNNING_AT_CREATION_BIT = 0x00000001
+    LAYER_DEPTH_BIT = 0x00000002
 
 
 class PassthroughStateChangedFlagsFB(FlagBase):
@@ -978,6 +987,7 @@ __all__ = [
     "ObjectType",
     "OverlayMainSessionFlagsEXTX",
     "OverlaySessionCreateFlagsEXTX",
+    "PassthroughCapabilityFlagsFB",
     "PassthroughFlagsFB",
     "PassthroughLayerPurposeFB",
     "PassthroughStateChangedFlagsFB",
