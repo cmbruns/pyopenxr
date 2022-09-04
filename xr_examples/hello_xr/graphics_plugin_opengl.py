@@ -19,6 +19,7 @@ import xr
 
 from .geometry import c_cubeVertices, c_cubeIndices, Vertex
 from .linear import GraphicsAPI, Matrix4x4f
+from .options import Options
 
 logger = logging.getLogger("hello_xr.graphics_plugin_opengl")
 
@@ -54,10 +55,11 @@ fragment_shader_glsl = inspect.cleandoc("""
 
 
 class OpenGLGraphicsPlugin(IGraphicsPlugin):
-    def __init__(self):
+    def __init__(self, options: Options):
         super().__init__()
         self.window = None
 
+        self.background_clear_color = options.background_clear_color
         if platform.system() == "Windows":
             self._graphics_binding = xr.GraphicsBindingOpenGLWin32KHR()
         elif platform.system() == "Linux":
@@ -75,7 +77,6 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         # Map color buffer to associated depth buffer. This map is populated on demand.
         self.color_to_depth_map: Dict[int, int] = {}
         self.debug_message_proc = None  # To keep the callback alive
-        self.background_clear_color = (0, 0, 0.5, 0)  # blue
 
     def __enter__(self):
         return self
@@ -339,8 +340,8 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
                     return sf
         raise RuntimeError("No runtime swapchain format supported for color swapchain")
 
-    def set_background_clear_color(self, color) -> None:
-        self.background_clear_color = color
+    def update_options(self, options) -> None:
+        self.background_clear_color = options.background_clear_color
 
     def window_should_close(self):
         return glfw.window_should_close(self.window)

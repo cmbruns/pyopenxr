@@ -18,3 +18,6 @@ class XlibPlatformPlugin(IPlatformPlugin):
     @property
     def instance_extensions(self):
         return []
+
+    def update_options(self, options) -> None:
+        pass

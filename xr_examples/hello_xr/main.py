@@ -17,6 +17,7 @@ from xr_examples.hello_xr.openxr_program import OpenXRProgram
 from xr_examples.hello_xr.graphics_plugin_opengl import OpenGLGraphicsPlugin
 from xr_examples.hello_xr.platform_plugin_win32 import Win32PlatformPlugin
 from xr_examples.hello_xr.platform_plugin_xlib import XlibPlatformPlugin
+from .options import Options
 
 key_press_event = threading.Event()
 logger = logging.getLogger("hello_xr.main")
@@ -27,9 +28,9 @@ def create_graphics_plugin(options: argparse.Namespace) -> IGraphicsPlugin:
     graphics_plugin_map = {
         "OpenGL": OpenGLGraphicsPlugin,
     }
-    if options.graphics not in graphics_plugin_map:
+    if options.graphics_plugin not in graphics_plugin_map:
         raise NotImplementedError
-    return graphics_plugin_map[options.graphics]()
+    return graphics_plugin_map[options.graphics_plugin](options)
 
 
 def create_platform_plugin(_options: argparse.Namespace) -> IPlatformPlugin:
@@ -56,15 +57,8 @@ def main():
         datefmt='%m/%d/%y %I:%M:%S',
         level=logging.INFO,
     )
-    options = update_options_from_command_line()
-    if options.blendmode == "Opaque":
-        background_clear_color = (0.184313729, 0.309803933, 0.309803933, 1.0)  # SlateGrey
-    elif options.blendmode == "Additive":
-        background_clear_color = (0, 0, 0, 1)  # Black
-    elif options.blendmode == "AlphaBlend":
-        background_clear_color = (0, 0, 0, 0)  # TransparentBlack
-    else:
-        raise NotImplementedError
+    options = Options()
+    update_options_from_command_line(options)
 
     # Install keyboard handler to exit on keypress
     threading.Thread(target=poll_keyboard, daemon=True).start()
@@ -76,9 +70,15 @@ def main():
         # Create graphics API implementation.
         with create_graphics_plugin(options) as graphics_plugin, \
              OpenXRProgram(options, platform_plugin, graphics_plugin) as program:
-            graphics_plugin.set_background_clear_color(background_clear_color)
             program.create_instance()
             program.initialize_system()
+
+            options.set_environment_blend_mode(program.preferred_blend_mode)
+            update_options_from_command_line(options)
+            platform_plugin.update_options(options)
+            graphics_plugin.update_options(options)
+
+            program.initialize_device()
             program.initialize_session()
             program.create_swapchains()
             while not key_press_event.is_set():
@@ -103,35 +103,46 @@ def main():
                 break
 
 
-def update_options_from_command_line() -> argparse.Namespace:
+def update_options_from_command_line(options: Options) -> bool:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--graphics", "-g", default="OpenGL",
+        "--graphics", "-g",
         choices=["D3D11", "D3D12", "OpenGLES", "OpenGL", "Vulkan2", "Vulkan"],
     )
     parser.add_argument(
-        "--formfactor", "-ff", default="Hmd",
+        "--formfactor", "-ff",
         choices=["Hmd", "Handheld"],
     )
     parser.add_argument(
-        "--viewconfig", "-vc", default="Stereo",
+        "--viewconfig", "-vc",
         choices=["Mono", "Stereo"],
     )
     parser.add_argument(
-        "--blendmode", "-bm", default="Opaque",
+        "--blendmode", "-bm",
         choices=["Opaque", "Additive", "AlphaBlend"],
     )
     parser.add_argument(
-        "--space", "-s", default="Local",
+        "--space", "-s",
         choices=["View", "Local", "Stage"],
     )
     parser.add_argument(
         "--verbose", "-v", action="store_true",
     )
-    options = parser.parse_args()
-    if options.verbose:
+    parsed = parser.parse_args()
+    if parsed.verbose:
         logging.getLogger("hello_xr").setLevel(logging.DEBUG)
-    return options
+    if parsed.graphics is not None:
+        options.graphics_plugin = parsed.graphics
+    if parsed.formfactor is not None:
+        options.form_factor = parsed.formfactor
+    if parsed.viewconfig is not None:
+        options.view_configuration = parsed.viewconfig
+    if parsed.blendmode is not None:
+        options.environment_blend_mode = parsed.blendmode
+    if parsed.space is not None:
+        options.app_space = parsed.space
+    options.parse_strings()
+    return True
 
 
 if __name__ == "__main__":

@@ -25,6 +25,7 @@ import xr.raw_functions
 
 from .graphics_plugin import Cube, IGraphicsPlugin
 from .platform_plugin import IPlatformPlugin
+from .options import Options
 
 logger = logging.getLogger("hello_xr.program")
 
@@ -79,8 +80,6 @@ class OpenXRProgram(object):
         self.session = None
         self.app_space = None
         self.form_factor = xr.FormFactor.HEAD_MOUNTED_DISPLAY
-        self.view_config_type = xr.ViewConfigurationType.PRIMARY_STEREO
-        self.environment_blend_mode = xr.EnvironmentBlendMode.OPAQUE
         self.system = None  # Higher level System class, not just ID
 
         self.config_views = []
@@ -98,6 +97,12 @@ class OpenXRProgram(object):
 
         self.event_data_buffer = xr.EventDataBuffer()
         self.input = OpenXRProgram.InputState()
+
+        self.acceptable_blend_modes = [
+            xr.EnvironmentBlendMode.OPAQUE,
+            xr.EnvironmentBlendMode.ADDITIVE,
+            xr.EnvironmentBlendMode.ALPHA_BLEND,
+        ]
 
     def __enter__(self):
         return self
@@ -200,13 +205,13 @@ class OpenXRProgram(object):
         # Note: No other view configurations exist at the time this (C++) code was written. If this
         # condition is not met, the project will need to be audited to see how support should be
         # added.
-        if self.view_config_type != xr.ViewConfigurationType.PRIMARY_STEREO:
+        if self.options.parsed["view_config_type"] != xr.ViewConfigurationType.PRIMARY_STEREO:
             raise RuntimeError("Unsupported view configuration type")
         # Query and cache view configuration views.
         self.config_views = xr.enumerate_view_configuration_views(
             instance=self.instance.handle,
             system_id=self.system.id,
-            view_configuration_type=self.view_config_type,
+            view_configuration_type=self.options.parsed["view_config_type"],
         )
         # Create and cache view buffer for xrLocateViews later.
         view_count = len(self.config_views)
@@ -305,7 +310,7 @@ class OpenXRProgram(object):
             xr.begin_session(
                 session=self.session,
                 begin_info=xr.SessionBeginInfo(
-                    primary_view_configuration_type=self.view_config_type,
+                    primary_view_configuration_type=self.options.parsed["view_config_type"],
                 ),
             )
             self.session_running = True
@@ -504,7 +509,7 @@ class OpenXRProgram(object):
         self.create_visualized_spaces()
         self.app_space = xr.create_reference_space(
             session=self.session,
-            create_info=get_xr_reference_space_create_info(self.options.space),
+            create_info=get_xr_reference_space_create_info(self.options.app_space),
         )
 
     def initialize_system(self) -> None:
@@ -514,13 +519,13 @@ class OpenXRProgram(object):
         """
         assert self.instance is not None
         assert self.system is None
-        form_factor = get_xr_form_factor(self.options.formfactor)
-        self.view_config_type = get_xr_view_configuration_type(self.options.viewconfig)
-        self.environment_blend_mode = get_xr_environment_blend_mode(self.options.blendmode)
+        form_factor = Options.get_xr_form_factor(self.options.form_factor)
         self.system = xr.SystemObject(instance=self.instance, form_factor=form_factor)
         logger.debug(f"Using system {hex(self.system.id.value)} for form factor {str(form_factor)}")
         assert self.instance.handle is not None
         assert self.system.id is not None
+
+    def initialize_device(self):
         self.log_view_configurations()
         # The graphics API can initialize the graphics device now that the systemId and instance
         # handle are available.
@@ -560,7 +565,7 @@ class OpenXRProgram(object):
         blend_mode_found = False
         for mode_value in blend_modes:
             mode = xr.EnvironmentBlendMode(mode_value)
-            blend_mode_match = mode == self.environment_blend_mode
+            blend_mode_match = mode == self.options.parsed["environment_blend_mode"]
             logger.info(f"Environment Blend Mode ({str(mode)}) : "
                         f"{'(Selected)' if blend_mode_match else ''}")
             blend_mode_found |= blend_mode_match
@@ -604,7 +609,7 @@ class OpenXRProgram(object):
             view_config_type = xr.ViewConfigurationType(view_config_type_value)
             logger.debug(
                 f"  View Configuration Type: {str(view_config_type)} "
-                f"{'(Selected)' if view_config_type == self.view_config_type else ''}")
+                f"{'(Selected)' if view_config_type == self.options.parsed['view_config_type'] else ''}")
             view_config_properties = xr.get_view_configuration_properties(
                 instance=self.instance.handle,
                 system_id=self.system.id,
@@ -721,6 +726,14 @@ class OpenXRProgram(object):
                 logger.debug(f"Ignoring event type {str(event_type)}")
         return exit_render_loop, request_restart
 
+    @property
+    def preferred_blend_mode(self):
+        blend_modes = xr.enumerate_environment_blend_modes(self.instance.handle, self.system.id, self.options.parsed["view_config_type"])
+        for blend_mode in blend_modes:
+            if blend_mode in self.acceptable_blend_modes:
+                return blend_mode
+        raise RuntimeError("No acceptable blend mode returned from the xrEnumerateEnvironmentBlendModes")
+
     def render_frame(self) -> None:
         """Create and submit a frame."""
         assert self.session is not None
@@ -732,7 +745,7 @@ class OpenXRProgram(object):
 
         layers = []
         layer_flags = 0
-        if self.options.blendmode == "AlphaBlend":
+        if self.options.environment_blend_mode == "AlphaBlend":
             layer_flags = xr.COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT \
                 | xr.COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
         layer = xr.CompositionLayerProjection(
@@ -750,7 +763,7 @@ class OpenXRProgram(object):
             session=self.session,
             frame_end_info=xr.FrameEndInfo(
                 display_time=frame_state.predicted_display_time,
-                environment_blend_mode=self.environment_blend_mode,
+                environment_blend_mode=self.options.parsed["environment_blend_mode"],
                 layers=layers,
             ),
         )
@@ -765,7 +778,7 @@ class OpenXRProgram(object):
         view_state, self.views = xr.locate_views(
             session=self.session,
             view_locate_info=xr.ViewLocateInfo(
-                view_configuration_type=self.view_config_type,
+                view_configuration_type=self.options.parsed["view_config_type"],
                 display_time=predicted_display_time,
                 space=self.app_space,
             ),
@@ -880,22 +893,6 @@ class OpenXRProgram(object):
         ]
 
 
-def get_xr_environment_blend_mode(environment_blend_mode_string):
-    return {
-        "Opaque": xr.EnvironmentBlendMode.OPAQUE,
-        "Additive": xr.EnvironmentBlendMode.ADDITIVE,
-        "AlphaBlend": xr.EnvironmentBlendMode.ALPHA_BLEND,
-    }[environment_blend_mode_string]
-
-
-def get_xr_form_factor(form_factor_string):
-    if form_factor_string == "Hmd":
-        return xr.FormFactor.HEAD_MOUNTED_DISPLAY
-    elif form_factor_string == "Handheld":
-        return xr.FormFactor.HANDHELD_DISPLAY
-    raise ValueError(f"Unknown form factor '{form_factor_string}'")
-
-
 def get_xr_reference_space_create_info(reference_space_type_string: str) -> xr.ReferenceSpaceCreateInfo:
     create_info = xr.ReferenceSpaceCreateInfo(
         pose_in_reference_space=Math.Pose.identity(),
@@ -926,14 +923,6 @@ def get_xr_reference_space_create_info(reference_space_type_string: str) -> xr.R
     else:
         raise ValueError(f"Unknown reference space type '{reference_space_type_string}'")
     return create_info
-
-
-def get_xr_view_configuration_type(view_configuration_string):
-    if view_configuration_string == "Mono":
-        return xr.ViewConfigurationType.PRIMARY_MONO
-    elif view_configuration_string == "Stereo":
-        return xr.ViewConfigurationType.PRIMARY_STEREO
-    raise ValueError(f"Unknown view configuration '{view_configuration_string}'")
 
 
 def handle_key(handle):

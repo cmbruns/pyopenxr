@@ -62,11 +62,11 @@ class IGraphicsPlugin(abc.ABC):
     def select_color_swapchain_format(self, runtime_formats: Union[List[int], ctypes.Array]) -> int:
         """Select the preferred swapchain format from the list of available formats."""
 
-    @abc.abstractmethod
-    def set_background_clear_color(self, color) -> None:
-        pass
-
     @property
     @abc.abstractmethod
     def swapchain_image_type(self):
         """The type of xr swapchain image used by this graphics plugin."""
+
+    @abc.abstractmethod
+    def update_options(self, options) -> None:
+        pass

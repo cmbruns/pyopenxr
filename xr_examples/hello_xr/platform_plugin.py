@@ -23,3 +23,7 @@ class IPlatformPlugin(abc.ABC):
     @abc.abstractmethod
     def instance_extensions(self) -> List[str]:
         """OpenXR instance-level extensions required by this platform."""
+
+    @abc.abstractmethod
+    def update_options(self, options) -> None:
+        pass
