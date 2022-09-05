@@ -333,6 +333,9 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             # depth, thus leading to banding.
             GL.GL_RGBA8,
             GL.GL_RGBA8_SNORM,
+            # These two below are the only color formats reported by Steam VR beta 1.24.2
+            GL.GL_SRGB8,
+            GL.GL_SRGB8_ALPHA8,
         ]
         for rf in runtime_formats:
             for sf in supported_color_swapchain_formats:
