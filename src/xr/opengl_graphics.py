@@ -144,6 +144,9 @@ class OpenGLGraphics(object):
             # depth, thus leading to banding.
             GL.GL_RGBA8,
             GL.GL_RGBA8_SNORM,
+            #
+            GL.GL_SRGB8,  # Linux SteamVR beta 1.24.2 has only these...
+            GL.GL_SRGB8_ALPHA8,
         ]
         for rf in runtime_formats:
             for sf in supported_color_swapchain_formats:
