@@ -56,7 +56,7 @@ KHR_swapchain_usage_input_attachment_bit = 1
 KHR_swapchain_usage_input_attachment_bit_SPEC_VERSION = 3
 KHR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME = "XR_KHR_swapchain_usage_input_attachment_bit"
 EXT_performance_settings = 1
-EXT_performance_settings_SPEC_VERSION = 3
+EXT_performance_settings_SPEC_VERSION = 4
 EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME = "XR_EXT_performance_settings"
 EXT_thermal_query = 1
 EXT_thermal_query_SPEC_VERSION = 2
@@ -171,12 +171,12 @@ HTC_vive_cosmos_controller_interaction = 1
 HTC_vive_cosmos_controller_interaction_SPEC_VERSION = 1
 HTC_VIVE_COSMOS_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_HTC_vive_cosmos_controller_interaction"
 HTCX_vive_tracker_interaction = 1
-HTCX_vive_tracker_interaction_SPEC_VERSION = 1
+HTCX_vive_tracker_interaction_SPEC_VERSION = 2
 HTCX_VIVE_TRACKER_INTERACTION_EXTENSION_NAME = "XR_HTCX_vive_tracker_interaction"
 HTC_facial_tracking = 1
 FACIAL_EXPRESSION_EYE_COUNT_HTC = 14
 FACIAL_EXPRESSION_LIP_COUNT_HTC = 37
-HTC_facial_tracking_SPEC_VERSION = 1
+HTC_facial_tracking_SPEC_VERSION = 2
 HTC_FACIAL_TRACKING_EXTENSION_NAME = "XR_HTC_facial_tracking"
 HTC_vive_focus3_controller_interaction = 1
 HTC_vive_focus3_controller_interaction_SPEC_VERSION = 2
@@ -283,11 +283,23 @@ FB_composition_layer_settings = 1
 FB_composition_layer_settings_SPEC_VERSION = 1
 FB_COMPOSITION_LAYER_SETTINGS_EXTENSION_NAME = "XR_FB_composition_layer_settings"
 META_performance_metrics = 1
-META_performance_metrics_SPEC_VERSION = 1
+META_performance_metrics_SPEC_VERSION = 2
 META_PERFORMANCE_METRICS_EXTENSION_NAME = "XR_META_performance_metrics"
+META_headset_id = 1
+META_headset_id_SPEC_VERSION = 1
+META_HEADSET_ID_EXTENSION_NAME = "XR_META_headset_id"
 EXT_uuid = 1
 EXT_uuid_SPEC_VERSION = 1
 EXT_UUID_EXTENSION_NAME = "XR_EXT_uuid"
+HTC_passthrough = 1
+HTC_passthrough_SPEC_VERSION = 1
+HTC_PASSTHROUGH_EXTENSION_NAME = "XR_HTC_passthrough"
+HTC_foveation = 1
+HTC_foveation_SPEC_VERSION = 1
+HTC_FOVEATION_EXTENSION_NAME = "XR_HTC_foveation"
+EXT_active_action_set_priority = 1
+EXT_active_action_set_priority_SPEC_VERSION = 1
+EXT_ACTIVE_ACTION_SET_PRIORITY_EXTENSION_NAME = "XR_EXT_active_action_set_priority"
 SPACE_VELOCITY_LINEAR_VALID_BIT = 0x00000001
 SPACE_VELOCITY_ANGULAR_VALID_BIT = 0x00000002
 SPACE_LOCATION_ORIENTATION_VALID_BIT = 0x00000001
@@ -365,6 +377,9 @@ COMPOSITION_LAYER_SETTINGS_QUALITY_SHARPENING_BIT_FB = 0x00000008
 PERFORMANCE_METRICS_COUNTER_ANY_VALUE_VALID_BIT_META = 0x00000001
 PERFORMANCE_METRICS_COUNTER_UINT_VALUE_VALID_BIT_META = 0x00000002
 PERFORMANCE_METRICS_COUNTER_FLOAT_VALUE_VALID_BIT_META = 0x00000004
+FOVEATION_DYNAMIC_LEVEL_ENABLED_BIT_HTC = 0x00000001
+FOVEATION_DYNAMIC_CLEAR_FOV_ENABLED_BIT_HTC = 0x00000002
+FOVEATION_DYNAMIC_FOCAL_CENTER_OFFSET_ENABLED_BIT_HTC = 0x00000004
 
 
 __all__ = [
@@ -397,6 +412,7 @@ __all__ = [
     "EXTX_OVERLAY_EXTENSION_NAME",
     "EXTX_overlay",
     "EXTX_overlay_SPEC_VERSION",
+    "EXT_ACTIVE_ACTION_SET_PRIORITY_EXTENSION_NAME",
     "EXT_CONFORMANCE_AUTOMATION_EXTENSION_NAME",
     "EXT_DEBUG_UTILS_EXTENSION_NAME",
     "EXT_DPAD_BINDING_EXTENSION_NAME",
@@ -411,6 +427,8 @@ __all__ = [
     "EXT_UUID_EXTENSION_NAME",
     "EXT_VIEW_CONFIGURATION_DEPTH_RANGE_EXTENSION_NAME",
     "EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME",
+    "EXT_active_action_set_priority",
+    "EXT_active_action_set_priority_SPEC_VERSION",
     "EXT_conformance_automation",
     "EXT_conformance_automation_SPEC_VERSION",
     "EXT_debug_utils",
@@ -513,6 +531,9 @@ __all__ = [
     "FB_swapchain_update_state_SPEC_VERSION",
     "FB_triangle_mesh",
     "FB_triangle_mesh_SPEC_VERSION",
+    "FOVEATION_DYNAMIC_CLEAR_FOV_ENABLED_BIT_HTC",
+    "FOVEATION_DYNAMIC_FOCAL_CENTER_OFFSET_ENABLED_BIT_HTC",
+    "FOVEATION_DYNAMIC_LEVEL_ENABLED_BIT_HTC",
     "FREQUENCY_UNSPECIFIED",
     "GUID_SIZE_MSFT",
     "HAND_FOREARM_JOINT_COUNT_ULTRALEAP",
@@ -532,14 +553,20 @@ __all__ = [
     "HTCX_vive_tracker_interaction",
     "HTCX_vive_tracker_interaction_SPEC_VERSION",
     "HTC_FACIAL_TRACKING_EXTENSION_NAME",
+    "HTC_FOVEATION_EXTENSION_NAME",
     "HTC_HAND_INTERACTION_EXTENSION_NAME",
+    "HTC_PASSTHROUGH_EXTENSION_NAME",
     "HTC_VIVE_COSMOS_CONTROLLER_INTERACTION_EXTENSION_NAME",
     "HTC_VIVE_FOCUS3_CONTROLLER_INTERACTION_EXTENSION_NAME",
     "HTC_VIVE_WRIST_TRACKER_INTERACTION_EXTENSION_NAME",
     "HTC_facial_tracking",
     "HTC_facial_tracking_SPEC_VERSION",
+    "HTC_foveation",
+    "HTC_foveation_SPEC_VERSION",
     "HTC_hand_interaction",
     "HTC_hand_interaction_SPEC_VERSION",
+    "HTC_passthrough",
+    "HTC_passthrough_SPEC_VERSION",
     "HTC_vive_cosmos_controller_interaction",
     "HTC_vive_cosmos_controller_interaction_SPEC_VERSION",
     "HTC_vive_focus3_controller_interaction",
@@ -607,7 +634,10 @@ __all__ = [
     "MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT",
     "MAX_STRUCTURE_NAME_SIZE",
     "MAX_SYSTEM_NAME_SIZE",
+    "META_HEADSET_ID_EXTENSION_NAME",
     "META_PERFORMANCE_METRICS_EXTENSION_NAME",
+    "META_headset_id",
+    "META_headset_id_SPEC_VERSION",
     "META_performance_metrics",
     "META_performance_metrics_SPEC_VERSION",
     "MIN_COMPOSITION_LAYERS_SUPPORTED",

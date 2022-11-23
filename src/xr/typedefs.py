@@ -8992,6 +8992,386 @@ PFN_xrGetPerformanceMetricsStateMETA = CFUNCTYPE(Result.ctype(), Session, POINTE
 PFN_xrQueryPerformanceMetricsCounterMETA = CFUNCTYPE(Result.ctype(), Session, Path, POINTER(PerformanceMetricsCounterMETA))
 
 
+class SystemHeadsetIdPropertiesMETA(Structure):
+    def __init__(
+        self,
+        id: UuidEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_HEADSET_ID_PROPERTIES_META,
+    ) -> None:
+        if id is None:
+            id = UuidEXT()
+        super().__init__(
+            id=id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemHeadsetIdPropertiesMETA(id={repr(self.id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemHeadsetIdPropertiesMETA(id={self.id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("id", UuidEXT),
+    ]
+
+
+class PassthroughHTC_T(Structure):
+    pass
+
+
+PassthroughHTC = POINTER(PassthroughHTC_T)
+
+
+class PassthroughCreateInfoHTC(Structure):
+    def __init__(
+        self,
+        form: PassthroughFormHTC = PassthroughFormHTC(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_CREATE_INFO_HTC,
+    ) -> None:
+        super().__init__(
+            form=PassthroughFormHTC(form).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughCreateInfoHTC(form={repr(self.form)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughCreateInfoHTC(form={self.form}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("form", PassthroughFormHTC.ctype()),
+    ]
+
+
+class PassthroughColorHTC(Structure):
+    def __init__(
+        self,
+        alpha: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_COLOR_HTC,
+    ) -> None:
+        super().__init__(
+            alpha=alpha,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorHTC(alpha={repr(self.alpha)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorHTC(alpha={self.alpha:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("alpha", c_float),
+    ]
+
+
+class PassthroughMeshTransformInfoHTC(Structure):
+    def __init__(
+        self,
+        vertex_count: int = 0,
+        vertices: POINTER(Vector3f) = None,
+        index_count: int = 0,
+        indices: POINTER(c_uint32) = None,
+        base_space: Space = None,
+        time: Time = 0,
+        pose: Posef = Posef(),
+        scale: Vector3f = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_MESH_TRANSFORM_INFO_HTC,
+    ) -> None:
+        if scale is None:
+            scale = Vector3f()
+        super().__init__(
+            vertex_count=vertex_count,
+            vertices=vertices,
+            index_count=index_count,
+            indices=indices,
+            base_space=base_space,
+            time=time,
+            pose=pose,
+            scale=scale,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughMeshTransformInfoHTC(vertex_count={repr(self.vertex_count)}, vertices={repr(self.vertices)}, index_count={repr(self.index_count)}, indices={repr(self.indices)}, base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughMeshTransformInfoHTC(vertex_count={self.vertex_count}, vertices={self.vertices}, index_count={self.index_count}, indices={self.indices}, base_space={self.base_space}, time={self.time}, pose={self.pose}, scale={self.scale}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("vertex_count", c_uint32),
+        ("vertices", POINTER(Vector3f)),
+        ("index_count", c_uint32),
+        ("indices", POINTER(c_uint32)),
+        ("base_space", Space),
+        ("time", Time),
+        ("pose", Posef),
+        ("scale", Vector3f),
+    ]
+
+
+class CompositionLayerPassthroughHTC(Structure):
+    def __init__(
+        self,
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),
+        space: Space = None,
+        passthrough: PassthroughHTC = None,
+        color: PassthroughColorHTC = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.COMPOSITION_LAYER_PASSTHROUGH_HTC,
+    ) -> None:
+        if color is None:
+            color = PassthroughColorHTC()
+        super().__init__(
+            layer_flags=CompositionLayerFlags(layer_flags).value,
+            space=space,
+            passthrough=passthrough,
+            color=color,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CompositionLayerPassthroughHTC(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, passthrough={repr(self.passthrough)}, color={repr(self.color)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CompositionLayerPassthroughHTC(layer_flags={self.layer_flags}, space={self.space}, passthrough={self.passthrough}, color={self.color}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("layer_flags", CompositionLayerFlagsCInt),
+        ("space", Space),
+        ("passthrough", PassthroughHTC),
+        ("color", PassthroughColorHTC),
+    ]
+
+
+PFN_xrCreatePassthroughHTC = CFUNCTYPE(Result.ctype(), Session, POINTER(PassthroughCreateInfoHTC), POINTER(PassthroughHTC))
+
+PFN_xrDestroyPassthroughHTC = CFUNCTYPE(Result.ctype(), PassthroughHTC)
+
+FoveationDynamicFlagsHTCCInt = Flags64
+
+
+class FoveationApplyInfoHTC(Structure):
+    def __init__(
+        self,
+        mode: FoveationModeHTC = FoveationModeHTC(),
+        sub_image_count: Optional[int] = None,
+        sub_images: ArrayFieldParamType[SwapchainSubImage] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FOVEATION_APPLY_INFO_HTC,
+    ) -> None:
+        sub_image_count, sub_images = array_field_helper(
+            SwapchainSubImage, sub_image_count, sub_images)
+        super().__init__(
+            mode=FoveationModeHTC(mode).value,
+            sub_image_count=sub_image_count,
+            _sub_images=sub_images,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FoveationApplyInfoHTC(mode={repr(self.mode)}, sub_image_count={repr(self.sub_image_count)}, sub_images={repr(self._sub_images)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FoveationApplyInfoHTC(mode={self.mode}, sub_image_count={self.sub_image_count}, sub_images={self._sub_images}, next={self.next}, type={self.type})"
+
+    @property
+    def sub_images(self):
+        if self.sub_image_count == 0:
+            return (SwapchainSubImage * 0)()
+        else:
+            return (SwapchainSubImage * self.sub_image_count).from_address(
+                ctypes.addressof(self._sub_images.contents))
+
+    @sub_images.setter
+    def sub_images(self, value):
+        self.sub_image_count, self._sub_images = array_field_helper(
+            SwapchainSubImage, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("mode", FoveationModeHTC.ctype()),
+        ("sub_image_count", c_uint32),
+        ("_sub_images", POINTER(SwapchainSubImage)),
+    ]
+
+
+class FoveationConfigurationHTC(Structure):
+    def __init__(
+        self,
+        level: FoveationLevelHTC = FoveationLevelHTC(),
+        clear_fov_degree: float = 0,
+        focal_center_offset: Vector2f = None,
+    ) -> None:
+        if focal_center_offset is None:
+            focal_center_offset = Vector2f()
+        super().__init__(
+            level=FoveationLevelHTC(level).value,
+            clear_fov_degree=clear_fov_degree,
+            focal_center_offset=focal_center_offset,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FoveationConfigurationHTC(level={repr(self.level)}, clear_fov_degree={repr(self.clear_fov_degree)}, focal_center_offset={repr(self.focal_center_offset)})"
+
+    def __str__(self) -> str:
+        return f"xr.FoveationConfigurationHTC(level={self.level}, clear_fov_degree={self.clear_fov_degree:.3f}, focal_center_offset={self.focal_center_offset})"
+
+    _fields_ = [
+        ("level", FoveationLevelHTC.ctype()),
+        ("clear_fov_degree", c_float),
+        ("focal_center_offset", Vector2f),
+    ]
+
+
+class FoveationDynamicModeInfoHTC(Structure):
+    def __init__(
+        self,
+        dynamic_flags: FoveationDynamicFlagsHTC = FoveationDynamicFlagsHTC(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FOVEATION_DYNAMIC_MODE_INFO_HTC,
+    ) -> None:
+        super().__init__(
+            dynamic_flags=FoveationDynamicFlagsHTC(dynamic_flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FoveationDynamicModeInfoHTC(dynamic_flags={repr(self.dynamic_flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FoveationDynamicModeInfoHTC(dynamic_flags={self.dynamic_flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("dynamic_flags", FoveationDynamicFlagsHTCCInt),
+    ]
+
+
+class FoveationCustomModeInfoHTC(Structure):
+    def __init__(
+        self,
+        config_count: Optional[int] = None,
+        configs: ArrayFieldParamType[FoveationConfigurationHTC] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FOVEATION_CUSTOM_MODE_INFO_HTC,
+    ) -> None:
+        config_count, configs = array_field_helper(
+            FoveationConfigurationHTC, config_count, configs)
+        super().__init__(
+            config_count=config_count,
+            _configs=configs,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FoveationCustomModeInfoHTC(config_count={repr(self.config_count)}, configs={repr(self._configs)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FoveationCustomModeInfoHTC(config_count={self.config_count}, configs={self._configs}, next={self.next}, type={self.type})"
+
+    @property
+    def configs(self):
+        if self.config_count == 0:
+            return (FoveationConfigurationHTC * 0)()
+        else:
+            return (FoveationConfigurationHTC * self.config_count).from_address(
+                ctypes.addressof(self._configs.contents))
+
+    @configs.setter
+    def configs(self, value):
+        self.config_count, self._configs = array_field_helper(
+            FoveationConfigurationHTC, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("config_count", c_uint32),
+        ("_configs", POINTER(FoveationConfigurationHTC)),
+    ]
+
+
+PFN_xrApplyFoveationHTC = CFUNCTYPE(Result.ctype(), Session, POINTER(FoveationApplyInfoHTC))
+
+
+class ActiveActionSetPriorityEXT(Structure):
+    def __init__(
+        self,
+        action_set: ActionSet = None,
+        priority_override: int = 0,
+    ) -> None:
+        super().__init__(
+            action_set=action_set,
+            priority_override=priority_override,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ActiveActionSetPriorityEXT(action_set={repr(self.action_set)}, priority_override={repr(self.priority_override)})"
+
+    def __str__(self) -> str:
+        return f"xr.ActiveActionSetPriorityEXT(action_set={self.action_set}, priority_override={self.priority_override})"
+
+    _fields_ = [
+        ("action_set", ActionSet),
+        ("priority_override", c_uint32),
+    ]
+
+
+class ActiveActionSetPrioritiesEXT(Structure):
+    def __init__(
+        self,
+        action_set_priority_count: int = 0,
+        action_set_priorities: POINTER(ActiveActionSetPriorityEXT) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.ACTIVE_ACTION_SET_PRIORITIES_EXT,
+    ) -> None:
+        super().__init__(
+            action_set_priority_count=action_set_priority_count,
+            action_set_priorities=action_set_priorities,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ActiveActionSetPrioritiesEXT(action_set_priority_count={repr(self.action_set_priority_count)}, action_set_priorities={repr(self.action_set_priorities)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ActiveActionSetPrioritiesEXT(action_set_priority_count={self.action_set_priority_count}, action_set_priorities={self.action_set_priorities}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("action_set_priority_count", c_uint32),
+        ("action_set_priorities", POINTER(ActiveActionSetPriorityEXT)),
+    ]
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -9008,6 +9388,8 @@ __all__ = [
     "Action_T",
     "ActionsSyncInfo",
     "ActiveActionSet",
+    "ActiveActionSetPrioritiesEXT",
+    "ActiveActionSetPriorityEXT",
     "ApiLayerProperties",
     "ApplicationInfo",
     "AsyncRequestIdFB",
@@ -9032,6 +9414,7 @@ __all__ = [
     "CompositionLayerImageLayoutFB",
     "CompositionLayerImageLayoutFlagsFBCInt",
     "CompositionLayerPassthroughFB",
+    "CompositionLayerPassthroughHTC",
     "CompositionLayerProjection",
     "CompositionLayerProjectionView",
     "CompositionLayerQuad",
@@ -9092,6 +9475,11 @@ __all__ = [
     "FacialTrackerHTC_T",
     "Flags64",
     "FoveatedViewConfigurationViewVARJO",
+    "FoveationApplyInfoHTC",
+    "FoveationConfigurationHTC",
+    "FoveationCustomModeInfoHTC",
+    "FoveationDynamicFlagsHTCCInt",
+    "FoveationDynamicModeInfoHTC",
     "FoveationLevelProfileCreateInfoFB",
     "FoveationProfileCreateInfoFB",
     "FoveationProfileFB",
@@ -9155,6 +9543,7 @@ __all__ = [
     "OverlayMainSessionFlagsEXTXCInt",
     "OverlaySessionCreateFlagsEXTXCInt",
     "PFN_xrAcquireSwapchainImage",
+    "PFN_xrApplyFoveationHTC",
     "PFN_xrApplyHapticFeedback",
     "PFN_xrAttachSessionActionSets",
     "PFN_xrBeginFrame",
@@ -9174,6 +9563,7 @@ __all__ = [
     "PFN_xrCreateKeyboardSpaceFB",
     "PFN_xrCreateMarkerSpaceVARJO",
     "PFN_xrCreatePassthroughFB",
+    "PFN_xrCreatePassthroughHTC",
     "PFN_xrCreatePassthroughLayerFB",
     "PFN_xrCreateReferenceSpace",
     "PFN_xrCreateSceneMSFT",
@@ -9198,6 +9588,7 @@ __all__ = [
     "PFN_xrDestroyHandTrackerEXT",
     "PFN_xrDestroyInstance",
     "PFN_xrDestroyPassthroughFB",
+    "PFN_xrDestroyPassthroughHTC",
     "PFN_xrDestroyPassthroughLayerFB",
     "PFN_xrDestroySceneMSFT",
     "PFN_xrDestroySceneObserverMSFT",
@@ -9332,16 +9723,21 @@ __all__ = [
     "PFN_xrWaitSwapchainImage",
     "PassthroughBrightnessContrastSaturationFB",
     "PassthroughCapabilityFlagsFBCInt",
+    "PassthroughColorHTC",
     "PassthroughColorMapMonoToMonoFB",
     "PassthroughColorMapMonoToRgbaFB",
     "PassthroughCreateInfoFB",
+    "PassthroughCreateInfoHTC",
     "PassthroughFB",
     "PassthroughFB_T",
     "PassthroughFlagsFBCInt",
+    "PassthroughHTC",
+    "PassthroughHTC_T",
     "PassthroughKeyboardHandsIntensityFB",
     "PassthroughLayerCreateInfoFB",
     "PassthroughLayerFB",
     "PassthroughLayerFB_T",
+    "PassthroughMeshTransformInfoHTC",
     "PassthroughStateChangedFlagsFBCInt",
     "PassthroughStyleFB",
     "Path",
@@ -9466,6 +9862,7 @@ __all__ = [
     "SystemGraphicsProperties",
     "SystemHandTrackingMeshPropertiesMSFT",
     "SystemHandTrackingPropertiesEXT",
+    "SystemHeadsetIdPropertiesMETA",
     "SystemId",
     "SystemKeyboardTrackingPropertiesFB",
     "SystemMarkerTrackingPropertiesVARJO",

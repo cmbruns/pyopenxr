@@ -364,6 +364,15 @@ class StructureType(EnumBase):
     VULKAN_SWAPCHAIN_CREATE_INFO_META = 1000227000
     PERFORMANCE_METRICS_STATE_META = 1000232001
     PERFORMANCE_METRICS_COUNTER_META = 1000232002
+    SYSTEM_HEADSET_ID_PROPERTIES_META = 1000245000
+    PASSTHROUGH_CREATE_INFO_HTC = 1000317001
+    PASSTHROUGH_COLOR_HTC = 1000317002
+    PASSTHROUGH_MESH_TRANSFORM_INFO_HTC = 1000317003
+    COMPOSITION_LAYER_PASSTHROUGH_HTC = 1000317004
+    FOVEATION_APPLY_INFO_HTC = 1000318000
+    FOVEATION_DYNAMIC_MODE_INFO_HTC = 1000318001
+    FOVEATION_CUSTOM_MODE_INFO_HTC = 1000318002
+    ACTIVE_ACTION_SET_PRIORITIES_EXT = 1000373000
     GRAPHICS_BINDING_VULKAN2_KHR = 1000025000
     SWAPCHAIN_IMAGE_VULKAN2_KHR = 1000025001
     GRAPHICS_REQUIREMENTS_VULKAN2_KHR = 1000025002
@@ -442,6 +451,7 @@ class ObjectType(EnumBase):
     PASSTHROUGH_LAYER_FB = 1000118002
     GEOMETRY_INSTANCE_FB = 1000118004
     SPATIAL_ANCHOR_STORE_CONNECTION_MSFT = 1000142000
+    PASSTHROUGH_HTC = 1000317000
 
 
 class VisibilityMaskTypeKHR(EnumBase):
@@ -757,6 +767,25 @@ class PerformanceMetricsCounterUnitMETA(EnumBase):
     HERTZ = 4
 
 
+class PassthroughFormHTC(EnumBase):
+    PLANAR = 0
+    PROJECTED = 1
+
+
+class FoveationModeHTC(EnumBase):
+    DISABLE = 0
+    FIXED = 1
+    DYNAMIC = 2
+    CUSTOM = 3
+
+
+class FoveationLevelHTC(EnumBase):
+    NONE = 0
+    LOW = 1
+    MEDIUM = 2
+    HIGH = 3
+
+
 class InstanceCreateFlags(FlagBase):
     NONE = 0x00000000
 
@@ -950,6 +979,13 @@ class PerformanceMetricsCounterFlagsMETA(FlagBase):
     FLOAT_VALUE_VALID_BIT = 0x00000004
 
 
+class FoveationDynamicFlagsHTC(FlagBase):
+    NONE = 0x00000000
+    LEVEL_ENABLED_BIT = 0x00000001
+    CLEAR_FOV_ENABLED_BIT = 0x00000002
+    FOCAL_CENTER_OFFSET_ENABLED_BIT = 0x00000004
+
+
 __all__ = [
     "ActionType",
     "BlendFactorFB",
@@ -970,7 +1006,10 @@ __all__ = [
     "FlagBase",
     "FormFactor",
     "FoveationDynamicFB",
+    "FoveationDynamicFlagsHTC",
     "FoveationLevelFB",
+    "FoveationLevelHTC",
+    "FoveationModeHTC",
     "HandEXT",
     "HandForearmJointULTRALEAP",
     "HandJointEXT",
@@ -989,6 +1028,7 @@ __all__ = [
     "OverlaySessionCreateFlagsEXTX",
     "PassthroughCapabilityFlagsFB",
     "PassthroughFlagsFB",
+    "PassthroughFormHTC",
     "PassthroughLayerPurposeFB",
     "PassthroughStateChangedFlagsFB",
     "PerfSettingsDomainEXT",
