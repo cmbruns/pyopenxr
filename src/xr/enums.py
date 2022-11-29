@@ -26,7 +26,12 @@ class DefaultEnumMeta(enum.EnumMeta):
 
     def __call__(cls, value=default, *args, **kwargs):
         if value is DefaultEnumMeta.default:
-            # Assume the first enum is default
+            # Enums with a zero should default to zero
+            try:
+                return cls(0)
+            except ValueError:
+                pass
+            # Otherwise assume the first enum is default
             return next(iter(cls))
         return super().__call__(value, *args, **kwargs)
 
