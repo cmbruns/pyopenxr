@@ -74,7 +74,7 @@ find_file(LIBCLANG_SHARED_LIBRARY
 if (EXISTS "${LIBCLANG_SHARED_LIBRARY}")
     get_filename_component(LIBCLANG_NAME ${LIBCLANG_SHARED_LIBRARY} NAME)
     # Use COPY_FILE to copy real file not just symlink
-    file(COPY_FILE "${LIBCLANG_SHARED_LIBRARY}" "${CMAKE_CURRENT_SOURCE_DIR}/xrg/${LIBCLANG_NAME}")
+    configure_file("${LIBCLANG_SHARED_LIBRARY}" "${CMAKE_CURRENT_SOURCE_DIR}/xrg/${LIBCLANG_NAME}" COPYONLY)
 endif()
 
 # Create staging folder for generated source files
@@ -87,7 +87,7 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 ### Generate version.py ###
 ###########################
 
-find_package(PythonInterp REQUIRED)
+find_package(PythonInterp 3 REQUIRED)
 
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} print_openxr_version.py
