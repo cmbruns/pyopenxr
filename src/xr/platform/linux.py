@@ -358,17 +358,7 @@ PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId,
 
 PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
-
-class timespec(Structure):
-    pass
-
-
 PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(timespec), POINTER(Time))
-
-
-class timespec(Structure):
-    pass
-
 
 PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(timespec))
 
@@ -684,5 +674,4 @@ __all__ = [
     "VulkanInstanceCreateInfoKHR",
     "VulkanSwapchainCreateInfoMETA",
     "VulkanSwapchainFormatListCreateInfoKHR",
-    "timespec",
 ]
