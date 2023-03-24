@@ -140,6 +140,9 @@ FB_SWAPCHAIN_UPDATE_STATE_EXTENSION_NAME = "XR_FB_swapchain_update_state"
 FB_composition_layer_secure_content = 1
 FB_composition_layer_secure_content_SPEC_VERSION = 1
 FB_COMPOSITION_LAYER_SECURE_CONTENT_EXTENSION_NAME = "XR_FB_composition_layer_secure_content"
+FB_body_tracking = 1
+FB_body_tracking_SPEC_VERSION = 1
+FB_BODY_TRACKING_EXTENSION_NAME = "XR_FB_body_tracking"
 EXT_dpad_binding = 1
 EXT_dpad_binding_SPEC_VERSION = 1
 EXT_DPAD_BINDING_EXTENSION_NAME = "XR_EXT_dpad_binding"
@@ -205,7 +208,7 @@ FB_HAND_TRACKING_CAPSULE_POINT_COUNT = HAND_TRACKING_CAPSULE_POINT_COUNT_FB
 FB_HAND_TRACKING_CAPSULE_COUNT = HAND_TRACKING_CAPSULE_COUNT_FB
 FB_spatial_entity = 1
 UUID_SIZE_EXT = 16
-FB_spatial_entity_SPEC_VERSION = 1
+FB_spatial_entity_SPEC_VERSION = 2
 FB_SPATIAL_ENTITY_EXTENSION_NAME = "XR_FB_spatial_entity"
 FB_foveation = 1
 FB_foveation_SPEC_VERSION = 1
@@ -230,7 +233,7 @@ FB_render_model_SPEC_VERSION = 3
 FB_RENDER_MODEL_EXTENSION_NAME = "XR_FB_render_model"
 MAX_RENDER_MODEL_NAME_SIZE_FB = 64
 VARJO_foveated_rendering = 1
-VARJO_foveated_rendering_SPEC_VERSION = 2
+VARJO_foveated_rendering_SPEC_VERSION = 3
 VARJO_FOVEATED_RENDERING_EXTENSION_NAME = "XR_VARJO_foveated_rendering"
 VARJO_composition_layer_depth_test = 1
 VARJO_composition_layer_depth_test_SPEC_VERSION = 2
@@ -247,6 +250,12 @@ VARJO_VIEW_OFFSET_EXTENSION_NAME = "XR_VARJO_view_offset"
 ML_ml2_controller_interaction = 1
 ML_ml2_controller_interaction_SPEC_VERSION = 1
 ML_ML2_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_ML_ml2_controller_interaction"
+ML_frame_end_info = 1
+ML_frame_end_info_SPEC_VERSION = 1
+ML_FRAME_END_INFO_EXTENSION_NAME = "XR_ML_frame_end_info"
+ML_global_dimmer = 1
+ML_global_dimmer_SPEC_VERSION = 1
+ML_GLOBAL_DIMMER_EXTENSION_NAME = "XR_ML_global_dimmer"
 MSFT_spatial_anchor_persistence = 1
 MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT = 256
 MSFT_spatial_anchor_persistence_SPEC_VERSION = 2
@@ -261,9 +270,19 @@ FB_SPATIAL_ENTITY_QUERY_EXTENSION_NAME = "XR_FB_spatial_entity_query"
 FB_spatial_entity_storage = 1
 FB_spatial_entity_storage_SPEC_VERSION = 1
 FB_SPATIAL_ENTITY_STORAGE_EXTENSION_NAME = "XR_FB_spatial_entity_storage"
+FB_touch_controller_pro = 1
+FB_touch_controller_pro_SPEC_VERSION = 1
+FB_TOUCH_CONTROLLER_PRO_EXTENSION_NAME = "XR_FB_touch_controller_pro"
+FB_spatial_entity_sharing = 1
+FB_spatial_entity_sharing_SPEC_VERSION = 1
+FB_SPATIAL_ENTITY_SHARING_EXTENSION_NAME = "XR_FB_spatial_entity_sharing"
 FB_space_warp = 1
 FB_space_warp_SPEC_VERSION = 2
 FB_SPACE_WARP_EXTENSION_NAME = "XR_FB_space_warp"
+FB_haptic_amplitude_envelope = 1
+MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB = 4000
+FB_haptic_amplitude_envelope_SPEC_VERSION = 1
+FB_HAPTIC_AMPLITUDE_ENVELOPE_EXTENSION_NAME = "XR_FB_haptic_amplitude_envelope"
 FB_scene = 1
 FB_scene_SPEC_VERSION = 1
 FB_SCENE_EXTENSION_NAME = "XR_FB_scene"
@@ -273,24 +292,63 @@ EXT_PALM_POSE_EXTENSION_NAME = "XR_EXT_palm_pose"
 ALMALENCE_digital_lens_control = 1
 ALMALENCE_digital_lens_control_SPEC_VERSION = 1
 ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME = "XR_ALMALENCE_digital_lens_control"
+FB_scene_capture = 1
+FB_scene_capture_SPEC_VERSION = 1
+FB_SCENE_CAPTURE_EXTENSION_NAME = "XR_FB_scene_capture"
 FB_spatial_entity_container = 1
 FB_spatial_entity_container_SPEC_VERSION = 2
 FB_SPATIAL_ENTITY_CONTAINER_EXTENSION_NAME = "XR_FB_spatial_entity_container"
+META_foveation_eye_tracked = 1
+FOVEATION_CENTER_SIZE_META = 2
+META_foveation_eye_tracked_SPEC_VERSION = 1
+META_FOVEATION_EYE_TRACKED_EXTENSION_NAME = "XR_META_foveation_eye_tracked"
+FB_face_tracking = 1
+FB_face_tracking_SPEC_VERSION = 1
+FB_FACE_TRACKING_EXTENSION_NAME = "XR_FB_face_tracking"
+FB_eye_tracking_social = 1
+FB_eye_tracking_social_SPEC_VERSION = 1
+FB_EYE_TRACKING_SOCIAL_EXTENSION_NAME = "XR_FB_eye_tracking_social"
 FB_passthrough_keyboard_hands = 1
 FB_passthrough_keyboard_hands_SPEC_VERSION = 2
 FB_PASSTHROUGH_KEYBOARD_HANDS_EXTENSION_NAME = "XR_FB_passthrough_keyboard_hands"
 FB_composition_layer_settings = 1
 FB_composition_layer_settings_SPEC_VERSION = 1
 FB_COMPOSITION_LAYER_SETTINGS_EXTENSION_NAME = "XR_FB_composition_layer_settings"
+FB_touch_controller_proximity = 1
+FB_touch_controller_proximity_SPEC_VERSION = 1
+FB_TOUCH_CONTROLLER_PROXIMITY_EXTENSION_NAME = "XR_FB_touch_controller_proximity"
+FB_haptic_pcm = 1
+MAX_HAPTIC_PCM_BUFFER_SIZE_FB = 4000
+FB_haptic_pcm_SPEC_VERSION = 1
+FB_HAPTIC_PCM_EXTENSION_NAME = "XR_FB_haptic_pcm"
+FB_composition_layer_depth_test = 1
+FB_composition_layer_depth_test_SPEC_VERSION = 1
+FB_COMPOSITION_LAYER_DEPTH_TEST_EXTENSION_NAME = "XR_FB_composition_layer_depth_test"
+META_local_dimming = 1
+META_local_dimming_SPEC_VERSION = 1
+META_LOCAL_DIMMING_EXTENSION_NAME = "XR_META_local_dimming"
+OCULUS_external_camera = 1
+MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS = 32
+OCULUS_external_camera_SPEC_VERSION = 1
+OCULUS_EXTERNAL_CAMERA_EXTENSION_NAME = "XR_OCULUS_external_camera"
 META_performance_metrics = 1
 META_performance_metrics_SPEC_VERSION = 2
 META_PERFORMANCE_METRICS_EXTENSION_NAME = "XR_META_performance_metrics"
+FB_spatial_entity_storage_batch = 1
+FB_spatial_entity_storage_batch_SPEC_VERSION = 1
+FB_SPATIAL_ENTITY_STORAGE_BATCH_EXTENSION_NAME = "XR_FB_spatial_entity_storage_batch"
+FB_spatial_entity_user = 1
+FB_spatial_entity_user_SPEC_VERSION = 1
+FB_SPATIAL_ENTITY_USER_EXTENSION_NAME = "XR_FB_spatial_entity_user"
 META_headset_id = 1
 META_headset_id_SPEC_VERSION = 1
 META_HEADSET_ID_EXTENSION_NAME = "XR_META_headset_id"
 EXT_uuid = 1
 EXT_uuid_SPEC_VERSION = 1
 EXT_UUID_EXTENSION_NAME = "XR_EXT_uuid"
+QCOM_tracking_optimization_settings = 1
+QCOM_tracking_optimization_settings_SPEC_VERSION = 1
+QCOM_TRACKING_OPTIMIZATION_SETTINGS_EXTENSION_NAME = "XR_QCOM_tracking_optimization_settings"
 HTC_passthrough = 1
 HTC_passthrough_SPEC_VERSION = 1
 HTC_PASSTHROUGH_EXTENSION_NAME = "XR_HTC_passthrough"
@@ -300,6 +358,15 @@ HTC_FOVEATION_EXTENSION_NAME = "XR_HTC_foveation"
 EXT_active_action_set_priority = 1
 EXT_active_action_set_priority_SPEC_VERSION = 1
 EXT_ACTIVE_ACTION_SET_PRIORITY_EXTENSION_NAME = "XR_EXT_active_action_set_priority"
+MNDX_force_feedback_curl = 1
+MNDX_force_feedback_curl_SPEC_VERSION = 1
+MNDX_FORCE_FEEDBACK_CURL_EXTENSION_NAME = "XR_MNDX_force_feedback_curl"
+BD_controller_interaction = 1
+BD_controller_interaction_SPEC_VERSION = 1
+BD_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_BD_controller_interaction"
+EXT_local_floor = 1
+EXT_local_floor_SPEC_VERSION = 1
+EXT_LOCAL_FLOOR_EXTENSION_NAME = "XR_EXT_local_floor"
 SPACE_VELOCITY_LINEAR_VALID_BIT = 0x00000001
 SPACE_VELOCITY_ANGULAR_VALID_BIT = 0x00000002
 SPACE_LOCATION_ORIENTATION_VALID_BIT = 0x00000001
@@ -368,12 +435,21 @@ PASSTHROUGH_STATE_CHANGED_RECOVERABLE_ERROR_BIT_FB = 0x00000004
 PASSTHROUGH_STATE_CHANGED_RESTORED_ERROR_BIT_FB = 0x00000008
 RENDER_MODEL_SUPPORTS_GLTF_2_0_SUBSET_1_BIT_FB = 0x00000001
 RENDER_MODEL_SUPPORTS_GLTF_2_0_SUBSET_2_BIT_FB = 0x00000002
+FRAME_END_INFO_PROTECTED_BIT_ML = 0x00000001
+FRAME_END_INFO_VIGNETTE_BIT_ML = 0x00000002
+GLOBAL_DIMMER_FRAME_END_INFO_ENABLED_BIT_ML = 0x00000001
 COMPOSITION_LAYER_SPACE_WARP_INFO_FRAME_SKIP_BIT_FB = 0x00000001
 DIGITAL_LENS_CONTROL_PROCESSING_DISABLE_BIT_ALMALENCE = 0x00000001
+FOVEATION_EYE_TRACKED_STATE_VALID_BIT_META = 0x00000001
 COMPOSITION_LAYER_SETTINGS_NORMAL_SUPER_SAMPLING_BIT_FB = 0x00000001
 COMPOSITION_LAYER_SETTINGS_QUALITY_SUPER_SAMPLING_BIT_FB = 0x00000002
 COMPOSITION_LAYER_SETTINGS_NORMAL_SHARPENING_BIT_FB = 0x00000004
 COMPOSITION_LAYER_SETTINGS_QUALITY_SHARPENING_BIT_FB = 0x00000008
+EXTERNAL_CAMERA_STATUS_CONNECTED_BIT_OCULUS = 0x00000001
+EXTERNAL_CAMERA_STATUS_CALIBRATING_BIT_OCULUS = 0x00000002
+EXTERNAL_CAMERA_STATUS_CALIBRATION_FAILED_BIT_OCULUS = 0x00000004
+EXTERNAL_CAMERA_STATUS_CALIBRATED_BIT_OCULUS = 0x00000008
+EXTERNAL_CAMERA_STATUS_CAPTURING_BIT_OCULUS = 0x00000010
 PERFORMANCE_METRICS_COUNTER_ANY_VALUE_VALID_BIT_META = 0x00000001
 PERFORMANCE_METRICS_COUNTER_UINT_VALUE_VALID_BIT_META = 0x00000002
 PERFORMANCE_METRICS_COUNTER_FLOAT_VALUE_VALID_BIT_META = 0x00000004
@@ -386,6 +462,9 @@ __all__ = [
     "ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME",
     "ALMALENCE_digital_lens_control",
     "ALMALENCE_digital_lens_control_SPEC_VERSION",
+    "BD_CONTROLLER_INTERACTION_EXTENSION_NAME",
+    "BD_controller_interaction",
+    "BD_controller_interaction_SPEC_VERSION",
     "COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT",
     "COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT",
     "COMPOSITION_LAYER_IMAGE_LAYOUT_VERTICAL_FLIP_BIT_FB",
@@ -409,6 +488,11 @@ __all__ = [
     "EPIC_VIEW_CONFIGURATION_FOV_EXTENSION_NAME",
     "EPIC_view_configuration_fov",
     "EPIC_view_configuration_fov_SPEC_VERSION",
+    "EXTERNAL_CAMERA_STATUS_CALIBRATED_BIT_OCULUS",
+    "EXTERNAL_CAMERA_STATUS_CALIBRATING_BIT_OCULUS",
+    "EXTERNAL_CAMERA_STATUS_CALIBRATION_FAILED_BIT_OCULUS",
+    "EXTERNAL_CAMERA_STATUS_CAPTURING_BIT_OCULUS",
+    "EXTERNAL_CAMERA_STATUS_CONNECTED_BIT_OCULUS",
     "EXTX_OVERLAY_EXTENSION_NAME",
     "EXTX_overlay",
     "EXTX_overlay_SPEC_VERSION",
@@ -420,6 +504,7 @@ __all__ = [
     "EXT_HAND_JOINTS_MOTION_RANGE_EXTENSION_NAME",
     "EXT_HAND_TRACKING_EXTENSION_NAME",
     "EXT_HP_MIXED_REALITY_CONTROLLER_EXTENSION_NAME",
+    "EXT_LOCAL_FLOOR_EXTENSION_NAME",
     "EXT_PALM_POSE_EXTENSION_NAME",
     "EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME",
     "EXT_SAMSUNG_ODYSSEY_CONTROLLER_EXTENSION_NAME",
@@ -443,6 +528,8 @@ __all__ = [
     "EXT_hand_tracking_SPEC_VERSION",
     "EXT_hp_mixed_reality_controller",
     "EXT_hp_mixed_reality_controller_SPEC_VERSION",
+    "EXT_local_floor",
+    "EXT_local_floor_SPEC_VERSION",
     "EXT_palm_pose",
     "EXT_palm_pose_SPEC_VERSION",
     "EXT_performance_settings",
@@ -460,12 +547,16 @@ __all__ = [
     "FACIAL_EXPRESSION_EYE_COUNT_HTC",
     "FACIAL_EXPRESSION_LIP_COUNT_HTC",
     "FALSE",
+    "FB_BODY_TRACKING_EXTENSION_NAME",
     "FB_COLOR_SPACE_EXTENSION_NAME",
     "FB_COMPOSITION_LAYER_ALPHA_BLEND_EXTENSION_NAME",
+    "FB_COMPOSITION_LAYER_DEPTH_TEST_EXTENSION_NAME",
     "FB_COMPOSITION_LAYER_IMAGE_LAYOUT_EXTENSION_NAME",
     "FB_COMPOSITION_LAYER_SECURE_CONTENT_EXTENSION_NAME",
     "FB_COMPOSITION_LAYER_SETTINGS_EXTENSION_NAME",
     "FB_DISPLAY_REFRESH_RATE_EXTENSION_NAME",
+    "FB_EYE_TRACKING_SOCIAL_EXTENSION_NAME",
+    "FB_FACE_TRACKING_EXTENSION_NAME",
     "FB_FOVEATION_CONFIGURATION_EXTENSION_NAME",
     "FB_FOVEATION_EXTENSION_NAME",
     "FB_HAND_TRACKING_AIM_EXTENSION_NAME",
@@ -473,22 +564,34 @@ __all__ = [
     "FB_HAND_TRACKING_CAPSULE_COUNT",
     "FB_HAND_TRACKING_CAPSULE_POINT_COUNT",
     "FB_HAND_TRACKING_MESH_EXTENSION_NAME",
+    "FB_HAPTIC_AMPLITUDE_ENVELOPE_EXTENSION_NAME",
+    "FB_HAPTIC_PCM_EXTENSION_NAME",
     "FB_KEYBOARD_TRACKING_EXTENSION_NAME",
     "FB_PASSTHROUGH_EXTENSION_NAME",
     "FB_PASSTHROUGH_KEYBOARD_HANDS_EXTENSION_NAME",
     "FB_RENDER_MODEL_EXTENSION_NAME",
+    "FB_SCENE_CAPTURE_EXTENSION_NAME",
     "FB_SCENE_EXTENSION_NAME",
     "FB_SPACE_WARP_EXTENSION_NAME",
     "FB_SPATIAL_ENTITY_CONTAINER_EXTENSION_NAME",
     "FB_SPATIAL_ENTITY_EXTENSION_NAME",
     "FB_SPATIAL_ENTITY_QUERY_EXTENSION_NAME",
+    "FB_SPATIAL_ENTITY_SHARING_EXTENSION_NAME",
+    "FB_SPATIAL_ENTITY_STORAGE_BATCH_EXTENSION_NAME",
     "FB_SPATIAL_ENTITY_STORAGE_EXTENSION_NAME",
+    "FB_SPATIAL_ENTITY_USER_EXTENSION_NAME",
     "FB_SWAPCHAIN_UPDATE_STATE_EXTENSION_NAME",
+    "FB_TOUCH_CONTROLLER_PROXIMITY_EXTENSION_NAME",
+    "FB_TOUCH_CONTROLLER_PRO_EXTENSION_NAME",
     "FB_TRIANGLE_MESH_EXTENSION_NAME",
+    "FB_body_tracking",
+    "FB_body_tracking_SPEC_VERSION",
     "FB_color_space",
     "FB_color_space_SPEC_VERSION",
     "FB_composition_layer_alpha_blend",
     "FB_composition_layer_alpha_blend_SPEC_VERSION",
+    "FB_composition_layer_depth_test",
+    "FB_composition_layer_depth_test_SPEC_VERSION",
     "FB_composition_layer_image_layout",
     "FB_composition_layer_image_layout_SPEC_VERSION",
     "FB_composition_layer_secure_content",
@@ -497,6 +600,10 @@ __all__ = [
     "FB_composition_layer_settings_SPEC_VERSION",
     "FB_display_refresh_rate",
     "FB_display_refresh_rate_SPEC_VERSION",
+    "FB_eye_tracking_social",
+    "FB_eye_tracking_social_SPEC_VERSION",
+    "FB_face_tracking",
+    "FB_face_tracking_SPEC_VERSION",
     "FB_foveation",
     "FB_foveation_SPEC_VERSION",
     "FB_foveation_configuration",
@@ -507,6 +614,10 @@ __all__ = [
     "FB_hand_tracking_capsules_SPEC_VERSION",
     "FB_hand_tracking_mesh",
     "FB_hand_tracking_mesh_SPEC_VERSION",
+    "FB_haptic_amplitude_envelope",
+    "FB_haptic_amplitude_envelope_SPEC_VERSION",
+    "FB_haptic_pcm",
+    "FB_haptic_pcm_SPEC_VERSION",
     "FB_keyboard_tracking",
     "FB_keyboard_tracking_SPEC_VERSION",
     "FB_passthrough",
@@ -517,6 +628,8 @@ __all__ = [
     "FB_render_model_SPEC_VERSION",
     "FB_scene",
     "FB_scene_SPEC_VERSION",
+    "FB_scene_capture",
+    "FB_scene_capture_SPEC_VERSION",
     "FB_space_warp",
     "FB_space_warp_SPEC_VERSION",
     "FB_spatial_entity",
@@ -525,16 +638,31 @@ __all__ = [
     "FB_spatial_entity_container_SPEC_VERSION",
     "FB_spatial_entity_query",
     "FB_spatial_entity_query_SPEC_VERSION",
+    "FB_spatial_entity_sharing",
+    "FB_spatial_entity_sharing_SPEC_VERSION",
     "FB_spatial_entity_storage",
     "FB_spatial_entity_storage_SPEC_VERSION",
+    "FB_spatial_entity_storage_batch",
+    "FB_spatial_entity_storage_batch_SPEC_VERSION",
+    "FB_spatial_entity_user",
+    "FB_spatial_entity_user_SPEC_VERSION",
     "FB_swapchain_update_state",
     "FB_swapchain_update_state_SPEC_VERSION",
+    "FB_touch_controller_pro",
+    "FB_touch_controller_pro_SPEC_VERSION",
+    "FB_touch_controller_proximity",
+    "FB_touch_controller_proximity_SPEC_VERSION",
     "FB_triangle_mesh",
     "FB_triangle_mesh_SPEC_VERSION",
+    "FOVEATION_CENTER_SIZE_META",
     "FOVEATION_DYNAMIC_CLEAR_FOV_ENABLED_BIT_HTC",
     "FOVEATION_DYNAMIC_FOCAL_CENTER_OFFSET_ENABLED_BIT_HTC",
     "FOVEATION_DYNAMIC_LEVEL_ENABLED_BIT_HTC",
+    "FOVEATION_EYE_TRACKED_STATE_VALID_BIT_META",
+    "FRAME_END_INFO_PROTECTED_BIT_ML",
+    "FRAME_END_INFO_VIGNETTE_BIT_ML",
     "FREQUENCY_UNSPECIFIED",
+    "GLOBAL_DIMMER_FRAME_END_INFO_ENABLED_BIT_ML",
     "GUID_SIZE_MSFT",
     "HAND_FOREARM_JOINT_COUNT_ULTRALEAP",
     "HAND_JOINT_COUNT_EXT",
@@ -624,6 +752,9 @@ __all__ = [
     "MAX_CONTROLLER_MODEL_NODE_NAME_SIZE_MSFT",
     "MAX_ENGINE_NAME_SIZE",
     "MAX_EXTENSION_NAME_SIZE",
+    "MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS",
+    "MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB",
+    "MAX_HAPTIC_PCM_BUFFER_SIZE_FB",
     "MAX_KEYBOARD_TRACKING_NAME_SIZE_FB",
     "MAX_LOCALIZED_ACTION_NAME_SIZE",
     "MAX_LOCALIZED_ACTION_SET_NAME_SIZE",
@@ -634,17 +765,32 @@ __all__ = [
     "MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT",
     "MAX_STRUCTURE_NAME_SIZE",
     "MAX_SYSTEM_NAME_SIZE",
+    "META_FOVEATION_EYE_TRACKED_EXTENSION_NAME",
     "META_HEADSET_ID_EXTENSION_NAME",
+    "META_LOCAL_DIMMING_EXTENSION_NAME",
     "META_PERFORMANCE_METRICS_EXTENSION_NAME",
+    "META_foveation_eye_tracked",
+    "META_foveation_eye_tracked_SPEC_VERSION",
     "META_headset_id",
     "META_headset_id_SPEC_VERSION",
+    "META_local_dimming",
+    "META_local_dimming_SPEC_VERSION",
     "META_performance_metrics",
     "META_performance_metrics_SPEC_VERSION",
     "MIN_COMPOSITION_LAYERS_SUPPORTED",
     "MIN_HAPTIC_DURATION",
+    "ML_FRAME_END_INFO_EXTENSION_NAME",
+    "ML_GLOBAL_DIMMER_EXTENSION_NAME",
     "ML_ML2_CONTROLLER_INTERACTION_EXTENSION_NAME",
+    "ML_frame_end_info",
+    "ML_frame_end_info_SPEC_VERSION",
+    "ML_global_dimmer",
+    "ML_global_dimmer_SPEC_VERSION",
     "ML_ml2_controller_interaction",
     "ML_ml2_controller_interaction_SPEC_VERSION",
+    "MNDX_FORCE_FEEDBACK_CURL_EXTENSION_NAME",
+    "MNDX_force_feedback_curl",
+    "MNDX_force_feedback_curl_SPEC_VERSION",
     "MND_HEADLESS_EXTENSION_NAME",
     "MND_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME",
     "MND_headless",
@@ -694,8 +840,11 @@ __all__ = [
     "NULL_RENDER_MODEL_KEY_FB",
     "NULL_SYSTEM_ID",
     "OCULUS_ANDROID_SESSION_STATE_ENABLE_EXTENSION_NAME",
+    "OCULUS_EXTERNAL_CAMERA_EXTENSION_NAME",
     "OCULUS_android_session_state_enable",
     "OCULUS_android_session_state_enable_SPEC_VERSION",
+    "OCULUS_external_camera",
+    "OCULUS_external_camera_SPEC_VERSION",
     "OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX",
     "PASSTHROUGH_CAPABILITY_BIT_FB",
     "PASSTHROUGH_CAPABILITY_COLOR_BIT_FB",
@@ -710,6 +859,9 @@ __all__ = [
     "PERFORMANCE_METRICS_COUNTER_ANY_VALUE_VALID_BIT_META",
     "PERFORMANCE_METRICS_COUNTER_FLOAT_VALUE_VALID_BIT_META",
     "PERFORMANCE_METRICS_COUNTER_UINT_VALUE_VALID_BIT_META",
+    "QCOM_TRACKING_OPTIMIZATION_SETTINGS_EXTENSION_NAME",
+    "QCOM_tracking_optimization_settings",
+    "QCOM_tracking_optimization_settings_SPEC_VERSION",
     "RENDER_MODEL_SUPPORTS_GLTF_2_0_SUBSET_1_BIT_FB",
     "RENDER_MODEL_SUPPORTS_GLTF_2_0_SUBSET_2_BIT_FB",
     "SPACE_LOCATION_ORIENTATION_TRACKED_BIT",

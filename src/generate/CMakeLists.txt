@@ -1,5 +1,5 @@
-project(PyOpenXr LANGUAGES CXX)
 cmake_minimum_required(VERSION 2.8.12)
+project(PyOpenXr LANGUAGES CXX)
 
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")
 

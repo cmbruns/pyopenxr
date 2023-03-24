@@ -61,10 +61,14 @@ class DefinitionItem(CodeItem):
         self.value = self.c_value
         if self.value is None:
             raise SkippableCodeItemException  # #define with no value
+        if "FACE_EXPRESSION_SET_DEFAULT_FB" in self.value:
+            raise SkippableCodeItemException  # TODO: handle weird enum alias...
         assert self._capi_name.startswith("XR_")
         self._py_name = self._capi_name[3:]
         if self.value.endswith("LL"):
             self.value = self.value[:-2]
+        if self.value.endswith("u"):
+            self.value = self.value[:-1]
         if self.value.startswith("XR_"):
             self.value = self.value[3:]
 

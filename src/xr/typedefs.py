@@ -4870,6 +4870,252 @@ class CompositionLayerSecureContentFB(Structure):
     ]
 
 
+class BodyTrackerFB_T(Structure):
+    pass
+
+
+BodyTrackerFB = POINTER(BodyTrackerFB_T)
+
+
+class BodyJointLocationFB(Structure):
+    def __init__(
+        self,
+        location_flags: SpaceLocationFlags = SpaceLocationFlags(),
+        pose: Posef = Posef(),
+    ) -> None:
+        super().__init__(
+            location_flags=SpaceLocationFlags(location_flags).value,
+            pose=pose,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyJointLocationFB(location_flags={repr(self.location_flags)}, pose={repr(self.pose)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyJointLocationFB(location_flags={self.location_flags}, pose={self.pose})"
+
+    _fields_ = [
+        ("location_flags", SpaceLocationFlagsCInt),
+        ("pose", Posef),
+    ]
+
+
+class SystemBodyTrackingPropertiesFB(Structure):
+    def __init__(
+        self,
+        supports_body_tracking: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_BODY_TRACKING_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            supports_body_tracking=supports_body_tracking,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemBodyTrackingPropertiesFB(supports_body_tracking={repr(self.supports_body_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemBodyTrackingPropertiesFB(supports_body_tracking={self.supports_body_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_body_tracking", Bool32),
+    ]
+
+
+class BodyTrackerCreateInfoFB(Structure):
+    def __init__(
+        self,
+        body_joint_set: BodyJointSetFB = BodyJointSetFB(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.BODY_TRACKER_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            body_joint_set=BodyJointSetFB(body_joint_set).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyTrackerCreateInfoFB(body_joint_set={repr(self.body_joint_set)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyTrackerCreateInfoFB(body_joint_set={self.body_joint_set}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("body_joint_set", BodyJointSetFB.ctype()),
+    ]
+
+
+class BodySkeletonJointFB(Structure):
+    def __init__(
+        self,
+        joint: int = 0,
+        parent_joint: int = 0,
+        pose: Posef = Posef(),
+    ) -> None:
+        super().__init__(
+            joint=joint,
+            parent_joint=parent_joint,
+            pose=pose,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodySkeletonJointFB(joint={repr(self.joint)}, parent_joint={repr(self.parent_joint)}, pose={repr(self.pose)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodySkeletonJointFB(joint={self.joint}, parent_joint={self.parent_joint}, pose={self.pose})"
+
+    _fields_ = [
+        ("joint", c_int32),
+        ("parent_joint", c_int32),
+        ("pose", Posef),
+    ]
+
+
+class BodySkeletonFB(Structure):
+    def __init__(
+        self,
+        joint_count: Optional[int] = None,
+        joints: ArrayFieldParamType[BodySkeletonJointFB] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.BODY_SKELETON_FB,
+    ) -> None:
+        joint_count, joints = array_field_helper(
+            BodySkeletonJointFB, joint_count, joints)
+        super().__init__(
+            joint_count=joint_count,
+            _joints=joints,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodySkeletonFB(joint_count={repr(self.joint_count)}, joints={repr(self._joints)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodySkeletonFB(joint_count={self.joint_count}, joints={self._joints}, next={self.next}, type={self.type})"
+
+    @property
+    def joints(self):
+        if self.joint_count == 0:
+            return (BodySkeletonJointFB * 0)()
+        else:
+            return (BodySkeletonJointFB * self.joint_count).from_address(
+                ctypes.addressof(self._joints.contents))
+
+    @joints.setter
+    def joints(self, value):
+        self.joint_count, self._joints = array_field_helper(
+            BodySkeletonJointFB, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("joint_count", c_uint32),
+        ("_joints", POINTER(BodySkeletonJointFB)),
+    ]
+
+
+class BodyJointsLocateInfoFB(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.BODY_JOINTS_LOCATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyJointsLocateInfoFB(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyJointsLocateInfoFB(base_space={self.base_space}, time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+        ("time", Time),
+    ]
+
+
+class BodyJointLocationsFB(Structure):
+    def __init__(
+        self,
+        is_active: Bool32 = 0,
+        confidence: float = 0,
+        joint_count: Optional[int] = None,
+        joint_locations: ArrayFieldParamType[BodyJointLocationFB] = None,
+        skeleton_changed_count: int = 0,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.BODY_JOINT_LOCATIONS_FB,
+    ) -> None:
+        joint_count, joint_locations = array_field_helper(
+            BodyJointLocationFB, joint_count, joint_locations)
+        super().__init__(
+            is_active=is_active,
+            confidence=confidence,
+            joint_count=joint_count,
+            _joint_locations=joint_locations,
+            skeleton_changed_count=skeleton_changed_count,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyJointLocationsFB(is_active={repr(self.is_active)}, confidence={repr(self.confidence)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self._joint_locations)}, skeleton_changed_count={repr(self.skeleton_changed_count)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyJointLocationsFB(is_active={self.is_active}, confidence={self.confidence:.3f}, joint_count={self.joint_count}, joint_locations={self._joint_locations}, skeleton_changed_count={self.skeleton_changed_count}, time={self.time}, next={self.next}, type={self.type})"
+
+    @property
+    def joint_locations(self):
+        if self.joint_count == 0:
+            return (BodyJointLocationFB * 0)()
+        else:
+            return (BodyJointLocationFB * self.joint_count).from_address(
+                ctypes.addressof(self._joint_locations.contents))
+
+    @joint_locations.setter
+    def joint_locations(self, value):
+        self.joint_count, self._joint_locations = array_field_helper(
+            BodyJointLocationFB, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("is_active", Bool32),
+        ("confidence", c_float),
+        ("joint_count", c_uint32),
+        ("_joint_locations", POINTER(BodyJointLocationFB)),
+        ("skeleton_changed_count", c_uint32),
+        ("time", Time),
+    ]
+
+
+PFN_xrCreateBodyTrackerFB = CFUNCTYPE(Result.ctype(), Session, POINTER(BodyTrackerCreateInfoFB), POINTER(BodyTrackerFB))
+
+PFN_xrDestroyBodyTrackerFB = CFUNCTYPE(Result.ctype(), BodyTrackerFB)
+
+PFN_xrLocateBodyJointsFB = CFUNCTYPE(Result.ctype(), BodyTrackerFB, POINTER(BodyJointsLocateInfoFB), POINTER(BodyJointLocationsFB))
+
+PFN_xrGetBodySkeletonFB = CFUNCTYPE(Result.ctype(), BodyTrackerFB, POINTER(BodySkeletonFB))
+
+
 class InteractionProfileDpadBindingEXT(Structure):
     def __init__(
         self,
@@ -7921,6 +8167,69 @@ PFN_xrCreateMarkerSpaceVARJO = CFUNCTYPE(Result.ctype(), Session, POINTER(Marker
 
 PFN_xrSetViewOffsetVARJO = CFUNCTYPE(Result.ctype(), Session, c_float)
 
+FrameEndInfoFlagsMLCInt = Flags64
+
+
+class FrameEndInfoML(Structure):
+    def __init__(
+        self,
+        focus_distance: float = 0,
+        flags: FrameEndInfoFlagsML = FrameEndInfoFlagsML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FRAME_END_INFO_ML,
+    ) -> None:
+        super().__init__(
+            focus_distance=focus_distance,
+            flags=FrameEndInfoFlagsML(flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FrameEndInfoML(focus_distance={repr(self.focus_distance)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FrameEndInfoML(focus_distance={self.focus_distance:.3f}, flags={self.flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("focus_distance", c_float),
+        ("flags", FrameEndInfoFlagsMLCInt),
+    ]
+
+
+GlobalDimmerFrameEndInfoFlagsMLCInt = Flags64
+
+
+class GlobalDimmerFrameEndInfoML(Structure):
+    def __init__(
+        self,
+        dimmer_value: float = 0,
+        flags: GlobalDimmerFrameEndInfoFlagsML = GlobalDimmerFrameEndInfoFlagsML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.GLOBAL_DIMMER_FRAME_END_INFO_ML,
+    ) -> None:
+        super().__init__(
+            dimmer_value=dimmer_value,
+            flags=GlobalDimmerFrameEndInfoFlagsML(flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GlobalDimmerFrameEndInfoML(dimmer_value={repr(self.dimmer_value)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GlobalDimmerFrameEndInfoML(dimmer_value={self.dimmer_value:.3f}, flags={self.flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("dimmer_value", c_float),
+        ("flags", GlobalDimmerFrameEndInfoFlagsMLCInt),
+    ]
+
 
 class SpatialAnchorStoreConnectionMSFT_T(Structure):
     pass
@@ -8468,6 +8777,110 @@ PFN_xrSaveSpaceFB = CFUNCTYPE(Result.ctype(), Session, POINTER(SpaceSaveInfoFB),
 
 PFN_xrEraseSpaceFB = CFUNCTYPE(Result.ctype(), Session, POINTER(SpaceEraseInfoFB), POINTER(AsyncRequestIdFB))
 
+
+class SpaceUserFB_T(Structure):
+    pass
+
+
+SpaceUserFB = POINTER(SpaceUserFB_T)
+
+
+class SpaceShareInfoFB(Structure):
+    def __init__(
+        self,
+        space_count: Optional[int] = None,
+        spaces: ArrayFieldParamType[Space] = None,
+        user_count: Optional[int] = None,
+        users: ArrayFieldParamType[SpaceUserFB] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_SHARE_INFO_FB,
+    ) -> None:
+        space_count, spaces = array_field_helper(
+            Space, space_count, spaces)
+        user_count, users = array_field_helper(
+            SpaceUserFB, user_count, users)
+        super().__init__(
+            space_count=space_count,
+            _spaces=spaces,
+            user_count=user_count,
+            _users=users,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceShareInfoFB(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, user_count={repr(self.user_count)}, users={repr(self._users)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceShareInfoFB(space_count={self.space_count}, spaces={self._spaces}, user_count={self.user_count}, users={self._users}, next={self.next}, type={self.type})"
+
+    @property
+    def spaces(self):
+        if self.space_count == 0:
+            return (Space * 0)()
+        else:
+            return (Space * self.space_count).from_address(
+                ctypes.addressof(self._spaces.contents))
+
+    @spaces.setter
+    def spaces(self, value):
+        self.space_count, self._spaces = array_field_helper(
+            Space, None, value)
+
+    @property
+    def users(self):
+        if self.user_count == 0:
+            return (SpaceUserFB * 0)()
+        else:
+            return (SpaceUserFB * self.user_count).from_address(
+                ctypes.addressof(self._users.contents))
+
+    @users.setter
+    def users(self, value):
+        self.user_count, self._users = array_field_helper(
+            SpaceUserFB, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space_count", c_uint32),
+        ("_spaces", POINTER(Space)),
+        ("user_count", c_uint32),
+        ("_users", POINTER(SpaceUserFB)),
+    ]
+
+
+class EventDataSpaceShareCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SPACE_SHARE_COMPLETE_FB,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceShareCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceShareCompleteFB(request_id={self.request_id}, result={self.result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+    ]
+
+
+PFN_xrShareSpacesFB = CFUNCTYPE(Result.ctype(), Session, POINTER(SpaceShareInfoFB), POINTER(AsyncRequestIdFB))
+
 CompositionLayerSpaceWarpInfoFlagsFBCInt = Flags64
 
 
@@ -8548,6 +8961,53 @@ class SystemSpaceWarpPropertiesFB(Structure):
         ("next", c_void_p),
         ("recommended_motion_vector_image_rect_width", c_uint32),
         ("recommended_motion_vector_image_rect_height", c_uint32),
+    ]
+
+
+class HapticAmplitudeEnvelopeVibrationFB(Structure):
+    def __init__(
+        self,
+        duration: Duration = 0,
+        amplitude_count: Optional[int] = None,
+        amplitudes: ArrayFieldParamType[c_float] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.HAPTIC_AMPLITUDE_ENVELOPE_VIBRATION_FB,
+    ) -> None:
+        amplitude_count, amplitudes = array_field_helper(
+            c_float, amplitude_count, amplitudes)
+        super().__init__(
+            duration=duration,
+            amplitude_count=amplitude_count,
+            _amplitudes=amplitudes,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HapticAmplitudeEnvelopeVibrationFB(duration={repr(self.duration)}, amplitude_count={repr(self.amplitude_count)}, amplitudes={repr(self._amplitudes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HapticAmplitudeEnvelopeVibrationFB(duration={self.duration}, amplitude_count={self.amplitude_count}, amplitudes={self._amplitudes}, next={self.next}, type={self.type})"
+
+    @property
+    def amplitudes(self):
+        if self.amplitude_count == 0:
+            return (c_float * 0)()
+        else:
+            return (c_float * self.amplitude_count).from_address(
+                ctypes.addressof(self._amplitudes.contents))
+
+    @amplitudes.setter
+    def amplitudes(self, value):
+        self.amplitude_count, self._amplitudes = array_field_helper(
+            c_float, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("duration", Duration),
+        ("amplitude_count", c_uint32),
+        ("_amplitudes", POINTER(c_float)),
     ]
 
 
@@ -8824,6 +9284,67 @@ class DigitalLensControlALMALENCE(Structure):
 PFN_xrSetDigitalLensControlALMALENCE = CFUNCTYPE(Result.ctype(), Session, POINTER(DigitalLensControlALMALENCE))
 
 
+class EventDataSceneCaptureCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SCENE_CAPTURE_COMPLETE_FB,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSceneCaptureCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSceneCaptureCompleteFB(request_id={self.request_id}, result={self.result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+    ]
+
+
+class SceneCaptureRequestInfoFB(Structure):
+    def __init__(
+        self,
+        request_byte_count: int = 0,
+        request: str = "",
+        next: c_void_p = None,
+        type: StructureType = StructureType.SCENE_CAPTURE_REQUEST_INFO_FB,
+    ) -> None:
+        super().__init__(
+            request_byte_count=request_byte_count,
+            request=request.encode(),
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={repr(self.request_byte_count)}, request={repr(self.request)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={self.request_byte_count}, request={self.request}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_byte_count", c_uint32),
+        ("request", c_char_p),
+    ]
+
+
+PFN_xrRequestSceneCaptureFB = CFUNCTYPE(Result.ctype(), Session, POINTER(SceneCaptureRequestInfoFB), POINTER(AsyncRequestIdFB))
+
+
 class SpaceContainerFB(Structure):
     def __init__(
         self,
@@ -8857,6 +9378,425 @@ class SpaceContainerFB(Structure):
 
 
 PFN_xrGetSpaceContainerFB = CFUNCTYPE(Result.ctype(), Session, Space, POINTER(SpaceContainerFB))
+
+FoveationEyeTrackedProfileCreateFlagsMETACInt = Flags64
+
+FoveationEyeTrackedStateFlagsMETACInt = Flags64
+
+
+class FoveationEyeTrackedProfileCreateInfoMETA(Structure):
+    def __init__(
+        self,
+        flags: FoveationEyeTrackedProfileCreateFlagsMETA = FoveationEyeTrackedProfileCreateFlagsMETA(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FOVEATION_EYE_TRACKED_PROFILE_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            flags=FoveationEyeTrackedProfileCreateFlagsMETA(flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FoveationEyeTrackedProfileCreateInfoMETA(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FoveationEyeTrackedProfileCreateInfoMETA(flags={self.flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", FoveationEyeTrackedProfileCreateFlagsMETACInt),
+    ]
+
+
+class FoveationEyeTrackedStateMETA(Structure):
+    def __init__(
+        self,
+        flags: FoveationEyeTrackedStateFlagsMETA = FoveationEyeTrackedStateFlagsMETA(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FOVEATION_EYE_TRACKED_STATE_META,
+    ) -> None:
+        super().__init__(
+            flags=FoveationEyeTrackedStateFlagsMETA(flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FoveationEyeTrackedStateMETA(foveation_center={repr(self.foveation_center)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FoveationEyeTrackedStateMETA(flags={self.flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("foveation_center", (Vector2f * 2)),
+        ("flags", FoveationEyeTrackedStateFlagsMETACInt),
+    ]
+
+
+class SystemFoveationEyeTrackedPropertiesMETA(Structure):
+    def __init__(
+        self,
+        supports_foveation_eye_tracked: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_FOVEATION_EYE_TRACKED_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_foveation_eye_tracked=supports_foveation_eye_tracked,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemFoveationEyeTrackedPropertiesMETA(supports_foveation_eye_tracked={repr(self.supports_foveation_eye_tracked)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemFoveationEyeTrackedPropertiesMETA(supports_foveation_eye_tracked={self.supports_foveation_eye_tracked}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_foveation_eye_tracked", Bool32),
+    ]
+
+
+PFN_xrGetFoveationEyeTrackedStateMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(FoveationEyeTrackedStateMETA))
+
+
+class FaceTrackerFB_T(Structure):
+    pass
+
+
+FaceTrackerFB = POINTER(FaceTrackerFB_T)
+
+
+class SystemFaceTrackingPropertiesFB(Structure):
+    def __init__(
+        self,
+        supports_face_tracking: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_FACE_TRACKING_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            supports_face_tracking=supports_face_tracking,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemFaceTrackingPropertiesFB(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemFaceTrackingPropertiesFB(supports_face_tracking={self.supports_face_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_face_tracking", Bool32),
+    ]
+
+
+class FaceTrackerCreateInfoFB(Structure):
+    def __init__(
+        self,
+        face_expression_set: FaceExpressionSetFB = FaceExpressionSetFB(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            face_expression_set=FaceExpressionSetFB(face_expression_set).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoFB(face_expression_set={repr(self.face_expression_set)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoFB(face_expression_set={self.face_expression_set}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("face_expression_set", FaceExpressionSetFB.ctype()),
+    ]
+
+
+class FaceExpressionInfoFB(Structure):
+    def __init__(
+        self,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FACE_EXPRESSION_INFO_FB,
+    ) -> None:
+        super().__init__(
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceExpressionInfoFB(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceExpressionInfoFB(time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("time", Time),
+    ]
+
+
+class FaceExpressionStatusFB(Structure):
+    def __init__(
+        self,
+        is_valid: Bool32 = 0,
+        is_eye_following_blendshapes_valid: Bool32 = 0,
+    ) -> None:
+        super().__init__(
+            is_valid=is_valid,
+            is_eye_following_blendshapes_valid=is_eye_following_blendshapes_valid,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceExpressionStatusFB(is_valid={repr(self.is_valid)}, is_eye_following_blendshapes_valid={repr(self.is_eye_following_blendshapes_valid)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceExpressionStatusFB(is_valid={self.is_valid}, is_eye_following_blendshapes_valid={self.is_eye_following_blendshapes_valid})"
+
+    _fields_ = [
+        ("is_valid", Bool32),
+        ("is_eye_following_blendshapes_valid", Bool32),
+    ]
+
+
+class FaceExpressionWeightsFB(Structure):
+    def __init__(
+        self,
+        weight_count: Optional[int] = None,
+        weights: ArrayFieldParamType[c_float] = None,
+        confidence_count: Optional[int] = None,
+        confidences: ArrayFieldParamType[c_float] = None,
+        status: FaceExpressionStatusFB = None,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FACE_EXPRESSION_WEIGHTS_FB,
+    ) -> None:
+        weight_count, weights = array_field_helper(
+            c_float, weight_count, weights)
+        confidence_count, confidences = array_field_helper(
+            c_float, confidence_count, confidences)
+        if status is None:
+            status = FaceExpressionStatusFB()
+        super().__init__(
+            weight_count=weight_count,
+            _weights=weights,
+            confidence_count=confidence_count,
+            _confidences=confidences,
+            status=status,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceExpressionWeightsFB(weight_count={repr(self.weight_count)}, weights={repr(self._weights)}, confidence_count={repr(self.confidence_count)}, confidences={repr(self._confidences)}, status={repr(self.status)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceExpressionWeightsFB(weight_count={self.weight_count}, weights={self._weights}, confidence_count={self.confidence_count}, confidences={self._confidences}, status={self.status}, time={self.time}, next={self.next}, type={self.type})"
+
+    @property
+    def weights(self):
+        if self.weight_count == 0:
+            return (c_float * 0)()
+        else:
+            return (c_float * self.weight_count).from_address(
+                ctypes.addressof(self._weights.contents))
+
+    @weights.setter
+    def weights(self, value):
+        self.weight_count, self._weights = array_field_helper(
+            c_float, None, value)
+
+    @property
+    def confidences(self):
+        if self.confidence_count == 0:
+            return (c_float * 0)()
+        else:
+            return (c_float * self.confidence_count).from_address(
+                ctypes.addressof(self._confidences.contents))
+
+    @confidences.setter
+    def confidences(self, value):
+        self.confidence_count, self._confidences = array_field_helper(
+            c_float, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("weight_count", c_uint32),
+        ("_weights", POINTER(c_float)),
+        ("confidence_count", c_uint32),
+        ("_confidences", POINTER(c_float)),
+        ("status", FaceExpressionStatusFB),
+        ("time", Time),
+    ]
+
+
+PFN_xrCreateFaceTrackerFB = CFUNCTYPE(Result.ctype(), Session, POINTER(FaceTrackerCreateInfoFB), POINTER(FaceTrackerFB))
+
+PFN_xrDestroyFaceTrackerFB = CFUNCTYPE(Result.ctype(), FaceTrackerFB)
+
+PFN_xrGetFaceExpressionWeightsFB = CFUNCTYPE(Result.ctype(), FaceTrackerFB, POINTER(FaceExpressionInfoFB), POINTER(FaceExpressionWeightsFB))
+
+
+class EyeTrackerFB_T(Structure):
+    pass
+
+
+EyeTrackerFB = POINTER(EyeTrackerFB_T)
+
+
+class EyeGazeFB(Structure):
+    def __init__(
+        self,
+        is_valid: Bool32 = 0,
+        gaze_pose: Posef = Posef(),
+        gaze_confidence: float = 0,
+    ) -> None:
+        super().__init__(
+            is_valid=is_valid,
+            gaze_pose=gaze_pose,
+            gaze_confidence=gaze_confidence,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyeGazeFB(is_valid={repr(self.is_valid)}, gaze_pose={repr(self.gaze_pose)}, gaze_confidence={repr(self.gaze_confidence)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyeGazeFB(is_valid={self.is_valid}, gaze_pose={self.gaze_pose}, gaze_confidence={self.gaze_confidence:.3f})"
+
+    _fields_ = [
+        ("is_valid", Bool32),
+        ("gaze_pose", Posef),
+        ("gaze_confidence", c_float),
+    ]
+
+
+class EyeTrackerCreateInfoFB(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EYE_TRACKER_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyeTrackerCreateInfoFB(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyeTrackerCreateInfoFB(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class EyeGazesInfoFB(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EYE_GAZES_INFO_FB,
+    ) -> None:
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyeGazesInfoFB(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyeGazesInfoFB(base_space={self.base_space}, time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+        ("time", Time),
+    ]
+
+
+class SystemEyeTrackingPropertiesFB(Structure):
+    def __init__(
+        self,
+        supports_eye_tracking: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_EYE_TRACKING_PROPERTIES_FB,
+    ) -> None:
+        super().__init__(
+            supports_eye_tracking=supports_eye_tracking,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemEyeTrackingPropertiesFB(supports_eye_tracking={repr(self.supports_eye_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemEyeTrackingPropertiesFB(supports_eye_tracking={self.supports_eye_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_eye_tracking", Bool32),
+    ]
+
+
+class EyeGazesFB(Structure):
+    def __init__(
+        self,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EYE_GAZES_FB,
+    ) -> None:
+        super().__init__(
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyeGazesFB(gaze={repr(self.gaze)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyeGazesFB(time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("gaze", (EyeGazeFB * 2)),
+        ("time", Time),
+    ]
+
+
+PFN_xrCreateEyeTrackerFB = CFUNCTYPE(Result.ctype(), Session, POINTER(EyeTrackerCreateInfoFB), POINTER(EyeTrackerFB))
+
+PFN_xrDestroyEyeTrackerFB = CFUNCTYPE(Result.ctype(), EyeTrackerFB)
+
+PFN_xrGetEyeGazesFB = CFUNCTYPE(Result.ctype(), EyeTrackerFB, POINTER(EyeGazesInfoFB), POINTER(EyeGazesFB))
 
 
 class PassthroughKeyboardHandsIntensityFB(Structure):
@@ -8918,6 +9858,236 @@ class CompositionLayerSettingsFB(Structure):
         ("layer_flags", CompositionLayerSettingsFlagsFBCInt),
     ]
 
+
+class HapticPcmVibrationFB(Structure):
+    def __init__(
+        self,
+        buffer_size: int = 0,
+        buffer: POINTER(c_float) = None,
+        sample_rate: float = 0,
+        append: Bool32 = 0,
+        samples_consumed: POINTER(c_uint32) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.HAPTIC_PCM_VIBRATION_FB,
+    ) -> None:
+        super().__init__(
+            buffer_size=buffer_size,
+            buffer=buffer,
+            sample_rate=sample_rate,
+            append=append,
+            samples_consumed=samples_consumed,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HapticPcmVibrationFB(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, sample_rate={repr(self.sample_rate)}, append={repr(self.append)}, samples_consumed={repr(self.samples_consumed)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HapticPcmVibrationFB(buffer_size={self.buffer_size}, buffer={self.buffer}, sample_rate={self.sample_rate:.3f}, append={self.append}, samples_consumed={self.samples_consumed}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("buffer_size", c_uint32),
+        ("buffer", POINTER(c_float)),
+        ("sample_rate", c_float),
+        ("append", Bool32),
+        ("samples_consumed", POINTER(c_uint32)),
+    ]
+
+
+class DevicePcmSampleRateStateFB(Structure):
+    def __init__(
+        self,
+        sample_rate: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.DEVICE_PCM_SAMPLE_RATE_STATE_FB,
+    ) -> None:
+        super().__init__(
+            sample_rate=sample_rate,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.DevicePcmSampleRateStateFB(sample_rate={repr(self.sample_rate)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.DevicePcmSampleRateStateFB(sample_rate={self.sample_rate:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("sample_rate", c_float),
+    ]
+
+
+DevicePcmSampleRateGetInfoFB = DevicePcmSampleRateStateFB
+
+PFN_xrGetDeviceSampleRateFB = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActionInfo), POINTER(DevicePcmSampleRateGetInfoFB))
+
+
+class CompositionLayerDepthTestFB(Structure):
+    def __init__(
+        self,
+        depth_mask: Bool32 = 0,
+        compare_op: CompareOpFB = CompareOpFB(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.COMPOSITION_LAYER_DEPTH_TEST_FB,
+    ) -> None:
+        super().__init__(
+            depth_mask=depth_mask,
+            compare_op=CompareOpFB(compare_op).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CompositionLayerDepthTestFB(depth_mask={repr(self.depth_mask)}, compare_op={repr(self.compare_op)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CompositionLayerDepthTestFB(depth_mask={self.depth_mask}, compare_op={self.compare_op}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("depth_mask", Bool32),
+        ("compare_op", CompareOpFB.ctype()),
+    ]
+
+
+class LocalDimmingFrameEndInfoMETA(Structure):
+    def __init__(
+        self,
+        local_dimming_mode: LocalDimmingModeMETA = LocalDimmingModeMETA(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.LOCAL_DIMMING_FRAME_END_INFO_META,
+    ) -> None:
+        super().__init__(
+            local_dimming_mode=LocalDimmingModeMETA(local_dimming_mode).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LocalDimmingFrameEndInfoMETA(local_dimming_mode={repr(self.local_dimming_mode)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LocalDimmingFrameEndInfoMETA(local_dimming_mode={self.local_dimming_mode}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("local_dimming_mode", LocalDimmingModeMETA.ctype()),
+    ]
+
+
+ExternalCameraStatusFlagsOCULUSCInt = Flags64
+
+
+class ExternalCameraIntrinsicsOCULUS(Structure):
+    def __init__(
+        self,
+        last_change_time: Time = 0,
+        fov: Fovf = None,
+        virtual_near_plane_distance: float = 0,
+        virtual_far_plane_distance: float = 0,
+        image_sensor_pixel_resolution: Extent2Di = None,
+    ) -> None:
+        if fov is None:
+            fov = Fovf()
+        if image_sensor_pixel_resolution is None:
+            image_sensor_pixel_resolution = Extent2Di()
+        super().__init__(
+            last_change_time=last_change_time,
+            fov=fov,
+            virtual_near_plane_distance=virtual_near_plane_distance,
+            virtual_far_plane_distance=virtual_far_plane_distance,
+            image_sensor_pixel_resolution=image_sensor_pixel_resolution,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ExternalCameraIntrinsicsOCULUS(last_change_time={repr(self.last_change_time)}, fov={repr(self.fov)}, virtual_near_plane_distance={repr(self.virtual_near_plane_distance)}, virtual_far_plane_distance={repr(self.virtual_far_plane_distance)}, image_sensor_pixel_resolution={repr(self.image_sensor_pixel_resolution)})"
+
+    def __str__(self) -> str:
+        return f"xr.ExternalCameraIntrinsicsOCULUS(last_change_time={self.last_change_time}, fov={self.fov}, virtual_near_plane_distance={self.virtual_near_plane_distance:.3f}, virtual_far_plane_distance={self.virtual_far_plane_distance:.3f}, image_sensor_pixel_resolution={self.image_sensor_pixel_resolution})"
+
+    _fields_ = [
+        ("last_change_time", Time),
+        ("fov", Fovf),
+        ("virtual_near_plane_distance", c_float),
+        ("virtual_far_plane_distance", c_float),
+        ("image_sensor_pixel_resolution", Extent2Di),
+    ]
+
+
+class ExternalCameraExtrinsicsOCULUS(Structure):
+    def __init__(
+        self,
+        last_change_time: Time = 0,
+        camera_status_flags: ExternalCameraStatusFlagsOCULUS = ExternalCameraStatusFlagsOCULUS(),
+        attached_to_device: ExternalCameraAttachedToDeviceOCULUS = ExternalCameraAttachedToDeviceOCULUS(),
+        relative_pose: Posef = Posef(),
+    ) -> None:
+        super().__init__(
+            last_change_time=last_change_time,
+            camera_status_flags=ExternalCameraStatusFlagsOCULUS(camera_status_flags).value,
+            attached_to_device=ExternalCameraAttachedToDeviceOCULUS(attached_to_device).value,
+            relative_pose=relative_pose,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ExternalCameraExtrinsicsOCULUS(last_change_time={repr(self.last_change_time)}, camera_status_flags={repr(self.camera_status_flags)}, attached_to_device={repr(self.attached_to_device)}, relative_pose={repr(self.relative_pose)})"
+
+    def __str__(self) -> str:
+        return f"xr.ExternalCameraExtrinsicsOCULUS(last_change_time={self.last_change_time}, camera_status_flags={self.camera_status_flags}, attached_to_device={self.attached_to_device}, relative_pose={self.relative_pose})"
+
+    _fields_ = [
+        ("last_change_time", Time),
+        ("camera_status_flags", ExternalCameraStatusFlagsOCULUSCInt),
+        ("attached_to_device", ExternalCameraAttachedToDeviceOCULUS.ctype()),
+        ("relative_pose", Posef),
+    ]
+
+
+class ExternalCameraOCULUS(Structure):
+    def __init__(
+        self,
+        name: str = "",
+        intrinsics: ExternalCameraIntrinsicsOCULUS = None,
+        extrinsics: ExternalCameraExtrinsicsOCULUS = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EXTERNAL_CAMERA_OCULUS,
+    ) -> None:
+        if intrinsics is None:
+            intrinsics = ExternalCameraIntrinsicsOCULUS()
+        if extrinsics is None:
+            extrinsics = ExternalCameraExtrinsicsOCULUS()
+        super().__init__(
+            name=name.encode(),
+            intrinsics=intrinsics,
+            extrinsics=extrinsics,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ExternalCameraOCULUS(name={repr(self.name)}, intrinsics={repr(self.intrinsics)}, extrinsics={repr(self.extrinsics)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ExternalCameraOCULUS(name={self.name}, intrinsics={self.intrinsics}, extrinsics={self.extrinsics}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("name", (c_char * 32)),
+        ("intrinsics", ExternalCameraIntrinsicsOCULUS),
+        ("extrinsics", ExternalCameraExtrinsicsOCULUS),
+    ]
+
+
+PFN_xrEnumerateExternalCamerasOCULUS = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(ExternalCameraOCULUS))
 
 PerformanceMetricsCounterFlagsMETACInt = Flags64
 
@@ -8992,6 +10162,120 @@ PFN_xrGetPerformanceMetricsStateMETA = CFUNCTYPE(Result.ctype(), Session, POINTE
 PFN_xrQueryPerformanceMetricsCounterMETA = CFUNCTYPE(Result.ctype(), Session, Path, POINTER(PerformanceMetricsCounterMETA))
 
 
+class SpaceListSaveInfoFB(Structure):
+    def __init__(
+        self,
+        space_count: Optional[int] = None,
+        spaces: ArrayFieldParamType[Space] = None,
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_LIST_SAVE_INFO_FB,
+    ) -> None:
+        space_count, spaces = array_field_helper(
+            Space, space_count, spaces)
+        super().__init__(
+            space_count=space_count,
+            _spaces=spaces,
+            location=SpaceStorageLocationFB(location).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceListSaveInfoFB(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceListSaveInfoFB(space_count={self.space_count}, spaces={self._spaces}, location={self.location}, next={self.next}, type={self.type})"
+
+    @property
+    def spaces(self):
+        if self.space_count == 0:
+            return (Space * 0)()
+        else:
+            return (Space * self.space_count).from_address(
+                ctypes.addressof(self._spaces.contents))
+
+    @spaces.setter
+    def spaces(self, value):
+        self.space_count, self._spaces = array_field_helper(
+            Space, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space_count", c_uint32),
+        ("_spaces", POINTER(Space)),
+        ("location", SpaceStorageLocationFB.ctype()),
+    ]
+
+
+class EventDataSpaceListSaveCompleteFB(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SPACE_LIST_SAVE_COMPLETE_FB,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceListSaveCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceListSaveCompleteFB(request_id={self.request_id}, result={self.result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+    ]
+
+
+PFN_xrSaveSpaceListFB = CFUNCTYPE(Result.ctype(), Session, POINTER(SpaceListSaveInfoFB), POINTER(AsyncRequestIdFB))
+
+SpaceUserIdFB = c_uint64
+
+
+class SpaceUserCreateInfoFB(Structure):
+    def __init__(
+        self,
+        user_id: SpaceUserIdFB = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_USER_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            user_id=user_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceUserCreateInfoFB(user_id={repr(self.user_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceUserCreateInfoFB(user_id={self.user_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("user_id", SpaceUserIdFB),
+    ]
+
+
+PFN_xrCreateSpaceUserFB = CFUNCTYPE(Result.ctype(), Session, POINTER(SpaceUserCreateInfoFB), POINTER(SpaceUserFB))
+
+PFN_xrGetSpaceUserIdFB = CFUNCTYPE(Result.ctype(), SpaceUserFB, POINTER(SpaceUserIdFB))
+
+PFN_xrDestroySpaceUserFB = CFUNCTYPE(Result.ctype(), SpaceUserFB)
+
+
 class SystemHeadsetIdPropertiesMETA(Structure):
     def __init__(
         self,
@@ -9018,6 +10302,9 @@ class SystemHeadsetIdPropertiesMETA(Structure):
         ("next", c_void_p),
         ("id", UuidEXT),
     ]
+
+
+PFN_xrSetTrackingOptimizationSettingsHintQCOM = CFUNCTYPE(Result.ctype(), Session, TrackingOptimizationSettingsDomainQCOM.ctype(), TrackingOptimizationSettingsHintQCOM.ctype())
 
 
 class PassthroughHTC_T(Structure):
@@ -9372,6 +10659,102 @@ class ActiveActionSetPrioritiesEXT(Structure):
     ]
 
 
+class SystemForceFeedbackCurlPropertiesMNDX(Structure):
+    def __init__(
+        self,
+        supports_force_feedback_curl: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX,
+    ) -> None:
+        super().__init__(
+            supports_force_feedback_curl=supports_force_feedback_curl,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemForceFeedbackCurlPropertiesMNDX(supports_force_feedback_curl={repr(self.supports_force_feedback_curl)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemForceFeedbackCurlPropertiesMNDX(supports_force_feedback_curl={self.supports_force_feedback_curl}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_force_feedback_curl", Bool32),
+    ]
+
+
+class ForceFeedbackCurlApplyLocationMNDX(Structure):
+    def __init__(
+        self,
+        location: ForceFeedbackCurlLocationMNDX = ForceFeedbackCurlLocationMNDX(),
+        value: float = 0,
+    ) -> None:
+        super().__init__(
+            location=ForceFeedbackCurlLocationMNDX(location).value,
+            value=value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ForceFeedbackCurlApplyLocationMNDX(location={repr(self.location)}, value={repr(self.value)})"
+
+    def __str__(self) -> str:
+        return f"xr.ForceFeedbackCurlApplyLocationMNDX(location={self.location}, value={self.value:.3f})"
+
+    _fields_ = [
+        ("location", ForceFeedbackCurlLocationMNDX.ctype()),
+        ("value", c_float),
+    ]
+
+
+class ForceFeedbackCurlApplyLocationsMNDX(Structure):
+    def __init__(
+        self,
+        location_count: Optional[int] = None,
+        locations: ArrayFieldParamType[ForceFeedbackCurlApplyLocationMNDX] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX,
+    ) -> None:
+        location_count, locations = array_field_helper(
+            ForceFeedbackCurlApplyLocationMNDX, location_count, locations)
+        super().__init__(
+            location_count=location_count,
+            _locations=locations,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ForceFeedbackCurlApplyLocationsMNDX(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ForceFeedbackCurlApplyLocationsMNDX(location_count={self.location_count}, locations={self._locations}, next={self.next}, type={self.type})"
+
+    @property
+    def locations(self):
+        if self.location_count == 0:
+            return (ForceFeedbackCurlApplyLocationMNDX * 0)()
+        else:
+            return (ForceFeedbackCurlApplyLocationMNDX * self.location_count).from_address(
+                ctypes.addressof(self._locations.contents))
+
+    @locations.setter
+    def locations(self, value):
+        self.location_count, self._locations = array_field_helper(
+            ForceFeedbackCurlApplyLocationMNDX, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location_count", c_uint32),
+        ("_locations", POINTER(ForceFeedbackCurlApplyLocationMNDX)),
+    ]
+
+
+PFN_xrApplyForceFeedbackCurlMNDX = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(ForceFeedbackCurlApplyLocationsMNDX))
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -9397,6 +10780,14 @@ __all__ = [
     "BaseOutStructure",
     "BindingModificationBaseHeaderKHR",
     "BindingModificationsKHR",
+    "BodyJointLocationFB",
+    "BodyJointLocationsFB",
+    "BodyJointsLocateInfoFB",
+    "BodySkeletonFB",
+    "BodySkeletonJointFB",
+    "BodyTrackerCreateInfoFB",
+    "BodyTrackerFB",
+    "BodyTrackerFB_T",
     "Bool32",
     "BoundSourcesForActionEnumerateInfo",
     "Boundary2DFB",
@@ -9407,6 +10798,7 @@ __all__ = [
     "CompositionLayerCubeKHR",
     "CompositionLayerCylinderKHR",
     "CompositionLayerDepthInfoKHR",
+    "CompositionLayerDepthTestFB",
     "CompositionLayerDepthTestVARJO",
     "CompositionLayerEquirect2KHR",
     "CompositionLayerEquirectKHR",
@@ -9441,6 +10833,8 @@ __all__ = [
     "DebugUtilsMessengerEXT_T",
     "DebugUtilsObjectNameInfoEXT",
     "DeserializeSceneFragmentMSFT",
+    "DevicePcmSampleRateGetInfoFB",
+    "DevicePcmSampleRateStateFB",
     "DigitalLensControlALMALENCE",
     "DigitalLensControlFlagsALMALENCECInt",
     "Duration",
@@ -9455,12 +10849,15 @@ __all__ = [
     "EventDataPassthroughStateChangedFB",
     "EventDataPerfSettingsEXT",
     "EventDataReferenceSpaceChangePending",
+    "EventDataSceneCaptureCompleteFB",
     "EventDataSessionStateChanged",
     "EventDataSpaceEraseCompleteFB",
+    "EventDataSpaceListSaveCompleteFB",
     "EventDataSpaceQueryCompleteFB",
     "EventDataSpaceQueryResultsAvailableFB",
     "EventDataSpaceSaveCompleteFB",
     "EventDataSpaceSetStatusCompleteFB",
+    "EventDataSpaceShareCompleteFB",
     "EventDataSpatialAnchorCreateCompleteFB",
     "EventDataVisibilityMaskChangedKHR",
     "EventDataViveTrackerConnectedHTCX",
@@ -9468,18 +10865,40 @@ __all__ = [
     "Extent2Df",
     "Extent2Di",
     "Extent3DfFB",
+    "ExternalCameraExtrinsicsOCULUS",
+    "ExternalCameraIntrinsicsOCULUS",
+    "ExternalCameraOCULUS",
+    "ExternalCameraStatusFlagsOCULUSCInt",
+    "EyeGazeFB",
     "EyeGazeSampleTimeEXT",
+    "EyeGazesFB",
+    "EyeGazesInfoFB",
+    "EyeTrackerCreateInfoFB",
+    "EyeTrackerFB",
+    "EyeTrackerFB_T",
+    "FaceExpressionInfoFB",
+    "FaceExpressionStatusFB",
+    "FaceExpressionWeightsFB",
+    "FaceTrackerCreateInfoFB",
+    "FaceTrackerFB",
+    "FaceTrackerFB_T",
     "FacialExpressionsHTC",
     "FacialTrackerCreateInfoHTC",
     "FacialTrackerHTC",
     "FacialTrackerHTC_T",
     "Flags64",
+    "ForceFeedbackCurlApplyLocationMNDX",
+    "ForceFeedbackCurlApplyLocationsMNDX",
     "FoveatedViewConfigurationViewVARJO",
     "FoveationApplyInfoHTC",
     "FoveationConfigurationHTC",
     "FoveationCustomModeInfoHTC",
     "FoveationDynamicFlagsHTCCInt",
     "FoveationDynamicModeInfoHTC",
+    "FoveationEyeTrackedProfileCreateFlagsMETACInt",
+    "FoveationEyeTrackedProfileCreateInfoMETA",
+    "FoveationEyeTrackedStateFlagsMETACInt",
+    "FoveationEyeTrackedStateMETA",
     "FoveationLevelProfileCreateInfoFB",
     "FoveationProfileCreateInfoFB",
     "FoveationProfileFB",
@@ -9487,12 +10906,16 @@ __all__ = [
     "Fovf",
     "FrameBeginInfo",
     "FrameEndInfo",
+    "FrameEndInfoFlagsMLCInt",
+    "FrameEndInfoML",
     "FrameState",
     "FrameWaitInfo",
     "GeometryInstanceCreateInfoFB",
     "GeometryInstanceFB",
     "GeometryInstanceFB_T",
     "GeometryInstanceTransformFB",
+    "GlobalDimmerFrameEndInfoFlagsMLCInt",
+    "GlobalDimmerFrameEndInfoML",
     "HandCapsuleFB",
     "HandJointLocationEXT",
     "HandJointLocationsEXT",
@@ -9516,7 +10939,9 @@ __all__ = [
     "HandTrackingMeshFB",
     "HandTrackingScaleFB",
     "HapticActionInfo",
+    "HapticAmplitudeEnvelopeVibrationFB",
     "HapticBaseHeader",
+    "HapticPcmVibrationFB",
     "HapticVibration",
     "InputSourceLocalizedNameFlagsCInt",
     "InputSourceLocalizedNameGetInfo",
@@ -9535,6 +10960,7 @@ __all__ = [
     "KeyboardTrackingQueryFB",
     "KeyboardTrackingQueryFlagsFBCInt",
     "LoaderInitInfoBaseHeaderKHR",
+    "LocalDimmingFrameEndInfoMETA",
     "MarkerSpaceCreateInfoVARJO",
     "NewSceneComputeInfoMSFT",
     "Offset2Df",
@@ -9543,6 +10969,7 @@ __all__ = [
     "OverlayMainSessionFlagsEXTXCInt",
     "OverlaySessionCreateFlagsEXTXCInt",
     "PFN_xrAcquireSwapchainImage",
+    "PFN_xrApplyForceFeedbackCurlMNDX",
     "PFN_xrApplyFoveationHTC",
     "PFN_xrApplyHapticFeedback",
     "PFN_xrAttachSessionActionSets",
@@ -9553,7 +10980,10 @@ __all__ = [
     "PFN_xrCreateAction",
     "PFN_xrCreateActionSet",
     "PFN_xrCreateActionSpace",
+    "PFN_xrCreateBodyTrackerFB",
     "PFN_xrCreateDebugUtilsMessengerEXT",
+    "PFN_xrCreateEyeTrackerFB",
+    "PFN_xrCreateFaceTrackerFB",
     "PFN_xrCreateFacialTrackerHTC",
     "PFN_xrCreateFoveationProfileFB",
     "PFN_xrCreateGeometryInstanceFB",
@@ -9569,6 +10999,7 @@ __all__ = [
     "PFN_xrCreateSceneMSFT",
     "PFN_xrCreateSceneObserverMSFT",
     "PFN_xrCreateSession",
+    "PFN_xrCreateSpaceUserFB",
     "PFN_xrCreateSpatialAnchorFB",
     "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
     "PFN_xrCreateSpatialAnchorMSFT",
@@ -9581,7 +11012,10 @@ __all__ = [
     "PFN_xrDeserializeSceneMSFT",
     "PFN_xrDestroyAction",
     "PFN_xrDestroyActionSet",
+    "PFN_xrDestroyBodyTrackerFB",
     "PFN_xrDestroyDebugUtilsMessengerEXT",
+    "PFN_xrDestroyEyeTrackerFB",
+    "PFN_xrDestroyFaceTrackerFB",
     "PFN_xrDestroyFacialTrackerHTC",
     "PFN_xrDestroyFoveationProfileFB",
     "PFN_xrDestroyGeometryInstanceFB",
@@ -9594,6 +11028,7 @@ __all__ = [
     "PFN_xrDestroySceneObserverMSFT",
     "PFN_xrDestroySession",
     "PFN_xrDestroySpace",
+    "PFN_xrDestroySpaceUserFB",
     "PFN_xrDestroySpatialAnchorMSFT",
     "PFN_xrDestroySpatialAnchorStoreConnectionMSFT",
     "PFN_xrDestroySpatialGraphNodeBindingMSFT",
@@ -9606,6 +11041,7 @@ __all__ = [
     "PFN_xrEnumerateColorSpacesFB",
     "PFN_xrEnumerateDisplayRefreshRatesFB",
     "PFN_xrEnumerateEnvironmentBlendModes",
+    "PFN_xrEnumerateExternalCamerasOCULUS",
     "PFN_xrEnumerateInstanceExtensionProperties",
     "PFN_xrEnumeratePerformanceMetricsCounterPathsMETA",
     "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
@@ -9625,12 +11061,17 @@ __all__ = [
     "PFN_xrGetActionStateFloat",
     "PFN_xrGetActionStatePose",
     "PFN_xrGetActionStateVector2f",
+    "PFN_xrGetBodySkeletonFB",
     "PFN_xrGetControllerModelKeyMSFT",
     "PFN_xrGetControllerModelPropertiesMSFT",
     "PFN_xrGetControllerModelStateMSFT",
     "PFN_xrGetCurrentInteractionProfile",
+    "PFN_xrGetDeviceSampleRateFB",
     "PFN_xrGetDisplayRefreshRateFB",
+    "PFN_xrGetEyeGazesFB",
+    "PFN_xrGetFaceExpressionWeightsFB",
     "PFN_xrGetFacialExpressionsHTC",
+    "PFN_xrGetFoveationEyeTrackedStateMETA",
     "PFN_xrGetHandMeshFB",
     "PFN_xrGetInputSourceLocalizedName",
     "PFN_xrGetInstanceProcAddr",
@@ -9650,6 +11091,7 @@ __all__ = [
     "PFN_xrGetSpaceContainerFB",
     "PFN_xrGetSpaceRoomLayoutFB",
     "PFN_xrGetSpaceSemanticLabelsFB",
+    "PFN_xrGetSpaceUserIdFB",
     "PFN_xrGetSpaceUuidFB",
     "PFN_xrGetSpatialGraphNodeBindingPropertiesMSFT",
     "PFN_xrGetSwapchainStateFB",
@@ -9660,6 +11102,7 @@ __all__ = [
     "PFN_xrInitializeLoaderKHR",
     "PFN_xrLoadControllerModelMSFT",
     "PFN_xrLoadRenderModelFB",
+    "PFN_xrLocateBodyJointsFB",
     "PFN_xrLocateHandJointsEXT",
     "PFN_xrLocateSceneComponentsMSFT",
     "PFN_xrLocateSpace",
@@ -9680,9 +11123,11 @@ __all__ = [
     "PFN_xrReleaseSwapchainImage",
     "PFN_xrRequestDisplayRefreshRateFB",
     "PFN_xrRequestExitSession",
+    "PFN_xrRequestSceneCaptureFB",
     "PFN_xrResultToString",
     "PFN_xrRetrieveSpaceQueryResultsFB",
     "PFN_xrSaveSpaceFB",
+    "PFN_xrSaveSpaceListFB",
     "PFN_xrSessionBeginDebugUtilsLabelRegionEXT",
     "PFN_xrSessionEndDebugUtilsLabelRegionEXT",
     "PFN_xrSessionInsertDebugUtilsLabelEXT",
@@ -9700,7 +11145,9 @@ __all__ = [
     "PFN_xrSetMarkerTrackingVARJO",
     "PFN_xrSetPerformanceMetricsStateMETA",
     "PFN_xrSetSpaceComponentStatusFB",
+    "PFN_xrSetTrackingOptimizationSettingsHintQCOM",
     "PFN_xrSetViewOffsetVARJO",
+    "PFN_xrShareSpacesFB",
     "PFN_xrStopHapticFeedback",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
@@ -9759,6 +11206,7 @@ __all__ = [
     "RenderModelPropertiesFB",
     "RoomLayoutFB",
     "SceneBoundsMSFT",
+    "SceneCaptureRequestInfoFB",
     "SceneComponentLocationMSFT",
     "SceneComponentLocationsMSFT",
     "SceneComponentMSFT",
@@ -9811,6 +11259,7 @@ __all__ = [
     "SpaceContainerFB",
     "SpaceEraseInfoFB",
     "SpaceFilterInfoBaseHeaderFB",
+    "SpaceListSaveInfoFB",
     "SpaceLocation",
     "SpaceLocationFlagsCInt",
     "SpaceQueryInfoBaseHeaderFB",
@@ -9818,7 +11267,12 @@ __all__ = [
     "SpaceQueryResultFB",
     "SpaceQueryResultsFB",
     "SpaceSaveInfoFB",
+    "SpaceShareInfoFB",
     "SpaceStorageLocationFilterInfoFB",
+    "SpaceUserCreateInfoFB",
+    "SpaceUserFB",
+    "SpaceUserFB_T",
+    "SpaceUserIdFB",
     "SpaceUuidFilterInfoFB",
     "SpaceVelocity",
     "SpaceVelocityFlagsCInt",
@@ -9854,10 +11308,15 @@ __all__ = [
     "SwapchainSubImage",
     "SwapchainUsageFlagsCInt",
     "Swapchain_T",
+    "SystemBodyTrackingPropertiesFB",
     "SystemColorSpacePropertiesFB",
     "SystemEyeGazeInteractionPropertiesEXT",
+    "SystemEyeTrackingPropertiesFB",
+    "SystemFaceTrackingPropertiesFB",
     "SystemFacialTrackingPropertiesHTC",
+    "SystemForceFeedbackCurlPropertiesMNDX",
     "SystemFoveatedRenderingPropertiesVARJO",
+    "SystemFoveationEyeTrackedPropertiesMETA",
     "SystemGetInfo",
     "SystemGraphicsProperties",
     "SystemHandTrackingMeshPropertiesMSFT",

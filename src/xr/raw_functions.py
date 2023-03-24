@@ -226,7 +226,7 @@ xrLocateSpace.argtypes = [
 
 xrDestroySpace = openxr_loader_library.xrDestroySpace
 xrDestroySpace.__doc__ = """
-    Creates a space based on a pose action.
+    Destroys an XrSpace.
 """
 xrDestroySpace.restype = Result
 xrDestroySpace.argtypes = [

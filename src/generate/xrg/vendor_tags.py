@@ -5,6 +5,9 @@ vendor_tags = [
     "HTC",
     "KHR",
     "META",
+    "MNDX",
     "MSFT",
+    "OCULUS",
+    "QCOM",
     "ULTRALEAP",
 ]

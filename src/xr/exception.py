@@ -1102,6 +1102,42 @@ class SpatialAnchorNameInvalidMSFTError(ErrorResult):
         return Result.ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT
 
 
+class SpaceMappingInsufficientFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_MAPPING_INSUFFICIENT_FB
+
+
+class SpaceLocalizationFailedFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_LOCALIZATION_FAILED_FB
+
+
+class SpaceNetworkTimeoutFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_NETWORK_TIMEOUT_FB
+
+
+class SpaceNetworkRequestFailedFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_NETWORK_REQUEST_FAILED_FB
+
+
+class SpaceCloudStorageDisabledFBError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB
+
+
+class HintAlreadySetQCOMError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_HINT_ALREADY_SET_QCOM
+
+
 _exception_map = {
     Result.SUCCESS: Success,
     Result.TIMEOUT_EXPIRED: TimeoutExpired,
@@ -1188,6 +1224,12 @@ _exception_map = {
     Result.ERROR_MARKER_ID_INVALID_VARJO: MarkerIdInvalidVarjoError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT: SpatialAnchorNameNotFoundMSFTError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT: SpatialAnchorNameInvalidMSFTError,
+    Result.ERROR_SPACE_MAPPING_INSUFFICIENT_FB: SpaceMappingInsufficientFBError,
+    Result.ERROR_SPACE_LOCALIZATION_FAILED_FB: SpaceLocalizationFailedFBError,
+    Result.ERROR_SPACE_NETWORK_TIMEOUT_FB: SpaceNetworkTimeoutFBError,
+    Result.ERROR_SPACE_NETWORK_REQUEST_FAILED_FB: SpaceNetworkRequestFailedFBError,
+    Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB: SpaceCloudStorageDisabledFBError,
+    Result.ERROR_HINT_ALREADY_SET_QCOM: HintAlreadySetQCOMError,
 }
 
 
@@ -1240,6 +1282,7 @@ __all__ = [
     "GraphicsDeviceInvalidError",
     "GraphicsRequirementsCallMissingError",
     "HandleInvalidError",
+    "HintAlreadySetQCOMError",
     "IndexOutOfRangeError",
     "InitializationFailedError",
     "InstanceLostError",
@@ -1283,10 +1326,15 @@ __all__ = [
     "SessionRunningError",
     "SizeInsufficientError",
     "SpaceBoundsUnavailable",
+    "SpaceCloudStorageDisabledFBError",
     "SpaceComponentNotEnabledFBError",
     "SpaceComponentNotSupportedFBError",
     "SpaceComponentStatusAlreadySetFBError",
     "SpaceComponentStatusPendingFBError",
+    "SpaceLocalizationFailedFBError",
+    "SpaceMappingInsufficientFBError",
+    "SpaceNetworkRequestFailedFBError",
+    "SpaceNetworkTimeoutFBError",
     "SpatialAnchorNameInvalidMSFTError",
     "SpatialAnchorNameNotFoundMSFTError",
     "Success",
