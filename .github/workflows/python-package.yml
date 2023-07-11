@@ -28,7 +28,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - uses: awalsh128/cache-apt-pkgs-action@latest
       with:
-        packages: mesa-libGL-devel
+        packages: mesa-common-dev
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
