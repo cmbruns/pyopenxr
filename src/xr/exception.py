@@ -1132,10 +1132,28 @@ class SpaceCloudStorageDisabledFBError(ErrorResult):
         return Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB
 
 
+class PassthroughColorLutBufferSizeMismatchMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META
+
+
 class HintAlreadySetQCOMError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_HINT_ALREADY_SET_QCOM
+
+
+class SpaceNotLocatableEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_NOT_LOCATABLE_EXT
+
+
+class PlaneDetectionPermissionDeniedEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT
 
 
 _exception_map = {
@@ -1229,7 +1247,10 @@ _exception_map = {
     Result.ERROR_SPACE_NETWORK_TIMEOUT_FB: SpaceNetworkTimeoutFBError,
     Result.ERROR_SPACE_NETWORK_REQUEST_FAILED_FB: SpaceNetworkRequestFailedFBError,
     Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB: SpaceCloudStorageDisabledFBError,
+    Result.ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META: PassthroughColorLutBufferSizeMismatchMETAError,
     Result.ERROR_HINT_ALREADY_SET_QCOM: HintAlreadySetQCOMError,
+    Result.ERROR_SPACE_NOT_LOCATABLE_EXT: SpaceNotLocatableEXTError,
+    Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT: PlaneDetectionPermissionDeniedEXTError,
 }
 
 
@@ -1298,10 +1319,12 @@ __all__ = [
     "NameInvalidError",
     "NotPermittedPassthroughFBError",
     "OutOfMemoryError",
+    "PassthroughColorLutBufferSizeMismatchMETAError",
     "PathCountExceededError",
     "PathFormatInvalidError",
     "PathInvalidError",
     "PathUnsupportedError",
+    "PlaneDetectionPermissionDeniedEXTError",
     "PoseInvalidError",
     "QualifiedSuccessResult",
     "ReferenceSpaceUnsupportedError",
@@ -1335,6 +1358,7 @@ __all__ = [
     "SpaceMappingInsufficientFBError",
     "SpaceNetworkRequestFailedFBError",
     "SpaceNetworkTimeoutFBError",
+    "SpaceNotLocatableEXTError",
     "SpatialAnchorNameInvalidMSFTError",
     "SpatialAnchorNameNotFoundMSFTError",
     "Success",

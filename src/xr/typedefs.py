@@ -9011,6 +9011,9 @@ class HapticAmplitudeEnvelopeVibrationFB(Structure):
     ]
 
 
+SemanticLabelsSupportFlagsFBCInt = Flags64
+
+
 class Extent3DfFB(Structure):
     def __init__(
         self,
@@ -9239,6 +9242,35 @@ class Boundary2DFB(Structure):
         ("vertex_capacity_input", c_uint32),
         ("vertex_count_output", c_uint32),
         ("vertices", POINTER(Vector2f)),
+    ]
+
+
+class SemanticLabelsSupportInfoFB(Structure):
+    def __init__(
+        self,
+        flags: SemanticLabelsSupportFlagsFB = SemanticLabelsSupportFlagsFB(),
+        recognized_labels: str = "",
+        next: c_void_p = None,
+        type: StructureType = StructureType.SEMANTIC_LABELS_SUPPORT_INFO_FB,
+    ) -> None:
+        super().__init__(
+            flags=SemanticLabelsSupportFlagsFB(flags).value,
+            recognized_labels=recognized_labels.encode(),
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SemanticLabelsSupportInfoFB(flags={repr(self.flags)}, recognized_labels={repr(self.recognized_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SemanticLabelsSupportInfoFB(flags={self.flags}, recognized_labels={self.recognized_labels}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", SemanticLabelsSupportFlagsFBCInt),
+        ("recognized_labels", c_char_p),
     ]
 
 
@@ -9983,6 +10015,472 @@ class LocalDimmingFrameEndInfoMETA(Structure):
     ]
 
 
+class VirtualKeyboardMETA_T(Structure):
+    pass
+
+
+VirtualKeyboardMETA = POINTER(VirtualKeyboardMETA_T)
+
+VirtualKeyboardInputStateFlagsMETACInt = Flags64
+
+
+class SystemVirtualKeyboardPropertiesMETA(Structure):
+    def __init__(
+        self,
+        supports_virtual_keyboard: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_VIRTUAL_KEYBOARD_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_virtual_keyboard=supports_virtual_keyboard,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemVirtualKeyboardPropertiesMETA(supports_virtual_keyboard={repr(self.supports_virtual_keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemVirtualKeyboardPropertiesMETA(supports_virtual_keyboard={self.supports_virtual_keyboard}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_virtual_keyboard", Bool32),
+    ]
+
+
+class VirtualKeyboardCreateInfoMETA(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardCreateInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardCreateInfoMETA(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class VirtualKeyboardSpaceCreateInfoMETA(Structure):
+    def __init__(
+        self,
+        location_type: VirtualKeyboardLocationTypeMETA = VirtualKeyboardLocationTypeMETA(),
+        space: Space = None,
+        pose_in_space: Posef = Posef(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_SPACE_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            location_type=VirtualKeyboardLocationTypeMETA(location_type).value,
+            space=space,
+            pose_in_space=pose_in_space,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardSpaceCreateInfoMETA(location_type={repr(self.location_type)}, space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardSpaceCreateInfoMETA(location_type={self.location_type}, space={self.space}, pose_in_space={self.pose_in_space}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location_type", VirtualKeyboardLocationTypeMETA.ctype()),
+        ("space", Space),
+        ("pose_in_space", Posef),
+    ]
+
+
+class VirtualKeyboardLocationInfoMETA(Structure):
+    def __init__(
+        self,
+        location_type: VirtualKeyboardLocationTypeMETA = VirtualKeyboardLocationTypeMETA(),
+        space: Space = None,
+        pose_in_space: Posef = Posef(),
+        scale: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_LOCATION_INFO_META,
+    ) -> None:
+        super().__init__(
+            location_type=VirtualKeyboardLocationTypeMETA(location_type).value,
+            space=space,
+            pose_in_space=pose_in_space,
+            scale=scale,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardLocationInfoMETA(location_type={repr(self.location_type)}, space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, scale={repr(self.scale)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardLocationInfoMETA(location_type={self.location_type}, space={self.space}, pose_in_space={self.pose_in_space}, scale={self.scale:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location_type", VirtualKeyboardLocationTypeMETA.ctype()),
+        ("space", Space),
+        ("pose_in_space", Posef),
+        ("scale", c_float),
+    ]
+
+
+class VirtualKeyboardModelVisibilitySetInfoMETA(Structure):
+    def __init__(
+        self,
+        visible: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_MODEL_VISIBILITY_SET_INFO_META,
+    ) -> None:
+        super().__init__(
+            visible=visible,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardModelVisibilitySetInfoMETA(visible={repr(self.visible)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardModelVisibilitySetInfoMETA(visible={self.visible}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("visible", Bool32),
+    ]
+
+
+class VirtualKeyboardAnimationStateMETA(Structure):
+    def __init__(
+        self,
+        animation_index: int = 0,
+        fraction: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_ANIMATION_STATE_META,
+    ) -> None:
+        super().__init__(
+            animation_index=animation_index,
+            fraction=fraction,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardAnimationStateMETA(animation_index={repr(self.animation_index)}, fraction={repr(self.fraction)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardAnimationStateMETA(animation_index={self.animation_index}, fraction={self.fraction:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("animation_index", c_int32),
+        ("fraction", c_float),
+    ]
+
+
+class VirtualKeyboardModelAnimationStatesMETA(Structure):
+    def __init__(
+        self,
+        state_capacity_input: int = 0,
+        state_count_output: int = 0,
+        states: POINTER(VirtualKeyboardAnimationStateMETA) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_MODEL_ANIMATION_STATES_META,
+    ) -> None:
+        super().__init__(
+            state_capacity_input=state_capacity_input,
+            state_count_output=state_count_output,
+            states=states,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardModelAnimationStatesMETA(state_capacity_input={repr(self.state_capacity_input)}, state_count_output={repr(self.state_count_output)}, states={repr(self.states)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardModelAnimationStatesMETA(state_capacity_input={self.state_capacity_input}, state_count_output={self.state_count_output}, states={self.states}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("state_capacity_input", c_uint32),
+        ("state_count_output", c_uint32),
+        ("states", POINTER(VirtualKeyboardAnimationStateMETA)),
+    ]
+
+
+class VirtualKeyboardTextureDataMETA(Structure):
+    def __init__(
+        self,
+        texture_width: int = 0,
+        texture_height: int = 0,
+        buffer_capacity_input: int = 0,
+        buffer_count_output: int = 0,
+        buffer: POINTER(c_uint8) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_TEXTURE_DATA_META,
+    ) -> None:
+        super().__init__(
+            texture_width=texture_width,
+            texture_height=texture_height,
+            buffer_capacity_input=buffer_capacity_input,
+            buffer_count_output=buffer_count_output,
+            buffer=buffer,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardTextureDataMETA(texture_width={repr(self.texture_width)}, texture_height={repr(self.texture_height)}, buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardTextureDataMETA(texture_width={self.texture_width}, texture_height={self.texture_height}, buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("texture_width", c_uint32),
+        ("texture_height", c_uint32),
+        ("buffer_capacity_input", c_uint32),
+        ("buffer_count_output", c_uint32),
+        ("buffer", POINTER(c_uint8)),
+    ]
+
+
+class VirtualKeyboardInputInfoMETA(Structure):
+    def __init__(
+        self,
+        input_source: VirtualKeyboardInputSourceMETA = VirtualKeyboardInputSourceMETA(),
+        input_space: Space = None,
+        input_pose_in_space: Posef = Posef(),
+        input_state: VirtualKeyboardInputStateFlagsMETA = VirtualKeyboardInputStateFlagsMETA(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_INPUT_INFO_META,
+    ) -> None:
+        super().__init__(
+            input_source=VirtualKeyboardInputSourceMETA(input_source).value,
+            input_space=input_space,
+            input_pose_in_space=input_pose_in_space,
+            input_state=VirtualKeyboardInputStateFlagsMETA(input_state).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardInputInfoMETA(input_source={repr(self.input_source)}, input_space={repr(self.input_space)}, input_pose_in_space={repr(self.input_pose_in_space)}, input_state={repr(self.input_state)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardInputInfoMETA(input_source={self.input_source}, input_space={self.input_space}, input_pose_in_space={self.input_pose_in_space}, input_state={self.input_state}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("input_source", VirtualKeyboardInputSourceMETA.ctype()),
+        ("input_space", Space),
+        ("input_pose_in_space", Posef),
+        ("input_state", VirtualKeyboardInputStateFlagsMETACInt),
+    ]
+
+
+class VirtualKeyboardTextContextChangeInfoMETA(Structure):
+    def __init__(
+        self,
+        text_context: str = "",
+        next: c_void_p = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_TEXT_CONTEXT_CHANGE_INFO_META,
+    ) -> None:
+        super().__init__(
+            text_context=text_context.encode(),
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={repr(self.text_context)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={self.text_context}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("text_context", c_char_p),
+    ]
+
+
+class EventDataVirtualKeyboardCommitTextMETA(Structure):
+    def __init__(
+        self,
+        keyboard: VirtualKeyboardMETA = None,
+        text: str = "",
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_COMMIT_TEXT_META,
+    ) -> None:
+        super().__init__(
+            keyboard=keyboard,
+            text=text.encode(),
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardCommitTextMETA(keyboard={repr(self.keyboard)}, text={repr(self.text)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardCommitTextMETA(keyboard={self.keyboard}, text={self.text}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("keyboard", VirtualKeyboardMETA),
+        ("text", (c_char * 3992)),
+    ]
+
+
+class EventDataVirtualKeyboardBackspaceMETA(Structure):
+    def __init__(
+        self,
+        keyboard: VirtualKeyboardMETA = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_BACKSPACE_META,
+    ) -> None:
+        super().__init__(
+            keyboard=keyboard,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardBackspaceMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardBackspaceMETA(keyboard={self.keyboard}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("keyboard", VirtualKeyboardMETA),
+    ]
+
+
+class EventDataVirtualKeyboardEnterMETA(Structure):
+    def __init__(
+        self,
+        keyboard: VirtualKeyboardMETA = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_ENTER_META,
+    ) -> None:
+        super().__init__(
+            keyboard=keyboard,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardEnterMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardEnterMETA(keyboard={self.keyboard}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("keyboard", VirtualKeyboardMETA),
+    ]
+
+
+class EventDataVirtualKeyboardShownMETA(Structure):
+    def __init__(
+        self,
+        keyboard: VirtualKeyboardMETA = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_SHOWN_META,
+    ) -> None:
+        super().__init__(
+            keyboard=keyboard,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardShownMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardShownMETA(keyboard={self.keyboard}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("keyboard", VirtualKeyboardMETA),
+    ]
+
+
+class EventDataVirtualKeyboardHiddenMETA(Structure):
+    def __init__(
+        self,
+        keyboard: VirtualKeyboardMETA = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_HIDDEN_META,
+    ) -> None:
+        super().__init__(
+            keyboard=keyboard,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardHiddenMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataVirtualKeyboardHiddenMETA(keyboard={self.keyboard}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("keyboard", VirtualKeyboardMETA),
+    ]
+
+
+PFN_xrCreateVirtualKeyboardMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(VirtualKeyboardCreateInfoMETA), POINTER(VirtualKeyboardMETA))
+
+PFN_xrDestroyVirtualKeyboardMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA)
+
+PFN_xrCreateVirtualKeyboardSpaceMETA = CFUNCTYPE(Result.ctype(), Session, VirtualKeyboardMETA, POINTER(VirtualKeyboardSpaceCreateInfoMETA), POINTER(Space))
+
+PFN_xrSuggestVirtualKeyboardLocationMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, POINTER(VirtualKeyboardLocationInfoMETA))
+
+PFN_xrGetVirtualKeyboardScaleMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, POINTER(c_float))
+
+PFN_xrSetVirtualKeyboardModelVisibilityMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, POINTER(VirtualKeyboardModelVisibilitySetInfoMETA))
+
+PFN_xrGetVirtualKeyboardModelAnimationStatesMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, POINTER(VirtualKeyboardModelAnimationStatesMETA))
+
+PFN_xrGetVirtualKeyboardDirtyTexturesMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, c_uint32, POINTER(c_uint32), POINTER(c_uint64))
+
+PFN_xrGetVirtualKeyboardTextureDataMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, c_uint64, POINTER(VirtualKeyboardTextureDataMETA))
+
+PFN_xrSendVirtualKeyboardInputMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, POINTER(VirtualKeyboardInputInfoMETA), POINTER(Posef))
+
+PFN_xrChangeVirtualKeyboardTextContextMETA = CFUNCTYPE(Result.ctype(), VirtualKeyboardMETA, POINTER(VirtualKeyboardTextContextChangeInfoMETA))
+
 ExternalCameraStatusFlagsOCULUSCInt = Flags64
 
 
@@ -10303,6 +10801,191 @@ class SystemHeadsetIdPropertiesMETA(Structure):
         ("id", UuidEXT),
     ]
 
+
+class PassthroughColorLutMETA_T(Structure):
+    pass
+
+
+PassthroughColorLutMETA = POINTER(PassthroughColorLutMETA_T)
+
+
+class PassthroughColorLutDataMETA(Structure):
+    def __init__(
+        self,
+        buffer_size: int = 0,
+        buffer: POINTER(c_uint8) = None,
+    ) -> None:
+        super().__init__(
+            buffer_size=buffer_size,
+            buffer=buffer,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorLutDataMETA(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorLutDataMETA(buffer_size={self.buffer_size}, buffer={self.buffer})"
+
+    _fields_ = [
+        ("buffer_size", c_uint32),
+        ("buffer", POINTER(c_uint8)),
+    ]
+
+
+class PassthroughColorLutCreateInfoMETA(Structure):
+    def __init__(
+        self,
+        channels: PassthroughColorLutChannelsMETA = PassthroughColorLutChannelsMETA(),
+        resolution: int = 0,
+        data: PassthroughColorLutDataMETA = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_COLOR_LUT_CREATE_INFO_META,
+    ) -> None:
+        if data is None:
+            data = PassthroughColorLutDataMETA()
+        super().__init__(
+            channels=PassthroughColorLutChannelsMETA(channels).value,
+            resolution=resolution,
+            data=data,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorLutCreateInfoMETA(channels={repr(self.channels)}, resolution={repr(self.resolution)}, data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorLutCreateInfoMETA(channels={self.channels}, resolution={self.resolution}, data={self.data}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("channels", PassthroughColorLutChannelsMETA.ctype()),
+        ("resolution", c_uint32),
+        ("data", PassthroughColorLutDataMETA),
+    ]
+
+
+class PassthroughColorLutUpdateInfoMETA(Structure):
+    def __init__(
+        self,
+        data: PassthroughColorLutDataMETA = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_COLOR_LUT_UPDATE_INFO_META,
+    ) -> None:
+        if data is None:
+            data = PassthroughColorLutDataMETA()
+        super().__init__(
+            data=data,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorLutUpdateInfoMETA(data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorLutUpdateInfoMETA(data={self.data}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("data", PassthroughColorLutDataMETA),
+    ]
+
+
+class PassthroughColorMapLutMETA(Structure):
+    def __init__(
+        self,
+        color_lut: PassthroughColorLutMETA = None,
+        weight: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_LUT_META,
+    ) -> None:
+        super().__init__(
+            color_lut=color_lut,
+            weight=weight,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorMapLutMETA(color_lut={repr(self.color_lut)}, weight={repr(self.weight)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorMapLutMETA(color_lut={self.color_lut}, weight={self.weight:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("color_lut", PassthroughColorLutMETA),
+        ("weight", c_float),
+    ]
+
+
+class PassthroughColorMapInterpolatedLutMETA(Structure):
+    def __init__(
+        self,
+        source_color_lut: PassthroughColorLutMETA = None,
+        target_color_lut: PassthroughColorLutMETA = None,
+        weight: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_INTERPOLATED_LUT_META,
+    ) -> None:
+        super().__init__(
+            source_color_lut=source_color_lut,
+            target_color_lut=target_color_lut,
+            weight=weight,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughColorMapInterpolatedLutMETA(source_color_lut={repr(self.source_color_lut)}, target_color_lut={repr(self.target_color_lut)}, weight={repr(self.weight)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughColorMapInterpolatedLutMETA(source_color_lut={self.source_color_lut}, target_color_lut={self.target_color_lut}, weight={self.weight:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("source_color_lut", PassthroughColorLutMETA),
+        ("target_color_lut", PassthroughColorLutMETA),
+        ("weight", c_float),
+    ]
+
+
+class SystemPassthroughColorLutPropertiesMETA(Structure):
+    def __init__(
+        self,
+        max_color_lut_resolution: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_PASSTHROUGH_COLOR_LUT_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            max_color_lut_resolution=max_color_lut_resolution,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPassthroughColorLutPropertiesMETA(max_color_lut_resolution={repr(self.max_color_lut_resolution)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPassthroughColorLutPropertiesMETA(max_color_lut_resolution={self.max_color_lut_resolution}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("max_color_lut_resolution", c_uint32),
+    ]
+
+
+PFN_xrCreatePassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughFB, POINTER(PassthroughColorLutCreateInfoMETA), POINTER(PassthroughColorLutMETA))
+
+PFN_xrDestroyPassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughColorLutMETA)
+
+PFN_xrUpdatePassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughColorLutMETA, POINTER(PassthroughColorLutUpdateInfoMETA))
 
 PFN_xrSetTrackingOptimizationSettingsHintQCOM = CFUNCTYPE(Result.ctype(), Session, TrackingOptimizationSettingsDomainQCOM.ctype(), TrackingOptimizationSettingsHintQCOM.ctype())
 
@@ -10755,6 +11438,428 @@ class ForceFeedbackCurlApplyLocationsMNDX(Structure):
 PFN_xrApplyForceFeedbackCurlMNDX = CFUNCTYPE(Result.ctype(), HandTrackerEXT, POINTER(ForceFeedbackCurlApplyLocationsMNDX))
 
 
+class HandTrackingDataSourceInfoEXT(Structure):
+    def __init__(
+        self,
+        requested_data_source_count: Optional[int] = None,
+        requested_data_sources: ArrayFieldParamType[HandTrackingDataSourceEXT.ctype()] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.HAND_TRACKING_DATA_SOURCE_INFO_EXT,
+    ) -> None:
+        requested_data_source_count, requested_data_sources = array_field_helper(
+            HandTrackingDataSourceEXT.ctype(), requested_data_source_count, requested_data_sources)
+        super().__init__(
+            requested_data_source_count=requested_data_source_count,
+            _requested_data_sources=requested_data_sources,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HandTrackingDataSourceInfoEXT(requested_data_source_count={repr(self.requested_data_source_count)}, requested_data_sources={repr(self._requested_data_sources)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HandTrackingDataSourceInfoEXT(requested_data_source_count={self.requested_data_source_count}, requested_data_sources={self._requested_data_sources}, next={self.next}, type={self.type})"
+
+    @property
+    def requested_data_sources(self):
+        if self.requested_data_source_count == 0:
+            return (HandTrackingDataSourceEXT.ctype() * 0)()
+        else:
+            return (HandTrackingDataSourceEXT.ctype() * self.requested_data_source_count).from_address(
+                ctypes.addressof(self._requested_data_sources.contents))
+
+    @requested_data_sources.setter
+    def requested_data_sources(self, value):
+        self.requested_data_source_count, self._requested_data_sources = array_field_helper(
+            HandTrackingDataSourceEXT.ctype(), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("requested_data_source_count", c_uint32),
+        ("_requested_data_sources", POINTER(HandTrackingDataSourceEXT.ctype())),
+    ]
+
+
+class HandTrackingDataSourceStateEXT(Structure):
+    def __init__(
+        self,
+        is_active: Bool32 = 0,
+        data_source: HandTrackingDataSourceEXT = HandTrackingDataSourceEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.HAND_TRACKING_DATA_SOURCE_STATE_EXT,
+    ) -> None:
+        super().__init__(
+            is_active=is_active,
+            data_source=HandTrackingDataSourceEXT(data_source).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HandTrackingDataSourceStateEXT(is_active={repr(self.is_active)}, data_source={repr(self.data_source)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HandTrackingDataSourceStateEXT(is_active={self.is_active}, data_source={self.data_source}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("is_active", Bool32),
+        ("data_source", HandTrackingDataSourceEXT.ctype()),
+    ]
+
+
+class PlaneDetectorEXT_T(Structure):
+    pass
+
+
+PlaneDetectorEXT = POINTER(PlaneDetectorEXT_T)
+
+PlaneDetectionCapabilityFlagsEXTCInt = Flags64
+
+PlaneDetectorFlagsEXTCInt = Flags64
+
+
+class SystemPlaneDetectionPropertiesEXT(Structure):
+    def __init__(
+        self,
+        supported_features: PlaneDetectionCapabilityFlagsEXT = PlaneDetectionCapabilityFlagsEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_PLANE_DETECTION_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            supported_features=PlaneDetectionCapabilityFlagsEXT(supported_features).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPlaneDetectionPropertiesEXT(supported_features={repr(self.supported_features)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPlaneDetectionPropertiesEXT(supported_features={self.supported_features}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supported_features", PlaneDetectionCapabilityFlagsEXTCInt),
+    ]
+
+
+class PlaneDetectorCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        flags: PlaneDetectorFlagsEXT = PlaneDetectorFlagsEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.PLANE_DETECTOR_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            flags=PlaneDetectorFlagsEXT(flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PlaneDetectorCreateInfoEXT(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PlaneDetectorCreateInfoEXT(flags={self.flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", PlaneDetectorFlagsEXTCInt),
+    ]
+
+
+class Extent3DfEXT(Structure):
+    def __init__(
+        self,
+        width: float = 0,
+        height: float = 0,
+        depth: float = 0,
+    ) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            depth=depth,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Generator[float, None, None]:
+        yield self.width
+        yield self.height
+        yield self.depth
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 3
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.Extent3DfEXT(width={repr(self.width)}, height={repr(self.height)}, depth={repr(self.depth)})"
+
+    def __str__(self) -> str:
+        return f"xr.Extent3DfEXT(width={self.width:.3f}, height={self.height:.3f}, depth={self.depth:.3f})"
+
+    _fields_ = [
+        ("width", c_float),
+        ("height", c_float),
+        ("depth", c_float),
+    ]
+
+
+class PlaneDetectorBeginInfoEXT(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        orientation_count: Optional[int] = None,
+        orientations: ArrayFieldParamType[c_int] = None,
+        semantic_type_count: Optional[int] = None,
+        semantic_types: ArrayFieldParamType[c_int] = None,
+        max_planes: int = 0,
+        min_area: float = 0,
+        bounding_box_pose: Posef = Posef(),
+        bounding_box_extent: Extent3DfEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PLANE_DETECTOR_BEGIN_INFO_EXT,
+    ) -> None:
+        orientation_count, orientations = array_field_helper(
+            c_int, orientation_count, orientations)
+        semantic_type_count, semantic_types = array_field_helper(
+            c_int, semantic_type_count, semantic_types)
+        if bounding_box_extent is None:
+            bounding_box_extent = Extent3DfEXT()
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            orientation_count=orientation_count,
+            _orientations=orientations,
+            semantic_type_count=semantic_type_count,
+            _semantic_types=semantic_types,
+            max_planes=max_planes,
+            min_area=min_area,
+            bounding_box_pose=bounding_box_pose,
+            bounding_box_extent=bounding_box_extent,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PlaneDetectorBeginInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, orientation_count={repr(self.orientation_count)}, orientations={repr(self._orientations)}, semantic_type_count={repr(self.semantic_type_count)}, semantic_types={repr(self._semantic_types)}, max_planes={repr(self.max_planes)}, min_area={repr(self.min_area)}, bounding_box_pose={repr(self.bounding_box_pose)}, bounding_box_extent={repr(self.bounding_box_extent)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PlaneDetectorBeginInfoEXT(base_space={self.base_space}, time={self.time}, orientation_count={self.orientation_count}, orientations={self._orientations}, semantic_type_count={self.semantic_type_count}, semantic_types={self._semantic_types}, max_planes={self.max_planes}, min_area={self.min_area:.3f}, bounding_box_pose={self.bounding_box_pose}, bounding_box_extent={self.bounding_box_extent}, next={self.next}, type={self.type})"
+
+    @property
+    def orientations(self):
+        if self.orientation_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.orientation_count).from_address(
+                ctypes.addressof(self._orientations.contents))
+
+    @orientations.setter
+    def orientations(self, value):
+        self.orientation_count, self._orientations = array_field_helper(
+            c_int, None, value)
+
+    @property
+    def semantic_types(self):
+        if self.semantic_type_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.semantic_type_count).from_address(
+                ctypes.addressof(self._semantic_types.contents))
+
+    @semantic_types.setter
+    def semantic_types(self, value):
+        self.semantic_type_count, self._semantic_types = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+        ("time", Time),
+        ("orientation_count", c_uint32),
+        ("_orientations", POINTER(c_int)),
+        ("semantic_type_count", c_uint32),
+        ("_semantic_types", POINTER(c_int)),
+        ("max_planes", c_uint32),
+        ("min_area", c_float),
+        ("bounding_box_pose", Posef),
+        ("bounding_box_extent", Extent3DfEXT),
+    ]
+
+
+class PlaneDetectorGetInfoEXT(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PLANE_DETECTOR_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PlaneDetectorGetInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PlaneDetectorGetInfoEXT(base_space={self.base_space}, time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+        ("time", Time),
+    ]
+
+
+class PlaneDetectorLocationEXT(Structure):
+    def __init__(
+        self,
+        plane_id: int = 0,
+        location_flags: SpaceLocationFlags = SpaceLocationFlags(),
+        pose: Posef = Posef(),
+        extents: Extent2Df = None,
+        orientation: PlaneDetectorOrientationEXT = PlaneDetectorOrientationEXT(),
+        semantic_type: PlaneDetectorSemanticTypeEXT = PlaneDetectorSemanticTypeEXT(),
+        polygon_buffer_count: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PLANE_DETECTOR_LOCATION_EXT,
+    ) -> None:
+        if extents is None:
+            extents = Extent2Df()
+        super().__init__(
+            plane_id=plane_id,
+            location_flags=SpaceLocationFlags(location_flags).value,
+            pose=pose,
+            extents=extents,
+            orientation=PlaneDetectorOrientationEXT(orientation).value,
+            semantic_type=PlaneDetectorSemanticTypeEXT(semantic_type).value,
+            polygon_buffer_count=polygon_buffer_count,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PlaneDetectorLocationEXT(plane_id={repr(self.plane_id)}, location_flags={repr(self.location_flags)}, pose={repr(self.pose)}, extents={repr(self.extents)}, orientation={repr(self.orientation)}, semantic_type={repr(self.semantic_type)}, polygon_buffer_count={repr(self.polygon_buffer_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PlaneDetectorLocationEXT(plane_id={self.plane_id}, location_flags={self.location_flags}, pose={self.pose}, extents={self.extents}, orientation={self.orientation}, semantic_type={self.semantic_type}, polygon_buffer_count={self.polygon_buffer_count}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("plane_id", c_uint64),
+        ("location_flags", SpaceLocationFlagsCInt),
+        ("pose", Posef),
+        ("extents", Extent2Df),
+        ("orientation", PlaneDetectorOrientationEXT.ctype()),
+        ("semantic_type", PlaneDetectorSemanticTypeEXT.ctype()),
+        ("polygon_buffer_count", c_uint32),
+    ]
+
+
+class PlaneDetectorLocationsEXT(Structure):
+    def __init__(
+        self,
+        plane_location_capacity_input: int = 0,
+        plane_location_count_output: int = 0,
+        plane_locations: POINTER(PlaneDetectorLocationEXT) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PLANE_DETECTOR_LOCATIONS_EXT,
+    ) -> None:
+        super().__init__(
+            plane_location_capacity_input=plane_location_capacity_input,
+            plane_location_count_output=plane_location_count_output,
+            plane_locations=plane_locations,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PlaneDetectorLocationsEXT(plane_location_capacity_input={repr(self.plane_location_capacity_input)}, plane_location_count_output={repr(self.plane_location_count_output)}, plane_locations={repr(self.plane_locations)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PlaneDetectorLocationsEXT(plane_location_capacity_input={self.plane_location_capacity_input}, plane_location_count_output={self.plane_location_count_output}, plane_locations={self.plane_locations}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("plane_location_capacity_input", c_uint32),
+        ("plane_location_count_output", c_uint32),
+        ("plane_locations", POINTER(PlaneDetectorLocationEXT)),
+    ]
+
+
+class PlaneDetectorPolygonBufferEXT(Structure):
+    def __init__(
+        self,
+        vertex_capacity_input: int = 0,
+        vertex_count_output: int = 0,
+        vertices: POINTER(Vector2f) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PLANE_DETECTOR_POLYGON_BUFFER_EXT,
+    ) -> None:
+        super().__init__(
+            vertex_capacity_input=vertex_capacity_input,
+            vertex_count_output=vertex_count_output,
+            vertices=vertices,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PlaneDetectorPolygonBufferEXT(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PlaneDetectorPolygonBufferEXT(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertices", POINTER(Vector2f)),
+    ]
+
+
+PFN_xrCreatePlaneDetectorEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(PlaneDetectorCreateInfoEXT), POINTER(PlaneDetectorEXT))
+
+PFN_xrDestroyPlaneDetectorEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT)
+
+PFN_xrBeginPlaneDetectionEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, POINTER(PlaneDetectorBeginInfoEXT))
+
+PFN_xrGetPlaneDetectionStateEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, POINTER(PlaneDetectionStateEXT.ctype()))
+
+PFN_xrGetPlaneDetectionsEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, POINTER(PlaneDetectorGetInfoEXT), POINTER(PlaneDetectorLocationsEXT))
+
+PFN_xrGetPlanePolygonBufferEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, c_uint64, c_uint32, POINTER(PlaneDetectorPolygonBufferEXT))
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -10859,11 +11964,17 @@ __all__ = [
     "EventDataSpaceSetStatusCompleteFB",
     "EventDataSpaceShareCompleteFB",
     "EventDataSpatialAnchorCreateCompleteFB",
+    "EventDataVirtualKeyboardBackspaceMETA",
+    "EventDataVirtualKeyboardCommitTextMETA",
+    "EventDataVirtualKeyboardEnterMETA",
+    "EventDataVirtualKeyboardHiddenMETA",
+    "EventDataVirtualKeyboardShownMETA",
     "EventDataVisibilityMaskChangedKHR",
     "EventDataViveTrackerConnectedHTCX",
     "ExtensionProperties",
     "Extent2Df",
     "Extent2Di",
+    "Extent3DfEXT",
     "Extent3DfFB",
     "ExternalCameraExtrinsicsOCULUS",
     "ExternalCameraIntrinsicsOCULUS",
@@ -10936,6 +12047,8 @@ __all__ = [
     "HandTrackingAimFlagsFBCInt",
     "HandTrackingAimStateFB",
     "HandTrackingCapsulesStateFB",
+    "HandTrackingDataSourceInfoEXT",
+    "HandTrackingDataSourceStateEXT",
     "HandTrackingMeshFB",
     "HandTrackingScaleFB",
     "HapticActionInfo",
@@ -10974,7 +12087,9 @@ __all__ = [
     "PFN_xrApplyHapticFeedback",
     "PFN_xrAttachSessionActionSets",
     "PFN_xrBeginFrame",
+    "PFN_xrBeginPlaneDetectionEXT",
     "PFN_xrBeginSession",
+    "PFN_xrChangeVirtualKeyboardTextContextMETA",
     "PFN_xrClearSpatialAnchorStoreMSFT",
     "PFN_xrComputeNewSceneMSFT",
     "PFN_xrCreateAction",
@@ -10992,9 +12107,11 @@ __all__ = [
     "PFN_xrCreateInstance",
     "PFN_xrCreateKeyboardSpaceFB",
     "PFN_xrCreateMarkerSpaceVARJO",
+    "PFN_xrCreatePassthroughColorLutMETA",
     "PFN_xrCreatePassthroughFB",
     "PFN_xrCreatePassthroughHTC",
     "PFN_xrCreatePassthroughLayerFB",
+    "PFN_xrCreatePlaneDetectorEXT",
     "PFN_xrCreateReferenceSpace",
     "PFN_xrCreateSceneMSFT",
     "PFN_xrCreateSceneObserverMSFT",
@@ -11008,6 +12125,8 @@ __all__ = [
     "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
     "PFN_xrCreateSwapchain",
     "PFN_xrCreateTriangleMeshFB",
+    "PFN_xrCreateVirtualKeyboardMETA",
+    "PFN_xrCreateVirtualKeyboardSpaceMETA",
     "PFN_xrDebugUtilsMessengerCallbackEXT",
     "PFN_xrDeserializeSceneMSFT",
     "PFN_xrDestroyAction",
@@ -11021,9 +12140,11 @@ __all__ = [
     "PFN_xrDestroyGeometryInstanceFB",
     "PFN_xrDestroyHandTrackerEXT",
     "PFN_xrDestroyInstance",
+    "PFN_xrDestroyPassthroughColorLutMETA",
     "PFN_xrDestroyPassthroughFB",
     "PFN_xrDestroyPassthroughHTC",
     "PFN_xrDestroyPassthroughLayerFB",
+    "PFN_xrDestroyPlaneDetectorEXT",
     "PFN_xrDestroySceneMSFT",
     "PFN_xrDestroySceneObserverMSFT",
     "PFN_xrDestroySession",
@@ -11034,6 +12155,7 @@ __all__ = [
     "PFN_xrDestroySpatialGraphNodeBindingMSFT",
     "PFN_xrDestroySwapchain",
     "PFN_xrDestroyTriangleMeshFB",
+    "PFN_xrDestroyVirtualKeyboardMETA",
     "PFN_xrEndFrame",
     "PFN_xrEndSession",
     "PFN_xrEnumerateApiLayerProperties",
@@ -11078,6 +12200,9 @@ __all__ = [
     "PFN_xrGetInstanceProperties",
     "PFN_xrGetMarkerSizeVARJO",
     "PFN_xrGetPerformanceMetricsStateMETA",
+    "PFN_xrGetPlaneDetectionStateEXT",
+    "PFN_xrGetPlaneDetectionsEXT",
+    "PFN_xrGetPlanePolygonBufferEXT",
     "PFN_xrGetReferenceSpaceBoundsRect",
     "PFN_xrGetRenderModelPropertiesFB",
     "PFN_xrGetSceneComponentsMSFT",
@@ -11098,6 +12223,10 @@ __all__ = [
     "PFN_xrGetSystem",
     "PFN_xrGetSystemProperties",
     "PFN_xrGetViewConfigurationProperties",
+    "PFN_xrGetVirtualKeyboardDirtyTexturesMETA",
+    "PFN_xrGetVirtualKeyboardModelAnimationStatesMETA",
+    "PFN_xrGetVirtualKeyboardScaleMETA",
+    "PFN_xrGetVirtualKeyboardTextureDataMETA",
     "PFN_xrGetVisibilityMaskKHR",
     "PFN_xrInitializeLoaderKHR",
     "PFN_xrLoadControllerModelMSFT",
@@ -11128,6 +12257,7 @@ __all__ = [
     "PFN_xrRetrieveSpaceQueryResultsFB",
     "PFN_xrSaveSpaceFB",
     "PFN_xrSaveSpaceListFB",
+    "PFN_xrSendVirtualKeyboardInputMETA",
     "PFN_xrSessionBeginDebugUtilsLabelRegionEXT",
     "PFN_xrSessionEndDebugUtilsLabelRegionEXT",
     "PFN_xrSessionInsertDebugUtilsLabelEXT",
@@ -11147,12 +12277,14 @@ __all__ = [
     "PFN_xrSetSpaceComponentStatusFB",
     "PFN_xrSetTrackingOptimizationSettingsHintQCOM",
     "PFN_xrSetViewOffsetVARJO",
+    "PFN_xrSetVirtualKeyboardModelVisibilityMETA",
     "PFN_xrShareSpacesFB",
     "PFN_xrStopHapticFeedback",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
     "PFN_xrSubmitDebugUtilsMessageEXT",
     "PFN_xrSuggestInteractionProfileBindings",
+    "PFN_xrSuggestVirtualKeyboardLocationMETA",
     "PFN_xrSyncActions",
     "PFN_xrThermalGetTemperatureTrendEXT",
     "PFN_xrTriangleMeshBeginUpdateFB",
@@ -11164,6 +12296,7 @@ __all__ = [
     "PFN_xrTryCreateSpatialGraphStaticNodeBindingMSFT",
     "PFN_xrUnpersistSpatialAnchorMSFT",
     "PFN_xrUpdateHandMeshMSFT",
+    "PFN_xrUpdatePassthroughColorLutMETA",
     "PFN_xrUpdateSwapchainFB",
     "PFN_xrVoidFunction",
     "PFN_xrWaitFrame",
@@ -11171,6 +12304,13 @@ __all__ = [
     "PassthroughBrightnessContrastSaturationFB",
     "PassthroughCapabilityFlagsFBCInt",
     "PassthroughColorHTC",
+    "PassthroughColorLutCreateInfoMETA",
+    "PassthroughColorLutDataMETA",
+    "PassthroughColorLutMETA",
+    "PassthroughColorLutMETA_T",
+    "PassthroughColorLutUpdateInfoMETA",
+    "PassthroughColorMapInterpolatedLutMETA",
+    "PassthroughColorMapLutMETA",
     "PassthroughColorMapMonoToMonoFB",
     "PassthroughColorMapMonoToRgbaFB",
     "PassthroughCreateInfoFB",
@@ -11191,6 +12331,16 @@ __all__ = [
     "PerformanceMetricsCounterFlagsMETACInt",
     "PerformanceMetricsCounterMETA",
     "PerformanceMetricsStateMETA",
+    "PlaneDetectionCapabilityFlagsEXTCInt",
+    "PlaneDetectorBeginInfoEXT",
+    "PlaneDetectorCreateInfoEXT",
+    "PlaneDetectorEXT",
+    "PlaneDetectorEXT_T",
+    "PlaneDetectorFlagsEXTCInt",
+    "PlaneDetectorGetInfoEXT",
+    "PlaneDetectorLocationEXT",
+    "PlaneDetectorLocationsEXT",
+    "PlaneDetectorPolygonBufferEXT",
     "Posef",
     "Quaternionf",
     "Rect2Df",
@@ -11244,6 +12394,8 @@ __all__ = [
     "SecondaryViewConfigurationStateMSFT",
     "SecondaryViewConfigurationSwapchainCreateInfoMSFT",
     "SemanticLabelsFB",
+    "SemanticLabelsSupportFlagsFBCInt",
+    "SemanticLabelsSupportInfoFB",
     "SerializedSceneFragmentDataGetInfoMSFT",
     "Session",
     "SessionActionSetsAttachInfo",
@@ -11325,13 +12477,16 @@ __all__ = [
     "SystemId",
     "SystemKeyboardTrackingPropertiesFB",
     "SystemMarkerTrackingPropertiesVARJO",
+    "SystemPassthroughColorLutPropertiesMETA",
     "SystemPassthroughProperties2FB",
     "SystemPassthroughPropertiesFB",
+    "SystemPlaneDetectionPropertiesEXT",
     "SystemProperties",
     "SystemRenderModelPropertiesFB",
     "SystemSpaceWarpPropertiesFB",
     "SystemSpatialEntityPropertiesFB",
     "SystemTrackingProperties",
+    "SystemVirtualKeyboardPropertiesMETA",
     "Time",
     "TriangleMeshCreateInfoFB",
     "TriangleMeshFB",
@@ -11353,6 +12508,18 @@ __all__ = [
     "ViewLocateInfo",
     "ViewState",
     "ViewStateFlagsCInt",
+    "VirtualKeyboardAnimationStateMETA",
+    "VirtualKeyboardCreateInfoMETA",
+    "VirtualKeyboardInputInfoMETA",
+    "VirtualKeyboardInputStateFlagsMETACInt",
+    "VirtualKeyboardLocationInfoMETA",
+    "VirtualKeyboardMETA",
+    "VirtualKeyboardMETA_T",
+    "VirtualKeyboardModelAnimationStatesMETA",
+    "VirtualKeyboardModelVisibilitySetInfoMETA",
+    "VirtualKeyboardSpaceCreateInfoMETA",
+    "VirtualKeyboardTextContextChangeInfoMETA",
+    "VirtualKeyboardTextureDataMETA",
     "VisibilityMaskKHR",
     "VisualMeshComputeLodInfoMSFT",
     "ViveTrackerPathsHTCX",
