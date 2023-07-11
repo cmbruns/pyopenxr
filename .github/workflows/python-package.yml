@@ -18,8 +18,10 @@ jobs:
         python-version: ["3.8", "3.10", "3.11"]
         os: [ubuntu-latest, ubuntu-20.04, windows-latest]
         include:
-          - os: windows-latest, ubuntu-20.04
-            python-version: 3.6  # ubuntu 22 / python 3.6 yields github error
+          - os: windows-latest
+            python-version: 3.6
+          - os: ubuntu-20.04
+            python-version: 3.6
           - os: ubuntu-latest
             python-version: 3.7  # lowest version that works in ubuntu 22
     steps:
