@@ -59,6 +59,18 @@ with xr.ContextObject(
             suggested_bindings=suggested_bindings,
         ),
     )
+    xr.suggest_interaction_profile_bindings(
+        instance=context.instance,
+        suggested_bindings=xr.InteractionProfileSuggestedBinding(
+            interaction_profile=xr.string_to_path(
+                context.instance,
+                "/interaction_profiles/htc/vive_controller",
+            ),
+            count_suggested_bindings=len(suggested_bindings),
+            suggested_bindings=suggested_bindings,
+        ),
+    )
+
     action_spaces = [
         xr.create_action_space(
             session=context.session,
