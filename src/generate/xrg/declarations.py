@@ -9,7 +9,7 @@ from typing import Generator, Set, Union
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
 from .default_values import default_values
-from .types import *
+from .xrtypes import *
 from .registry import xr_registry
 from .vendor_tags import vendor_tags
 from .docstrings import create_docstring
@@ -412,6 +412,7 @@ class StructFieldItem(CodeItem):
         NORMAL = 1,
         ARRAY_COUNT = 2,
         ARRAY_POINTER = 3,
+        VERSION = 4,
 
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -435,7 +436,10 @@ class StructFieldItem(CodeItem):
     def inner_name(self, api=Api.PYTHON) -> str:
         """Sometimes we hide the inner field name, so we can wrap it."""
         n = self.name(api)
-        if self.kind in [StructFieldItem.Kind.ARRAY_POINTER]:
+        if self.kind in [
+            StructFieldItem.Kind.ARRAY_POINTER,
+            StructFieldItem.Kind.VERSION,
+        ]:
             return f"_{n}"  # Prepend with underscore
         else:
             return n
@@ -492,6 +496,10 @@ class StructItem(CodeItem):
                     # OK at this point we know it's a matching count/pointer pair
                     f.kind = StructFieldItem.Kind.ARRAY_COUNT
                     f2.kind = StructFieldItem.Kind.ARRAY_POINTER
+        # Pack/unpack version numbers
+        for f in self.fields:
+            if f.type.name(Api.CTYPES) == "VersionNumber":
+                f.kind = StructFieldItem.Kind.VERSION
         # Insert default values
         if self.name() in default_values["Structure"]:
             fd = default_values["Structure"][self.name()]["Field"]
@@ -1206,7 +1214,24 @@ class VersionFieldCoder(FieldCoder):
         yield f'{self.name}: Version = {default}'
 
     def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}={self.name}.number()"
+        yield f"{self.field.inner_name()}={self.name}.number()"
+
+    def property_code(self) -> Generator[str, None, None]:
+        if self.inner_name != self.name:
+            # getter
+            yield "@property"
+            yield f"def {self.name}(self):"
+            yield f"    return Version(self.{self.inner_name})"
+            # setter
+            yield ""
+            yield f"@{self.name}.setter"
+            yield f"def {self.name}(self, value: Version):"
+            yield f"    if hasattr(value, 'number'):"
+            yield f"        # noinspection PyAttributeOutsideInit"
+            yield f"        self.{self.inner_name} = value.number()"
+            yield f"    else:"
+            yield f"        # noinspection PyAttributeOutsideInit"
+            yield f"        self.{self.inner_name} = value"
 
 
 class StructureFieldCoder(FieldCoder):

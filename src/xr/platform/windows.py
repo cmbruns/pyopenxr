@@ -174,23 +174,49 @@ class GraphicsRequirementsOpenGLKHR(Structure):
         type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_OPENGL_KHR,
     ) -> None:
         super().__init__(
-            min_api_version_supported=min_api_version_supported.number(),
-            max_api_version_supported=max_api_version_supported.number(),
+            _min_api_version_supported=min_api_version_supported.number(),
+            _max_api_version_supported=max_api_version_supported.number(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={self.min_api_version_supported}, max_api_version_supported={self.max_api_version_supported}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
+
+    @property
+    def min_api_version_supported(self):
+        return Version(self._min_api_version_supported)
+    
+    @min_api_version_supported.setter
+    def min_api_version_supported(self, value: Version):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._min_api_version_supported = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._min_api_version_supported = value
+
+    @property
+    def max_api_version_supported(self):
+        return Version(self._max_api_version_supported)
+    
+    @max_api_version_supported.setter
+    def max_api_version_supported(self, value: Version):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._max_api_version_supported = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._max_api_version_supported = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("min_api_version_supported", VersionNumber),
-        ("max_api_version_supported", VersionNumber),
+        ("_min_api_version_supported", VersionNumber),
+        ("_max_api_version_supported", VersionNumber),
     ]
 
 
@@ -270,23 +296,49 @@ class GraphicsRequirementsVulkanKHR(Structure):
         type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_VULKAN_KHR,
     ) -> None:
         super().__init__(
-            min_api_version_supported=min_api_version_supported.number(),
-            max_api_version_supported=max_api_version_supported.number(),
+            _min_api_version_supported=min_api_version_supported.number(),
+            _max_api_version_supported=max_api_version_supported.number(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={self.min_api_version_supported}, max_api_version_supported={self.max_api_version_supported}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
+
+    @property
+    def min_api_version_supported(self):
+        return Version(self._min_api_version_supported)
+    
+    @min_api_version_supported.setter
+    def min_api_version_supported(self, value: Version):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._min_api_version_supported = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._min_api_version_supported = value
+
+    @property
+    def max_api_version_supported(self):
+        return Version(self._max_api_version_supported)
+    
+    @max_api_version_supported.setter
+    def max_api_version_supported(self, value: Version):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._max_api_version_supported = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._max_api_version_supported = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("min_api_version_supported", VersionNumber),
-        ("max_api_version_supported", VersionNumber),
+        ("_min_api_version_supported", VersionNumber),
+        ("_max_api_version_supported", VersionNumber),
     ]
 
 

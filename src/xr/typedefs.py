@@ -102,7 +102,7 @@ class ApiLayerProperties(Structure):
     ) -> None:
         super().__init__(
             layer_name=layer_name.encode(),
-            spec_version=spec_version.number(),
+            _spec_version=spec_version.number(),
             layer_version=layer_version,
             description=description.encode(),
             next=next,
@@ -123,11 +123,24 @@ class ApiLayerProperties(Structure):
     def __str__(self):
         return self.layer_name.decode()
 
+    @property
+    def spec_version(self):
+        return Version(self._spec_version)
+    
+    @spec_version.setter
+    def spec_version(self, value: Version):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._spec_version = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._spec_version = value
+
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("layer_name", (c_char * 256)),
-        ("spec_version", VersionNumber),
+        ("_spec_version", VersionNumber),
         ("layer_version", c_uint32),
         ("description", (c_char * 256)),
     ]
@@ -184,21 +197,34 @@ class ApplicationInfo(Structure):
             application_version=application_version,
             engine_name=engine_name.encode(),
             engine_version=engine_version,
-            api_version=api_version.number(),
+            _api_version=api_version.number(),
         )
 
     def __repr__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self.application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self.engine_version)}, api_version={repr(self.api_version)})"
+        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self.application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self.engine_version)}, api_version={repr(self._api_version)})"
 
     def __str__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self.application_version}, engine_name={self.engine_name}, engine_version={self.engine_version}, api_version={self.api_version})"
+        return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self.application_version}, engine_name={self.engine_name}, engine_version={self.engine_version}, api_version={self._api_version})"
+
+    @property
+    def api_version(self):
+        return Version(self._api_version)
+    
+    @api_version.setter
+    def api_version(self, value: Version):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._api_version = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._api_version = value
 
     _fields_ = [
         ("application_name", (c_char * 128)),
         ("application_version", c_uint32),
         ("engine_name", (c_char * 128)),
         ("engine_version", c_uint32),
-        ("api_version", VersionNumber),
+        ("_api_version", VersionNumber),
     ]
 
 
@@ -284,22 +310,35 @@ class InstanceProperties(Structure):
         type: StructureType = StructureType.INSTANCE_PROPERTIES,
     ) -> None:
         super().__init__(
-            runtime_version=runtime_version.number(),
+            _runtime_version=runtime_version.number(),
             runtime_name=runtime_name.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceProperties(runtime_version={repr(self.runtime_version)}, runtime_name={repr(self.runtime_name)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.InstanceProperties(runtime_version={repr(self._runtime_version)}, runtime_name={repr(self.runtime_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.InstanceProperties(runtime_version={self.runtime_version}, runtime_name={self.runtime_name}, next={self.next}, type={self.type})"
+        return f"xr.InstanceProperties(runtime_version={self._runtime_version}, runtime_name={self.runtime_name}, next={self.next}, type={self.type})"
+
+    @property
+    def runtime_version(self):
+        return Version(self._runtime_version)
+    
+    @runtime_version.setter
+    def runtime_version(self, value: Version):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._runtime_version = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._runtime_version = value
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("runtime_version", VersionNumber),
+        ("_runtime_version", VersionNumber),
         ("runtime_name", (c_char * 128)),
     ]
 

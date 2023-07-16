@@ -16,7 +16,7 @@ from typing import Generator, List
 import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 
-from .types import *
+from .xrtypes import *
 from .declarations import *
 
 

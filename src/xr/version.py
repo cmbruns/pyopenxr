@@ -19,11 +19,14 @@ PYOPENXR_VERSION = "1.0.2802"
 
 class Version(object):
     def __init__(self, major: int = 0, minor: int = None, patch: int = None):
-        if minor is None and patch is None and major > 0xffff:
-            # major argument is actually a packed xr.VersionNumber
-            patch = major & 0xffffffff
-            minor = (major >> 32) & 0xffff
-            major = (major >> 48) & 0xffff
+        if minor is None and patch is None:
+            if hasattr(major, "number"):  # Copy constructor
+                major = major.number()
+            if major > 0xffff:
+                # major argument is actually a packed xr.VersionNumber
+                patch = major & 0xffffffff
+                minor = (major >> 32) & 0xffff
+                major = (major >> 48) & 0xffff
         if minor is None:
             minor = 0
         if patch is None:
@@ -54,11 +57,14 @@ class Version32(object):
     32-bit version of Version, for use in engineVersion and applicationVersion
     """
     def __init__(self, major: int = 0, minor: int = None, patch: int = None):
-        if minor is None and patch is None and major >= 0xffff:
-            # major argument is actually a packed xr.VersionNumber
-            patch = major & 0xffff
-            minor = (major >> 16) & 0xff
-            major = (major >> 24) & 0xff
+        if minor is None and patch is None:
+            if hasattr(major, "number"):  # Copy constructor
+                major = major.number()
+            if major > 0xffff:
+                # major argument is actually a packed xr.VersionNumber
+                patch = major & 0xffff
+                minor = (major >> 16) & 0xff
+                major = (major >> 24) & 0xff
         if minor is None:
             minor = 0
         if patch is None:
