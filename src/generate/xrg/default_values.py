@@ -5,7 +5,7 @@ default_values = {
         "ApplicationInfo": {
             "Field": {
                 "application_name": "os.path.basename(sys.argv[0])",
-                "application_version": "Version(0)",  # it's an int
+                "application_version": "Version32(0)",  # it's an int
                 "engine_name": '"pyopenxr"',
                 "engine_version": "PYOPENXR_CURRENT_API_VERSION",
                 "api_version": "XR_CURRENT_API_VERSION",
