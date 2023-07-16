@@ -174,7 +174,7 @@ class ApplicationInfo(Structure):
     def __init__(
         self,
         application_name: str = os.path.basename(sys.argv[0]),
-        application_version: int = Version(0),
+        application_version: int = Version32(0),
         engine_name: str = "pyopenxr",
         engine_version: int = PYOPENXR_CURRENT_API_VERSION,
         api_version: Version = XR_CURRENT_API_VERSION,
