@@ -57,9 +57,9 @@ class InstanceObject(object):
             application_version = xr.Version(0, 0, 0)
         application_info = ApplicationInfo(
             application_name=application_name,
-            application_version=application_version.number(),
+            application_version=application_version,
             engine_name=engine_name,
-            engine_version=engine_version.number(),
+            engine_version=engine_version,
             api_version=XR_CURRENT_API_VERSION,
         )
         instance_create_info = InstanceCreateInfo(

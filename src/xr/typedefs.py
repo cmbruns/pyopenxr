@@ -187,24 +187,50 @@ class ApplicationInfo(Structure):
     def __init__(
         self,
         application_name: str = os.path.basename(sys.argv[0]),
-        application_version: int = Version32(0),
+        application_version: Version32 = Version32(0),
         engine_name: str = "pyopenxr",
-        engine_version: int = PYOPENXR_CURRENT_API_VERSION,
+        engine_version: Version32 = PYOPENXR_CURRENT_API_VERSION,
         api_version: Version = XR_CURRENT_API_VERSION,
     ) -> None:
         super().__init__(
             application_name=application_name.encode(),
-            application_version=application_version,
+            _application_version=application_version.number(),
             engine_name=engine_name.encode(),
-            engine_version=engine_version,
+            _engine_version=engine_version.number(),
             _api_version=api_version.number(),
         )
 
     def __repr__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self.application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self.engine_version)}, api_version={repr(self._api_version)})"
+        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self._application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self._engine_version)}, api_version={repr(self._api_version)})"
 
     def __str__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self.application_version}, engine_name={self.engine_name}, engine_version={self.engine_version}, api_version={self._api_version})"
+        return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self._application_version}, engine_name={self.engine_name}, engine_version={self._engine_version}, api_version={self._api_version})"
+
+    @property
+    def application_version(self):
+        return Version32(self._application_version)
+    
+    @application_version.setter
+    def application_version(self, value: Version32):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._application_version = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._application_version = value
+
+    @property
+    def engine_version(self):
+        return Version32(self._engine_version)
+    
+    @engine_version.setter
+    def engine_version(self, value: Version32):
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._engine_version = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._engine_version = value
 
     @property
     def api_version(self):
@@ -221,9 +247,9 @@ class ApplicationInfo(Structure):
 
     _fields_ = [
         ("application_name", (c_char * 128)),
-        ("application_version", c_uint32),
+        ("_application_version", c_uint32),
         ("engine_name", (c_char * 128)),
-        ("engine_version", c_uint32),
+        ("_engine_version", c_uint32),
         ("_api_version", VersionNumber),
     ]
 
