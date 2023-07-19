@@ -46,7 +46,7 @@ def main():
             ]
 
         
-        _LARGE_INTEGER = c_longlong
+        _LARGE_INTEGER = ctypes.wintypes.LARGE_INTEGER
     """))
     print("")
     cg.print_items()

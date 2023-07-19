@@ -19,7 +19,7 @@ class _LUID(ctypes.Structure):
     ]
 
 
-_LARGE_INTEGER = c_longlong
+_LARGE_INTEGER = ctypes.wintypes.LARGE_INTEGER
 
 KHR_vulkan_swapchain_format_list = 1
 KHR_vulkan_swapchain_format_list_SPEC_VERSION = 4
