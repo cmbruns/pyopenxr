@@ -7,6 +7,10 @@ import ctypes
 import time
 import xr
 
+# TODO: windows only
+kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+pc_time = ctypes.wintypes.LARGE_INTEGER()
+
 # Create instance for headless use
 instance = xr.create_instance(xr.InstanceCreateInfo(
     # XR_MND_HEADLESS_EXTENSION permits use without a graphics display
@@ -128,12 +132,11 @@ pxrConvertWin32PerformanceCounterToTimeKHR = ctypes.cast(
 )
 
 
-def xrConvertWin32PerformanceCounterToTimeKHR(instance: xr.Instance, performance_counter: int):
-    pct = ctypes.c_longlong(performance_counter)
+def xrConvertWin32PerformanceCounterToTimeKHR(instance: xr.Instance, performance_counter: ctypes.wintypes.LARGE_INTEGER) -> xr.Time:
     xr_time = xr.Time()
     result = pxrConvertWin32PerformanceCounterToTimeKHR(
         instance,
-        ctypes.pointer(pct),
+        ctypes.pointer(performance_counter),
         ctypes.byref(xr_time),
     )
     result = xr.check_result(result)
@@ -174,8 +177,8 @@ for frame_index in range(30):  # Limit number of frames for demo purposes
         xr.wait_frame(session=session)  # Helps SteamVR show application name better
         # Perform per-frame activities here
 
-        pc_time_now = int(time.perf_counter_ns() / 100)  # TODO: why 100?  Is this SteamVR specific?
-        xr_time_now = xrConvertWin32PerformanceCounterToTimeKHR(instance, pc_time_now)
+        kernel32.QueryPerformanceCounter(ctypes.byref(pc_time))
+        xr_time_now = xrConvertWin32PerformanceCounterToTimeKHR(instance, pc_time)
 
         active_action_set = xr.ActiveActionSet(
             action_set=action_set,
