@@ -38,6 +38,7 @@ class TwoControllers(object):
                 subaction_paths=self.controller_paths,
             ),
         )
+        # TODO: more bindings like in C++ hello_xr
         self.suggested_bindings = (xr.ActionSuggestedBinding * 2)(
             xr.ActionSuggestedBinding(
                 action=self.controller_pose_action,
