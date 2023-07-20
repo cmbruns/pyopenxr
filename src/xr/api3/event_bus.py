@@ -1,19 +1,38 @@
+import abc
 import ctypes
+import typing
 import xr
 
 
-class EventBus(object):
-    def __init__(self):
-        self.subscribers = dict()
+class ISubscriber(abc.ABC):
+    """
+    Abstract base class for classes that subscribe to events from an EventBus.
+    """
+    @abc.abstractmethod
+    def notify(self, event_key, event_data) -> None:
+        """
+        Receives an event from the EventBus
+        :param event_key: key uniquely identifying an event type
+        :param event_data: data associated with the event
+        """
+        pass
 
-    def subscribe(self, event_key, subscriber):
-        """Subscribe to a particular event type"""
+
+class EventBus(object):
+    """
+    Generic synchronous event bus that receives events and notifies subscribers.
+    """
+    def __init__(self) -> None:
+        self.subscribers: typing.Dict[typing.Any, typing.Set[ISubscriber]] = dict()
+
+    def subscribe(self, event_key, subscriber: ISubscriber) -> None:
+        """Add a subscriber client to a particular event type"""
         if event_key not in self.subscribers:
             self.subscribers[event_key] = set()
         self.subscribers[event_key].add(subscriber)
 
-    def post(self, event_key, event_data=None):
-        """Post an event to the event bus"""
+    def post(self, event_key, event_data=None) -> None:
+        """Post a new event to the event bus"""
         if event_key not in self.subscribers:
             return
         for subscriber in self.subscribers[event_key]:
@@ -21,10 +40,13 @@ class EventBus(object):
 
 
 class XrEventGenerator(object):
-    def __init__(self, instance):
+    """
+    Dispatches OpenXR events to subscribers.
+    """
+    def __init__(self, instance: xr.Instance) -> None:
         self.instance = instance
 
-    def poll_events(self, destination: EventBus):
+    def poll_events(self, destination: EventBus) -> None:
         while True:
             try:
                 event_buffer = xr.poll_event(self.instance)
@@ -34,7 +56,10 @@ class XrEventGenerator(object):
                 break
 
 
-class SessionStatus(object):
+class SessionStatus(ISubscriber):
+    """
+    Event subscriber that manages an OpenXR session state.
+    """
     def __init__(self, session: xr.Session, event_source: EventBus, begin_info=xr.SessionBeginInfo()):
         self.session = session
         self._begin_info = begin_info
@@ -44,10 +69,16 @@ class SessionStatus(object):
             subscriber=self,
         )
 
-    def notify(self, event_type, event_buffer):
-        if event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED:
+    def notify(self, event_key, event_data) -> None:
+        """
+        Respond to OpenXR session state change events
+        :param event_key: event type
+        :param event_data: event buffer
+        :return:
+        """
+        if event_key == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED:
             event = ctypes.cast(
-                ctypes.byref(event_buffer),
+                ctypes.byref(event_data),
                 ctypes.POINTER(xr.EventDataSessionStateChanged)).contents
             self.state = xr.SessionState(event.state)
             if self.state == xr.SessionState.READY:
