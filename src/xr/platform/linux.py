@@ -665,6 +665,7 @@ __all__ = [
     "SwapchainImageVulkan2KHR",
     "SwapchainImageVulkanKHR",
     "SwapchainStateSamplerVulkanFB",
+    "timespec",
     "VulkanDeviceCreateFlagsKHR",
     "VulkanDeviceCreateFlagsKHRCInt",
     "VulkanDeviceCreateInfoKHR",

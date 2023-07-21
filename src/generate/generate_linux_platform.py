@@ -51,6 +51,7 @@ def main():
     """))
     print("\n")
     cg.print_items()
+    cg.all_list.add("timespec")
     cg.print_all_list()
 
 
