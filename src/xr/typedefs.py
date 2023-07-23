@@ -17,7 +17,17 @@ VersionNumber = c_uint64
 
 Flags64 = c_uint64
 
-SystemId = c_uint64
+
+class SystemId(c_uint64):
+    def __init__(self, instance: "Instance", get_info: "SystemGetInfo") -> None:
+        raise NotImplementedError  # implementation will be overwritten later
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
 
 Bool32 = c_uint32
 
@@ -32,14 +42,34 @@ class Instance_T(Structure):
     pass
 
 
-Instance = POINTER(Instance_T)
+class Instance(POINTER(Instance_T)):
+    _type_ = Instance_T
+
+    def __init__(self, create_info: "InstanceCreateInfo" = None) -> None:
+        raise NotImplementedError  # implementation will be overwritten later
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        raise NotImplementedError  # implementation will be overwritten later
 
 
 class Session_T(Structure):
     pass
 
 
-Session = POINTER(Session_T)
+class Session (POINTER(Session_T)):
+    _type_ = Session_T
+
+    def __init__(self, instance: Instance, create_info: "SessionCreateInfo" = None) -> None:
+        raise NotImplementedError  # implementation will be overwritten later
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        raise NotImplementedError  # implementation will be overwritten later
 
 
 class Space_T(Structure):

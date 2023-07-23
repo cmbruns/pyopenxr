@@ -12,6 +12,7 @@ from . import raw_functions
 from .enums import *
 from .exception import check_result
 from .typedefs import *
+from .mgr import *  # for clever side effect
 
 
 def get_instance_proc_addr(
@@ -90,17 +91,7 @@ def create_instance(
     create_info: InstanceCreateInfo = None,
 ) -> Instance:
     """"""
-    if create_info is None:
-        create_info = InstanceCreateInfo()
-    instance = Instance()
-    fxn = raw_functions.xrCreateInstance
-    result = check_result(fxn(
-        create_info,
-        byref(instance),
-    ))
-    if result.is_exception():
-        raise result
-    return instance
+    return Instance(create_info)
 
 
 def destroy_instance(
@@ -182,16 +173,7 @@ def get_system(
     get_info: SystemGetInfo,
 ) -> SystemId:
     """"""
-    system_id = SystemId()
-    fxn = raw_functions.xrGetSystem
-    result = check_result(fxn(
-        instance,
-        get_info,
-        byref(system_id),
-    ))
-    if result.is_exception():
-        raise result
-    return system_id
+    return SystemId(instance, get_info)
 
 
 def get_system_properties(
@@ -249,18 +231,7 @@ def create_session(
     create_info: SessionCreateInfo = None,
 ) -> Session:
     """"""
-    if create_info is None:
-        create_info = SessionCreateInfo()
-    session = Session()
-    fxn = raw_functions.xrCreateSession
-    result = check_result(fxn(
-        instance,
-        create_info,
-        byref(session),
-    ))
-    if result.is_exception():
-        raise result
-    return session
+    return Session(instance, create_info)
 
 
 def destroy_session(

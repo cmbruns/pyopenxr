@@ -14,7 +14,7 @@ class OpenGLGraphics(object):
     def required_extensions():
         return [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
 
-    def __init__(self, instance: xr.Instance, system: xr.SystemId) -> None:
+    def __init__(self, instance: xr.Instance, system_id: xr.SystemId) -> None:
         if not glfw.init():
             raise xr.XrException("GLFW initialization failed")
         self.window_size = (64, 64)
@@ -29,7 +29,7 @@ class OpenGLGraphics(object):
         self.graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
         result = self.pxrGetOpenGLGraphicsRequirementsKHR(
             instance,
-            system,
+            system_id,
             byref(self.graphics_requirements))
         result = xr.check_result(xr.Result(result))
         if result.is_exception():
