@@ -1,3 +1,11 @@
+"""
+OpenGL context using glfw.
+This is sufficient for non-rendering uses of pyopenxr.
+For example pseudo-headless use when the MND_headless extension is unavailable.
+See GLSwapchain for when graphics display is required.
+"""
+
+import abc
 from ctypes import byref, c_void_p, cast, pointer
 import platform
 
@@ -9,7 +17,17 @@ elif platform.system() == "Linux":
 import xr
 
 
-class GLFWContext(object):
+class IGLContext(abc.ABC):
+    @abc.abstractmethod
+    def destroy(self) -> None:
+        pass
+
+    @abc.abstractmethod
+    def make_current(self) -> None:
+        pass
+
+
+class GLFWContext(IGLContext):
     @staticmethod
     def required_extensions():
         return [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
@@ -72,16 +90,17 @@ class GLFWContext(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.destroy()
 
-    def destroy(self):
+    def destroy(self) -> None:
         self.make_current()
         glfw.destroy_window(self.window)
         self.window = None
         glfw.terminate()
 
-    def make_current(self):
+    def make_current(self) -> None:
         glfw.make_context_current(self.window)
 
 
 __all__ = [
     "GLFWContext",
+    "IGLContext",
 ]
