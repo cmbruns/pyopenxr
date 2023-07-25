@@ -12,7 +12,10 @@ from . import raw_functions
 from .enums import *
 from .exception import check_result
 from .typedefs import *
-from .mgr import *  # for clever side effect
+from .atom_methods import inject_atom_methods
+
+
+inject_atom_methods()  # Late definition of pythonic methods for atom types
 
 
 def get_instance_proc_addr(

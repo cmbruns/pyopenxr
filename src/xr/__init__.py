@@ -16,7 +16,6 @@ from . import (
     context_object,
     opengl_graphics,
     matrix4x4f,
-    extension,
 )
 
 from .version import *
@@ -36,7 +35,6 @@ from .matrix4x4f import *
 # from .experiment import *
 
 __all__ = [
-    "extension",
 ]
 
 for subpackage in (

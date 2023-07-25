@@ -9,7 +9,7 @@ elif platform.system() == "Linux":
 import xr
 
 
-class OpenGLGraphics(object):
+class GLFWContext(object):
     @staticmethod
     def required_extensions():
         return [xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
@@ -41,7 +41,7 @@ class OpenGLGraphics(object):
         self.window = glfw.create_window(*self.window_size, "pyopenxr glfw OpenGL", None, None)
         if self.window is None:
             raise xr.XrException("Failed to create GLFW window")
-        glfw.make_context_current(self.window)
+        self.make_current()
         # Attempt to disable vsync on the desktop window, or
         # it will interfere with the OpenXR frame loop timing
         glfw.swap_interval(0)
@@ -73,12 +73,15 @@ class OpenGLGraphics(object):
         self.destroy()
 
     def destroy(self):
-        glfw.make_context_current(self.window)
+        self.make_current()
         glfw.destroy_window(self.window)
         self.window = None
         glfw.terminate()
 
+    def make_current(self):
+        glfw.make_context_current(self.window)
+
 
 __all__ = [
-    "OpenGLGraphics",
+    "GLFWContext",
 ]
