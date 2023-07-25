@@ -21,7 +21,9 @@ Flags64 = c_uint64
 # Create a separate class for SystemId,
 # because we will inject methods into it later
 class SystemId(c_uint64):
-    pass
+    def __init__(self, instance: Optional["Instance"], get_info: "SystemGetInfo") -> None:
+        # This method will be overwritten at function definition time
+        raise NotImplementedError
 
 
 Bool32 = c_uint32
