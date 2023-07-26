@@ -64,6 +64,8 @@ class SessionStatus(ISubscriber):
         self.session = session
         self._begin_info = begin_info
         self.state = xr.SessionState.UNKNOWN
+        self.is_running = False
+        self.exit_frame_loop = False
         event_source.subscribe(
             event_key=xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED,
             subscriber=self,
@@ -81,13 +83,18 @@ class SessionStatus(ISubscriber):
                 ctypes.byref(event_data),
                 ctypes.POINTER(xr.EventDataSessionStateChanged)).contents
             self.state = xr.SessionState(event.state)
+            print(self.state.name)
             if self.state == xr.SessionState.READY:
                 xr.begin_session(
                     session=self.session,
                     begin_info=self._begin_info,
                 )
+                self.is_running = True
             elif self.state == xr.SessionState.STOPPING:
+                self.is_running = False
                 xr.end_session(self.session)
+            elif self.state == xr.SessionState.EXITING:
+                self.exit_frame_loop = True
 
 
 __all__ = [

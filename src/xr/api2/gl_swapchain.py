@@ -181,57 +181,56 @@ class XrSwapchains(object):
             self.framebuffer.destroy()
         self.framebuffer = None
 
-    def enumerate_views(self, frame_state: xr.FrameState, render_layers):
-        if frame_state.should_render:
-            layer = xr.CompositionLayerProjection(space=self.app_space)
-            projection_layer_views = (xr.CompositionLayerProjectionView * self.view_count)(
-                *([xr.CompositionLayerProjectionView()] * self.view_count)
+    def views(self, frame_state: xr.FrameState, render_layers):
+        layer = xr.CompositionLayerProjection(space=self.app_space)
+        projection_layer_views = (xr.CompositionLayerProjectionView * self.view_count)(
+            *([xr.CompositionLayerProjectionView()] * self.view_count)
+        )
+        view_state, views = xr.locate_views(
+            session=self.session,
+            view_locate_info=xr.ViewLocateInfo(
+                view_configuration_type=self.view_configuration_type,
+                display_time=frame_state.predicted_display_time,
+                space=self.app_space,
             )
-            view_state, views = xr.locate_views(
-                session=self.session,
-                view_locate_info=xr.ViewLocateInfo(
-                    view_configuration_type=self.view_configuration_type,
-                    display_time=frame_state.predicted_display_time,
-                    space=self.app_space,
-                )
+        )
+        vsf = view_state.view_state_flags
+        if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
+                or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0):
+            return  # There are no valid tracking poses for the views.
+        for view_index, view in enumerate(views):
+            view_swapchain = self.swapchains[view_index]
+            swapchain_image_index = xr.acquire_swapchain_image(
+                swapchain=view_swapchain.handle,
+                acquire_info=xr.SwapchainImageAcquireInfo(),
             )
-            vsf = view_state.view_state_flags
-            if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
-                    or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0):
-                return  # There are no valid tracking poses for the views.
-            for view_index, view in enumerate(views):
-                view_swapchain = self.swapchains[view_index]
-                swapchain_image_index = xr.acquire_swapchain_image(
-                    swapchain=view_swapchain.handle,
-                    acquire_info=xr.SwapchainImageAcquireInfo(),
-                )
-                xr.wait_swapchain_image(
-                    swapchain=view_swapchain.handle,
-                    wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
-                )
-                layer_view = projection_layer_views[view_index]
-                assert layer_view.type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
-                layer_view.pose = view.pose
-                layer_view.fov = view.fov
-                layer_view.sub_image.swapchain = view_swapchain.handle
-                layer_view.sub_image.image_rect.offset[:] = [0, 0]
-                layer_view.sub_image.image_rect.extent[:] = [
-                    view_swapchain.width, view_swapchain.height, ]
-                swapchain_image_ptr = self.swapchain_image_ptr_buffers[view_index][swapchain_image_index]
-                swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLKHR)).contents
-                assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
-                color_texture = swapchain_image.image
-                self.framebuffer.begin_frame(layer_view, color_texture)
+            xr.wait_swapchain_image(
+                swapchain=view_swapchain.handle,
+                wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
+            )
+            layer_view = projection_layer_views[view_index]
+            assert layer_view.type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
+            layer_view.pose = view.pose
+            layer_view.fov = view.fov
+            layer_view.sub_image.swapchain = view_swapchain.handle
+            layer_view.sub_image.image_rect.offset[:] = [0, 0]
+            layer_view.sub_image.image_rect.extent[:] = [
+                view_swapchain.width, view_swapchain.height, ]
+            swapchain_image_ptr = self.swapchain_image_ptr_buffers[view_index][swapchain_image_index]
+            swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLKHR)).contents
+            assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
+            color_texture = swapchain_image.image
+            self.framebuffer.begin_frame(layer_view, color_texture)
 
-                yield view_index, view
+            yield view
 
-                self.framebuffer.end_frame()
-                xr.release_swapchain_image(
-                    swapchain=view_swapchain.handle,
-                    release_info=xr.SwapchainImageReleaseInfo()
-                )
-            layer.views = projection_layer_views
-            render_layers.append(byref(layer))
+            self.framebuffer.end_frame()
+            xr.release_swapchain_image(
+                swapchain=view_swapchain.handle,
+                release_info=xr.SwapchainImageReleaseInfo()
+            )
+        layer.views = projection_layer_views
+        render_layers.append(byref(layer))
 
 
 __all__ = [
