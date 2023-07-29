@@ -184,7 +184,7 @@ class XrSwapchains(object):
     def views(self, frame_state: xr.FrameState, render_layers):
         layer = xr.CompositionLayerProjection(space=self.app_space)
         projection_layer_views = (xr.CompositionLayerProjectionView * self.view_count)(
-            *([xr.CompositionLayerProjectionView()] * self.view_count)
+            *([xr.CompositionLayerProjectionView() for _ in range(self.view_count)])
         )
         view_state, views = xr.locate_views(
             session=self.session,

@@ -9,7 +9,7 @@ class ISubscriber(abc.ABC):
     Abstract base class for classes that subscribe to events from an EventBus.
     """
     @abc.abstractmethod
-    def notify(self, event_key, event_data) -> None:
+    def handle_event(self, event_key, event_data) -> None:
         """
         Receives an event from the EventBus
         :param event_key: key uniquely identifying an event type
@@ -36,7 +36,7 @@ class EventBus(object):
         if event_key not in self.subscribers:
             return
         for subscriber in self.subscribers[event_key]:
-            subscriber.notify(event_key, event_data)
+            subscriber.handle_event(event_key, event_data)
 
 
 class XrEventGenerator(object):
@@ -71,7 +71,7 @@ class SessionStatus(ISubscriber):
             subscriber=self,
         )
 
-    def notify(self, event_key, event_data) -> None:
+    def handle_event(self, event_key, event_data) -> None:
         """
         Respond to OpenXR session state change events
         :param event_key: event type
@@ -99,6 +99,7 @@ class SessionStatus(ISubscriber):
 
 __all__ = [
     "EventBus",
+    "ISubscriber",
     "SessionStatus",
     "XrEventGenerator",
 ]
