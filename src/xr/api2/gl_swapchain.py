@@ -109,18 +109,14 @@ class XrSwapchains(object):
             session: xr.Session,
             context: IGLContext,
             view_configuration_type: xr.ViewConfigurationType,
+            reference_space: xr.Space,
     ):
         self.session = session
         self.view_configuration_type = view_configuration_type
         self.context = context
         self.framebuffer = GLSwapchainFramebuffer(context=self.context)
         self.render_layers = []
-        self.app_space = xr.create_reference_space(
-            session=session,
-            create_info=xr.ReferenceSpaceCreateInfo(
-                reference_space_type=xr.ReferenceSpaceType.LOCAL,  # right?
-            ),
-        )
+        self.app_space = reference_space
         # Create swapchains
         config_views = xr.enumerate_view_configuration_views(
             instance=instance,

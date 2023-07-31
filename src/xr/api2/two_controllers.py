@@ -2,18 +2,7 @@ import xr
 
 
 class TwoControllers(object):
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.reference_space is not None:
-            xr.destroy_space(self.reference_space)
-            self.reference_space = None
-        if self.action_set is not None:
-            xr.destroy_action_set(self.action_set)
-            self.action_set = None
-
-    def __init__(self, instance, session):
+    def __init__(self, instance: xr.Instance, session: xr.Session, reference_space: xr.Space):
         self.instance = instance
         self.session = session
         self.action_set = xr.create_action_set(
@@ -93,12 +82,15 @@ class TwoControllers(object):
                 ),
             ),
         ]
-        self.reference_space = xr.create_reference_space(
-            session=session,
-            create_info=xr.ReferenceSpaceCreateInfo(
-                reference_space_type=xr.ReferenceSpaceType.STAGE,
-            ),
-        )
+        self.reference_space = reference_space
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.action_set is not None:
+            xr.destroy_action_set(self.action_set)
+            self.action_set = None
 
     def enumerate_active_controllers(self, time: xr.Time):
         active_action_set = xr.ActiveActionSet(
