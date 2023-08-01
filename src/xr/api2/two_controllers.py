@@ -1,3 +1,4 @@
+from typing import Generator, Tuple
 import xr
 
 
@@ -92,7 +93,8 @@ class TwoControllers(object):
             xr.destroy_action_set(self.action_set)
             self.action_set = None
 
-    def enumerate_active_controllers(self, time: xr.Time):
+    def enumerate_active_controllers(self, time: xr.Time)\
+            -> Generator[Tuple[int, xr.SpaceLocation], None, None]:
         active_action_set = xr.ActiveActionSet(
             action_set=self.action_set,
             subaction_path=xr.NULL_PATH,

@@ -44,6 +44,12 @@ class Matrix4x4f(Structure):
         super().__init__()
         self._numpy = None
 
+    def __getitem__(self, item) -> float:
+        return self.m[item]
+
+    def __len__(self) -> int:
+        return 16
+
     def __matmul__(self, other) -> "Matrix4x4f":
         return self.multiply(other)
 
@@ -170,8 +176,12 @@ class Matrix4x4f(Structure):
         return Matrix4x4f.create_projection(graphics_api, tan_left, tan_right, tan_up, tan_down, near_z, far_z)
 
     @staticmethod
-    def create_scale(x: float, y: float, z: float) -> "Matrix4x4f":
+    def create_scale(x: float, y: float = None, z: float = None) -> "Matrix4x4f":
         """ Creates a scale matrix. """
+        if y is None:
+            y = x
+        if z is None:
+            z = x
         result = Matrix4x4f()
         result.m[0] = x
         result.m[1] = 0.0
