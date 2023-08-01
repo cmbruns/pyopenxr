@@ -9,7 +9,7 @@ complex definition order dependencies.
 """
 
 from ctypes import byref
-from typing import Optional
+from typing import Optional, Union
 
 from .exception import check_result
 from . import raw_functions
@@ -120,7 +120,133 @@ def inject_atom_methods():
             raise result
         self.instance = None
 
-    # TODO: other atoms: Space etc.
+    #########
+    # Space #
+    #########
+
+    @instance_method_of(Space)
+    def __init__(self, session: Optional[Session],
+                 create_info: Union[ReferenceSpaceCreateInfo, ActionSpaceCreateInfo] = None
+                 ) -> None:
+        # super().__init__()
+        self.session = session
+        if session is None:
+            return
+        result = None
+        if isinstance(create_info, ReferenceSpaceCreateInfo):
+            result = check_result(raw_functions.xrCreateReferenceSpace(
+                session,
+                create_info,
+                byref(self),
+            ))
+        elif isinstance(create_info, ActionSpaceCreateInfo):
+            result = check_result(raw_functions.xrCreateActionSpace(
+                session,
+                create_info,
+                byref(self),
+            ))
+        else:
+            raise NotImplementedError
+        if result.is_exception():
+            raise result
+
+    @instance_method_of(Space)
+    def __enter__(self):
+        return self
+
+    @instance_method_of(Space)
+    def __exit__(self, _exc_type, _exc_val, _exc_tb):
+        result = check_result(raw_functions.xrDestroySpace(self))
+        if result.is_exception():
+            raise result
+        self.session = None
+
+    ##########
+    # Action #
+    ##########
+
+    @instance_method_of(Action)
+    def __init__(self, action_set: Optional[ActionSet], create_info: "ActionCreateInfo" = None) -> None:
+        # super().__init__()
+        self.action_set = action_set
+        if action_set is None:
+            return
+        result = check_result(raw_functions.xrCreateAction(
+            action_set,
+            create_info,
+            byref(self),
+        ))
+        if result.is_exception():
+            raise result
+
+    @instance_method_of(Action)
+    def __enter__(self):
+        return self
+
+    @instance_method_of(Action)
+    def __exit__(self, _exc_type, _exc_val, _exc_tb):
+        result = check_result(raw_functions.xrDestroyAction(self))
+        if result.is_exception():
+            raise result
+        self.action_set = None
+
+    #############
+    # ActionSet #
+    #############
+
+    @instance_method_of(ActionSet)
+    def __init__(self, instance: Optional[Instance], create_info: "ActionSetCreateInfo" = None) -> None:
+        # super().__init__()
+        self.instance = instance
+        if instance is None:
+            return
+        result = check_result(raw_functions.xrCreateActionSet(
+            instance,
+            create_info,
+            byref(self),
+        ))
+        if result.is_exception():
+            raise result
+
+    @instance_method_of(ActionSet)
+    def __enter__(self):
+        return self
+
+    @instance_method_of(ActionSet)
+    def __exit__(self, _exc_type, _exc_val, _exc_tb):
+        result = check_result(raw_functions.xrDestroyActionSet(self))
+        if result.is_exception():
+            raise result
+        self.instance = None
+
+    #############
+    # Swapchain #
+    #############
+
+    @instance_method_of(Swapchain)
+    def __init__(self, session: Optional[Session], create_info: "SwapchainCreateInfo" = None) -> None:
+        # super().__init__()
+        self.session = session
+        if session is None:
+            return
+        result = check_result(raw_functions.xrCreateSwapchain(
+            session,
+            create_info,
+            byref(self),
+        ))
+        if result.is_exception():
+            raise result
+
+    @instance_method_of(Swapchain)
+    def __enter__(self):
+        return self
+
+    @instance_method_of(Swapchain)
+    def __exit__(self, _exc_type, _exc_val, _exc_tb):
+        result = check_result(raw_functions.xrDestroySwapchain(self))
+        if result.is_exception():
+            raise result
+        self.session = None
 
 
 __all__ = [
