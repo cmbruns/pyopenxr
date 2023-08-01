@@ -283,7 +283,7 @@ def create_reference_space(
     """"""
     if create_info is None:
         create_info = ReferenceSpaceCreateInfo()
-    space = Space()
+    space = Space(None)
     fxn = raw_functions.xrCreateReferenceSpace
     result = check_result(fxn(
         session,
@@ -319,7 +319,7 @@ def create_action_space(
     """"""
     if create_info is None:
         create_info = ActionSpaceCreateInfo()
-    space = Space()
+    space = Space(None)
     fxn = raw_functions.xrCreateActionSpace
     result = check_result(fxn(
         session,
@@ -478,7 +478,7 @@ def create_swapchain(
     """"""
     if create_info is None:
         create_info = SwapchainCreateInfo()
-    swapchain = Swapchain()
+    swapchain = Swapchain(None)
     fxn = raw_functions.xrCreateSwapchain
     result = check_result(fxn(
         session,
@@ -747,7 +747,7 @@ def create_action_set(
     """"""
     if create_info is None:
         create_info = ActionSetCreateInfo()
-    action_set = ActionSet()
+    action_set = ActionSet(None)
     fxn = raw_functions.xrCreateActionSet
     result = check_result(fxn(
         instance,
@@ -778,7 +778,7 @@ def create_action(
     """"""
     if create_info is None:
         create_info = ActionCreateInfo()
-    action = Action()
+    action = Action(None)
     fxn = raw_functions.xrCreateAction
     result = check_result(fxn(
         action_set,
