@@ -11,10 +11,7 @@ from . import (
     functions,
     platform,
     exception,
-    classes,
     api_layer,
-    context_object,
-    opengl_graphics,
     matrix4x4f,
 )
 
@@ -25,10 +22,7 @@ from .typedefs import *
 from .functions import *
 from .platform import *
 from .exception import *
-from .classes import *
 from .api_layer import *
-from .context_object import *
-from .opengl_graphics import *
 from .matrix4x4f import *
 
 
@@ -45,10 +39,7 @@ for subpackage in (
     functions,
     platform,
     exception,
-    classes,
     api_layer,
-    context_object,
-    opengl_graphics,
     matrix4x4f,
 ):
     __all__ += subpackage.__all__

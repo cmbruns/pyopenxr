@@ -83,6 +83,7 @@ PYOPENXR_CURRENT_API_VERSION = pack_32_bit_version(
 __version__ = PYOPENXR_VERSION
 
 __all__ = [
+    "pack_32_bit_version",
     "PYOPENXR_CURRENT_API_VERSION",
     "PYOPENXR_VERSION_MAJOR",
     "PYOPENXR_VERSION_MINOR",
