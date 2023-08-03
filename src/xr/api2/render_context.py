@@ -28,7 +28,7 @@ class RenderContext(object):
         self.view_matrix = xr.Matrix4x4f.invert_rigid_body(to_view).as_numpy()
 
 
-class CubeRenderer(object):
+class ColorCubeRenderer(object):
     """
     Colorful cube with default edge length 1 meter.
     """
@@ -167,6 +167,6 @@ class CubeRenderer(object):
 
 
 __all__ = [
-    "CubeRenderer",
+    "ColorCubeRenderer",
     "RenderContext",
 ]
