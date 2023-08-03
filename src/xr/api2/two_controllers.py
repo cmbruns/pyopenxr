@@ -3,7 +3,12 @@ import xr
 
 
 class TwoControllers(object):
-    def __init__(self, instance: xr.Instance, session: xr.Session, reference_space: xr.Space):
+    def __init__(
+            self,
+            instance: xr.Instance,
+            session: xr.Session,
+            reference_space: xr.Space,
+    ):
         self.instance = instance
         self.session = session
         self.action_set = xr.create_action_set(
@@ -93,8 +98,10 @@ class TwoControllers(object):
             xr.destroy_action_set(self.action_set)
             self.action_set = None
 
-    def enumerate_active_controllers(self, time: xr.Time)\
-            -> Generator[Tuple[int, xr.SpaceLocation], None, None]:
+    def enumerate_active_controllers(
+            self,
+            time: xr.Time,
+    ) -> Generator[Tuple[int, xr.SpaceLocation], None, None]:
         active_action_set = xr.ActiveActionSet(
             action_set=self.action_set,
             subaction_path=xr.NULL_PATH,

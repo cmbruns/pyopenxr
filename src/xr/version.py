@@ -3,6 +3,7 @@
 # pyopenxr version is based on openxr version...
 # except the patch number is:
 #   100 * openxr patch number + pyopenxr patch number
+import functools
 
 XR_VERSION_MAJOR = 1
 XR_VERSION_MINOR = 0
@@ -17,6 +18,7 @@ PYOPENXR_VERSION_SUFFIX = ""
 PYOPENXR_VERSION = "1.0.2802"
 
 
+@functools.total_ordering
 class Version(object):
     def __init__(self, major: int = 0, minor: int = None, patch: int = None):
         if minor is None and patch is None:
@@ -35,6 +37,9 @@ class Version(object):
         self.minor = minor
         self.patch = patch
 
+    def __eq__(self, other):
+        return int(self) == int(other)
+
     def __index__(self) -> int:
         """Packed xr.VersionNumber"""
         return (((int(self.major) & 0xffff) << 48) 
@@ -43,6 +48,9 @@ class Version(object):
 
     def __int__(self) -> int:
         return self.__index__()
+
+    def __lt__(self, other):
+        return int(self) < int(other)
 
     def number(self) -> int:
         """Packed xr.VersionNumber"""
