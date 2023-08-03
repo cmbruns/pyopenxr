@@ -7,7 +7,6 @@ class TwoControllers(object):
             self,
             instance: xr.Instance,
             session: xr.Session,
-            reference_space: xr.Space,
     ):
         self.instance = instance
         self.session = session
@@ -88,7 +87,6 @@ class TwoControllers(object):
                 ),
             ),
         ]
-        self.reference_space = reference_space
 
     def __enter__(self):
         return self
@@ -101,6 +99,7 @@ class TwoControllers(object):
     def enumerate_active_controllers(
             self,
             time: xr.Time,
+            reference_space: xr.Space,
     ) -> Generator[Tuple[int, xr.SpaceLocation], None, None]:
         active_action_set = xr.ActiveActionSet(
             action_set=self.action_set,
@@ -115,7 +114,7 @@ class TwoControllers(object):
         for index, space in enumerate(self.action_spaces):
             space_location = xr.locate_space(
                 space=space,
-                base_space=self.reference_space,
+                base_space=reference_space,
                 time=time,
             )
             yield index, space_location
