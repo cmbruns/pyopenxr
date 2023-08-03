@@ -122,7 +122,7 @@ class SessionManager(ISubscriber):
                 primary_view_configuration_type=view_configuration_type,
             )
         self._begin_info = begin_info
-        self.event_bus = xr.api2.EventBus()  # TODO: this event bus should be shared
+        self.event_bus = EventBus()  # TODO: this event bus should be shared
         self.is_running = False
         self.exit_frame_loop = False
         self.session_state = xr.SessionState.UNKNOWN
