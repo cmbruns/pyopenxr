@@ -13,7 +13,7 @@ class XrContext(object):
     """
     def __init__(
             self,
-            instance_create_info: xr.InstanceCreateInfo = None,
+            instance_create_info: xr.InstanceCreateInfo,
             system_get_info: xr.SystemGetInfo = None,
             session_create_info: xr.SessionCreateInfo = None,
             reference_space_type: xr.ReferenceSpaceType = xr.ReferenceSpaceType.STAGE,

@@ -40,13 +40,13 @@ def inject_atom_methods():
     ############
 
     @instance_method_of(Instance)
-    def __init__(self: Instance, create_info: Optional[InstanceCreateInfo] = InstanceCreateInfo()) -> None:
+    def __init__(self: Instance, create_info: Optional[InstanceCreateInfo] = None) -> None:
         """
         Call Instance(None) to construct an uninitialized Instance.
         """
         # super().__init__()  # Triggers a problem in ctypes "RuntimeError: super(): __class__ cell not found"
         if create_info is None:
-            return
+            return  # Non-initializing contructor
         result = check_result(raw_functions.xrCreateInstance(
             create_info,
             byref(self),
@@ -70,11 +70,11 @@ def inject_atom_methods():
     # (SystemId is not actually an atom)
 
     @instance_method_of(SystemId)
-    def __init__(self, instance: Optional[Instance], get_info: SystemGetInfo = SystemGetInfo()) -> None:
+    def __init__(self, instance: Optional[Instance] = None, get_info: SystemGetInfo = SystemGetInfo()) -> None:
         # super().__init__()
         self.instance = instance
         if instance is None:
-            return
+            return  # Non-initializing contructor
         result = check_result(raw_functions.xrGetSystem(
             instance,
             get_info,
@@ -96,7 +96,7 @@ def inject_atom_methods():
     ###########
 
     @instance_method_of(Session)
-    def __init__(self, instance: Optional[Instance], create_info: "SessionCreateInfo" = None) -> None:
+    def __init__(self, instance: Optional[Instance] = None, create_info: "SessionCreateInfo" = None) -> None:
         # super().__init__()
         self.instance = instance
         if instance is None:
@@ -125,13 +125,14 @@ def inject_atom_methods():
     #########
 
     @instance_method_of(Space)
-    def __init__(self, session: Optional[Session],
+    def __init__(self,
+                 session: Optional[Session] = None,
                  create_info: Union[ReferenceSpaceCreateInfo, ActionSpaceCreateInfo] = None
                  ) -> None:
         # super().__init__()
         self.session = session
         if session is None:
-            return
+            return  # Non-initializing contructor
         result = None
         if isinstance(create_info, ReferenceSpaceCreateInfo):
             result = check_result(raw_functions.xrCreateReferenceSpace(
@@ -166,11 +167,11 @@ def inject_atom_methods():
     ##########
 
     @instance_method_of(Action)
-    def __init__(self, action_set: Optional[ActionSet], create_info: "ActionCreateInfo" = None) -> None:
+    def __init__(self, action_set: Optional[ActionSet] = None, create_info: "ActionCreateInfo" = None) -> None:
         # super().__init__()
         self.action_set = action_set
         if action_set is None:
-            return
+            return  # Non-initializing contructor
         result = check_result(raw_functions.xrCreateAction(
             action_set,
             create_info,
@@ -195,11 +196,11 @@ def inject_atom_methods():
     #############
 
     @instance_method_of(ActionSet)
-    def __init__(self, instance: Optional[Instance], create_info: "ActionSetCreateInfo" = None) -> None:
+    def __init__(self, instance: Optional[Instance] = None, create_info: "ActionSetCreateInfo" = None) -> None:
         # super().__init__()
         self.instance = instance
         if instance is None:
-            return
+            return  # Non-initializing contructor
         result = check_result(raw_functions.xrCreateActionSet(
             instance,
             create_info,
@@ -224,11 +225,11 @@ def inject_atom_methods():
     #############
 
     @instance_method_of(Swapchain)
-    def __init__(self, session: Optional[Session], create_info: "SwapchainCreateInfo" = None) -> None:
+    def __init__(self, session: Optional[Session] = None, create_info: "SwapchainCreateInfo" = None) -> None:
         # super().__init__()
         self.session = session
         if session is None:
-            return
+            return  # Non-initializing contructor
         result = check_result(raw_functions.xrCreateSwapchain(
             session,
             create_info,
