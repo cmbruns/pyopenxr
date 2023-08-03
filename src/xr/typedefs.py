@@ -13,10 +13,6 @@ from .array_field import *
 from .enums import *
 from .version import *
 
-VersionNumber = c_uint64
-
-Flags64 = c_uint64
-
 
 # Create a separate class for SystemId,
 # because we will inject methods into it later
@@ -25,6 +21,9 @@ class SystemId(c_uint64):
         # This method will be overwritten at function definition time
         raise NotImplementedError
 
+VersionNumber = c_uint64
+
+Flags64 = c_uint64
 
 Bool32 = c_uint32
 
@@ -196,7 +195,7 @@ class ApplicationInfo(Structure):
         application_name: str = os.path.basename(sys.argv[0]),
         application_version: int = 0,
         engine_name: str = "pyopenxr",
-        engine_version: int = 0,
+        engine_version: int = PYOPENXR_CURRENT_API_VERSION,
         api_version: Version = XR_CURRENT_API_VERSION,
     ) -> None:
         super().__init__(
@@ -208,10 +207,10 @@ class ApplicationInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self._application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self._engine_version)}, api_version={repr(self._api_version)})"
+        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self.application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self.engine_version)}, api_version={repr(self._api_version)})"
 
     def __str__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self._application_version}, engine_name={self.engine_name}, engine_version={self._engine_version}, api_version={self._api_version})"
+        return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self.application_version}, engine_name={self.engine_name}, engine_version={self.engine_version}, api_version={self._api_version})"
 
     @property
     def api_version(self):

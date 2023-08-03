@@ -33,6 +33,10 @@ def main():
         from .enums import *
         from .exception import check_result
         from .typedefs import *
+        from .atom_methods import inject_atom_methods
+
+
+        inject_atom_methods()  # Late definition of pythonic methods for atom types
     '''))
 
     for fn in functions.items:

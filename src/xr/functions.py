@@ -94,7 +94,17 @@ def create_instance(
     create_info: InstanceCreateInfo = None,
 ) -> Instance:
     """"""
-    return Instance(create_info)
+    if create_info is None:
+        create_info = InstanceCreateInfo()
+    instance = Instance()
+    fxn = raw_functions.xrCreateInstance
+    result = check_result(fxn(
+        create_info,
+        byref(instance),
+    ))
+    if result.is_exception():
+        raise result
+    return instance
 
 
 def destroy_instance(
@@ -173,10 +183,21 @@ def structure_type_to_string(
 
 def get_system(
     instance: Instance,
-    get_info: SystemGetInfo = SystemGetInfo(),
+    get_info: SystemGetInfo = None,
 ) -> SystemId:
     """"""
-    return SystemId(instance, get_info)
+    if get_info is None:
+        get_info = SystemGetInfo()
+    system_id = SystemId()
+    fxn = raw_functions.xrGetSystem
+    result = check_result(fxn(
+        instance,
+        get_info,
+        byref(system_id),
+    ))
+    if result.is_exception():
+        raise result
+    return system_id
 
 
 def get_system_properties(
@@ -234,7 +255,18 @@ def create_session(
     create_info: SessionCreateInfo = None,
 ) -> Session:
     """"""
-    return Session(instance, create_info)
+    if create_info is None:
+        create_info = SessionCreateInfo()
+    session = Session()
+    fxn = raw_functions.xrCreateSession
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(session),
+    ))
+    if result.is_exception():
+        raise result
+    return session
 
 
 def destroy_session(
@@ -283,7 +315,7 @@ def create_reference_space(
     """"""
     if create_info is None:
         create_info = ReferenceSpaceCreateInfo()
-    space = Space(None)
+    space = Space()
     fxn = raw_functions.xrCreateReferenceSpace
     result = check_result(fxn(
         session,
@@ -319,7 +351,7 @@ def create_action_space(
     """"""
     if create_info is None:
         create_info = ActionSpaceCreateInfo()
-    space = Space(None)
+    space = Space()
     fxn = raw_functions.xrCreateActionSpace
     result = check_result(fxn(
         session,
@@ -478,7 +510,7 @@ def create_swapchain(
     """"""
     if create_info is None:
         create_info = SwapchainCreateInfo()
-    swapchain = Swapchain(None)
+    swapchain = Swapchain()
     fxn = raw_functions.xrCreateSwapchain
     result = check_result(fxn(
         session,
@@ -747,7 +779,7 @@ def create_action_set(
     """"""
     if create_info is None:
         create_info = ActionSetCreateInfo()
-    action_set = ActionSet(None)
+    action_set = ActionSet()
     fxn = raw_functions.xrCreateActionSet
     result = check_result(fxn(
         instance,
@@ -778,7 +810,7 @@ def create_action(
     """"""
     if create_info is None:
         create_info = ActionCreateInfo()
-    action = Action(None)
+    action = Action()
     fxn = raw_functions.xrCreateAction
     result = check_result(fxn(
         action_set,
