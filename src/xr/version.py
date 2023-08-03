@@ -60,46 +60,20 @@ class Version(object):
         return f"{self.major}.{self.minor}.{self.patch}"
 
 
-class Version32(object):
-    """
-    32-bit version of Version, for use in engineVersion and applicationVersion
-    """
-    def __init__(self, major: int = 0, minor: int = None, patch: int = None):
-        if minor is None and patch is None:
-            if hasattr(major, "number"):  # Copy constructor
-                major = major.number()
-            if major > 0xffff:
-                # major argument is actually a packed xr.VersionNumber
-                patch = major & 0xffff
-                minor = (major >> 16) & 0xff
-                major = (major >> 24) & 0xff
-        if minor is None:
-            minor = 0
-        if patch is None:
-            patch = 0
-        self.major = major
-        self.minor = minor
-        self.patch = patch
-
-    def __index__(self) -> int:
-        """Packed xr.VersionNumber"""
-        return (((int(self.major) & 0xff) << 24)
-                | ((int(self.minor) & 0xff) << 16)
-                | (int(self.patch) & 0xffff))
-
-    def __int__(self) -> int:
-        return self.__index__()
-
-    def number(self) -> int:
-        """Packed xr.VersionNumber"""
-        return self.__index__()
-
-    def __str__(self):
-        return f"{self.major}.{self.minor}.{self.patch}"
+def pack_32_bit_version(major: int, minor: int, patch: int) -> int:
+    if not 0 <= major < 2**8:
+        raise RuntimeError("major version out of range")
+    if not 0 <= minor < 2**8:
+        raise RuntimeError("minor version out of range")
+    if not 0 <= patch < 2**16:
+        raise RuntimeError("patch version out of range")
+    return (((int(major) & 0xff) << 24)
+            | ((int(minor) & 0xff) << 16)
+            | (int(patch) & 0xffff))
 
 
 XR_CURRENT_API_VERSION = Version(XR_VERSION_MAJOR, XR_VERSION_MINOR, XR_VERSION_PATCH)
-PYOPENXR_CURRENT_API_VERSION = Version32(
+PYOPENXR_CURRENT_API_VERSION = pack_32_bit_version(
     PYOPENXR_VERSION_MAJOR,
     PYOPENXR_VERSION_MINOR,
     PYOPENXR_VERSION_PATCH
@@ -117,7 +91,6 @@ __all__ = [
     "PYOPENXR_VERSION_SUFFIX",
     "PYOPENXR_VERSION",
     "Version",
-    "Version32",
     "XR_CURRENT_API_VERSION",
     "XR_VERSION_MAJOR",
     "XR_VERSION_MINOR",
