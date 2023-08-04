@@ -173,6 +173,11 @@ class XrSwapchains(object):
         self.destroy()
 
     def destroy(self):
+        for swapchain in self.swapchains:
+            if swapchain and swapchain.handle:
+                xr.destroy_swapchain(swapchain.handle)
+                swapchain.handle = None
+        self.swapchains = []
         if self.framebuffer is not None:
             self.framebuffer.destroy()
         self.framebuffer = None
