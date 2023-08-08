@@ -18,11 +18,13 @@ class RenderContext(object):
     Contains enough information for renderers to display,
     including projection matrix and view matrix.
     """
+    identity_matrix = xr.Matrix4x4f.create_scale(1).as_numpy()
+
     def __init__(
             self,
             color_space=ColorSpace.LINEAR,
-            projection_matrix=xr.Matrix4x4f.create_scale(1),
-            view_matrix=xr.Matrix4x4f.create_scale(1),
+            projection_matrix=identity_matrix,
+            view_matrix=identity_matrix,
     ):
         self.projection_matrix = projection_matrix
         self.view_matrix = view_matrix
