@@ -13,18 +13,19 @@ class ColorSpace(enum.Enum):
     SRGB = 2,
 
 
+identity_matrix = xr.Matrix4x4f.create_scale(1).as_numpy()
+
+
 class RenderContext(object):
     """
     Contains enough information for renderers to display,
     including projection matrix and view matrix.
     """
-    identity_matrix = xr.Matrix4x4f.create_scale(1).as_numpy()
-
     def __init__(
             self,
-            color_space=ColorSpace.LINEAR,
-            projection_matrix=identity_matrix,
-            view_matrix=identity_matrix,
+            color_space: ColorSpace = ColorSpace.LINEAR,
+            projection_matrix: numpy.array = identity_matrix,
+            view_matrix: numpy.array = identity_matrix,
     ):
         self.projection_matrix = projection_matrix
         self.view_matrix = view_matrix
@@ -33,7 +34,7 @@ class RenderContext(object):
     @staticmethod
     def from_view(
             view: xr.View,
-            near_z=0.05,
+            near_z: float = 0.05,
             color_space: ColorSpace = ColorSpace.LINEAR
     ):
         # TODO: cache projection matrix for performance
@@ -56,10 +57,11 @@ class ColorCubeRenderer(object):
     """
     Colorful cube with default edge length 1 meter.
     """
-    def __init__(self, model_matrix=xr.Matrix4x4f.create_scale(1)):
+    def __init__(self, model_matrix=identity_matrix, local_matrix=identity_matrix):
         self.vao = None
         self.shader = None
         self._model_matrix = numpy.array(model_matrix, dtype=numpy.float32).flatten()
+        self.local_matrix = local_matrix
         self.do_show = True
 
     def __enter__(self):
@@ -109,6 +111,7 @@ class ColorCubeRenderer(object):
                 0, s, 0, 0,
                 0, 0, s, 0,
                 0, s, 0, 1);  // raise cube to sit on floor
+            layout(location = 12) uniform mat4 Local = mat4(1);
 
             const float r = 0.5;  // "radius" is 0.5, so cube edge length is 1.0
             const vec3 UNIT_CUBE[8] = vec3[8](
@@ -152,7 +155,7 @@ class ColorCubeRenderer(object):
                   _color = vec3(1.0) + _color;
               }
 
-              gl_Position = Projection * View * Model * vec4(UNIT_CUBE[vertexIndex], 1.0);
+              gl_Position = Projection * View * Model * Local * vec4(UNIT_CUBE[vertexIndex], 1.0);
             }
             """), GL.GL_VERTEX_SHADER)
         fragment_shader = compileShader(
@@ -178,6 +181,7 @@ class ColorCubeRenderer(object):
         GL.glUniformMatrix4fv(4, 1, False, render_context.view_matrix)
         if self._model_matrix is not None:
             GL.glUniformMatrix4fv(8, 1, False, self._model_matrix)
+        GL.glUniformMatrix4fv(12, 1, False, self.local_matrix)
         GL.glBindVertexArray(self.vao)
         GL.glDrawArrays(GL.GL_TRIANGLES, 0, 36)
 
