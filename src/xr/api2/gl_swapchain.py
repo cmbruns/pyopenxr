@@ -16,6 +16,7 @@ class GLSwapchainFramebuffer(object):
         self.context.make_current()
         self.framebuffer = GL.glGenFramebuffers(1)
         self._color_to_depth_map: Dict[int, int] = {}
+        self.color_space = xr.api2.ColorSpace.LINEAR
 
     def __enter__(self):
         return self
@@ -70,15 +71,11 @@ class GLSwapchainFramebuffer(object):
     def select_color_swapchain_format(runtime_formats):
         # List of supported color swapchain formats.
         supported_color_swapchain_formats = [
-            GL.GL_RGB10_A2,
+            GL.GL_RGBA16,
             GL.GL_RGBA16F,
-            # The two below should only be used as a fallback, as they are linear color formats without enough bits for color
-            # depth, thus leading to banding.
-            GL.GL_RGBA8,
-            GL.GL_RGBA8_SNORM,
-            #
-            GL.GL_SRGB8,  # Linux SteamVR beta 1.24.2 has only these...
+            GL.GL_RGB16F,
             GL.GL_SRGB8_ALPHA8,
+            GL.GL_SRGB8,
         ]
         for rf in runtime_formats:
             for sf in supported_color_swapchain_formats:
@@ -127,6 +124,10 @@ class XrSwapchains(object):
         self.context.make_current()
         swapchain_formats = xr.enumerate_swapchain_formats(session)
         color_swapchain_format = self.framebuffer.select_color_swapchain_format(swapchain_formats)
+        if color_swapchain_format in [GL.GL_SRGB8, GL.GL_SRGB8_ALPHA8]:
+            self.color_space = xr.api2.ColorSpace.SRGB
+        else:
+            self.color_space = xr.api2.ColorSpace.LINEAR
         # Create a swapchain for each view.
         self.swapchains = []
         self.swapchain_image_buffers = []

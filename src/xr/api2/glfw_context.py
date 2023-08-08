@@ -19,10 +19,6 @@ import xr
 
 class IGLContext(abc.ABC):
     @abc.abstractmethod
-    def destroy(self) -> None:
-        pass
-
-    @abc.abstractmethod
     def make_current(self) -> None:
         pass
 

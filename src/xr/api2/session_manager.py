@@ -155,6 +155,19 @@ class SessionManager(ISubscriber):
                     # We are trying to wind down as quickly as possible.
                     time.sleep(0.050)  # quickly let other things happen if necessary.
 
+    def frame(self) -> typing.Generator[FrameManager, None, None]:
+        """
+        Generate zero or one frame
+        """
+        self._poll_events()
+        if self.exit_frame_loop:
+            return
+        elif self.session_state == xr.SessionState.IDLE:
+            time.sleep(0.200)  # minimize resource consumption while idle
+        elif self.is_running:
+            with FrameManager(self) as frame:
+                yield frame
+
     def frames(self) -> typing.Generator[FrameManager, None, None]:
         """
         Generate frames of the OpenXR frame loop

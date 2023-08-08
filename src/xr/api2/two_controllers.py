@@ -101,23 +101,27 @@ class TwoControllers(object):
             time: xr.Time,
             reference_space: xr.Space,
     ) -> Generator[Tuple[int, xr.SpaceLocation], None, None]:
-        active_action_set = xr.ActiveActionSet(
-            action_set=self.action_set,
-            subaction_path=xr.NULL_PATH,
-        )
-        xr.sync_actions(
-            session=self.session,
-            sync_info=xr.ActionsSyncInfo(
-                active_action_sets=[active_action_set],
-            ),
-        )
-        for index, space in enumerate(self.action_spaces):
-            space_location = xr.locate_space(
-                space=space,
-                base_space=reference_space,
-                time=time,
+        try:
+            active_action_set = xr.ActiveActionSet(
+                action_set=self.action_set,
+                subaction_path=xr.NULL_PATH,
             )
-            yield index, space_location
+            xr.sync_actions(
+                session=self.session,
+                sync_info=xr.ActionsSyncInfo(
+                    active_action_sets=[active_action_set],
+                ),
+            )
+            for index, space in enumerate(self.action_spaces):
+                space_location = xr.locate_space(
+                    space=space,
+                    base_space=reference_space,
+                    time=time,
+                )
+                yield index, space_location
+        except xr.exception.SessionNotFocused:
+            # Sometimes (due to race condition?) the session is no longer focused when we get here
+            yield from []
 
 
 __all__ = [

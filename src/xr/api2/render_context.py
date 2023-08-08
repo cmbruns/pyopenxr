@@ -1,3 +1,4 @@
+import enum
 import inspect
 
 import numpy
@@ -7,14 +8,34 @@ from OpenGL.GL.shaders import compileShader, compileProgram
 import xr
 
 
+class ColorSpace(enum.Enum):
+    LINEAR = 1,
+    SRGB = 2,
+
+
 class RenderContext(object):
     """
     Contains enough information for renderers to display,
     including projection matrix and view matrix.
     """
-    def __init__(self, view: xr.View, near_z=0.05):
+    def __init__(
+            self,
+            color_space=ColorSpace.LINEAR,
+            projection_matrix=xr.Matrix4x4f.create_scale(1),
+            view_matrix=xr.Matrix4x4f.create_scale(1),
+    ):
+        self.projection_matrix = projection_matrix
+        self.view_matrix = view_matrix
+        self.color_space = color_space
+
+    @staticmethod
+    def from_view(
+            view: xr.View,
+            near_z=0.05,
+            color_space: ColorSpace = ColorSpace.LINEAR
+    ):
         # TODO: cache projection matrix for performance
-        self.projection_matrix = xr.Matrix4x4f.create_projection_fov(
+        projection_matrix = xr.Matrix4x4f.create_projection_fov(
             graphics_api=xr.GraphicsAPI.OPENGL,
             fov=view.fov,
             near_z=near_z,
@@ -25,7 +46,8 @@ class RenderContext(object):
             rotation=view.pose.orientation,
             scale=(1, 1, 1),
         )
-        self.view_matrix = xr.Matrix4x4f.invert_rigid_body(to_view).as_numpy()
+        view_matrix = xr.Matrix4x4f.invert_rigid_body(to_view).as_numpy()
+        return RenderContext(color_space=color_space, projection_matrix=projection_matrix, view_matrix=view_matrix)
 
 
 class ColorCubeRenderer(object):
@@ -168,5 +190,6 @@ class ColorCubeRenderer(object):
 
 __all__ = [
     "ColorCubeRenderer",
+    "ColorSpace",
     "RenderContext",
 ]
