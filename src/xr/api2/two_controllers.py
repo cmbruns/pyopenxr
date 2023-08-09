@@ -49,28 +49,32 @@ class TwoControllers(object):
                 ),
             ),
         )
-        xr.suggest_interaction_profile_bindings(
-            instance=instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    instance,
-                    "/interaction_profiles/khr/simple_controller",
-                ),
-                count_suggested_bindings=len(self.suggested_bindings),
-                suggested_bindings=self.suggested_bindings,
-            ),
-        )
-        xr.suggest_interaction_profile_bindings(
-            instance=instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    instance,
-                    "/interaction_profiles/htc/vive_controller",
-                ),
-                count_suggested_bindings=len(self.suggested_bindings),
-                suggested_bindings=self.suggested_bindings,
-            ),
-        )
+        for profile in [
+            "/interaction_profiles/microsoft/motion_controller",
+            "/interaction_profiles/khr/simple_controller",
+            "/interaction_profiles/oculus/touch_controller",
+            "/interaction_profiles/valve/index_controller",
+            "/interaction_profiles/htc/vive_controller",
+            "/interaction_profiles/samsung/odyssey_controller",
+            "/interaction_profiles/hp/mixed_reality_controller",
+            "/interaction_profiles/microsoft/hand_interaction",
+            "/interaction_profiles/htc/vive_cosmos_controller",
+        ]:
+            try:
+                xr.suggest_interaction_profile_bindings(
+                    instance=instance,
+                    suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                        interaction_profile=xr.string_to_path(
+                            instance,
+                            profile,
+                        ),
+                        count_suggested_bindings=len(self.suggested_bindings),
+                        suggested_bindings=self.suggested_bindings,
+                    ),
+                )
+            except xr.PathUnsupportedError:
+                # print("Unsupported profile path", profile)
+                pass
         self.action_spaces = [
             xr.create_action_space(
                 session=session,
