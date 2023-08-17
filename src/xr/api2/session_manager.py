@@ -173,14 +173,7 @@ class SessionManager(ISubscriber):
         Generate frames of the OpenXR frame loop
         """
         while True:
-            self._poll_events()
-            if self.exit_frame_loop:
-                break
-            elif self.session_state == xr.SessionState.IDLE:
-                time.sleep(0.200)  # minimize resource consumption while idle
-            elif self.is_running:
-                with FrameManager(self) as frame:
-                    yield frame
+            yield from self.frame()
 
     def handle_event(self, event_key, event_data) -> None:
         """

@@ -54,11 +54,13 @@ class XrContext(object):
             if self.graphics_extension == xr.MND_HEADLESS_EXTENSION_NAME:
                 graphics_binding_pointer = None
             elif self.graphics_extension == xr.KHR_OPENGL_ENABLE_EXTENSION_NAME:
+                graphics_binding = xr.api2.GraphicsBinding(
+                    self.instance,
+                    self.system_id,
+                )
                 self.graphics_context = xr.api2.GLFWContext(
-                    instance=self.instance,
-                    system_id=self.system_id,
                 ).__enter__()
-                graphics_binding_pointer = self.graphics_context.graphics_binding_pointer
+                graphics_binding_pointer = graphics_binding.pointer(self.graphics_context)
             else:
                 raise NotImplementedError  # More graphics contexts!
             self.session_create_info.system_id = self.system_id
