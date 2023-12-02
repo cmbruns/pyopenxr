@@ -255,9 +255,6 @@ class ContextObject(object):
     def view_loop(self, frame_state):
         if frame_state.should_render:
             layer = xr.CompositionLayerProjection(space=self.space)
-            projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
-                xr.CompositionLayerProjectionView(),
-                xr.CompositionLayerProjectionView())
             view_state, views = xr.locate_views(
                 session=self.session,
                 view_locate_info=xr.ViewLocateInfo(
@@ -266,6 +263,9 @@ class ContextObject(object):
                     space=self.space,
                 )
             )
+            num_views = len(views)
+            projection_layer_views = tuple(xr.CompositionLayerProjectionView() for _ in range(num_views))
+
             vsf = view_state.view_state_flags
             if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
                     or vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT == 0):
