@@ -264,8 +264,7 @@ class ContextObject(object):
                 )
             )
             num_views = len(views)
-            projection_layer_views = (xr.CompositionLayerProjectionView * num_views)(
-                *([xr.CompositionLayerProjectionView()] * num_views))
+            projection_layer_views = tuple(xr.CompositionLayerProjectionView() for _ in range(num_views))
 
             vsf = view_state.view_state_flags
             if (vsf & xr.VIEW_STATE_POSITION_VALID_BIT == 0
