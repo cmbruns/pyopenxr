@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 project(PyOpenXr LANGUAGES CXX)
 
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")
@@ -87,7 +87,7 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 ### Generate version.py ###
 ###########################
 
-find_package(PythonInterp 3 REQUIRED)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
 execute_process(
     COMMAND ${PYTHON_EXECUTABLE} print_openxr_version.py

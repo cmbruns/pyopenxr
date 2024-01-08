@@ -188,6 +188,8 @@ class EnumValueItem(CodeItem):
                 postfix = f"_{postfix1}"
                 break
         prefix = snake_from_camel(prefix).upper() + "_"
+        if self._capi_name == 'XR_SCENE_MARKER_QRCODE_SYMBOL_TYPE_MAX_ENUM_MSFT':
+            return f"_MAX_ENUM"  # special case for poorly spelled enum value
         if n == f"{prefix}MAX_ENUM{postfix}":
             return f"_MAX_ENUM"  # private enum value
         if prefix in self._PREFIX_TABLE:
@@ -1434,6 +1436,7 @@ def snake_from_camel(camel: str) -> str:
         "D3D11": "D3d11",
         "D3D12": "D3d12",
         "OpenGL": "Opengl",
+        "QRCode": "QrCode",
     }
     for up, down in words.items():
         snake = re.sub(up, down, snake)
