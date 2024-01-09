@@ -199,6 +199,9 @@ class EnumValueItem(CodeItem):
         n = n[len(prefix):]
         if len(postfix) > 0:
             n = n[: -len(postfix)]  # It's already in the parent enum name
+        # If the remaining fragment starts with a digit, prepend something to make it a valid identifier
+        if n[0] in "0123456789":
+            n = f"N{n}"  # Prepend "N" to make it a valid identifier
         return n
 
     @staticmethod

@@ -944,29 +944,29 @@ class MarkerTypeML(EnumBase):
 
 
 class MarkerArucoDictML(EnumBase):
-    4X4_50 = 0
-    4X4_100 = 1
-    4X4_250 = 2
-    4X4_1000 = 3
-    5X5_50 = 4
-    5X5_100 = 5
-    5X5_250 = 6
-    5X5_1000 = 7
-    6X6_50 = 8
-    6X6_100 = 9
-    6X6_250 = 10
-    6X6_1000 = 11
-    7X7_50 = 12
-    7X7_100 = 13
-    7X7_250 = 14
-    7X7_1000 = 15
+    N4X4_50 = 0
+    N4X4_100 = 1
+    N4X4_250 = 2
+    N4X4_1000 = 3
+    N5X5_50 = 4
+    N5X5_100 = 5
+    N5X5_250 = 6
+    N5X5_1000 = 7
+    N6X6_50 = 8
+    N6X6_100 = 9
+    N6X6_250 = 10
+    N6X6_1000 = 11
+    N7X7_50 = 12
+    N7X7_100 = 13
+    N7X7_250 = 14
+    N7X7_1000 = 15
 
 
 class MarkerAprilTagDictML(EnumBase):
-    16H5 = 0
-    25H9 = 1
-    36H10 = 2
-    36H11 = 3
+    N16H5 = 0
+    N25H9 = 1
+    N36H10 = 2
+    N36H11 = 3
 
 
 class MarkerDetectorFpsML(EnumBase):
