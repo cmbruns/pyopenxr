@@ -89,7 +89,7 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 
 find_package(Python COMPONENTS Interpreter REQUIRED)
 
-message(STATUS "Python Executable =" ${Python_EXECUTABLE})
+message(STATUS "Python Executable = " ${Python_EXECUTABLE})
 execute_process(
     COMMAND ${Python_EXECUTABLE} print_openxr_version.py
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"

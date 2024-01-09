@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include <openxr/openxr.h>
-#include "loader_interfaces.h"
+#include <openxr/openxr_loader_negotiation.h>
 
 // #pragma warning(disable : 26812)
 
