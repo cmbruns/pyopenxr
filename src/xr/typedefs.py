@@ -8296,6 +8296,496 @@ class GlobalDimmerFrameEndInfoML(Structure):
     ]
 
 
+MarkerML = c_uint64
+
+
+class MarkerDetectorML_T(Structure):
+    pass
+
+
+MarkerDetectorML = POINTER(MarkerDetectorML_T)
+
+
+class SystemMarkerUnderstandingPropertiesML(Structure):
+    def __init__(
+        self,
+        supports_marker_understanding: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_MARKER_UNDERSTANDING_PROPERTIES_ML,
+    ) -> None:
+        super().__init__(
+            supports_marker_understanding=supports_marker_understanding,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemMarkerUnderstandingPropertiesML(supports_marker_understanding={repr(self.supports_marker_understanding)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemMarkerUnderstandingPropertiesML(supports_marker_understanding={self.supports_marker_understanding}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_marker_understanding", Bool32),
+    ]
+
+
+class MarkerDetectorCreateInfoML(Structure):
+    def __init__(
+        self,
+        profile: MarkerDetectorProfileML = MarkerDetectorProfileML(),
+        marker_type: MarkerTypeML = MarkerTypeML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_CREATE_INFO_ML,
+    ) -> None:
+        super().__init__(
+            profile=MarkerDetectorProfileML(profile).value,
+            marker_type=MarkerTypeML(marker_type).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorCreateInfoML(profile={repr(self.profile)}, marker_type={repr(self.marker_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorCreateInfoML(profile={self.profile}, marker_type={self.marker_type}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("profile", MarkerDetectorProfileML.ctype()),
+        ("marker_type", MarkerTypeML.ctype()),
+    ]
+
+
+class MarkerDetectorArucoInfoML(Structure):
+    def __init__(
+        self,
+        aruco_dict: MarkerArucoDictML = MarkerArucoDictML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_ARUCO_INFO_ML,
+    ) -> None:
+        super().__init__(
+            aruco_dict=MarkerArucoDictML(aruco_dict).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorArucoInfoML(aruco_dict={repr(self.aruco_dict)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorArucoInfoML(aruco_dict={self.aruco_dict}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("aruco_dict", MarkerArucoDictML.ctype()),
+    ]
+
+
+class MarkerDetectorSizeInfoML(Structure):
+    def __init__(
+        self,
+        marker_length: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_SIZE_INFO_ML,
+    ) -> None:
+        super().__init__(
+            marker_length=marker_length,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorSizeInfoML(marker_length={repr(self.marker_length)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorSizeInfoML(marker_length={self.marker_length:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("marker_length", c_float),
+    ]
+
+
+class MarkerDetectorAprilTagInfoML(Structure):
+    def __init__(
+        self,
+        april_tag_dict: MarkerAprilTagDictML = MarkerAprilTagDictML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_APRIL_TAG_INFO_ML,
+    ) -> None:
+        super().__init__(
+            april_tag_dict=MarkerAprilTagDictML(april_tag_dict).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorAprilTagInfoML(april_tag_dict={repr(self.april_tag_dict)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorAprilTagInfoML(april_tag_dict={self.april_tag_dict}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("april_tag_dict", MarkerAprilTagDictML.ctype()),
+    ]
+
+
+class MarkerDetectorCustomProfileInfoML(Structure):
+    def __init__(
+        self,
+        fps_hint: MarkerDetectorFpsML = MarkerDetectorFpsML(),
+        resolution_hint: MarkerDetectorResolutionML = MarkerDetectorResolutionML(),
+        camera_hint: MarkerDetectorCameraML = MarkerDetectorCameraML(),
+        corner_refine_method: MarkerDetectorCornerRefineMethodML = MarkerDetectorCornerRefineMethodML(),
+        use_edge_refinement: Bool32 = 0,
+        full_analysis_interval_hint: MarkerDetectorFullAnalysisIntervalML = MarkerDetectorFullAnalysisIntervalML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML,
+    ) -> None:
+        super().__init__(
+            fps_hint=MarkerDetectorFpsML(fps_hint).value,
+            resolution_hint=MarkerDetectorResolutionML(resolution_hint).value,
+            camera_hint=MarkerDetectorCameraML(camera_hint).value,
+            corner_refine_method=MarkerDetectorCornerRefineMethodML(corner_refine_method).value,
+            use_edge_refinement=use_edge_refinement,
+            full_analysis_interval_hint=MarkerDetectorFullAnalysisIntervalML(full_analysis_interval_hint).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorCustomProfileInfoML(fps_hint={repr(self.fps_hint)}, resolution_hint={repr(self.resolution_hint)}, camera_hint={repr(self.camera_hint)}, corner_refine_method={repr(self.corner_refine_method)}, use_edge_refinement={repr(self.use_edge_refinement)}, full_analysis_interval_hint={repr(self.full_analysis_interval_hint)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorCustomProfileInfoML(fps_hint={self.fps_hint}, resolution_hint={self.resolution_hint}, camera_hint={self.camera_hint}, corner_refine_method={self.corner_refine_method}, use_edge_refinement={self.use_edge_refinement}, full_analysis_interval_hint={self.full_analysis_interval_hint}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("fps_hint", MarkerDetectorFpsML.ctype()),
+        ("resolution_hint", MarkerDetectorResolutionML.ctype()),
+        ("camera_hint", MarkerDetectorCameraML.ctype()),
+        ("corner_refine_method", MarkerDetectorCornerRefineMethodML.ctype()),
+        ("use_edge_refinement", Bool32),
+        ("full_analysis_interval_hint", MarkerDetectorFullAnalysisIntervalML.ctype()),
+    ]
+
+
+class MarkerDetectorSnapshotInfoML(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_SNAPSHOT_INFO_ML,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorSnapshotInfoML(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorSnapshotInfoML(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class MarkerDetectorStateML(Structure):
+    def __init__(
+        self,
+        state: MarkerDetectorStatusML = MarkerDetectorStatusML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_STATE_ML,
+    ) -> None:
+        super().__init__(
+            state=MarkerDetectorStatusML(state).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorStateML(state={repr(self.state)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorStateML(state={self.state}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("state", MarkerDetectorStatusML.ctype()),
+    ]
+
+
+class MarkerSpaceCreateInfoML(Structure):
+    def __init__(
+        self,
+        marker_detector: MarkerDetectorML = None,
+        marker: MarkerML = 0,
+        pose_in_marker_space: Posef = Posef(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.MARKER_SPACE_CREATE_INFO_ML,
+    ) -> None:
+        super().__init__(
+            marker_detector=marker_detector,
+            marker=marker,
+            pose_in_marker_space=pose_in_marker_space,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerSpaceCreateInfoML(marker_detector={repr(self.marker_detector)}, marker={repr(self.marker)}, pose_in_marker_space={repr(self.pose_in_marker_space)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerSpaceCreateInfoML(marker_detector={self.marker_detector}, marker={self.marker}, pose_in_marker_space={self.pose_in_marker_space}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("marker_detector", MarkerDetectorML),
+        ("marker", MarkerML),
+        ("pose_in_marker_space", Posef),
+    ]
+
+
+PFN_xrCreateMarkerDetectorML = CFUNCTYPE(Result.ctype(), Session, POINTER(MarkerDetectorCreateInfoML), POINTER(MarkerDetectorML))
+
+PFN_xrDestroyMarkerDetectorML = CFUNCTYPE(Result.ctype(), MarkerDetectorML)
+
+PFN_xrSnapshotMarkerDetectorML = CFUNCTYPE(Result.ctype(), MarkerDetectorML, POINTER(MarkerDetectorSnapshotInfoML))
+
+PFN_xrGetMarkerDetectorStateML = CFUNCTYPE(Result.ctype(), MarkerDetectorML, POINTER(MarkerDetectorStateML))
+
+PFN_xrGetMarkersML = CFUNCTYPE(Result.ctype(), MarkerDetectorML, c_uint32, POINTER(c_uint32), POINTER(MarkerML))
+
+PFN_xrGetMarkerReprojectionErrorML = CFUNCTYPE(Result.ctype(), MarkerDetectorML, MarkerML, POINTER(c_float))
+
+PFN_xrGetMarkerLengthML = CFUNCTYPE(Result.ctype(), MarkerDetectorML, MarkerML, POINTER(c_float))
+
+PFN_xrGetMarkerNumberML = CFUNCTYPE(Result.ctype(), MarkerDetectorML, MarkerML, POINTER(c_uint64))
+
+PFN_xrGetMarkerStringML = CFUNCTYPE(Result.ctype(), MarkerDetectorML, MarkerML, c_uint32, POINTER(c_uint32), c_char_p)
+
+PFN_xrCreateMarkerSpaceML = CFUNCTYPE(Result.ctype(), Session, POINTER(MarkerSpaceCreateInfoML), POINTER(Space))
+
+
+class ExportedLocalizationMapML_T(Structure):
+    pass
+
+
+ExportedLocalizationMapML = POINTER(ExportedLocalizationMapML_T)
+
+LocalizationMapErrorFlagsMLCInt = Flags64
+
+
+class LocalizationMapML(Structure):
+    def __init__(
+        self,
+        name: str = "",
+        map_uuid: UuidEXT = None,
+        map_type: LocalizationMapTypeML = LocalizationMapTypeML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.LOCALIZATION_MAP_ML,
+    ) -> None:
+        if map_uuid is None:
+            map_uuid = UuidEXT()
+        super().__init__(
+            name=name.encode(),
+            map_uuid=map_uuid,
+            map_type=LocalizationMapTypeML(map_type).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LocalizationMapML(name={repr(self.name)}, map_uuid={repr(self.map_uuid)}, map_type={repr(self.map_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LocalizationMapML(name={self.name}, map_uuid={self.map_uuid}, map_type={self.map_type}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("name", (c_char * 64)),
+        ("map_uuid", UuidEXT),
+        ("map_type", LocalizationMapTypeML.ctype()),
+    ]
+
+
+class EventDataLocalizationChangedML(Structure):
+    def __init__(
+        self,
+        session: Session = None,
+        state: LocalizationMapStateML = LocalizationMapStateML(),
+        map: LocalizationMapML = None,
+        confidence: LocalizationMapConfidenceML = LocalizationMapConfidenceML(),
+        error_flags: LocalizationMapErrorFlagsML = LocalizationMapErrorFlagsML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_LOCALIZATION_CHANGED_ML,
+    ) -> None:
+        if map is None:
+            map = LocalizationMapML()
+        super().__init__(
+            session=session,
+            state=LocalizationMapStateML(state).value,
+            map=map,
+            confidence=LocalizationMapConfidenceML(confidence).value,
+            error_flags=LocalizationMapErrorFlagsML(error_flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataLocalizationChangedML(session={repr(self.session)}, state={repr(self.state)}, map={repr(self.map)}, confidence={repr(self.confidence)}, error_flags={repr(self.error_flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataLocalizationChangedML(session={self.session}, state={self.state}, map={self.map}, confidence={self.confidence}, error_flags={self.error_flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("session", Session),
+        ("state", LocalizationMapStateML.ctype()),
+        ("map", LocalizationMapML),
+        ("confidence", LocalizationMapConfidenceML.ctype()),
+        ("error_flags", LocalizationMapErrorFlagsMLCInt),
+    ]
+
+
+class LocalizationMapQueryInfoBaseHeaderML(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.UNKNOWN,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LocalizationMapQueryInfoBaseHeaderML(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LocalizationMapQueryInfoBaseHeaderML(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class MapLocalizationRequestInfoML(Structure):
+    def __init__(
+        self,
+        map_uuid: UuidEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.MAP_LOCALIZATION_REQUEST_INFO_ML,
+    ) -> None:
+        if map_uuid is None:
+            map_uuid = UuidEXT()
+        super().__init__(
+            map_uuid=map_uuid,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MapLocalizationRequestInfoML(map_uuid={repr(self.map_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MapLocalizationRequestInfoML(map_uuid={self.map_uuid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("map_uuid", UuidEXT),
+    ]
+
+
+class LocalizationMapImportInfoML(Structure):
+    def __init__(
+        self,
+        size: int = 0,
+        data: str = "",
+        next: c_void_p = None,
+        type: StructureType = StructureType.LOCALIZATION_MAP_IMPORT_INFO_ML,
+    ) -> None:
+        super().__init__(
+            size=size,
+            data=data.encode(),
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LocalizationMapImportInfoML(size={repr(self.size)}, data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LocalizationMapImportInfoML(size={self.size}, data={self.data}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("size", c_uint32),
+        ("data", c_char_p),
+    ]
+
+
+class LocalizationEnableEventsInfoML(Structure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.LOCALIZATION_ENABLE_EVENTS_INFO_ML,
+    ) -> None:
+        super().__init__(
+            enabled=enabled,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LocalizationEnableEventsInfoML(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LocalizationEnableEventsInfoML(enabled={self.enabled}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("enabled", Bool32),
+    ]
+
+
+PFN_xrEnableLocalizationEventsML = CFUNCTYPE(Result.ctype(), Session, POINTER(LocalizationEnableEventsInfoML))
+
+PFN_xrQueryLocalizationMapsML = CFUNCTYPE(Result.ctype(), Session, POINTER(LocalizationMapQueryInfoBaseHeaderML), c_uint32, POINTER(c_uint32), POINTER(LocalizationMapML))
+
+PFN_xrRequestMapLocalizationML = CFUNCTYPE(Result.ctype(), Session, POINTER(MapLocalizationRequestInfoML))
+
+PFN_xrImportLocalizationMapML = CFUNCTYPE(Result.ctype(), Session, POINTER(LocalizationMapImportInfoML), POINTER(UuidEXT))
+
+PFN_xrCreateExportedLocalizationMapML = CFUNCTYPE(Result.ctype(), Session, POINTER(UuidEXT), POINTER(ExportedLocalizationMapML))
+
+PFN_xrDestroyExportedLocalizationMapML = CFUNCTYPE(Result.ctype(), ExportedLocalizationMapML)
+
+PFN_xrGetExportedLocalizationMapDataML = CFUNCTYPE(Result.ctype(), ExportedLocalizationMapML, c_uint32, POINTER(c_uint32), c_char_p)
+
+
 class SpatialAnchorStoreConnectionMSFT_T(Structure):
     pass
 
@@ -8398,6 +8888,169 @@ PFN_xrCreateSpatialAnchorFromPersistedNameMSFT = CFUNCTYPE(Result.ctype(), Sessi
 PFN_xrUnpersistSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT, POINTER(SpatialAnchorPersistenceNameMSFT))
 
 PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStoreConnectionMSFT)
+
+
+class SceneMarkerMSFT(Structure):
+    def __init__(
+        self,
+        marker_type: SceneMarkerTypeMSFT = SceneMarkerTypeMSFT(),
+        last_seen_time: Time = 0,
+        center: Offset2Df = None,
+        size: Extent2Df = None,
+    ) -> None:
+        if center is None:
+            center = Offset2Df()
+        if size is None:
+            size = Extent2Df()
+        super().__init__(
+            marker_type=SceneMarkerTypeMSFT(marker_type).value,
+            last_seen_time=last_seen_time,
+            center=center,
+            size=size,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMarkerMSFT(marker_type={repr(self.marker_type)}, last_seen_time={repr(self.last_seen_time)}, center={repr(self.center)}, size={repr(self.size)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMarkerMSFT(marker_type={self.marker_type}, last_seen_time={self.last_seen_time}, center={self.center}, size={self.size})"
+
+    _fields_ = [
+        ("marker_type", SceneMarkerTypeMSFT.ctype()),
+        ("last_seen_time", Time),
+        ("center", Offset2Df),
+        ("size", Extent2Df),
+    ]
+
+
+class SceneMarkersMSFT(Structure):
+    def __init__(
+        self,
+        scene_marker_capacity_input: int = 0,
+        scene_markers: POINTER(SceneMarkerMSFT) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SCENE_MARKERS_MSFT,
+    ) -> None:
+        super().__init__(
+            scene_marker_capacity_input=scene_marker_capacity_input,
+            scene_markers=scene_markers,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMarkersMSFT(scene_marker_capacity_input={repr(self.scene_marker_capacity_input)}, scene_markers={repr(self.scene_markers)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMarkersMSFT(scene_marker_capacity_input={self.scene_marker_capacity_input}, scene_markers={self.scene_markers}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("scene_marker_capacity_input", c_uint32),
+        ("scene_markers", POINTER(SceneMarkerMSFT)),
+    ]
+
+
+class SceneMarkerTypeFilterMSFT(Structure):
+    def __init__(
+        self,
+        marker_type_count: Optional[int] = None,
+        marker_types: ArrayFieldParamType[SceneMarkerTypeMSFT.ctype()] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SCENE_MARKER_TYPE_FILTER_MSFT,
+    ) -> None:
+        marker_type_count, marker_types = array_field_helper(
+            SceneMarkerTypeMSFT.ctype(), marker_type_count, marker_types)
+        super().__init__(
+            marker_type_count=marker_type_count,
+            _marker_types=marker_types,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMarkerTypeFilterMSFT(marker_type_count={repr(self.marker_type_count)}, marker_types={repr(self._marker_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMarkerTypeFilterMSFT(marker_type_count={self.marker_type_count}, marker_types={self._marker_types}, next={self.next}, type={self.type})"
+
+    @property
+    def marker_types(self):
+        if self.marker_type_count == 0:
+            return (SceneMarkerTypeMSFT.ctype() * 0)()
+        else:
+            return (SceneMarkerTypeMSFT.ctype() * self.marker_type_count).from_address(
+                ctypes.addressof(self._marker_types.contents))
+
+    @marker_types.setter
+    def marker_types(self, value):
+        self.marker_type_count, self._marker_types = array_field_helper(
+            SceneMarkerTypeMSFT.ctype(), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("marker_type_count", c_uint32),
+        ("_marker_types", POINTER(SceneMarkerTypeMSFT.ctype())),
+    ]
+
+
+class SceneMarkerQRCodeMSFT(Structure):
+    def __init__(
+        self,
+        symbol_type: SceneMarkerQRCodeSymbolTypeMSFT = SceneMarkerQRCodeSymbolTypeMSFT(),
+        version: int = 0,
+    ) -> None:
+        super().__init__(
+            symbol_type=SceneMarkerQRCodeSymbolTypeMSFT(symbol_type).value,
+            version=version,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMarkerQRCodeMSFT(symbol_type={repr(self.symbol_type)}, version={repr(self.version)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMarkerQRCodeMSFT(symbol_type={self.symbol_type}, version={self.version})"
+
+    _fields_ = [
+        ("symbol_type", SceneMarkerQRCodeSymbolTypeMSFT.ctype()),
+        ("version", c_uint8),
+    ]
+
+
+class SceneMarkerQRCodesMSFT(Structure):
+    def __init__(
+        self,
+        qr_code_capacity_input: int = 0,
+        qr_codes: POINTER(SceneMarkerQRCodeMSFT) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SCENE_MARKER_QR_CODES_MSFT,
+    ) -> None:
+        super().__init__(
+            qr_code_capacity_input=qr_code_capacity_input,
+            qr_codes=qr_codes,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMarkerQRCodesMSFT(qr_code_capacity_input={repr(self.qr_code_capacity_input)}, qr_codes={repr(self.qr_codes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMarkerQRCodesMSFT(qr_code_capacity_input={self.qr_code_capacity_input}, qr_codes={self.qr_codes}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("qr_code_capacity_input", c_uint32),
+        ("qr_codes", POINTER(SceneMarkerQRCodeMSFT)),
+    ]
+
+
+PFN_xrGetSceneMarkerRawDataMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(UuidMSFT), c_uint32, POINTER(c_uint32), POINTER(c_uint8))
+
+PFN_xrGetSceneMarkerDecodedStringMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POINTER(UuidMSFT), c_uint32, POINTER(c_uint32), c_char_p)
 
 
 class SpaceQueryInfoBaseHeaderFB(Structure):
@@ -10080,6 +10733,38 @@ class LocalDimmingFrameEndInfoMETA(Structure):
     ]
 
 
+PassthroughPreferenceFlagsMETACInt = Flags64
+
+
+class PassthroughPreferencesMETA(Structure):
+    def __init__(
+        self,
+        flags: PassthroughPreferenceFlagsMETA = PassthroughPreferenceFlagsMETA(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_PREFERENCES_META,
+    ) -> None:
+        super().__init__(
+            flags=PassthroughPreferenceFlagsMETA(flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughPreferencesMETA(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughPreferencesMETA(flags={self.flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("flags", PassthroughPreferenceFlagsMETACInt),
+    ]
+
+
+PFN_xrGetPassthroughPreferencesMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(PassthroughPreferencesMETA))
+
+
 class VirtualKeyboardMETA_T(Structure):
     pass
 
@@ -11355,6 +12040,91 @@ class FoveationCustomModeInfoHTC(Structure):
 PFN_xrApplyFoveationHTC = CFUNCTYPE(Result.ctype(), Session, POINTER(FoveationApplyInfoHTC))
 
 
+class SystemAnchorPropertiesHTC(Structure):
+    def __init__(
+        self,
+        supports_anchor: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_ANCHOR_PROPERTIES_HTC,
+    ) -> None:
+        super().__init__(
+            supports_anchor=supports_anchor,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemAnchorPropertiesHTC(supports_anchor={repr(self.supports_anchor)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemAnchorPropertiesHTC(supports_anchor={self.supports_anchor}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_anchor", Bool32),
+    ]
+
+
+class SpatialAnchorNameHTC(Structure):
+    def __init__(
+        self,
+        name: str = "",
+    ) -> None:
+        super().__init__(
+            name=name.encode(),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorNameHTC(name={repr(self.name)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorNameHTC(name={self.name})"
+
+    _fields_ = [
+        ("name", (c_char * 256)),
+    ]
+
+
+class SpatialAnchorCreateInfoHTC(Structure):
+    def __init__(
+        self,
+        space: Space = None,
+        pose_in_space: Posef = Posef(),
+        name: SpatialAnchorNameHTC = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_HTC,
+    ) -> None:
+        if name is None:
+            name = SpatialAnchorNameHTC()
+        super().__init__(
+            space=space,
+            pose_in_space=pose_in_space,
+            name=name,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoHTC(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, name={repr(self.name)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoHTC(space={self.space}, pose_in_space={self.pose_in_space}, name={self.name}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", Space),
+        ("pose_in_space", Posef),
+        ("name", SpatialAnchorNameHTC),
+    ]
+
+
+PFN_xrCreateSpatialAnchorHTC = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAnchorCreateInfoHTC), POINTER(Space))
+
+PFN_xrGetSpatialAnchorNameHTC = CFUNCTYPE(Result.ctype(), Space, POINTER(SpatialAnchorNameHTC))
+
+
 class ActiveActionSetPriorityEXT(Structure):
     def __init__(
         self,
@@ -11925,6 +12695,90 @@ PFN_xrGetPlaneDetectionsEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, POINTE
 PFN_xrGetPlanePolygonBufferEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, c_uint64, c_uint32, POINTER(PlaneDetectorPolygonBufferEXT))
 
 
+class EventDataHeadsetFitChangedML(Structure):
+    def __init__(
+        self,
+        status: HeadsetFitStatusML = HeadsetFitStatusML(),
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_HEADSET_FIT_CHANGED_ML,
+    ) -> None:
+        super().__init__(
+            status=HeadsetFitStatusML(status).value,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataHeadsetFitChangedML(status={repr(self.status)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataHeadsetFitChangedML(status={self.status}, time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("status", HeadsetFitStatusML.ctype()),
+        ("time", Time),
+    ]
+
+
+class EventDataEyeCalibrationChangedML(Structure):
+    def __init__(
+        self,
+        status: EyeCalibrationStatusML = EyeCalibrationStatusML(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_EYE_CALIBRATION_CHANGED_ML,
+    ) -> None:
+        super().__init__(
+            status=EyeCalibrationStatusML(status).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataEyeCalibrationChangedML(status={repr(self.status)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataEyeCalibrationChangedML(status={self.status}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("status", EyeCalibrationStatusML.ctype()),
+    ]
+
+
+class UserCalibrationEnableEventsInfoML(Structure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.USER_CALIBRATION_ENABLE_EVENTS_INFO_ML,
+    ) -> None:
+        super().__init__(
+            enabled=enabled,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.UserCalibrationEnableEventsInfoML(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.UserCalibrationEnableEventsInfoML(enabled={self.enabled}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("enabled", Bool32),
+    ]
+
+
+PFN_xrEnableUserCalibrationEventsML = CFUNCTYPE(Result.ctype(), Instance, POINTER(UserCalibrationEnableEventsInfoML))
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -12012,8 +12866,11 @@ __all__ = [
     "EventDataBuffer",
     "EventDataDisplayRefreshRateChangedFB",
     "EventDataEventsLost",
+    "EventDataEyeCalibrationChangedML",
+    "EventDataHeadsetFitChangedML",
     "EventDataInstanceLossPending",
     "EventDataInteractionProfileChanged",
+    "EventDataLocalizationChangedML",
     "EventDataMainSessionVisibilityChangedEXTX",
     "EventDataMarkerTrackingUpdateVARJO",
     "EventDataPassthroughStateChangedFB",
@@ -12036,6 +12893,8 @@ __all__ = [
     "EventDataVirtualKeyboardShownMETA",
     "EventDataVisibilityMaskChangedKHR",
     "EventDataViveTrackerConnectedHTCX",
+    "ExportedLocalizationMapML",
+    "ExportedLocalizationMapML_T",
     "ExtensionProperties",
     "Extent2Df",
     "Extent2Di",
@@ -12139,6 +12998,23 @@ __all__ = [
     "KeyboardTrackingQueryFlagsFBCInt",
     "LoaderInitInfoBaseHeaderKHR",
     "LocalDimmingFrameEndInfoMETA",
+    "LocalizationEnableEventsInfoML",
+    "LocalizationMapErrorFlagsMLCInt",
+    "LocalizationMapImportInfoML",
+    "LocalizationMapML",
+    "LocalizationMapQueryInfoBaseHeaderML",
+    "MapLocalizationRequestInfoML",
+    "MarkerDetectorAprilTagInfoML",
+    "MarkerDetectorArucoInfoML",
+    "MarkerDetectorCreateInfoML",
+    "MarkerDetectorCustomProfileInfoML",
+    "MarkerDetectorML",
+    "MarkerDetectorML_T",
+    "MarkerDetectorSizeInfoML",
+    "MarkerDetectorSnapshotInfoML",
+    "MarkerDetectorStateML",
+    "MarkerML",
+    "MarkerSpaceCreateInfoML",
     "MarkerSpaceCreateInfoVARJO",
     "NewSceneComputeInfoMSFT",
     "Offset2Df",
@@ -12162,6 +13038,7 @@ __all__ = [
     "PFN_xrCreateActionSpace",
     "PFN_xrCreateBodyTrackerFB",
     "PFN_xrCreateDebugUtilsMessengerEXT",
+    "PFN_xrCreateExportedLocalizationMapML",
     "PFN_xrCreateEyeTrackerFB",
     "PFN_xrCreateFaceTrackerFB",
     "PFN_xrCreateFacialTrackerHTC",
@@ -12171,6 +13048,8 @@ __all__ = [
     "PFN_xrCreateHandTrackerEXT",
     "PFN_xrCreateInstance",
     "PFN_xrCreateKeyboardSpaceFB",
+    "PFN_xrCreateMarkerDetectorML",
+    "PFN_xrCreateMarkerSpaceML",
     "PFN_xrCreateMarkerSpaceVARJO",
     "PFN_xrCreatePassthroughColorLutMETA",
     "PFN_xrCreatePassthroughFB",
@@ -12184,6 +13063,7 @@ __all__ = [
     "PFN_xrCreateSpaceUserFB",
     "PFN_xrCreateSpatialAnchorFB",
     "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
+    "PFN_xrCreateSpatialAnchorHTC",
     "PFN_xrCreateSpatialAnchorMSFT",
     "PFN_xrCreateSpatialAnchorSpaceMSFT",
     "PFN_xrCreateSpatialAnchorStoreConnectionMSFT",
@@ -12198,6 +13078,7 @@ __all__ = [
     "PFN_xrDestroyActionSet",
     "PFN_xrDestroyBodyTrackerFB",
     "PFN_xrDestroyDebugUtilsMessengerEXT",
+    "PFN_xrDestroyExportedLocalizationMapML",
     "PFN_xrDestroyEyeTrackerFB",
     "PFN_xrDestroyFaceTrackerFB",
     "PFN_xrDestroyFacialTrackerHTC",
@@ -12205,6 +13086,7 @@ __all__ = [
     "PFN_xrDestroyGeometryInstanceFB",
     "PFN_xrDestroyHandTrackerEXT",
     "PFN_xrDestroyInstance",
+    "PFN_xrDestroyMarkerDetectorML",
     "PFN_xrDestroyPassthroughColorLutMETA",
     "PFN_xrDestroyPassthroughFB",
     "PFN_xrDestroyPassthroughHTC",
@@ -12221,6 +13103,8 @@ __all__ = [
     "PFN_xrDestroySwapchain",
     "PFN_xrDestroyTriangleMeshFB",
     "PFN_xrDestroyVirtualKeyboardMETA",
+    "PFN_xrEnableLocalizationEventsML",
+    "PFN_xrEnableUserCalibrationEventsML",
     "PFN_xrEndFrame",
     "PFN_xrEndSession",
     "PFN_xrEnumerateApiLayerProperties",
@@ -12255,6 +13139,7 @@ __all__ = [
     "PFN_xrGetCurrentInteractionProfile",
     "PFN_xrGetDeviceSampleRateFB",
     "PFN_xrGetDisplayRefreshRateFB",
+    "PFN_xrGetExportedLocalizationMapDataML",
     "PFN_xrGetEyeGazesFB",
     "PFN_xrGetFaceExpressionWeightsFB",
     "PFN_xrGetFacialExpressionsHTC",
@@ -12263,7 +13148,14 @@ __all__ = [
     "PFN_xrGetInputSourceLocalizedName",
     "PFN_xrGetInstanceProcAddr",
     "PFN_xrGetInstanceProperties",
+    "PFN_xrGetMarkerDetectorStateML",
+    "PFN_xrGetMarkerLengthML",
+    "PFN_xrGetMarkerNumberML",
+    "PFN_xrGetMarkerReprojectionErrorML",
     "PFN_xrGetMarkerSizeVARJO",
+    "PFN_xrGetMarkerStringML",
+    "PFN_xrGetMarkersML",
+    "PFN_xrGetPassthroughPreferencesMETA",
     "PFN_xrGetPerformanceMetricsStateMETA",
     "PFN_xrGetPlaneDetectionStateEXT",
     "PFN_xrGetPlaneDetectionsEXT",
@@ -12272,6 +13164,8 @@ __all__ = [
     "PFN_xrGetRenderModelPropertiesFB",
     "PFN_xrGetSceneComponentsMSFT",
     "PFN_xrGetSceneComputeStateMSFT",
+    "PFN_xrGetSceneMarkerDecodedStringMSFT",
+    "PFN_xrGetSceneMarkerRawDataMSFT",
     "PFN_xrGetSceneMeshBuffersMSFT",
     "PFN_xrGetSerializedSceneFragmentDataMSFT",
     "PFN_xrGetSpaceBoundary2DFB",
@@ -12283,6 +13177,7 @@ __all__ = [
     "PFN_xrGetSpaceSemanticLabelsFB",
     "PFN_xrGetSpaceUserIdFB",
     "PFN_xrGetSpaceUuidFB",
+    "PFN_xrGetSpatialAnchorNameHTC",
     "PFN_xrGetSpatialGraphNodeBindingPropertiesMSFT",
     "PFN_xrGetSwapchainStateFB",
     "PFN_xrGetSystem",
@@ -12293,6 +13188,7 @@ __all__ = [
     "PFN_xrGetVirtualKeyboardScaleMETA",
     "PFN_xrGetVirtualKeyboardTextureDataMETA",
     "PFN_xrGetVisibilityMaskKHR",
+    "PFN_xrImportLocalizationMapML",
     "PFN_xrInitializeLoaderKHR",
     "PFN_xrLoadControllerModelMSFT",
     "PFN_xrLoadRenderModelFB",
@@ -12311,12 +13207,14 @@ __all__ = [
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
     "PFN_xrPersistSpatialAnchorMSFT",
     "PFN_xrPollEvent",
+    "PFN_xrQueryLocalizationMapsML",
     "PFN_xrQueryPerformanceMetricsCounterMETA",
     "PFN_xrQuerySpacesFB",
     "PFN_xrQuerySystemTrackedKeyboardFB",
     "PFN_xrReleaseSwapchainImage",
     "PFN_xrRequestDisplayRefreshRateFB",
     "PFN_xrRequestExitSession",
+    "PFN_xrRequestMapLocalizationML",
     "PFN_xrRequestSceneCaptureFB",
     "PFN_xrResultToString",
     "PFN_xrRetrieveSpaceQueryResultsFB",
@@ -12344,6 +13242,7 @@ __all__ = [
     "PFN_xrSetViewOffsetVARJO",
     "PFN_xrSetVirtualKeyboardModelVisibilityMETA",
     "PFN_xrShareSpacesFB",
+    "PFN_xrSnapshotMarkerDetectorML",
     "PFN_xrStopHapticFeedback",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
@@ -12390,6 +13289,8 @@ __all__ = [
     "PassthroughLayerFB",
     "PassthroughLayerFB_T",
     "PassthroughMeshTransformInfoHTC",
+    "PassthroughPreferenceFlagsMETACInt",
+    "PassthroughPreferencesMETA",
     "PassthroughStateChangedFlagsFBCInt",
     "PassthroughStyleFB",
     "Path",
@@ -12434,6 +13335,11 @@ __all__ = [
     "SceneFrustumBoundMSFT",
     "SceneMSFT",
     "SceneMSFT_T",
+    "SceneMarkerMSFT",
+    "SceneMarkerQRCodeMSFT",
+    "SceneMarkerQRCodesMSFT",
+    "SceneMarkerTypeFilterMSFT",
+    "SceneMarkersMSFT",
     "SceneMeshBuffersGetInfoMSFT",
     "SceneMeshBuffersMSFT",
     "SceneMeshIndicesUint16MSFT",
@@ -12495,10 +13401,12 @@ __all__ = [
     "SpaceVelocityFlagsCInt",
     "Space_T",
     "SpatialAnchorCreateInfoFB",
+    "SpatialAnchorCreateInfoHTC",
     "SpatialAnchorCreateInfoMSFT",
     "SpatialAnchorFromPersistedAnchorCreateInfoMSFT",
     "SpatialAnchorMSFT",
     "SpatialAnchorMSFT_T",
+    "SpatialAnchorNameHTC",
     "SpatialAnchorPersistenceInfoMSFT",
     "SpatialAnchorPersistenceNameMSFT",
     "SpatialAnchorSpaceCreateInfoMSFT",
@@ -12525,6 +13433,7 @@ __all__ = [
     "SwapchainSubImage",
     "SwapchainUsageFlagsCInt",
     "Swapchain_T",
+    "SystemAnchorPropertiesHTC",
     "SystemBodyTrackingPropertiesFB",
     "SystemColorSpacePropertiesFB",
     "SystemEyeGazeInteractionPropertiesEXT",
@@ -12542,6 +13451,7 @@ __all__ = [
     "SystemId",
     "SystemKeyboardTrackingPropertiesFB",
     "SystemMarkerTrackingPropertiesVARJO",
+    "SystemMarkerUnderstandingPropertiesML",
     "SystemPassthroughColorLutPropertiesMETA",
     "SystemPassthroughProperties2FB",
     "SystemPassthroughPropertiesFB",
@@ -12557,6 +13467,7 @@ __all__ = [
     "TriangleMeshFB",
     "TriangleMeshFB_T",
     "TriangleMeshFlagsFBCInt",
+    "UserCalibrationEnableEventsInfoML",
     "UuidEXT",
     "UuidMSFT",
     "Vector2f",

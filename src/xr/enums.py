@@ -133,8 +133,21 @@ class Result(EnumBase):
     RENDER_MODEL_UNAVAILABLE_FB = 1000119020
     ERROR_MARKER_NOT_TRACKED_VARJO = -1000124000
     ERROR_MARKER_ID_INVALID_VARJO = -1000124001
+    ERROR_MARKER_DETECTOR_PERMISSION_DENIED_ML = -1000138000
+    ERROR_MARKER_DETECTOR_LOCATE_FAILED_ML = -1000138001
+    ERROR_MARKER_DETECTOR_INVALID_DATA_QUERY_ML = -1000138002
+    ERROR_MARKER_DETECTOR_INVALID_CREATE_INFO_ML = -1000138003
+    ERROR_MARKER_INVALID_ML = -1000138004
+    ERROR_LOCALIZATION_MAP_INCOMPATIBLE_ML = -1000139000
+    ERROR_LOCALIZATION_MAP_UNAVAILABLE_ML = -1000139001
+    ERROR_LOCALIZATION_MAP_FAIL_ML = -1000139002
+    ERROR_LOCALIZATION_MAP_IMPORT_EXPORT_PERMISSION_DENIED_ML = -1000139003
+    ERROR_LOCALIZATION_MAP_PERMISSION_DENIED_ML = -1000139004
+    ERROR_LOCALIZATION_MAP_ALREADY_EXISTS_ML = -1000139005
+    ERROR_LOCALIZATION_MAP_CANNOT_EXPORT_CLOUD_MAP_ML = -1000139006
     ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT = -1000142001
     ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT = -1000142002
+    SCENE_MARKER_DATA_NOT_STRING_MSFT = 1000147000
     ERROR_SPACE_MAPPING_INSUFFICIENT_FB = -1000169000
     ERROR_SPACE_LOCALIZATION_FAILED_FB = -1000169001
     ERROR_SPACE_NETWORK_TIMEOUT_FB = -1000169002
@@ -142,6 +155,7 @@ class Result(EnumBase):
     ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB = -1000169004
     ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META = -1000266000
     ERROR_HINT_ALREADY_SET_QCOM = -1000306000
+    ERROR_NOT_AN_ANCHOR_HTC = -1000319000
     ERROR_SPACE_NOT_LOCATABLE_EXT = -1000429000
     ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT = -1000429001
 
@@ -358,8 +372,28 @@ class StructureType(EnumBase):
     FRAME_END_INFO_ML = 1000135000
     GLOBAL_DIMMER_FRAME_END_INFO_ML = 1000136000
     COORDINATE_SPACE_CREATE_INFO_ML = 1000137000
+    SYSTEM_MARKER_UNDERSTANDING_PROPERTIES_ML = 1000138000
+    MARKER_DETECTOR_CREATE_INFO_ML = 1000138001
+    MARKER_DETECTOR_ARUCO_INFO_ML = 1000138002
+    MARKER_DETECTOR_SIZE_INFO_ML = 1000138003
+    MARKER_DETECTOR_APRIL_TAG_INFO_ML = 1000138004
+    MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML = 1000138005
+    MARKER_DETECTOR_SNAPSHOT_INFO_ML = 1000138006
+    MARKER_DETECTOR_STATE_ML = 1000138007
+    MARKER_SPACE_CREATE_INFO_ML = 1000138008
+    LOCALIZATION_MAP_ML = 1000139000
+    EVENT_DATA_LOCALIZATION_CHANGED_ML = 1000139001
+    MAP_LOCALIZATION_REQUEST_INFO_ML = 1000139002
+    LOCALIZATION_MAP_IMPORT_INFO_ML = 1000139003
+    LOCALIZATION_ENABLE_EVENTS_INFO_ML = 1000139004
+    EVENT_DATA_HEADSET_FIT_CHANGED_ML = 1000472000
+    EVENT_DATA_EYE_CALIBRATION_CHANGED_ML = 1000472001
+    USER_CALIBRATION_ENABLE_EVENTS_INFO_ML = 1000472002
     SPATIAL_ANCHOR_PERSISTENCE_INFO_MSFT = 1000142000
     SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_MSFT = 1000142001
+    SCENE_MARKERS_MSFT = 1000147000
+    SCENE_MARKER_TYPE_FILTER_MSFT = 1000147001
+    SCENE_MARKER_QR_CODES_MSFT = 1000147002
     SPACE_QUERY_INFO_FB = 1000156001
     SPACE_QUERY_RESULTS_FB = 1000156002
     SPACE_STORAGE_LOCATION_FILTER_INFO_FB = 1000156003
@@ -405,6 +439,7 @@ class StructureType(EnumBase):
     DEVICE_PCM_SAMPLE_RATE_STATE_FB = 1000209002
     COMPOSITION_LAYER_DEPTH_TEST_FB = 1000212000
     LOCAL_DIMMING_FRAME_END_INFO_META = 1000216000
+    PASSTHROUGH_PREFERENCES_META = 1000217000
     SYSTEM_VIRTUAL_KEYBOARD_PROPERTIES_META = 1000219001
     VIRTUAL_KEYBOARD_CREATE_INFO_META = 1000219002
     VIRTUAL_KEYBOARD_SPACE_CREATE_INFO_META = 1000219003
@@ -440,6 +475,8 @@ class StructureType(EnumBase):
     FOVEATION_APPLY_INFO_HTC = 1000318000
     FOVEATION_DYNAMIC_MODE_INFO_HTC = 1000318001
     FOVEATION_CUSTOM_MODE_INFO_HTC = 1000318002
+    SYSTEM_ANCHOR_PROPERTIES_HTC = 1000319000
+    SPATIAL_ANCHOR_CREATE_INFO_HTC = 1000319001
     ACTIVE_ACTION_SET_PRIORITIES_EXT = 1000373000
     SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX = 1000375000
     FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX = 1000375001
@@ -482,6 +519,7 @@ class ReferenceSpaceType(EnumBase):
     STAGE = 3
     UNBOUNDED_MSFT = 1000038000
     COMBINED_EYE_VARJO = 1000121000
+    LOCALIZATION_MAP_ML = 1000139000
     LOCAL_FLOOR_EXT = 1000426000
 
 
@@ -532,6 +570,8 @@ class ObjectType(EnumBase):
     PASSTHROUGH_FB = 1000118000
     PASSTHROUGH_LAYER_FB = 1000118002
     GEOMETRY_INSTANCE_FB = 1000118004
+    MARKER_DETECTOR_ML = 1000138000
+    EXPORTED_LOCALIZATION_MAP_ML = 1000139000
     SPATIAL_ANCHOR_STORE_CONNECTION_MSFT = 1000142000
     FACE_TRACKER_FB = 1000201000
     EYE_TRACKER_FB = 1000202000
@@ -727,6 +767,7 @@ class SceneComputeFeatureMSFT(EnumBase):
     VISUAL_MESH = 3
     COLLIDER_MESH = 4
     SERIALIZE_SCENE = 1000098000
+    MARKER = 1000147000
 
 
 class SceneComputeConsistencyMSFT(EnumBase):
@@ -749,6 +790,7 @@ class SceneComponentTypeMSFT(EnumBase):
     VISUAL_MESH = 3
     COLLIDER_MESH = 4
     SERIALIZED_SCENE_FRAGMENT = 1000098000
+    MARKER = 1000147000
 
 
 class SceneObjectTypeMSFT(EnumBase):
@@ -881,6 +923,116 @@ class PassthroughLayerPurposeFB(EnumBase):
     PROJECTED = 1
     TRACKED_KEYBOARD_HANDS = 1000203001
     TRACKED_KEYBOARD_MASKED_HANDS = 1000203002
+
+
+class MarkerDetectorProfileML(EnumBase):
+    DEFAULT = 0
+    SPEED = 1
+    ACCURACY = 2
+    SMALL_TARGETS = 3
+    LARGE_FOV = 4
+    CUSTOM = 5
+
+
+class MarkerTypeML(EnumBase):
+    ARUCO = 0
+    APRIL_TAG = 1
+    QR = 2
+    EAN_13 = 3
+    UPC_A = 4
+    CODE_128 = 5
+
+
+class MarkerArucoDictML(EnumBase):
+    4X4_50 = 0
+    4X4_100 = 1
+    4X4_250 = 2
+    4X4_1000 = 3
+    5X5_50 = 4
+    5X5_100 = 5
+    5X5_250 = 6
+    5X5_1000 = 7
+    6X6_50 = 8
+    6X6_100 = 9
+    6X6_250 = 10
+    6X6_1000 = 11
+    7X7_50 = 12
+    7X7_100 = 13
+    7X7_250 = 14
+    7X7_1000 = 15
+
+
+class MarkerAprilTagDictML(EnumBase):
+    16H5 = 0
+    25H9 = 1
+    36H10 = 2
+    36H11 = 3
+
+
+class MarkerDetectorFpsML(EnumBase):
+    LOW = 0
+    MEDIUM = 1
+    HIGH = 2
+    MAX = 3
+
+
+class MarkerDetectorResolutionML(EnumBase):
+    LOW = 0
+    MEDIUM = 1
+    HIGH = 2
+
+
+class MarkerDetectorCameraML(EnumBase):
+    RGB_CAMERA = 0
+    WORLD_CAMERAS = 1
+
+
+class MarkerDetectorCornerRefineMethodML(EnumBase):
+    NONE = 0
+    SUBPIX = 1
+    CONTOUR = 2
+    APRIL_TAG = 3
+
+
+class MarkerDetectorFullAnalysisIntervalML(EnumBase):
+    MAX = 0
+    FAST = 1
+    MEDIUM = 2
+    SLOW = 3
+
+
+class MarkerDetectorStatusML(EnumBase):
+    PENDING = 0
+    READY = 1
+    ERROR = 2
+
+
+class LocalizationMapStateML(EnumBase):
+    NOT_LOCALIZED = 0
+    LOCALIZED = 1
+    LOCALIZATION_PENDING = 2
+    LOCALIZATION_SLEEPING_BEFORE_RETRY = 3
+
+
+class LocalizationMapTypeML(EnumBase):
+    ON_DEVICE = 0
+    CLOUD = 1
+
+
+class LocalizationMapConfidenceML(EnumBase):
+    POOR = 0
+    FAIR = 1
+    GOOD = 2
+    EXCELLENT = 3
+
+
+class SceneMarkerTypeMSFT(EnumBase):
+    QR_CODE = 1
+
+
+class SceneMarkerQRCodeSymbolTypeMSFT(EnumBase):
+    QR_CODE = 1
+    MICRO_QR_CODE = 2
 
 
 class HandForearmJointULTRALEAP(EnumBase):
@@ -1131,6 +1283,20 @@ class PlaneDetectionStateEXT(EnumBase):
     FATAL = 4
 
 
+class HeadsetFitStatusML(EnumBase):
+    UNKNOWN = 0
+    NOT_WORN = 1
+    GOOD_FIT = 2
+    BAD_FIT = 3
+
+
+class EyeCalibrationStatusML(EnumBase):
+    UNKNOWN = 0
+    NONE = 1
+    COARSE = 2
+    FINE = 3
+
+
 class InstanceCreateFlags(FlagBase):
     NONE = 0x00000000
 
@@ -1310,6 +1476,16 @@ class GlobalDimmerFrameEndInfoFlagsML(FlagBase):
     ENABLED_BIT = 0x00000001
 
 
+class LocalizationMapErrorFlagsML(FlagBase):
+    NONE = 0x00000000
+    UNKNOWN_BIT = 0x00000001
+    OUT_OF_MAPPED_AREA_BIT = 0x00000002
+    LOW_FEATURE_COUNT_BIT = 0x00000004
+    EXCESSIVE_MOTION_BIT = 0x00000008
+    LOW_LIGHT_BIT = 0x00000010
+    HEADPOSE_BIT = 0x00000020
+
+
 class CompositionLayerSpaceWarpInfoFlagsFB(FlagBase):
     NONE = 0x00000000
     FRAME_SKIP_BIT = 0x00000001
@@ -1341,6 +1517,11 @@ class CompositionLayerSettingsFlagsFB(FlagBase):
     QUALITY_SUPER_SAMPLING_BIT = 0x00000002
     NORMAL_SHARPENING_BIT = 0x00000004
     QUALITY_SHARPENING_BIT = 0x00000008
+
+
+class PassthroughPreferenceFlagsMETA(FlagBase):
+    NONE = 0x00000000
+    DEFAULT_TO_ACTIVE_BIT = 0x00000001
 
 
 class VirtualKeyboardInputStateFlagsMETA(FlagBase):
@@ -1406,6 +1587,7 @@ __all__ = [
     "EnvironmentBlendMode",
     "ExternalCameraAttachedToDeviceOCULUS",
     "ExternalCameraStatusFlagsOCULUS",
+    "EyeCalibrationStatusML",
     "EyeExpressionHTC",
     "EyePositionFB",
     "EyeVisibility",
@@ -1433,12 +1615,27 @@ __all__ = [
     "HandPoseTypeMSFT",
     "HandTrackingAimFlagsFB",
     "HandTrackingDataSourceEXT",
+    "HeadsetFitStatusML",
     "InputSourceLocalizedNameFlags",
     "InstanceCreateFlags",
     "KeyboardTrackingFlagsFB",
     "KeyboardTrackingQueryFlagsFB",
     "LipExpressionHTC",
     "LocalDimmingModeMETA",
+    "LocalizationMapConfidenceML",
+    "LocalizationMapErrorFlagsML",
+    "LocalizationMapStateML",
+    "LocalizationMapTypeML",
+    "MarkerAprilTagDictML",
+    "MarkerArucoDictML",
+    "MarkerDetectorCameraML",
+    "MarkerDetectorCornerRefineMethodML",
+    "MarkerDetectorFpsML",
+    "MarkerDetectorFullAnalysisIntervalML",
+    "MarkerDetectorProfileML",
+    "MarkerDetectorResolutionML",
+    "MarkerDetectorStatusML",
+    "MarkerTypeML",
     "MeshComputeLodMSFT",
     "ObjectType",
     "OverlayMainSessionFlagsEXTX",
@@ -1448,6 +1645,7 @@ __all__ = [
     "PassthroughFlagsFB",
     "PassthroughFormHTC",
     "PassthroughLayerPurposeFB",
+    "PassthroughPreferenceFlagsMETA",
     "PassthroughStateChangedFlagsFB",
     "PerfSettingsDomainEXT",
     "PerfSettingsLevelEXT",
@@ -1468,6 +1666,8 @@ __all__ = [
     "SceneComputeConsistencyMSFT",
     "SceneComputeFeatureMSFT",
     "SceneComputeStateMSFT",
+    "SceneMarkerQRCodeSymbolTypeMSFT",
+    "SceneMarkerTypeMSFT",
     "SceneObjectTypeMSFT",
     "ScenePlaneAlignmentTypeMSFT",
     "SemanticLabelsSupportFlagsFB",

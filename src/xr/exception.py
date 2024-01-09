@@ -1090,6 +1090,78 @@ class MarkerIdInvalidVarjoError(ErrorResult):
         return Result.ERROR_MARKER_ID_INVALID_VARJO
 
 
+class MarkerDetectorPermissionDeniedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MARKER_DETECTOR_PERMISSION_DENIED_ML
+
+
+class MarkerDetectorLocateFailedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MARKER_DETECTOR_LOCATE_FAILED_ML
+
+
+class MarkerDetectorInvalidDataQueryMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MARKER_DETECTOR_INVALID_DATA_QUERY_ML
+
+
+class MarkerDetectorInvalidCreateInfoMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MARKER_DETECTOR_INVALID_CREATE_INFO_ML
+
+
+class MarkerInvalidMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MARKER_INVALID_ML
+
+
+class LocalizationMapIncompatibleMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_LOCALIZATION_MAP_INCOMPATIBLE_ML
+
+
+class LocalizationMapUnavailableMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_LOCALIZATION_MAP_UNAVAILABLE_ML
+
+
+class LocalizationMapFailMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_LOCALIZATION_MAP_FAIL_ML
+
+
+class LocalizationMapImportExportPermissionDeniedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_LOCALIZATION_MAP_IMPORT_EXPORT_PERMISSION_DENIED_ML
+
+
+class LocalizationMapPermissionDeniedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_LOCALIZATION_MAP_PERMISSION_DENIED_ML
+
+
+class LocalizationMapAlreadyExistsMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_LOCALIZATION_MAP_ALREADY_EXISTS_ML
+
+
+class LocalizationMapCannotExportCloudMapMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_LOCALIZATION_MAP_CANNOT_EXPORT_CLOUD_MAP_ML
+
+
 class SpatialAnchorNameNotFoundMSFTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1100,6 +1172,12 @@ class SpatialAnchorNameInvalidMSFTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT
+
+
+class SceneMarkerDataNotStringMSFT(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.SCENE_MARKER_DATA_NOT_STRING_MSFT
 
 
 class SpaceMappingInsufficientFBError(ErrorResult):
@@ -1142,6 +1220,12 @@ class HintAlreadySetQCOMError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_HINT_ALREADY_SET_QCOM
+
+
+class NotAnAnchorHTCError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_NOT_AN_ANCHOR_HTC
 
 
 class SpaceNotLocatableEXTError(ErrorResult):
@@ -1240,8 +1324,21 @@ _exception_map = {
     Result.RENDER_MODEL_UNAVAILABLE_FB: RenderModelUnavailableFB,
     Result.ERROR_MARKER_NOT_TRACKED_VARJO: MarkerNotTrackedVarjoError,
     Result.ERROR_MARKER_ID_INVALID_VARJO: MarkerIdInvalidVarjoError,
+    Result.ERROR_MARKER_DETECTOR_PERMISSION_DENIED_ML: MarkerDetectorPermissionDeniedMLError,
+    Result.ERROR_MARKER_DETECTOR_LOCATE_FAILED_ML: MarkerDetectorLocateFailedMLError,
+    Result.ERROR_MARKER_DETECTOR_INVALID_DATA_QUERY_ML: MarkerDetectorInvalidDataQueryMLError,
+    Result.ERROR_MARKER_DETECTOR_INVALID_CREATE_INFO_ML: MarkerDetectorInvalidCreateInfoMLError,
+    Result.ERROR_MARKER_INVALID_ML: MarkerInvalidMLError,
+    Result.ERROR_LOCALIZATION_MAP_INCOMPATIBLE_ML: LocalizationMapIncompatibleMLError,
+    Result.ERROR_LOCALIZATION_MAP_UNAVAILABLE_ML: LocalizationMapUnavailableMLError,
+    Result.ERROR_LOCALIZATION_MAP_FAIL_ML: LocalizationMapFailMLError,
+    Result.ERROR_LOCALIZATION_MAP_IMPORT_EXPORT_PERMISSION_DENIED_ML: LocalizationMapImportExportPermissionDeniedMLError,
+    Result.ERROR_LOCALIZATION_MAP_PERMISSION_DENIED_ML: LocalizationMapPermissionDeniedMLError,
+    Result.ERROR_LOCALIZATION_MAP_ALREADY_EXISTS_ML: LocalizationMapAlreadyExistsMLError,
+    Result.ERROR_LOCALIZATION_MAP_CANNOT_EXPORT_CLOUD_MAP_ML: LocalizationMapCannotExportCloudMapMLError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT: SpatialAnchorNameNotFoundMSFTError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT: SpatialAnchorNameInvalidMSFTError,
+    Result.SCENE_MARKER_DATA_NOT_STRING_MSFT: SceneMarkerDataNotStringMSFT,
     Result.ERROR_SPACE_MAPPING_INSUFFICIENT_FB: SpaceMappingInsufficientFBError,
     Result.ERROR_SPACE_LOCALIZATION_FAILED_FB: SpaceLocalizationFailedFBError,
     Result.ERROR_SPACE_NETWORK_TIMEOUT_FB: SpaceNetworkTimeoutFBError,
@@ -1249,6 +1346,7 @@ _exception_map = {
     Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB: SpaceCloudStorageDisabledFBError,
     Result.ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META: PassthroughColorLutBufferSizeMismatchMETAError,
     Result.ERROR_HINT_ALREADY_SET_QCOM: HintAlreadySetQCOMError,
+    Result.ERROR_NOT_AN_ANCHOR_HTC: NotAnAnchorHTCError,
     Result.ERROR_SPACE_NOT_LOCATABLE_EXT: SpaceNotLocatableEXTError,
     Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT: PlaneDetectionPermissionDeniedEXTError,
 }
@@ -1311,12 +1409,25 @@ __all__ = [
     "LayerInvalidError",
     "LayerLimitExceededError",
     "LimitReachedError",
+    "LocalizationMapAlreadyExistsMLError",
+    "LocalizationMapCannotExportCloudMapMLError",
+    "LocalizationMapFailMLError",
+    "LocalizationMapImportExportPermissionDeniedMLError",
+    "LocalizationMapIncompatibleMLError",
+    "LocalizationMapPermissionDeniedMLError",
+    "LocalizationMapUnavailableMLError",
     "LocalizedNameDuplicatedError",
     "LocalizedNameInvalidError",
+    "MarkerDetectorInvalidCreateInfoMLError",
+    "MarkerDetectorInvalidDataQueryMLError",
+    "MarkerDetectorLocateFailedMLError",
+    "MarkerDetectorPermissionDeniedMLError",
     "MarkerIdInvalidVarjoError",
+    "MarkerInvalidMLError",
     "MarkerNotTrackedVarjoError",
     "NameDuplicatedError",
     "NameInvalidError",
+    "NotAnAnchorHTCError",
     "NotPermittedPassthroughFBError",
     "OutOfMemoryError",
     "PassthroughColorLutBufferSizeMismatchMETAError",
@@ -1338,6 +1449,7 @@ __all__ = [
     "SceneComponentTypeMismatchMSFTError",
     "SceneComputeConsistencyMismatchMSFTError",
     "SceneComputeFeatureIncompatibleMSFTError",
+    "SceneMarkerDataNotStringMSFT",
     "SceneMeshBufferIdInvalidMSFTError",
     "SecondaryViewConfigurationTypeNotEnabledMSFTError",
     "SessionLossPending",
