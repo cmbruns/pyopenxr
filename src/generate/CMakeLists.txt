@@ -87,10 +87,11 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 ### Generate version.py ###
 ###########################
 
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
+find_package(Python COMPONENTS Interpreter REQUIRED)
 
+message(STATUS "Python Executable =" ${Python_EXECUTABLE})
 execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} print_openxr_version.py
+    COMMAND ${Python_EXECUTABLE} print_openxr_version.py
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     OUTPUT_VARIABLE OPENXR_VERSION
 )
@@ -177,7 +178,7 @@ endforeach()
 function(generate_source GENERATOR OUTPUT OUT_DIR)
     # Two step copy so newlines are used as line ending
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} "${GENERATOR}"
+        COMMAND ${Python_EXECUTABLE} "${GENERATOR}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         OUTPUT_FILE "${CMAKE_BINARY_DIR}/${OUTPUT}"
     )
