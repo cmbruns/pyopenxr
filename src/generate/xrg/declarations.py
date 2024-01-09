@@ -418,7 +418,6 @@ class StructFieldItem(CodeItem):
         ARRAY_COUNT = 2,
         ARRAY_POINTER = 3,
         VERSION = 4,
-        VERSION32 = 5,
 
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -445,7 +444,6 @@ class StructFieldItem(CodeItem):
         if self.kind in [
             StructFieldItem.Kind.ARRAY_POINTER,
             StructFieldItem.Kind.VERSION,
-            StructFieldItem.Kind.VERSION32,
         ]:
             return f"_{n}"  # Prepend with underscore
         else:
@@ -507,8 +505,6 @@ class StructItem(CodeItem):
         for f in self.fields:
             if f.type.name(Api.CTYPES) == "VersionNumber":
                 f.kind = StructFieldItem.Kind.VERSION
-            elif f.cursor.spelling in ["engineVersion", "applicationVersion"] and f.type.name(Api.CTYPES) == "c_uint32":
-                f.kind = StructFieldItem.Kind.VERSION32
         # Insert default values
         if self.name() in default_values["Structure"]:
             fd = default_values["Structure"][self.name()]["Field"]
@@ -1243,34 +1239,6 @@ class VersionFieldCoder(FieldCoder):
             yield f"        self.{self.inner_name} = value"
 
 
-class Version32FieldCoder(FieldCoder):
-    def param_code(self) -> Generator[str, None, None]:
-        default = "Version32()"
-        if self.field.default_value is not None:
-            default = self.field.default_value
-        yield f'{self.name}: Version32 = {default}'
-
-    def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.inner_name()}={self.name}.number()"
-
-    def property_code(self) -> Generator[str, None, None]:
-        if self.inner_name != self.name:
-            # getter
-            yield "@property"
-            yield f"def {self.name}(self):"
-            yield f"    return Version32(self.{self.inner_name})"
-            # setter
-            yield ""
-            yield f"@{self.name}.setter"
-            yield f"def {self.name}(self, value: Version32):"
-            yield f"    if hasattr(value, 'number'):"
-            yield f"        # noinspection PyAttributeOutsideInit"
-            yield f"        self.{self.inner_name} = value.number()"
-            yield f"    else:"
-            yield f"        # noinspection PyAttributeOutsideInit"
-            yield f"        self.{self.inner_name} = value"
-
-
 class StructureFieldCoder(FieldCoder):
     def pre_call_code(self) -> Generator[str, None, None]:
         yield f"if {self.name} is None:"
@@ -1314,8 +1282,6 @@ class StructureCoder(object):
                 self.field_coders.append(PosefFieldCoder(field))
             elif field.type.name(Api.CTYPES) == "VersionNumber":
                 self.field_coders.append(VersionFieldCoder(field))
-            elif field.type.name(Api.CTYPES) == "c_uint32" and field.cursor.spelling in ["engineVersion", "applicationVersion"]:
-                self.field_coders.append(Version32FieldCoder(field))
             elif struct.name() == "Quaternionf" and field.name() == "w":
                 self.field_coders.append(FieldCoder(field, default=1))
             elif isinstance(field.type, TypedefType) and isinstance(field.type.underlying_type, RecordType):
