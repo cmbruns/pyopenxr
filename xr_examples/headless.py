@@ -4,21 +4,22 @@ using low level OpenXR API
 """
 
 import ctypes
+import platform
 import time
 import xr
 
-# TODO: windows only
-kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-pc_time = ctypes.wintypes.LARGE_INTEGER()
+# Enumerate the required instance extensions
+extensions = [xr.MND_HEADLESS_EXTENSION_NAME]  # Permits use without a graphics display
+# Tracking controllers in headless mode requires a way to get the current XrTime
+if platform.system() == "Windows":
+    extensions.append(xr.KHR_WIN32_CONVERT_PERFORMANCE_COUNTER_TIME_EXTENSION_NAME)
+else:  # Linux
+    extensions.append(xr.KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME)
 
 # Create instance for headless use
 instance = xr.create_instance(xr.InstanceCreateInfo(
     # XR_MND_HEADLESS_EXTENSION permits use without a graphics display
-    enabled_extension_names=[
-        xr.MND_HEADLESS_EXTENSION_NAME,
-        # TODO: this time method is windows only
-        xr.KHR_WIN32_CONVERT_PERFORMANCE_COUNTER_TIME_EXTENSION_NAME,
-    ],
+    enabled_extension_names=extensions,
 ))
 system = xr.get_system(
     instance,
@@ -33,6 +34,51 @@ session = xr.create_session(
     )
 )
 
+if platform.system() == "Windows":
+    import ctypes.wintypes
+    pc_time = ctypes.wintypes.LARGE_INTEGER()
+    kernel32 = ctypes.WinDLL("kernel32")
+    pxrConvertWin32PerformanceCounterToTimeKHR = ctypes.cast(
+        xr.get_instance_proc_addr(
+            instance=instance,
+            name="xrConvertWin32PerformanceCounterToTimeKHR",
+        ),
+        xr.PFN_xrConvertWin32PerformanceCounterToTimeKHR,
+    )
+
+    def time_from_perf_counter(instance: xr.Instance,
+                               performance_counter: ctypes.wintypes.LARGE_INTEGER) -> xr.Time:
+        xr_time = xr.Time()
+        result = pxrConvertWin32PerformanceCounterToTimeKHR(
+            instance,
+            ctypes.pointer(performance_counter),
+            ctypes.byref(xr_time),
+        )
+        result = xr.check_result(result)
+        if result.is_exception():
+            raise result
+        return xr_time
+else:
+    timespecTime = xr.timespec()
+    pxrConvertTimespecTimeToTimeKHR = ctypes.cast(
+        xr.get_instance_proc_addr(
+            instance=instance,
+            name="xrConvertTimespecTimeToTimeKHR",
+        ),
+        xr.PFN_xrConvertTimespecTimeToTimeKHR,
+    )
+
+    def time_from_timespec(instance: xr.Instance, timespec_time: xr.timespec) -> xr.Time:
+        xr_time = xr.Time()
+        result = pxrConvertTimespecTimeToTimeKHR(
+            instance,
+            ctypes.pointer(timespec_time),
+            ctypes.byref(xr_time),
+        )
+        result = xr.check_result(result)
+        if result.is_exception():
+            raise result
+        return xr_time
 # Set up controller tracking, as one possible legitimate headless activity
 action_set = xr.create_action_set(
     instance=instance,
@@ -123,28 +169,6 @@ reference_space = xr.create_reference_space(
     ),
 )
 
-pxrConvertWin32PerformanceCounterToTimeKHR = ctypes.cast(
-    xr.get_instance_proc_addr(
-        instance=instance,
-        name="xrConvertWin32PerformanceCounterToTimeKHR",
-    ),
-    xr.PFN_xrConvertWin32PerformanceCounterToTimeKHR,
-)
-
-
-def xrConvertWin32PerformanceCounterToTimeKHR(instance: xr.Instance, performance_counter: ctypes.wintypes.LARGE_INTEGER) -> xr.Time:
-    xr_time = xr.Time()
-    result = pxrConvertWin32PerformanceCounterToTimeKHR(
-        instance,
-        ctypes.pointer(performance_counter),
-        ctypes.byref(xr_time),
-    )
-    result = xr.check_result(result)
-    if result.is_exception():
-        raise result
-    return xr_time
-
-
 session_state = xr.SessionState.UNKNOWN
 # Loop over session frames
 for frame_index in range(30):  # Limit number of frames for demo purposes
@@ -177,8 +201,14 @@ for frame_index in range(30):  # Limit number of frames for demo purposes
         xr.wait_frame(session=session)  # Helps SteamVR show application name better
         # Perform per-frame activities here
 
-        kernel32.QueryPerformanceCounter(ctypes.byref(pc_time))
-        xr_time_now = xrConvertWin32PerformanceCounterToTimeKHR(instance, pc_time)
+        if platform.system() == "Windows":
+            kernel32.QueryPerformanceCounter(ctypes.byref(pc_time))
+            xr_time_now = time_from_perf_counter(instance, pc_time)
+        else:
+            time_float = time.clock_gettime(time.CLOCK_MONOTONIC)
+            timespecTime.tv_sec = int(time_float)
+            timespecTime.tv_nsec = int((time_float % 1) * 1e9)
+            xr_time_now = time_from_timespec(instance, timespecTime)
 
         active_action_set = xr.ActiveActionSet(
             action_set=action_set,
