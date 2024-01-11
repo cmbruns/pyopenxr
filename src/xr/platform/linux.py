@@ -726,4 +726,5 @@ __all__ = [
     "VulkanInstanceCreateInfoKHR",
     "VulkanSwapchainCreateInfoMETA",
     "VulkanSwapchainFormatListCreateInfoKHR",
+    "timespec",
 ]
