@@ -18,7 +18,6 @@ else:  # Linux
 
 # Create instance for headless use
 instance = xr.create_instance(xr.InstanceCreateInfo(
-    # XR_MND_HEADLESS_EXTENSION permits use without a graphics display
     enabled_extension_names=extensions,
 ))
 system = xr.get_system(
