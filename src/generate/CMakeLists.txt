@@ -67,6 +67,7 @@ find_file(LIBCLANG_SHARED_LIBRARY
     HINTS
         "$ENV{ProgramW6432}/LLVM"
         "$ENV{ProgramFiles}/LLVM"
+        "/usr/lib/llvm-14/lib"
         "/usr/lib/llvm-10/lib"
     PATH_SUFFIXES bin
     DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
