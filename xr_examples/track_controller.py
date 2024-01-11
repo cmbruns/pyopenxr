@@ -88,9 +88,11 @@ with xr.ContextObject(
         ),
     ]
     # Loop over the render frames
+    session_was_focused = False  # Check for a common problem
     for frame_index, frame_state in enumerate(context.frame_loop()):
 
         if context.session_state == xr.SessionState.FOCUSED:
+            session_was_focused = True
             active_action_set = xr.ActiveActionSet(
                 action_set=context.default_action_set,
                 subaction_path=xr.NULL_PATH,
@@ -120,3 +122,5 @@ with xr.ContextObject(
         # Don't run forever
         if frame_index > 30:
             break
+    if not session_was_focused:
+        print("This OpenXR session never entered the FOCUSED state. Did you wear the headset?")
