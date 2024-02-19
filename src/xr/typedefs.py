@@ -11526,6 +11526,69 @@ class SystemHeadsetIdPropertiesMETA(Structure):
     ]
 
 
+class RecommendedLayerResolutionMETA(Structure):
+    def __init__(
+        self,
+        recommended_image_dimensions: Extent2Di = None,
+        is_valid: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RECOMMENDED_LAYER_RESOLUTION_META,
+    ) -> None:
+        if recommended_image_dimensions is None:
+            recommended_image_dimensions = Extent2Di()
+        super().__init__(
+            recommended_image_dimensions=recommended_image_dimensions,
+            is_valid=is_valid,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RecommendedLayerResolutionMETA(recommended_image_dimensions={repr(self.recommended_image_dimensions)}, is_valid={repr(self.is_valid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RecommendedLayerResolutionMETA(recommended_image_dimensions={self.recommended_image_dimensions}, is_valid={self.is_valid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("recommended_image_dimensions", Extent2Di),
+        ("is_valid", Bool32),
+    ]
+
+
+class RecommendedLayerResolutionGetInfoMETA(Structure):
+    def __init__(
+        self,
+        layer: POINTER(CompositionLayerBaseHeader) = None,
+        predicted_display_time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RECOMMENDED_LAYER_RESOLUTION_GET_INFO_META,
+    ) -> None:
+        super().__init__(
+            layer=layer,
+            predicted_display_time=predicted_display_time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RecommendedLayerResolutionGetInfoMETA(layer={repr(self.layer)}, predicted_display_time={repr(self.predicted_display_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RecommendedLayerResolutionGetInfoMETA(layer={self.layer}, predicted_display_time={self.predicted_display_time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("layer", POINTER(CompositionLayerBaseHeader)),
+        ("predicted_display_time", Time),
+    ]
+
+
+PFN_xrGetRecommendedLayerResolutionMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(RecommendedLayerResolutionGetInfoMETA), POINTER(RecommendedLayerResolutionMETA))
+
+
 class PassthroughColorLutMETA_T(Structure):
     pass
 
@@ -11710,6 +11773,266 @@ PFN_xrCreatePassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughFB, P
 PFN_xrDestroyPassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughColorLutMETA)
 
 PFN_xrUpdatePassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughColorLutMETA, POINTER(PassthroughColorLutUpdateInfoMETA))
+
+
+class SpaceTriangleMeshGetInfoMETA(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_TRIANGLE_MESH_GET_INFO_META,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceTriangleMeshGetInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceTriangleMeshGetInfoMETA(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SpaceTriangleMeshMETA(Structure):
+    def __init__(
+        self,
+        vertex_capacity_input: int = 0,
+        vertex_count_output: int = 0,
+        vertices: POINTER(Vector3f) = None,
+        index_capacity_input: int = 0,
+        index_count_output: int = 0,
+        indices: POINTER(c_uint32) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_TRIANGLE_MESH_META,
+    ) -> None:
+        super().__init__(
+            vertex_capacity_input=vertex_capacity_input,
+            vertex_count_output=vertex_count_output,
+            vertices=vertices,
+            index_capacity_input=index_capacity_input,
+            index_count_output=index_count_output,
+            indices=indices,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceTriangleMeshMETA(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceTriangleMeshMETA(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertices", POINTER(Vector3f)),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
+        ("indices", POINTER(c_uint32)),
+    ]
+
+
+PFN_xrGetSpaceTriangleMeshMETA = CFUNCTYPE(Result.ctype(), Space, POINTER(SpaceTriangleMeshGetInfoMETA), POINTER(SpaceTriangleMeshMETA))
+
+
+class FaceTracker2FB_T(Structure):
+    pass
+
+
+FaceTracker2FB = POINTER(FaceTracker2FB_T)
+
+
+class SystemFaceTrackingProperties2FB(Structure):
+    def __init__(
+        self,
+        supports_visual_face_tracking: Bool32 = 0,
+        supports_audio_face_tracking: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_FACE_TRACKING_PROPERTIES2_FB,
+    ) -> None:
+        super().__init__(
+            supports_visual_face_tracking=supports_visual_face_tracking,
+            supports_audio_face_tracking=supports_audio_face_tracking,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemFaceTrackingProperties2FB(supports_visual_face_tracking={repr(self.supports_visual_face_tracking)}, supports_audio_face_tracking={repr(self.supports_audio_face_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemFaceTrackingProperties2FB(supports_visual_face_tracking={self.supports_visual_face_tracking}, supports_audio_face_tracking={self.supports_audio_face_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_visual_face_tracking", Bool32),
+        ("supports_audio_face_tracking", Bool32),
+    ]
+
+
+class FaceTrackerCreateInfo2FB(Structure):
+    def __init__(
+        self,
+        face_expression_set: FaceExpressionSet2FB = FaceExpressionSet2FB(),
+        requested_data_source_count: Optional[int] = None,
+        requested_data_sources: ArrayFieldParamType[FaceTrackingDataSource2FB.ctype()] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO2_FB,
+    ) -> None:
+        requested_data_source_count, requested_data_sources = array_field_helper(
+            FaceTrackingDataSource2FB.ctype(), requested_data_source_count, requested_data_sources)
+        super().__init__(
+            face_expression_set=FaceExpressionSet2FB(face_expression_set).value,
+            requested_data_source_count=requested_data_source_count,
+            _requested_data_sources=requested_data_sources,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceTrackerCreateInfo2FB(face_expression_set={repr(self.face_expression_set)}, requested_data_source_count={repr(self.requested_data_source_count)}, requested_data_sources={repr(self._requested_data_sources)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceTrackerCreateInfo2FB(face_expression_set={self.face_expression_set}, requested_data_source_count={self.requested_data_source_count}, requested_data_sources={self._requested_data_sources}, next={self.next}, type={self.type})"
+
+    @property
+    def requested_data_sources(self):
+        if self.requested_data_source_count == 0:
+            return (FaceTrackingDataSource2FB.ctype() * 0)()
+        else:
+            return (FaceTrackingDataSource2FB.ctype() * self.requested_data_source_count).from_address(
+                ctypes.addressof(self._requested_data_sources.contents))
+
+    @requested_data_sources.setter
+    def requested_data_sources(self, value):
+        self.requested_data_source_count, self._requested_data_sources = array_field_helper(
+            FaceTrackingDataSource2FB.ctype(), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("face_expression_set", FaceExpressionSet2FB.ctype()),
+        ("requested_data_source_count", c_uint32),
+        ("_requested_data_sources", POINTER(FaceTrackingDataSource2FB.ctype())),
+    ]
+
+
+class FaceExpressionInfo2FB(Structure):
+    def __init__(
+        self,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FACE_EXPRESSION_INFO2_FB,
+    ) -> None:
+        super().__init__(
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceExpressionInfo2FB(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceExpressionInfo2FB(time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("time", Time),
+    ]
+
+
+class FaceExpressionWeights2FB(Structure):
+    def __init__(
+        self,
+        weight_count: Optional[int] = None,
+        weights: ArrayFieldParamType[c_float] = None,
+        confidence_count: Optional[int] = None,
+        confidences: ArrayFieldParamType[c_float] = None,
+        is_valid: Bool32 = 0,
+        is_eye_following_blendshapes_valid: Bool32 = 0,
+        data_source: FaceTrackingDataSource2FB = FaceTrackingDataSource2FB(),
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FACE_EXPRESSION_WEIGHTS2_FB,
+    ) -> None:
+        weight_count, weights = array_field_helper(
+            c_float, weight_count, weights)
+        confidence_count, confidences = array_field_helper(
+            c_float, confidence_count, confidences)
+        super().__init__(
+            weight_count=weight_count,
+            _weights=weights,
+            confidence_count=confidence_count,
+            _confidences=confidences,
+            is_valid=is_valid,
+            is_eye_following_blendshapes_valid=is_eye_following_blendshapes_valid,
+            data_source=FaceTrackingDataSource2FB(data_source).value,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceExpressionWeights2FB(weight_count={repr(self.weight_count)}, weights={repr(self._weights)}, confidence_count={repr(self.confidence_count)}, confidences={repr(self._confidences)}, is_valid={repr(self.is_valid)}, is_eye_following_blendshapes_valid={repr(self.is_eye_following_blendshapes_valid)}, data_source={repr(self.data_source)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceExpressionWeights2FB(weight_count={self.weight_count}, weights={self._weights}, confidence_count={self.confidence_count}, confidences={self._confidences}, is_valid={self.is_valid}, is_eye_following_blendshapes_valid={self.is_eye_following_blendshapes_valid}, data_source={self.data_source}, time={self.time}, next={self.next}, type={self.type})"
+
+    @property
+    def weights(self):
+        if self.weight_count == 0:
+            return (c_float * 0)()
+        else:
+            return (c_float * self.weight_count).from_address(
+                ctypes.addressof(self._weights.contents))
+
+    @weights.setter
+    def weights(self, value):
+        self.weight_count, self._weights = array_field_helper(
+            c_float, None, value)
+
+    @property
+    def confidences(self):
+        if self.confidence_count == 0:
+            return (c_float * 0)()
+        else:
+            return (c_float * self.confidence_count).from_address(
+                ctypes.addressof(self._confidences.contents))
+
+    @confidences.setter
+    def confidences(self, value):
+        self.confidence_count, self._confidences = array_field_helper(
+            c_float, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("weight_count", c_uint32),
+        ("_weights", POINTER(c_float)),
+        ("confidence_count", c_uint32),
+        ("_confidences", POINTER(c_float)),
+        ("is_valid", Bool32),
+        ("is_eye_following_blendshapes_valid", Bool32),
+        ("data_source", FaceTrackingDataSource2FB.ctype()),
+        ("time", Time),
+    ]
+
+
+PFN_xrCreateFaceTracker2FB = CFUNCTYPE(Result.ctype(), Session, POINTER(FaceTrackerCreateInfo2FB), POINTER(FaceTracker2FB))
+
+PFN_xrDestroyFaceTracker2FB = CFUNCTYPE(Result.ctype(), FaceTracker2FB)
+
+PFN_xrGetFaceExpressionWeights2FB = CFUNCTYPE(Result.ctype(), FaceTracker2FB, POINTER(FaceExpressionInfo2FB), POINTER(FaceExpressionWeights2FB))
 
 PFN_xrSetTrackingOptimizationSettingsHintQCOM = CFUNCTYPE(Result.ctype(), Session, TrackingOptimizationSettingsDomainQCOM.ctype(), TrackingOptimizationSettingsHintQCOM.ctype())
 
@@ -12669,6 +12992,61 @@ PFN_xrGetPlaneDetectionsEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, POINTE
 PFN_xrGetPlanePolygonBufferEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, c_uint64, c_uint32, POINTER(PlaneDetectorPolygonBufferEXT))
 
 
+class EventDataUserPresenceChangedEXT(Structure):
+    def __init__(
+        self,
+        session: Session = None,
+        is_user_present: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_USER_PRESENCE_CHANGED_EXT,
+    ) -> None:
+        super().__init__(
+            session=session,
+            is_user_present=is_user_present,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataUserPresenceChangedEXT(session={repr(self.session)}, is_user_present={repr(self.is_user_present)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataUserPresenceChangedEXT(session={self.session}, is_user_present={self.is_user_present}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("session", Session),
+        ("is_user_present", Bool32),
+    ]
+
+
+class SystemUserPresencePropertiesEXT(Structure):
+    def __init__(
+        self,
+        supports_user_presence: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_USER_PRESENCE_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            supports_user_presence=supports_user_presence,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemUserPresencePropertiesEXT(supports_user_presence={repr(self.supports_user_presence)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemUserPresencePropertiesEXT(supports_user_presence={self.supports_user_presence}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_user_presence", Bool32),
+    ]
+
+
 class EventDataHeadsetFitChangedML(Structure):
     def __init__(
         self,
@@ -12860,6 +13238,7 @@ __all__ = [
     "EventDataSpaceSetStatusCompleteFB",
     "EventDataSpaceShareCompleteFB",
     "EventDataSpatialAnchorCreateCompleteFB",
+    "EventDataUserPresenceChangedEXT",
     "EventDataVirtualKeyboardBackspaceMETA",
     "EventDataVirtualKeyboardCommitTextMETA",
     "EventDataVirtualKeyboardEnterMETA",
@@ -12885,9 +13264,14 @@ __all__ = [
     "EyeTrackerCreateInfoFB",
     "EyeTrackerFB",
     "EyeTrackerFB_T",
+    "FaceExpressionInfo2FB",
     "FaceExpressionInfoFB",
     "FaceExpressionStatusFB",
+    "FaceExpressionWeights2FB",
     "FaceExpressionWeightsFB",
+    "FaceTracker2FB",
+    "FaceTracker2FB_T",
+    "FaceTrackerCreateInfo2FB",
     "FaceTrackerCreateInfoFB",
     "FaceTrackerFB",
     "FaceTrackerFB_T",
@@ -13014,6 +13398,7 @@ __all__ = [
     "PFN_xrCreateDebugUtilsMessengerEXT",
     "PFN_xrCreateExportedLocalizationMapML",
     "PFN_xrCreateEyeTrackerFB",
+    "PFN_xrCreateFaceTracker2FB",
     "PFN_xrCreateFaceTrackerFB",
     "PFN_xrCreateFacialTrackerHTC",
     "PFN_xrCreateFoveationProfileFB",
@@ -13054,6 +13439,7 @@ __all__ = [
     "PFN_xrDestroyDebugUtilsMessengerEXT",
     "PFN_xrDestroyExportedLocalizationMapML",
     "PFN_xrDestroyEyeTrackerFB",
+    "PFN_xrDestroyFaceTracker2FB",
     "PFN_xrDestroyFaceTrackerFB",
     "PFN_xrDestroyFacialTrackerHTC",
     "PFN_xrDestroyFoveationProfileFB",
@@ -13115,6 +13501,7 @@ __all__ = [
     "PFN_xrGetDisplayRefreshRateFB",
     "PFN_xrGetExportedLocalizationMapDataML",
     "PFN_xrGetEyeGazesFB",
+    "PFN_xrGetFaceExpressionWeights2FB",
     "PFN_xrGetFaceExpressionWeightsFB",
     "PFN_xrGetFacialExpressionsHTC",
     "PFN_xrGetFoveationEyeTrackedStateMETA",
@@ -13134,6 +13521,7 @@ __all__ = [
     "PFN_xrGetPlaneDetectionStateEXT",
     "PFN_xrGetPlaneDetectionsEXT",
     "PFN_xrGetPlanePolygonBufferEXT",
+    "PFN_xrGetRecommendedLayerResolutionMETA",
     "PFN_xrGetReferenceSpaceBoundsRect",
     "PFN_xrGetRenderModelPropertiesFB",
     "PFN_xrGetSceneComponentsMSFT",
@@ -13149,6 +13537,7 @@ __all__ = [
     "PFN_xrGetSpaceContainerFB",
     "PFN_xrGetSpaceRoomLayoutFB",
     "PFN_xrGetSpaceSemanticLabelsFB",
+    "PFN_xrGetSpaceTriangleMeshMETA",
     "PFN_xrGetSpaceUserIdFB",
     "PFN_xrGetSpaceUuidFB",
     "PFN_xrGetSpatialAnchorNameHTC",
@@ -13283,6 +13672,8 @@ __all__ = [
     "PlaneDetectorPolygonBufferEXT",
     "Posef",
     "Quaternionf",
+    "RecommendedLayerResolutionGetInfoMETA",
+    "RecommendedLayerResolutionMETA",
     "Rect2Df",
     "Rect2Di",
     "Rect3DfFB",
@@ -13366,6 +13757,8 @@ __all__ = [
     "SpaceSaveInfoFB",
     "SpaceShareInfoFB",
     "SpaceStorageLocationFilterInfoFB",
+    "SpaceTriangleMeshGetInfoMETA",
+    "SpaceTriangleMeshMETA",
     "SpaceUserCreateInfoFB",
     "SpaceUserFB",
     "SpaceUserFB_T",
@@ -13412,6 +13805,7 @@ __all__ = [
     "SystemColorSpacePropertiesFB",
     "SystemEyeGazeInteractionPropertiesEXT",
     "SystemEyeTrackingPropertiesFB",
+    "SystemFaceTrackingProperties2FB",
     "SystemFaceTrackingPropertiesFB",
     "SystemFacialTrackingPropertiesHTC",
     "SystemForceFeedbackCurlPropertiesMNDX",
@@ -13435,6 +13829,7 @@ __all__ = [
     "SystemSpaceWarpPropertiesFB",
     "SystemSpatialEntityPropertiesFB",
     "SystemTrackingProperties",
+    "SystemUserPresencePropertiesEXT",
     "SystemVirtualKeyboardPropertiesMETA",
     "Time",
     "TriangleMeshCreateInfoFB",

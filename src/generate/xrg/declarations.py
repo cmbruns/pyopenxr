@@ -188,8 +188,12 @@ class EnumValueItem(CodeItem):
                 postfix = f"_{postfix1}"
                 break
         prefix = snake_from_camel(prefix).upper() + "_"
+        # Handle some specific poorly spelled MAX_ENUM values:
         if self._capi_name == 'XR_SCENE_MARKER_QRCODE_SYMBOL_TYPE_MAX_ENUM_MSFT':
             return f"_MAX_ENUM"  # special case for poorly spelled enum value
+        if self._capi_name.endswith("_2FB_MAX_ENUM_FB"):
+            return f"_MAX_ENUM"
+        # Well-spelled MAX_ENUM values:
         if n == f"{prefix}MAX_ENUM{postfix}":
             return f"_MAX_ENUM"  # private enum value
         if prefix in self._PREFIX_TABLE:
@@ -256,7 +260,11 @@ class FlagsItem(CodeItem):
         assert item.name().startswith(self.value_prefix)
         item_name = item.name()[len(self.value_prefix):]
         if len(self.vendor) > 0:
-            assert item_name.endswith("_" + self.vendor)
+            # Special case for AUTO_LAYER_FILTER_BIT_META in XrCompositionLayerSettingsFlagsFB
+            if self.vendor == "FB" and item_name.endswith("_META"):
+                item_name = item_name[:-4] + "FB"
+            if not item_name.endswith("_" + self.vendor):
+                assert False
             item_name = item_name[:-len(self.vendor) - 1]
         self.values.append([item_name, item.value])
 
