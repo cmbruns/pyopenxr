@@ -617,6 +617,17 @@ xrStopHapticFeedback.argtypes = [
     POINTER(HapticActionInfo),  # haptic_action_info
 ]
 
+xrLocateSpaces = openxr_loader_library.xrLocateSpaces
+xrLocateSpaces.__doc__ = """
+    Locate an array of spaces.
+"""
+xrLocateSpaces.restype = Result
+xrLocateSpaces.argtypes = [
+    Session,  # session
+    POINTER(SpacesLocateInfo),  # locate_info
+    POINTER(SpaceLocations),  # space_locations
+]
+
 
 __all__ = [
     "xrAcquireSwapchainImage",
@@ -661,6 +672,7 @@ __all__ = [
     "xrGetSystemProperties",
     "xrGetViewConfigurationProperties",
     "xrLocateSpace",
+    "xrLocateSpaces",
     "xrLocateViews",
     "xrPathToString",
     "xrPollEvent",

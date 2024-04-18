@@ -48,7 +48,7 @@ class OpenXrDocstringParser(HTMLParser):
 
 
 def create_docstring(function_name: str) -> str:
-    url = f"https://registry.khronos.org/OpenXR/specs/1.0/man/html/{function_name}.html"
+    url = f"https://registry.khronos.org/OpenXR/specs/1.1/man/html/{function_name}.html"
     headers = {"User-Agent": "Mozilla"}
     parser = OpenXrDocstringParser(function_name)
     request = urllib.request.Request(url, headers=headers)

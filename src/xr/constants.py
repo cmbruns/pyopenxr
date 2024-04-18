@@ -27,6 +27,8 @@ MAX_ACTION_SET_NAME_SIZE = 64
 MAX_LOCALIZED_ACTION_SET_NAME_SIZE = 128
 MAX_ACTION_NAME_SIZE = 64
 MAX_LOCALIZED_ACTION_NAME_SIZE = 128
+VERSION_1_1 = 1
+UUID_SIZE = 16
 KHR_composition_layer_cube = 1
 KHR_composition_layer_cube_SPEC_VERSION = 8
 KHR_COMPOSITION_LAYER_CUBE_EXTENSION_NAME = "XR_KHR_composition_layer_cube"
@@ -57,6 +59,12 @@ KHR_BINDING_MODIFICATION_EXTENSION_NAME = "XR_KHR_binding_modification"
 KHR_swapchain_usage_input_attachment_bit = 1
 KHR_swapchain_usage_input_attachment_bit_SPEC_VERSION = 3
 KHR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME = "XR_KHR_swapchain_usage_input_attachment_bit"
+KHR_locate_spaces = 1
+KHR_locate_spaces_SPEC_VERSION = 1
+KHR_LOCATE_SPACES_EXTENSION_NAME = "XR_KHR_locate_spaces"
+KHR_maintenance1 = 1
+KHR_maintenance1_SPEC_VERSION = 1
+KHR_MAINTENANCE1_EXTENSION_NAME = "XR_KHR_maintenance1"
 EXT_performance_settings = 1
 EXT_performance_settings_SPEC_VERSION = 4
 EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME = "XR_EXT_performance_settings"
@@ -209,7 +217,6 @@ FB_HAND_TRACKING_CAPSULES_EXTENSION_NAME = "XR_FB_hand_tracking_capsules"
 FB_HAND_TRACKING_CAPSULE_POINT_COUNT = HAND_TRACKING_CAPSULE_POINT_COUNT_FB
 FB_HAND_TRACKING_CAPSULE_COUNT = HAND_TRACKING_CAPSULE_COUNT_FB
 FB_spatial_entity = 1
-UUID_SIZE_EXT = 16
 FB_spatial_entity_SPEC_VERSION = 3
 FB_SPATIAL_ENTITY_EXTENSION_NAME = "XR_FB_spatial_entity"
 FB_foveation = 1
@@ -302,7 +309,7 @@ FB_scene = 1
 FB_scene_SPEC_VERSION = 4
 FB_SCENE_EXTENSION_NAME = "XR_FB_scene"
 EXT_palm_pose = 1
-EXT_palm_pose_SPEC_VERSION = 2
+EXT_palm_pose_SPEC_VERSION = 3
 EXT_PALM_POSE_EXTENSION_NAME = "XR_EXT_palm_pose"
 ALMALENCE_digital_lens_control = 1
 ALMALENCE_digital_lens_control_SPEC_VERSION = 1
@@ -383,9 +390,13 @@ META_TOUCH_CONTROLLER_PLUS_EXTENSION_NAME = "XR_META_touch_controller_plus"
 FB_face_tracking2 = 1
 FB_face_tracking2_SPEC_VERSION = 1
 FB_FACE_TRACKING2_EXTENSION_NAME = "XR_FB_face_tracking2"
+META_environment_depth = 1
+META_environment_depth_SPEC_VERSION = 1
+META_ENVIRONMENT_DEPTH_EXTENSION_NAME = "XR_META_environment_depth"
 EXT_uuid = 1
 EXT_uuid_SPEC_VERSION = 1
 EXT_UUID_EXTENSION_NAME = "XR_EXT_uuid"
+UUID_SIZE_EXT = 16
 EXT_hand_interaction = 1
 EXT_hand_interaction_SPEC_VERSION = 1
 EXT_HAND_INTERACTION_EXTENSION_NAME = "XR_EXT_hand_interaction"
@@ -423,6 +434,10 @@ EXT_PLANE_DETECTION_EXTENSION_NAME = "XR_EXT_plane_detection"
 OPPO_controller_interaction = 1
 OPPO_controller_interaction_SPEC_VERSION = 1
 OPPO_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_OPPO_controller_interaction"
+EXT_future = 1
+EXT_future_SPEC_VERSION = 1
+EXT_FUTURE_EXTENSION_NAME = "XR_EXT_future"
+NULL_FUTURE_EXT = 0
 EXT_user_presence = 1
 EXT_user_presence_SPEC_VERSION = 1
 EXT_USER_PRESENCE_EXTENSION_NAME = "XR_EXT_user_presence"
@@ -589,6 +604,7 @@ __all__ = [
     "EXT_DEBUG_UTILS_EXTENSION_NAME",
     "EXT_DPAD_BINDING_EXTENSION_NAME",
     "EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME",
+    "EXT_FUTURE_EXTENSION_NAME",
     "EXT_HAND_INTERACTION_EXTENSION_NAME",
     "EXT_HAND_JOINTS_MOTION_RANGE_EXTENSION_NAME",
     "EXT_HAND_TRACKING_DATA_SOURCE_EXTENSION_NAME",
@@ -614,6 +630,8 @@ __all__ = [
     "EXT_dpad_binding_SPEC_VERSION",
     "EXT_eye_gaze_interaction",
     "EXT_eye_gaze_interaction_SPEC_VERSION",
+    "EXT_future",
+    "EXT_future_SPEC_VERSION",
     "EXT_hand_interaction",
     "EXT_hand_interaction_SPEC_VERSION",
     "EXT_hand_joints_motion_range",
@@ -828,6 +846,8 @@ __all__ = [
     "KHR_COMPOSITION_LAYER_EQUIRECT2_EXTENSION_NAME",
     "KHR_COMPOSITION_LAYER_EQUIRECT_EXTENSION_NAME",
     "KHR_LOADER_INIT_EXTENSION_NAME",
+    "KHR_LOCATE_SPACES_EXTENSION_NAME",
+    "KHR_MAINTENANCE1_EXTENSION_NAME",
     "KHR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME",
     "KHR_VISIBILITY_MASK_EXTENSION_NAME",
     "KHR_binding_modification",
@@ -846,6 +866,10 @@ __all__ = [
     "KHR_composition_layer_equirect_SPEC_VERSION",
     "KHR_loader_init",
     "KHR_loader_init_SPEC_VERSION",
+    "KHR_locate_spaces",
+    "KHR_locate_spaces_SPEC_VERSION",
+    "KHR_maintenance1",
+    "KHR_maintenance1_SPEC_VERSION",
     "KHR_swapchain_usage_input_attachment_bit",
     "KHR_swapchain_usage_input_attachment_bit_SPEC_VERSION",
     "KHR_visibility_mask",
@@ -881,6 +905,7 @@ __all__ = [
     "MAX_SYSTEM_NAME_SIZE",
     "MAX_VIRTUAL_KEYBOARD_COMMIT_TEXT_SIZE_META",
     "META_AUTOMATIC_LAYER_FILTER_EXTENSION_NAME",
+    "META_ENVIRONMENT_DEPTH_EXTENSION_NAME",
     "META_FOVEATION_EYE_TRACKED_EXTENSION_NAME",
     "META_HEADSET_ID_EXTENSION_NAME",
     "META_LOCAL_DIMMING_EXTENSION_NAME",
@@ -893,6 +918,8 @@ __all__ = [
     "META_VIRTUAL_KEYBOARD_EXTENSION_NAME",
     "META_automatic_layer_filter",
     "META_automatic_layer_filter_SPEC_VERSION",
+    "META_environment_depth",
+    "META_environment_depth_SPEC_VERSION",
     "META_foveation_eye_tracked",
     "META_foveation_eye_tracked_SPEC_VERSION",
     "META_headset_id",
@@ -983,6 +1010,7 @@ __all__ = [
     "MSFT_unbounded_reference_space_SPEC_VERSION",
     "NO_DURATION",
     "NULL_CONTROLLER_MODEL_KEY_MSFT",
+    "NULL_FUTURE_EXT",
     "NULL_HANDLE",
     "NULL_PATH",
     "NULL_RENDER_MODEL_KEY_FB",
@@ -1051,6 +1079,7 @@ __all__ = [
     "ULTRALEAP_HAND_TRACKING_FOREARM_EXTENSION_NAME",
     "ULTRALEAP_hand_tracking_forearm",
     "ULTRALEAP_hand_tracking_forearm_SPEC_VERSION",
+    "UUID_SIZE",
     "UUID_SIZE_EXT",
     "VALVE_ANALOG_THRESHOLD_EXTENSION_NAME",
     "VALVE_analog_threshold",
@@ -1077,6 +1106,7 @@ __all__ = [
     "VARJO_xr4_controller_interaction",
     "VARJO_xr4_controller_interaction_SPEC_VERSION",
     "VERSION_1_0",
+    "VERSION_1_1",
     "VIEW_STATE_ORIENTATION_TRACKED_BIT",
     "VIEW_STATE_ORIENTATION_VALID_BIT",
     "VIEW_STATE_POSITION_TRACKED_BIT",

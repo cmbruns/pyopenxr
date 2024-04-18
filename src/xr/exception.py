@@ -347,12 +347,12 @@ class InstanceLostError(ErrorResult):
 
 
 class SessionRunningError(ErrorResult):
-    """The session <<session_running, is already running>>."""
+    """The session <<session-running, is already running>>."""
 
     def __init__(self, message=None):
         if message is None:
             super().__init__(
-                "The session <<session_running, is already running>>."
+                "The session <<session-running, is already running>>."
             )
         else:
             super().__init__(message)
@@ -363,12 +363,12 @@ class SessionRunningError(ErrorResult):
 
 
 class SessionNotRunningError(ErrorResult):
-    """The session <<session_not_running, is not yet running>>."""
+    """The session <<session-not-running, is not yet running>>."""
 
     def __init__(self, message=None):
         if message is None:
             super().__init__(
-                "The session <<session_not_running, is not yet running>>."
+                "The session <<session-not-running, is not yet running>>."
             )
         else:
             super().__init__(message)
@@ -922,6 +922,18 @@ class RuntimeUnavailableError(ErrorResult):
         return Result.ERROR_RUNTIME_UNAVAILABLE
 
 
+class ExtensionDependencyNotEnabledError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED
+
+
+class PermissionInsufficientError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_PERMISSION_INSUFFICIENT
+
+
 class AndroidThreadSettingsIdInvalidKHRError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1216,6 +1228,12 @@ class PassthroughColorLutBufferSizeMismatchMETAError(ErrorResult):
         return Result.ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META
 
 
+class EnvironmentDepthNotAvailableMETA(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ENVIRONMENT_DEPTH_NOT_AVAILABLE_META
+
+
 class HintAlreadySetQCOMError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1238,6 +1256,30 @@ class PlaneDetectionPermissionDeniedEXTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT
+
+
+class FuturePendingEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_FUTURE_PENDING_EXT
+
+
+class FutureInvalidEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_FUTURE_INVALID_EXT
+
+
+class ExtensionDependencyNotEnabledKHRError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED_KHR
+
+
+class PermissionInsufficientKHRError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_PERMISSION_INSUFFICIENT_KHR
 
 
 _exception_map = {
@@ -1296,6 +1338,8 @@ _exception_map = {
     Result.ERROR_LOCALIZED_NAME_INVALID: LocalizedNameInvalidError,
     Result.ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING: GraphicsRequirementsCallMissingError,
     Result.ERROR_RUNTIME_UNAVAILABLE: RuntimeUnavailableError,
+    Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED: ExtensionDependencyNotEnabledError,
+    Result.ERROR_PERMISSION_INSUFFICIENT: PermissionInsufficientError,
     Result.ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR: AndroidThreadSettingsIdInvalidKHRError,
     Result.ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR: AndroidThreadSettingsFailureKHRError,
     Result.ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT: CreateSpatialAnchorFailedMSFTError,
@@ -1345,10 +1389,15 @@ _exception_map = {
     Result.ERROR_SPACE_NETWORK_REQUEST_FAILED_FB: SpaceNetworkRequestFailedFBError,
     Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB: SpaceCloudStorageDisabledFBError,
     Result.ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META: PassthroughColorLutBufferSizeMismatchMETAError,
+    Result.ENVIRONMENT_DEPTH_NOT_AVAILABLE_META: EnvironmentDepthNotAvailableMETA,
     Result.ERROR_HINT_ALREADY_SET_QCOM: HintAlreadySetQCOMError,
     Result.ERROR_NOT_AN_ANCHOR_HTC: NotAnAnchorHTCError,
     Result.ERROR_SPACE_NOT_LOCATABLE_EXT: SpaceNotLocatableEXTError,
     Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT: PlaneDetectionPermissionDeniedEXTError,
+    Result.ERROR_FUTURE_PENDING_EXT: FuturePendingEXTError,
+    Result.ERROR_FUTURE_INVALID_EXT: FutureInvalidEXTError,
+    Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED_KHR: ExtensionDependencyNotEnabledKHRError,
+    Result.ERROR_PERMISSION_INSUFFICIENT_KHR: PermissionInsufficientKHRError,
 }
 
 
@@ -1386,8 +1435,11 @@ __all__ = [
     "CreateSpatialAnchorFailedMSFTError",
     "DisplayRefreshRateUnsupportedFBError",
     "EnvironmentBlendModeUnsupportedError",
+    "EnvironmentDepthNotAvailableMETA",
     "ErrorResult",
     "EventUnavailable",
+    "ExtensionDependencyNotEnabledError",
+    "ExtensionDependencyNotEnabledKHRError",
     "ExtensionNotPresentError",
     "FeatureAlreadyCreatedPassthroughFBError",
     "FeatureRequiredPassthroughFBError",
@@ -1398,6 +1450,8 @@ __all__ = [
     "FormFactorUnsupportedError",
     "FrameDiscarded",
     "FunctionUnsupportedError",
+    "FutureInvalidEXTError",
+    "FuturePendingEXTError",
     "GraphicsDeviceInvalidError",
     "GraphicsRequirementsCallMissingError",
     "HandleInvalidError",
@@ -1435,6 +1489,8 @@ __all__ = [
     "PathFormatInvalidError",
     "PathInvalidError",
     "PathUnsupportedError",
+    "PermissionInsufficientError",
+    "PermissionInsufficientKHRError",
     "PlaneDetectionPermissionDeniedEXTError",
     "PoseInvalidError",
     "QualifiedSuccessResult",

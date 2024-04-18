@@ -2779,6 +2779,380 @@ PFN_xrApplyHapticFeedback = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticAct
 PFN_xrStopHapticFeedback = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActionInfo))
 
 
+class Color3f(Structure):
+    def __init__(
+        self,
+        r: float = 0,
+        g: float = 0,
+        b: float = 0,
+    ) -> None:
+        super().__init__(
+            r=r,
+            g=g,
+            b=b,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Generator[float, None, None]:
+        yield self.r
+        yield self.g
+        yield self.b
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 3
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.Color3f(r={repr(self.r)}, g={repr(self.g)}, b={repr(self.b)})"
+
+    def __str__(self) -> str:
+        return f"xr.Color3f(r={self.r:.3f}, g={self.g:.3f}, b={self.b:.3f})"
+
+    _fields_ = [
+        ("r", c_float),
+        ("g", c_float),
+        ("b", c_float),
+    ]
+
+
+class Extent3Df(Structure):
+    def __init__(
+        self,
+        width: float = 0,
+        height: float = 0,
+        depth: float = 0,
+    ) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            depth=depth,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Generator[float, None, None]:
+        yield self.width
+        yield self.height
+        yield self.depth
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 3
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            buffer._wrapper = self  # To link lifetime of buffer to self
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.Extent3Df(width={repr(self.width)}, height={repr(self.height)}, depth={repr(self.depth)})"
+
+    def __str__(self) -> str:
+        return f"xr.Extent3Df(width={self.width:.3f}, height={self.height:.3f}, depth={self.depth:.3f})"
+
+    _fields_ = [
+        ("width", c_float),
+        ("height", c_float),
+        ("depth", c_float),
+    ]
+
+
+class Spheref(Structure):
+    def __init__(
+        self,
+        center: Posef = Posef(),
+        radius: float = 0,
+    ) -> None:
+        super().__init__(
+            center=center,
+            radius=radius,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.Spheref(center={repr(self.center)}, radius={repr(self.radius)})"
+
+    def __str__(self) -> str:
+        return f"xr.Spheref(center={self.center}, radius={self.radius:.3f})"
+
+    _fields_ = [
+        ("center", Posef),
+        ("radius", c_float),
+    ]
+
+
+class Boxf(Structure):
+    def __init__(
+        self,
+        center: Posef = Posef(),
+        extents: Extent3Df = None,
+    ) -> None:
+        if extents is None:
+            extents = Extent3Df()
+        super().__init__(
+            center=center,
+            extents=extents,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.Boxf(center={repr(self.center)}, extents={repr(self.extents)})"
+
+    def __str__(self) -> str:
+        return f"xr.Boxf(center={self.center}, extents={self.extents})"
+
+    _fields_ = [
+        ("center", Posef),
+        ("extents", Extent3Df),
+    ]
+
+
+class Frustumf(Structure):
+    def __init__(
+        self,
+        pose: Posef = Posef(),
+        fov: Fovf = None,
+        near_z: float = 0,
+        far_z: float = 0,
+    ) -> None:
+        if fov is None:
+            fov = Fovf()
+        super().__init__(
+            pose=pose,
+            fov=fov,
+            near_z=near_z,
+            far_z=far_z,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.Frustumf(pose={repr(self.pose)}, fov={repr(self.fov)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)})"
+
+    def __str__(self) -> str:
+        return f"xr.Frustumf(pose={self.pose}, fov={self.fov}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f})"
+
+    _fields_ = [
+        ("pose", Posef),
+        ("fov", Fovf),
+        ("near_z", c_float),
+        ("far_z", c_float),
+    ]
+
+
+class Uuid(Structure):
+    def __init__(
+        self,
+    ) -> None:
+        super().__init__(
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.Uuid(data={repr(self.data)})"
+
+    def __str__(self) -> str:
+        return f"xr.Uuid()"
+
+    _fields_ = [
+        ("data", (c_uint8 * 16)),
+    ]
+
+
+class SpacesLocateInfo(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        space_count: Optional[int] = None,
+        spaces: ArrayFieldParamType[POINTER(Space_T)] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACES_LOCATE_INFO,
+    ) -> None:
+        space_count, spaces = array_field_helper(
+            POINTER(Space_T), space_count, spaces)
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            space_count=space_count,
+            _spaces=spaces,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpacesLocateInfo(base_space={repr(self.base_space)}, time={repr(self.time)}, space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpacesLocateInfo(base_space={self.base_space}, time={self.time}, space_count={self.space_count}, spaces={self._spaces}, next={self.next}, type={self.type})"
+
+    @property
+    def spaces(self):
+        if self.space_count == 0:
+            return (POINTER(Space_T) * 0)()
+        else:
+            return (POINTER(Space_T) * self.space_count).from_address(
+                ctypes.addressof(self._spaces.contents))
+
+    @spaces.setter
+    def spaces(self, value):
+        self.space_count, self._spaces = array_field_helper(
+            POINTER(Space_T), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+        ("time", Time),
+        ("space_count", c_uint32),
+        ("_spaces", POINTER(POINTER(Space_T))),
+    ]
+
+
+class SpaceLocationData(Structure):
+    def __init__(
+        self,
+        location_flags: SpaceLocationFlags = SpaceLocationFlags(),
+        pose: Posef = Posef(),
+    ) -> None:
+        super().__init__(
+            location_flags=SpaceLocationFlags(location_flags).value,
+            pose=pose,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceLocationData(location_flags={repr(self.location_flags)}, pose={repr(self.pose)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceLocationData(location_flags={self.location_flags}, pose={self.pose})"
+
+    _fields_ = [
+        ("location_flags", SpaceLocationFlagsCInt),
+        ("pose", Posef),
+    ]
+
+
+class SpaceLocations(Structure):
+    def __init__(
+        self,
+        location_count: Optional[int] = None,
+        locations: ArrayFieldParamType[SpaceLocationData] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_LOCATIONS,
+    ) -> None:
+        location_count, locations = array_field_helper(
+            SpaceLocationData, location_count, locations)
+        super().__init__(
+            location_count=location_count,
+            _locations=locations,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceLocations(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceLocations(location_count={self.location_count}, locations={self._locations}, next={self.next}, type={self.type})"
+
+    @property
+    def locations(self):
+        if self.location_count == 0:
+            return (SpaceLocationData * 0)()
+        else:
+            return (SpaceLocationData * self.location_count).from_address(
+                ctypes.addressof(self._locations.contents))
+
+    @locations.setter
+    def locations(self, value):
+        self.location_count, self._locations = array_field_helper(
+            SpaceLocationData, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location_count", c_uint32),
+        ("_locations", POINTER(SpaceLocationData)),
+    ]
+
+
+class SpaceVelocityData(Structure):
+    def __init__(
+        self,
+        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags(),
+        linear_velocity: Vector3f = None,
+        angular_velocity: Vector3f = None,
+    ) -> None:
+        if linear_velocity is None:
+            linear_velocity = Vector3f()
+        if angular_velocity is None:
+            angular_velocity = Vector3f()
+        super().__init__(
+            velocity_flags=SpaceVelocityFlags(velocity_flags).value,
+            linear_velocity=linear_velocity,
+            angular_velocity=angular_velocity,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceVelocityData(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceVelocityData(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity})"
+
+    _fields_ = [
+        ("velocity_flags", SpaceVelocityFlagsCInt),
+        ("linear_velocity", Vector3f),
+        ("angular_velocity", Vector3f),
+    ]
+
+
+class SpaceVelocities(Structure):
+    def __init__(
+        self,
+        velocity_count: int = 0,
+        velocities: POINTER(SpaceVelocityData) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_VELOCITIES,
+    ) -> None:
+        super().__init__(
+            velocity_count=velocity_count,
+            velocities=velocities,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceVelocities(velocity_count={repr(self.velocity_count)}, velocities={repr(self.velocities)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceVelocities(velocity_count={self.velocity_count}, velocities={self.velocities}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("velocity_count", c_uint32),
+        ("velocities", POINTER(SpaceVelocityData)),
+    ]
+
+
+PFN_xrLocateSpaces = CFUNCTYPE(Result.ctype(), Session, POINTER(SpacesLocateInfo), POINTER(SpaceLocations))
+
+
 class CompositionLayerCubeKHR(Structure):
     def __init__(
         self,
@@ -3216,6 +3590,29 @@ class BindingModificationsKHR(Structure):
         ("binding_modification_count", c_uint32),
         ("_binding_modifications", POINTER(POINTER(BindingModificationBaseHeaderKHR))),
     ]
+
+
+SpacesLocateInfoKHR = SpacesLocateInfo
+
+SpaceLocationDataKHR = SpaceLocationData
+
+SpaceLocationsKHR = SpaceLocations
+
+SpaceVelocityDataKHR = SpaceVelocityData
+
+SpaceVelocitiesKHR = SpaceVelocities
+
+PFN_xrLocateSpacesKHR = CFUNCTYPE(Result.ctype(), Session, POINTER(SpacesLocateInfo), POINTER(SpaceLocations))
+
+Color3fKHR = Color3f
+
+Extent3DfKHR = Extent3Df
+
+SpherefKHR = Spheref
+
+BoxfKHR = Boxf
+
+FrustumfKHR = Frustumf
 
 
 class EventDataPerfSettingsEXT(Structure):
@@ -6980,22 +7377,7 @@ class SpaceComponentStatusFB(Structure):
     ]
 
 
-class UuidEXT(Structure):
-    def __init__(
-        self,
-    ) -> None:
-        super().__init__(
-        )
-
-    def __repr__(self) -> str:
-        return f"xr.UuidEXT(data={repr(self.data)})"
-
-    def __str__(self) -> str:
-        return f"xr.UuidEXT()"
-
-    _fields_ = [
-        ("data", (c_uint8 * 16)),
-    ]
+UuidEXT = Uuid
 
 
 class EventDataSpatialAnchorCreateCompleteFB(Structure):
@@ -7004,12 +7386,10 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
         space: Space = None,
-        uuid: UuidEXT = None,
+        uuid: UuidEXT = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.EVENT_DATA_SPATIAL_ANCHOR_CREATE_COMPLETE_FB,
     ) -> None:
-        if uuid is None:
-            uuid = UuidEXT()
         super().__init__(
             request_id=request_id,
             result=Result(result).value,
@@ -7041,14 +7421,12 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
         space: Space = None,
-        uuid: UuidEXT = None,
+        uuid: UuidEXT = 0,
         component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),
         enabled: Bool32 = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SET_STATUS_COMPLETE_FB,
     ) -> None:
-        if uuid is None:
-            uuid = UuidEXT()
         super().__init__(
             request_id=request_id,
             result=Result(result).value,
@@ -8569,13 +8947,11 @@ class LocalizationMapML(Structure):
     def __init__(
         self,
         name: str = "",
-        map_uuid: UuidEXT = None,
+        map_uuid: UuidEXT = 0,
         map_type: LocalizationMapTypeML = LocalizationMapTypeML(),
         next: c_void_p = None,
         type: StructureType = StructureType.LOCALIZATION_MAP_ML,
     ) -> None:
-        if map_uuid is None:
-            map_uuid = UuidEXT()
         super().__init__(
             name=name.encode(),
             map_uuid=map_uuid,
@@ -8665,12 +9041,10 @@ class LocalizationMapQueryInfoBaseHeaderML(Structure):
 class MapLocalizationRequestInfoML(Structure):
     def __init__(
         self,
-        map_uuid: UuidEXT = None,
+        map_uuid: UuidEXT = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.MAP_LOCALIZATION_REQUEST_INFO_ML,
     ) -> None:
-        if map_uuid is None:
-            map_uuid = UuidEXT()
         super().__init__(
             map_uuid=map_uuid,
             next=next,
@@ -8753,7 +9127,7 @@ PFN_xrRequestMapLocalizationML = CFUNCTYPE(Result.ctype(), Session, POINTER(MapL
 
 PFN_xrImportLocalizationMapML = CFUNCTYPE(Result.ctype(), Session, POINTER(LocalizationMapImportInfoML), POINTER(UuidEXT))
 
-PFN_xrCreateExportedLocalizationMapML = CFUNCTYPE(Result.ctype(), Session, POINTER(UuidEXT), POINTER(ExportedLocalizationMapML))
+PFN_xrCreateExportedLocalizationMapML = CFUNCTYPE(Result.ctype(), Session, POINTER(Uuid), POINTER(ExportedLocalizationMapML))
 
 PFN_xrDestroyExportedLocalizationMapML = CFUNCTYPE(Result.ctype(), ExportedLocalizationMapML)
 
@@ -9211,10 +9585,8 @@ class SpaceQueryResultFB(Structure):
     def __init__(
         self,
         space: Space = None,
-        uuid: UuidEXT = None,
+        uuid: UuidEXT = 0,
     ) -> None:
-        if uuid is None:
-            uuid = UuidEXT()
         super().__init__(
             space=space,
             uuid=uuid,
@@ -9391,13 +9763,11 @@ class EventDataSpaceSaveCompleteFB(Structure):
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
         space: Space = None,
-        uuid: UuidEXT = None,
+        uuid: UuidEXT = 0,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
         next: c_void_p = None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SAVE_COMPLETE_FB,
     ) -> None:
-        if uuid is None:
-            uuid = UuidEXT()
         super().__init__(
             request_id=request_id,
             result=Result(result).value,
@@ -9431,13 +9801,11 @@ class EventDataSpaceEraseCompleteFB(Structure):
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),
         space: Space = None,
-        uuid: UuidEXT = None,
+        uuid: UuidEXT = 0,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),
         next: c_void_p = None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_ERASE_COMPLETE_FB,
     ) -> None:
-        if uuid is None:
-            uuid = UuidEXT()
         super().__init__(
             request_id=request_id,
             result=Result(result).value,
@@ -9705,54 +10073,7 @@ class HapticAmplitudeEnvelopeVibrationFB(Structure):
 
 SemanticLabelsSupportFlagsFBCInt = Flags64
 
-
-class Extent3DfFB(Structure):
-    def __init__(
-        self,
-        width: float = 0,
-        height: float = 0,
-        depth: float = 0,
-    ) -> None:
-        super().__init__(
-            width=width,
-            height=height,
-            depth=depth,
-        )
-        self._numpy = None
-
-    def __iter__(self) -> Generator[float, None, None]:
-        yield self.width
-        yield self.height
-        yield self.depth
-
-    def __getitem__(self, key):
-        return tuple(self)[key]
-
-    def __setitem__(self, key, value):
-        self.as_numpy()[key] = value
-
-    def __len__(self) -> int:
-        return 3
-
-    def as_numpy(self):
-        if not hasattr(self, "_numpy") or self._numpy is None:
-            # Just in time construction
-            buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
-            self._numpy = numpy.ctypeslib.as_array(buffer)
-        return self._numpy
-
-    def __repr__(self) -> str:
-        return f"xr.Extent3DfFB(width={repr(self.width)}, height={repr(self.height)}, depth={repr(self.depth)})"
-
-    def __str__(self) -> str:
-        return f"xr.Extent3DfFB(width={self.width:.3f}, height={self.height:.3f}, depth={self.depth:.3f})"
-
-    _fields_ = [
-        ("width", c_float),
-        ("height", c_float),
-        ("depth", c_float),
-    ]
+Extent3DfFB = Extent3Df
 
 
 class Offset3DfFB(Structure):
@@ -9808,12 +10129,10 @@ class Rect3DfFB(Structure):
     def __init__(
         self,
         offset: Offset3DfFB = None,
-        extent: Extent3DfFB = None,
+        extent: Extent3DfFB = 0,
     ) -> None:
         if offset is None:
             offset = Offset3DfFB()
-        if extent is None:
-            extent = Extent3DfFB()
         super().__init__(
             offset=offset,
             extent=extent,
@@ -9866,18 +10185,14 @@ class SemanticLabelsFB(Structure):
 class RoomLayoutFB(Structure):
     def __init__(
         self,
-        floor_uuid: UuidEXT = None,
-        ceiling_uuid: UuidEXT = None,
+        floor_uuid: UuidEXT = 0,
+        ceiling_uuid: UuidEXT = 0,
         wall_uuid_capacity_input: int = 0,
         wall_uuid_count_output: int = 0,
         wall_uuids: POINTER(UuidEXT) = None,
         next: c_void_p = None,
         type: StructureType = StructureType.ROOM_LAYOUT_FB,
     ) -> None:
-        if floor_uuid is None:
-            floor_uuid = UuidEXT()
-        if ceiling_uuid is None:
-            ceiling_uuid = UuidEXT()
         super().__init__(
             floor_uuid=floor_uuid,
             ceiling_uuid=ceiling_uuid,
@@ -11501,12 +11816,10 @@ PFN_xrDestroySpaceUserFB = CFUNCTYPE(Result.ctype(), SpaceUserFB)
 class SystemHeadsetIdPropertiesMETA(Structure):
     def __init__(
         self,
-        id: UuidEXT = None,
+        id: UuidEXT = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.SYSTEM_HEADSET_ID_PROPERTIES_META,
     ) -> None:
-        if id is None:
-            id = UuidEXT()
         super().__init__(
             id=id,
             next=next,
@@ -12033,6 +12346,274 @@ PFN_xrCreateFaceTracker2FB = CFUNCTYPE(Result.ctype(), Session, POINTER(FaceTrac
 PFN_xrDestroyFaceTracker2FB = CFUNCTYPE(Result.ctype(), FaceTracker2FB)
 
 PFN_xrGetFaceExpressionWeights2FB = CFUNCTYPE(Result.ctype(), FaceTracker2FB, POINTER(FaceExpressionInfo2FB), POINTER(FaceExpressionWeights2FB))
+
+
+class EnvironmentDepthProviderMETA_T(Structure):
+    pass
+
+
+EnvironmentDepthProviderMETA = POINTER(EnvironmentDepthProviderMETA_T)
+
+
+class EnvironmentDepthSwapchainMETA_T(Structure):
+    pass
+
+
+EnvironmentDepthSwapchainMETA = POINTER(EnvironmentDepthSwapchainMETA_T)
+
+EnvironmentDepthProviderCreateFlagsMETACInt = Flags64
+
+EnvironmentDepthSwapchainCreateFlagsMETACInt = Flags64
+
+
+class EnvironmentDepthProviderCreateInfoMETA(Structure):
+    def __init__(
+        self,
+        create_flags: EnvironmentDepthProviderCreateFlagsMETA = EnvironmentDepthProviderCreateFlagsMETA(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_PROVIDER_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            create_flags=EnvironmentDepthProviderCreateFlagsMETA(create_flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthProviderCreateInfoMETA(create_flags={repr(self.create_flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthProviderCreateInfoMETA(create_flags={self.create_flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("create_flags", EnvironmentDepthProviderCreateFlagsMETACInt),
+    ]
+
+
+class EnvironmentDepthSwapchainCreateInfoMETA(Structure):
+    def __init__(
+        self,
+        create_flags: EnvironmentDepthSwapchainCreateFlagsMETA = EnvironmentDepthSwapchainCreateFlagsMETA(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_SWAPCHAIN_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            create_flags=EnvironmentDepthSwapchainCreateFlagsMETA(create_flags).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthSwapchainCreateInfoMETA(create_flags={repr(self.create_flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthSwapchainCreateInfoMETA(create_flags={self.create_flags}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("create_flags", EnvironmentDepthSwapchainCreateFlagsMETACInt),
+    ]
+
+
+class EnvironmentDepthSwapchainStateMETA(Structure):
+    def __init__(
+        self,
+        width: int = 0,
+        height: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_SWAPCHAIN_STATE_META,
+    ) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthSwapchainStateMETA(width={repr(self.width)}, height={repr(self.height)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthSwapchainStateMETA(width={self.width}, height={self.height}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("width", c_uint32),
+        ("height", c_uint32),
+    ]
+
+
+class EnvironmentDepthImageAcquireInfoMETA(Structure):
+    def __init__(
+        self,
+        space: Space = None,
+        display_time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_IMAGE_ACQUIRE_INFO_META,
+    ) -> None:
+        super().__init__(
+            space=space,
+            display_time=display_time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthImageAcquireInfoMETA(space={repr(self.space)}, display_time={repr(self.display_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthImageAcquireInfoMETA(space={self.space}, display_time={self.display_time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", Space),
+        ("display_time", Time),
+    ]
+
+
+class EnvironmentDepthImageViewMETA(Structure):
+    def __init__(
+        self,
+        fov: Fovf = None,
+        pose: Posef = Posef(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_IMAGE_VIEW_META,
+    ) -> None:
+        if fov is None:
+            fov = Fovf()
+        super().__init__(
+            fov=fov,
+            pose=pose,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthImageViewMETA(fov={repr(self.fov)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthImageViewMETA(fov={self.fov}, pose={self.pose}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("fov", Fovf),
+        ("pose", Posef),
+    ]
+
+
+class EnvironmentDepthImageMETA(Structure):
+    def __init__(
+        self,
+        swapchain_index: int = 0,
+        near_z: float = 0,
+        far_z: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_IMAGE_META,
+    ) -> None:
+        super().__init__(
+            swapchain_index=swapchain_index,
+            near_z=near_z,
+            far_z=far_z,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthImageMETA(swapchain_index={repr(self.swapchain_index)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, views={repr(self.views)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthImageMETA(swapchain_index={self.swapchain_index}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("swapchain_index", c_uint32),
+        ("near_z", c_float),
+        ("far_z", c_float),
+        ("views", (EnvironmentDepthImageViewMETA * 2)),
+    ]
+
+
+class EnvironmentDepthHandRemovalSetInfoMETA(Structure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META,
+    ) -> None:
+        super().__init__(
+            enabled=enabled,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthHandRemovalSetInfoMETA(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthHandRemovalSetInfoMETA(enabled={self.enabled}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("enabled", Bool32),
+    ]
+
+
+class SystemEnvironmentDepthPropertiesMETA(Structure):
+    def __init__(
+        self,
+        supports_environment_depth: Bool32 = 0,
+        supports_hand_removal: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_environment_depth=supports_environment_depth,
+            supports_hand_removal=supports_hand_removal,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemEnvironmentDepthPropertiesMETA(supports_environment_depth={repr(self.supports_environment_depth)}, supports_hand_removal={repr(self.supports_hand_removal)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemEnvironmentDepthPropertiesMETA(supports_environment_depth={self.supports_environment_depth}, supports_hand_removal={self.supports_hand_removal}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_environment_depth", Bool32),
+        ("supports_hand_removal", Bool32),
+    ]
+
+
+PFN_xrCreateEnvironmentDepthProviderMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(EnvironmentDepthProviderCreateInfoMETA), POINTER(EnvironmentDepthProviderMETA))
+
+PFN_xrDestroyEnvironmentDepthProviderMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA)
+
+PFN_xrStartEnvironmentDepthProviderMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA)
+
+PFN_xrStopEnvironmentDepthProviderMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA)
+
+PFN_xrCreateEnvironmentDepthSwapchainMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA, POINTER(EnvironmentDepthSwapchainCreateInfoMETA), POINTER(EnvironmentDepthSwapchainMETA))
+
+PFN_xrDestroyEnvironmentDepthSwapchainMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthSwapchainMETA)
+
+PFN_xrEnumerateEnvironmentDepthSwapchainImagesMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthSwapchainMETA, c_uint32, POINTER(c_uint32), POINTER(SwapchainImageBaseHeader))
+
+PFN_xrGetEnvironmentDepthSwapchainStateMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthSwapchainMETA, POINTER(EnvironmentDepthSwapchainStateMETA))
+
+PFN_xrAcquireEnvironmentDepthImageMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA, POINTER(EnvironmentDepthImageAcquireInfoMETA), POINTER(EnvironmentDepthImageMETA))
+
+PFN_xrSetEnvironmentDepthHandRemovalMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA, POINTER(EnvironmentDepthHandRemovalSetInfoMETA))
 
 PFN_xrSetTrackingOptimizationSettingsHintQCOM = CFUNCTYPE(Result.ctype(), Session, TrackingOptimizationSettingsDomainQCOM.ctype(), TrackingOptimizationSettingsHintQCOM.ctype())
 
@@ -12706,53 +13287,7 @@ class PlaneDetectorCreateInfoEXT(Structure):
     ]
 
 
-class Extent3DfEXT(Structure):
-    def __init__(
-        self,
-        width: float = 0,
-        height: float = 0,
-        depth: float = 0,
-    ) -> None:
-        super().__init__(
-            width=width,
-            height=height,
-            depth=depth,
-        )
-        self._numpy = None
-
-    def __iter__(self) -> Generator[float, None, None]:
-        yield self.width
-        yield self.height
-        yield self.depth
-
-    def __getitem__(self, key):
-        return tuple(self)[key]
-
-    def __setitem__(self, key, value):
-        self.as_numpy()[key] = value
-
-    def __len__(self) -> int:
-        return 3
-
-    def as_numpy(self):
-        if not hasattr(self, "_numpy") or self._numpy is None:
-            # Just in time construction
-            buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
-            self._numpy = numpy.ctypeslib.as_array(buffer)
-        return self._numpy
-
-    def __repr__(self) -> str:
-        return f"xr.Extent3DfEXT(width={repr(self.width)}, height={repr(self.height)}, depth={repr(self.depth)})"
-
-    def __str__(self) -> str:
-        return f"xr.Extent3DfEXT(width={self.width:.3f}, height={self.height:.3f}, depth={self.depth:.3f})"
-
-    _fields_ = [
-        ("width", c_float),
-        ("height", c_float),
-        ("depth", c_float),
-    ]
+Extent3DfEXT = Extent3Df
 
 
 class PlaneDetectorBeginInfoEXT(Structure):
@@ -12767,7 +13302,7 @@ class PlaneDetectorBeginInfoEXT(Structure):
         max_planes: int = 0,
         min_area: float = 0,
         bounding_box_pose: Posef = Posef(),
-        bounding_box_extent: Extent3DfEXT = None,
+        bounding_box_extent: Extent3DfEXT = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.PLANE_DETECTOR_BEGIN_INFO_EXT,
     ) -> None:
@@ -12775,8 +13310,6 @@ class PlaneDetectorBeginInfoEXT(Structure):
             c_int, orientation_count, orientations)
         semantic_type_count, semantic_types = array_field_helper(
             c_int, semantic_type_count, semantic_types)
-        if bounding_box_extent is None:
-            bounding_box_extent = Extent3DfEXT()
         super().__init__(
             base_space=base_space,
             time=time,
@@ -12992,6 +13525,148 @@ PFN_xrGetPlaneDetectionsEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, POINTE
 PFN_xrGetPlanePolygonBufferEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, c_uint64, c_uint32, POINTER(PlaneDetectorPolygonBufferEXT))
 
 
+class FutureEXT_T(Structure):
+    pass
+
+
+FutureEXT = POINTER(FutureEXT_T)
+
+
+class FutureCancelInfoEXT(Structure):
+    def __init__(
+        self,
+        future: FutureEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FUTURE_CANCEL_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            future=future,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FutureCancelInfoEXT(future={repr(self.future)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FutureCancelInfoEXT(future={self.future}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future", FutureEXT),
+    ]
+
+
+class FuturePollInfoEXT(Structure):
+    def __init__(
+        self,
+        future: FutureEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FUTURE_POLL_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            future=future,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FuturePollInfoEXT(future={repr(self.future)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FuturePollInfoEXT(future={self.future}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future", FutureEXT),
+    ]
+
+
+class FutureCompletionBaseHeaderEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.UNKNOWN,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FutureCompletionBaseHeaderEXT(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FutureCompletionBaseHeaderEXT(future_result={self.future_result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+    ]
+
+
+class FutureCompletionEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FUTURE_COMPLETION_EXT,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FutureCompletionEXT(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FutureCompletionEXT(future_result={self.future_result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+    ]
+
+
+class FuturePollResultEXT(Structure):
+    def __init__(
+        self,
+        state: FutureStateEXT = FutureStateEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FUTURE_POLL_RESULT_EXT,
+    ) -> None:
+        super().__init__(
+            state=FutureStateEXT(state).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FuturePollResultEXT(state={repr(self.state)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FuturePollResultEXT(state={self.state}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("state", FutureStateEXT.ctype()),
+    ]
+
+
+PFN_xrPollFutureEXT = CFUNCTYPE(Result.ctype(), Instance, POINTER(FuturePollInfoEXT), POINTER(FuturePollResultEXT))
+
+PFN_xrCancelFutureEXT = CFUNCTYPE(Result.ctype(), Instance, POINTER(FutureCancelInfoEXT))
+
+
 class EventDataUserPresenceChangedEXT(Structure):
     def __init__(
         self,
@@ -13167,6 +13842,10 @@ __all__ = [
     "Bool32",
     "BoundSourcesForActionEnumerateInfo",
     "Boundary2DFB",
+    "Boxf",
+    "BoxfKHR",
+    "Color3f",
+    "Color3fKHR",
     "Color4f",
     "CompositionLayerAlphaBlendFB",
     "CompositionLayerBaseHeader",
@@ -13214,6 +13893,19 @@ __all__ = [
     "DigitalLensControlALMALENCE",
     "DigitalLensControlFlagsALMALENCECInt",
     "Duration",
+    "EnvironmentDepthHandRemovalSetInfoMETA",
+    "EnvironmentDepthImageAcquireInfoMETA",
+    "EnvironmentDepthImageMETA",
+    "EnvironmentDepthImageViewMETA",
+    "EnvironmentDepthProviderCreateFlagsMETACInt",
+    "EnvironmentDepthProviderCreateInfoMETA",
+    "EnvironmentDepthProviderMETA",
+    "EnvironmentDepthProviderMETA_T",
+    "EnvironmentDepthSwapchainCreateFlagsMETACInt",
+    "EnvironmentDepthSwapchainCreateInfoMETA",
+    "EnvironmentDepthSwapchainMETA",
+    "EnvironmentDepthSwapchainMETA_T",
+    "EnvironmentDepthSwapchainStateMETA",
     "EventDataBaseHeader",
     "EventDataBuffer",
     "EventDataDisplayRefreshRateChangedFB",
@@ -13251,8 +13943,10 @@ __all__ = [
     "ExtensionProperties",
     "Extent2Df",
     "Extent2Di",
+    "Extent3Df",
     "Extent3DfEXT",
     "Extent3DfFB",
+    "Extent3DfKHR",
     "ExternalCameraExtrinsicsOCULUS",
     "ExternalCameraIntrinsicsOCULUS",
     "ExternalCameraOCULUS",
@@ -13303,6 +13997,15 @@ __all__ = [
     "FrameEndInfoML",
     "FrameState",
     "FrameWaitInfo",
+    "Frustumf",
+    "FrustumfKHR",
+    "FutureCancelInfoEXT",
+    "FutureCompletionBaseHeaderEXT",
+    "FutureCompletionEXT",
+    "FutureEXT",
+    "FutureEXT_T",
+    "FuturePollInfoEXT",
+    "FuturePollResultEXT",
     "GeometryInstanceCreateInfoFB",
     "GeometryInstanceFB",
     "GeometryInstanceFB_T",
@@ -13380,6 +14083,7 @@ __all__ = [
     "Offset3DfFB",
     "OverlayMainSessionFlagsEXTXCInt",
     "OverlaySessionCreateFlagsEXTXCInt",
+    "PFN_xrAcquireEnvironmentDepthImageMETA",
     "PFN_xrAcquireSwapchainImage",
     "PFN_xrApplyForceFeedbackCurlMNDX",
     "PFN_xrApplyFoveationHTC",
@@ -13388,6 +14092,7 @@ __all__ = [
     "PFN_xrBeginFrame",
     "PFN_xrBeginPlaneDetectionEXT",
     "PFN_xrBeginSession",
+    "PFN_xrCancelFutureEXT",
     "PFN_xrChangeVirtualKeyboardTextContextMETA",
     "PFN_xrClearSpatialAnchorStoreMSFT",
     "PFN_xrComputeNewSceneMSFT",
@@ -13396,6 +14101,8 @@ __all__ = [
     "PFN_xrCreateActionSpace",
     "PFN_xrCreateBodyTrackerFB",
     "PFN_xrCreateDebugUtilsMessengerEXT",
+    "PFN_xrCreateEnvironmentDepthProviderMETA",
+    "PFN_xrCreateEnvironmentDepthSwapchainMETA",
     "PFN_xrCreateExportedLocalizationMapML",
     "PFN_xrCreateEyeTrackerFB",
     "PFN_xrCreateFaceTracker2FB",
@@ -13437,6 +14144,8 @@ __all__ = [
     "PFN_xrDestroyActionSet",
     "PFN_xrDestroyBodyTrackerFB",
     "PFN_xrDestroyDebugUtilsMessengerEXT",
+    "PFN_xrDestroyEnvironmentDepthProviderMETA",
+    "PFN_xrDestroyEnvironmentDepthSwapchainMETA",
     "PFN_xrDestroyExportedLocalizationMapML",
     "PFN_xrDestroyEyeTrackerFB",
     "PFN_xrDestroyFaceTracker2FB",
@@ -13472,6 +14181,7 @@ __all__ = [
     "PFN_xrEnumerateColorSpacesFB",
     "PFN_xrEnumerateDisplayRefreshRatesFB",
     "PFN_xrEnumerateEnvironmentBlendModes",
+    "PFN_xrEnumerateEnvironmentDepthSwapchainImagesMETA",
     "PFN_xrEnumerateExternalCamerasOCULUS",
     "PFN_xrEnumerateInstanceExtensionProperties",
     "PFN_xrEnumeratePerformanceMetricsCounterPathsMETA",
@@ -13499,6 +14209,7 @@ __all__ = [
     "PFN_xrGetCurrentInteractionProfile",
     "PFN_xrGetDeviceSampleRateFB",
     "PFN_xrGetDisplayRefreshRateFB",
+    "PFN_xrGetEnvironmentDepthSwapchainStateMETA",
     "PFN_xrGetExportedLocalizationMapDataML",
     "PFN_xrGetEyeGazesFB",
     "PFN_xrGetFaceExpressionWeights2FB",
@@ -13559,6 +14270,8 @@ __all__ = [
     "PFN_xrLocateHandJointsEXT",
     "PFN_xrLocateSceneComponentsMSFT",
     "PFN_xrLocateSpace",
+    "PFN_xrLocateSpaces",
+    "PFN_xrLocateSpacesKHR",
     "PFN_xrLocateViews",
     "PFN_xrPassthroughLayerPauseFB",
     "PFN_xrPassthroughLayerResumeFB",
@@ -13570,6 +14283,7 @@ __all__ = [
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
     "PFN_xrPersistSpatialAnchorMSFT",
     "PFN_xrPollEvent",
+    "PFN_xrPollFutureEXT",
     "PFN_xrQueryLocalizationMapsML",
     "PFN_xrQueryPerformanceMetricsCounterMETA",
     "PFN_xrQuerySpacesFB",
@@ -13591,6 +14305,7 @@ __all__ = [
     "PFN_xrSetDebugUtilsObjectNameEXT",
     "PFN_xrSetDigitalLensControlALMALENCE",
     "PFN_xrSetEnvironmentDepthEstimationVARJO",
+    "PFN_xrSetEnvironmentDepthHandRemovalMETA",
     "PFN_xrSetInputDeviceActiveEXT",
     "PFN_xrSetInputDeviceLocationEXT",
     "PFN_xrSetInputDeviceStateBoolEXT",
@@ -13606,6 +14321,8 @@ __all__ = [
     "PFN_xrSetVirtualKeyboardModelVisibilityMETA",
     "PFN_xrShareSpacesFB",
     "PFN_xrSnapshotMarkerDetectorML",
+    "PFN_xrStartEnvironmentDepthProviderMETA",
+    "PFN_xrStopEnvironmentDepthProviderMETA",
     "PFN_xrStopHapticFeedback",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
@@ -13749,7 +14466,11 @@ __all__ = [
     "SpaceFilterInfoBaseHeaderFB",
     "SpaceListSaveInfoFB",
     "SpaceLocation",
+    "SpaceLocationData",
+    "SpaceLocationDataKHR",
     "SpaceLocationFlagsCInt",
+    "SpaceLocations",
+    "SpaceLocationsKHR",
     "SpaceQueryInfoBaseHeaderFB",
     "SpaceQueryInfoFB",
     "SpaceQueryResultFB",
@@ -13764,9 +14485,15 @@ __all__ = [
     "SpaceUserFB_T",
     "SpaceUserIdFB",
     "SpaceUuidFilterInfoFB",
+    "SpaceVelocities",
+    "SpaceVelocitiesKHR",
     "SpaceVelocity",
+    "SpaceVelocityData",
+    "SpaceVelocityDataKHR",
     "SpaceVelocityFlagsCInt",
     "Space_T",
+    "SpacesLocateInfo",
+    "SpacesLocateInfoKHR",
     "SpatialAnchorCreateInfoFB",
     "SpatialAnchorCreateInfoHTC",
     "SpatialAnchorCreateInfoMSFT",
@@ -13785,6 +14512,8 @@ __all__ = [
     "SpatialGraphNodeBindingPropertiesMSFT",
     "SpatialGraphNodeSpaceCreateInfoMSFT",
     "SpatialGraphStaticNodeBindingCreateInfoMSFT",
+    "Spheref",
+    "SpherefKHR",
     "Swapchain",
     "SwapchainCreateFlagsCInt",
     "SwapchainCreateFoveationFlagsFBCInt",
@@ -13803,6 +14532,7 @@ __all__ = [
     "SystemAnchorPropertiesHTC",
     "SystemBodyTrackingPropertiesFB",
     "SystemColorSpacePropertiesFB",
+    "SystemEnvironmentDepthPropertiesMETA",
     "SystemEyeGazeInteractionPropertiesEXT",
     "SystemEyeTrackingPropertiesFB",
     "SystemFaceTrackingProperties2FB",
@@ -13837,6 +14567,7 @@ __all__ = [
     "TriangleMeshFB_T",
     "TriangleMeshFlagsFBCInt",
     "UserCalibrationEnableEventsInfoML",
+    "Uuid",
     "UuidEXT",
     "UuidMSFT",
     "Vector2f",

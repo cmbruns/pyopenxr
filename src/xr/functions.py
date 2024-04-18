@@ -1045,6 +1045,23 @@ def stop_haptic_feedback(
         raise result
 
 
+def locate_spaces(
+    session: Session,
+    locate_info: SpacesLocateInfo,
+) -> SpaceLocations:
+    """"""
+    space_locations = SpaceLocations()
+    fxn = raw_functions.xrLocateSpaces
+    result = check_result(fxn(
+        session,
+        locate_info,
+        byref(space_locations),
+    ))
+    if result.is_exception():
+        raise result
+    return space_locations
+
+
 __all__ = [
     "acquire_swapchain_image",
     "apply_haptic_feedback",
@@ -1088,6 +1105,7 @@ __all__ = [
     "get_system_properties",
     "get_view_configuration_properties",
     "locate_space",
+    "locate_spaces",
     "locate_views",
     "path_to_string",
     "poll_event",
