@@ -178,6 +178,8 @@ class OpenXRProgram(object):
             enabled_extensions=extensions,
             application_name="hello_xr.py",
             application_version=xr.Version(0, 0, 1),
+            # Current version is 1.1.x, but hello_xr only requires 1.0.x
+            api_version=xr.Version(xr.XR_VERSION_MAJOR, 0, xr.XR_VERSION_PATCH),
             next=next_structure,
         )
 
