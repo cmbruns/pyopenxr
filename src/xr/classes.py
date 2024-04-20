@@ -34,6 +34,7 @@ class InstanceObject(object):
             application_version: Version = None,
             engine_name: str = None,
             engine_version: Version = None,
+            api_version=XR_CURRENT_API_VERSION,
             next=None,
     ) -> None:
         if enabled_extensions is None:
@@ -60,7 +61,7 @@ class InstanceObject(object):
             application_version=application_version,
             engine_name=engine_name,
             engine_version=engine_version,
-            api_version=XR_CURRENT_API_VERSION,
+            api_version=api_version,
         )
         instance_create_info = InstanceCreateInfo(
             create_flags=InstanceCreateFlags(),
