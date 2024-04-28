@@ -34,7 +34,7 @@ class InstanceObject(object):
             application_version: Version = None,
             engine_name: str = None,
             engine_version: Version = None,
-            api_version=XR_CURRENT_API_VERSION,
+            api_version=Version(1, 0, XR_VERSION_PATCH),
             next=None,
     ) -> None:
         if enabled_extensions is None:
