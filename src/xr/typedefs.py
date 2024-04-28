@@ -190,7 +190,8 @@ class ApplicationInfo(Structure):
         application_version: int = 0,
         engine_name: str = "pyopenxr",
         engine_version: int = PYOPENXR_CURRENT_API_VERSION,
-        api_version: Version = XR_CURRENT_API_VERSION,
+        # Default OpenXR version is 1.0, for backward compatibility
+        api_version: Version = Version(1, 0, XR_VERSION_PATCH),
     ) -> None:
         super().__init__(
             application_name=application_name.encode(),
