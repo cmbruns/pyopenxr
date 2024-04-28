@@ -167,7 +167,12 @@ reference_space = xr.create_reference_space(
         reference_space_type=xr.ReferenceSpaceType.STAGE,
     ),
 )
-
+view_reference_space = xr.create_reference_space(
+    session=session,
+    create_info=xr.ReferenceSpaceCreateInfo(
+        reference_space_type=xr.ReferenceSpaceType.VIEW,
+    ),
+)
 session_state = xr.SessionState.UNKNOWN
 # Loop over session frames
 for frame_index in range(30):  # Limit number of frames for demo purposes
@@ -220,6 +225,14 @@ for frame_index in range(30):  # Limit number of frames for demo purposes
             ),
         )
         found_count = 0
+        hmd_location = xr.locate_space(
+            space=view_reference_space,
+            base_space=reference_space,
+            time=xr_time_now,
+        )
+        if hmd_location.location_flags & xr.SPACE_LOCATION_POSITION_VALID_BIT:
+            print(f"HMD location: {hmd_location.pose}")
+            found_count += 1
         for index, space in enumerate(action_spaces):
             space_location = xr.locate_space(
                 space=space,

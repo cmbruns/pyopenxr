@@ -186,7 +186,13 @@ class OpenXrExample(object):
             requested_extensions.append(xr.EXT_DEBUG_UTILS_EXTENSION_NAME)
         for extension in requested_extensions:
             assert extension in discovered_extensions
-        app_info = xr.ApplicationInfo("gl_example", 0, "pyopenxr", 0, xr.XR_CURRENT_API_VERSION)
+        app_info = xr.ApplicationInfo(
+            application_name="gl_example",
+            application_version=0,
+            engine_name="pyopenxr",
+            engine_version=xr.PYOPENXR_CURRENT_API_VERSION,
+            api_version=xr.Version(1, 0, xr.XR_VERSION_PATCH),
+        )
         ici = xr.InstanceCreateInfo(
             application_info=app_info,
             enabled_extension_names=requested_extensions,
