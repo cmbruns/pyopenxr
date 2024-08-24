@@ -22,7 +22,7 @@ class TestCreateInfo(unittest.TestCase):
     def test_default_constructible2(self):
         try:
             xr.create_instance()
-        except xr.RuntimeUnavailableError:
+        except (xr.RuntimeUnavailableError, xr.RuntimeFailureError):
             # Pass test on machine with no OpenXR runtime running.
             # But *not* TypeError
             pass

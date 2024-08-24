@@ -37,7 +37,7 @@ class OpenXrDocstringParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.in_header and self.in_paragraph:
             if self.function_name in data:
-                match = re.match(f"{self.function_name} - (\S.*)", data)
+                match = re.match(f"{self.function_name} - (\\S.*)", data)
                 assert match
                 brief_description = match.group(1)
                 brief_description = brief_description.strip()

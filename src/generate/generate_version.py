@@ -112,7 +112,9 @@ print(
         PYOPENXR_VERSION_PATCH
     )
     
-    
+    XR_API_VERSION_1_0 = Version(1, 0, XR_VERSION_PATCH)
+    XR_API_VERSION_1_1 = Version(1, 1, XR_VERSION_PATCH)
+
     __version__ = PYOPENXR_VERSION
     
     __all__ = [
@@ -125,6 +127,8 @@ print(
         "PYOPENXR_VERSION_SUFFIX",
         "PYOPENXR_VERSION",
         "Version",
+        "XR_API_VERSION_1_0",
+        "XR_API_VERSION_1_1",
         "XR_CURRENT_API_VERSION",
         "XR_VERSION_MAJOR",
         "XR_VERSION_MINOR",
