@@ -545,7 +545,6 @@ class Vector3f(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -633,7 +632,6 @@ class Quaternionf(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -736,7 +734,6 @@ class Extent2Df(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -1304,7 +1301,6 @@ class Fovf(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -1706,7 +1702,6 @@ class Vector2f(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -2040,7 +2035,6 @@ class Offset2Di(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_int32 * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -2085,7 +2079,6 @@ class Extent2Di(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_int32 * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -2519,7 +2512,6 @@ class Offset2Df(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -2597,7 +2589,6 @@ class Vector4f(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -2650,7 +2641,6 @@ class Color4f(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -2811,7 +2801,6 @@ class Color3f(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -2860,7 +2849,6 @@ class Extent3Df(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
@@ -10108,7 +10096,6 @@ class Offset3DfFB(Structure):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
             buffer = (c_float * len(self)).from_address(addressof(self))
-            buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
 
