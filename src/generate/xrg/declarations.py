@@ -575,7 +575,6 @@ class StructItem(CodeItem):
                 if not hasattr(self, "_numpy") or self._numpy is None:
                     # Just in time construction
                     buffer = ({field_ctype} * len(self)).from_address(addressof(self))
-                    buffer._wrapper = self  # To link lifetime of buffer to self
                     self._numpy = numpy.ctypeslib.as_array(buffer)
                 return self._numpy
         """), "    ")
