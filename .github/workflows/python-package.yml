@@ -15,15 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.10", "3.11"]
-        os: [ubuntu-latest, ubuntu-20.04, windows-latest]
+        python-version: ["3.9", "3.10", "3.13"]
+        os: [ubuntu-latest, ubuntu-22.04, windows-latest]
         include:
           - os: windows-latest
             python-version: 3.6
-          - os: ubuntu-20.04
-            python-version: 3.6
-          - os: ubuntu-latest
-            python-version: 3.7  # lowest version that works in ubuntu 22
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}

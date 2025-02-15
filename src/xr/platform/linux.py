@@ -25,7 +25,7 @@ class timespec(Structure):
 
 
 KHR_vulkan_swapchain_format_list = 1
-KHR_vulkan_swapchain_format_list_SPEC_VERSION = 4
+KHR_vulkan_swapchain_format_list_SPEC_VERSION = 5
 KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME = "XR_KHR_vulkan_swapchain_format_list"
 KHR_opengl_enable = 1
 KHR_opengl_enable_SPEC_VERSION = 10
