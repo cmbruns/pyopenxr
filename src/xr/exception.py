@@ -1174,6 +1174,36 @@ class LocalizationMapCannotExportCloudMapMLError(ErrorResult):
         return Result.ERROR_LOCALIZATION_MAP_CANNOT_EXPORT_CLOUD_MAP_ML
 
 
+class SpatialAnchorsPermissionDeniedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHORS_PERMISSION_DENIED_ML
+
+
+class SpatialAnchorsNotLocalizedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHORS_NOT_LOCALIZED_ML
+
+
+class SpatialAnchorsOutOfMapBoundsMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHORS_OUT_OF_MAP_BOUNDS_ML
+
+
+class SpatialAnchorsSpaceNotLocatableMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHORS_SPACE_NOT_LOCATABLE_ML
+
+
+class SpatialAnchorsAnchorNotFoundMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHORS_ANCHOR_NOT_FOUND_ML
+
+
 class SpatialAnchorNameNotFoundMSFTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1268,6 +1298,66 @@ class FutureInvalidEXTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_FUTURE_INVALID_EXT
+
+
+class SystemNotificationPermissionDeniedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SYSTEM_NOTIFICATION_PERMISSION_DENIED_ML
+
+
+class SystemNotificationIncompatibleSkuMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SYSTEM_NOTIFICATION_INCOMPATIBLE_SKU_ML
+
+
+class WorldMeshDetectorPermissionDeniedMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_WORLD_MESH_DETECTOR_PERMISSION_DENIED_ML
+
+
+class WorldMeshDetectorSpaceNotLocatableMLError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_WORLD_MESH_DETECTOR_SPACE_NOT_LOCATABLE_ML
+
+
+class FacialExpressionPermissionDeniedMLError(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_FACIAL_EXPRESSION_PERMISSION_DENIED_ML
+
+
+class ColocationDiscoveryNetworkFailedMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_COLOCATION_DISCOVERY_NETWORK_FAILED_META
+
+
+class ColocationDiscoveryNoDiscoveryMethodMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_COLOCATION_DISCOVERY_NO_DISCOVERY_METHOD_META
+
+
+class ColocationDiscoveryAlreadyAdvertisingMETA(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.COLOCATION_DISCOVERY_ALREADY_ADVERTISING_META
+
+
+class ColocationDiscoveryAlreadyDiscoveringMETA(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META
+
+
+class SpaceGroupNotFoundMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_GROUP_NOT_FOUND_META
 
 
 class ExtensionDependencyNotEnabledKHRError(ErrorResult):
@@ -1380,6 +1470,11 @@ _exception_map = {
     Result.ERROR_LOCALIZATION_MAP_PERMISSION_DENIED_ML: LocalizationMapPermissionDeniedMLError,
     Result.ERROR_LOCALIZATION_MAP_ALREADY_EXISTS_ML: LocalizationMapAlreadyExistsMLError,
     Result.ERROR_LOCALIZATION_MAP_CANNOT_EXPORT_CLOUD_MAP_ML: LocalizationMapCannotExportCloudMapMLError,
+    Result.ERROR_SPATIAL_ANCHORS_PERMISSION_DENIED_ML: SpatialAnchorsPermissionDeniedMLError,
+    Result.ERROR_SPATIAL_ANCHORS_NOT_LOCALIZED_ML: SpatialAnchorsNotLocalizedMLError,
+    Result.ERROR_SPATIAL_ANCHORS_OUT_OF_MAP_BOUNDS_ML: SpatialAnchorsOutOfMapBoundsMLError,
+    Result.ERROR_SPATIAL_ANCHORS_SPACE_NOT_LOCATABLE_ML: SpatialAnchorsSpaceNotLocatableMLError,
+    Result.ERROR_SPATIAL_ANCHORS_ANCHOR_NOT_FOUND_ML: SpatialAnchorsAnchorNotFoundMLError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT: SpatialAnchorNameNotFoundMSFTError,
     Result.ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT: SpatialAnchorNameInvalidMSFTError,
     Result.SCENE_MARKER_DATA_NOT_STRING_MSFT: SceneMarkerDataNotStringMSFT,
@@ -1396,6 +1491,16 @@ _exception_map = {
     Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT: PlaneDetectionPermissionDeniedEXTError,
     Result.ERROR_FUTURE_PENDING_EXT: FuturePendingEXTError,
     Result.ERROR_FUTURE_INVALID_EXT: FutureInvalidEXTError,
+    Result.ERROR_SYSTEM_NOTIFICATION_PERMISSION_DENIED_ML: SystemNotificationPermissionDeniedMLError,
+    Result.ERROR_SYSTEM_NOTIFICATION_INCOMPATIBLE_SKU_ML: SystemNotificationIncompatibleSkuMLError,
+    Result.ERROR_WORLD_MESH_DETECTOR_PERMISSION_DENIED_ML: WorldMeshDetectorPermissionDeniedMLError,
+    Result.ERROR_WORLD_MESH_DETECTOR_SPACE_NOT_LOCATABLE_ML: WorldMeshDetectorSpaceNotLocatableMLError,
+    Result.ERROR_FACIAL_EXPRESSION_PERMISSION_DENIED_ML: FacialExpressionPermissionDeniedMLError,
+    Result.ERROR_COLOCATION_DISCOVERY_NETWORK_FAILED_META: ColocationDiscoveryNetworkFailedMETAError,
+    Result.ERROR_COLOCATION_DISCOVERY_NO_DISCOVERY_METHOD_META: ColocationDiscoveryNoDiscoveryMethodMETAError,
+    Result.COLOCATION_DISCOVERY_ALREADY_ADVERTISING_META: ColocationDiscoveryAlreadyAdvertisingMETA,
+    Result.COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META: ColocationDiscoveryAlreadyDiscoveringMETA,
+    Result.ERROR_SPACE_GROUP_NOT_FOUND_META: SpaceGroupNotFoundMETAError,
     Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED_KHR: ExtensionDependencyNotEnabledKHRError,
     Result.ERROR_PERMISSION_INSUFFICIENT_KHR: PermissionInsufficientKHRError,
 }
@@ -1429,6 +1534,10 @@ __all__ = [
     "ApiLayerNotPresentError",
     "ApiVersionUnsupportedError",
     "CallOrderInvalidError",
+    "ColocationDiscoveryAlreadyAdvertisingMETA",
+    "ColocationDiscoveryAlreadyDiscoveringMETA",
+    "ColocationDiscoveryNetworkFailedMETAError",
+    "ColocationDiscoveryNoDiscoveryMethodMETAError",
     "ColorSpaceUnsupportedFBError",
     "ComputeNewSceneNotCompletedMSFTError",
     "ControllerModelKeyInvalidMSFTError",
@@ -1441,6 +1550,7 @@ __all__ = [
     "ExtensionDependencyNotEnabledError",
     "ExtensionDependencyNotEnabledKHRError",
     "ExtensionNotPresentError",
+    "FacialExpressionPermissionDeniedMLError",
     "FeatureAlreadyCreatedPassthroughFBError",
     "FeatureRequiredPassthroughFBError",
     "FeatureUnsupportedError",
@@ -1522,6 +1632,7 @@ __all__ = [
     "SpaceComponentNotSupportedFBError",
     "SpaceComponentStatusAlreadySetFBError",
     "SpaceComponentStatusPendingFBError",
+    "SpaceGroupNotFoundMETAError",
     "SpaceLocalizationFailedFBError",
     "SpaceMappingInsufficientFBError",
     "SpaceNetworkRequestFailedFBError",
@@ -1529,16 +1640,25 @@ __all__ = [
     "SpaceNotLocatableEXTError",
     "SpatialAnchorNameInvalidMSFTError",
     "SpatialAnchorNameNotFoundMSFTError",
+    "SpatialAnchorsAnchorNotFoundMLError",
+    "SpatialAnchorsNotLocalizedMLError",
+    "SpatialAnchorsOutOfMapBoundsMLError",
+    "SpatialAnchorsPermissionDeniedMLError",
+    "SpatialAnchorsSpaceNotLocatableMLError",
     "Success",
     "SwapchainFormatUnsupportedError",
     "SwapchainRectInvalidError",
     "SystemInvalidError",
+    "SystemNotificationIncompatibleSkuMLError",
+    "SystemNotificationPermissionDeniedMLError",
     "TimeInvalidError",
     "TimeoutExpired",
     "UnexpectedStatePassthroughFBError",
     "UnknownPassthroughFBError",
     "ValidationFailureError",
     "ViewConfigurationTypeUnsupportedError",
+    "WorldMeshDetectorPermissionDeniedMLError",
+    "WorldMeshDetectorSpaceNotLocatableMLError",
     "XrException",
     "check_result",
 ]

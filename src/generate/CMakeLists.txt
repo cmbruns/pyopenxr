@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
+cmake_policy(SET CMP0177 NEW)
 project(PyOpenXr LANGUAGES CXX)
 
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")

@@ -189,7 +189,7 @@ HTCX_VIVE_TRACKER_INTERACTION_EXTENSION_NAME = "XR_HTCX_vive_tracker_interaction
 HTC_facial_tracking = 1
 FACIAL_EXPRESSION_EYE_COUNT_HTC = 14
 FACIAL_EXPRESSION_LIP_COUNT_HTC = 37
-HTC_facial_tracking_SPEC_VERSION = 2
+HTC_facial_tracking_SPEC_VERSION = 3
 HTC_FACIAL_TRACKING_EXTENSION_NAME = "XR_HTC_facial_tracking"
 HTC_vive_focus3_controller_interaction = 1
 HTC_vive_focus3_controller_interaction_SPEC_VERSION = 2
@@ -257,7 +257,7 @@ VARJO_view_offset = 1
 VARJO_view_offset_SPEC_VERSION = 1
 VARJO_VIEW_OFFSET_EXTENSION_NAME = "XR_VARJO_view_offset"
 VARJO_xr4_controller_interaction = 1
-VARJO_xr4_controller_interaction_SPEC_VERSION = 1
+VARJO_xr4_controller_interaction_SPEC_VERSION = 2
 VARJO_XR4_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_VARJO_xr4_controller_interaction"
 ML_ml2_controller_interaction = 1
 ML_ml2_controller_interaction_SPEC_VERSION = 1
@@ -275,6 +275,12 @@ ML_localization_map = 1
 MAX_LOCALIZATION_MAP_NAME_LENGTH_ML = 64
 ML_localization_map_SPEC_VERSION = 1
 ML_LOCALIZATION_MAP_EXTENSION_NAME = "XR_ML_localization_map"
+ML_spatial_anchors = 1
+ML_spatial_anchors_SPEC_VERSION = 1
+ML_SPATIAL_ANCHORS_EXTENSION_NAME = "XR_ML_spatial_anchors"
+ML_spatial_anchors_storage = 1
+ML_spatial_anchors_storage_SPEC_VERSION = 1
+ML_SPATIAL_ANCHORS_STORAGE_EXTENSION_NAME = "XR_ML_spatial_anchors_storage"
 MSFT_spatial_anchor_persistence = 1
 MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT = 256
 MSFT_spatial_anchor_persistence_SPEC_VERSION = 2
@@ -343,6 +349,9 @@ FB_haptic_pcm = 1
 MAX_HAPTIC_PCM_BUFFER_SIZE_FB = 4000
 FB_haptic_pcm_SPEC_VERSION = 1
 FB_HAPTIC_PCM_EXTENSION_NAME = "XR_FB_haptic_pcm"
+EXT_frame_synthesis = 1
+EXT_frame_synthesis_SPEC_VERSION = 1
+EXT_FRAME_SYNTHESIS_EXTENSION_NAME = "XR_EXT_frame_synthesis"
 FB_composition_layer_depth_test = 1
 FB_composition_layer_depth_test_SPEC_VERSION = 1
 FB_COMPOSITION_LAYER_DEPTH_TEST_EXTENSION_NAME = "XR_FB_composition_layer_depth_test"
@@ -387,9 +396,16 @@ META_AUTOMATIC_LAYER_FILTER_EXTENSION_NAME = "XR_META_automatic_layer_filter"
 META_touch_controller_plus = 1
 META_touch_controller_plus_SPEC_VERSION = 1
 META_TOUCH_CONTROLLER_PLUS_EXTENSION_NAME = "XR_META_touch_controller_plus"
+META_passthrough_layer_resumed_event = 1
+META_passthrough_layer_resumed_event_SPEC_VERSION = 1
+META_PASSTHROUGH_LAYER_RESUMED_EVENT_EXTENSION_NAME = "XR_META_passthrough_layer_resumed_event"
 FB_face_tracking2 = 1
 FB_face_tracking2_SPEC_VERSION = 1
 FB_FACE_TRACKING2_EXTENSION_NAME = "XR_FB_face_tracking2"
+META_spatial_entity_sharing = 1
+META_spatial_entity_sharing_SPEC_VERSION = 1
+META_SPATIAL_ENTITY_SHARING_EXTENSION_NAME = "XR_META_spatial_entity_sharing"
+MAX_SPACES_PER_SHARE_REQUEST_META = 32
 META_environment_depth = 1
 META_environment_depth_SPEC_VERSION = 1
 META_ENVIRONMENT_DEPTH_EXTENSION_NAME = "XR_META_environment_depth"
@@ -413,6 +429,10 @@ HTC_anchor = 1
 MAX_SPATIAL_ANCHOR_NAME_SIZE_HTC = 256
 HTC_anchor_SPEC_VERSION = 1
 HTC_ANCHOR_EXTENSION_NAME = "XR_HTC_anchor"
+HTC_body_tracking = 1
+BODY_JOINT_COUNT_HTC = 26
+HTC_body_tracking_SPEC_VERSION = 1
+HTC_BODY_TRACKING_EXTENSION_NAME = "XR_HTC_body_tracking"
 EXT_active_action_set_priority = 1
 EXT_active_action_set_priority_SPEC_VERSION = 1
 EXT_ACTIVE_ACTION_SET_PRIORITY_EXTENSION_NAME = "XR_EXT_active_action_set_priority"
@@ -422,6 +442,11 @@ MNDX_FORCE_FEEDBACK_CURL_EXTENSION_NAME = "XR_MNDX_force_feedback_curl"
 BD_controller_interaction = 1
 BD_controller_interaction_SPEC_VERSION = 2
 BD_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_BD_controller_interaction"
+BD_body_tracking = 1
+BODY_JOINT_COUNT_BD = 24
+BODY_JOINT_WITHOUT_ARM_COUNT_BD = 16
+BD_body_tracking_SPEC_VERSION = 1
+BD_BODY_TRACKING_EXTENSION_NAME = "XR_BD_body_tracking"
 EXT_local_floor = 1
 EXT_local_floor_SPEC_VERSION = 1
 EXT_LOCAL_FLOOR_EXTENSION_NAME = "XR_EXT_local_floor"
@@ -444,12 +469,31 @@ EXT_USER_PRESENCE_EXTENSION_NAME = "XR_EXT_user_presence"
 ML_user_calibration = 1
 ML_user_calibration_SPEC_VERSION = 1
 ML_USER_CALIBRATION_EXTENSION_NAME = "XR_ML_user_calibration"
+ML_system_notifications = 1
+ML_system_notifications_SPEC_VERSION = 1
+ML_SYSTEM_NOTIFICATIONS_EXTENSION_NAME = "XR_ML_system_notifications"
+ML_world_mesh_detection = 1
+ML_world_mesh_detection_SPEC_VERSION = 1
+ML_WORLD_MESH_DETECTION_EXTENSION_NAME = "XR_ML_world_mesh_detection"
+ML_facial_expression = 1
+ML_facial_expression_SPEC_VERSION = 1
+ML_FACIAL_EXPRESSION_EXTENSION_NAME = "XR_ML_facial_expression"
+ML_view_configuration_depth_range_change = 1
+ML_view_configuration_depth_range_change_SPEC_VERSION = 1
+ML_VIEW_CONFIGURATION_DEPTH_RANGE_CHANGE_EXTENSION_NAME = "XR_ML_view_configuration_depth_range_change"
 YVR_controller_interaction = 1
 YVR_controller_interaction_SPEC_VERSION = 1
 YVR_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_YVR_controller_interaction"
 EXT_composition_layer_inverted_alpha = 1
 EXT_composition_layer_inverted_alpha_SPEC_VERSION = 1
 EXT_COMPOSITION_LAYER_INVERTED_ALPHA_EXTENSION_NAME = "XR_EXT_composition_layer_inverted_alpha"
+META_colocation_discovery = 1
+MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META = 1024
+META_colocation_discovery_SPEC_VERSION = 1
+META_COLOCATION_DISCOVERY_EXTENSION_NAME = "XR_META_colocation_discovery"
+META_spatial_entity_group_sharing = 1
+META_spatial_entity_group_sharing_SPEC_VERSION = 1
+META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME = "XR_META_spatial_entity_group_sharing"
 SPACE_VELOCITY_LINEAR_VALID_BIT = 0x00000001
 SPACE_VELOCITY_ANGULAR_VALID_BIT = 0x00000002
 SPACE_LOCATION_ORIENTATION_VALID_BIT = 0x00000001
@@ -539,6 +583,8 @@ COMPOSITION_LAYER_SETTINGS_QUALITY_SUPER_SAMPLING_BIT_FB = 0x00000002
 COMPOSITION_LAYER_SETTINGS_NORMAL_SHARPENING_BIT_FB = 0x00000004
 COMPOSITION_LAYER_SETTINGS_QUALITY_SHARPENING_BIT_FB = 0x00000008
 COMPOSITION_LAYER_SETTINGS_AUTO_LAYER_FILTER_BIT_META = 0x00000020
+FRAME_SYNTHESIS_INFO_USE_2D_MOTION_VECTOR_BIT_EXT = 0x00000001
+FRAME_SYNTHESIS_INFO_REQUEST_RELAXED_FRAME_INTERVAL_BIT_EXT = 0x00000002
 PASSTHROUGH_PREFERENCE_DEFAULT_TO_ACTIVE_BIT_META = 0x00000001
 VIRTUAL_KEYBOARD_INPUT_STATE_PRESSED_BIT_META = 0x00000001
 EXTERNAL_CAMERA_STATUS_CONNECTED_BIT_OCULUS = 0x00000001
@@ -560,15 +606,29 @@ PLANE_DETECTION_CAPABILITY_SEMANTIC_WALL_BIT_EXT = 0x00000010
 PLANE_DETECTION_CAPABILITY_SEMANTIC_PLATFORM_BIT_EXT = 0x00000020
 PLANE_DETECTION_CAPABILITY_ORIENTATION_BIT_EXT = 0x00000040
 PLANE_DETECTOR_ENABLE_CONTOUR_BIT_EXT = 0x00000001
+WORLD_MESH_DETECTOR_POINT_CLOUD_BIT_ML = 0x00000001
+WORLD_MESH_DETECTOR_COMPUTE_NORMALS_BIT_ML = 0x00000002
+WORLD_MESH_DETECTOR_COMPUTE_CONFIDENCE_BIT_ML = 0x00000004
+WORLD_MESH_DETECTOR_PLANARIZE_BIT_ML = 0x00000008
+WORLD_MESH_DETECTOR_REMOVE_MESH_SKIRT_BIT_ML = 0x00000010
+WORLD_MESH_DETECTOR_INDEX_ORDER_CW_BIT_ML = 0x00000020
+FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_VALID_BIT_ML = 0x00000001
+FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_TRACKED_BIT_ML = 0x00000002
 
 
 __all__ = [
     "ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME",
     "ALMALENCE_digital_lens_control",
     "ALMALENCE_digital_lens_control_SPEC_VERSION",
+    "BD_BODY_TRACKING_EXTENSION_NAME",
     "BD_CONTROLLER_INTERACTION_EXTENSION_NAME",
+    "BD_body_tracking",
+    "BD_body_tracking_SPEC_VERSION",
     "BD_controller_interaction",
     "BD_controller_interaction_SPEC_VERSION",
+    "BODY_JOINT_COUNT_BD",
+    "BODY_JOINT_COUNT_HTC",
+    "BODY_JOINT_WITHOUT_ARM_COUNT_BD",
     "COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT",
     "COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT",
     "COMPOSITION_LAYER_IMAGE_LAYOUT_VERTICAL_FLIP_BIT_FB",
@@ -610,6 +670,7 @@ __all__ = [
     "EXT_DEBUG_UTILS_EXTENSION_NAME",
     "EXT_DPAD_BINDING_EXTENSION_NAME",
     "EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME",
+    "EXT_FRAME_SYNTHESIS_EXTENSION_NAME",
     "EXT_FUTURE_EXTENSION_NAME",
     "EXT_HAND_INTERACTION_EXTENSION_NAME",
     "EXT_HAND_JOINTS_MOTION_RANGE_EXTENSION_NAME",
@@ -638,6 +699,8 @@ __all__ = [
     "EXT_dpad_binding_SPEC_VERSION",
     "EXT_eye_gaze_interaction",
     "EXT_eye_gaze_interaction_SPEC_VERSION",
+    "EXT_frame_synthesis",
+    "EXT_frame_synthesis_SPEC_VERSION",
     "EXT_future",
     "EXT_future_SPEC_VERSION",
     "EXT_hand_interaction",
@@ -670,6 +733,8 @@ __all__ = [
     "EXT_view_configuration_depth_range_SPEC_VERSION",
     "EXT_win32_appcontainer_compatible",
     "EXT_win32_appcontainer_compatible_SPEC_VERSION",
+    "FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_TRACKED_BIT_ML",
+    "FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_VALID_BIT_ML",
     "FACIAL_EXPRESSION_EYE_COUNT_HTC",
     "FACIAL_EXPRESSION_LIP_COUNT_HTC",
     "FALSE",
@@ -790,6 +855,8 @@ __all__ = [
     "FOVEATION_EYE_TRACKED_STATE_VALID_BIT_META",
     "FRAME_END_INFO_PROTECTED_BIT_ML",
     "FRAME_END_INFO_VIGNETTE_BIT_ML",
+    "FRAME_SYNTHESIS_INFO_REQUEST_RELAXED_FRAME_INTERVAL_BIT_EXT",
+    "FRAME_SYNTHESIS_INFO_USE_2D_MOTION_VECTOR_BIT_EXT",
     "FREQUENCY_UNSPECIFIED",
     "GLOBAL_DIMMER_FRAME_END_INFO_ENABLED_BIT_ML",
     "GUID_SIZE_MSFT",
@@ -810,6 +877,7 @@ __all__ = [
     "HTCX_vive_tracker_interaction",
     "HTCX_vive_tracker_interaction_SPEC_VERSION",
     "HTC_ANCHOR_EXTENSION_NAME",
+    "HTC_BODY_TRACKING_EXTENSION_NAME",
     "HTC_FACIAL_TRACKING_EXTENSION_NAME",
     "HTC_FOVEATION_EXTENSION_NAME",
     "HTC_HAND_INTERACTION_EXTENSION_NAME",
@@ -819,6 +887,8 @@ __all__ = [
     "HTC_VIVE_WRIST_TRACKER_INTERACTION_EXTENSION_NAME",
     "HTC_anchor",
     "HTC_anchor_SPEC_VERSION",
+    "HTC_body_tracking",
+    "HTC_body_tracking_SPEC_VERSION",
     "HTC_facial_tracking",
     "HTC_facial_tracking_SPEC_VERSION",
     "HTC_foveation",
@@ -893,6 +963,7 @@ __all__ = [
     "MAX_API_LAYER_DESCRIPTION_SIZE",
     "MAX_API_LAYER_NAME_SIZE",
     "MAX_APPLICATION_NAME_SIZE",
+    "MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META",
     "MAX_CONTROLLER_MODEL_NODE_NAME_SIZE_MSFT",
     "MAX_ENGINE_NAME_SIZE",
     "MAX_EXTENSION_NAME_SIZE",
@@ -907,25 +978,32 @@ __all__ = [
     "MAX_RENDER_MODEL_NAME_SIZE_FB",
     "MAX_RESULT_STRING_SIZE",
     "MAX_RUNTIME_NAME_SIZE",
+    "MAX_SPACES_PER_SHARE_REQUEST_META",
     "MAX_SPATIAL_ANCHOR_NAME_SIZE_HTC",
     "MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT",
     "MAX_STRUCTURE_NAME_SIZE",
     "MAX_SYSTEM_NAME_SIZE",
     "MAX_VIRTUAL_KEYBOARD_COMMIT_TEXT_SIZE_META",
     "META_AUTOMATIC_LAYER_FILTER_EXTENSION_NAME",
+    "META_COLOCATION_DISCOVERY_EXTENSION_NAME",
     "META_ENVIRONMENT_DEPTH_EXTENSION_NAME",
     "META_FOVEATION_EYE_TRACKED_EXTENSION_NAME",
     "META_HEADSET_ID_EXTENSION_NAME",
     "META_LOCAL_DIMMING_EXTENSION_NAME",
     "META_PASSTHROUGH_COLOR_LUT_EXTENSION_NAME",
+    "META_PASSTHROUGH_LAYER_RESUMED_EVENT_EXTENSION_NAME",
     "META_PASSTHROUGH_PREFERENCES_EXTENSION_NAME",
     "META_PERFORMANCE_METRICS_EXTENSION_NAME",
     "META_RECOMMENDED_LAYER_RESOLUTION_EXTENSION_NAME",
+    "META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_MESH_EXTENSION_NAME",
+    "META_SPATIAL_ENTITY_SHARING_EXTENSION_NAME",
     "META_TOUCH_CONTROLLER_PLUS_EXTENSION_NAME",
     "META_VIRTUAL_KEYBOARD_EXTENSION_NAME",
     "META_automatic_layer_filter",
     "META_automatic_layer_filter_SPEC_VERSION",
+    "META_colocation_discovery",
+    "META_colocation_discovery_SPEC_VERSION",
     "META_environment_depth",
     "META_environment_depth_SPEC_VERSION",
     "META_foveation_eye_tracked",
@@ -936,26 +1014,40 @@ __all__ = [
     "META_local_dimming_SPEC_VERSION",
     "META_passthrough_color_lut",
     "META_passthrough_color_lut_SPEC_VERSION",
+    "META_passthrough_layer_resumed_event",
+    "META_passthrough_layer_resumed_event_SPEC_VERSION",
     "META_passthrough_preferences",
     "META_passthrough_preferences_SPEC_VERSION",
     "META_performance_metrics",
     "META_performance_metrics_SPEC_VERSION",
     "META_recommended_layer_resolution",
     "META_recommended_layer_resolution_SPEC_VERSION",
+    "META_spatial_entity_group_sharing",
+    "META_spatial_entity_group_sharing_SPEC_VERSION",
     "META_spatial_entity_mesh",
     "META_spatial_entity_mesh_SPEC_VERSION",
+    "META_spatial_entity_sharing",
+    "META_spatial_entity_sharing_SPEC_VERSION",
     "META_touch_controller_plus",
     "META_touch_controller_plus_SPEC_VERSION",
     "META_virtual_keyboard",
     "META_virtual_keyboard_SPEC_VERSION",
     "MIN_COMPOSITION_LAYERS_SUPPORTED",
     "MIN_HAPTIC_DURATION",
+    "ML_FACIAL_EXPRESSION_EXTENSION_NAME",
     "ML_FRAME_END_INFO_EXTENSION_NAME",
     "ML_GLOBAL_DIMMER_EXTENSION_NAME",
     "ML_LOCALIZATION_MAP_EXTENSION_NAME",
     "ML_MARKER_UNDERSTANDING_EXTENSION_NAME",
     "ML_ML2_CONTROLLER_INTERACTION_EXTENSION_NAME",
+    "ML_SPATIAL_ANCHORS_EXTENSION_NAME",
+    "ML_SPATIAL_ANCHORS_STORAGE_EXTENSION_NAME",
+    "ML_SYSTEM_NOTIFICATIONS_EXTENSION_NAME",
     "ML_USER_CALIBRATION_EXTENSION_NAME",
+    "ML_VIEW_CONFIGURATION_DEPTH_RANGE_CHANGE_EXTENSION_NAME",
+    "ML_WORLD_MESH_DETECTION_EXTENSION_NAME",
+    "ML_facial_expression",
+    "ML_facial_expression_SPEC_VERSION",
     "ML_frame_end_info",
     "ML_frame_end_info_SPEC_VERSION",
     "ML_global_dimmer",
@@ -966,8 +1058,18 @@ __all__ = [
     "ML_marker_understanding_SPEC_VERSION",
     "ML_ml2_controller_interaction",
     "ML_ml2_controller_interaction_SPEC_VERSION",
+    "ML_spatial_anchors",
+    "ML_spatial_anchors_SPEC_VERSION",
+    "ML_spatial_anchors_storage",
+    "ML_spatial_anchors_storage_SPEC_VERSION",
+    "ML_system_notifications",
+    "ML_system_notifications_SPEC_VERSION",
     "ML_user_calibration",
     "ML_user_calibration_SPEC_VERSION",
+    "ML_view_configuration_depth_range_change",
+    "ML_view_configuration_depth_range_change_SPEC_VERSION",
+    "ML_world_mesh_detection",
+    "ML_world_mesh_detection_SPEC_VERSION",
     "MNDX_FORCE_FEEDBACK_CURL_EXTENSION_NAME",
     "MNDX_force_feedback_curl",
     "MNDX_force_feedback_curl_SPEC_VERSION",
@@ -1120,6 +1222,12 @@ __all__ = [
     "VIEW_STATE_POSITION_TRACKED_BIT",
     "VIEW_STATE_POSITION_VALID_BIT",
     "VIRTUAL_KEYBOARD_INPUT_STATE_PRESSED_BIT_META",
+    "WORLD_MESH_DETECTOR_COMPUTE_CONFIDENCE_BIT_ML",
+    "WORLD_MESH_DETECTOR_COMPUTE_NORMALS_BIT_ML",
+    "WORLD_MESH_DETECTOR_INDEX_ORDER_CW_BIT_ML",
+    "WORLD_MESH_DETECTOR_PLANARIZE_BIT_ML",
+    "WORLD_MESH_DETECTOR_POINT_CLOUD_BIT_ML",
+    "WORLD_MESH_DETECTOR_REMOVE_MESH_SKIRT_BIT_ML",
     "YVR_CONTROLLER_INTERACTION_EXTENSION_NAME",
     "YVR_controller_interaction",
     "YVR_controller_interaction_SPEC_VERSION",
