@@ -56,6 +56,10 @@ KHR_COMPOSITION_LAYER_EQUIRECT2_EXTENSION_NAME = "XR_KHR_composition_layer_equir
 KHR_binding_modification = 1
 KHR_binding_modification_SPEC_VERSION = 1
 KHR_BINDING_MODIFICATION_EXTENSION_NAME = "XR_KHR_binding_modification"
+KHR_extended_struct_name_lengths = 1
+KHR_extended_struct_name_lengths_SPEC_VERSION = 1
+KHR_EXTENDED_STRUCT_NAME_LENGTHS_EXTENSION_NAME = "XR_KHR_extended_struct_name_lengths"
+MAX_STRUCTURE_NAME_SIZE_EXTENDED_KHR = 256
 KHR_swapchain_usage_input_attachment_bit = 1
 KHR_swapchain_usage_input_attachment_bit_SPEC_VERSION = 3
 KHR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_EXTENSION_NAME = "XR_KHR_swapchain_usage_input_attachment_bit"
@@ -381,6 +385,9 @@ FB_SPATIAL_ENTITY_USER_EXTENSION_NAME = "XR_FB_spatial_entity_user"
 META_headset_id = 1
 META_headset_id_SPEC_VERSION = 2
 META_HEADSET_ID_EXTENSION_NAME = "XR_META_headset_id"
+META_hand_tracking_microgestures = 1
+META_hand_tracking_microgestures_SPEC_VERSION = 1
+META_HAND_TRACKING_MICROGESTURES_EXTENSION_NAME = "XR_META_hand_tracking_microgestures"
 META_recommended_layer_resolution = 1
 META_recommended_layer_resolution_SPEC_VERSION = 1
 META_RECOMMENDED_LAYER_RESOLUTION_EXTENSION_NAME = "XR_META_recommended_layer_resolution"
@@ -494,6 +501,9 @@ META_COLOCATION_DISCOVERY_EXTENSION_NAME = "XR_META_colocation_discovery"
 META_spatial_entity_group_sharing = 1
 META_spatial_entity_group_sharing_SPEC_VERSION = 1
 META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME = "XR_META_spatial_entity_group_sharing"
+LOGITECH_mx_ink_stylus_interaction = 1
+LOGITECH_mx_ink_stylus_interaction_SPEC_VERSION = 1
+LOGITECH_MX_INK_STYLUS_INTERACTION_EXTENSION_NAME = "XR_LOGITECH_mx_ink_stylus_interaction"
 SPACE_VELOCITY_LINEAR_VALID_BIT = 0x00000001
 SPACE_VELOCITY_ANGULAR_VALID_BIT = 0x00000002
 SPACE_LOCATION_ORIENTATION_VALID_BIT = 0x00000001
@@ -923,6 +933,7 @@ __all__ = [
     "KHR_COMPOSITION_LAYER_DEPTH_EXTENSION_NAME",
     "KHR_COMPOSITION_LAYER_EQUIRECT2_EXTENSION_NAME",
     "KHR_COMPOSITION_LAYER_EQUIRECT_EXTENSION_NAME",
+    "KHR_EXTENDED_STRUCT_NAME_LENGTHS_EXTENSION_NAME",
     "KHR_LOADER_INIT_EXTENSION_NAME",
     "KHR_LOCATE_SPACES_EXTENSION_NAME",
     "KHR_MAINTENANCE1_EXTENSION_NAME",
@@ -942,6 +953,8 @@ __all__ = [
     "KHR_composition_layer_equirect2",
     "KHR_composition_layer_equirect2_SPEC_VERSION",
     "KHR_composition_layer_equirect_SPEC_VERSION",
+    "KHR_extended_struct_name_lengths",
+    "KHR_extended_struct_name_lengths_SPEC_VERSION",
     "KHR_loader_init",
     "KHR_loader_init_SPEC_VERSION",
     "KHR_locate_spaces",
@@ -958,6 +971,9 @@ __all__ = [
     "LOCALIZATION_MAP_ERROR_LOW_LIGHT_BIT_ML",
     "LOCALIZATION_MAP_ERROR_OUT_OF_MAPPED_AREA_BIT_ML",
     "LOCALIZATION_MAP_ERROR_UNKNOWN_BIT_ML",
+    "LOGITECH_MX_INK_STYLUS_INTERACTION_EXTENSION_NAME",
+    "LOGITECH_mx_ink_stylus_interaction",
+    "LOGITECH_mx_ink_stylus_interaction_SPEC_VERSION",
     "MAX_ACTION_NAME_SIZE",
     "MAX_ACTION_SET_NAME_SIZE",
     "MAX_API_LAYER_DESCRIPTION_SIZE",
@@ -982,12 +998,14 @@ __all__ = [
     "MAX_SPATIAL_ANCHOR_NAME_SIZE_HTC",
     "MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT",
     "MAX_STRUCTURE_NAME_SIZE",
+    "MAX_STRUCTURE_NAME_SIZE_EXTENDED_KHR",
     "MAX_SYSTEM_NAME_SIZE",
     "MAX_VIRTUAL_KEYBOARD_COMMIT_TEXT_SIZE_META",
     "META_AUTOMATIC_LAYER_FILTER_EXTENSION_NAME",
     "META_COLOCATION_DISCOVERY_EXTENSION_NAME",
     "META_ENVIRONMENT_DEPTH_EXTENSION_NAME",
     "META_FOVEATION_EYE_TRACKED_EXTENSION_NAME",
+    "META_HAND_TRACKING_MICROGESTURES_EXTENSION_NAME",
     "META_HEADSET_ID_EXTENSION_NAME",
     "META_LOCAL_DIMMING_EXTENSION_NAME",
     "META_PASSTHROUGH_COLOR_LUT_EXTENSION_NAME",
@@ -1008,6 +1026,8 @@ __all__ = [
     "META_environment_depth_SPEC_VERSION",
     "META_foveation_eye_tracked",
     "META_foveation_eye_tracked_SPEC_VERSION",
+    "META_hand_tracking_microgestures",
+    "META_hand_tracking_microgestures_SPEC_VERSION",
     "META_headset_id",
     "META_headset_id_SPEC_VERSION",
     "META_local_dimming",

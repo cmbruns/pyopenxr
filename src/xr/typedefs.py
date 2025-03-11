@@ -3580,6 +3580,8 @@ class BindingModificationsKHR(Structure):
     ]
 
 
+PFN_xrStructureTypeToString2KHR = CFUNCTYPE(Result.ctype(), Instance, StructureType.ctype(), (c_char * 256))
+
 SpacesLocateInfoKHR = SpacesLocateInfo
 
 SpaceLocationDataKHR = SpaceLocationData
@@ -16832,6 +16834,7 @@ __all__ = [
     "PFN_xrStopHapticFeedback",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
+    "PFN_xrStructureTypeToString2KHR",
     "PFN_xrSubmitDebugUtilsMessageEXT",
     "PFN_xrSuggestInteractionProfileBindings",
     "PFN_xrSuggestVirtualKeyboardLocationMETA",
