@@ -9,6 +9,7 @@ from . import (
     enums,
     typedefs,
     functions,
+    custom_functions,
     platform,
     exception,
     classes,
@@ -24,7 +25,7 @@ from .constants import *
 from .enums import *
 from .typedefs import *
 from .functions import *
-from .platform import *
+from .custom_functions import *
 from .exception import *
 from .classes import *
 from .api_layer import *
@@ -45,6 +46,7 @@ for subpackage in (
     enums,
     typedefs,
     functions,
+    custom_functions,
     platform,
     exception,
     classes,

@@ -1,8 +1,6 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import Array, POINTER, byref, c_char, c_int64, c_uint32, cast, create_string_buffer
-import ctypes
-from typing import Tuple
 
 """
 File xr.functions.py
@@ -376,30 +374,6 @@ def locate_space(
     if result.is_exception():
         raise result
     return location
-
-
-def locate_space_with_velocity(
-    space: Space,
-    base_space: Space,
-    time: Time,
-) -> Tuple[SpaceLocation, SpaceVelocity]:
-    """"""
-    velocity = SpaceVelocity()
-    location = SpaceLocation(
-        next=ctypes.cast(ctypes.pointer(velocity), ctypes.c_void_p)
-    )
-    fxn = raw_functions.xrLocateSpace
-    result = check_result(
-        fxn(
-            space,
-            base_space,
-            time,
-            byref(location),
-        )
-    )
-    if result.is_exception():
-        raise result
-    return location, velocity
 
 
 def destroy_space(
@@ -1131,7 +1105,6 @@ __all__ = [
     "get_system_properties",
     "get_view_configuration_properties",
     "locate_space",
-    "locate_space_with_velocity",
     "locate_spaces",
     "locate_views",
     "path_to_string",
