@@ -26,6 +26,7 @@ from .enums import *
 from .typedefs import *
 from .functions import *
 from .custom_functions import *
+from .platform import *
 from .exception import *
 from .classes import *
 from .api_layer import *
