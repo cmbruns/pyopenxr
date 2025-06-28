@@ -181,8 +181,9 @@ class ContextObject(object):
                         SessionState.VISIBLE,
                         SessionState.FOCUSED,
                 ):
-                    frame_state = wait_frame(self.session)
-                    begin_frame(self.session)
+                    frame_wait_info = FrameWaitInfo(None)
+                    frame_state = wait_frame(self.session, frame_wait_info)
+                    begin_frame(self.session, None)
                     self.render_layers = []
                     self.graphics.make_current()
 
