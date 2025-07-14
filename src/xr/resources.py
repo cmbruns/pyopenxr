@@ -5,7 +5,6 @@ Implement pkg_resources functions using importlib
 import atexit
 import contextlib
 import importlib.resources
-from pathlib import Path
 
 _exit_stack = contextlib.ExitStack()
 atexit.register(_exit_stack.close)
@@ -15,11 +14,11 @@ def resource_exists(package: str, resource_name: str) -> bool:
     return (importlib.resources.files(package) / resource_name).exists()
 
 
-def resource_filename(package: str, resource_name: str) -> Path:
+def resource_filename(package: str, resource_name: str) -> str:
     """Replacement for pkg_resources.resource_filename"""
     ref = importlib.resources.files(package) / resource_name
     path = _exit_stack.enter_context(importlib.resources.as_file(ref))
-    return path
+    return str(path)
 
 
 def resource_stream(package: str, resource_name: str):

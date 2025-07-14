@@ -1,6 +1,7 @@
-from ..resources import resource_filename
 import os
 import platform
+
+from ..resources import resource_filename
 
 
 def add_folder_to_api_layer_path(folder_name: str):
@@ -19,9 +20,9 @@ def expose_packaged_api_layers():
     Make pre-packaged layers available to the openxr loader
     """
     if platform.system() == "Windows":
-        local_path = os.path.abspath(resource_filename(__name__, "windows"))
+        local_path = os.path.abspath(resource_filename("xr.api_layer", "windows"))
     elif platform.system() == "Linux":
-        local_path = os.path.abspath(resource_filename(__name__, "linux"))
+        local_path = os.path.abspath(resource_filename("xr.api_layer", "linux"))
     else:
         raise NotImplementedError
     add_folder_to_api_layer_path(local_path)
