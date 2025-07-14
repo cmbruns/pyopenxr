@@ -9,22 +9,22 @@ This module contains code to help generate the code in pyopenxr.
 
 import enum
 import os
-import pkg_resources
 import platform
 from typing import Generator, List
 
 import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 
+from xr.resources import resource_filename, resource_string
 from .xrtypes import *
 from .declarations import *
 
 
 if platform.system() == "Windows":
-    lib_clang = pkg_resources.resource_filename("xrg", "libclang.dll")
+    lib_clang = resource_filename("xrg", "libclang.dll")
 elif platform.system() == "Linux":
     # TODO: don't hardcode this file name
-    lib_clang = pkg_resources.resource_filename("xrg", "libclang-14.so")
+    lib_clang = resource_filename("xrg", "libclang-14.so")
 else:
     raise NotImplementedError
 if os.path.isfile(lib_clang):
@@ -98,8 +98,8 @@ def generate_cursors(
         compiler_args=None,
         header_preamble=None,
 ) -> Generator[Cursor, None, None]:
-    header_file_name = pkg_resources.resource_filename("xrg.headers", f"{header.value[0]}")
-    header_text = pkg_resources.resource_string("xrg.headers", f"{header.value[0]}")
+    header_file_name = resource_filename("xrg.headers", f"{header.value[0]}")
+    header_text = resource_string("xrg.headers", f"{header.value[0]}")
     if header_preamble is not None:
         header_text = f"{header_preamble}\n" + header_text.decode()
     if compiler_args is None:
@@ -181,7 +181,7 @@ def generate_code_items(
 
 
 def get_header_as_string(header: Header = Header.OPENXR) -> str:
-    header_file = pkg_resources.resource_filename("xrg", f"headers/{header.value[0]}")
+    header_file = resource_filename("xrg", f"headers/{header.value[0]}")
     with open(header_file) as f:
         file_string = f.read()
     return file_string

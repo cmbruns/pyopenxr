@@ -1,9 +1,4 @@
-# Programmatically run as if "nosetests" on command line
-# NOTE: run this from the top level pyopenxr folder, *NOT* from this "tests" folder.
+import nose2
 
-# workaround for python 3.10 and nose
-import collections.abc
-collections.Callable = collections.abc.Callable
-import nose
-
-nose.main()
+if __name__ == "__main__":
+    nose2.discover(argv=["nose2", "-v"])

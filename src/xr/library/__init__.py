@@ -1,6 +1,7 @@
 import ctypes
-import pkg_resources
 import platform
+
+from ..resources import resource_filename
 
 if platform.system() == "Windows":
     library_name = "openxr_loader.dll"
@@ -9,7 +10,7 @@ elif platform.system() == "Linux":
 else:
     raise NotImplementedError
 
-library_path = pkg_resources.resource_filename("xr.library", library_name)
+library_path = resource_filename("xr.library", library_name)
 openxr_loader_library = ctypes.cdll.LoadLibrary(library_path)
 
 __all__ = [
