@@ -1,6 +1,5 @@
 import ctypes
 import platform
-from typing import Dict
 
 import glfw
 if platform.system() == "Windows":
@@ -71,7 +70,7 @@ class OpenGLGraphics(object):
         else:
             raise NotImplementedError
         self.swapchain_framebuffer = None
-        self.color_to_depth_map: Dict[int, int] = {}
+        self.color_to_depth_map: dict[int, int] = {}
 
     def __enter__(self):
         return self

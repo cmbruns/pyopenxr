@@ -10,7 +10,7 @@ This module contains code to help generate the code in pyopenxr.
 import enum
 import os
 import platform
-from typing import Generator, List
+from typing import Generator
 
 import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
@@ -42,7 +42,7 @@ class Header(enum.Enum):
 class CodeGenerator(object):
     def __init__(
             self,
-            kinds: List[CursorKind] = None,
+            kinds: list[CursorKind] = None,
             header: Header = Header.OPENXR,
             compiler_args=None,
             header_preamble: str = None,
@@ -57,7 +57,7 @@ class CodeGenerator(object):
         self._flag_types = {}
 
     @property
-    def items(self) -> List[CodeItem]:
+    def items(self) -> list[CodeItem]:
         if self._items is None:  # Populate list just in time
             self._items = list(generate_code_items(
                 kinds=self.cursor_kinds,
@@ -130,7 +130,7 @@ _CursorHandlers = {
 
 
 def generate_code_items(
-    kinds: List[CursorKind] = None,
+    kinds: list[CursorKind] = None,
     header: Header = Header.OPENXR,
     compiler_args=None,
     header_preamble=None,
