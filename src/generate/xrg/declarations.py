@@ -309,6 +309,16 @@ class FunctionItem(CodeItem):
                 self.parameters.append(FunctionParameterItem(c))
             else:
                 assert False
+        if "Function" in default_values:
+            fns = default_values["Function"]
+            n = self.name()
+            if self.name() in fns:
+                fn = fns[self.name()]
+                if "Parameter" in fn:
+                    pd = fn["Parameter"]
+                    for parameter in self.parameters:
+                        if parameter.name() in pd:
+                            parameter.default_value = pd[parameter.name()]
 
     @staticmethod
     def _py_function_name(capi_name: str) -> str:
@@ -383,6 +393,7 @@ class FunctionParameterItem(CodeItem):
         self._py_name = snake_from_camel(self._capi_name)
         self.type = parse_type(cursor.type)
         self._optional = False
+        self._default_value = None
         # Query xr registry to see if this parameter is optional
         if xr_registry:
             function_c_name = cursor.semantic_parent.spelling
@@ -406,13 +417,22 @@ class FunctionParameterItem(CodeItem):
     def code(self, api=Api.PYTHON) -> str:
         pass
 
-    @staticmethod
-    def default_value() -> str:
-        """Only applies if is_optional() is True"""
+    @property
+    def default_value(self) -> str:
+        if self._default_value is not None:
+            return self._default_value
         return "None"
 
+    @default_value.setter
+    def default_value(self, value: str) -> None:
+        self._default_value = value
+
     def is_optional(self) -> bool:
-        return self._optional
+        # Parameters with an overridden default value are optional
+        if self._default_value is not None:
+            return True
+        else:
+            return self._optional
 
     def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(api)
@@ -514,11 +534,15 @@ class StructItem(CodeItem):
             if f.type.name(Api.CTYPES) == "VersionNumber":
                 f.kind = StructFieldItem.Kind.VERSION
         # Insert default values
-        if self.name() in default_values["Structure"]:
-            fd = default_values["Structure"][self.name()]["Field"]
-            for field in self.fields:
-                if field.name() in fd:
-                    field.default_value = fd[field.name()]
+        if "Structure" in default_values:
+            sts = default_values["Structure"]
+            if self.name() in sts:
+                st = default_values["Structure"][self.name()]
+                if "Field" in st:
+                    fd = st["Field"]
+                    for field in self.fields:
+                        if field.name() in fd:
+                            field.default_value = fd[field.name()]
 
     @staticmethod
     def blank_lines_before():
@@ -964,9 +988,9 @@ class FunctionCoder(object):
         param_strings = []
         for p, c in reversed(self.param_coders):
             for s in c.declaration_code(api):
-                default = ","
+                default = ","  # default suffix is no default value
                 if p.is_optional() and can_haz_default:
-                    default = f" = {p.default_value()},"
+                    default = f" = {p.default_value},"
                 if not p.is_optional():
                     can_haz_default = False
                 param_strings.append(f"\n{' ' * 16}{s}{default}")

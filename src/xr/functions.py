@@ -179,7 +179,7 @@ def structure_type_to_string(
 
 def get_system(
     instance: Instance,
-    get_info: SystemGetInfo,
+    get_info: SystemGetInfo = SystemGetInfo(),
 ) -> SystemId:
     """"""
     system_id = SystemId()

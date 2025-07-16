@@ -1,7 +1,8 @@
 import ctypes
 import platform
 
-import glfw
+from .glfw_context_provider import GLFWContextProvider
+
 if platform.system() == "Windows":
     from OpenGL import WGL
     from .platform.windows import *
@@ -21,12 +22,11 @@ class OpenGLGraphics(object):
             self,
             instance: Instance,
             system: SystemId,
-            title: str = "glfw OpenGL window",
+            context_provider=None,
     ) -> None:
-        if not glfw.init():
-            raise XrException("GLFW initialization failed")
-        self.window_size = (64, 64)
-        glfw.window_hint(glfw.VISIBLE, False)
+        if context_provider is None:
+            context_provider = GLFWContextProvider()
+        self.context_provider = context_provider
         self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(
             get_instance_proc_addr(
                 instance=instance,
@@ -42,17 +42,7 @@ class OpenGLGraphics(object):
         result = check_result(Result(result))
         if result.is_exception():
             raise result
-        glfw.window_hint(glfw.DOUBLEBUFFER, False)
-        glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
-        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
-        glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-        self.window = glfw.create_window(*self.window_size, title, None, None)
-        if self.window is None:
-            raise XrException("Failed to create GLFW window")
-        glfw.make_context_current(self.window)
-        # Attempt to disable vsync on the desktop window, or
-        # it will interfere with the OpenXR frame loop timing
-        glfw.swap_interval(0)
+        self.context_provider.make_current()
         self.graphics_binding = None
         if platform.system() == "Windows":
             self.graphics_binding = GraphicsBindingOpenGLWin32KHR()
@@ -69,6 +59,8 @@ class OpenGLGraphics(object):
             )
         else:
             raise NotImplementedError
+        self.graphics_binding_pointer = ctypes.cast(ctypes.pointer(
+            self.graphics_binding), ctypes.c_void_p)
         self.swapchain_framebuffer = None
         self.color_to_depth_map: dict[int, int] = {}
 
@@ -95,9 +87,7 @@ class OpenGLGraphics(object):
         if self.swapchain_framebuffer is not None:
             GL.glDeleteFramebuffers(1, [self.swapchain_framebuffer, ])
             self.swapchain_framebuffer = None
-        glfw.destroy_window(self.window)
-        self.window = None
-        glfw.terminate()
+        self.context_provider.destroy()
 
     @staticmethod
     def end_frame():
@@ -127,11 +117,10 @@ class OpenGLGraphics(object):
         self.swapchain_framebuffer = GL.glGenFramebuffers(1)
 
     def make_current(self):
-        glfw.make_context_current(self.window)
+        self.context_provider.make_current()
 
     def poll_events(self) -> bool:
-        glfw.poll_events()
-        return glfw.window_should_close(self.window)
+        return self.context_provider.poll_events()
 
     @staticmethod
     def select_color_swapchain_format(runtime_formats):

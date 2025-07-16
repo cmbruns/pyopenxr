@@ -1,6 +1,13 @@
 
 # These default values override others
 default_values = {
+    "Function": {
+        "get_system": {
+            "Parameter": {
+                "get_info": "SystemGetInfo()",
+            },
+        },
+    },
     "Structure": {
         "ApplicationInfo": {
             "Field": {
