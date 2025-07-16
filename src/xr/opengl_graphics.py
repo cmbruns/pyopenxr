@@ -1,7 +1,7 @@
 import ctypes
 import platform
 
-from .glfw_context_provider import GLFWContextProvider
+from .glfw_context_provider import GLFWOffscreenContextProvider
 
 if platform.system() == "Windows":
     from OpenGL import WGL
@@ -25,7 +25,7 @@ class OpenGLGraphics(object):
             context_provider=None,
     ) -> None:
         if context_provider is None:
-            context_provider = GLFWContextProvider()
+            context_provider = GLFWOffscreenContextProvider()
         self.context_provider = context_provider
         self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(
             get_instance_proc_addr(

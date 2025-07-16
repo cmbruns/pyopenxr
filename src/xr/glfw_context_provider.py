@@ -1,33 +1,42 @@
 import glfw
+from typing import Tuple
 
 
-class GLFWContextProvider(object):
-    def __init__(self):
+class GLFWOffscreenContextProvider:
+    """
+    Create a hidden OpenGL context (offscreen) for use with the OpenXR render loop.
+    Only make_current() and destroy() are exposed.
+    """
+    def __init__(self, gl_version: Tuple[int, int] = (4, 1)) -> None:
         if not glfw.init():
-            raise RuntimeError("GLFW initialization failed")
-        glfw.window_hint(glfw.VISIBLE, False)
-        glfw.window_hint(glfw.DOUBLEBUFFER, False)
-        glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
-        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 5)
+            raise RuntimeError("Failed to initialize GLFW")
+        # hidden, single‐buffered context
+        glfw.window_hint(glfw.VISIBLE, glfw.FALSE)
+        glfw.window_hint(glfw.DOUBLEBUFFER, glfw.FALSE)
+        glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, gl_version[0])
+        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, gl_version[1])
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
-        self.window = glfw.create_window(
-            64, 64,
-            "glfw OpenGL window",
-            None, None)
-        if self.window is None:
-            raise RuntimeError("Failed to create GLFW window")
-        # Attempt to disable vsync on the desktop window, or
-        # it will interfere with the OpenXR frame loop timing
+        # tiny 1×1 window just to get a context
+        self._window = glfw.create_window(1, 1, "", None, None)
+        if self._window is None:
+            glfw.terminate()
+            raise RuntimeError("Failed to create hidden GLFW window")
+        # make it current so swap_interval takes effect on this context
+        glfw.make_context_current(self._window)
         glfw.swap_interval(0)
 
-    def destroy(self):
-        glfw.destroy_window(self.window)
-        self.window = None
+    def __enter__(self) -> "GLFWOffscreenContextProvider":
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> None:
+        self.destroy()
+
+    def make_current(self) -> None:
+        """Activate this OpenGL context for subsequent GL calls."""
+        glfw.make_context_current(self._window)
+
+    def destroy(self) -> None:
+        """Tear down the hidden window and terminate GLFW."""
+        glfw.destroy_window(self._window)
         glfw.terminate()
-
-    def make_current(self):
-        glfw.make_context_current(self.window)
-
-    def poll_events(self) -> bool:
-        glfw.poll_events()
-        return glfw.window_should_close(self.window)
+        self._window = None
