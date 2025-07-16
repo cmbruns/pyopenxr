@@ -15,7 +15,7 @@ from typing import Generator
 import clang.cindex
 from clang.cindex import Cursor, CursorKind, Index, TranslationUnit, TypeKind
 
-from xr.resources import resource_filename, resource_string
+from .resources import resource_filename, resource_string
 from .xrtypes import *
 from .declarations import *
 
