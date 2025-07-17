@@ -4,12 +4,7 @@ from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_lo
 
 import ctypes
 from typing import Optional
-
-import OpenGL.platform as _plat
-from OpenGL.platform.glx import GLXPlatform
-if not isinstance(_plat.PLATFORM, GLXPlatform):
-    _plat.PLATFORM = GLXPlatform()  # override auto-selection
-from OpenGL import GLX  # now guaranteed to work
+from OpenGL import GLX
 
 from ..array_field import *
 from ..enums import *
@@ -33,16 +28,16 @@ KHR_vulkan_swapchain_format_list = 1
 KHR_vulkan_swapchain_format_list_SPEC_VERSION = 5
 KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME = "XR_KHR_vulkan_swapchain_format_list"
 KHR_opengl_enable = 1
-KHR_opengl_enable_SPEC_VERSION = 10
+KHR_opengl_enable_SPEC_VERSION = 11
 KHR_OPENGL_ENABLE_EXTENSION_NAME = "XR_KHR_opengl_enable"
 KHR_vulkan_enable = 1
-KHR_vulkan_enable_SPEC_VERSION = 8
+KHR_vulkan_enable_SPEC_VERSION = 9
 KHR_VULKAN_ENABLE_EXTENSION_NAME = "XR_KHR_vulkan_enable"
 KHR_convert_timespec_time = 1
 KHR_convert_timespec_time_SPEC_VERSION = 1
 KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME = "XR_KHR_convert_timespec_time"
 KHR_vulkan_enable2 = 1
-KHR_vulkan_enable2_SPEC_VERSION = 2
+KHR_vulkan_enable2_SPEC_VERSION = 3
 KHR_VULKAN_ENABLE2_EXTENSION_NAME = "XR_KHR_vulkan_enable2"
 FB_foveation_vulkan = 1
 FB_foveation_vulkan_SPEC_VERSION = 1
