@@ -119,9 +119,6 @@ class OpenGLGraphics(object):
     def make_current(self):
         self.context_provider.make_current()
 
-    def poll_events(self) -> bool:
-        return self.context_provider.poll_events()
-
     @staticmethod
     def select_color_swapchain_format(runtime_formats):
         # List of supported color swapchain formats.
