@@ -12963,6 +12963,32 @@ class SpaceTriangleMeshMETA(Structure):
 PFN_xrGetSpaceTriangleMeshMETA = CFUNCTYPE(Result.ctype(), Space, POINTER(SpaceTriangleMeshGetInfoMETA), POINTER(SpaceTriangleMeshMETA))
 
 
+class SystemPropertiesBodyTrackingFullBodyMETA(Structure):
+    def __init__(
+        self,
+        supports_full_body_tracking: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_PROPERTIES_BODY_TRACKING_FULL_BODY_META,
+    ) -> None:
+        super().__init__(
+            supports_full_body_tracking=supports_full_body_tracking,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPropertiesBodyTrackingFullBodyMETA(supports_full_body_tracking={repr(self.supports_full_body_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPropertiesBodyTrackingFullBodyMETA(supports_full_body_tracking={self.supports_full_body_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_full_body_tracking", Bool32),
+    ]
+
+
 class EventDataPassthroughLayerResumedMETA(Structure):
     def __init__(
         self,
@@ -13576,6 +13602,532 @@ PFN_xrGetEnvironmentDepthSwapchainStateMETA = CFUNCTYPE(Result.ctype(), Environm
 PFN_xrAcquireEnvironmentDepthImageMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA, POINTER(EnvironmentDepthImageAcquireInfoMETA), POINTER(EnvironmentDepthImageMETA))
 
 PFN_xrSetEnvironmentDepthHandRemovalMETA = CFUNCTYPE(Result.ctype(), EnvironmentDepthProviderMETA, POINTER(EnvironmentDepthHandRemovalSetInfoMETA))
+
+RenderModelIdEXT = c_uint64
+
+
+class RenderModelEXT_T(Structure):
+    pass
+
+
+RenderModelEXT = POINTER(RenderModelEXT_T)
+
+
+class RenderModelAssetEXT_T(Structure):
+    pass
+
+
+RenderModelAssetEXT = POINTER(RenderModelAssetEXT_T)
+
+
+class RenderModelCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        render_model_id: RenderModelIdEXT = 0,
+        gltf_extension_count: Optional[int] = None,
+        gltf_extensions: StringArrayFieldParamType = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_CREATE_INFO_EXT,
+    ) -> None:
+        gltf_extension_count, gltf_extensions = string_array_field_helper(
+            gltf_extension_count, gltf_extensions)
+        super().__init__(
+            render_model_id=render_model_id,
+            gltf_extension_count=gltf_extension_count,
+            _gltf_extensions=gltf_extensions,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelCreateInfoEXT(render_model_id={repr(self.render_model_id)}, gltf_extension_count={repr(self.gltf_extension_count)}, gltf_extensions={repr(self._gltf_extensions)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelCreateInfoEXT(render_model_id={self.render_model_id}, gltf_extension_count={self.gltf_extension_count}, gltf_extensions={self._gltf_extensions}, next={self.next}, type={self.type})"
+
+    @property
+    def gltf_extensions(self):
+        if self.gltf_extension_count == 0:
+            return (c_char_p * 0)()
+        else:
+            return (c_char_p * self.gltf_extension_count).from_address(
+                ctypes.addressof(self._gltf_extensions.contents))
+
+    @gltf_extensions.setter
+    def gltf_extensions(self, value):
+        self.gltf_extension_count, self._gltf_extensions = string_array_field_helper(
+            None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("render_model_id", RenderModelIdEXT),
+        ("gltf_extension_count", c_uint32),
+        ("_gltf_extensions", POINTER(c_char_p)),
+    ]
+
+
+class RenderModelPropertiesGetInfoEXT(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelPropertiesGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelPropertiesGetInfoEXT(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class RenderModelPropertiesEXT(Structure):
+    def __init__(
+        self,
+        cache_id: UuidEXT = 0,
+        animatable_node_count: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            cache_id=cache_id,
+            animatable_node_count=animatable_node_count,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelPropertiesEXT(cache_id={repr(self.cache_id)}, animatable_node_count={repr(self.animatable_node_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelPropertiesEXT(cache_id={self.cache_id}, animatable_node_count={self.animatable_node_count}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("cache_id", UuidEXT),
+        ("animatable_node_count", c_uint32),
+    ]
+
+
+class RenderModelSpaceCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        render_model: RenderModelEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_SPACE_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            render_model=render_model,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelSpaceCreateInfoEXT(render_model={repr(self.render_model)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelSpaceCreateInfoEXT(render_model={self.render_model}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("render_model", RenderModelEXT),
+    ]
+
+
+class RenderModelStateGetInfoEXT(Structure):
+    def __init__(
+        self,
+        display_time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_STATE_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            display_time=display_time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelStateGetInfoEXT(display_time={repr(self.display_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelStateGetInfoEXT(display_time={self.display_time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("display_time", Time),
+    ]
+
+
+class RenderModelNodeStateEXT(Structure):
+    def __init__(
+        self,
+        node_pose: Posef = Posef(),
+        is_visible: Bool32 = 0,
+    ) -> None:
+        super().__init__(
+            node_pose=node_pose,
+            is_visible=is_visible,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelNodeStateEXT(node_pose={repr(self.node_pose)}, is_visible={repr(self.is_visible)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelNodeStateEXT(node_pose={self.node_pose}, is_visible={self.is_visible})"
+
+    _fields_ = [
+        ("node_pose", Posef),
+        ("is_visible", Bool32),
+    ]
+
+
+class RenderModelStateEXT(Structure):
+    def __init__(
+        self,
+        node_state_count: Optional[int] = None,
+        node_states: ArrayFieldParamType[RenderModelNodeStateEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_STATE_EXT,
+    ) -> None:
+        node_state_count, node_states = array_field_helper(
+            RenderModelNodeStateEXT, node_state_count, node_states)
+        super().__init__(
+            node_state_count=node_state_count,
+            _node_states=node_states,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelStateEXT(node_state_count={repr(self.node_state_count)}, node_states={repr(self._node_states)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelStateEXT(node_state_count={self.node_state_count}, node_states={self._node_states}, next={self.next}, type={self.type})"
+
+    @property
+    def node_states(self):
+        if self.node_state_count == 0:
+            return (RenderModelNodeStateEXT * 0)()
+        else:
+            return (RenderModelNodeStateEXT * self.node_state_count).from_address(
+                ctypes.addressof(self._node_states.contents))
+
+    @node_states.setter
+    def node_states(self, value):
+        self.node_state_count, self._node_states = array_field_helper(
+            RenderModelNodeStateEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("node_state_count", c_uint32),
+        ("_node_states", POINTER(RenderModelNodeStateEXT)),
+    ]
+
+
+class RenderModelAssetCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        cache_id: UuidEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_ASSET_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            cache_id=cache_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetCreateInfoEXT(cache_id={repr(self.cache_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetCreateInfoEXT(cache_id={self.cache_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("cache_id", UuidEXT),
+    ]
+
+
+class RenderModelAssetDataGetInfoEXT(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_ASSET_DATA_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetDataGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetDataGetInfoEXT(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class RenderModelAssetDataEXT(Structure):
+    def __init__(
+        self,
+        buffer_capacity_input: int = 0,
+        buffer_count_output: int = 0,
+        buffer: POINTER(c_uint8) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_ASSET_DATA_EXT,
+    ) -> None:
+        super().__init__(
+            buffer_capacity_input=buffer_capacity_input,
+            buffer_count_output=buffer_count_output,
+            buffer=buffer,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetDataEXT(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetDataEXT(buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("buffer_capacity_input", c_uint32),
+        ("buffer_count_output", c_uint32),
+        ("buffer", POINTER(c_uint8)),
+    ]
+
+
+class RenderModelAssetPropertiesGetInfoEXT(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_ASSET_PROPERTIES_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class RenderModelAssetNodePropertiesEXT(Structure):
+    def __init__(
+        self,
+        unique_name: str = "",
+    ) -> None:
+        super().__init__(
+            unique_name=unique_name.encode(),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetNodePropertiesEXT(unique_name={repr(self.unique_name)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetNodePropertiesEXT(unique_name={self.unique_name})"
+
+    _fields_ = [
+        ("unique_name", (c_char * 64)),
+    ]
+
+
+class RenderModelAssetPropertiesEXT(Structure):
+    def __init__(
+        self,
+        node_property_count: int = 0,
+        node_properties: POINTER(RenderModelAssetNodePropertiesEXT) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RENDER_MODEL_ASSET_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            node_property_count=node_property_count,
+            node_properties=node_properties,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetPropertiesEXT(node_property_count={repr(self.node_property_count)}, node_properties={repr(self.node_properties)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetPropertiesEXT(node_property_count={self.node_property_count}, node_properties={self.node_properties}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("node_property_count", c_uint32),
+        ("node_properties", POINTER(RenderModelAssetNodePropertiesEXT)),
+    ]
+
+
+PFN_xrCreateRenderModelEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(RenderModelCreateInfoEXT), POINTER(RenderModelEXT))
+
+PFN_xrDestroyRenderModelEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT)
+
+PFN_xrGetRenderModelPropertiesEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT, POINTER(RenderModelPropertiesGetInfoEXT), POINTER(RenderModelPropertiesEXT))
+
+PFN_xrCreateRenderModelSpaceEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(RenderModelSpaceCreateInfoEXT), POINTER(Space))
+
+PFN_xrCreateRenderModelAssetEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(RenderModelAssetCreateInfoEXT), POINTER(RenderModelAssetEXT))
+
+PFN_xrDestroyRenderModelAssetEXT = CFUNCTYPE(Result.ctype(), RenderModelAssetEXT)
+
+PFN_xrGetRenderModelAssetDataEXT = CFUNCTYPE(Result.ctype(), RenderModelAssetEXT, POINTER(RenderModelAssetDataGetInfoEXT), POINTER(RenderModelAssetDataEXT))
+
+PFN_xrGetRenderModelAssetPropertiesEXT = CFUNCTYPE(Result.ctype(), RenderModelAssetEXT, POINTER(RenderModelAssetPropertiesGetInfoEXT), POINTER(RenderModelAssetPropertiesEXT))
+
+PFN_xrGetRenderModelStateEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT, POINTER(RenderModelStateGetInfoEXT), POINTER(RenderModelStateEXT))
+
+
+class InteractionRenderModelIdsEnumerateInfoEXT(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.INTERACTION_RENDER_MODEL_IDS_ENUMERATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class InteractionRenderModelSubactionPathInfoEXT(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.INTERACTION_RENDER_MODEL_SUBACTION_PATH_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class InteractionRenderModelTopLevelUserPathGetInfoEXT(Structure):
+    def __init__(
+        self,
+        top_level_user_path_count: Optional[int] = None,
+        top_level_user_paths: ArrayFieldParamType[c_uint64] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.INTERACTION_RENDER_MODEL_TOP_LEVEL_USER_PATH_GET_INFO_EXT,
+    ) -> None:
+        top_level_user_path_count, top_level_user_paths = array_field_helper(
+            c_uint64, top_level_user_path_count, top_level_user_paths)
+        super().__init__(
+            top_level_user_path_count=top_level_user_path_count,
+            _top_level_user_paths=top_level_user_paths,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.InteractionRenderModelTopLevelUserPathGetInfoEXT(top_level_user_path_count={repr(self.top_level_user_path_count)}, top_level_user_paths={repr(self._top_level_user_paths)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.InteractionRenderModelTopLevelUserPathGetInfoEXT(top_level_user_path_count={self.top_level_user_path_count}, top_level_user_paths={self._top_level_user_paths}, next={self.next}, type={self.type})"
+
+    @property
+    def top_level_user_paths(self):
+        if self.top_level_user_path_count == 0:
+            return (c_uint64 * 0)()
+        else:
+            return (c_uint64 * self.top_level_user_path_count).from_address(
+                ctypes.addressof(self._top_level_user_paths.contents))
+
+    @top_level_user_paths.setter
+    def top_level_user_paths(self, value):
+        self.top_level_user_path_count, self._top_level_user_paths = array_field_helper(
+            c_uint64, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("top_level_user_path_count", c_uint32),
+        ("_top_level_user_paths", POINTER(c_uint64)),
+    ]
+
+
+class EventDataInteractionRenderModelsChangedEXT(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_INTERACTION_RENDER_MODELS_CHANGED_EXT,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataInteractionRenderModelsChangedEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataInteractionRenderModelsChangedEXT(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+PFN_xrEnumerateInteractionRenderModelIdsEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(InteractionRenderModelIdsEnumerateInfoEXT), c_uint32, POINTER(c_uint32), POINTER(RenderModelIdEXT))
+
+PFN_xrEnumerateRenderModelSubactionPathsEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT, POINTER(InteractionRenderModelSubactionPathInfoEXT), c_uint32, POINTER(c_uint32), POINTER(Path))
+
+PFN_xrGetRenderModelPoseTopLevelUserPathEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT, POINTER(InteractionRenderModelTopLevelUserPathGetInfoEXT), POINTER(Path))
 
 PFN_xrSetTrackingOptimizationSettingsHintQCOM = CFUNCTYPE(Result.ctype(), Session, TrackingOptimizationSettingsDomainQCOM.ctype(), TrackingOptimizationSettingsHintQCOM.ctype())
 
@@ -14514,6 +15066,1256 @@ PFN_xrDestroyBodyTrackerBD = CFUNCTYPE(Result.ctype(), BodyTrackerBD)
 
 PFN_xrLocateBodyJointsBD = CFUNCTYPE(Result.ctype(), BodyTrackerBD, POINTER(BodyJointsLocateInfoBD), POINTER(BodyJointLocationsBD))
 
+SpatialEntityIdBD = c_uint64
+
+
+class SenseDataProviderBD_T(Structure):
+    pass
+
+
+SenseDataProviderBD = POINTER(SenseDataProviderBD_T)
+
+
+class SenseDataSnapshotBD_T(Structure):
+    pass
+
+
+SenseDataSnapshotBD = POINTER(SenseDataSnapshotBD_T)
+
+
+class AnchorBD_T(Structure):
+    pass
+
+
+AnchorBD = POINTER(AnchorBD_T)
+
+
+class SystemSpatialSensingPropertiesBD(Structure):
+    def __init__(
+        self,
+        supports_spatial_sensing: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPATIAL_SENSING_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_spatial_sensing=supports_spatial_sensing,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialSensingPropertiesBD(supports_spatial_sensing={repr(self.supports_spatial_sensing)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialSensingPropertiesBD(supports_spatial_sensing={self.supports_spatial_sensing}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_spatial_sensing", Bool32),
+    ]
+
+
+class SpatialEntityComponentGetInfoBD(Structure):
+    def __init__(
+        self,
+        entity_id: SpatialEntityIdBD = 0,
+        component_type: SpatialEntityComponentTypeBD = SpatialEntityComponentTypeBD(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
+    ) -> None:
+        super().__init__(
+            entity_id=entity_id,
+            component_type=SpatialEntityComponentTypeBD(component_type).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentGetInfoBD(entity_id={repr(self.entity_id)}, component_type={repr(self.component_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentGetInfoBD(entity_id={self.entity_id}, component_type={self.component_type}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("entity_id", SpatialEntityIdBD),
+        ("component_type", SpatialEntityComponentTypeBD.ctype()),
+    ]
+
+
+class SpatialEntityComponentDataBaseHeaderBD(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.UNKNOWN,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataBaseHeaderBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataBaseHeaderBD(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SpatialEntityLocationGetInfoBD(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_LOCATION_GET_INFO_BD,
+    ) -> None:
+        super().__init__(
+            base_space=base_space,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityLocationGetInfoBD(base_space={repr(self.base_space)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityLocationGetInfoBD(base_space={self.base_space}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+    ]
+
+
+class SpatialEntityComponentDataLocationBD(Structure):
+    def __init__(
+        self,
+        location: SpaceLocation = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_LOCATION_BD,
+    ) -> None:
+        if location is None:
+            location = SpaceLocation()
+        super().__init__(
+            location=location,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataLocationBD(location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataLocationBD(location={self.location}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location", SpaceLocation),
+    ]
+
+
+class SpatialEntityComponentDataSemanticBD(Structure):
+    def __init__(
+        self,
+        label_capacity_input: int = 0,
+        label_count_output: int = 0,
+        labels: POINTER(SemanticLabelBD.ctype()) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_SEMANTIC_BD,
+    ) -> None:
+        super().__init__(
+            label_capacity_input=label_capacity_input,
+            label_count_output=label_count_output,
+            labels=labels,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataSemanticBD(label_capacity_input={repr(self.label_capacity_input)}, label_count_output={repr(self.label_count_output)}, labels={repr(self.labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataSemanticBD(label_capacity_input={self.label_capacity_input}, label_count_output={self.label_count_output}, labels={self.labels}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("label_capacity_input", c_uint32),
+        ("label_count_output", c_uint32),
+        ("labels", POINTER(SemanticLabelBD.ctype())),
+    ]
+
+
+class SpatialEntityComponentDataBoundingBox2DBD(Structure):
+    def __init__(
+        self,
+        bounding_box_2d: Rect2Df = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_2D_BD,
+    ) -> None:
+        if bounding_box_2d is None:
+            bounding_box_2d = Rect2Df()
+        super().__init__(
+            bounding_box_2d=bounding_box_2d,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataBoundingBox2DBD(bounding_box_2d={repr(self.bounding_box_2d)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataBoundingBox2DBD(bounding_box_2d={self.bounding_box_2d}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("bounding_box_2d", Rect2Df),
+    ]
+
+
+class SpatialEntityComponentDataPolygonBD(Structure):
+    def __init__(
+        self,
+        vertex_capacity_input: int = 0,
+        vertex_count_output: int = 0,
+        vertices: POINTER(Vector2f) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_POLYGON_BD,
+    ) -> None:
+        super().__init__(
+            vertex_capacity_input=vertex_capacity_input,
+            vertex_count_output=vertex_count_output,
+            vertices=vertices,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataPolygonBD(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataPolygonBD(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertices", POINTER(Vector2f)),
+    ]
+
+
+class SpatialEntityComponentDataBoundingBox3DBD(Structure):
+    def __init__(
+        self,
+        bounding_box_3d: Boxf = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_3D_BD,
+    ) -> None:
+        if bounding_box_3d is None:
+            bounding_box_3d = Boxf()
+        super().__init__(
+            bounding_box_3d=bounding_box_3d,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataBoundingBox3DBD(bounding_box_3d={repr(self.bounding_box_3d)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataBoundingBox3DBD(bounding_box_3d={self.bounding_box_3d}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("bounding_box_3d", Boxf),
+    ]
+
+
+class SpatialEntityComponentDataTriangleMeshBD(Structure):
+    def __init__(
+        self,
+        vertex_capacity_input: int = 0,
+        vertex_count_output: int = 0,
+        vertices: POINTER(Vector3f) = None,
+        index_capacity_input: int = 0,
+        index_count_output: int = 0,
+        indices: POINTER(c_uint16) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_TRIANGLE_MESH_BD,
+    ) -> None:
+        super().__init__(
+            vertex_capacity_input=vertex_capacity_input,
+            vertex_count_output=vertex_count_output,
+            vertices=vertices,
+            index_capacity_input=index_capacity_input,
+            index_count_output=index_count_output,
+            indices=indices,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataTriangleMeshBD(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataTriangleMeshBD(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertices", POINTER(Vector3f)),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
+        ("indices", POINTER(c_uint16)),
+    ]
+
+
+class SenseDataProviderCreateInfoBD(Structure):
+    def __init__(
+        self,
+        provider_type: SenseDataProviderTypeBD = SenseDataProviderTypeBD(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            provider_type=SenseDataProviderTypeBD(provider_type).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoBD(provider_type={repr(self.provider_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoBD(provider_type={self.provider_type}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("provider_type", SenseDataProviderTypeBD.ctype()),
+    ]
+
+
+class SenseDataProviderStartInfoBD(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_PROVIDER_START_INFO_BD,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataProviderStartInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataProviderStartInfoBD(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class EventDataSenseDataProviderStateChangedBD(Structure):
+    def __init__(
+        self,
+        provider: SenseDataProviderBD = None,
+        new_state: SenseDataProviderStateBD = SenseDataProviderStateBD(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SENSE_DATA_PROVIDER_STATE_CHANGED_BD,
+    ) -> None:
+        super().__init__(
+            provider=provider,
+            new_state=SenseDataProviderStateBD(new_state).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSenseDataProviderStateChangedBD(provider={repr(self.provider)}, new_state={repr(self.new_state)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSenseDataProviderStateChangedBD(provider={self.provider}, new_state={self.new_state}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("provider", SenseDataProviderBD),
+        ("new_state", SenseDataProviderStateBD.ctype()),
+    ]
+
+
+class EventDataSenseDataUpdatedBD(Structure):
+    def __init__(
+        self,
+        provider: SenseDataProviderBD = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SENSE_DATA_UPDATED_BD,
+    ) -> None:
+        super().__init__(
+            provider=provider,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSenseDataUpdatedBD(provider={repr(self.provider)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSenseDataUpdatedBD(provider={self.provider}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("provider", SenseDataProviderBD),
+    ]
+
+
+class SenseDataQueryInfoBD(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_QUERY_INFO_BD,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataQueryInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataQueryInfoBD(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SenseDataQueryCompletionBD(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        snapshot: SenseDataSnapshotBD = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_QUERY_COMPLETION_BD,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            snapshot=snapshot,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataQueryCompletionBD(future_result={repr(self.future_result)}, snapshot={repr(self.snapshot)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataQueryCompletionBD(future_result={self.future_result}, snapshot={self.snapshot}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+        ("snapshot", SenseDataSnapshotBD),
+    ]
+
+
+class QueriedSenseDataGetInfoBD(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.QUERIED_SENSE_DATA_GET_INFO_BD,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.QueriedSenseDataGetInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.QueriedSenseDataGetInfoBD(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SpatialEntityStateBD(Structure):
+    def __init__(
+        self,
+        entity_id: SpatialEntityIdBD = 0,
+        last_update_time: Time = 0,
+        uuid: UuidEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_STATE_BD,
+    ) -> None:
+        super().__init__(
+            entity_id=entity_id,
+            last_update_time=last_update_time,
+            uuid=uuid,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityStateBD(entity_id={repr(self.entity_id)}, last_update_time={repr(self.last_update_time)}, uuid={repr(self.uuid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityStateBD(entity_id={self.entity_id}, last_update_time={self.last_update_time}, uuid={self.uuid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("entity_id", SpatialEntityIdBD),
+        ("last_update_time", Time),
+        ("uuid", UuidEXT),
+    ]
+
+
+class QueriedSenseDataBD(Structure):
+    def __init__(
+        self,
+        state_capacity_input: int = 0,
+        state_count_output: int = 0,
+        states: POINTER(SpatialEntityStateBD) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.QUERIED_SENSE_DATA_BD,
+    ) -> None:
+        super().__init__(
+            state_capacity_input=state_capacity_input,
+            state_count_output=state_count_output,
+            states=states,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.QueriedSenseDataBD(state_capacity_input={repr(self.state_capacity_input)}, state_count_output={repr(self.state_count_output)}, states={repr(self.states)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.QueriedSenseDataBD(state_capacity_input={self.state_capacity_input}, state_count_output={self.state_count_output}, states={self.states}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("state_capacity_input", c_uint32),
+        ("state_count_output", c_uint32),
+        ("states", POINTER(SpatialEntityStateBD)),
+    ]
+
+
+class SenseDataFilterUuidBD(Structure):
+    def __init__(
+        self,
+        uuid_count: Optional[int] = None,
+        uuids: ArrayFieldParamType[Uuid] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_FILTER_UUID_BD,
+    ) -> None:
+        uuid_count, uuids = array_field_helper(
+            Uuid, uuid_count, uuids)
+        super().__init__(
+            uuid_count=uuid_count,
+            _uuids=uuids,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataFilterUuidBD(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataFilterUuidBD(uuid_count={self.uuid_count}, uuids={self._uuids}, next={self.next}, type={self.type})"
+
+    @property
+    def uuids(self):
+        if self.uuid_count == 0:
+            return (Uuid * 0)()
+        else:
+            return (Uuid * self.uuid_count).from_address(
+                ctypes.addressof(self._uuids.contents))
+
+    @uuids.setter
+    def uuids(self, value):
+        self.uuid_count, self._uuids = array_field_helper(
+            Uuid, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("uuid_count", c_uint32),
+        ("_uuids", POINTER(Uuid)),
+    ]
+
+
+class SenseDataFilterSemanticBD(Structure):
+    def __init__(
+        self,
+        label_count: Optional[int] = None,
+        labels: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_FILTER_SEMANTIC_BD,
+    ) -> None:
+        label_count, labels = array_field_helper(
+            c_int, label_count, labels)
+        super().__init__(
+            label_count=label_count,
+            _labels=labels,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataFilterSemanticBD(label_count={repr(self.label_count)}, labels={repr(self._labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataFilterSemanticBD(label_count={self.label_count}, labels={self._labels}, next={self.next}, type={self.type})"
+
+    @property
+    def labels(self):
+        if self.label_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.label_count).from_address(
+                ctypes.addressof(self._labels.contents))
+
+    @labels.setter
+    def labels(self, value):
+        self.label_count, self._labels = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("label_count", c_uint32),
+        ("_labels", POINTER(c_int)),
+    ]
+
+
+class SpatialEntityAnchorCreateInfoBD(Structure):
+    def __init__(
+        self,
+        snapshot: SenseDataSnapshotBD = None,
+        entity_id: SpatialEntityIdBD = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_ANCHOR_CREATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            snapshot=snapshot,
+            entity_id=entity_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityAnchorCreateInfoBD(snapshot={repr(self.snapshot)}, entity_id={repr(self.entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityAnchorCreateInfoBD(snapshot={self.snapshot}, entity_id={self.entity_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("snapshot", SenseDataSnapshotBD),
+        ("entity_id", SpatialEntityIdBD),
+    ]
+
+
+class AnchorSpaceCreateInfoBD(Structure):
+    def __init__(
+        self,
+        anchor: AnchorBD = None,
+        pose_in_anchor_space: Posef = Posef(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.ANCHOR_SPACE_CREATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            anchor=anchor,
+            pose_in_anchor_space=pose_in_anchor_space,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AnchorSpaceCreateInfoBD(anchor={repr(self.anchor)}, pose_in_anchor_space={repr(self.pose_in_anchor_space)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AnchorSpaceCreateInfoBD(anchor={self.anchor}, pose_in_anchor_space={self.pose_in_anchor_space}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("anchor", AnchorBD),
+        ("pose_in_anchor_space", Posef),
+    ]
+
+
+class FutureCompletionEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.FUTURE_COMPLETION_EXT,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FutureCompletionEXT(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FutureCompletionEXT(future_result={self.future_result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+    ]
+
+
+PFN_xrEnumerateSpatialEntityComponentTypesBD = CFUNCTYPE(Result.ctype(), SenseDataSnapshotBD, SpatialEntityIdBD, c_uint32, POINTER(c_uint32), POINTER(SpatialEntityComponentTypeBD.ctype()))
+
+PFN_xrGetSpatialEntityUuidBD = CFUNCTYPE(Result.ctype(), SenseDataSnapshotBD, SpatialEntityIdBD, POINTER(UuidEXT))
+
+PFN_xrGetSpatialEntityComponentDataBD = CFUNCTYPE(Result.ctype(), SenseDataSnapshotBD, POINTER(SpatialEntityComponentGetInfoBD), POINTER(SpatialEntityComponentDataBaseHeaderBD))
+
+PFN_xrCreateSenseDataProviderBD = CFUNCTYPE(Result.ctype(), Session, POINTER(SenseDataProviderCreateInfoBD), POINTER(SenseDataProviderBD))
+
+PFN_xrStartSenseDataProviderAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SenseDataProviderStartInfoBD), POINTER(FutureEXT))
+
+PFN_xrStartSenseDataProviderCompleteBD = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(FutureCompletionEXT))
+
+PFN_xrGetSenseDataProviderStateBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SenseDataProviderStateBD.ctype()))
+
+PFN_xrQuerySenseDataAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SenseDataQueryInfoBD), POINTER(FutureEXT))
+
+PFN_xrQuerySenseDataCompleteBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, FutureEXT, POINTER(SenseDataQueryCompletionBD))
+
+PFN_xrDestroySenseDataSnapshotBD = CFUNCTYPE(Result.ctype(), SenseDataSnapshotBD)
+
+PFN_xrGetQueriedSenseDataBD = CFUNCTYPE(Result.ctype(), SenseDataSnapshotBD, POINTER(QueriedSenseDataGetInfoBD), POINTER(QueriedSenseDataBD))
+
+PFN_xrStopSenseDataProviderBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD)
+
+PFN_xrDestroySenseDataProviderBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD)
+
+PFN_xrCreateSpatialEntityAnchorBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SpatialEntityAnchorCreateInfoBD), POINTER(AnchorBD))
+
+PFN_xrDestroyAnchorBD = CFUNCTYPE(Result.ctype(), AnchorBD)
+
+PFN_xrGetAnchorUuidBD = CFUNCTYPE(Result.ctype(), AnchorBD, POINTER(UuidEXT))
+
+PFN_xrCreateAnchorSpaceBD = CFUNCTYPE(Result.ctype(), Session, POINTER(AnchorSpaceCreateInfoBD), POINTER(Space))
+
+
+class SystemSpatialAnchorPropertiesBD(Structure):
+    def __init__(
+        self,
+        supports_spatial_anchor: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPATIAL_ANCHOR_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_spatial_anchor=supports_spatial_anchor,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialAnchorPropertiesBD(supports_spatial_anchor={repr(self.supports_spatial_anchor)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialAnchorPropertiesBD(supports_spatial_anchor={self.supports_spatial_anchor}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_spatial_anchor", Bool32),
+    ]
+
+
+class SpatialAnchorCreateInfoBD(Structure):
+    def __init__(
+        self,
+        space: Space = None,
+        pose: Posef = Posef(),
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            space=space,
+            pose=pose,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoBD(space={repr(self.space)}, pose={repr(self.pose)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoBD(space={self.space}, pose={self.pose}, time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", Space),
+        ("pose", Posef),
+        ("time", Time),
+    ]
+
+
+class SpatialAnchorCreateCompletionBD(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        anchor: AnchorBD = None,
+        uuid: UuidEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_COMPLETION_BD,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            anchor=anchor,
+            uuid=uuid,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorCreateCompletionBD(future_result={repr(self.future_result)}, anchor={repr(self.anchor)}, uuid={repr(self.uuid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorCreateCompletionBD(future_result={self.future_result}, anchor={self.anchor}, uuid={self.uuid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+        ("anchor", AnchorBD),
+        ("uuid", UuidEXT),
+    ]
+
+
+class SpatialAnchorPersistInfoBD(Structure):
+    def __init__(
+        self,
+        location: PersistenceLocationBD = PersistenceLocationBD(),
+        anchor: AnchorBD = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_PERSIST_INFO_BD,
+    ) -> None:
+        super().__init__(
+            location=PersistenceLocationBD(location).value,
+            anchor=anchor,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorPersistInfoBD(location={repr(self.location)}, anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorPersistInfoBD(location={self.location}, anchor={self.anchor}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location", PersistenceLocationBD.ctype()),
+        ("anchor", AnchorBD),
+    ]
+
+
+class SpatialAnchorUnpersistInfoBD(Structure):
+    def __init__(
+        self,
+        location: PersistenceLocationBD = PersistenceLocationBD(),
+        anchor: AnchorBD = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_UNPERSIST_INFO_BD,
+    ) -> None:
+        super().__init__(
+            location=PersistenceLocationBD(location).value,
+            anchor=anchor,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorUnpersistInfoBD(location={repr(self.location)}, anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorUnpersistInfoBD(location={self.location}, anchor={self.anchor}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location", PersistenceLocationBD.ctype()),
+        ("anchor", AnchorBD),
+    ]
+
+
+PFN_xrCreateSpatialAnchorAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SpatialAnchorCreateInfoBD), POINTER(FutureEXT))
+
+PFN_xrCreateSpatialAnchorCompleteBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, FutureEXT, POINTER(SpatialAnchorCreateCompletionBD))
+
+PFN_xrPersistSpatialAnchorAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SpatialAnchorPersistInfoBD), POINTER(FutureEXT))
+
+PFN_xrPersistSpatialAnchorCompleteBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, FutureEXT, POINTER(FutureCompletionEXT))
+
+PFN_xrUnpersistSpatialAnchorAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SpatialAnchorUnpersistInfoBD), POINTER(FutureEXT))
+
+PFN_xrUnpersistSpatialAnchorCompleteBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, FutureEXT, POINTER(FutureCompletionEXT))
+
+
+class SystemSpatialAnchorSharingPropertiesBD(Structure):
+    def __init__(
+        self,
+        supports_spatial_anchor_sharing: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPATIAL_ANCHOR_SHARING_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_spatial_anchor_sharing=supports_spatial_anchor_sharing,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialAnchorSharingPropertiesBD(supports_spatial_anchor_sharing={repr(self.supports_spatial_anchor_sharing)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialAnchorSharingPropertiesBD(supports_spatial_anchor_sharing={self.supports_spatial_anchor_sharing}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_spatial_anchor_sharing", Bool32),
+    ]
+
+
+class SpatialAnchorShareInfoBD(Structure):
+    def __init__(
+        self,
+        anchor: AnchorBD = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_SHARE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            anchor=anchor,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorShareInfoBD(anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorShareInfoBD(anchor={self.anchor}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("anchor", AnchorBD),
+    ]
+
+
+class SharedSpatialAnchorDownloadInfoBD(Structure):
+    def __init__(
+        self,
+        uuid: UuidEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SHARED_SPATIAL_ANCHOR_DOWNLOAD_INFO_BD,
+    ) -> None:
+        super().__init__(
+            uuid=uuid,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SharedSpatialAnchorDownloadInfoBD(uuid={repr(self.uuid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SharedSpatialAnchorDownloadInfoBD(uuid={self.uuid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("uuid", UuidEXT),
+    ]
+
+
+PFN_xrShareSpatialAnchorAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SpatialAnchorShareInfoBD), POINTER(FutureEXT))
+
+PFN_xrShareSpatialAnchorCompleteBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, FutureEXT, POINTER(FutureCompletionEXT))
+
+PFN_xrDownloadSharedSpatialAnchorAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SharedSpatialAnchorDownloadInfoBD), POINTER(FutureEXT))
+
+PFN_xrDownloadSharedSpatialAnchorCompleteBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, FutureEXT, POINTER(FutureCompletionEXT))
+
+
+class SystemSpatialScenePropertiesBD(Structure):
+    def __init__(
+        self,
+        supports_spatial_scene: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPATIAL_SCENE_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_spatial_scene=supports_spatial_scene,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialScenePropertiesBD(supports_spatial_scene={repr(self.supports_spatial_scene)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialScenePropertiesBD(supports_spatial_scene={self.supports_spatial_scene}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_spatial_scene", Bool32),
+    ]
+
+
+class SceneCaptureInfoBD(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SCENE_CAPTURE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneCaptureInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneCaptureInfoBD(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+PFN_xrCaptureSceneAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SceneCaptureInfoBD), POINTER(FutureEXT))
+
+PFN_xrCaptureSceneCompleteBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, FutureEXT, POINTER(FutureCompletionEXT))
+
+SpatialMeshConfigFlagsBDCInt = Flags64
+
+
+class SystemSpatialMeshPropertiesBD(Structure):
+    def __init__(
+        self,
+        supports_spatial_mesh: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPATIAL_MESH_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_spatial_mesh=supports_spatial_mesh,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialMeshPropertiesBD(supports_spatial_mesh={repr(self.supports_spatial_mesh)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialMeshPropertiesBD(supports_spatial_mesh={self.supports_spatial_mesh}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_spatial_mesh", Bool32),
+    ]
+
+
+class SenseDataProviderCreateInfoSpatialMeshBD(Structure):
+    def __init__(
+        self,
+        config_flags: SpatialMeshConfigFlagsBD = SpatialMeshConfigFlagsBD(),
+        lod: SpatialMeshLodBD = SpatialMeshLodBD(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_SPATIAL_MESH_BD,
+    ) -> None:
+        super().__init__(
+            config_flags=SpatialMeshConfigFlagsBD(config_flags).value,
+            lod=SpatialMeshLodBD(lod).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoSpatialMeshBD(config_flags={repr(self.config_flags)}, lod={repr(self.lod)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoSpatialMeshBD(config_flags={self.config_flags}, lod={self.lod}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("config_flags", SpatialMeshConfigFlagsBDCInt),
+        ("lod", SpatialMeshLodBD.ctype()),
+    ]
+
+
+class FuturePollResultProgressBD(Structure):
+    def __init__(
+        self,
+        is_supported: Bool32 = 0,
+        progress_percentage: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.FUTURE_POLL_RESULT_PROGRESS_BD,
+    ) -> None:
+        super().__init__(
+            is_supported=is_supported,
+            progress_percentage=progress_percentage,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FuturePollResultProgressBD(is_supported={repr(self.is_supported)}, progress_percentage={repr(self.progress_percentage)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FuturePollResultProgressBD(is_supported={self.is_supported}, progress_percentage={self.progress_percentage}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("is_supported", Bool32),
+        ("progress_percentage", c_uint32),
+    ]
+
+
+class SystemSpatialPlanePropertiesBD(Structure):
+    def __init__(
+        self,
+        supports_spatial_plane: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPATIAL_PLANE_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_spatial_plane=supports_spatial_plane,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialPlanePropertiesBD(supports_spatial_plane={repr(self.supports_spatial_plane)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialPlanePropertiesBD(supports_spatial_plane={self.supports_spatial_plane}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_spatial_plane", Bool32),
+    ]
+
+
+class SpatialEntityComponentDataPlaneOrientationBD(Structure):
+    def __init__(
+        self,
+        orientation: PlaneOrientationBD = PlaneOrientationBD(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_PLANE_ORIENTATION_BD,
+    ) -> None:
+        super().__init__(
+            orientation=PlaneOrientationBD(orientation).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataPlaneOrientationBD(orientation={repr(self.orientation)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataPlaneOrientationBD(orientation={self.orientation}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("orientation", PlaneOrientationBD.ctype()),
+    ]
+
+
+class SenseDataFilterPlaneOrientationBD(Structure):
+    def __init__(
+        self,
+        orientation_count: Optional[int] = None,
+        orientations: ArrayFieldParamType[PlaneOrientationBD.ctype()] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SENSE_DATA_FILTER_PLANE_ORIENTATION_BD,
+    ) -> None:
+        orientation_count, orientations = array_field_helper(
+            PlaneOrientationBD.ctype(), orientation_count, orientations)
+        super().__init__(
+            orientation_count=orientation_count,
+            _orientations=orientations,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataFilterPlaneOrientationBD(orientation_count={repr(self.orientation_count)}, orientations={repr(self._orientations)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataFilterPlaneOrientationBD(orientation_count={self.orientation_count}, orientations={self._orientations}, next={self.next}, type={self.type})"
+
+    @property
+    def orientations(self):
+        if self.orientation_count == 0:
+            return (PlaneOrientationBD.ctype() * 0)()
+        else:
+            return (PlaneOrientationBD.ctype() * self.orientation_count).from_address(
+                ctypes.addressof(self._orientations.contents))
+
+    @orientations.setter
+    def orientations(self, value):
+        self.orientation_count, self._orientations = array_field_helper(
+            PlaneOrientationBD.ctype(), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("orientation_count", c_uint32),
+        ("_orientations", POINTER(PlaneOrientationBD.ctype())),
+    ]
+
 
 class HandTrackingDataSourceInfoEXT(Structure):
     def __init__(
@@ -14959,32 +16761,6 @@ class FutureCompletionBaseHeaderEXT(Structure):
 
     def __str__(self) -> str:
         return f"xr.FutureCompletionBaseHeaderEXT(future_result={self.future_result}, next={self.next}, type={self.type})"
-
-    _fields_ = [
-        ("type", StructureType.ctype()),
-        ("next", c_void_p),
-        ("future_result", Result.ctype()),
-    ]
-
-
-class FutureCompletionEXT(Structure):
-    def __init__(
-        self,
-        future_result: Result = Result(),
-        next: c_void_p = None,
-        type: StructureType = StructureType.FUTURE_COMPLETION_EXT,
-    ) -> None:
-        super().__init__(
-            future_result=Result(future_result).value,
-            next=next,
-            type=type,
-        )
-
-    def __repr__(self) -> str:
-        return f"xr.FutureCompletionEXT(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
-
-    def __str__(self) -> str:
-        return f"xr.FutureCompletionEXT(future_result={self.future_result}, next={self.next}, type={self.type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -15796,6 +17572,83 @@ PFN_xrDestroyFacialExpressionClientML = CFUNCTYPE(Result.ctype(), FacialExpressi
 PFN_xrGetFacialExpressionBlendShapePropertiesML = CFUNCTYPE(Result.ctype(), FacialExpressionClientML, POINTER(FacialExpressionBlendShapeGetInfoML), c_uint32, POINTER(FacialExpressionBlendShapePropertiesML))
 
 
+class SystemSimultaneousHandsAndControllersPropertiesMETA(Structure):
+    def __init__(
+        self,
+        supports_simultaneous_hands_and_controllers: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SIMULTANEOUS_HANDS_AND_CONTROLLERS_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_simultaneous_hands_and_controllers=supports_simultaneous_hands_and_controllers,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSimultaneousHandsAndControllersPropertiesMETA(supports_simultaneous_hands_and_controllers={repr(self.supports_simultaneous_hands_and_controllers)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSimultaneousHandsAndControllersPropertiesMETA(supports_simultaneous_hands_and_controllers={self.supports_simultaneous_hands_and_controllers}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_simultaneous_hands_and_controllers", Bool32),
+    ]
+
+
+class SimultaneousHandsAndControllersTrackingResumeInfoMETA(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SIMULTANEOUS_HANDS_AND_CONTROLLERS_TRACKING_RESUME_INFO_META,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SimultaneousHandsAndControllersTrackingPauseInfoMETA(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SIMULTANEOUS_HANDS_AND_CONTROLLERS_TRACKING_PAUSE_INFO_META,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SimultaneousHandsAndControllersTrackingResumeInfoMETA))
+
+PFN_xrPauseSimultaneousHandsAndControllersTrackingMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SimultaneousHandsAndControllersTrackingPauseInfoMETA))
+
+
 class ColocationDiscoveryStartInfoMETA(Structure):
     def __init__(
         self,
@@ -16241,6 +18094,1866 @@ class SpaceGroupUuidFilterInfoMETA(Structure):
     ]
 
 
+SpatialEntityIdEXT = c_uint64
+
+SpatialBufferIdEXT = c_uint64
+
+
+class SpatialEntityEXT_T(Structure):
+    pass
+
+
+SpatialEntityEXT = POINTER(SpatialEntityEXT_T)
+
+
+class SpatialContextEXT_T(Structure):
+    pass
+
+
+SpatialContextEXT = POINTER(SpatialContextEXT_T)
+
+
+class SpatialSnapshotEXT_T(Structure):
+    pass
+
+
+SpatialSnapshotEXT = POINTER(SpatialSnapshotEXT_T)
+
+
+class SpatialCapabilityComponentTypesEXT(Structure):
+    def __init__(
+        self,
+        component_type_capacity_input: int = 0,
+        component_type_count_output: int = 0,
+        component_types: POINTER(SpatialComponentTypeEXT.ctype()) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT,
+    ) -> None:
+        super().__init__(
+            component_type_capacity_input=component_type_capacity_input,
+            component_type_count_output=component_type_count_output,
+            component_types=component_types,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityComponentTypesEXT(component_type_capacity_input={repr(self.component_type_capacity_input)}, component_type_count_output={repr(self.component_type_count_output)}, component_types={repr(self.component_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityComponentTypesEXT(component_type_capacity_input={self.component_type_capacity_input}, component_type_count_output={self.component_type_count_output}, component_types={self.component_types}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("component_type_capacity_input", c_uint32),
+        ("component_type_count_output", c_uint32),
+        ("component_types", POINTER(SpatialComponentTypeEXT.ctype())),
+    ]
+
+
+class SpatialCapabilityConfigurationBaseHeaderEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.UNKNOWN,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationBaseHeaderEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationBaseHeaderEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self.next}, type={self.type})"
+
+    @property
+    def enabled_components(self):
+        if self.enabled_component_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.enabled_component_count).from_address(
+                ctypes.addressof(self._enabled_components.contents))
+
+    @enabled_components.setter
+    def enabled_components(self, value):
+        self.enabled_component_count, self._enabled_components = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("enabled_component_count", c_uint32),
+        ("_enabled_components", POINTER(c_int)),
+    ]
+
+
+class SpatialContextCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        capability_config_count: Optional[int] = None,
+        capability_configs: BaseArrayFieldParamType = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CONTEXT_CREATE_INFO_EXT,
+    ) -> None:
+        capability_config_count, capability_configs = base_array_field_helper(
+            POINTER(SpatialCapabilityConfigurationBaseHeaderEXT), capability_config_count, capability_configs)
+        super().__init__(
+            capability_config_count=capability_config_count,
+            _capability_configs=capability_configs,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContextCreateInfoEXT(capability_config_count={repr(self.capability_config_count)}, capability_configs={repr(self._capability_configs)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContextCreateInfoEXT(capability_config_count={self.capability_config_count}, capability_configs={self._capability_configs}, next={self.next}, type={self.type})"
+
+    @property
+    def capability_configs(self):
+        if self.capability_config_count == 0:
+            return (POINTER(SpatialCapabilityConfigurationBaseHeaderEXT) * 0)()
+        else:
+            return (POINTER(SpatialCapabilityConfigurationBaseHeaderEXT) * self.capability_config_count).from_address(
+                ctypes.addressof(self._capability_configs.contents))
+
+    @capability_configs.setter
+    def capability_configs(self, value):
+        self.capability_config_count, self._capability_configs = base_array_field_helper(
+            POINTER(SpatialCapabilityConfigurationBaseHeaderEXT), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability_config_count", c_uint32),
+        ("_capability_configs", POINTER(POINTER(SpatialCapabilityConfigurationBaseHeaderEXT))),
+    ]
+
+
+class CreateSpatialContextCompletionEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        spatial_context: SpatialContextEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            spatial_context=spatial_context,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateSpatialContextCompletionEXT(future_result={repr(self.future_result)}, spatial_context={repr(self.spatial_context)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateSpatialContextCompletionEXT(future_result={self.future_result}, spatial_context={self.spatial_context}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+        ("spatial_context", SpatialContextEXT),
+    ]
+
+
+class SpatialDiscoverySnapshotCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        component_type_count: Optional[int] = None,
+        component_types: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    ) -> None:
+        component_type_count, component_types = array_field_helper(
+            c_int, component_type_count, component_types)
+        super().__init__(
+            component_type_count=component_type_count,
+            _component_types=component_types,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialDiscoverySnapshotCreateInfoEXT(component_type_count={repr(self.component_type_count)}, component_types={repr(self._component_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialDiscoverySnapshotCreateInfoEXT(component_type_count={self.component_type_count}, component_types={self._component_types}, next={self.next}, type={self.type})"
+
+    @property
+    def component_types(self):
+        if self.component_type_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.component_type_count).from_address(
+                ctypes.addressof(self._component_types.contents))
+
+    @component_types.setter
+    def component_types(self, value):
+        self.component_type_count, self._component_types = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("component_type_count", c_uint32),
+        ("_component_types", POINTER(c_int)),
+    ]
+
+
+class CreateSpatialDiscoverySnapshotCompletionInfoEXT(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        future: FutureEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            future=future,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateSpatialDiscoverySnapshotCompletionInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, future={repr(self.future)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateSpatialDiscoverySnapshotCompletionInfoEXT(base_space={self.base_space}, time={self.time}, future={self.future}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+        ("time", Time),
+        ("future", FutureEXT),
+    ]
+
+
+class CreateSpatialDiscoverySnapshotCompletionEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        snapshot: SpatialSnapshotEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            snapshot=snapshot,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateSpatialDiscoverySnapshotCompletionEXT(future_result={repr(self.future_result)}, snapshot={repr(self.snapshot)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateSpatialDiscoverySnapshotCompletionEXT(future_result={self.future_result}, snapshot={self.snapshot}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+        ("snapshot", SpatialSnapshotEXT),
+    ]
+
+
+class SpatialComponentDataQueryConditionEXT(Structure):
+    def __init__(
+        self,
+        component_type_count: Optional[int] = None,
+        component_types: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+    ) -> None:
+        component_type_count, component_types = array_field_helper(
+            c_int, component_type_count, component_types)
+        super().__init__(
+            component_type_count=component_type_count,
+            _component_types=component_types,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentDataQueryConditionEXT(component_type_count={repr(self.component_type_count)}, component_types={repr(self._component_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentDataQueryConditionEXT(component_type_count={self.component_type_count}, component_types={self._component_types}, next={self.next}, type={self.type})"
+
+    @property
+    def component_types(self):
+        if self.component_type_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.component_type_count).from_address(
+                ctypes.addressof(self._component_types.contents))
+
+    @component_types.setter
+    def component_types(self, value):
+        self.component_type_count, self._component_types = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("component_type_count", c_uint32),
+        ("_component_types", POINTER(c_int)),
+    ]
+
+
+class SpatialComponentDataQueryResultEXT(Structure):
+    def __init__(
+        self,
+        entity_id_capacity_input: int = 0,
+        entity_id_count_output: int = 0,
+        entity_ids: POINTER(SpatialEntityIdEXT) = None,
+        entity_state_capacity_input: int = 0,
+        entity_state_count_output: int = 0,
+        entity_states: POINTER(SpatialEntityTrackingStateEXT.ctype()) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+    ) -> None:
+        super().__init__(
+            entity_id_capacity_input=entity_id_capacity_input,
+            entity_id_count_output=entity_id_count_output,
+            entity_ids=entity_ids,
+            entity_state_capacity_input=entity_state_capacity_input,
+            entity_state_count_output=entity_state_count_output,
+            entity_states=entity_states,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentDataQueryResultEXT(entity_id_capacity_input={repr(self.entity_id_capacity_input)}, entity_id_count_output={repr(self.entity_id_count_output)}, entity_ids={repr(self.entity_ids)}, entity_state_capacity_input={repr(self.entity_state_capacity_input)}, entity_state_count_output={repr(self.entity_state_count_output)}, entity_states={repr(self.entity_states)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentDataQueryResultEXT(entity_id_capacity_input={self.entity_id_capacity_input}, entity_id_count_output={self.entity_id_count_output}, entity_ids={self.entity_ids}, entity_state_capacity_input={self.entity_state_capacity_input}, entity_state_count_output={self.entity_state_count_output}, entity_states={self.entity_states}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("entity_id_capacity_input", c_uint32),
+        ("entity_id_count_output", c_uint32),
+        ("entity_ids", POINTER(SpatialEntityIdEXT)),
+        ("entity_state_capacity_input", c_uint32),
+        ("entity_state_count_output", c_uint32),
+        ("entity_states", POINTER(SpatialEntityTrackingStateEXT.ctype())),
+    ]
+
+
+class SpatialBufferEXT(Structure):
+    def __init__(
+        self,
+        buffer_id: SpatialBufferIdEXT = 0,
+        buffer_type: SpatialBufferTypeEXT = SpatialBufferTypeEXT(),
+    ) -> None:
+        super().__init__(
+            buffer_id=buffer_id,
+            buffer_type=SpatialBufferTypeEXT(buffer_type).value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialBufferEXT(buffer_id={repr(self.buffer_id)}, buffer_type={repr(self.buffer_type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialBufferEXT(buffer_id={self.buffer_id}, buffer_type={self.buffer_type})"
+
+    _fields_ = [
+        ("buffer_id", SpatialBufferIdEXT),
+        ("buffer_type", SpatialBufferTypeEXT.ctype()),
+    ]
+
+
+class SpatialBufferGetInfoEXT(Structure):
+    def __init__(
+        self,
+        buffer_id: SpatialBufferIdEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_BUFFER_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            buffer_id=buffer_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialBufferGetInfoEXT(buffer_id={repr(self.buffer_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialBufferGetInfoEXT(buffer_id={self.buffer_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("buffer_id", SpatialBufferIdEXT),
+    ]
+
+
+class SpatialBounded2DDataEXT(Structure):
+    def __init__(
+        self,
+        center: Posef = Posef(),
+        extents: Extent2Df = None,
+    ) -> None:
+        if extents is None:
+            extents = Extent2Df()
+        super().__init__(
+            center=center,
+            extents=extents,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialBounded2DDataEXT(center={repr(self.center)}, extents={repr(self.extents)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialBounded2DDataEXT(center={self.center}, extents={self.extents})"
+
+    _fields_ = [
+        ("center", Posef),
+        ("extents", Extent2Df),
+    ]
+
+
+class SpatialComponentBounded2DListEXT(Structure):
+    def __init__(
+        self,
+        bound_count: Optional[int] = None,
+        bounds: ArrayFieldParamType[SpatialBounded2DDataEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT,
+    ) -> None:
+        bound_count, bounds = array_field_helper(
+            SpatialBounded2DDataEXT, bound_count, bounds)
+        super().__init__(
+            bound_count=bound_count,
+            _bounds=bounds,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentBounded2DListEXT(bound_count={repr(self.bound_count)}, bounds={repr(self._bounds)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentBounded2DListEXT(bound_count={self.bound_count}, bounds={self._bounds}, next={self.next}, type={self.type})"
+
+    @property
+    def bounds(self):
+        if self.bound_count == 0:
+            return (SpatialBounded2DDataEXT * 0)()
+        else:
+            return (SpatialBounded2DDataEXT * self.bound_count).from_address(
+                ctypes.addressof(self._bounds.contents))
+
+    @bounds.setter
+    def bounds(self, value):
+        self.bound_count, self._bounds = array_field_helper(
+            SpatialBounded2DDataEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("bound_count", c_uint32),
+        ("_bounds", POINTER(SpatialBounded2DDataEXT)),
+    ]
+
+
+class SpatialComponentBounded3DListEXT(Structure):
+    def __init__(
+        self,
+        bound_count: Optional[int] = None,
+        bounds: ArrayFieldParamType[Boxf] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT,
+    ) -> None:
+        bound_count, bounds = array_field_helper(
+            Boxf, bound_count, bounds)
+        super().__init__(
+            bound_count=bound_count,
+            _bounds=bounds,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentBounded3DListEXT(bound_count={repr(self.bound_count)}, bounds={repr(self._bounds)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentBounded3DListEXT(bound_count={self.bound_count}, bounds={self._bounds}, next={self.next}, type={self.type})"
+
+    @property
+    def bounds(self):
+        if self.bound_count == 0:
+            return (Boxf * 0)()
+        else:
+            return (Boxf * self.bound_count).from_address(
+                ctypes.addressof(self._bounds.contents))
+
+    @bounds.setter
+    def bounds(self, value):
+        self.bound_count, self._bounds = array_field_helper(
+            Boxf, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("bound_count", c_uint32),
+        ("_bounds", POINTER(Boxf)),
+    ]
+
+
+class SpatialComponentParentListEXT(Structure):
+    def __init__(
+        self,
+        parent_count: Optional[int] = None,
+        parents: ArrayFieldParamType[SpatialEntityIdEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_PARENT_LIST_EXT,
+    ) -> None:
+        parent_count, parents = array_field_helper(
+            SpatialEntityIdEXT, parent_count, parents)
+        super().__init__(
+            parent_count=parent_count,
+            _parents=parents,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentParentListEXT(parent_count={repr(self.parent_count)}, parents={repr(self._parents)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentParentListEXT(parent_count={self.parent_count}, parents={self._parents}, next={self.next}, type={self.type})"
+
+    @property
+    def parents(self):
+        if self.parent_count == 0:
+            return (SpatialEntityIdEXT * 0)()
+        else:
+            return (SpatialEntityIdEXT * self.parent_count).from_address(
+                ctypes.addressof(self._parents.contents))
+
+    @parents.setter
+    def parents(self, value):
+        self.parent_count, self._parents = array_field_helper(
+            SpatialEntityIdEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("parent_count", c_uint32),
+        ("_parents", POINTER(SpatialEntityIdEXT)),
+    ]
+
+
+class SpatialMeshDataEXT(Structure):
+    def __init__(
+        self,
+        origin: Posef = Posef(),
+        vertex_buffer: SpatialBufferEXT = None,
+        index_buffer: SpatialBufferEXT = None,
+    ) -> None:
+        if vertex_buffer is None:
+            vertex_buffer = SpatialBufferEXT()
+        if index_buffer is None:
+            index_buffer = SpatialBufferEXT()
+        super().__init__(
+            origin=origin,
+            vertex_buffer=vertex_buffer,
+            index_buffer=index_buffer,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialMeshDataEXT(origin={repr(self.origin)}, vertex_buffer={repr(self.vertex_buffer)}, index_buffer={repr(self.index_buffer)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialMeshDataEXT(origin={self.origin}, vertex_buffer={self.vertex_buffer}, index_buffer={self.index_buffer})"
+
+    _fields_ = [
+        ("origin", Posef),
+        ("vertex_buffer", SpatialBufferEXT),
+        ("index_buffer", SpatialBufferEXT),
+    ]
+
+
+class SpatialComponentMesh3DListEXT(Structure):
+    def __init__(
+        self,
+        mesh_count: Optional[int] = None,
+        meshes: ArrayFieldParamType[SpatialMeshDataEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_MESH_3D_LIST_EXT,
+    ) -> None:
+        mesh_count, meshes = array_field_helper(
+            SpatialMeshDataEXT, mesh_count, meshes)
+        super().__init__(
+            mesh_count=mesh_count,
+            _meshes=meshes,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentMesh3DListEXT(mesh_count={repr(self.mesh_count)}, meshes={repr(self._meshes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentMesh3DListEXT(mesh_count={self.mesh_count}, meshes={self._meshes}, next={self.next}, type={self.type})"
+
+    @property
+    def meshes(self):
+        if self.mesh_count == 0:
+            return (SpatialMeshDataEXT * 0)()
+        else:
+            return (SpatialMeshDataEXT * self.mesh_count).from_address(
+                ctypes.addressof(self._meshes.contents))
+
+    @meshes.setter
+    def meshes(self, value):
+        self.mesh_count, self._meshes = array_field_helper(
+            SpatialMeshDataEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("mesh_count", c_uint32),
+        ("_meshes", POINTER(SpatialMeshDataEXT)),
+    ]
+
+
+class SpatialEntityFromIdCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        entity_id: SpatialEntityIdEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_FROM_ID_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            entity_id=entity_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityFromIdCreateInfoEXT(entity_id={repr(self.entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityFromIdCreateInfoEXT(entity_id={self.entity_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("entity_id", SpatialEntityIdEXT),
+    ]
+
+
+class SpatialUpdateSnapshotCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        entity_count: int = 0,
+        entities: POINTER(POINTER(SpatialEntityEXT_T)) = None,
+        component_type_count: Optional[int] = None,
+        component_types: ArrayFieldParamType[c_int] = None,
+        base_space: Space = None,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_UPDATE_SNAPSHOT_CREATE_INFO_EXT,
+    ) -> None:
+        component_type_count, component_types = array_field_helper(
+            c_int, component_type_count, component_types)
+        super().__init__(
+            entity_count=entity_count,
+            entities=entities,
+            component_type_count=component_type_count,
+            _component_types=component_types,
+            base_space=base_space,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialUpdateSnapshotCreateInfoEXT(entity_count={repr(self.entity_count)}, entities={repr(self.entities)}, component_type_count={repr(self.component_type_count)}, component_types={repr(self._component_types)}, base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialUpdateSnapshotCreateInfoEXT(entity_count={self.entity_count}, entities={self.entities}, component_type_count={self.component_type_count}, component_types={self._component_types}, base_space={self.base_space}, time={self.time}, next={self.next}, type={self.type})"
+
+    @property
+    def component_types(self):
+        if self.component_type_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.component_type_count).from_address(
+                ctypes.addressof(self._component_types.contents))
+
+    @component_types.setter
+    def component_types(self, value):
+        self.component_type_count, self._component_types = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("entity_count", c_uint32),
+        ("entities", POINTER(POINTER(SpatialEntityEXT_T))),
+        ("component_type_count", c_uint32),
+        ("_component_types", POINTER(c_int)),
+        ("base_space", Space),
+        ("time", Time),
+    ]
+
+
+class EventDataSpatialDiscoveryRecommendedEXT(Structure):
+    def __init__(
+        self,
+        spatial_context: SpatialContextEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_context=spatial_context,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialDiscoveryRecommendedEXT(spatial_context={repr(self.spatial_context)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialDiscoveryRecommendedEXT(spatial_context={self.spatial_context}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("spatial_context", SpatialContextEXT),
+    ]
+
+
+class SpatialFilterTrackingStateEXT(Structure):
+    def __init__(
+        self,
+        tracking_state: SpatialEntityTrackingStateEXT = SpatialEntityTrackingStateEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_FILTER_TRACKING_STATE_EXT,
+    ) -> None:
+        super().__init__(
+            tracking_state=SpatialEntityTrackingStateEXT(tracking_state).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialFilterTrackingStateEXT(tracking_state={repr(self.tracking_state)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialFilterTrackingStateEXT(tracking_state={self.tracking_state}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("tracking_state", SpatialEntityTrackingStateEXT.ctype()),
+    ]
+
+
+PFN_xrEnumerateSpatialCapabilitiesEXT = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SpatialCapabilityEXT.ctype()))
+
+PFN_xrEnumerateSpatialCapabilityComponentTypesEXT = CFUNCTYPE(Result.ctype(), Instance, SystemId, SpatialCapabilityEXT.ctype(), POINTER(SpatialCapabilityComponentTypesEXT))
+
+PFN_xrEnumerateSpatialCapabilityFeaturesEXT = CFUNCTYPE(Result.ctype(), Instance, SystemId, SpatialCapabilityEXT.ctype(), c_uint32, POINTER(c_uint32), POINTER(SpatialCapabilityFeatureEXT.ctype()))
+
+PFN_xrCreateSpatialContextAsyncEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialContextCreateInfoEXT), POINTER(FutureEXT))
+
+PFN_xrCreateSpatialContextCompleteEXT = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(CreateSpatialContextCompletionEXT))
+
+PFN_xrDestroySpatialContextEXT = CFUNCTYPE(Result.ctype(), SpatialContextEXT)
+
+PFN_xrCreateSpatialDiscoverySnapshotAsyncEXT = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(SpatialDiscoverySnapshotCreateInfoEXT), POINTER(FutureEXT))
+
+PFN_xrCreateSpatialDiscoverySnapshotCompleteEXT = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(CreateSpatialDiscoverySnapshotCompletionInfoEXT), POINTER(CreateSpatialDiscoverySnapshotCompletionEXT))
+
+PFN_xrQuerySpatialComponentDataEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialComponentDataQueryConditionEXT), POINTER(SpatialComponentDataQueryResultEXT))
+
+PFN_xrDestroySpatialSnapshotEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT)
+
+PFN_xrCreateSpatialEntityFromIdEXT = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(SpatialEntityFromIdCreateInfoEXT), POINTER(SpatialEntityEXT))
+
+PFN_xrDestroySpatialEntityEXT = CFUNCTYPE(Result.ctype(), SpatialEntityEXT)
+
+PFN_xrCreateSpatialUpdateSnapshotEXT = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(SpatialUpdateSnapshotCreateInfoEXT), POINTER(SpatialSnapshotEXT))
+
+PFN_xrGetSpatialBufferStringEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialBufferGetInfoEXT), c_uint32, POINTER(c_uint32), c_char_p)
+
+PFN_xrGetSpatialBufferUint8EXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialBufferGetInfoEXT), c_uint32, POINTER(c_uint32), POINTER(c_uint8))
+
+PFN_xrGetSpatialBufferUint16EXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialBufferGetInfoEXT), c_uint32, POINTER(c_uint32), POINTER(c_uint16))
+
+PFN_xrGetSpatialBufferUint32EXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialBufferGetInfoEXT), c_uint32, POINTER(c_uint32), POINTER(c_uint32))
+
+PFN_xrGetSpatialBufferFloatEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialBufferGetInfoEXT), c_uint32, POINTER(c_uint32), POINTER(c_float))
+
+PFN_xrGetSpatialBufferVector2fEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialBufferGetInfoEXT), c_uint32, POINTER(c_uint32), POINTER(Vector2f))
+
+PFN_xrGetSpatialBufferVector3fEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, POINTER(SpatialBufferGetInfoEXT), c_uint32, POINTER(c_uint32), POINTER(Vector3f))
+
+
+class SpatialCapabilityConfigurationPlaneTrackingEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_PLANE_TRACKING_EXT,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationPlaneTrackingEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationPlaneTrackingEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self.next}, type={self.type})"
+
+    @property
+    def enabled_components(self):
+        if self.enabled_component_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.enabled_component_count).from_address(
+                ctypes.addressof(self._enabled_components.contents))
+
+    @enabled_components.setter
+    def enabled_components(self, value):
+        self.enabled_component_count, self._enabled_components = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("enabled_component_count", c_uint32),
+        ("_enabled_components", POINTER(c_int)),
+    ]
+
+
+class SpatialComponentPlaneAlignmentListEXT(Structure):
+    def __init__(
+        self,
+        plane_alignment_count: Optional[int] = None,
+        plane_alignments: ArrayFieldParamType[SpatialPlaneAlignmentEXT.ctype()] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_PLANE_ALIGNMENT_LIST_EXT,
+    ) -> None:
+        plane_alignment_count, plane_alignments = array_field_helper(
+            SpatialPlaneAlignmentEXT.ctype(), plane_alignment_count, plane_alignments)
+        super().__init__(
+            plane_alignment_count=plane_alignment_count,
+            _plane_alignments=plane_alignments,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentPlaneAlignmentListEXT(plane_alignment_count={repr(self.plane_alignment_count)}, plane_alignments={repr(self._plane_alignments)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentPlaneAlignmentListEXT(plane_alignment_count={self.plane_alignment_count}, plane_alignments={self._plane_alignments}, next={self.next}, type={self.type})"
+
+    @property
+    def plane_alignments(self):
+        if self.plane_alignment_count == 0:
+            return (SpatialPlaneAlignmentEXT.ctype() * 0)()
+        else:
+            return (SpatialPlaneAlignmentEXT.ctype() * self.plane_alignment_count).from_address(
+                ctypes.addressof(self._plane_alignments.contents))
+
+    @plane_alignments.setter
+    def plane_alignments(self, value):
+        self.plane_alignment_count, self._plane_alignments = array_field_helper(
+            SpatialPlaneAlignmentEXT.ctype(), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("plane_alignment_count", c_uint32),
+        ("_plane_alignments", POINTER(SpatialPlaneAlignmentEXT.ctype())),
+    ]
+
+
+class SpatialComponentMesh2DListEXT(Structure):
+    def __init__(
+        self,
+        mesh_count: Optional[int] = None,
+        meshes: ArrayFieldParamType[SpatialMeshDataEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_MESH_2D_LIST_EXT,
+    ) -> None:
+        mesh_count, meshes = array_field_helper(
+            SpatialMeshDataEXT, mesh_count, meshes)
+        super().__init__(
+            mesh_count=mesh_count,
+            _meshes=meshes,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentMesh2DListEXT(mesh_count={repr(self.mesh_count)}, meshes={repr(self._meshes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentMesh2DListEXT(mesh_count={self.mesh_count}, meshes={self._meshes}, next={self.next}, type={self.type})"
+
+    @property
+    def meshes(self):
+        if self.mesh_count == 0:
+            return (SpatialMeshDataEXT * 0)()
+        else:
+            return (SpatialMeshDataEXT * self.mesh_count).from_address(
+                ctypes.addressof(self._meshes.contents))
+
+    @meshes.setter
+    def meshes(self, value):
+        self.mesh_count, self._meshes = array_field_helper(
+            SpatialMeshDataEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("mesh_count", c_uint32),
+        ("_meshes", POINTER(SpatialMeshDataEXT)),
+    ]
+
+
+class SpatialPolygon2DDataEXT(Structure):
+    def __init__(
+        self,
+        origin: Posef = Posef(),
+        vertex_buffer: SpatialBufferEXT = None,
+    ) -> None:
+        if vertex_buffer is None:
+            vertex_buffer = SpatialBufferEXT()
+        super().__init__(
+            origin=origin,
+            vertex_buffer=vertex_buffer,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialPolygon2DDataEXT(origin={repr(self.origin)}, vertex_buffer={repr(self.vertex_buffer)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialPolygon2DDataEXT(origin={self.origin}, vertex_buffer={self.vertex_buffer})"
+
+    _fields_ = [
+        ("origin", Posef),
+        ("vertex_buffer", SpatialBufferEXT),
+    ]
+
+
+class SpatialComponentPolygon2DListEXT(Structure):
+    def __init__(
+        self,
+        polygon_count: Optional[int] = None,
+        polygons: ArrayFieldParamType[SpatialPolygon2DDataEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_POLYGON_2D_LIST_EXT,
+    ) -> None:
+        polygon_count, polygons = array_field_helper(
+            SpatialPolygon2DDataEXT, polygon_count, polygons)
+        super().__init__(
+            polygon_count=polygon_count,
+            _polygons=polygons,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentPolygon2DListEXT(polygon_count={repr(self.polygon_count)}, polygons={repr(self._polygons)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentPolygon2DListEXT(polygon_count={self.polygon_count}, polygons={self._polygons}, next={self.next}, type={self.type})"
+
+    @property
+    def polygons(self):
+        if self.polygon_count == 0:
+            return (SpatialPolygon2DDataEXT * 0)()
+        else:
+            return (SpatialPolygon2DDataEXT * self.polygon_count).from_address(
+                ctypes.addressof(self._polygons.contents))
+
+    @polygons.setter
+    def polygons(self, value):
+        self.polygon_count, self._polygons = array_field_helper(
+            SpatialPolygon2DDataEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("polygon_count", c_uint32),
+        ("_polygons", POINTER(SpatialPolygon2DDataEXT)),
+    ]
+
+
+class SpatialComponentPlaneSemanticLabelListEXT(Structure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[SpatialPlaneSemanticLabelEXT.ctype()] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_PLANE_SEMANTIC_LABEL_LIST_EXT,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            SpatialPlaneSemanticLabelEXT.ctype(), semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentPlaneSemanticLabelListEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self._semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentPlaneSemanticLabelListEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self._semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self):
+        if self.semantic_label_count == 0:
+            return (SpatialPlaneSemanticLabelEXT.ctype() * 0)()
+        else:
+            return (SpatialPlaneSemanticLabelEXT.ctype() * self.semantic_label_count).from_address(
+                ctypes.addressof(self._semantic_labels.contents))
+
+    @semantic_labels.setter
+    def semantic_labels(self, value):
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            SpatialPlaneSemanticLabelEXT.ctype(), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(SpatialPlaneSemanticLabelEXT.ctype())),
+    ]
+
+
+class SpatialCapabilityConfigurationQrCodeEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_QR_CODE_EXT,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationQrCodeEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationQrCodeEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self.next}, type={self.type})"
+
+    @property
+    def enabled_components(self):
+        if self.enabled_component_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.enabled_component_count).from_address(
+                ctypes.addressof(self._enabled_components.contents))
+
+    @enabled_components.setter
+    def enabled_components(self, value):
+        self.enabled_component_count, self._enabled_components = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("enabled_component_count", c_uint32),
+        ("_enabled_components", POINTER(c_int)),
+    ]
+
+
+class SpatialCapabilityConfigurationMicroQrCodeEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_MICRO_QR_CODE_EXT,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationMicroQrCodeEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationMicroQrCodeEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self.next}, type={self.type})"
+
+    @property
+    def enabled_components(self):
+        if self.enabled_component_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.enabled_component_count).from_address(
+                ctypes.addressof(self._enabled_components.contents))
+
+    @enabled_components.setter
+    def enabled_components(self, value):
+        self.enabled_component_count, self._enabled_components = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("enabled_component_count", c_uint32),
+        ("_enabled_components", POINTER(c_int)),
+    ]
+
+
+class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        ar_uco_dict: SpatialMarkerArucoDictEXT = SpatialMarkerArucoDictEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_ARUCO_MARKER_EXT,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            ar_uco_dict=SpatialMarkerArucoDictEXT(ar_uco_dict).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationArucoMarkerEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, ar_uco_dict={repr(self.ar_uco_dict)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationArucoMarkerEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, ar_uco_dict={self.ar_uco_dict}, next={self.next}, type={self.type})"
+
+    @property
+    def enabled_components(self):
+        if self.enabled_component_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.enabled_component_count).from_address(
+                ctypes.addressof(self._enabled_components.contents))
+
+    @enabled_components.setter
+    def enabled_components(self, value):
+        self.enabled_component_count, self._enabled_components = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("enabled_component_count", c_uint32),
+        ("_enabled_components", POINTER(c_int)),
+        ("ar_uco_dict", SpatialMarkerArucoDictEXT.ctype()),
+    ]
+
+
+class SpatialCapabilityConfigurationAprilTagEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        april_dict: SpatialMarkerAprilTagDictEXT = SpatialMarkerAprilTagDictEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_APRIL_TAG_EXT,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            april_dict=SpatialMarkerAprilTagDictEXT(april_dict).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationAprilTagEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, april_dict={repr(self.april_dict)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationAprilTagEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, april_dict={self.april_dict}, next={self.next}, type={self.type})"
+
+    @property
+    def enabled_components(self):
+        if self.enabled_component_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.enabled_component_count).from_address(
+                ctypes.addressof(self._enabled_components.contents))
+
+    @enabled_components.setter
+    def enabled_components(self, value):
+        self.enabled_component_count, self._enabled_components = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("enabled_component_count", c_uint32),
+        ("_enabled_components", POINTER(c_int)),
+        ("april_dict", SpatialMarkerAprilTagDictEXT.ctype()),
+    ]
+
+
+class SpatialMarkerSizeEXT(Structure):
+    def __init__(
+        self,
+        marker_side_length: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_MARKER_SIZE_EXT,
+    ) -> None:
+        super().__init__(
+            marker_side_length=marker_side_length,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialMarkerSizeEXT(marker_side_length={repr(self.marker_side_length)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialMarkerSizeEXT(marker_side_length={self.marker_side_length:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("marker_side_length", c_float),
+    ]
+
+
+class SpatialMarkerStaticOptimizationEXT(Structure):
+    def __init__(
+        self,
+        optimize_for_static_marker: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_MARKER_STATIC_OPTIMIZATION_EXT,
+    ) -> None:
+        super().__init__(
+            optimize_for_static_marker=optimize_for_static_marker,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialMarkerStaticOptimizationEXT(optimize_for_static_marker={repr(self.optimize_for_static_marker)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialMarkerStaticOptimizationEXT(optimize_for_static_marker={self.optimize_for_static_marker}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("optimize_for_static_marker", Bool32),
+    ]
+
+
+class SpatialMarkerDataEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        marker_id: int = 0,
+        data: SpatialBufferEXT = None,
+    ) -> None:
+        if data is None:
+            data = SpatialBufferEXT()
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            marker_id=marker_id,
+            data=data,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialMarkerDataEXT(capability={repr(self.capability)}, marker_id={repr(self.marker_id)}, data={repr(self.data)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialMarkerDataEXT(capability={self.capability}, marker_id={self.marker_id}, data={self.data})"
+
+    _fields_ = [
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("marker_id", c_uint32),
+        ("data", SpatialBufferEXT),
+    ]
+
+
+class SpatialComponentMarkerListEXT(Structure):
+    def __init__(
+        self,
+        marker_count: Optional[int] = None,
+        markers: ArrayFieldParamType[SpatialMarkerDataEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_MARKER_LIST_EXT,
+    ) -> None:
+        marker_count, markers = array_field_helper(
+            SpatialMarkerDataEXT, marker_count, markers)
+        super().__init__(
+            marker_count=marker_count,
+            _markers=markers,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentMarkerListEXT(marker_count={repr(self.marker_count)}, markers={repr(self._markers)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentMarkerListEXT(marker_count={self.marker_count}, markers={self._markers}, next={self.next}, type={self.type})"
+
+    @property
+    def markers(self):
+        if self.marker_count == 0:
+            return (SpatialMarkerDataEXT * 0)()
+        else:
+            return (SpatialMarkerDataEXT * self.marker_count).from_address(
+                ctypes.addressof(self._markers.contents))
+
+    @markers.setter
+    def markers(self, value):
+        self.marker_count, self._markers = array_field_helper(
+            SpatialMarkerDataEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("marker_count", c_uint32),
+        ("_markers", POINTER(SpatialMarkerDataEXT)),
+    ]
+
+
+class SpatialCapabilityConfigurationAnchorEXT(Structure):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        super().__init__(
+            capability=SpatialCapabilityEXT(capability).value,
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationAnchorEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationAnchorEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self.next}, type={self.type})"
+
+    @property
+    def enabled_components(self):
+        if self.enabled_component_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.enabled_component_count).from_address(
+                ctypes.addressof(self._enabled_components.contents))
+
+    @enabled_components.setter
+    def enabled_components(self, value):
+        self.enabled_component_count, self._enabled_components = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("capability", SpatialCapabilityEXT.ctype()),
+        ("enabled_component_count", c_uint32),
+        ("_enabled_components", POINTER(c_int)),
+    ]
+
+
+class SpatialComponentAnchorListEXT(Structure):
+    def __init__(
+        self,
+        location_count: Optional[int] = None,
+        locations: ArrayFieldParamType[Posef] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_ANCHOR_LIST_EXT,
+    ) -> None:
+        location_count, locations = array_field_helper(
+            Posef, location_count, locations)
+        super().__init__(
+            location_count=location_count,
+            _locations=locations,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentAnchorListEXT(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentAnchorListEXT(location_count={self.location_count}, locations={self._locations}, next={self.next}, type={self.type})"
+
+    @property
+    def locations(self):
+        if self.location_count == 0:
+            return (Posef * 0)()
+        else:
+            return (Posef * self.location_count).from_address(
+                ctypes.addressof(self._locations.contents))
+
+    @locations.setter
+    def locations(self, value):
+        self.location_count, self._locations = array_field_helper(
+            Posef, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("location_count", c_uint32),
+        ("_locations", POINTER(Posef)),
+    ]
+
+
+class SpatialAnchorCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        pose: Posef = Posef(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            pose=pose,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorCreateInfoEXT(base_space={self.base_space}, time={self.time}, pose={self.pose}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("base_space", Space),
+        ("time", Time),
+        ("pose", Posef),
+    ]
+
+
+PFN_xrCreateSpatialAnchorEXT = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(SpatialAnchorCreateInfoEXT), POINTER(SpatialEntityIdEXT), POINTER(SpatialEntityEXT))
+
+
+class SpatialPersistenceContextEXT_T(Structure):
+    pass
+
+
+SpatialPersistenceContextEXT = POINTER(SpatialPersistenceContextEXT_T)
+
+
+class SpatialPersistenceContextCreateInfoEXT(Structure):
+    def __init__(
+        self,
+        scope: SpatialPersistenceScopeEXT = SpatialPersistenceScopeEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_PERSISTENCE_CONTEXT_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            scope=SpatialPersistenceScopeEXT(scope).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialPersistenceContextCreateInfoEXT(scope={repr(self.scope)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialPersistenceContextCreateInfoEXT(scope={self.scope}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("scope", SpatialPersistenceScopeEXT.ctype()),
+    ]
+
+
+class CreateSpatialPersistenceContextCompletionEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        create_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),
+        persistence_context: SpatialPersistenceContextEXT = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            create_result=SpatialPersistenceContextResultEXT(create_result).value,
+            persistence_context=persistence_context,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateSpatialPersistenceContextCompletionEXT(future_result={repr(self.future_result)}, create_result={repr(self.create_result)}, persistence_context={repr(self.persistence_context)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateSpatialPersistenceContextCompletionEXT(future_result={self.future_result}, create_result={self.create_result}, persistence_context={self.persistence_context}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+        ("create_result", SpatialPersistenceContextResultEXT.ctype()),
+        ("persistence_context", SpatialPersistenceContextEXT),
+    ]
+
+
+class SpatialContextPersistenceConfigEXT(Structure):
+    def __init__(
+        self,
+        persistence_context_count: Optional[int] = None,
+        persistence_contexts: ArrayFieldParamType[POINTER(SpatialPersistenceContextEXT_T)] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_CONTEXT_PERSISTENCE_CONFIG_EXT,
+    ) -> None:
+        persistence_context_count, persistence_contexts = array_field_helper(
+            POINTER(SpatialPersistenceContextEXT_T), persistence_context_count, persistence_contexts)
+        super().__init__(
+            persistence_context_count=persistence_context_count,
+            _persistence_contexts=persistence_contexts,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContextPersistenceConfigEXT(persistence_context_count={repr(self.persistence_context_count)}, persistence_contexts={repr(self._persistence_contexts)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContextPersistenceConfigEXT(persistence_context_count={self.persistence_context_count}, persistence_contexts={self._persistence_contexts}, next={self.next}, type={self.type})"
+
+    @property
+    def persistence_contexts(self):
+        if self.persistence_context_count == 0:
+            return (POINTER(SpatialPersistenceContextEXT_T) * 0)()
+        else:
+            return (POINTER(SpatialPersistenceContextEXT_T) * self.persistence_context_count).from_address(
+                ctypes.addressof(self._persistence_contexts.contents))
+
+    @persistence_contexts.setter
+    def persistence_contexts(self, value):
+        self.persistence_context_count, self._persistence_contexts = array_field_helper(
+            POINTER(SpatialPersistenceContextEXT_T), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("persistence_context_count", c_uint32),
+        ("_persistence_contexts", POINTER(POINTER(SpatialPersistenceContextEXT_T))),
+    ]
+
+
+class SpatialDiscoveryPersistenceUuidFilterEXT(Structure):
+    def __init__(
+        self,
+        persisted_uuid_count: Optional[int] = None,
+        persisted_uuids: ArrayFieldParamType[Uuid] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_DISCOVERY_PERSISTENCE_UUID_FILTER_EXT,
+    ) -> None:
+        persisted_uuid_count, persisted_uuids = array_field_helper(
+            Uuid, persisted_uuid_count, persisted_uuids)
+        super().__init__(
+            persisted_uuid_count=persisted_uuid_count,
+            _persisted_uuids=persisted_uuids,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialDiscoveryPersistenceUuidFilterEXT(persisted_uuid_count={repr(self.persisted_uuid_count)}, persisted_uuids={repr(self._persisted_uuids)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialDiscoveryPersistenceUuidFilterEXT(persisted_uuid_count={self.persisted_uuid_count}, persisted_uuids={self._persisted_uuids}, next={self.next}, type={self.type})"
+
+    @property
+    def persisted_uuids(self):
+        if self.persisted_uuid_count == 0:
+            return (Uuid * 0)()
+        else:
+            return (Uuid * self.persisted_uuid_count).from_address(
+                ctypes.addressof(self._persisted_uuids.contents))
+
+    @persisted_uuids.setter
+    def persisted_uuids(self, value):
+        self.persisted_uuid_count, self._persisted_uuids = array_field_helper(
+            Uuid, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("persisted_uuid_count", c_uint32),
+        ("_persisted_uuids", POINTER(Uuid)),
+    ]
+
+
+class SpatialPersistenceDataEXT(Structure):
+    def __init__(
+        self,
+        persist_uuid: Uuid = None,
+        persist_state: SpatialPersistenceStateEXT = SpatialPersistenceStateEXT(),
+    ) -> None:
+        if persist_uuid is None:
+            persist_uuid = Uuid()
+        super().__init__(
+            persist_uuid=persist_uuid,
+            persist_state=SpatialPersistenceStateEXT(persist_state).value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialPersistenceDataEXT(persist_uuid={repr(self.persist_uuid)}, persist_state={repr(self.persist_state)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialPersistenceDataEXT(persist_uuid={self.persist_uuid}, persist_state={self.persist_state})"
+
+    _fields_ = [
+        ("persist_uuid", Uuid),
+        ("persist_state", SpatialPersistenceStateEXT.ctype()),
+    ]
+
+
+class SpatialComponentPersistenceListEXT(Structure):
+    def __init__(
+        self,
+        persist_data_count: int = 0,
+        persist_data: POINTER(SpatialPersistenceDataEXT) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT,
+    ) -> None:
+        super().__init__(
+            persist_data_count=persist_data_count,
+            persist_data=persist_data,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentPersistenceListEXT(persist_data_count={repr(self.persist_data_count)}, persist_data={repr(self.persist_data)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentPersistenceListEXT(persist_data_count={self.persist_data_count}, persist_data={self.persist_data}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("persist_data_count", c_uint32),
+        ("persist_data", POINTER(SpatialPersistenceDataEXT)),
+    ]
+
+
+PFN_xrEnumerateSpatialPersistenceScopesEXT = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SpatialPersistenceScopeEXT.ctype()))
+
+PFN_xrCreateSpatialPersistenceContextAsyncEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialPersistenceContextCreateInfoEXT), POINTER(FutureEXT))
+
+PFN_xrCreateSpatialPersistenceContextCompleteEXT = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(CreateSpatialPersistenceContextCompletionEXT))
+
+PFN_xrDestroySpatialPersistenceContextEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT)
+
+
+class SpatialEntityPersistInfoEXT(Structure):
+    def __init__(
+        self,
+        spatial_context: SpatialContextEXT = None,
+        spatial_entity_id: SpatialEntityIdEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_PERSIST_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_context=spatial_context,
+            spatial_entity_id=spatial_entity_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityPersistInfoEXT(spatial_context={repr(self.spatial_context)}, spatial_entity_id={repr(self.spatial_entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityPersistInfoEXT(spatial_context={self.spatial_context}, spatial_entity_id={self.spatial_entity_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("spatial_context", SpatialContextEXT),
+        ("spatial_entity_id", SpatialEntityIdEXT),
+    ]
+
+
+class PersistSpatialEntityCompletionEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        persist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),
+        persist_uuid: Uuid = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PERSIST_SPATIAL_ENTITY_COMPLETION_EXT,
+    ) -> None:
+        if persist_uuid is None:
+            persist_uuid = Uuid()
+        super().__init__(
+            future_result=Result(future_result).value,
+            persist_result=SpatialPersistenceContextResultEXT(persist_result).value,
+            persist_uuid=persist_uuid,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PersistSpatialEntityCompletionEXT(future_result={repr(self.future_result)}, persist_result={repr(self.persist_result)}, persist_uuid={repr(self.persist_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PersistSpatialEntityCompletionEXT(future_result={self.future_result}, persist_result={self.persist_result}, persist_uuid={self.persist_uuid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+        ("persist_result", SpatialPersistenceContextResultEXT.ctype()),
+        ("persist_uuid", Uuid),
+    ]
+
+
+class SpatialEntityUnpersistInfoEXT(Structure):
+    def __init__(
+        self,
+        persist_uuid: Uuid = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_UNPERSIST_INFO_EXT,
+    ) -> None:
+        if persist_uuid is None:
+            persist_uuid = Uuid()
+        super().__init__(
+            persist_uuid=persist_uuid,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityUnpersistInfoEXT(persist_uuid={repr(self.persist_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityUnpersistInfoEXT(persist_uuid={self.persist_uuid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("persist_uuid", Uuid),
+    ]
+
+
+class UnpersistSpatialEntityCompletionEXT(Structure):
+    def __init__(
+        self,
+        future_result: Result = Result(),
+        unpersist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.UNPERSIST_SPATIAL_ENTITY_COMPLETION_EXT,
+    ) -> None:
+        super().__init__(
+            future_result=Result(future_result).value,
+            unpersist_result=SpatialPersistenceContextResultEXT(unpersist_result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.UnpersistSpatialEntityCompletionEXT(future_result={repr(self.future_result)}, unpersist_result={repr(self.unpersist_result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.UnpersistSpatialEntityCompletionEXT(future_result={self.future_result}, unpersist_result={self.unpersist_result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("future_result", Result.ctype()),
+        ("unpersist_result", SpatialPersistenceContextResultEXT.ctype()),
+    ]
+
+
+PFN_xrPersistSpatialEntityAsyncEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT, POINTER(SpatialEntityPersistInfoEXT), POINTER(FutureEXT))
+
+PFN_xrPersistSpatialEntityCompleteEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT, FutureEXT, POINTER(PersistSpatialEntityCompletionEXT))
+
+PFN_xrUnpersistSpatialEntityAsyncEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT, POINTER(SpatialEntityUnpersistInfoEXT), POINTER(FutureEXT))
+
+PFN_xrUnpersistSpatialEntityCompleteEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT, FutureEXT, POINTER(UnpersistSpatialEntityCompletionEXT))
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -16259,6 +19972,9 @@ __all__ = [
     "ActiveActionSet",
     "ActiveActionSetPrioritiesEXT",
     "ActiveActionSetPriorityEXT",
+    "AnchorBD",
+    "AnchorBD_T",
+    "AnchorSpaceCreateInfoBD",
     "ApiLayerProperties",
     "ApplicationInfo",
     "AsyncRequestIdFB",
@@ -16333,6 +20049,10 @@ __all__ = [
     "ControllerModelPropertiesMSFT",
     "ControllerModelStateMSFT",
     "CreateSpatialAnchorsCompletionML",
+    "CreateSpatialContextCompletionEXT",
+    "CreateSpatialDiscoverySnapshotCompletionEXT",
+    "CreateSpatialDiscoverySnapshotCompletionInfoEXT",
+    "CreateSpatialPersistenceContextCompletionEXT",
     "DebugUtilsLabelEXT",
     "DebugUtilsMessageSeverityFlagsEXTCInt",
     "DebugUtilsMessageTypeFlagsEXTCInt",
@@ -16371,6 +20091,7 @@ __all__ = [
     "EventDataHeadsetFitChangedML",
     "EventDataInstanceLossPending",
     "EventDataInteractionProfileChanged",
+    "EventDataInteractionRenderModelsChangedEXT",
     "EventDataLocalizationChangedML",
     "EventDataMainSessionVisibilityChangedEXTX",
     "EventDataMarkerTrackingUpdateVARJO",
@@ -16379,6 +20100,8 @@ __all__ = [
     "EventDataPerfSettingsEXT",
     "EventDataReferenceSpaceChangePending",
     "EventDataSceneCaptureCompleteFB",
+    "EventDataSenseDataProviderStateChangedBD",
+    "EventDataSenseDataUpdatedBD",
     "EventDataSessionStateChanged",
     "EventDataShareSpacesCompleteMETA",
     "EventDataSpaceEraseCompleteFB",
@@ -16389,6 +20112,7 @@ __all__ = [
     "EventDataSpaceSetStatusCompleteFB",
     "EventDataSpaceShareCompleteFB",
     "EventDataSpatialAnchorCreateCompleteFB",
+    "EventDataSpatialDiscoveryRecommendedEXT",
     "EventDataStartColocationAdvertisementCompleteMETA",
     "EventDataStartColocationDiscoveryCompleteMETA",
     "EventDataStopColocationAdvertisementCompleteMETA",
@@ -16478,6 +20202,7 @@ __all__ = [
     "FutureEXT_T",
     "FuturePollInfoEXT",
     "FuturePollResultEXT",
+    "FuturePollResultProgressBD",
     "GeometryInstanceCreateInfoFB",
     "GeometryInstanceFB",
     "GeometryInstanceFB_T",
@@ -16524,6 +20249,9 @@ __all__ = [
     "InteractionProfileDpadBindingEXT",
     "InteractionProfileState",
     "InteractionProfileSuggestedBinding",
+    "InteractionRenderModelIdsEnumerateInfoEXT",
+    "InteractionRenderModelSubactionPathInfoEXT",
+    "InteractionRenderModelTopLevelUserPathGetInfoEXT",
     "KeyboardSpaceCreateInfoFB",
     "KeyboardTrackingDescriptionFB",
     "KeyboardTrackingFlagsFBCInt",
@@ -16566,12 +20294,15 @@ __all__ = [
     "PFN_xrBeginPlaneDetectionEXT",
     "PFN_xrBeginSession",
     "PFN_xrCancelFutureEXT",
+    "PFN_xrCaptureSceneAsyncBD",
+    "PFN_xrCaptureSceneCompleteBD",
     "PFN_xrChangeVirtualKeyboardTextContextMETA",
     "PFN_xrClearSpatialAnchorStoreMSFT",
     "PFN_xrComputeNewSceneMSFT",
     "PFN_xrCreateAction",
     "PFN_xrCreateActionSet",
     "PFN_xrCreateActionSpace",
+    "PFN_xrCreateAnchorSpaceBD",
     "PFN_xrCreateBodyTrackerBD",
     "PFN_xrCreateBodyTrackerFB",
     "PFN_xrCreateBodyTrackerHTC",
@@ -16599,10 +20330,17 @@ __all__ = [
     "PFN_xrCreatePassthroughLayerFB",
     "PFN_xrCreatePlaneDetectorEXT",
     "PFN_xrCreateReferenceSpace",
+    "PFN_xrCreateRenderModelAssetEXT",
+    "PFN_xrCreateRenderModelEXT",
+    "PFN_xrCreateRenderModelSpaceEXT",
     "PFN_xrCreateSceneMSFT",
     "PFN_xrCreateSceneObserverMSFT",
+    "PFN_xrCreateSenseDataProviderBD",
     "PFN_xrCreateSession",
     "PFN_xrCreateSpaceUserFB",
+    "PFN_xrCreateSpatialAnchorAsyncBD",
+    "PFN_xrCreateSpatialAnchorCompleteBD",
+    "PFN_xrCreateSpatialAnchorEXT",
     "PFN_xrCreateSpatialAnchorFB",
     "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
     "PFN_xrCreateSpatialAnchorHTC",
@@ -16612,7 +20350,16 @@ __all__ = [
     "PFN_xrCreateSpatialAnchorsAsyncML",
     "PFN_xrCreateSpatialAnchorsCompleteML",
     "PFN_xrCreateSpatialAnchorsStorageML",
+    "PFN_xrCreateSpatialContextAsyncEXT",
+    "PFN_xrCreateSpatialContextCompleteEXT",
+    "PFN_xrCreateSpatialDiscoverySnapshotAsyncEXT",
+    "PFN_xrCreateSpatialDiscoverySnapshotCompleteEXT",
+    "PFN_xrCreateSpatialEntityAnchorBD",
+    "PFN_xrCreateSpatialEntityFromIdEXT",
     "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
+    "PFN_xrCreateSpatialPersistenceContextAsyncEXT",
+    "PFN_xrCreateSpatialPersistenceContextCompleteEXT",
+    "PFN_xrCreateSpatialUpdateSnapshotEXT",
     "PFN_xrCreateSwapchain",
     "PFN_xrCreateTriangleMeshFB",
     "PFN_xrCreateVirtualKeyboardMETA",
@@ -16624,6 +20371,7 @@ __all__ = [
     "PFN_xrDeserializeSceneMSFT",
     "PFN_xrDestroyAction",
     "PFN_xrDestroyActionSet",
+    "PFN_xrDestroyAnchorBD",
     "PFN_xrDestroyBodyTrackerBD",
     "PFN_xrDestroyBodyTrackerFB",
     "PFN_xrDestroyBodyTrackerHTC",
@@ -16646,19 +20394,29 @@ __all__ = [
     "PFN_xrDestroyPassthroughHTC",
     "PFN_xrDestroyPassthroughLayerFB",
     "PFN_xrDestroyPlaneDetectorEXT",
+    "PFN_xrDestroyRenderModelAssetEXT",
+    "PFN_xrDestroyRenderModelEXT",
     "PFN_xrDestroySceneMSFT",
     "PFN_xrDestroySceneObserverMSFT",
+    "PFN_xrDestroySenseDataProviderBD",
+    "PFN_xrDestroySenseDataSnapshotBD",
     "PFN_xrDestroySession",
     "PFN_xrDestroySpace",
     "PFN_xrDestroySpaceUserFB",
     "PFN_xrDestroySpatialAnchorMSFT",
     "PFN_xrDestroySpatialAnchorStoreConnectionMSFT",
     "PFN_xrDestroySpatialAnchorsStorageML",
+    "PFN_xrDestroySpatialContextEXT",
+    "PFN_xrDestroySpatialEntityEXT",
     "PFN_xrDestroySpatialGraphNodeBindingMSFT",
+    "PFN_xrDestroySpatialPersistenceContextEXT",
+    "PFN_xrDestroySpatialSnapshotEXT",
     "PFN_xrDestroySwapchain",
     "PFN_xrDestroyTriangleMeshFB",
     "PFN_xrDestroyVirtualKeyboardMETA",
     "PFN_xrDestroyWorldMeshDetectorML",
+    "PFN_xrDownloadSharedSpatialAnchorAsyncBD",
+    "PFN_xrDownloadSharedSpatialAnchorCompleteBD",
     "PFN_xrEnableLocalizationEventsML",
     "PFN_xrEnableUserCalibrationEventsML",
     "PFN_xrEndFrame",
@@ -16671,13 +20429,20 @@ __all__ = [
     "PFN_xrEnumerateEnvironmentDepthSwapchainImagesMETA",
     "PFN_xrEnumerateExternalCamerasOCULUS",
     "PFN_xrEnumerateInstanceExtensionProperties",
+    "PFN_xrEnumerateInteractionRenderModelIdsEXT",
     "PFN_xrEnumeratePerformanceMetricsCounterPathsMETA",
     "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
     "PFN_xrEnumerateReferenceSpaces",
     "PFN_xrEnumerateRenderModelPathsFB",
+    "PFN_xrEnumerateRenderModelSubactionPathsEXT",
     "PFN_xrEnumerateReprojectionModesMSFT",
     "PFN_xrEnumerateSceneComputeFeaturesMSFT",
     "PFN_xrEnumerateSpaceSupportedComponentsFB",
+    "PFN_xrEnumerateSpatialCapabilitiesEXT",
+    "PFN_xrEnumerateSpatialCapabilityComponentTypesEXT",
+    "PFN_xrEnumerateSpatialCapabilityFeaturesEXT",
+    "PFN_xrEnumerateSpatialEntityComponentTypesBD",
+    "PFN_xrEnumerateSpatialPersistenceScopesEXT",
     "PFN_xrEnumerateSwapchainFormats",
     "PFN_xrEnumerateSwapchainImages",
     "PFN_xrEnumerateViewConfigurationViews",
@@ -16690,6 +20455,7 @@ __all__ = [
     "PFN_xrGetActionStateFloat",
     "PFN_xrGetActionStatePose",
     "PFN_xrGetActionStateVector2f",
+    "PFN_xrGetAnchorUuidBD",
     "PFN_xrGetBodySkeletonFB",
     "PFN_xrGetBodySkeletonHTC",
     "PFN_xrGetControllerModelKeyMSFT",
@@ -16722,14 +20488,21 @@ __all__ = [
     "PFN_xrGetPlaneDetectionStateEXT",
     "PFN_xrGetPlaneDetectionsEXT",
     "PFN_xrGetPlanePolygonBufferEXT",
+    "PFN_xrGetQueriedSenseDataBD",
     "PFN_xrGetRecommendedLayerResolutionMETA",
     "PFN_xrGetReferenceSpaceBoundsRect",
+    "PFN_xrGetRenderModelAssetDataEXT",
+    "PFN_xrGetRenderModelAssetPropertiesEXT",
+    "PFN_xrGetRenderModelPoseTopLevelUserPathEXT",
+    "PFN_xrGetRenderModelPropertiesEXT",
     "PFN_xrGetRenderModelPropertiesFB",
+    "PFN_xrGetRenderModelStateEXT",
     "PFN_xrGetSceneComponentsMSFT",
     "PFN_xrGetSceneComputeStateMSFT",
     "PFN_xrGetSceneMarkerDecodedStringMSFT",
     "PFN_xrGetSceneMarkerRawDataMSFT",
     "PFN_xrGetSceneMeshBuffersMSFT",
+    "PFN_xrGetSenseDataProviderStateBD",
     "PFN_xrGetSerializedSceneFragmentDataMSFT",
     "PFN_xrGetSpaceBoundary2DFB",
     "PFN_xrGetSpaceBoundingBox2DFB",
@@ -16743,6 +20516,15 @@ __all__ = [
     "PFN_xrGetSpaceUuidFB",
     "PFN_xrGetSpatialAnchorNameHTC",
     "PFN_xrGetSpatialAnchorStateML",
+    "PFN_xrGetSpatialBufferFloatEXT",
+    "PFN_xrGetSpatialBufferStringEXT",
+    "PFN_xrGetSpatialBufferUint16EXT",
+    "PFN_xrGetSpatialBufferUint32EXT",
+    "PFN_xrGetSpatialBufferUint8EXT",
+    "PFN_xrGetSpatialBufferVector2fEXT",
+    "PFN_xrGetSpatialBufferVector3fEXT",
+    "PFN_xrGetSpatialEntityComponentDataBD",
+    "PFN_xrGetSpatialEntityUuidBD",
     "PFN_xrGetSpatialGraphNodeBindingPropertiesMSFT",
     "PFN_xrGetSwapchainStateFB",
     "PFN_xrGetSystem",
@@ -16774,17 +20556,25 @@ __all__ = [
     "PFN_xrPassthroughPauseFB",
     "PFN_xrPassthroughStartFB",
     "PFN_xrPathToString",
+    "PFN_xrPauseSimultaneousHandsAndControllersTrackingMETA",
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
+    "PFN_xrPersistSpatialAnchorAsyncBD",
+    "PFN_xrPersistSpatialAnchorCompleteBD",
     "PFN_xrPersistSpatialAnchorMSFT",
+    "PFN_xrPersistSpatialEntityAsyncEXT",
+    "PFN_xrPersistSpatialEntityCompleteEXT",
     "PFN_xrPollEvent",
     "PFN_xrPollFutureEXT",
     "PFN_xrPublishSpatialAnchorsAsyncML",
     "PFN_xrPublishSpatialAnchorsCompleteML",
     "PFN_xrQueryLocalizationMapsML",
     "PFN_xrQueryPerformanceMetricsCounterMETA",
+    "PFN_xrQuerySenseDataAsyncBD",
+    "PFN_xrQuerySenseDataCompleteBD",
     "PFN_xrQuerySpacesFB",
     "PFN_xrQuerySpatialAnchorsAsyncML",
     "PFN_xrQuerySpatialAnchorsCompleteML",
+    "PFN_xrQuerySpatialComponentDataEXT",
     "PFN_xrQuerySystemTrackedKeyboardFB",
     "PFN_xrReleaseSwapchainImage",
     "PFN_xrRequestDisplayRefreshRateFB",
@@ -16796,6 +20586,7 @@ __all__ = [
     "PFN_xrRequestWorldMeshStateAsyncML",
     "PFN_xrRequestWorldMeshStateCompleteML",
     "PFN_xrResultToString",
+    "PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA",
     "PFN_xrRetrieveSpaceQueryResultsFB",
     "PFN_xrSaveSpaceFB",
     "PFN_xrSaveSpaceListFB",
@@ -16824,14 +20615,19 @@ __all__ = [
     "PFN_xrSetVirtualKeyboardModelVisibilityMETA",
     "PFN_xrShareSpacesFB",
     "PFN_xrShareSpacesMETA",
+    "PFN_xrShareSpatialAnchorAsyncBD",
+    "PFN_xrShareSpatialAnchorCompleteBD",
     "PFN_xrSnapshotMarkerDetectorML",
     "PFN_xrStartColocationAdvertisementMETA",
     "PFN_xrStartColocationDiscoveryMETA",
     "PFN_xrStartEnvironmentDepthProviderMETA",
+    "PFN_xrStartSenseDataProviderAsyncBD",
+    "PFN_xrStartSenseDataProviderCompleteBD",
     "PFN_xrStopColocationAdvertisementMETA",
     "PFN_xrStopColocationDiscoveryMETA",
     "PFN_xrStopEnvironmentDepthProviderMETA",
     "PFN_xrStopHapticFeedback",
+    "PFN_xrStopSenseDataProviderBD",
     "PFN_xrStringToPath",
     "PFN_xrStructureTypeToString",
     "PFN_xrStructureTypeToString2KHR",
@@ -16847,7 +20643,11 @@ __all__ = [
     "PFN_xrTriangleMeshGetIndexBufferFB",
     "PFN_xrTriangleMeshGetVertexBufferFB",
     "PFN_xrTryCreateSpatialGraphStaticNodeBindingMSFT",
+    "PFN_xrUnpersistSpatialAnchorAsyncBD",
+    "PFN_xrUnpersistSpatialAnchorCompleteBD",
     "PFN_xrUnpersistSpatialAnchorMSFT",
+    "PFN_xrUnpersistSpatialEntityAsyncEXT",
+    "PFN_xrUnpersistSpatialEntityCompleteEXT",
     "PFN_xrUpdateHandMeshMSFT",
     "PFN_xrUpdatePassthroughColorLutMETA",
     "PFN_xrUpdateSpatialAnchorsExpirationAsyncML",
@@ -16888,6 +20688,7 @@ __all__ = [
     "PerformanceMetricsCounterFlagsMETACInt",
     "PerformanceMetricsCounterMETA",
     "PerformanceMetricsStateMETA",
+    "PersistSpatialEntityCompletionEXT",
     "PlaneDetectionCapabilityFlagsEXTCInt",
     "PlaneDetectorBeginInfoEXT",
     "PlaneDetectorCreateInfoEXT",
@@ -16900,21 +20701,42 @@ __all__ = [
     "PlaneDetectorPolygonBufferEXT",
     "Posef",
     "Quaternionf",
+    "QueriedSenseDataBD",
+    "QueriedSenseDataGetInfoBD",
     "RecommendedLayerResolutionGetInfoMETA",
     "RecommendedLayerResolutionMETA",
     "Rect2Df",
     "Rect2Di",
     "Rect3DfFB",
     "ReferenceSpaceCreateInfo",
+    "RenderModelAssetCreateInfoEXT",
+    "RenderModelAssetDataEXT",
+    "RenderModelAssetDataGetInfoEXT",
+    "RenderModelAssetEXT",
+    "RenderModelAssetEXT_T",
+    "RenderModelAssetNodePropertiesEXT",
+    "RenderModelAssetPropertiesEXT",
+    "RenderModelAssetPropertiesGetInfoEXT",
     "RenderModelBufferFB",
     "RenderModelCapabilitiesRequestFB",
+    "RenderModelCreateInfoEXT",
+    "RenderModelEXT",
+    "RenderModelEXT_T",
     "RenderModelFlagsFBCInt",
+    "RenderModelIdEXT",
     "RenderModelKeyFB",
     "RenderModelLoadInfoFB",
+    "RenderModelNodeStateEXT",
     "RenderModelPathInfoFB",
+    "RenderModelPropertiesEXT",
     "RenderModelPropertiesFB",
+    "RenderModelPropertiesGetInfoEXT",
+    "RenderModelSpaceCreateInfoEXT",
+    "RenderModelStateEXT",
+    "RenderModelStateGetInfoEXT",
     "RoomLayoutFB",
     "SceneBoundsMSFT",
+    "SceneCaptureInfoBD",
     "SceneCaptureRequestInfoFB",
     "SceneComponentLocationMSFT",
     "SceneComponentLocationsMSFT",
@@ -16960,6 +20782,18 @@ __all__ = [
     "SemanticLabelsFB",
     "SemanticLabelsSupportFlagsFBCInt",
     "SemanticLabelsSupportInfoFB",
+    "SenseDataFilterPlaneOrientationBD",
+    "SenseDataFilterSemanticBD",
+    "SenseDataFilterUuidBD",
+    "SenseDataProviderBD",
+    "SenseDataProviderBD_T",
+    "SenseDataProviderCreateInfoBD",
+    "SenseDataProviderCreateInfoSpatialMeshBD",
+    "SenseDataProviderStartInfoBD",
+    "SenseDataQueryCompletionBD",
+    "SenseDataQueryInfoBD",
+    "SenseDataSnapshotBD",
+    "SenseDataSnapshotBD_T",
     "SerializedSceneFragmentDataGetInfoMSFT",
     "Session",
     "SessionActionSetsAttachInfo",
@@ -16971,6 +20805,9 @@ __all__ = [
     "ShareSpacesInfoMETA",
     "ShareSpacesRecipientBaseHeaderMETA",
     "ShareSpacesRecipientGroupsMETA",
+    "SharedSpatialAnchorDownloadInfoBD",
+    "SimultaneousHandsAndControllersTrackingPauseInfoMETA",
+    "SimultaneousHandsAndControllersTrackingResumeInfoMETA",
     "Space",
     "SpaceComponentFilterInfoFB",
     "SpaceComponentStatusFB",
@@ -17010,6 +20847,9 @@ __all__ = [
     "SpacesLocateInfo",
     "SpacesLocateInfoKHR",
     "SpatialAnchorCompletionResultML",
+    "SpatialAnchorCreateCompletionBD",
+    "SpatialAnchorCreateInfoBD",
+    "SpatialAnchorCreateInfoEXT",
     "SpatialAnchorCreateInfoFB",
     "SpatialAnchorCreateInfoHTC",
     "SpatialAnchorCreateInfoMSFT",
@@ -17017,12 +20857,15 @@ __all__ = [
     "SpatialAnchorMSFT",
     "SpatialAnchorMSFT_T",
     "SpatialAnchorNameHTC",
+    "SpatialAnchorPersistInfoBD",
     "SpatialAnchorPersistenceInfoMSFT",
     "SpatialAnchorPersistenceNameMSFT",
+    "SpatialAnchorShareInfoBD",
     "SpatialAnchorSpaceCreateInfoMSFT",
     "SpatialAnchorStateML",
     "SpatialAnchorStoreConnectionMSFT",
     "SpatialAnchorStoreConnectionMSFT_T",
+    "SpatialAnchorUnpersistInfoBD",
     "SpatialAnchorsCreateInfoBaseHeaderML",
     "SpatialAnchorsCreateInfoFromPoseML",
     "SpatialAnchorsCreateInfoFromUuidsML",
@@ -17041,12 +20884,76 @@ __all__ = [
     "SpatialAnchorsUpdateExpirationCompletionDetailsML",
     "SpatialAnchorsUpdateExpirationCompletionML",
     "SpatialAnchorsUpdateExpirationInfoML",
+    "SpatialBounded2DDataEXT",
+    "SpatialBufferEXT",
+    "SpatialBufferGetInfoEXT",
+    "SpatialBufferIdEXT",
+    "SpatialCapabilityComponentTypesEXT",
+    "SpatialCapabilityConfigurationAnchorEXT",
+    "SpatialCapabilityConfigurationAprilTagEXT",
+    "SpatialCapabilityConfigurationArucoMarkerEXT",
+    "SpatialCapabilityConfigurationBaseHeaderEXT",
+    "SpatialCapabilityConfigurationMicroQrCodeEXT",
+    "SpatialCapabilityConfigurationPlaneTrackingEXT",
+    "SpatialCapabilityConfigurationQrCodeEXT",
+    "SpatialComponentAnchorListEXT",
+    "SpatialComponentBounded2DListEXT",
+    "SpatialComponentBounded3DListEXT",
+    "SpatialComponentDataQueryConditionEXT",
+    "SpatialComponentDataQueryResultEXT",
+    "SpatialComponentMarkerListEXT",
+    "SpatialComponentMesh2DListEXT",
+    "SpatialComponentMesh3DListEXT",
+    "SpatialComponentParentListEXT",
+    "SpatialComponentPersistenceListEXT",
+    "SpatialComponentPlaneAlignmentListEXT",
+    "SpatialComponentPlaneSemanticLabelListEXT",
+    "SpatialComponentPolygon2DListEXT",
+    "SpatialContextCreateInfoEXT",
+    "SpatialContextEXT",
+    "SpatialContextEXT_T",
+    "SpatialContextPersistenceConfigEXT",
+    "SpatialDiscoveryPersistenceUuidFilterEXT",
+    "SpatialDiscoverySnapshotCreateInfoEXT",
+    "SpatialEntityAnchorCreateInfoBD",
+    "SpatialEntityComponentDataBaseHeaderBD",
+    "SpatialEntityComponentDataBoundingBox2DBD",
+    "SpatialEntityComponentDataBoundingBox3DBD",
+    "SpatialEntityComponentDataLocationBD",
+    "SpatialEntityComponentDataPlaneOrientationBD",
+    "SpatialEntityComponentDataPolygonBD",
+    "SpatialEntityComponentDataSemanticBD",
+    "SpatialEntityComponentDataTriangleMeshBD",
+    "SpatialEntityComponentGetInfoBD",
+    "SpatialEntityEXT",
+    "SpatialEntityEXT_T",
+    "SpatialEntityFromIdCreateInfoEXT",
+    "SpatialEntityIdBD",
+    "SpatialEntityIdEXT",
+    "SpatialEntityLocationGetInfoBD",
+    "SpatialEntityPersistInfoEXT",
+    "SpatialEntityStateBD",
+    "SpatialEntityUnpersistInfoEXT",
+    "SpatialFilterTrackingStateEXT",
     "SpatialGraphNodeBindingMSFT",
     "SpatialGraphNodeBindingMSFT_T",
     "SpatialGraphNodeBindingPropertiesGetInfoMSFT",
     "SpatialGraphNodeBindingPropertiesMSFT",
     "SpatialGraphNodeSpaceCreateInfoMSFT",
     "SpatialGraphStaticNodeBindingCreateInfoMSFT",
+    "SpatialMarkerDataEXT",
+    "SpatialMarkerSizeEXT",
+    "SpatialMarkerStaticOptimizationEXT",
+    "SpatialMeshConfigFlagsBDCInt",
+    "SpatialMeshDataEXT",
+    "SpatialPersistenceContextCreateInfoEXT",
+    "SpatialPersistenceContextEXT",
+    "SpatialPersistenceContextEXT_T",
+    "SpatialPersistenceDataEXT",
+    "SpatialPolygon2DDataEXT",
+    "SpatialSnapshotEXT",
+    "SpatialSnapshotEXT_T",
+    "SpatialUpdateSnapshotCreateInfoEXT",
     "Spheref",
     "SpherefKHR",
     "Swapchain",
@@ -17095,11 +21002,19 @@ __all__ = [
     "SystemPassthroughPropertiesFB",
     "SystemPlaneDetectionPropertiesEXT",
     "SystemProperties",
+    "SystemPropertiesBodyTrackingFullBodyMETA",
     "SystemRenderModelPropertiesFB",
+    "SystemSimultaneousHandsAndControllersPropertiesMETA",
     "SystemSpaceWarpPropertiesFB",
+    "SystemSpatialAnchorPropertiesBD",
+    "SystemSpatialAnchorSharingPropertiesBD",
     "SystemSpatialEntityGroupSharingPropertiesMETA",
     "SystemSpatialEntityPropertiesFB",
     "SystemSpatialEntitySharingPropertiesMETA",
+    "SystemSpatialMeshPropertiesBD",
+    "SystemSpatialPlanePropertiesBD",
+    "SystemSpatialScenePropertiesBD",
+    "SystemSpatialSensingPropertiesBD",
     "SystemTrackingProperties",
     "SystemUserPresencePropertiesEXT",
     "SystemVirtualKeyboardPropertiesMETA",
@@ -17108,6 +21023,7 @@ __all__ = [
     "TriangleMeshFB",
     "TriangleMeshFB_T",
     "TriangleMeshFlagsFBCInt",
+    "UnpersistSpatialEntityCompletionEXT",
     "UserCalibrationEnableEventsInfoML",
     "Uuid",
     "UuidEXT",

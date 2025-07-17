@@ -62,7 +62,6 @@ class ContextObject(object):
             self.graphics = OpenGLGraphics(
                 instance=self.instance,
                 system=self.system_id,
-                title=self._instance_create_info.application_info.application_name.decode()
             )
             self.graphics_binding_pointer = cast(pointer(self.graphics.graphics_binding), c_void_p)
             self._session_create_info.next = self.graphics_binding_pointer
@@ -166,10 +165,6 @@ class ContextObject(object):
             ),
         )
         while True:
-            window_closed = self.graphics.poll_events()
-            if window_closed:
-                self.exit_render_loop = True
-                break
             self.exit_render_loop = False
             self.poll_xr_events()
             if self.exit_render_loop:

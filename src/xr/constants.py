@@ -379,6 +379,9 @@ META_PERFORMANCE_METRICS_EXTENSION_NAME = "XR_META_performance_metrics"
 FB_spatial_entity_storage_batch = 1
 FB_spatial_entity_storage_batch_SPEC_VERSION = 1
 FB_SPATIAL_ENTITY_STORAGE_BATCH_EXTENSION_NAME = "XR_FB_spatial_entity_storage_batch"
+META_detached_controllers = 1
+META_detached_controllers_SPEC_VERSION = 1
+META_DETACHED_CONTROLLERS_EXTENSION_NAME = "XR_META_detached_controllers"
 FB_spatial_entity_user = 1
 FB_spatial_entity_user_SPEC_VERSION = 1
 FB_SPATIAL_ENTITY_USER_EXTENSION_NAME = "XR_FB_spatial_entity_user"
@@ -400,6 +403,9 @@ META_SPATIAL_ENTITY_MESH_EXTENSION_NAME = "XR_META_spatial_entity_mesh"
 META_automatic_layer_filter = 1
 META_automatic_layer_filter_SPEC_VERSION = 1
 META_AUTOMATIC_LAYER_FILTER_EXTENSION_NAME = "XR_META_automatic_layer_filter"
+META_body_tracking_full_body = 1
+META_body_tracking_full_body_SPEC_VERSION = 1
+META_BODY_TRACKING_FULL_BODY_EXTENSION_NAME = "XR_META_body_tracking_full_body"
 META_touch_controller_plus = 1
 META_touch_controller_plus_SPEC_VERSION = 1
 META_TOUCH_CONTROLLER_PLUS_EXTENSION_NAME = "XR_META_touch_controller_plus"
@@ -420,6 +426,14 @@ EXT_uuid = 1
 EXT_uuid_SPEC_VERSION = 1
 EXT_UUID_EXTENSION_NAME = "XR_EXT_uuid"
 UUID_SIZE_EXT = 16
+EXT_render_model = 1
+MAX_RENDER_MODEL_ASSET_NODE_NAME_SIZE_EXT = 64
+EXT_render_model_SPEC_VERSION = 1
+EXT_RENDER_MODEL_EXTENSION_NAME = "XR_EXT_render_model"
+NULL_RENDER_MODEL_ID_EXT = 0
+EXT_interaction_render_model = 1
+EXT_interaction_render_model_SPEC_VERSION = 1
+EXT_INTERACTION_RENDER_MODEL_EXTENSION_NAME = "XR_EXT_interaction_render_model"
 EXT_hand_interaction = 1
 EXT_hand_interaction_SPEC_VERSION = 1
 EXT_HAND_INTERACTION_EXTENSION_NAME = "XR_EXT_hand_interaction"
@@ -454,6 +468,27 @@ BODY_JOINT_COUNT_BD = 24
 BODY_JOINT_WITHOUT_ARM_COUNT_BD = 16
 BD_body_tracking_SPEC_VERSION = 1
 BD_BODY_TRACKING_EXTENSION_NAME = "XR_BD_body_tracking"
+BD_spatial_sensing = 1
+BD_spatial_sensing_SPEC_VERSION = 1
+BD_SPATIAL_SENSING_EXTENSION_NAME = "XR_BD_spatial_sensing"
+BD_spatial_anchor = 1
+BD_spatial_anchor_SPEC_VERSION = 1
+BD_SPATIAL_ANCHOR_EXTENSION_NAME = "XR_BD_spatial_anchor"
+BD_spatial_anchor_sharing = 1
+BD_spatial_anchor_sharing_SPEC_VERSION = 2
+BD_SPATIAL_ANCHOR_SHARING_EXTENSION_NAME = "XR_BD_spatial_anchor_sharing"
+BD_spatial_scene = 1
+BD_spatial_scene_SPEC_VERSION = 1
+BD_SPATIAL_SCENE_EXTENSION_NAME = "XR_BD_spatial_scene"
+BD_spatial_mesh = 1
+BD_spatial_mesh_SPEC_VERSION = 1
+BD_SPATIAL_MESH_EXTENSION_NAME = "XR_BD_spatial_mesh"
+BD_future_progress = 1
+BD_future_progress_SPEC_VERSION = 1
+BD_FUTURE_PROGRESS_EXTENSION_NAME = "XR_BD_future_progress"
+BD_spatial_plane = 1
+BD_spatial_plane_SPEC_VERSION = 1
+BD_SPATIAL_PLANE_EXTENSION_NAME = "XR_BD_spatial_plane"
 EXT_local_floor = 1
 EXT_local_floor_SPEC_VERSION = 1
 EXT_LOCAL_FLOOR_EXTENSION_NAME = "XR_EXT_local_floor"
@@ -491,6 +526,9 @@ ML_VIEW_CONFIGURATION_DEPTH_RANGE_CHANGE_EXTENSION_NAME = "XR_ML_view_configurat
 YVR_controller_interaction = 1
 YVR_controller_interaction_SPEC_VERSION = 1
 YVR_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_YVR_controller_interaction"
+META_simultaneous_hands_and_controllers = 1
+META_simultaneous_hands_and_controllers_SPEC_VERSION = 1
+META_SIMULTANEOUS_HANDS_AND_CONTROLLERS_EXTENSION_NAME = "XR_META_simultaneous_hands_and_controllers"
 EXT_composition_layer_inverted_alpha = 1
 EXT_composition_layer_inverted_alpha_SPEC_VERSION = 1
 EXT_COMPOSITION_LAYER_INVERTED_ALPHA_EXTENSION_NAME = "XR_EXT_composition_layer_inverted_alpha"
@@ -501,9 +539,29 @@ META_COLOCATION_DISCOVERY_EXTENSION_NAME = "XR_META_colocation_discovery"
 META_spatial_entity_group_sharing = 1
 META_spatial_entity_group_sharing_SPEC_VERSION = 1
 META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME = "XR_META_spatial_entity_group_sharing"
+EXT_spatial_entity = 1
+NULL_SPATIAL_ENTITY_ID_EXT = 0
+NULL_SPATIAL_BUFFER_ID_EXT = 0
+EXT_spatial_entity_SPEC_VERSION = 1
+EXT_SPATIAL_ENTITY_EXTENSION_NAME = "XR_EXT_spatial_entity"
+EXT_spatial_plane_tracking = 1
+EXT_spatial_plane_tracking_SPEC_VERSION = 1
+EXT_SPATIAL_PLANE_TRACKING_EXTENSION_NAME = "XR_EXT_spatial_plane_tracking"
+EXT_spatial_marker_tracking = 1
+EXT_spatial_marker_tracking_SPEC_VERSION = 1
+EXT_SPATIAL_MARKER_TRACKING_EXTENSION_NAME = "XR_EXT_spatial_marker_tracking"
 LOGITECH_mx_ink_stylus_interaction = 1
 LOGITECH_mx_ink_stylus_interaction_SPEC_VERSION = 1
 LOGITECH_MX_INK_STYLUS_INTERACTION_EXTENSION_NAME = "XR_LOGITECH_mx_ink_stylus_interaction"
+EXT_spatial_anchor = 1
+EXT_spatial_anchor_SPEC_VERSION = 1
+EXT_SPATIAL_ANCHOR_EXTENSION_NAME = "XR_EXT_spatial_anchor"
+EXT_spatial_persistence = 1
+EXT_spatial_persistence_SPEC_VERSION = 1
+EXT_SPATIAL_PERSISTENCE_EXTENSION_NAME = "XR_EXT_spatial_persistence"
+EXT_spatial_persistence_operations = 1
+EXT_spatial_persistence_operations_SPEC_VERSION = 1
+EXT_SPATIAL_PERSISTENCE_OPERATIONS_EXTENSION_NAME = "XR_EXT_spatial_persistence_operations"
 SPACE_VELOCITY_LINEAR_VALID_BIT = 0x00000001
 SPACE_VELOCITY_ANGULAR_VALID_BIT = 0x00000002
 SPACE_LOCATION_ORIENTATION_VALID_BIT = 0x00000001
@@ -608,6 +666,8 @@ PERFORMANCE_METRICS_COUNTER_FLOAT_VALUE_VALID_BIT_META = 0x00000004
 FOVEATION_DYNAMIC_LEVEL_ENABLED_BIT_HTC = 0x00000001
 FOVEATION_DYNAMIC_CLEAR_FOV_ENABLED_BIT_HTC = 0x00000002
 FOVEATION_DYNAMIC_FOCAL_CENTER_OFFSET_ENABLED_BIT_HTC = 0x00000004
+SPATIAL_MESH_CONFIG_SEMANTIC_BIT_BD = 0x00000001
+SPATIAL_MESH_CONFIG_ALIGN_SEMANTIC_WITH_VERTEX_BIT_BD = 0x00000002
 PLANE_DETECTION_CAPABILITY_PLANE_DETECTION_BIT_EXT = 0x00000001
 PLANE_DETECTION_CAPABILITY_PLANE_HOLES_BIT_EXT = 0x00000002
 PLANE_DETECTION_CAPABILITY_SEMANTIC_CEILING_BIT_EXT = 0x00000004
@@ -632,10 +692,31 @@ __all__ = [
     "ALMALENCE_digital_lens_control_SPEC_VERSION",
     "BD_BODY_TRACKING_EXTENSION_NAME",
     "BD_CONTROLLER_INTERACTION_EXTENSION_NAME",
+    "BD_FUTURE_PROGRESS_EXTENSION_NAME",
+    "BD_SPATIAL_ANCHOR_EXTENSION_NAME",
+    "BD_SPATIAL_ANCHOR_SHARING_EXTENSION_NAME",
+    "BD_SPATIAL_MESH_EXTENSION_NAME",
+    "BD_SPATIAL_PLANE_EXTENSION_NAME",
+    "BD_SPATIAL_SCENE_EXTENSION_NAME",
+    "BD_SPATIAL_SENSING_EXTENSION_NAME",
     "BD_body_tracking",
     "BD_body_tracking_SPEC_VERSION",
     "BD_controller_interaction",
     "BD_controller_interaction_SPEC_VERSION",
+    "BD_future_progress",
+    "BD_future_progress_SPEC_VERSION",
+    "BD_spatial_anchor",
+    "BD_spatial_anchor_SPEC_VERSION",
+    "BD_spatial_anchor_sharing",
+    "BD_spatial_anchor_sharing_SPEC_VERSION",
+    "BD_spatial_mesh",
+    "BD_spatial_mesh_SPEC_VERSION",
+    "BD_spatial_plane",
+    "BD_spatial_plane_SPEC_VERSION",
+    "BD_spatial_scene",
+    "BD_spatial_scene_SPEC_VERSION",
+    "BD_spatial_sensing",
+    "BD_spatial_sensing_SPEC_VERSION",
     "BODY_JOINT_COUNT_BD",
     "BODY_JOINT_COUNT_HTC",
     "BODY_JOINT_WITHOUT_ARM_COUNT_BD",
@@ -687,11 +768,19 @@ __all__ = [
     "EXT_HAND_TRACKING_DATA_SOURCE_EXTENSION_NAME",
     "EXT_HAND_TRACKING_EXTENSION_NAME",
     "EXT_HP_MIXED_REALITY_CONTROLLER_EXTENSION_NAME",
+    "EXT_INTERACTION_RENDER_MODEL_EXTENSION_NAME",
     "EXT_LOCAL_FLOOR_EXTENSION_NAME",
     "EXT_PALM_POSE_EXTENSION_NAME",
     "EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME",
     "EXT_PLANE_DETECTION_EXTENSION_NAME",
+    "EXT_RENDER_MODEL_EXTENSION_NAME",
     "EXT_SAMSUNG_ODYSSEY_CONTROLLER_EXTENSION_NAME",
+    "EXT_SPATIAL_ANCHOR_EXTENSION_NAME",
+    "EXT_SPATIAL_ENTITY_EXTENSION_NAME",
+    "EXT_SPATIAL_MARKER_TRACKING_EXTENSION_NAME",
+    "EXT_SPATIAL_PERSISTENCE_EXTENSION_NAME",
+    "EXT_SPATIAL_PERSISTENCE_OPERATIONS_EXTENSION_NAME",
+    "EXT_SPATIAL_PLANE_TRACKING_EXTENSION_NAME",
     "EXT_THERMAL_QUERY_EXTENSION_NAME",
     "EXT_USER_PRESENCE_EXTENSION_NAME",
     "EXT_UUID_EXTENSION_NAME",
@@ -723,6 +812,8 @@ __all__ = [
     "EXT_hand_tracking_data_source_SPEC_VERSION",
     "EXT_hp_mixed_reality_controller",
     "EXT_hp_mixed_reality_controller_SPEC_VERSION",
+    "EXT_interaction_render_model",
+    "EXT_interaction_render_model_SPEC_VERSION",
     "EXT_local_floor",
     "EXT_local_floor_SPEC_VERSION",
     "EXT_palm_pose",
@@ -731,8 +822,22 @@ __all__ = [
     "EXT_performance_settings_SPEC_VERSION",
     "EXT_plane_detection",
     "EXT_plane_detection_SPEC_VERSION",
+    "EXT_render_model",
+    "EXT_render_model_SPEC_VERSION",
     "EXT_samsung_odyssey_controller",
     "EXT_samsung_odyssey_controller_SPEC_VERSION",
+    "EXT_spatial_anchor",
+    "EXT_spatial_anchor_SPEC_VERSION",
+    "EXT_spatial_entity",
+    "EXT_spatial_entity_SPEC_VERSION",
+    "EXT_spatial_marker_tracking",
+    "EXT_spatial_marker_tracking_SPEC_VERSION",
+    "EXT_spatial_persistence",
+    "EXT_spatial_persistence_SPEC_VERSION",
+    "EXT_spatial_persistence_operations",
+    "EXT_spatial_persistence_operations_SPEC_VERSION",
+    "EXT_spatial_plane_tracking",
+    "EXT_spatial_plane_tracking_SPEC_VERSION",
     "EXT_thermal_query",
     "EXT_thermal_query_SPEC_VERSION",
     "EXT_user_presence",
@@ -991,6 +1096,7 @@ __all__ = [
     "MAX_LOCALIZED_ACTION_NAME_SIZE",
     "MAX_LOCALIZED_ACTION_SET_NAME_SIZE",
     "MAX_PATH_LENGTH",
+    "MAX_RENDER_MODEL_ASSET_NODE_NAME_SIZE_EXT",
     "MAX_RENDER_MODEL_NAME_SIZE_FB",
     "MAX_RESULT_STRING_SIZE",
     "MAX_RUNTIME_NAME_SIZE",
@@ -1002,7 +1108,9 @@ __all__ = [
     "MAX_SYSTEM_NAME_SIZE",
     "MAX_VIRTUAL_KEYBOARD_COMMIT_TEXT_SIZE_META",
     "META_AUTOMATIC_LAYER_FILTER_EXTENSION_NAME",
+    "META_BODY_TRACKING_FULL_BODY_EXTENSION_NAME",
     "META_COLOCATION_DISCOVERY_EXTENSION_NAME",
+    "META_DETACHED_CONTROLLERS_EXTENSION_NAME",
     "META_ENVIRONMENT_DEPTH_EXTENSION_NAME",
     "META_FOVEATION_EYE_TRACKED_EXTENSION_NAME",
     "META_HAND_TRACKING_MICROGESTURES_EXTENSION_NAME",
@@ -1013,6 +1121,7 @@ __all__ = [
     "META_PASSTHROUGH_PREFERENCES_EXTENSION_NAME",
     "META_PERFORMANCE_METRICS_EXTENSION_NAME",
     "META_RECOMMENDED_LAYER_RESOLUTION_EXTENSION_NAME",
+    "META_SIMULTANEOUS_HANDS_AND_CONTROLLERS_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_MESH_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_SHARING_EXTENSION_NAME",
@@ -1020,8 +1129,12 @@ __all__ = [
     "META_VIRTUAL_KEYBOARD_EXTENSION_NAME",
     "META_automatic_layer_filter",
     "META_automatic_layer_filter_SPEC_VERSION",
+    "META_body_tracking_full_body",
+    "META_body_tracking_full_body_SPEC_VERSION",
     "META_colocation_discovery",
     "META_colocation_discovery_SPEC_VERSION",
+    "META_detached_controllers",
+    "META_detached_controllers_SPEC_VERSION",
     "META_environment_depth",
     "META_environment_depth_SPEC_VERSION",
     "META_foveation_eye_tracked",
@@ -1042,6 +1155,8 @@ __all__ = [
     "META_performance_metrics_SPEC_VERSION",
     "META_recommended_layer_resolution",
     "META_recommended_layer_resolution_SPEC_VERSION",
+    "META_simultaneous_hands_and_controllers",
+    "META_simultaneous_hands_and_controllers_SPEC_VERSION",
     "META_spatial_entity_group_sharing",
     "META_spatial_entity_group_sharing_SPEC_VERSION",
     "META_spatial_entity_mesh",
@@ -1143,7 +1258,10 @@ __all__ = [
     "NULL_FUTURE_EXT",
     "NULL_HANDLE",
     "NULL_PATH",
+    "NULL_RENDER_MODEL_ID_EXT",
     "NULL_RENDER_MODEL_KEY_FB",
+    "NULL_SPATIAL_BUFFER_ID_EXT",
+    "NULL_SPATIAL_ENTITY_ID_EXT",
     "NULL_SYSTEM_ID",
     "OCULUS_ANDROID_SESSION_STATE_ENABLE_EXTENSION_NAME",
     "OCULUS_EXTERNAL_CAMERA_EXTENSION_NAME",
@@ -1191,6 +1309,8 @@ __all__ = [
     "SPACE_LOCATION_POSITION_VALID_BIT",
     "SPACE_VELOCITY_ANGULAR_VALID_BIT",
     "SPACE_VELOCITY_LINEAR_VALID_BIT",
+    "SPATIAL_MESH_CONFIG_ALIGN_SEMANTIC_WITH_VERTEX_BIT_BD",
+    "SPATIAL_MESH_CONFIG_SEMANTIC_BIT_BD",
     "SWAPCHAIN_CREATE_FOVEATION_FRAGMENT_DENSITY_MAP_BIT_FB",
     "SWAPCHAIN_CREATE_FOVEATION_SCALED_BIN_BIT_FB",
     "SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT",

@@ -1264,6 +1264,30 @@ class EnvironmentDepthNotAvailableMETA(QualifiedSuccessResult):
         return Result.ENVIRONMENT_DEPTH_NOT_AVAILABLE_META
 
 
+class RenderModelIdInvalidEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_RENDER_MODEL_ID_INVALID_EXT
+
+
+class RenderModelAssetUnavailableEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_RENDER_MODEL_ASSET_UNAVAILABLE_EXT
+
+
+class RenderModelGltfExtensionRequiredEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_RENDER_MODEL_GLTF_EXTENSION_REQUIRED_EXT
+
+
+class NotInteractionRenderModelEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_NOT_INTERACTION_RENDER_MODEL_EXT
+
+
 class HintAlreadySetQCOMError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1274,6 +1298,66 @@ class NotAnAnchorHTCError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_NOT_AN_ANCHOR_HTC
+
+
+class SpatialEntityIdInvalidBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ENTITY_ID_INVALID_BD
+
+
+class SpatialSensingServiceUnavailableBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_SENSING_SERVICE_UNAVAILABLE_BD
+
+
+class AnchorNotSupportedForEntityBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_ANCHOR_NOT_SUPPORTED_FOR_ENTITY_BD
+
+
+class SpatialAnchorNotFoundBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_NOT_FOUND_BD
+
+
+class SpatialAnchorSharingNetworkTimeoutBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_SHARING_NETWORK_TIMEOUT_BD
+
+
+class SpatialAnchorSharingAuthenticationFailureBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_SHARING_AUTHENTICATION_FAILURE_BD
+
+
+class SpatialAnchorSharingNetworkFailureBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_SHARING_NETWORK_FAILURE_BD
+
+
+class SpatialAnchorSharingLocalizationFailBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_SHARING_LOCALIZATION_FAIL_BD
+
+
+class SpatialAnchorSharingMapInsufficientBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_SHARING_MAP_INSUFFICIENT_BD
+
+
+class SceneCaptureFailureBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SCENE_CAPTURE_FAILURE_BD
 
 
 class SpaceNotLocatableEXTError(ErrorResult):
@@ -1358,6 +1442,54 @@ class SpaceGroupNotFoundMETAError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_SPACE_GROUP_NOT_FOUND_META
+
+
+class SpatialCapabilityUnsupportedEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+
+
+class SpatialEntityIdInvalidEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ENTITY_ID_INVALID_EXT
+
+
+class SpatialBufferIdInvalidEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_BUFFER_ID_INVALID_EXT
+
+
+class SpatialComponentUnsupportedForCapabilityEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_COMPONENT_UNSUPPORTED_FOR_CAPABILITY_EXT
+
+
+class SpatialCapabilityConfigurationInvalidEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT
+
+
+class SpatialComponentNotEnabledEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT
+
+
+class SpatialPersistenceScopeUnsupportedEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_PERSISTENCE_SCOPE_UNSUPPORTED_EXT
+
+
+class SpatialPersistenceScopeIncompatibleEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_PERSISTENCE_SCOPE_INCOMPATIBLE_EXT
 
 
 class ExtensionDependencyNotEnabledKHRError(ErrorResult):
@@ -1485,8 +1617,22 @@ _exception_map = {
     Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB: SpaceCloudStorageDisabledFBError,
     Result.ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META: PassthroughColorLutBufferSizeMismatchMETAError,
     Result.ENVIRONMENT_DEPTH_NOT_AVAILABLE_META: EnvironmentDepthNotAvailableMETA,
+    Result.ERROR_RENDER_MODEL_ID_INVALID_EXT: RenderModelIdInvalidEXTError,
+    Result.ERROR_RENDER_MODEL_ASSET_UNAVAILABLE_EXT: RenderModelAssetUnavailableEXTError,
+    Result.ERROR_RENDER_MODEL_GLTF_EXTENSION_REQUIRED_EXT: RenderModelGltfExtensionRequiredEXTError,
+    Result.ERROR_NOT_INTERACTION_RENDER_MODEL_EXT: NotInteractionRenderModelEXTError,
     Result.ERROR_HINT_ALREADY_SET_QCOM: HintAlreadySetQCOMError,
     Result.ERROR_NOT_AN_ANCHOR_HTC: NotAnAnchorHTCError,
+    Result.ERROR_SPATIAL_ENTITY_ID_INVALID_BD: SpatialEntityIdInvalidBDError,
+    Result.ERROR_SPATIAL_SENSING_SERVICE_UNAVAILABLE_BD: SpatialSensingServiceUnavailableBDError,
+    Result.ERROR_ANCHOR_NOT_SUPPORTED_FOR_ENTITY_BD: AnchorNotSupportedForEntityBDError,
+    Result.ERROR_SPATIAL_ANCHOR_NOT_FOUND_BD: SpatialAnchorNotFoundBDError,
+    Result.ERROR_SPATIAL_ANCHOR_SHARING_NETWORK_TIMEOUT_BD: SpatialAnchorSharingNetworkTimeoutBDError,
+    Result.ERROR_SPATIAL_ANCHOR_SHARING_AUTHENTICATION_FAILURE_BD: SpatialAnchorSharingAuthenticationFailureBDError,
+    Result.ERROR_SPATIAL_ANCHOR_SHARING_NETWORK_FAILURE_BD: SpatialAnchorSharingNetworkFailureBDError,
+    Result.ERROR_SPATIAL_ANCHOR_SHARING_LOCALIZATION_FAIL_BD: SpatialAnchorSharingLocalizationFailBDError,
+    Result.ERROR_SPATIAL_ANCHOR_SHARING_MAP_INSUFFICIENT_BD: SpatialAnchorSharingMapInsufficientBDError,
+    Result.ERROR_SCENE_CAPTURE_FAILURE_BD: SceneCaptureFailureBDError,
     Result.ERROR_SPACE_NOT_LOCATABLE_EXT: SpaceNotLocatableEXTError,
     Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT: PlaneDetectionPermissionDeniedEXTError,
     Result.ERROR_FUTURE_PENDING_EXT: FuturePendingEXTError,
@@ -1501,6 +1647,14 @@ _exception_map = {
     Result.COLOCATION_DISCOVERY_ALREADY_ADVERTISING_META: ColocationDiscoveryAlreadyAdvertisingMETA,
     Result.COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META: ColocationDiscoveryAlreadyDiscoveringMETA,
     Result.ERROR_SPACE_GROUP_NOT_FOUND_META: SpaceGroupNotFoundMETAError,
+    Result.ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT: SpatialCapabilityUnsupportedEXTError,
+    Result.ERROR_SPATIAL_ENTITY_ID_INVALID_EXT: SpatialEntityIdInvalidEXTError,
+    Result.ERROR_SPATIAL_BUFFER_ID_INVALID_EXT: SpatialBufferIdInvalidEXTError,
+    Result.ERROR_SPATIAL_COMPONENT_UNSUPPORTED_FOR_CAPABILITY_EXT: SpatialComponentUnsupportedForCapabilityEXTError,
+    Result.ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT: SpatialCapabilityConfigurationInvalidEXTError,
+    Result.ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT: SpatialComponentNotEnabledEXTError,
+    Result.ERROR_SPATIAL_PERSISTENCE_SCOPE_UNSUPPORTED_EXT: SpatialPersistenceScopeUnsupportedEXTError,
+    Result.ERROR_SPATIAL_PERSISTENCE_SCOPE_INCOMPATIBLE_EXT: SpatialPersistenceScopeIncompatibleEXTError,
     Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED_KHR: ExtensionDependencyNotEnabledKHRError,
     Result.ERROR_PERMISSION_INSUFFICIENT_KHR: PermissionInsufficientKHRError,
 }
@@ -1529,6 +1683,7 @@ __all__ = [
     "ActionTypeMismatchError",
     "ActionsetNotAttachedError",
     "ActionsetsAlreadyAttachedError",
+    "AnchorNotSupportedForEntityBDError",
     "AndroidThreadSettingsFailureKHRError",
     "AndroidThreadSettingsIdInvalidKHRError",
     "ApiLayerNotPresentError",
@@ -1592,6 +1747,7 @@ __all__ = [
     "NameDuplicatedError",
     "NameInvalidError",
     "NotAnAnchorHTCError",
+    "NotInteractionRenderModelEXTError",
     "NotPermittedPassthroughFBError",
     "OutOfMemoryError",
     "PassthroughColorLutBufferSizeMismatchMETAError",
@@ -1605,12 +1761,16 @@ __all__ = [
     "PoseInvalidError",
     "QualifiedSuccessResult",
     "ReferenceSpaceUnsupportedError",
+    "RenderModelAssetUnavailableEXTError",
+    "RenderModelGltfExtensionRequiredEXTError",
+    "RenderModelIdInvalidEXTError",
     "RenderModelKeyInvalidFBError",
     "RenderModelUnavailableFB",
     "ReprojectionModeUnsupportedMSFTError",
     "ResultException",
     "RuntimeFailureError",
     "RuntimeUnavailableError",
+    "SceneCaptureFailureBDError",
     "SceneComponentIdInvalidMSFTError",
     "SceneComponentTypeMismatchMSFTError",
     "SceneComputeConsistencyMismatchMSFTError",
@@ -1640,11 +1800,27 @@ __all__ = [
     "SpaceNotLocatableEXTError",
     "SpatialAnchorNameInvalidMSFTError",
     "SpatialAnchorNameNotFoundMSFTError",
+    "SpatialAnchorNotFoundBDError",
+    "SpatialAnchorSharingAuthenticationFailureBDError",
+    "SpatialAnchorSharingLocalizationFailBDError",
+    "SpatialAnchorSharingMapInsufficientBDError",
+    "SpatialAnchorSharingNetworkFailureBDError",
+    "SpatialAnchorSharingNetworkTimeoutBDError",
     "SpatialAnchorsAnchorNotFoundMLError",
     "SpatialAnchorsNotLocalizedMLError",
     "SpatialAnchorsOutOfMapBoundsMLError",
     "SpatialAnchorsPermissionDeniedMLError",
     "SpatialAnchorsSpaceNotLocatableMLError",
+    "SpatialBufferIdInvalidEXTError",
+    "SpatialCapabilityConfigurationInvalidEXTError",
+    "SpatialCapabilityUnsupportedEXTError",
+    "SpatialComponentNotEnabledEXTError",
+    "SpatialComponentUnsupportedForCapabilityEXTError",
+    "SpatialEntityIdInvalidBDError",
+    "SpatialEntityIdInvalidEXTError",
+    "SpatialPersistenceScopeIncompatibleEXTError",
+    "SpatialPersistenceScopeUnsupportedEXTError",
+    "SpatialSensingServiceUnavailableBDError",
     "Success",
     "SwapchainFormatUnsupportedError",
     "SwapchainRectInvalidError",

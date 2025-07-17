@@ -1432,9 +1432,13 @@ def snake_from_camel(camel: str) -> str:
     snake = f"{camel}"
     # Pre-adjust capitalization of known words: OpenGL, 2D, 3D
     words = {
-        "2D": "_2d",
-        "D3D11": "D3d11",
+        # e.g. StructureType.GRAPHICS_BINDING_D3D11_KHR
+        "D3D11": "D3d11",  # apply this BEFORE "3D" rule below
         "D3D12": "D3d12",
+        "2D": "_2d",
+        # e.g. StructureType.SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_3D_BD
+        # e.g. StructureType.SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT
+        "3D": "_3d",
         "OpenGL": "Opengl",
         "QRCode": "QrCode",
     }
