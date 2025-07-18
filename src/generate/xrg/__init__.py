@@ -152,12 +152,15 @@ def generate_code_items(
                     continue
                 flag_types[cursor.spelling] = FlagsItem(cursor)
             elif cursor.kind == CursorKind.VAR_DECL:
-                if cursor.type.kind != TypeKind.TYPEDEF:
+                ct = cursor.type
+                if ct.kind == TypeKind.ELABORATED:
+                    ct = ct.get_named_type()  # unpack elaborated type, whatever that is
+                if ct.kind != TypeKind.TYPEDEF:
                     continue
-                ut = cursor.type.get_declaration().underlying_typedef_type
+                ut = ct.get_declaration().underlying_typedef_type
                 if ut.spelling != "XrFlags64":
                     continue
-                flags_type_name = cursor.type.spelling.replace("const ", "")
+                flags_type_name = ct.spelling.replace("const ", "")
                 flag_types[flags_type_name].add_value(cursor)
     for cursor in generate_cursors(
             header=header,
