@@ -32,15 +32,15 @@ class CodeItem(ABC):
         return 1
 
     @abstractmethod
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         pass
 
     @abstractmethod
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         pass
 
     @abstractmethod
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         pass
 
 
@@ -80,7 +80,7 @@ class DefinitionItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -90,12 +90,12 @@ class DefinitionItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         if api == api.C:
             return f"#define {self.name(api)} {self.c_value}"
         return f"{self.name(api)} = {self.value}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return set()
 
 
@@ -118,7 +118,7 @@ class EnumItem(CodeItem):
     def blank_lines_after():
         return 1
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -128,8 +128,8 @@ class EnumItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
-        if api == api.CTYPES:
+    def code(self, api: Api = Api.PYTHON) -> str:
+        if api == Api.CTYPES:
             result = f"{self.name(api)} = c_int"
             for v in self.values:
                 result += f"\n{v.code(api)}"
@@ -152,8 +152,10 @@ class EnumItem(CodeItem):
                 result += f"    \n{v.code(api)}"
             result += "\n}"
             return result
+        else:
+            raise NotImplementedError
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return {
             "c_int",
         }
@@ -216,7 +218,7 @@ class EnumValueItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -226,7 +228,7 @@ class EnumValueItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         line_end = ""
         line_indent = "    "
         if api == Api.C:
@@ -235,7 +237,7 @@ class EnumValueItem(CodeItem):
             line_indent = ""
         return f"\n{line_indent}{self.name(api)} = {self.value}{line_end}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return {
             "c_int",
         }
@@ -268,7 +270,7 @@ class FlagsItem(CodeItem):
             item_name = item_name[:-len(self.vendor) - 1]
         self.values.append([item_name, item.value])
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -278,18 +280,16 @@ class FlagsItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
-        if api == api.CTYPES:
-            raise NotImplementedError
-        elif api == api.PYTHON:
+    def code(self, api: Api = Api.PYTHON) -> str:
+        if api == api.PYTHON:
             result = f"class {self.name(api)}(FlagBase):\n    NONE = 0x00000000"
             for name, value in self.values:
                 result += f"\n    {name} = {value}"
             return result
-        elif api == api.C:
+        else:
             raise NotImplementedError
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return set()
 
 
@@ -311,7 +311,6 @@ class FunctionItem(CodeItem):
                 assert False
         if "Function" in default_values:
             fns = default_values["Function"]
-            n = self.name()
             if self.name() in fns:
                 fn = fns[self.name()]
                 if "Parameter" in fn:
@@ -335,7 +334,7 @@ class FunctionItem(CodeItem):
     def blank_lines_after():
         return 2
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -345,8 +344,7 @@ class FunctionItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
-
+    def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.CTYPES:
             # ctypes raw function definition
             result = ""
@@ -375,10 +373,10 @@ class FunctionItem(CodeItem):
             return result
         elif api == Api.PYTHON:
             return str(FunctionCoder(self))
-        elif api == Api.C:
+        else:
             raise NotImplementedError
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         result = self.return_type.used_ctypes(api)
         for p in self.parameters:
             result.update(p.used_ctypes(api))
@@ -404,7 +402,7 @@ class FunctionParameterItem(CodeItem):
             except Exception:
                 pass
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -414,7 +412,7 @@ class FunctionParameterItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         pass
 
     @property
@@ -434,7 +432,7 @@ class FunctionParameterItem(CodeItem):
         else:
             return self._optional
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(api)
 
 
@@ -456,7 +454,7 @@ class StructFieldItem(CodeItem):
         self.kind = StructFieldItem.Kind.NORMAL
         self.default_value = None
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -466,7 +464,7 @@ class StructFieldItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def inner_name(self, api=Api.PYTHON) -> str:
+    def inner_name(self, api: Api = Api.PYTHON) -> str:
         """Sometimes we hide the inner field name, so we can wrap it."""
         n = self.name(api)
         if self.kind in [
@@ -477,12 +475,12 @@ class StructFieldItem(CodeItem):
         else:
             return n
 
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
         return f'\n        ("{self.inner_name(api)}", {self.type.name(api)}),'
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(api)
 
 
@@ -516,6 +514,7 @@ class StructItem(CodeItem):
                 and f.type.name(Api.PYTHON) == "int"  # It's typed like a count
                 and ix + 1 < len(self.fields)  # It's not the final field
             ):
+                stem = f.name()
                 if f.name().endswith("_count"):
                     stem = f.name()[:-6]  # Remove the final "_count"
                 elif f.name().startswith("count_"):
@@ -552,7 +551,7 @@ class StructItem(CodeItem):
     def blank_lines_after():
         return 2
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -629,7 +628,7 @@ class StructItem(CodeItem):
         result += "\n"
         return result
 
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
         result = f"class {self.name(api)}(Structure):"
@@ -653,7 +652,7 @@ class StructItem(CodeItem):
         result += structure_coder.generate_fields(api)
         return result
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         result = {
             "Structure",
         }
@@ -687,7 +686,7 @@ class TypeDefItem(CodeItem):
         if self._py_name == "Version":
             self._py_name = self._ctypes_name = "VersionNumber"
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -697,12 +696,12 @@ class TypeDefItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
         return f"{self.name(api)} = {self.type.name(Api.CTYPES)}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(Api.CTYPES)
 
 
@@ -740,7 +739,7 @@ class VariableItem(CodeItem):
     def blank_lines_after():
         return 0
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name
         elif api == api.C:
@@ -750,12 +749,12 @@ class VariableItem(CodeItem):
         else:
             raise NotImplementedError
 
-    def code(self, api=Api.PYTHON) -> str:
+    def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
         return f"{self.name(api)} = {self.value}"
 
-    def used_ctypes(self, api=Api.PYTHON) -> Set[str]:
+    def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return set()
 
 
@@ -769,10 +768,10 @@ class NothingParameterCoder(object):
     def declaration_code(api=Api.PYTHON) -> Generator[str, None, None]:
         yield from []
 
-    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield from []
 
-    def buffer_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def buffer_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield from self.main_call_code()
 
     @staticmethod
@@ -787,17 +786,17 @@ class NothingParameterCoder(object):
     def result_type_code(api=Api.PYTHON) -> Generator[str, None, None]:
         yield from []
 
-    def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_value_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield from []
 
 
 class ParameterCoderBase(NothingParameterCoder):
-    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.parameter.name(api)}"
 
 
 class InputParameterCoder(ParameterCoderBase):
-    def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def declaration_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         if self.default is None:
             yield f"{self.parameter.name(api)}: {self.type_string()}"
         else:
@@ -818,37 +817,37 @@ class CreateInfoParameterCoder(InputParameterCoder):
     def __init__(self, parameter: FunctionParameterItem):
         super().__init__(parameter=parameter, default="None")
 
-    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"if {self.parameter.name(api)} is None:"
         yield f"    {self.parameter.name(api)} = {self.type_string()}()"
 
 
 class EnumParameterCoder(InputParameterCoder):
-    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.parameter.name(api)}.value"
 
 
 class StringInputParameterCoder(InputParameterCoder):
-    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"if {self.parameter.name(api)} is not None:"
         yield f"    {self.parameter.name(api)} = {self.parameter.name(api)}.encode()"
 
 
 class OutputParameterCoder(ParameterCoderBase):
-    def result_type_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_type_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         yield f"{rtype.name(api)}"
 
-    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         yield f"{self.parameter.name(api)} = {rtype.name(Api.CTYPES)}()"
 
-    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"byref({self.parameter.name(api)})"
 
-    def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_value_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         if rtype.name(Api.PYTHON) == "int":
@@ -887,19 +886,19 @@ class BufferCoder(ParameterCoderBase):
         else:
             self.array_type_name_internal = self.array_type_name
 
-    def declaration_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def declaration_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         if self.use_element_type_arg:
             yield f"element_type: type"
 
-    def pre_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)} = {self.cap_in.type.name(Api.CTYPES)}(0)"
 
-    def buffer_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def buffer_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield "0"
         yield f"byref({self.cap_in.name(api)})"
         yield "None"
 
-    def mid_body_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def mid_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         name = f"{self.array.name()}"
         n = f"{self.cap_in.name(api)}.value"
         e_type = self.array_type_name_internal
@@ -910,7 +909,7 @@ class BufferCoder(ParameterCoderBase):
             # initialized_array = (MyStructure * N)(*([MyStructure()] * N))
             yield f"{name} = ({e_type} * {n})(*([{e_type}()] * {n}))"
 
-    def main_call_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
         yield f"byref({self.cap_in.name(api)})"
         if self.use_element_type_arg:
@@ -918,14 +917,14 @@ class BufferCoder(ParameterCoderBase):
         else:
             yield f"{self.array.name(api)}"
 
-    def result_type_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_type_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         if self.array_type_name == "str":
             yield "str"
         else:  # array case
             # yield f"Array[{self.array_type_name}]"  # Not in python 3.6
             yield f"Array"
 
-    def result_value_code(self, api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_value_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         if self.array_type_name == "str":
             yield f"{self.array.name(api)}.value.decode()"
         else:  # array case
@@ -978,7 +977,7 @@ class FunctionCoder(object):
                     continue
             pc[1] = InputParameterCoder(p)
 
-    def declaration_code(self, api=Api.PYTHON) -> str:
+    def declaration_code(self, api: Api = Api.PYTHON) -> str:
         result_types = []
         for p, c in self.param_coders:
             for r in c.result_type_code(Api.PYTHON):
@@ -1006,7 +1005,7 @@ class FunctionCoder(object):
             ) -> {result}:
         """)
 
-    def __str__(self, api=Api.PYTHON):
+    def __str__(self, api: Api = Api.PYTHON):
         result = self.declaration_code(api)
         docstring = ""
         result += f'\n    """{docstring}"""'
@@ -1357,6 +1356,8 @@ class StructureCoder(object):
         i8 = "        "
         i12 = "            "
         result = ""
+        if self.struct.name() == "SecondaryViewConfigurationSessionBeginInfoMSFT":
+            x = 3
         result += f"\n{i4}def __init__(\n{i8}self,\n"
         for fc in self.field_coders:
             for s in fc.param_code():
@@ -1372,7 +1373,7 @@ class StructureCoder(object):
         result += f"{i8})\n"
         return result
 
-    def generate_fields(self, api=Api.PYTHON) -> str:
+    def generate_fields(self, api: Api = Api.PYTHON) -> str:
         result = ""
         # Recursive structures require two separate stanzas
         if self.struct.is_recursive:

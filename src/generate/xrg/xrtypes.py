@@ -34,7 +34,7 @@ class ArrayType(TypeBase):
         self.element_type = parse_type(clang_type.element_type)
         self.count = clang_type.element_count
 
-    def name(self, api=Api.PYTHON) -> str:
+    def name(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             return f"{self.element_type.name(api)}[{self.count}]"
         else:
