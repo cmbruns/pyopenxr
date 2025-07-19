@@ -141,7 +141,6 @@ system_id = xr.get_system(
 graphics = xr.OpenGLGraphics(
     instance=instance,
     system=system_id,
-    title="Horatio Hornblower",
 )
 
 # OpenGL can report debug messages too
@@ -254,9 +253,6 @@ frame_count = 0
 if run_frame_loop:
     while True:
         frame_count += 1
-        window_closed = graphics.poll_events()
-        if window_closed:
-            xr.request_exit_session(session)
         # poll_xr_events
         exit_render_loop = False
         while True:
