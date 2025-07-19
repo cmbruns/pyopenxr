@@ -4,3 +4,14 @@ requires = [
     "wheel",
 ]
 build-backend = "setuptools.build_meta"
+[tool.setuptools]
+license-files = []
+[project]
+name = "pyopenxr"
+dynamic = ["version"]
+description = "Python bindings for OpenXR"
+authors = [{ name = "Christopher Bruns", email = "cmbruns@rotatingpenguin.com" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
