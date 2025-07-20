@@ -1,7 +1,8 @@
 import ctypes
 import platform
+from typing import Optional
 
-from .glfw_context_provider import GLFWOffscreenContextProvider
+from .glfw_context_provider import GLFWOffscreenContextProvider, OffscreenContextProvider
 
 if platform.system() == "Windows":
     from OpenGL import WGL
@@ -22,7 +23,7 @@ class OpenGLGraphics(object):
             self,
             instance: Instance,
             system: SystemId,
-            context_provider=None,
+            context_provider: Optional[OffscreenContextProvider] = None,
     ) -> None:
         if context_provider is None:
             context_provider = GLFWOffscreenContextProvider()
