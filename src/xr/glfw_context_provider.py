@@ -26,6 +26,15 @@ class OffscreenContextProvider(ABC):
             GL.glDrawArrays(...)
     """
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def destroy(self):
+        pass
+
     @abstractmethod
     def make_current(self) -> None:
         """Bind this context and surface to the current thread."""
