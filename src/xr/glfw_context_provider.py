@@ -30,7 +30,7 @@ class OffscreenContextProvider(ABC):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+        self.destroy()
 
     def destroy(self):
         pass
