@@ -19,3 +19,7 @@ authors = [{ name = "Christopher M. Bruns", email = "cmbruns@rotatingpenguin.com
 license = { text = "Apache-2.0" }
 readme = "README.md"
 requires-python = ">=3.9"
+[project.optional-dependencies]
+dev = ["libclang"]
+glfw = ["glfw"]
+pyside = ["PySide6"]

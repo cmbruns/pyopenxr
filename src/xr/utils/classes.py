@@ -13,12 +13,12 @@ elif platform.system() == "Linux":
     from OpenGL import GLX
 import glfw
 
-from .enums import *
-from .typedefs import *
-from .functions import *
-from .platform import *
-from .version import *
-from .exception import *
+from xr.enums import *
+from xr.typedefs import *
+from xr.functions import *
+from xr.platform import *
+from xr.version import *
+from xr.exception import *
 
 
 class Eye(enum.IntEnum):

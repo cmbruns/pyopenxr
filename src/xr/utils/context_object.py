@@ -2,11 +2,11 @@ import time
 from ctypes import byref, c_int32, c_void_p, cast, POINTER, pointer, Structure
 
 import xr
-from .enums import *
-from .exception import *
-from .typedefs import *
-from .functions import *
-from .opengl_graphics import OpenGLGraphics
+from xr.enums import *
+from xr.exception import *
+from xr.typedefs import *
+from xr.functions import *
+from xr.utils.opengl_graphics import OpenGLGraphics
 
 
 class SwapchainStruct(Structure):

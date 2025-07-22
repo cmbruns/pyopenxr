@@ -26,7 +26,7 @@ import math
 import numpy
 from typing import Sequence
 
-from .typedefs import *
+from xr.typedefs import *
 
 
 class GraphicsAPI(enum.Enum):

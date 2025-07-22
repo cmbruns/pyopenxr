@@ -2,20 +2,21 @@ import ctypes
 import platform
 from typing import Optional
 
-from .glfw_context_provider import GLFWOffscreenContextProvider, OffscreenContextProvider
+from xr.utils.glfw_context_provider import GLFWOffscreenContextProvider
+from xr.utils.graphics_context_provider import GraphicsContextProvider
 
 if platform.system() == "Windows":
     from OpenGL import WGL
-    from .platform.windows import *
+    from xr.platform.windows import *
 elif platform.system() == "Linux":
     from OpenGL import GLX
-    from .platform.linux import *
+    from xr.platform.linux import *
 from OpenGL import GL
 
-from .enums import *
-from .exception import *
-from .typedefs import *
-from .functions import *
+from xr.enums import *
+from xr.exception import *
+from xr.typedefs import *
+from xr.functions import *
 
 
 class OpenGLGraphics(object):
@@ -23,7 +24,7 @@ class OpenGLGraphics(object):
             self,
             instance: Instance,
             system: SystemId,
-            context_provider: Optional[OffscreenContextProvider] = None,
+            context_provider: Optional[GraphicsContextProvider] = None,
     ) -> None:
         if context_provider is None:
             context_provider = GLFWOffscreenContextProvider()

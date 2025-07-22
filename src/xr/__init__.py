@@ -12,13 +12,10 @@ from . import (
     custom_functions,
     platform,
     exception,
-    classes,
     api_layer,
-    context_object,
-    opengl_graphics,
-    matrix4x4f,
     extension,
 )
+from .utils import classes, context_object, matrix4x4f, opengl_graphics
 
 from .version import *
 from .constants import *
@@ -28,11 +25,11 @@ from .functions import *
 from .custom_functions import *
 from .platform import *
 from .exception import *
-from .classes import *
+from xr.utils.classes import *
 from .api_layer import *
-from .context_object import *
-from .opengl_graphics import *
-from .matrix4x4f import *
+from xr.utils.context_object import *
+from xr.utils.opengl_graphics import *
+from xr.utils.matrix4x4f import *
 
 
 # from .experiment import *
@@ -50,15 +47,8 @@ for subpackage in (
     custom_functions,
     platform,
     exception,
-    classes,
     api_layer,
-    context_object,
-    opengl_graphics,
-    matrix4x4f,
 ):
     __all__ += subpackage.__all__
-
-from .api_layer.steamvr_linux_destroyinstance_layer import SteamVrLinuxDestroyInstanceLayer
-__all__ += "SteamVrLinuxDestroyInstanceLayer"
 
 __version__ = version.PYOPENXR_VERSION  # Not in __all__, right?
