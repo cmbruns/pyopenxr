@@ -1,9 +1,12 @@
+from ctypes import byref, cast, POINTER
+import logging
 import time
-from _ctypes import byref, POINTER
-from ctypes import cast
 from typing import Optional
 
 import xr
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())  # To avoid complaints about missing handler
 
 
 class SessionStateManager:
@@ -13,11 +16,6 @@ class SessionStateManager:
     This class manages the transition between session states, receives runtime events,
     and coordinates rendering activity. It also gracefully winds down the session
     during context exit or shutdown.
-
-    Note:
-        Currently this class consumes all OpenXR events internally via `poll_xr_events()`.
-        In future refactoring, consider a pub-sub or callback interface to allow
-        other modules to handle relevant events independently.
 
     Raises:
         ExitRenderLoop: When the session transitions into an exit state.
@@ -49,9 +47,6 @@ class SessionStateManager:
         Returns:
             FrameState if the frame is started, None otherwise.
         """
-        self.exit_render_loop = False
-        self.poll_xr_events()
-
         if self.exit_render_loop:
             raise self.ExitRenderLoop()
 
@@ -99,9 +94,13 @@ class SessionStateManager:
             xr.request_exit_session(self.session)
         except xr.exception.SessionNotRunningError:
             pass  # Session already exited or never started
-
         for _ in range(20):
-            self.poll_xr_events()
+            while True:
+                try:
+                    event = xr.poll_event(self.instance)
+                    self.handle_xr_event(event)
+                except xr.EventUnavailable:
+                    break
             if self.exit_render_loop:
                 break
             if self.session_is_running:
@@ -129,7 +128,7 @@ class SessionStateManager:
                 POINTER(xr.EventDataSessionStateChanged)
             ).contents
             self.session_state = xr.SessionState(event.state)
-            log.info(f"Session state changed to {self.session_state.name}")
+            logger.info(f"OpenXR session state changed to {self.session_state.name}")
 
             if self.session_state == xr.SessionState.READY:
                 xr.begin_session(
@@ -145,16 +144,3 @@ class SessionStateManager:
             elif self.session_state in (xr.SessionState.EXITING, xr.SessionState.LOSS_PENDING):
                 self.exit_render_loop = True
                 self.request_restart = (self.session_state == xr.SessionState.LOSS_PENDING)
-
-    def poll_xr_events(self) -> None:
-        """
-        Poll the OpenXR runtime for available events and handle them.
-
-        Consumes all queued events using `handle_xr_event`.
-        """
-        while True:
-            try:
-                event_buffer = xr.poll_event(self.instance)
-                self.handle_xr_event(event_buffer)
-            except xr.EventUnavailable:
-                break

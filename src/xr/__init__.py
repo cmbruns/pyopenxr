@@ -13,9 +13,7 @@ from . import (
     platform,
     exception,
     api_layer,
-    extension,
 )
-from .utils import classes, context_object, matrix4x4f, opengl_graphics
 
 from .version import *
 from .constants import *
@@ -25,17 +23,10 @@ from .functions import *
 from .custom_functions import *
 from .platform import *
 from .exception import *
-from xr.utils.classes import *
 from .api_layer import *
-from xr.utils.context_object import *
-from xr.utils.opengl_graphics import *
-from xr.utils.matrix4x4f import *
 
-
-# from .experiment import *
 
 __all__ = [
-    "extension",
 ]
 
 for subpackage in (
