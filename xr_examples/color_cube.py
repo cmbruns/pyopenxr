@@ -7,10 +7,12 @@ import inspect
 from OpenGL import GL
 from OpenGL.GL.shaders import compileShader, compileProgram
 import xr
+from xr.utils import GraphicsAPI
+from xr.utils.matrix4x4f import Matrix4x4f
 
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.ContextObject(
+with xr.utils.ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
@@ -108,22 +110,23 @@ with xr.ContextObject(
                 # continue
                 pass
             # print(view_index, view.pose.position)  # Are both eyes the same?
-            projection = xr.Matrix4x4f.create_projection_fov(
-                graphics_api=xr.GraphicsAPI.OPENGL,
+            projection = Matrix4x4f.create_projection_fov(
+                graphics_api=GraphicsAPI.OPENGL,
                 fov=view.fov,
                 near_z=0.05,
                 far_z=100.0,  # tip: use negative far_z for infinity projection...
             )
-            to_view = xr.Matrix4x4f.create_translation_rotation_scale(
+            to_view = Matrix4x4f.create_translation_rotation_scale(
                 translation=view.pose.position,
                 rotation=view.pose.orientation,
                 scale=(1, 1, 1),
             )
-            view = xr.Matrix4x4f.invert_rigid_body(to_view)
+            view = Matrix4x4f.invert_rigid_body(to_view)
+            # print(projection, view)
             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
             GL.glUseProgram(shader)
-            GL.glUniformMatrix4fv(0, 1, False, projection.as_numpy())
-            GL.glUniformMatrix4fv(4, 1, False, view.as_numpy())
+            GL.glUniformMatrix4fv(0, 1, False, projection.as_numpy().flatten("F"))
+            GL.glUniformMatrix4fv(4, 1, False, view.as_numpy().flatten("F"))
             GL.glBindVertexArray(vao)
             GL.glDrawArrays(GL.GL_TRIANGLES, 0, 36)
         # if frame_index > 3: break

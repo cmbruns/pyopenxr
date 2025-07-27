@@ -22,6 +22,7 @@ elif platform.system() == "Linux":
     from OpenGL import GLX
 from OpenGL import GL
 import xr
+import xr.utils
 
 
 run_frame_loop = True
@@ -138,7 +139,7 @@ system_id = xr.get_system(
     ),
 )
 
-graphics = xr.OpenGLGraphics(
+graphics = xr.utils.OpenGLGraphics(
     instance=instance,
     system=system_id,
 )

@@ -6,10 +6,10 @@ Prints the position of your right-hand controller for 30 frames.
 
 import ctypes
 import time
-import xr
+import xr.utils
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.ContextObject(
+with xr.utils.ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)

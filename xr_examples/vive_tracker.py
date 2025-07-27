@@ -10,13 +10,17 @@ The udev symbolic link trick was crucial in my case.
 
 import ctypes
 from ctypes import cast, byref
+import logging
 import time
-import xr
+import xr.utils
+
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger(__name__)
 
 print("Warning: trackers with role 'Handheld object' won't be detected.")
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.ContextObject(
+with xr.utils.ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
@@ -86,15 +90,19 @@ with xr.ContextObject(
         )
     )
     # Create action spaces for locating trackers in each role
-    tracker_action_spaces = (xr.Space * len(role_paths))(
-        *[xr.create_action_space(
-            session=session,
-            create_info=xr.ActionSpaceCreateInfo(
-                action=pose_action,
-                subaction_path=role_path,
+    tracker_action_spaces = []
+    for role_index, role_path in enumerate(role_paths):
+        try:
+            action_space = xr.create_action_space(
+                session=session,
+                create_info=xr.ActionSpaceCreateInfo(
+                    action=pose_action,
+                    subaction_path=role_path,
+                )
             )
-        ) for role_path in role_paths],
-    )
+            tracker_action_spaces.append(action_space)
+        except xr.exception.PathUnsupportedError:
+            log.info(f"Skipping vive tracker role {role_strings[role_index]}")
 
     n_paths = ctypes.c_uint32(0)
     result = enumerateViveTrackerPathsHTCX(instance, 0, byref(n_paths), None)
@@ -149,7 +157,8 @@ with xr.ContextObject(
                     print(f"{role_strings[index]}: {space_location.pose}")
                     found_tracker_count += 1
             if found_tracker_count == 0:
-                print("no trackers found")
+                log.info("no trackers found")
+            log.info(f"{found_tracker_count} vive trackers found")
 
         # Slow things down, especially since we are not rendering anything
         time.sleep(0.5)

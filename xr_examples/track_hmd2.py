@@ -5,10 +5,10 @@ Prints the position of your head-mounted display for 30 frames.
 """
 
 import time
-import xr
+import xr.utils
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.ContextObject(
+with xr.utils.ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
@@ -28,7 +28,7 @@ with xr.ContextObject(
         )
         flags = xr.ViewStateFlags(view_state.view_state_flags)
         if flags & xr.ViewStateFlags.POSITION_VALID_BIT:
-            view = views[xr.Eye.LEFT]
+            view = views[xr.utils.Eye.LEFT]
             print(view.pose, flush=True)
         else:
             print("pose not valid")
