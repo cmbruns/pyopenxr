@@ -9,6 +9,7 @@ def main():
     compiler_args = [
         "-DXR_USE_GRAPHICS_API_OPENGL",
         "-DXR_USE_GRAPHICS_API_VULKAN",
+        "-DXR_USE_PLATFORM_EGL",
         "-DXR_USE_PLATFORM_WAYLAND",
         "-DXR_USE_PLATFORM_XCB",
         "-DXR_USE_PLATFORM_XLIB",
@@ -20,6 +21,9 @@ def main():
         header_preamble=inspect.cleandoc("""
             #include <GL/gl.h>
             #include <GL/glx.h>
+            #include <EGL/egl.h>
+            #include <EGL/eglext.h>
+            #include <EGL/eglplatform.h
         """),
     )
 
