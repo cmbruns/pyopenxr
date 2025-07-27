@@ -16,10 +16,6 @@ import os
 import platform
 import time
 
-if platform.system() == "Windows":
-    from OpenGL import WGL
-elif platform.system() == "Linux":
-    from OpenGL import GLX
 from OpenGL import GL
 import xr
 import xr.utils
@@ -165,7 +161,7 @@ gl_debug_message_proc = GL.GLDEBUGPROC(gl_debug_message_callback)
 graphics.make_current()
 GL.glDebugMessageCallback(gl_debug_message_proc, None)
 
-graphics_binding_pointer = cast(pointer(graphics.graphics_binding), c_void_p)
+graphics_binding_pointer = graphics.graphics_binding.pointer
 session = xr.create_session(
     instance=instance,
     create_info=xr.SessionCreateInfo(
