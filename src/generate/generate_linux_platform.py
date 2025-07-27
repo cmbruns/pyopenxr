@@ -29,17 +29,13 @@ def main():
 
     cg.ctypes_names.add("c_long")
     cg.ctypes_names.add("c_longlong")
+    cg.ctypes_names.add("cast")
+    cg.ctypes_names.add("c_ulong")
     cg.print_header()
     print("")
     print(inspect.cleandoc("""
         import ctypes
         from typing import Optional
-        
-        import OpenGL.platform as _plat
-        from OpenGL.platform.glx import GLXPlatform
-        if not isinstance(_plat.PLATFORM, GLXPlatform):
-            _plat.PLATFORM = GLXPlatform()  # override auto-selection
-        from OpenGL import GLX
 
         from ..array_field import *
         from ..enums import *
