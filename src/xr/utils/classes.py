@@ -7,10 +7,6 @@ from typing import Sequence
 # TODO: separate package for opengl stuff
 import xr
 
-if platform.system() == "Windows":
-    from OpenGL import WGL
-elif platform.system() == "Linux":
-    from OpenGL import GLX
 import glfw
 
 from xr.enums import *
@@ -19,6 +15,8 @@ from xr.functions import *
 from xr.platform import *
 from xr.version import *
 from xr.exception import *
+
+from .gl import create_graphics_binding
 
 
 class Eye(enum.IntEnum):
@@ -150,22 +148,7 @@ class GlfwWindow(object):
         # Attempt to disable vsync on the desktop window, or
         # it will interfere with the OpenXR frame loop timing
         glfw.swap_interval(0)
-        self.graphics_binding = None
-        if platform.system() == "Windows":
-            self.graphics_binding = GraphicsBindingOpenGLWin32KHR()
-            self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
-            self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
-        elif platform.system() == "Linux":
-            drawable = GLX.glXGetCurrentDrawable()
-            context = GLX.glXGetCurrentContext()
-            display = GLX.glXGetCurrentDisplay()
-            self.graphics_binding = GraphicsBindingOpenGLXlibKHR(
-                x_display=display,
-                glx_drawable=drawable,
-                glx_context=context,
-            )
-        else:
-            raise NotImplementedError
+        self.graphics_binding = create_graphics_binding()
 
     def __enter__(self):
         return self
@@ -176,13 +159,8 @@ class GlfwWindow(object):
 
 class SessionObject(object):
     def __init__(self, system: SystemObject, graphics_binding):
-        graphics_binding_pointer = None
-        if graphics_binding is not None:
-            graphics_binding_pointer = ctypes.cast(
-                ctypes.pointer(graphics_binding),
-                ctypes.c_void_p)
         session_create_info = SessionCreateInfo(
-            next=graphics_binding_pointer,
+            next=graphics_binding.pointer,
             create_flags=SessionCreateFlags(),
             system_id=system.id,
         )

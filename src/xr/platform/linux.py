@@ -1,15 +1,9 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_void_p
+from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong, c_uint32, c_ulong, c_void_p, cast
 
 import ctypes
 from typing import Optional
-
-import OpenGL.platform as _plat
-from OpenGL.platform.glx import GLXPlatform
-if not isinstance(_plat.PLATFORM, GLXPlatform):
-    _plat.PLATFORM = GLXPlatform()  # override auto-selection
-from OpenGL import GLX
 
 from ..array_field import *
 from ..enums import *
@@ -44,6 +38,9 @@ KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME = "XR_KHR_convert_timespec_time"
 KHR_vulkan_enable2 = 1
 KHR_vulkan_enable2_SPEC_VERSION = 3
 KHR_VULKAN_ENABLE2_EXTENSION_NAME = "XR_KHR_vulkan_enable2"
+MNDX_egl_enable = 1
+MNDX_egl_enable_SPEC_VERSION = 2
+MNDX_EGL_ENABLE_EXTENSION_NAME = "XR_MNDX_egl_enable"
 FB_foveation_vulkan = 1
 FB_foveation_vulkan_SPEC_VERSION = 1
 FB_FOVEATION_VULKAN_EXTENSION_NAME = "XR_FB_foveation_vulkan"
@@ -102,11 +99,11 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 class GraphicsBindingOpenGLXlibKHR(Structure):
     def __init__(
         self,
-        x_display: POINTER(GLX.Display) = None,
+        x_display: POINTER(None) = None,
         visualid: int = 0,
-        glx_fbconfig: GLX.GLXFBConfig = None,
-        glx_drawable: GLX.GLXDrawable = 0,
-        glx_context: GLX.GLXContext = None,
+        glx_fbconfig: POINTER(None) = None,
+        glx_drawable: c_ulong = 0,
+        glx_context: POINTER(None) = None,
         next: c_void_p = None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_XLIB_KHR,
     ) -> None:
@@ -129,11 +126,11 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("x_display", POINTER(GLX.Display)),
+        ("x_display", POINTER(None)),
         ("visualid", c_uint32),
-        ("glx_fbconfig", GLX.GLXFBConfig),
-        ("glx_drawable", GLX.GLXDrawable),
-        ("glx_context", GLX.GLXContext),
+        ("glx_fbconfig", POINTER(None)),
+        ("glx_drawable", c_ulong),
+        ("glx_context", POINTER(None)),
     ]
 
 
@@ -553,6 +550,43 @@ PFN_xrGetVulkanGraphicsDevice2KHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(
 
 PFN_xrGetVulkanGraphicsRequirements2KHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
+PFN_xrEglGetProcAddressMNDX = CFUNCTYPE(PFN_xrVoidFunction, c_char_p)
+
+
+class GraphicsBindingEGLMNDX(Structure):
+    def __init__(
+        self,
+        get_proc_address: PFN_xrEglGetProcAddressMNDX = cast(None, PFN_xrEglGetProcAddressMNDX),
+        display: c_void_p = None,
+        config: c_void_p = None,
+        context: c_void_p = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.GRAPHICS_BINDING_EGL_MNDX,
+    ) -> None:
+        super().__init__(
+            get_proc_address=get_proc_address,
+            display=display,
+            config=config,
+            context=context,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={repr(self.get_proc_address)}, display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={self.get_proc_address}, display={self.display}, config={self.config}, context={self.context}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("get_proc_address", PFN_xrEglGetProcAddressMNDX),
+        ("display", c_void_p),
+        ("config", c_void_p),
+        ("context", c_void_p),
+    ]
+
 
 class SwapchainImageFoveationVulkanFB(Structure):
     def __init__(
@@ -680,6 +714,7 @@ __all__ = [
     "FB_foveation_vulkan_SPEC_VERSION",
     "FB_swapchain_update_state_vulkan",
     "FB_swapchain_update_state_vulkan_SPEC_VERSION",
+    "GraphicsBindingEGLMNDX",
     "GraphicsBindingOpenGLWaylandKHR",
     "GraphicsBindingOpenGLXcbKHR",
     "GraphicsBindingOpenGLXlibKHR",
@@ -706,10 +741,14 @@ __all__ = [
     "META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME",
     "META_vulkan_swapchain_create_info",
     "META_vulkan_swapchain_create_info_SPEC_VERSION",
+    "MNDX_EGL_ENABLE_EXTENSION_NAME",
+    "MNDX_egl_enable",
+    "MNDX_egl_enable_SPEC_VERSION",
     "PFN_xrConvertTimeToTimespecTimeKHR",
     "PFN_xrConvertTimespecTimeToTimeKHR",
     "PFN_xrCreateVulkanDeviceKHR",
     "PFN_xrCreateVulkanInstanceKHR",
+    "PFN_xrEglGetProcAddressMNDX",
     "PFN_xrGetOpenGLGraphicsRequirementsKHR",
     "PFN_xrGetVulkanDeviceExtensionsKHR",
     "PFN_xrGetVulkanGraphicsDevice2KHR",

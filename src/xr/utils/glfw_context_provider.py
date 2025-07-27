@@ -19,6 +19,7 @@ class GLFWOffscreenContextProvider(GraphicsContextProvider):
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, gl_version[0])
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, gl_version[1])
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
+        glfw.window_hint(glfw.CONTEXT_CREATION_API, glfw.EGL_CONTEXT_API)
         # tiny 1×1 window just to get a context
         self._window = glfw.create_window(1, 1, "", None, None)
         if self._window is None:
@@ -39,6 +40,12 @@ class GLFWOffscreenContextProvider(GraphicsContextProvider):
         glfw.destroy_window(self._window)
         glfw.terminate()
         self._window = None
+
+    def egl_context(self):
+        return glfw.get_egl_context(self._window)
+
+    def egl_display(self):
+        return glfw.get_egl_display()
 
     def make_current(self) -> None:
         """Activate this OpenGL context for subsequent GL calls."""

@@ -2,14 +2,13 @@ import ctypes
 import platform
 from typing import Optional
 
+from xr.utils.gl import create_graphics_binding
 from xr.utils.glfw_context_provider import GLFWOffscreenContextProvider
 from xr.utils.graphics_context_provider import GraphicsContextProvider
 
 if platform.system() == "Windows":
-    from OpenGL import WGL
     from xr.platform.windows import *
 elif platform.system() == "Linux":
-    from OpenGL import GLX
     from xr.platform.linux import *
 from OpenGL import GL
 
@@ -45,24 +44,7 @@ class OpenGLGraphics(object):
         if result.is_exception():
             raise result
         self.context_provider.make_current()
-        self.graphics_binding = None
-        if platform.system() == "Windows":
-            self.graphics_binding = GraphicsBindingOpenGLWin32KHR()
-            self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
-            self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
-        elif platform.system() == "Linux":
-            drawable = GLX.glXGetCurrentDrawable()
-            context = GLX.glXGetCurrentContext()
-            display = GLX.glXGetCurrentDisplay()
-            self.graphics_binding = GraphicsBindingOpenGLXlibKHR(
-                x_display=display,
-                glx_drawable=drawable,
-                glx_context=context,
-            )
-        else:
-            raise NotImplementedError
-        self.graphics_binding_pointer = ctypes.cast(ctypes.pointer(
-            self.graphics_binding), ctypes.c_void_p)
+        self.graphics_binding = create_graphics_binding(context_provider)
         self.swapchain_framebuffer = None
         self.color_to_depth_map: dict[int, int] = {}
 
