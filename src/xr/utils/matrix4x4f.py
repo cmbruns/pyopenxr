@@ -423,6 +423,6 @@ class Matrix4x4f:
 
 __all__ = [
     "GraphicsAPI",
-    "Matrix4x4f_ctypes",
+    # "Matrix4x4f_ctypes",
     "Matrix4x4f",
 ]
