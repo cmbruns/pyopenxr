@@ -19,7 +19,7 @@ import time
 from OpenGL import GL
 import xr
 import xr.utils
-
+import xr.utils.gl
 
 run_frame_loop = True
 
@@ -135,7 +135,7 @@ system_id = xr.get_system(
     ),
 )
 
-graphics = xr.utils.OpenGLGraphics(
+graphics = xr.utils.gl.OpenGLGraphics(
     instance=instance,
     system=system_id,
 )
