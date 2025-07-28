@@ -342,11 +342,10 @@ class WideCharType(TypeBase):
 class PlatformType(TypeBase):
     type_map = {
         # If GLX type names are not being found, make sure GL/glx.h exists
-        # OpenGL.GLX might not be found, so use more generic types
-        "Display": "None",  # void "GLX.Display",
-        "GLXContext": "POINTER(None)",  # "GLX.GLXContext",
-        "GLXDrawable": "c_ulong",  # "GLX.GLXDrawable",
-        "GLXFBConfig": "POINTER(None)",  # "GLX.GLXFBConfig",
+        "Display": "GLX.Display",
+        "GLXContext": "GLX.GLXContext",
+        "GLXDrawable": "GLX.GLXDrawable",
+        "GLXFBConfig": "GLX.GLXFBConfig",
         "HDC": "wintypes.HDC",
         "HGLRC": "WGL.HGLRC",  # Needs from OpenGL import WGL
     }

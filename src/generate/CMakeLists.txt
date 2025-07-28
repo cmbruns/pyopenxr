@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 project(PyOpenXr LANGUAGES CXX)
 
+if(POLICY CMP0177)
+  cmake_policy(SET CMP0177 NEW)
+endif()
+
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")
 
 option(PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES "Overwrite current source files?" OFF)
@@ -88,6 +92,10 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 ### Generate version.py ###
 ###########################
 
+set(VENV "${CMAKE_SOURCE_DIR}/../../.venv")
+if(EXISTS ${VENV})
+    set(ENV{VIRTUAL_ENV} "${VENV}")
+endif()
 find_package(Python COMPONENTS Interpreter REQUIRED)
 
 message(STATUS "Python Executable = " ${Python_EXECUTABLE})

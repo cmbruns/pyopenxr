@@ -5,6 +5,12 @@ from ctypes import CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_lo
 import ctypes
 from typing import Optional
 
+import OpenGL.platform as _plat
+from OpenGL.platform.glx import GLXPlatform
+if not isinstance(_plat.PLATFORM, GLXPlatform):
+    _plat.PLATFORM = GLXPlatform()  # override auto-selection
+from OpenGL import GLX
+    
 from ..array_field import *
 from ..enums import *
 from ..typedefs import *
@@ -99,11 +105,11 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 class GraphicsBindingOpenGLXlibKHR(Structure):
     def __init__(
         self,
-        x_display: POINTER(None) = None,
+        x_display: POINTER(GLX.Display) = None,
         visualid: int = 0,
-        glx_fbconfig: POINTER(None) = None,
-        glx_drawable: c_ulong = 0,
-        glx_context: POINTER(None) = None,
+        glx_fbconfig: GLX.GLXFBConfig = None,
+        glx_drawable: GLX.GLXDrawable = 0,
+        glx_context: GLX.GLXContext = None,
         next: c_void_p = None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_XLIB_KHR,
     ) -> None:
@@ -126,11 +132,11 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("x_display", POINTER(None)),
+        ("x_display", POINTER(GLX.Display)),
         ("visualid", c_uint32),
-        ("glx_fbconfig", POINTER(None)),
-        ("glx_drawable", c_ulong),
-        ("glx_context", POINTER(None)),
+        ("glx_fbconfig", GLX.GLXFBConfig),
+        ("glx_drawable", GLX.GLXDrawable),
+        ("glx_context", GLX.GLXContext),
     ]
 
 
