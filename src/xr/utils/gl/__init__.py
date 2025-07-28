@@ -1,25 +1,29 @@
 from abc import ABC, abstractmethod
 from ctypes import byref, c_void_p, cast, pointer
+from typing import Optional
+
+from OpenGL import GL
 
 import xr
+
+
+from .glfw_util import GLFWOffscreenContextProvider
 from ..graphics_context_provider import GraphicsContextProvider
 
 
 def create_graphics_binding(context_provider: GraphicsContextProvider):
     try:
-        from OpenGL import EGL
+        from .egl_util import EGLGraphicsBinding
         return EGLGraphicsBinding(context_provider)
-    except ImportError:
+    except AttributeError:
         pass
     try:
-        from OpenGL import WGL
         return WGLGraphicsBinding(context_provider)
-    except ImportError:
+    except AttributeError:
         pass
     try:
-        from OpenGL import GLX
         return GLXGraphicsBinding(context_provider)
-    except ImportError:
+    except AttributeError:
         pass
     raise RuntimeError("No supported graphics backend found.")
 
@@ -30,37 +34,6 @@ class GraphicsBinding(ABC):
     def pointer(self):
         """Return the native pointer or ctypes handle backing this graphics binding."""
         pass
-
-
-class EGLGraphicsBinding(GraphicsBinding):
-    def __init__(self, context_provider: GraphicsContextProvider):
-        from OpenGL import EGL
-        self.graphics_binding = xr.GraphicsBindingEGLMNDX()
-        display = context_provider.egl_display()
-        context = context_provider.egl_context()
-        self.graphics_binding.display = display
-        self.graphics_binding.context = context
-        self.graphics_binding.get_proc_address = cast(
-            EGL.eglGetProcAddress.load(), xr.PFN_xrEglGetProcAddressMNDX)
-        config = c_void_p()
-        num_configs = EGL.EGLint()
-        config_attribs = [
-            EGL.EGL_RENDERABLE_TYPE, EGL.EGL_OPENGL_BIT,
-            EGL.EGL_SURFACE_TYPE, EGL.EGL_PBUFFER_BIT,
-            EGL.EGL_RED_SIZE, 8,
-            EGL.EGL_GREEN_SIZE, 8,
-            EGL.EGL_BLUE_SIZE, 8,
-            EGL.EGL_ALPHA_SIZE, 8,
-            EGL.EGL_NONE
-        ]
-        attribs_list = (EGL.EGLint * len(config_attribs))(*config_attribs)
-        EGL.eglChooseConfig(display, attribs_list, byref(config), 1, byref(num_configs))
-        self.graphics_binding.config = config
-        self._pointer = cast(pointer(self.graphics_binding), c_void_p)
-
-    @property
-    def pointer(self):
-        return self._pointer
 
 
 class GLXGraphicsBinding(GraphicsBinding):
@@ -81,6 +54,7 @@ class GLXGraphicsBinding(GraphicsBinding):
     def pointer(self):
         return self._pointer
 
+
 class WGLGraphicsBinding(GraphicsBinding):
     def __init__(self, context_provider: GraphicsContextProvider):
         from OpenGL import WGL
@@ -93,3 +67,113 @@ class WGLGraphicsBinding(GraphicsBinding):
     @property
     def pointer(self):
         return self._pointer
+
+
+class OpenGLGraphics(object):
+    def __init__(
+            self,
+            instance: xr.Instance,
+            system: xr.SystemId,
+            context_provider: Optional[GraphicsContextProvider] = None,
+    ) -> None:
+        if context_provider is None:
+            context_provider = GLFWOffscreenContextProvider()
+        self.context_provider = context_provider
+        self.pxrGetOpenGLGraphicsRequirementsKHR = cast(
+            xr.get_instance_proc_addr(
+                instance=instance,
+                name="xrGetOpenGLGraphicsRequirementsKHR",
+            ),
+            xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
+        )
+        self.graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
+        result = self.pxrGetOpenGLGraphicsRequirementsKHR(
+            instance,
+            system,
+            byref(self.graphics_requirements))
+        result = xr.check_result(xr.Result(result))
+        if result.is_exception():
+            raise result
+        self.context_provider.make_current()
+        self.graphics_binding = create_graphics_binding(context_provider)
+        self.swapchain_framebuffer = None
+        self.color_to_depth_map: dict[int, int] = {}
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exception_type, value, traceback):
+        self.destroy()
+
+    def begin_frame(self, layer_view, color_texture):
+        self.make_current()
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
+        GL.glViewport(layer_view.sub_image.image_rect.offset.x,
+                      layer_view.sub_image.image_rect.offset.y,
+                      layer_view.sub_image.image_rect.extent.width,
+                      layer_view.sub_image.image_rect.extent.height)
+        depth_texture = self.get_depth_texture(color_texture)
+        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, color_texture, 0)
+        GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
+
+    def destroy(self):
+        self.make_current()
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
+        if self.swapchain_framebuffer is not None:
+            GL.glDeleteFramebuffers(1, [self.swapchain_framebuffer, ])
+            self.swapchain_framebuffer = None
+        self.context_provider.destroy()
+
+    @staticmethod
+    def end_frame():
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
+
+    def get_depth_texture(self, color_texture) -> int:
+        # If a depth-stencil view has already been created for this back-buffer, use it.
+        if color_texture in self.color_to_depth_map:
+            return self.color_to_depth_map[color_texture]
+        # This back-buffer has no corresponding depth-stencil texture, so create one with matching dimensions.
+        GL.glBindTexture(GL.GL_TEXTURE_2D, color_texture)
+        width = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_WIDTH)
+        height = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_HEIGHT)
+
+        depth_texture = GL.glGenTextures(1)
+        GL.glBindTexture(GL.GL_TEXTURE_2D, depth_texture)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
+        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
+        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT32, width, height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_FLOAT, None)
+        self.color_to_depth_map[color_texture] = depth_texture
+        return depth_texture
+
+    def initialize_resources(self):
+        self.make_current()
+        self.swapchain_framebuffer = GL.glGenFramebuffers(1)
+
+    def make_current(self):
+        self.context_provider.make_current()
+
+    @staticmethod
+    def select_color_swapchain_format(runtime_formats):
+        # List of supported color swapchain formats.
+        supported_color_swapchain_formats = [
+            GL.GL_RGB10_A2,
+            GL.GL_RGBA16F,
+            # The two below should only be used as a fallback, as they are linear color formats without enough bits for color
+            # depth, thus leading to banding.
+            GL.GL_RGBA8,
+            GL.GL_RGBA8_SNORM,
+            #
+            GL.GL_SRGB8,  # Linux SteamVR beta 1.24.2 has only these...
+            GL.GL_SRGB8_ALPHA8,
+        ]
+        for rf in runtime_formats:
+            for sf in supported_color_swapchain_formats:
+                if rf == sf:
+                    return sf
+        raise RuntimeError("No runtime swapchain format supported for color swapchain")
+
+    @property
+    def swapchain_image_type(self):
+        return xr.SwapchainImageOpenGLKHR

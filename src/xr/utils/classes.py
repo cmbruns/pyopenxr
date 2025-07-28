@@ -1,7 +1,6 @@
 import ctypes
 from ctypes import Array
 import enum
-import platform
 from typing import Sequence
 
 # TODO: separate package for opengl stuff
@@ -148,7 +147,8 @@ class GlfwWindow(object):
         # Attempt to disable vsync on the desktop window, or
         # it will interfere with the OpenXR frame loop timing
         glfw.swap_interval(0)
-        self.graphics_binding = create_graphics_binding()
+        offscreen_context = xr.utils.gl.glfw_util.GLFWSharedOffscreenContextProvider(self.window)
+        self.graphics_binding = create_graphics_binding(offscreen_context)
 
     def __enter__(self):
         return self

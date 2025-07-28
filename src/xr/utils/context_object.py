@@ -6,7 +6,7 @@ from xr.enums import *
 from xr.exception import *
 from xr.typedefs import *
 from xr.functions import *
-from xr.utils.opengl_graphics import OpenGLGraphics
+from xr.utils.gl import OpenGLGraphics
 
 
 class SwapchainStruct(Structure):
@@ -63,7 +63,7 @@ class ContextObject(object):
                 instance=self.instance,
                 system=self.system_id,
             )
-            self.graphics_binding_pointer = cast(pointer(self.graphics.graphics_binding), c_void_p)
+            self.graphics_binding_pointer = self.graphics.graphics_binding.pointer
             self._session_create_info.next = self.graphics_binding_pointer
         else:
             self.graphics_binding_pointer = self._session_create_info.next
