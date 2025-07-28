@@ -55,14 +55,12 @@ packages = [
 generate = ["clang"]
 test = ["pytest"]
 dev = [
-  "libclang>=12",
+  "libclang==12",
   "PyOpenGL>=3.1.6",
   "glfw>=2.5.6",
   "numpy",
   "pytest>=7.2.0,<8.0.0",
   "nose2",
-  "black>=23.1.0",
-  "flake8>=6.0.0",
   "twine>=4.0.0"
 ]
 glfw = ["glfw"]

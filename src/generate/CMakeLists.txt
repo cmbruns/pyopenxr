@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
-project(PyOpenXr LANGUAGES CXX)
-
 message(STATUS "This Configure step creates updated version bindings for pyopenxr")
 
 option(PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES "Overwrite current source files?" OFF)
@@ -87,8 +84,6 @@ file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/platform")
 ###########################
 ### Generate version.py ###
 ###########################
-
-find_package(Python COMPONENTS Interpreter REQUIRED)
 
 message(STATUS "Python Executable = " ${Python_EXECUTABLE})
 execute_process(
@@ -233,7 +228,7 @@ find_path(OPENXR_REGISTRY_PATH
 if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
    message(STATUS "")
    message(WARNING "Warning: Overwriting contents of source xr package.")
-   file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/../xr/")
+   file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/src/xr/")
 endif()
 
 add_subdirectory(py_api_layer)

@@ -15,3 +15,5 @@ src/generate/xrg/libclang*.so
 /docs/.doctrees
 /docs/_sources
 /docs/.buildinfo
+/.venv
+/build_cmake2
