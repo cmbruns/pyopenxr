@@ -1,25 +1,72 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel",
-]
+requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
-[tool.setuptools]
-license-files = []
+
 [project]
 name = "pyopenxr"
 dynamic = ["version"]
+description = "Unofficial Python bindings for OpenXR VR/AR device access"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Christopher M. Bruns", email = "cmbruns@rotatingpenguin.com" }]
 dependencies = [
     "glfw",
     "numpy",
     "PyOpenGL",
 ]
-description = "Python bindings for OpenXR"
-authors = [{ name = "Christopher M. Bruns", email = "cmbruns@rotatingpenguin.com" }]
-license = { text = "Apache-2.0" }
-readme = "README.md"
-requires-python = ">=3.9"
+
+keywords = ["OpenXR", "VR", "AR", "bindings", "Python", "3D", "graphics"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Win32 (MS Windows)",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Multimedia :: Graphics :: 3D Rendering",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+
+[project.urls]
+homepage = "https://github.com/cmbruns/pyopenxr"
+bug_tracker = "https://github.com/cmbruns/pyopenxr/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = [
+    "xr",
+    "xr.library",
+    "xr.platform",
+    "xr.api_layer",
+    "xr.api_layer.windows",
+    "xr.api_layer.linux",
+    "xr.extension",
+    "xr.utils",
+]
+
+[tool.setuptools.package-data]
+"*" = ["*.dll", "*.so", "*.json"]
+
 [project.optional-dependencies]
-dev = ["libclang"]
+generate = ["clang"]
+test = ["pytest"]
+dev = [
+  "libclang>=12",
+  "PyOpenGL>=3.1.6",
+  "glfw>=2.5.6",
+  "numpy",
+  "pytest>=7.2.0,<8.0.0",
+  "nose2",
+  "black>=23.1.0",
+  "flake8>=6.0.0",
+  "twine>=4.0.0"
+]
 glfw = ["glfw"]
 pyside = ["PySide6"]
+
+[tool.setuptools.dynamic]
+version = {attr = "xr.version.__version__"}
