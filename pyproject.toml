@@ -39,15 +39,15 @@ bug_tracker = "https://github.com/cmbruns/pyopenxr/issues"
 package-dir = {"" = "src"}
 packages = [
     "xr",
-    "xr.library",
-    "xr.platform",
     "xr.api_layer",
     "xr.api_layer.windows",
     "xr.api_layer.linux",
     "xr.ext",
+    "xr.ext.HTCX",
+    "xr.ext.KHR",
+    "xr.library",
+    "xr.platform",
     "xr.utils",
-    "xr.utils.HTCX",
-    "xr.utils.KHR",
     "xr.utils.gl",
 ]
 
