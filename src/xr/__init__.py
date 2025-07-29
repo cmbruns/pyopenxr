@@ -1,6 +1,11 @@
 """
-`xr` is the top level module of the pyopenxr unofficial python bindings for the
-OpenXR SDK to access VR and AR devices.
+`xr` is the root module of pyopenxr, an unofficial Python binding for the OpenXR SDK.
+
+It provides low-level access to the core OpenXR API for interacting with VR and AR runtimes,
+including system queries, session management, and extension dispatch. This module wraps the
+standard C interface in a Pythonic structure while preserving fidelity to the original spec.
+
+For high-level utilities and ergonomic abstractions, see submodules and helper packages.
 """
 
 from . import (
