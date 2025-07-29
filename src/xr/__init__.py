@@ -13,7 +13,6 @@ from . import (
     platform,
     exception,
     api_layer,
-    extension,
 )
 
 from .version import *
@@ -25,7 +24,6 @@ from .custom_functions import *
 from .platform import *
 from .exception import *
 from .api_layer import *
-from .extension import *
 
 
 __all__ = [
@@ -39,7 +37,6 @@ for subpackage in (
     functions,
     custom_functions,
     platform,
-    exception,
     api_layer,
 ):
     __all__ += subpackage.__all__
