@@ -1,68 +1,101 @@
-import ctypes
-import platform
+from abc import ABC, abstractmethod
+from ctypes import byref, c_void_p, cast, pointer
 from typing import Optional
 
-from xr.utils.glfw_context_provider import GLFWOffscreenContextProvider
-from xr.utils.graphics_context_provider import GraphicsContextProvider
-
-if platform.system() == "Windows":
-    from OpenGL import WGL
-    from xr.platform.windows import *
-elif platform.system() == "Linux":
-    from OpenGL import GLX
-    from xr.platform.linux import *
 from OpenGL import GL
 
-from xr.enums import *
-from xr.exception import *
-from xr.typedefs import *
-from xr.functions import *
+import xr
+
+
+from .glfw_util import GLFWOffscreenContextProvider
+from ..graphics_context_provider import GraphicsContextProvider
+
+
+def create_graphics_binding(context_provider: GraphicsContextProvider):
+    try:
+        from .egl_util import EGLGraphicsBinding
+        return EGLGraphicsBinding(context_provider)
+    except AttributeError:
+        pass
+    try:
+        return WGLGraphicsBinding(context_provider)
+    except AttributeError:
+        pass
+    try:
+        return GLXGraphicsBinding(context_provider)
+    except AttributeError:
+        pass
+    raise RuntimeError("No supported graphics backend found.")
+
+
+class GraphicsBinding(ABC):
+    @property
+    @abstractmethod
+    def pointer(self):
+        """Return the native pointer or ctypes handle backing this graphics binding."""
+        pass
+
+
+class GLXGraphicsBinding(GraphicsBinding):
+    def __init__(self, context_provider: GraphicsContextProvider):
+        from OpenGL import GLX
+        context_provider.make_current()
+        drawable = GLX.glXGetCurrentDrawable()
+        context = GLX.glXGetCurrentContext()
+        display = GLX.glXGetCurrentDisplay()
+        self.graphics_binding = xr.GraphicsBindingOpenGLXlibKHR(
+            x_display=display,
+            glx_drawable=drawable,
+            glx_context=context,
+        )
+        self._pointer = cast(pointer(self.graphics_binding), c_void_p)
+
+    @property
+    def pointer(self):
+        return self._pointer
+
+
+class WGLGraphicsBinding(GraphicsBinding):
+    def __init__(self, context_provider: GraphicsContextProvider):
+        from OpenGL import WGL
+        self.graphics_binding = xr.GraphicsBindingOpenGLWin32KHR()
+        context_provider.make_current()
+        self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
+        self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
+        self._pointer = cast(pointer(self.graphics_binding), c_void_p)
+
+    @property
+    def pointer(self):
+        return self._pointer
 
 
 class OpenGLGraphics(object):
     def __init__(
             self,
-            instance: Instance,
-            system: SystemId,
+            instance: xr.Instance,
+            system: xr.SystemId,
             context_provider: Optional[GraphicsContextProvider] = None,
     ) -> None:
         if context_provider is None:
             context_provider = GLFWOffscreenContextProvider()
         self.context_provider = context_provider
-        self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(
-            get_instance_proc_addr(
+        self.pxrGetOpenGLGraphicsRequirementsKHR = cast(
+            xr.get_instance_proc_addr(
                 instance=instance,
                 name="xrGetOpenGLGraphicsRequirementsKHR",
             ),
-            PFN_xrGetOpenGLGraphicsRequirementsKHR
+            xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
         )
-        self.graphics_requirements = GraphicsRequirementsOpenGLKHR()
+        self.graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
         result = self.pxrGetOpenGLGraphicsRequirementsKHR(
             instance,
             system,
-            ctypes.byref(self.graphics_requirements))
-        result = check_result(Result(result))
+            byref(self.graphics_requirements))
+        result = xr.check_result(xr.Result(result))
         if result.is_exception():
             raise result
         self.context_provider.make_current()
-        self.graphics_binding = None
-        if platform.system() == "Windows":
-            self.graphics_binding = GraphicsBindingOpenGLWin32KHR()
-            self.graphics_binding.h_dc = WGL.wglGetCurrentDC()
-            self.graphics_binding.h_glrc = WGL.wglGetCurrentContext()
-        elif platform.system() == "Linux":
-            drawable = GLX.glXGetCurrentDrawable()
-            context = GLX.glXGetCurrentContext()
-            display = GLX.glXGetCurrentDisplay()
-            self.graphics_binding = GraphicsBindingOpenGLXlibKHR(
-                x_display=display,
-                glx_drawable=drawable,
-                glx_context=context,
-            )
-        else:
-            raise NotImplementedError
-        self.graphics_binding_pointer = ctypes.cast(ctypes.pointer(
-            self.graphics_binding), ctypes.c_void_p)
+        self.graphics_binding = create_graphics_binding(context_provider)
         self.swapchain_framebuffer = None
         self.color_to_depth_map: dict[int, int] = {}
 
@@ -143,9 +176,4 @@ class OpenGLGraphics(object):
 
     @property
     def swapchain_image_type(self):
-        return SwapchainImageOpenGLKHR
-
-
-__all__ = [
-    "OpenGLGraphics",
-]
+        return xr.SwapchainImageOpenGLKHR

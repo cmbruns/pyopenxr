@@ -1,8 +1,6 @@
 from typing import Optional
 
-from PySide6.QtGui import QOffscreenSurface, QOpenGLContext, QSurfaceFormat
-
-from xr.utils.graphics_context_provider import GraphicsContextProvider
+from xr.utils import GraphicsContextProvider
 
 
 class PySide6OffscreenContextProvider(GraphicsContextProvider):

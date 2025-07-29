@@ -1356,8 +1356,6 @@ class StructureCoder(object):
         i8 = "        "
         i12 = "            "
         result = ""
-        if self.struct.name() == "SecondaryViewConfigurationSessionBeginInfoMSFT":
-            x = 3
         result += f"\n{i4}def __init__(\n{i8}self,\n"
         for fc in self.field_coders:
             for s in fc.param_code():
@@ -1441,7 +1439,9 @@ def snake_from_camel(camel: str) -> str:
         # e.g. StructureType.SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT
         "3D": "_3d",
         "OpenGL": "Opengl",
+        "OpenGLES": "OpenglEs",
         "QRCode": "QrCode",
+        "EGL": "Egl",
     }
     for up, down in words.items():
         snake = re.sub(up, down, snake)

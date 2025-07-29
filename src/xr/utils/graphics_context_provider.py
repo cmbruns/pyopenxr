@@ -93,3 +93,7 @@ class GraphicsContextProvider(ABC):
 
         def __exit__(self, exc_type, exc_val, exc_tb):
             self.done_current()
+
+__all__ = [
+    "GraphicsContextProvider",
+]

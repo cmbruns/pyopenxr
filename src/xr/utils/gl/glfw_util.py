@@ -2,7 +2,39 @@ from typing import Tuple
 
 import glfw
 
-from xr.utils.graphics_context_provider import GraphicsContextProvider
+from ..graphics_context_provider import GraphicsContextProvider
+
+
+class GLFWSharedOffscreenContextProvider(GraphicsContextProvider):
+    def __init__(self, window) -> None:
+        glfw.window_hint(glfw.VISIBLE, glfw.FALSE)
+        glfw.window_hint(glfw.DOUBLEBUFFER, glfw.FALSE)
+        # tiny 1×1 window just to get a context
+        self._window = glfw.create_window(1, 1, "", None, window)
+        if self._window is None:
+            raise RuntimeError("Failed to create hidden GLFW window")
+        # make it current so swap_interval takes effect on this context
+        glfw.make_context_current(self._window)
+        glfw.swap_interval(0)
+
+    def __enter__(self) -> "GLFWOffscreenContextProvider":
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> None:
+        self.destroy()
+
+    def destroy(self) -> None:
+        """Tear down the hidden window and terminate GLFW."""
+        glfw.destroy_window(self._window)
+        self._window = None
+
+    def make_current(self) -> None:
+        """Activate this OpenGL context for subsequent GL calls."""
+        glfw.make_context_current(self._window)
+
+    def done_current(self) -> None:
+        """Unbind this context from the current thread."""
+        glfw.make_context_current(None)
 
 
 class GLFWOffscreenContextProvider(GraphicsContextProvider):
