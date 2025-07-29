@@ -5,16 +5,11 @@
 #    pip-compile --extra=dev --output-file=../../requirements-dev.txt ../../pyproject.toml
 #
 glfw
-    # via pyopenxr (..\..\pyproject.toml)
 libclang==12
-    # via pyopenxr (..\..\pyproject.toml)
 nose2
-    # via pyopenxr (..\..\pyproject.toml)
 numpy
-    # via pyopenxr (..\..\pyproject.toml)
 pyopengl
-    # via pyopenxr (..\..\pyproject.toml)
 pytest
-    # via pyopenxr (..\..\pyproject.toml)
+sphinx
+sphinx_rtd_theme
 twine
-    # via pyopenxr (..\..\pyproject.toml)

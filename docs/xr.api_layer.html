@@ -1,20 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>xr.api_layer package &mdash; pyopenxr 1.0.2404 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e423673f"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> pyopenxr
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyopenxr
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -76,9 +81,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="xr.html">xr package</a> &raquo;</li>
-      <li>xr.api_layer package</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="xr.html">xr package</a></li>
+      <li class="breadcrumb-item active">xr.api_layer package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/xr.api_layer.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -89,9 +94,9 @@
            <div itemprop="articleBody">
              
   <section id="xr-api-layer-package">
-<h1>xr.api_layer package<a class="headerlink" href="#xr-api-layer-package" title="Permalink to this headline"></a></h1>
+<h1>xr.api_layer package<a class="headerlink" href="#xr-api-layer-package" title="Link to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="xr.api_layer.linux.html">xr.api_layer.linux package</a><ul>
@@ -106,23 +111,23 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
 <section id="module-xr.api_layer.dynamic_api_layer_base">
-<span id="xr-api-layer-dynamic-api-layer-base-module"></span><h2>xr.api_layer.dynamic_api_layer_base module<a class="headerlink" href="#module-xr.api_layer.dynamic_api_layer_base" title="Permalink to this headline"></a></h2>
+<span id="xr-api-layer-dynamic-api-layer-base-module"></span><h2>xr.api_layer.dynamic_api_layer_base module<a class="headerlink" href="#module-xr.api_layer.dynamic_api_layer_base" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.dynamic_api_layer_base.</span></span><span class="sig-name descname"><span class="pre">DynamicApiLayerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.dynamic_api_layer_base.</span></span><span class="sig-name descname"><span class="pre">DynamicApiLayerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Base class for temporary dynamic runtime python OpenXR API layers.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase.name" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase.negotiate_loader_api_layer_interface">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">negotiate_loader_api_layer_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="xr.api_layer.loader_interfaces.NegotiateLoaderInfo"><span class="pre">xr.api_layer.loader_interfaces.NegotiateLoaderInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest"><span class="pre">xr.api_layer.loader_interfaces.NegotiateApiLayerRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">xr.enums.Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase.negotiate_loader_api_layer_interface" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">negotiate_loader_api_layer_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="xr.api_layer.loader_interfaces.NegotiateLoaderInfo"><span class="pre">NegotiateLoaderInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest"><span class="pre">NegotiateApiLayerRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase.negotiate_loader_api_layer_interface" title="Link to this definition"></a></dt>
 <dd><p>Override this method in a derived class to create your own temporary dynamic OpenXR API layer.</p>
 <dl class="simple">
 <dt>If this layer is able to support the request, it must: return xr.Result.SUCCESS and:</dt><dd><p>Fill in pname:layerRequest→pname:layerInterfaceVersion with the API layer interface version it desires to support.
@@ -152,64 +157,64 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
 </section>
 <section id="module-xr.api_layer.layer_path">
-<span id="xr-api-layer-layer-path-module"></span><h2>xr.api_layer.layer_path module<a class="headerlink" href="#module-xr.api_layer.layer_path" title="Permalink to this headline"></a></h2>
+<span id="xr-api-layer-layer-path-module"></span><h2>xr.api_layer.layer_path module<a class="headerlink" href="#module-xr.api_layer.layer_path" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="xr.api_layer.layer_path.add_folder_to_api_layer_path">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.layer_path.</span></span><span class="sig-name descname"><span class="pre">add_folder_to_api_layer_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.layer_path.add_folder_to_api_layer_path" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.layer_path.</span></span><span class="sig-name descname"><span class="pre">add_folder_to_api_layer_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.layer_path.add_folder_to_api_layer_path" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="xr.api_layer.layer_path.expose_packaged_api_layers">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.layer_path.</span></span><span class="sig-name descname"><span class="pre">expose_packaged_api_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.layer_path.expose_packaged_api_layers" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.layer_path.</span></span><span class="sig-name descname"><span class="pre">expose_packaged_api_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.layer_path.expose_packaged_api_layers" title="Link to this definition"></a></dt>
 <dd><p>Make pre-packaged layers available to the openxr loader</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="xr.api_layer.layer_path.py_layer_library_path">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.layer_path.</span></span><span class="sig-name descname"><span class="pre">py_layer_library_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#xr.api_layer.layer_path.py_layer_library_path" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.layer_path.</span></span><span class="sig-name descname"><span class="pre">py_layer_library_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#xr.api_layer.layer_path.py_layer_library_path" title="Link to this definition"></a></dt>
 <dd><p>Path to a shared library file used for dynamic API layer dispatch.</p>
 </dd></dl>
 
 </section>
 <section id="module-xr.api_layer.loader_interfaces">
-<span id="xr-api-layer-loader-interfaces-module"></span><h2>xr.api_layer.loader_interfaces module<a class="headerlink" href="#module-xr.api_layer.loader_interfaces" title="Permalink to this headline"></a></h2>
+<span id="xr-api-layer-loader-interfaces-module"></span><h2>xr.api_layer.loader_interfaces module<a class="headerlink" href="#module-xr.api_layer.loader_interfaces" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.ApiLayerCreateInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">ApiLayerCreateInfo</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ctypes.Structure</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">ApiLayerCreateInfo</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.ApiLayerCreateInfo.loader_instance">
-<span class="sig-name descname"><span class="pre">loader_instance</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.loader_instance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">loader_instance</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.loader_instance" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.ApiLayerCreateInfo.next_info">
-<span class="sig-name descname"><span class="pre">next_info</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.next_info" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">next_info</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.next_info" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.ApiLayerCreateInfo.settings_file_location">
-<span class="sig-name descname"><span class="pre">settings_file_location</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.settings_file_location" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">settings_file_location</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.settings_file_location" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_size">
-<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_size" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_size" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_type">
-<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_type" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_version">
-<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.ApiLayerCreateInfo.struct_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
@@ -217,47 +222,47 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">NegotiateApiLayerRequest</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ctypes.Structure</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">NegotiateApiLayerRequest</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.create_api_layer_instance">
-<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.create_api_layer_instance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.create_api_layer_instance" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.get_instance_proc_addr">
-<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.get_instance_proc_addr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.get_instance_proc_addr" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.layer_api_version">
-<span class="sig-name descname"><span class="pre">layer_api_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.layer_api_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">layer_api_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.layer_api_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.layer_interface_version">
-<span class="sig-name descname"><span class="pre">layer_interface_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.layer_interface_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">layer_interface_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.layer_interface_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_size">
-<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_size" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_size" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_type">
-<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_type" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_version">
-<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest.struct_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
@@ -265,47 +270,47 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">NegotiateLoaderInfo</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ctypes.Structure</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">NegotiateLoaderInfo</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo.max_api_version">
-<span class="sig-name descname"><span class="pre">max_api_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.max_api_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_api_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.max_api_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo.max_interface_version">
-<span class="sig-name descname"><span class="pre">max_interface_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.max_interface_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_interface_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.max_interface_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo.min_api_version">
-<span class="sig-name descname"><span class="pre">min_api_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.min_api_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_api_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.min_api_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo.min_interface_version">
-<span class="sig-name descname"><span class="pre">min_interface_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.min_interface_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_interface_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.min_interface_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_size">
-<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_size" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_size" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_type">
-<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_type" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_version">
-<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.struct_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
@@ -313,48 +318,48 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.PFN_xrCreateApiLayerInstance">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">PFN_xrCreateApiLayerInstance</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.PFN_xrCreateApiLayerInstance" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE.&lt;locals&gt;.CFunctionType</span></code></p>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">PFN_xrCreateApiLayerInstance</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.PFN_xrCreateApiLayerInstance" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">CFunctionType</span></code></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.loader_interfaces.PFN_xrNegotiateLoaderApiLayerInterface">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">PFN_xrNegotiateLoaderApiLayerInterface</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.PFN_xrNegotiateLoaderApiLayerInterface" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE.&lt;locals&gt;.CFunctionType</span></code></p>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.loader_interfaces.</span></span><span class="sig-name descname"><span class="pre">PFN_xrNegotiateLoaderApiLayerInterface</span></span><a class="headerlink" href="#xr.api_layer.loader_interfaces.PFN_xrNegotiateLoaderApiLayerInterface" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">CFunctionType</span></code></p>
 </dd></dl>
 
 </section>
 <section id="module-xr.api_layer.raw_functions">
-<span id="xr-api-layer-raw-functions-module"></span><h2>xr.api_layer.raw_functions module<a class="headerlink" href="#module-xr.api_layer.raw_functions" title="Permalink to this headline"></a></h2>
+<span id="xr-api-layer-raw-functions-module"></span><h2>xr.api_layer.raw_functions module<a class="headerlink" href="#module-xr.api_layer.raw_functions" title="Link to this heading"></a></h2>
 </section>
 <section id="module-xr.api_layer.steamvr_linux_destroyinstance_layer">
-<span id="xr-api-layer-steamvr-linux-destroyinstance-layer-module"></span><h2>xr.api_layer.steamvr_linux_destroyinstance_layer module<a class="headerlink" href="#module-xr.api_layer.steamvr_linux_destroyinstance_layer" title="Permalink to this headline"></a></h2>
+<span id="xr-api-layer-steamvr-linux-destroyinstance-layer-module"></span><h2>xr.api_layer.steamvr_linux_destroyinstance_layer module<a class="headerlink" href="#module-xr.api_layer.steamvr_linux_destroyinstance_layer" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.steamvr_linux_destroyinstance_layer.</span></span><span class="sig-name descname"><span class="pre">SteamVrLinuxDestroyInstanceLayer</span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase" title="xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.steamvr_linux_destroyinstance_layer.</span></span><span class="sig-name descname"><span class="pre">SteamVrLinuxDestroyInstanceLayer</span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase" title="xr.api_layer.dynamic_api_layer_base.DynamicApiLayerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicApiLayerBase</span></code></a></p>
 <p>Pure-python OpenXR API layer.
 Designed to work around SteamVR linux bug.
 <a class="reference external" href="https://steamcommunity.com/app/250820/discussions/8/3114772813482874960/">https://steamcommunity.com/app/250820/discussions/8/3114772813482874960/</a>
 <a class="reference external" href="https://github.com/cmbruns/pyopenxr/pull/66">https://github.com/cmbruns/pyopenxr/pull/66</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.create_api_layer_instance">
-<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">xr.typedefs.LP_InstanceCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">xr.api_layer.loader_interfaces.LP_ApiLayerCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">xr.typedefs.LP_Instance_T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">xr.enums.Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.create_api_layer_instance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_InstanceCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_ApiLayerCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Instance_T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.create_api_layer_instance" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.destroy_instance">
-<span class="sig-name descname"><span class="pre">destroy_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">xr.typedefs.LP_Instance_T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">xr.enums.Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.destroy_instance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">destroy_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Instance_T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.destroy_instance" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.get_instance_proc_addr">
-<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">xr.typedefs.LP_Instance_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ctypes.c_char_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">xr.typedefs.LP_CFunctionType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">xr.enums.Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.get_instance_proc_addr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Instance_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">c_char_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_CFunctionType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.get_instance_proc_addr" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.negotiate_loader_api_layer_interface">
-<span class="sig-name descname"><span class="pre">negotiate_loader_api_layer_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="xr.api_layer.loader_interfaces.NegotiateLoaderInfo"><span class="pre">xr.api_layer.loader_interfaces.NegotiateLoaderInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest"><span class="pre">xr.api_layer.loader_interfaces.NegotiateApiLayerRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">xr.enums.Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.negotiate_loader_api_layer_interface" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">negotiate_loader_api_layer_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="xr.api_layer.loader_interfaces.NegotiateLoaderInfo"><span class="pre">NegotiateLoaderInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest"><span class="pre">NegotiateApiLayerRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.negotiate_loader_api_layer_interface" title="Link to this definition"></a></dt>
 <dd><p>Set up our layer to intercept OpenXR function calls.
 :param loader_info:
 :param layer_name: The name of an API layer which the loader is attempting to negotiate with.
@@ -366,44 +371,44 @@ Designed to work around SteamVR linux bug.
 
 </section>
 <section id="module-xr.api_layer">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xr.api_layer" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xr.api_layer" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.ApiLayerCreateInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">ApiLayerCreateInfo</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ctypes.Structure</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">ApiLayerCreateInfo</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.ApiLayerCreateInfo.loader_instance">
-<span class="sig-name descname"><span class="pre">loader_instance</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.loader_instance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">loader_instance</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.loader_instance" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.ApiLayerCreateInfo.next_info">
-<span class="sig-name descname"><span class="pre">next_info</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.next_info" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">next_info</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.next_info" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.ApiLayerCreateInfo.settings_file_location">
-<span class="sig-name descname"><span class="pre">settings_file_location</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.settings_file_location" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">settings_file_location</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.settings_file_location" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.ApiLayerCreateInfo.struct_size">
-<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.struct_size" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.struct_size" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.ApiLayerCreateInfo.struct_type">
-<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.struct_type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.struct_type" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.ApiLayerCreateInfo.struct_version">
-<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.struct_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.ApiLayerCreateInfo.struct_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
@@ -411,17 +416,17 @@ Designed to work around SteamVR linux bug.
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.DynamicApiLayerBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">DynamicApiLayerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.DynamicApiLayerBase" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">DynamicApiLayerBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.DynamicApiLayerBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Base class for temporary dynamic runtime python OpenXR API layers.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="xr.api_layer.DynamicApiLayerBase.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#xr.api_layer.DynamicApiLayerBase.name" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#xr.api_layer.DynamicApiLayerBase.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.DynamicApiLayerBase.negotiate_loader_api_layer_interface">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">negotiate_loader_api_layer_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="xr.api_layer.loader_interfaces.NegotiateLoaderInfo"><span class="pre">xr.api_layer.loader_interfaces.NegotiateLoaderInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest"><span class="pre">xr.api_layer.loader_interfaces.NegotiateApiLayerRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">xr.enums.Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.DynamicApiLayerBase.negotiate_loader_api_layer_interface" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">negotiate_loader_api_layer_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateLoaderInfo" title="xr.api_layer.loader_interfaces.NegotiateLoaderInfo"><span class="pre">NegotiateLoaderInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.api_layer.loader_interfaces.NegotiateApiLayerRequest" title="xr.api_layer.loader_interfaces.NegotiateApiLayerRequest"><span class="pre">NegotiateApiLayerRequest</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.DynamicApiLayerBase.negotiate_loader_api_layer_interface" title="Link to this definition"></a></dt>
 <dd><p>Override this method in a derived class to create your own temporary dynamic OpenXR API layer.</p>
 <dl class="simple">
 <dt>If this layer is able to support the request, it must: return xr.Result.SUCCESS and:</dt><dd><p>Fill in pname:layerRequest→pname:layerInterfaceVersion with the API layer interface version it desires to support.
@@ -451,47 +456,47 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">NegotiateApiLayerRequest</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ctypes.Structure</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">NegotiateApiLayerRequest</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest.create_api_layer_instance">
-<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.create_api_layer_instance" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.create_api_layer_instance" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest.get_instance_proc_addr">
-<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.get_instance_proc_addr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.get_instance_proc_addr" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest.layer_api_version">
-<span class="sig-name descname"><span class="pre">layer_api_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.layer_api_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">layer_api_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.layer_api_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest.layer_interface_version">
-<span class="sig-name descname"><span class="pre">layer_interface_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.layer_interface_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">layer_interface_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.layer_interface_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest.struct_size">
-<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.struct_size" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.struct_size" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest.struct_type">
-<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.struct_type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.struct_type" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateApiLayerRequest.struct_version">
-<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.struct_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateApiLayerRequest.struct_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
@@ -499,47 +504,47 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">NegotiateLoaderInfo</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ctypes.Structure</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">NegotiateLoaderInfo</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo.max_api_version">
-<span class="sig-name descname"><span class="pre">max_api_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.max_api_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_api_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.max_api_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo.max_interface_version">
-<span class="sig-name descname"><span class="pre">max_interface_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.max_interface_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_interface_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.max_interface_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo.min_api_version">
-<span class="sig-name descname"><span class="pre">min_api_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.min_api_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_api_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.min_api_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo.min_interface_version">
-<span class="sig-name descname"><span class="pre">min_interface_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.min_interface_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_interface_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.min_interface_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo.struct_size">
-<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.struct_size" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_size</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.struct_size" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo.struct_type">
-<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.struct_type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_type</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.struct_type" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.NegotiateLoaderInfo.struct_version">
-<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.struct_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">struct_version</span></span><a class="headerlink" href="#xr.api_layer.NegotiateLoaderInfo.struct_version" title="Link to this definition"></a></dt>
 <dd><p>Structure/Union member</p>
 </dd></dl>
 
@@ -547,19 +552,19 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.PFN_xrCreateApiLayerInstance">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">PFN_xrCreateApiLayerInstance</span></span><a class="headerlink" href="#xr.api_layer.PFN_xrCreateApiLayerInstance" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE.&lt;locals&gt;.CFunctionType</span></code></p>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">PFN_xrCreateApiLayerInstance</span></span><a class="headerlink" href="#xr.api_layer.PFN_xrCreateApiLayerInstance" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">CFunctionType</span></code></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="xr.api_layer.PFN_xrNegotiateLoaderApiLayerInterface">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">PFN_xrNegotiateLoaderApiLayerInterface</span></span><a class="headerlink" href="#xr.api_layer.PFN_xrNegotiateLoaderApiLayerInterface" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ctypes.CFUNCTYPE.&lt;locals&gt;.CFunctionType</span></code></p>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">PFN_xrNegotiateLoaderApiLayerInterface</span></span><a class="headerlink" href="#xr.api_layer.PFN_xrNegotiateLoaderApiLayerInterface" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">CFunctionType</span></code></p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="xr.api_layer.expose_packaged_api_layers">
-<span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">expose_packaged_api_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.expose_packaged_api_layers" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">xr.api_layer.</span></span><span class="sig-name descname"><span class="pre">expose_packaged_api_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.api_layer.expose_packaged_api_layers" title="Link to this definition"></a></dt>
 <dd><p>Make pre-packaged layers available to the openxr loader</p>
 </dd></dl>
 

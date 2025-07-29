@@ -55,13 +55,15 @@ packages = [
 generate = ["clang"]
 test = ["pytest"]
 dev = [
-  "libclang==12",
-  "PyOpenGL>=3.1.6",
-  "glfw>=2.5.6",
-  "numpy",
-  "pytest>=7.2.0,<8.0.0",
-  "nose2",
-  "twine>=4.0.0"
+    "libclang==12",
+    "PyOpenGL",
+    "glfw",
+    "numpy",
+    "pytest",
+    "nose2",
+    "sphinx",
+    "sphinx_rtd_theme",
+    "twine",
 ]
 glfw = ["glfw"]
 pyside = ["PySide6"]
