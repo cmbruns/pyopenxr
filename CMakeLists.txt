@@ -21,7 +21,7 @@ endif()
 if(PYOPENXR_BUILD_DOCS)
     # Add a custom target that depends on the core generation
     add_custom_target(docs ALL
-        COMMAND ${Python_EXECUTABLE} -m sphinx -b html ${CMAKE_SOURCE_DIR}/docs/source ${CMAKE_SOURCE_DIR}/docs
+        COMMAND ${Python_EXECUTABLE} -m sphinx -b html ${CMAKE_SOURCE_DIR}/src/docs ${CMAKE_SOURCE_DIR}/docs
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Generating Sphinx documentation"
         VERBATIM
