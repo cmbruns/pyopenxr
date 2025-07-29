@@ -44,8 +44,11 @@ packages = [
     "xr.api_layer",
     "xr.api_layer.windows",
     "xr.api_layer.linux",
-    "xr.extension",
+    "xr.ext",
     "xr.utils",
+    "xr.utils.HTCX",
+    "xr.utils.KHR",
+    "xr.utils.gl",
 ]
 
 [tool.setuptools.package-data]
