@@ -47,7 +47,7 @@ for a hands-on introduction.
 | handle      | `xr.Instance`                        | `XrInstance`                          |
 
 ## 📚 Documentation
-Full API reference and guides are [available](pyopenxr.readthedocs.io)
+Full API reference and guides are [available](https://cmbruns.github.io/pyopenxr/)
 
 ## 📦 License
 This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
