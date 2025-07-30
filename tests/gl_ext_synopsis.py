@@ -1,5 +1,5 @@
 import xr
-import xr.extension.KHR.opengl_enable as opengl_enable
+import xr.ext.KHR.opengl_enable as opengl_enable
 
 assert opengl_enable.NAME == xr.KHR_OPENGL_ENABLE_EXTENSION_NAME
 assert opengl_enable.NAME == "XR_KHR_opengl_enable"
