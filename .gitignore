@@ -13,3 +13,4 @@ build_cmake/
 src/generate/xrg/libclang*.so
 /.venv
 /build_cmake2
+/.pytest_cache
