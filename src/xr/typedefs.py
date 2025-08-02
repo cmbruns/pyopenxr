@@ -62,9 +62,9 @@ class Instance(POINTER(Instance_T)):
     :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
     """
 
-    _type_ = POINTER(Instance_T)._type_  # ctypes idiosyncracy
+    _type_ = Instance_T  # ctypes idiosyncrasy
 
-    def __init__(self, create_info: Optional["xr.InstanceCreateInfo"] = None):
+    def __init__(self, create_info: Optional["InstanceCreateInfo"] = None):
         """
         Construct and initialize an OpenXR instance.
 

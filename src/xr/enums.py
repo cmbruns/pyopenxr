@@ -22,11 +22,8 @@ class DefaultEnumMeta(enum.EnumMeta):
 
     https://stackoverflow.com/questions/44867597/is-there-a-way-to-specify-a-default-value-for-python-enums
     """
-    default = object()
-
-    def __call__(cls, value=default, *args, **kwargs):
-        if value is DefaultEnumMeta.default:
-            result = None
+    def __call__(cls, *args, **kwargs):
+        if len(args) < 1:
             # Enums with a zero should default to zero
             try:
                 result = cls(0)
@@ -34,7 +31,8 @@ class DefaultEnumMeta(enum.EnumMeta):
                 # Otherwise assume the first enum is default
                 result = next(iter(cls))
             return result
-        return super().__call__(value, *args, **kwargs)
+        else:
+            return super().__call__(*args, **kwargs)
 
 
 class EnumBase(enum.IntEnum, metaclass=DefaultEnumMeta):

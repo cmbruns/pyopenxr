@@ -41,7 +41,6 @@ def main():
     
         def __call__(cls, value=default, *args, **kwargs):
             if value is DefaultEnumMeta.default:
-                result = None
                 # Enums with a zero should default to zero
                 try:
                     result = cls(0)
