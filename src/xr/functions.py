@@ -1,7 +1,7 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import Array, POINTER, byref, c_char, c_int64, c_uint32, cast, create_string_buffer
-from typing import Sequence, TypeVar
+from typing import Sequence, TypeVar, Type
 
 """
 File xr.functions.py
@@ -545,13 +545,13 @@ def destroy_swapchain(
         raise result
 
 
-TYPE = TypeVar("TYPE")
+SWAPCHAIN_IMAGE_TYPE = TypeVar("SWAPCHAIN_IMAGE_TYPE")
 
 
 def enumerate_swapchain_images(
     swapchain: Swapchain,
-    element_type: type(TYPE),
-) -> Sequence[TYPE]:
+    element_type: Type[SWAPCHAIN_IMAGE_TYPE],
+) -> Sequence[SWAPCHAIN_IMAGE_TYPE]:
     """"""
     image_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainImages
