@@ -16,9 +16,9 @@ class XrEventDispatcher:
 
     def __init__(self, instance):
         self.instance = instance
-        self.subscribers: List[Callable[[object], None]] = []
+        self.subscribers: List[Callable[[xr.EventDataBuffer], None]] = []
 
-    def subscribe(self, callback: Callable[[object], None]):
+    def subscribe(self, callback: Callable[[xr.EventDataBuffer], None]):
         """
         Register a callback to receive OpenXR events.
 

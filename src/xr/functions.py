@@ -1,6 +1,7 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import Array, POINTER, byref, c_char, c_int64, c_uint32, cast, create_string_buffer
+from typing import Sequence, TypeVar
 
 """
 File xr.functions.py
@@ -34,7 +35,7 @@ def get_instance_proc_addr(
 
 
 def enumerate_api_layer_properties(
-) -> Array:
+) -> Sequence[ApiLayerProperties]:
     """"""
     property_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateApiLayerProperties
@@ -54,12 +55,12 @@ def enumerate_api_layer_properties(
     ))
     if result.is_exception():
         raise result
-    return properties
+    return properties  # noqa
 
 
 def enumerate_instance_extension_properties(
     layer_name: str = None,
-) -> Array:
+) -> Sequence[ExtensionProperties]:
     """"""
     if layer_name is not None:
         layer_name = layer_name.encode()
@@ -83,7 +84,7 @@ def enumerate_instance_extension_properties(
     ))
     if result.is_exception():
         raise result
-    return properties
+    return properties  # noqa
 
 
 def create_instance(
@@ -231,7 +232,7 @@ def enumerate_environment_blend_modes(
     instance: Instance,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
-) -> Array:
+) -> Sequence[EnvironmentBlendMode]:
     """"""
     environment_blend_mode_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateEnvironmentBlendModes
@@ -293,7 +294,7 @@ def destroy_session(
 
 def enumerate_reference_spaces(
     session: Session,
-) -> Array:
+) -> Sequence[ReferenceSpaceType]:
     """"""
     space_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateReferenceSpaces
@@ -457,7 +458,7 @@ def enumerate_view_configuration_views(
     instance: Instance,
     system_id: SystemId,
     view_configuration_type: ViewConfigurationType,
-) -> Array:
+) -> Sequence[ViewConfigurationView]:
     """"""
     view_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateViewConfigurationViews
@@ -483,12 +484,12 @@ def enumerate_view_configuration_views(
     ))
     if result.is_exception():
         raise result
-    return views
+    return views  # noqa
 
 
 def enumerate_swapchain_formats(
     session: Session,
-) -> Array:
+) -> Sequence[c_int64]:
     """"""
     format_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainFormats
@@ -510,7 +511,7 @@ def enumerate_swapchain_formats(
     ))
     if result.is_exception():
         raise result
-    return formats
+    return formats  # noqa
 
 
 def create_swapchain(
@@ -544,10 +545,13 @@ def destroy_swapchain(
         raise result
 
 
+TYPE = TypeVar("TYPE")
+
+
 def enumerate_swapchain_images(
     swapchain: Swapchain,
-    element_type: type,
-) -> Array:
+    element_type: type(TYPE),
+) -> Sequence[TYPE]:
     """"""
     image_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateSwapchainImages
@@ -560,7 +564,7 @@ def enumerate_swapchain_images(
     ))
     if result.is_exception():
         raise result
-    images = (element_type * image_capacity_input.value)(*([element_type()] * image_capacity_input.value))
+    images = (element_type * image_capacity_input.value)(*([element_type()] * image_capacity_input.value))  # noqa
     result = check_result(fxn(
         swapchain,
         image_capacity_input,
@@ -703,7 +707,7 @@ def end_frame(
 def locate_views(
     session: Session,
     view_locate_info: ViewLocateInfo,
-) -> (ViewState, Array):
+) -> (ViewState, Sequence[View]):
     """"""
     view_state = ViewState()
     view_capacity_input = c_uint32(0)
@@ -974,7 +978,7 @@ def sync_actions(
 def enumerate_bound_sources_for_action(
     session: Session,
     enumerate_info: BoundSourcesForActionEnumerateInfo,
-) -> Array:
+) -> Sequence[Path]:
     """"""
     source_capacity_input = c_uint32(0)
     fxn = raw_functions.xrEnumerateBoundSourcesForAction
@@ -998,7 +1002,7 @@ def enumerate_bound_sources_for_action(
     ))
     if result.is_exception():
         raise result
-    return sources
+    return sources  # noqa
 
 
 def get_input_source_localized_name(
