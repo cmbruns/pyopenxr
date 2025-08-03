@@ -37,10 +37,8 @@ def main():
     
         https://stackoverflow.com/questions/44867597/is-there-a-way-to-specify-a-default-value-for-python-enums
         """
-        default = object()
-    
-        def __call__(cls, value=default, *args, **kwargs):
-            if value is DefaultEnumMeta.default:
+        def __call__(cls, *args, **kwargs):
+            if len(args) < 1:
                 # Enums with a zero should default to zero
                 try:
                     result = cls(0)
@@ -48,7 +46,8 @@ def main():
                     # Otherwise assume the first enum is default
                     result = next(iter(cls))
                 return result
-            return super().__call__(value, *args, **kwargs)
+            else:
+                return super().__call__(*args, **kwargs)
 
 
     class EnumBase(enum.IntEnum, metaclass=DefaultEnumMeta):
@@ -61,6 +60,27 @@ def main():
         @staticmethod
         def ctype():
             return c_uint64
+
+        def __and__(self, other):
+            return type(self)(self.value & other)
+    
+        def __rand__(self, other):
+            return type(self)(other & self.value)
+    
+        def __invert__(self):
+            return type(self)(~self.value)
+    
+        def __or__(self, other):
+            return type(self)(self.value | other)
+    
+        def __ror__(self, other):
+            return type(self)(other | self.value)
+    
+        def __xor__(self, other):
+            return type(self)(self.value ^ other)
+    
+        def __rxor__(self, other):
+            return type(self)(other ^ self.value)
     '''))
     cg.print_items()
 
