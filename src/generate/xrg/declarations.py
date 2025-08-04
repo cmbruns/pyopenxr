@@ -373,7 +373,11 @@ class FunctionItem(CodeItem):
             result += "\n]"
             return result
         elif api == Api.PYTHON:
-            return str(FunctionCoder(self))
+            # Custom code for atom create functions
+            if self.name() == "create_instance":
+                return str(AtomCreationFunctionCoder(self))
+            else:
+                return str(FunctionCoder(self))
         else:
             raise NotImplementedError
 
@@ -400,7 +404,7 @@ class FunctionParameterItem(CodeItem):
                 command = xr_registry.find(f'commands/command/proto[name="{function_c_name}"]/..')
                 this_param = command.find(f'param[name="{self._capi_name}"]')
                 self._optional = this_param.attrib["optional"] == "true"
-            except Exception:
+            except KeyError:
                 pass
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -512,9 +516,8 @@ class StructItem(CodeItem):
         # For example CompositionLayerProjection.view_count/views
         for ix, f in enumerate(self.fields):
             if ((f.name().endswith("_count") or f.name().startswith("count_"))  # It's named like a count
-                and f.type.name(Api.PYTHON) == "int"  # It's typed like a count
-                and ix + 1 < len(self.fields)  # It's not the final field
-            ):
+                    and f.type.name(Api.PYTHON) == "int"  # It's typed like a count
+                    and ix + 1 < len(self.fields)):  # It's not the final field
                 stem = f.name()
                 if f.name().endswith("_count"):
                     stem = f.name()[:-6]  # Remove the final "_count"
@@ -522,10 +525,9 @@ class StructItem(CodeItem):
                     stem = f.name()[6:]  # Remove the initial "count_"
                 f2 = self.fields[ix + 1]  # Fetch the subsequent field to see if it matches
                 f2n = f2.name()  # e.g. "values"
-                if (f2n.endswith("s")   # It's plural
-                    and stem in f2n  # Field names are similar
-                    and f2.type.name().startswith("POINTER(")
-                ):
+                if (f2n.endswith("s")  # It's plural
+                        and stem in f2n  # Field names are similar
+                        and f2.type.name().startswith("POINTER(")):
                     # OK at this point we know it's a matching count/pointer pair
                     f.kind = StructFieldItem.Kind.ARRAY_COUNT
                     f2.kind = StructFieldItem.Kind.ARRAY_POINTER
@@ -568,6 +570,7 @@ class StructItem(CodeItem):
         if len(self.fields) < 2:
             return ""  # One field is not enough for a sequence
         field_ctype = None
+        field_pytype = None
         if self.fields[0].type.name(Api.CTYPES) == "c_float":
             field_ctype = "c_float"
             field_pytype = "float"
@@ -761,6 +764,7 @@ class VariableItem(CodeItem):
 
 class NothingParameterCoder(object):
     """Parameter that generates no code. Used as a base for other parameter types."""
+
     def __init__(self, parameter: FunctionParameterItem, default=None):
         self.parameter = parameter
         self.default = default
@@ -863,6 +867,7 @@ class BufferCoder(ParameterCoderBase):
     Be we want to use just one call in python.
     https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#buffer-size-parameters
     """
+
     def __init__(
             self,
             cap_in: FunctionParameterItem,
@@ -978,46 +983,8 @@ class FunctionCoder(object):
                     continue
             pc[1] = InputParameterCoder(p)
 
-    def declaration_code(self, api: Api = Api.PYTHON) -> str:
-        result_types = []
-        for p, c in self.param_coders:
-            for r in c.result_type_code(Api.PYTHON):
-                result_types.append(r)
-        # Don't show default value for any parameter that appears before required parameters
-        can_haz_default = True
-        param_strings = []
-        for p, c in reversed(self.param_coders):
-            for s in c.declaration_code(api):
-                default = ","  # default suffix is no default value
-                if p.is_optional() and can_haz_default:
-                    default = f" = {p.default_value},"
-                if not p.is_optional():
-                    can_haz_default = False
-                param_strings.append(f"\n{' ' * 16}{s}{default}")
-        params = "".join(reversed(param_strings))
-        if len(result_types) == 0:
-            result = "None"
-        elif len(result_types) == 1:
-            result = result_types[0]
-        else:
-            result = f"({', '.join(result_types)})"
-        return inspect.cleandoc(f"""
-            def {self.function.name(api)}({params}
-            ) -> {result}:
-        """)
-
-    def __str__(self, api: Api = Api.PYTHON):
-        result = self.declaration_code(api)
-        xr_fn_name = f"xr.{self.function.name(Api.PYTHON)}"
-        if xr_fn_name in function_docstrings:
-            docstring = function_docstrings[xr_fn_name]["docstring"]
-            result += f'\n    """'
-            for line in docstring.split("\n"):
-                result += f"\n    {line}"
-            result += f'\n    """'
-        else:
-            docstring = ""
-            # result += f'\n    """{docstring}"""'
+    def body_code(self) -> str:
+        result = ""
         for p, c in self.param_coders:
             for line in c.pre_body_code():
                 result += f"\n    {line}"
@@ -1056,9 +1023,57 @@ class FunctionCoder(object):
                 result += "  # noqa"
         return result
 
+    def declaration_code(self, api: Api = Api.PYTHON) -> str:
+        result_types = []
+        for p, c in self.param_coders:
+            for r in c.result_type_code(Api.PYTHON):
+                result_types.append(r)
+        # Don't show default value for any parameter that appears before required parameters
+        can_haz_default = True
+        param_strings = []
+        for p, c in reversed(self.param_coders):
+            for s in c.declaration_code(api):
+                default = ","  # default suffix is no default value
+                if p.is_optional() and can_haz_default:
+                    default = f" = {p.default_value},"
+                if not p.is_optional():
+                    can_haz_default = False
+                param_strings.append(f"\n{' ' * 16}{s}{default}")
+        params = "".join(reversed(param_strings))
+        if len(result_types) == 0:
+            result = "None"
+        elif len(result_types) == 1:
+            result = result_types[0]
+        else:
+            result = f"({', '.join(result_types)})"
+        return inspect.cleandoc(f"""
+            def {self.function.name(api)}({params}
+            ) -> {result}:
+        """)
+
+    def __str__(self, api: Api = Api.PYTHON):
+        result = self.declaration_code(api)
+        xr_fn_name = f"xr.{self.function.name(Api.PYTHON)}"
+        if xr_fn_name in function_docstrings:
+            docstring = function_docstrings[xr_fn_name]["docstring"]
+            result += f'\n    """'
+            for line in docstring.split("\n"):
+                result += f"\n    {line}"
+            result += f'\n    """'
+        else:
+            pass
+        result += self.body_code()
+        return result
+
+
+class AtomCreationFunctionCoder(FunctionCoder):
+    def body_code(self) -> str:
+        return "\n    return Instance(create_info)"
+
 
 class FieldCoder(object):
     """Code generator helper for a single field in a ctypes.Structure constructor"""
+
     def __init__(self, field: StructFieldItem, default: Union[Number, str, None] = 0, rename=None):
         self.field = field
         self.name = self.field.name(Api.PYTHON)
@@ -1114,6 +1129,7 @@ class ArrayCountFieldCoder(FieldCoder):
     """
     Collapse count/pointer field pairs into a single sequence constructor parameter.
     """
+
     def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
         super().__init__(field=count_field, default="None")
         self.array_field = array_field
@@ -1126,12 +1142,13 @@ class ArrayPointerFieldCoder(FieldCoder):
     """
     Collapse count/pointer field pairs into a single sequence constructor parameter.
     """
+
     def __init__(self, count_field: StructFieldItem, array_field: StructFieldItem):
         super().__init__(field=array_field, default="None")
         self.count_field = count_field
 
     def param_code(self) -> Generator[str, None, None]:
-        pn = self.field.type.pointee.name(Api.CTYPES)
+        pn = self.field.type.pointee.name(Api.CTYPES)  # noqa
         if pn == "c_char_p":
             pt = "StringArrayFieldParamType"
         elif "BaseHeader" in pn:
@@ -1145,7 +1162,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         # Create a ctypes array if one does not already exist
         array = self.name
         count = self.count_field.name(Api.CTYPES)
-        element_type = self.field.type.pointee.name(Api.CTYPES)
+        element_type = self.field.type.pointee.name(Api.CTYPES)  # noqa
         if element_type == "c_char_p":
             yield f"{count}, {array} = string_array_field_helper("
             yield f"    {count}, {array})"
@@ -1158,7 +1175,7 @@ class ArrayPointerFieldCoder(FieldCoder):
 
     def property_code(self) -> Generator[str, None, None]:
         count = self.count_field.name(Api.CTYPES)
-        element_type = self.field.type.pointee.name(Api.CTYPES)
+        element_type = self.field.type.pointee.name(Api.CTYPES)  # noqa
         # getter
         yield "@property"
         yield f"def {self.name}(self):"
@@ -1172,6 +1189,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         # yield "# noinspection PyAttributeOutsideInit"
         yield f"@{self.name}.setter"
         yield f"def {self.name}(self, value):"
+        yield f"    # noinspection PyAttributeOutsideInit"
         if element_type == "c_char_p":
             yield f"    self.{count}, self.{self.inner_name} = string_array_field_helper("
             yield f"        None, value)"
@@ -1204,6 +1222,7 @@ class FunctionPointerFieldCoder(FieldCoder):
 
 class NoDefaultFieldCoder(FieldCoder):
     """There is no reasonable default"""
+
     def param_code(self) -> Generator[str, None, None]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)}"
 
@@ -1218,6 +1237,7 @@ class PosefFieldCoder(FieldCoder):
 
 class ArrayFieldCoder(FieldCoder):
     """We should not pass EventDataBuffer.varying in the constructor"""
+
     def param_code(self) -> Generator[str, None, None]:
         yield from []
 
@@ -1363,6 +1383,7 @@ class StructureCoder(object):
             self.field_coders = self.field_coders[2:] + [self.field_coders[1]] + [self.field_coders[0]]
 
     """Creates __init__(...) method for Structure types"""
+
     def generate_constructor(self) -> str:
         # Special cases for default values
         # TODO: box/unbox enums
@@ -1375,7 +1396,11 @@ class StructureCoder(object):
         result += f"\n{i4}def __init__(\n{i8}self,\n"
         for fc in self.field_coders:
             for s in fc.param_code():
-                result += f"{i8}{s},\n"
+                # pycharm warns too much in default constructed enums.
+                noqa = ""  # maybe add a noqa comment
+                if isinstance(fc, EnumFieldCoder) and s.endswith("()"):
+                    noqa = "  # noqa"
+                result += f"{i8}{s},{noqa}\n"
         result += f"{i4}) -> None:\n"
         for fc in self.field_coders:
             for s in fc.pre_call_code():

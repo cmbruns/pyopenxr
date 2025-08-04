@@ -102,6 +102,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 
     @view_formats.setter
     def view_formats(self, value):
+        # noinspection PyAttributeOutsideInit
         self.view_format_count, self._view_formats = array_field_helper(
             c_int, None, value)
 
@@ -557,7 +558,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR(),
+        create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR(),  # noqa
         pfn_get_instance_proc_addr: int = 0,
         vulkan_create_info: POINTER(c_int) = None,
         vulkan_allocator: POINTER(c_int) = None,
@@ -595,7 +596,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR(),
+        create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR(),  # noqa
         pfn_get_instance_proc_addr: int = 0,
         vulkan_physical_device: int = 0,
         vulkan_create_info: POINTER(c_int) = None,

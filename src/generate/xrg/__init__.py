@@ -86,7 +86,7 @@ class CodeGenerator(object):
         elif len(self.ctypes_names) <= max_ctypes_per_line:
             print(f"from ctypes import {', '.join(sorted(self.ctypes_names))}")
         else:
-            print(f"from ctypes import(")
+            print(f"from ctypes import (")
             offset = 0
             all_names = sorted(self.ctypes_names)
             while offset < len(all_names):
