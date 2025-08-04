@@ -1,8 +1,9 @@
 # Warning: this file is auto-generated. Do not edit.
 
-from ctypes import (
-    byref, CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p,
-    c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8, c_void_p, cast
+from ctypes import(
+    CFUNCTYPE, POINTER, Structure, addressof, byref, c_char, c_char_p, c_float
+    c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8
+    c_void_p, cast
 )
 import ctypes
 

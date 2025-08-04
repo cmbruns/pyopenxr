@@ -14,6 +14,7 @@ def main():
     )
 
     cg.ctypes_names.add("addressof")
+    cg.ctypes_names.add("byref")
     cg.ctypes_names.add("cast")
     cg.print_header()
     print(inspect.cleandoc("""
@@ -27,6 +28,7 @@ def main():
         
         from .array_field import *
         from .enums import *
+        from .exception import check_result
         from .version import *
     """))
 

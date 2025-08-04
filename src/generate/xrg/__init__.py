@@ -80,8 +80,21 @@ class CodeGenerator(object):
             self.ctypes_names.update(t.used_ctypes(api))
         print("""# Warning: this file is auto-generated. Do not edit.""")
         print("")
-        if len(self.ctypes_names) > 0:
+        max_ctypes_per_line = 8
+        if len(self.ctypes_names) == 0:
+            pass
+        elif len(self.ctypes_names) <= max_ctypes_per_line:
             print(f"from ctypes import {', '.join(sorted(self.ctypes_names))}")
+        else:
+            print(f"from ctypes import(")
+            offset = 0
+            all_names = sorted(self.ctypes_names)
+            while offset < len(all_names):
+                max_ix = min(len(all_names), offset + max_ctypes_per_line)
+                these_names = all_names[offset:max_ix]
+                print(f"    {', '.join(these_names)}")
+                offset += max_ctypes_per_line
+            print(f")")
 
     def print_items(self, api=Api.PYTHON) -> None:
         blanks2 = 0
