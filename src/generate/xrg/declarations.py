@@ -8,6 +8,7 @@ from typing import Generator, Set, Union
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
+from .class_docstring_data import class_docstrings
 from .default_values import default_values
 from .xrtypes import *
 from .registry import xr_registry
@@ -677,6 +678,7 @@ class TypeDefItem(CodeItem):
             raise SkippableCodeItemException  # Keep enum typedefs out of typedefs.py
         if self._py_name == self.type.name(Api.CTYPES):
             raise SkippableCodeItemException  # Nonsense A = A typedef
+        self.is_handle = False
         # Rename xr "Handle" types
         if cursor.underlying_typedef_type.kind == TypeKind.POINTER:
             pointee = cursor.underlying_typedef_type.get_pointee()
@@ -684,6 +686,7 @@ class TypeDefItem(CodeItem):
                 if pointee.spelling.endswith("_T"):
                     # This is a HANDLE type
                     # self._py_name += "Handle"  # To distinguish Instance from InstanceHandle
+                    self.is_handle = True
                     self._ctypes_name = self._py_name
         if self.type.name() == "Flags64":
             self._py_name = self._ctypes_name = self._py_name + "CInt"
@@ -703,7 +706,45 @@ class TypeDefItem(CodeItem):
     def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
-        return f"{self.name(api)} = {self.type.name(Api.CTYPES)}"
+        # TODO - special case for elaborated handle types
+        if self.is_handle and self.name(Api.PYTHON) == "Instance":
+            docstring = ""
+            doc_key = f"xr.{self.name(api)}"
+            if doc_key in class_docstrings:
+                docstring = f'\n"""\n{class_docstrings[doc_key]["docstring"]}\n"""\n'
+                docstring = textwrap.indent(docstring, " " * 20)
+            init_docstring = ""
+            init_key = f"{doc_key}.__init__"
+            if init_key in function_docstrings:
+                init_docstring = f'\n"""\n{function_docstrings[init_key]["docstring"]}\n"""\n'
+                init_docstring = textwrap.indent(init_docstring, " " * 24)
+            # TODO: generalize for non-Instance handles
+            result = inspect.cleandoc(f'''
+                class {self.name(api)}({self.type.name(Api.CTYPES)}):{docstring}
+                    _type_ = {self.type.pointee.name(Api.CTYPES)}  # ctypes idiosyncrasy
+                
+                    def __init__(self, create_info: Optional["InstanceCreateInfo"] = None):{init_docstring}
+                        if create_info is None:
+                            create_info = InstanceCreateInfo()
+                        # Import function just-in-time to avoid initialization order problem
+                        from .raw_functions import xrCreateInstance
+                        result = check_result(xrCreateInstance(
+                            create_info,
+                            byref(self),
+                        ))
+                        if result.is_exception():
+                            raise result
+                
+                    def __enter__(self) -> "{self.name(api)}":
+                        return self
+                
+                    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
+                        from .functions import destroy_instance
+                        destroy_instance(self)
+            ''')
+            return result
+        else:
+            return f"{self.name(api)} = {self.type.name(Api.CTYPES)}"
 
     def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
         return self.type.used_ctypes(Api.CTYPES)
@@ -1382,9 +1423,8 @@ class StructureCoder(object):
             assert n1 == "c_void_p" or n1.startswith("POINTER(Base")
             self.field_coders = self.field_coders[2:] + [self.field_coders[1]] + [self.field_coders[0]]
 
-    """Creates __init__(...) method for Structure types"""
-
     def generate_constructor(self) -> str:
+        """Creates __init__(...) method for Structure types"""
         # Special cases for default values
         # TODO: box/unbox enums
         # TODO: use None as default for pointer fields

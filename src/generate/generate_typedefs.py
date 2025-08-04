@@ -22,7 +22,7 @@ def main():
         
         import os
         import sys
-        from typing import Generator, Optional, Self
+        from typing import Generator, Optional
         
         import numpy
         

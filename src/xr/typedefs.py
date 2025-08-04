@@ -9,7 +9,7 @@ import ctypes
 
 import os
 import sys
-from typing import Generator, Optional, Self
+from typing import Generator, Optional
 
 import numpy
 
@@ -93,7 +93,7 @@ class Instance(POINTER(Instance_T)):
         :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
         :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
         """
-        # super().__init__()  # Triggers a problem in ctypes "RuntimeError: super(): __class__ cell not found"
+
         if create_info is None:
             create_info = InstanceCreateInfo()
         # Import function just-in-time to avoid initialization order problem
@@ -105,7 +105,7 @@ class Instance(POINTER(Instance_T)):
         if result.is_exception():
             raise result
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> "Instance":
         return self
 
     def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
