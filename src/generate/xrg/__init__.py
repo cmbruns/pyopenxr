@@ -92,7 +92,7 @@ class CodeGenerator(object):
             while offset < len(all_names):
                 max_ix = min(len(all_names), offset + max_ctypes_per_line)
                 these_names = all_names[offset:max_ix]
-                print(f"    {', '.join(these_names)}")
+                print(f"    {', '.join(these_names)},")
                 offset += max_ctypes_per_line
             print(f")")
 
