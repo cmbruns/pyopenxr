@@ -37,7 +37,80 @@ class Instance_T(Structure):
     pass
 
 
-Instance = POINTER(Instance_T)
+class Instance(POINTER(Instance_T)):
+    """
+    Opaque handle to an OpenXR instance object.
+
+    An `xr.Instance` represents a connection between an OpenXR application and the
+    OpenXR runtime. It encapsulates all runtime-managed state and serves as the root
+    object for most OpenXR operations, including system queries, session creation,
+    and extension dispatch.
+
+    This object may be instantiated directly with an optional `xr.InstanceCreateInfo`
+    descriptor. If none is provided, a default descriptor will be used. Initialization
+    is performed lazily, with runtime bindings deferred to minimize import-time overhead
+    and avoid ordering issues.
+
+    `Instance` supports context management protocols and may be used in a `with` block
+    for automatic cleanup:
+        with xr.Instance(...) as instance:
+            ...
+
+    Internally, this object wraps a pointer to the OpenXR instance and delegates all
+    interactions to the runtime via raw API functions. It is opaque and cannot be
+    directly inspected or modified.
+
+    :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
+    """
+
+    _type_ = Instance_T  # ctypes idiosyncrasy
+
+    def __init__(self, create_info: Optional["InstanceCreateInfo"] = None):
+        """
+        Construct and initialize an OpenXR instance.
+
+        This constructor wraps the native :func:`xrCreateInstance` call, creating a new
+        OpenXR instance and binding it to this object. If `create_info` is not provided,
+        a default descriptor will be used.
+
+        Initialization is performed lazily, with runtime bindings imported just-in-time
+        to avoid circular dependencies and ordering issues. This object supports context
+        management for automatic teardown via :func:`xr.destroy_instance`.
+
+        :param create_info: Optional descriptor specifying application info, enabled extensions,
+                            and platform-specific parameters.
+        :type create_info: xr.InstanceCreateInfo or None
+        :raises xr.ValidationFailureError: If validation layers reject the configuration.
+        :raises xr.RuntimeFailureError: If the runtime fails to initialize.
+        :raises xr.OutOfMemoryError: If memory allocation fails.
+        :raises xr.LimitReachedError: If the runtime cannot support additional instances.
+        :raises xr.RuntimeUnavailableError: If no runtime is available.
+        :raises xr.NameInvalidError: If the application name is empty.
+        :raises xr.InitializationFailedError: If platform-specific initialization fails.
+        :raises xr.ExtensionNotPresentError: If a requested extension is missing.
+        :raises xr.ExtensionDependencyNotEnabledError: If an extension dependency is missing.
+        :raises xr.ApiVersionUnsupportedError: If the requested API version is not supported.
+        :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
+        :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
+        """
+        # super().__init__()  # Triggers a problem in ctypes "RuntimeError: super(): __class__ cell not found"
+        if create_info is None:
+            create_info = InstanceCreateInfo()
+        # Import function just-in-time to avoid initialization order problem
+        from .raw_functions import xrCreateInstance
+        result = check_result(xrCreateInstance(
+            create_info,
+            byref(self),
+        ))
+        if result.is_exception():
+            raise result
+
+    def __enter__(self) -> "Instance":
+        return self
+
+    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
+        from .functions import destroy_instance
+        destroy_instance(self)
 
 
 class Session_T(Structure):
