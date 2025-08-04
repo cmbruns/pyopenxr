@@ -17,12 +17,13 @@ def main():
         ]
     )
 
-    functions.ctypes_names.update(["Array", "byref", "cast", "create_string_buffer", ])
+    functions.ctypes_names.update(["byref", "cast", "create_string_buffer", ])
 
     functions.print_header(api=xrg.Api.PYTHON)
-    print("")
 
     print(inspect.cleandoc('''
+        from typing import Sequence, TypeVar, Type
+
         """
         File xr.functions.py
         
@@ -33,6 +34,8 @@ def main():
         from .enums import *
         from .exception import check_result
         from .typedefs import *
+        
+        SWAPCHAIN_IMAGE_TYPE = TypeVar("SWAPCHAIN_IMAGE_TYPE")
     '''))
 
     for fn in functions.items:

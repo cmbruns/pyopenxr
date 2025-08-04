@@ -13,6 +13,7 @@ from .xrtypes import *
 from .registry import xr_registry
 from .vendor_tags import vendor_tags
 from .docstrings import create_docstring
+from .function_docstring_data import function_docstrings
 
 
 class SkippableCodeItemException(Exception):
@@ -888,7 +889,8 @@ class BufferCoder(ParameterCoderBase):
 
     def declaration_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         if self.use_element_type_arg:
-            yield f"element_type: type"
+            # TODO: this is hard coded for enumerate_swapchain_images()
+            yield f"element_type: Type[SWAPCHAIN_IMAGE_TYPE]"
 
     def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)} = {self.cap_in.type.name(Api.CTYPES)}(0)"
@@ -907,7 +909,7 @@ class BufferCoder(ParameterCoderBase):
         else:
             # Use the default constructor to initialize each array member
             # initialized_array = (MyStructure * N)(*([MyStructure()] * N))
-            yield f"{name} = ({e_type} * {n})(*([{e_type}()] * {n}))"
+            yield f"{name} = ({e_type} * {n})(*([{e_type}()] * {n}))  # noqa"
 
     def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         yield f"{self.cap_in.name(api)}"
@@ -921,8 +923,7 @@ class BufferCoder(ParameterCoderBase):
         if self.array_type_name == "str":
             yield "str"
         else:  # array case
-            # yield f"Array[{self.array_type_name}]"  # Not in python 3.6
-            yield f"Array"
+            yield f"Sequence[{self.array_type.name(Api.PYTHON)}]"
 
     def result_value_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
         if self.array_type_name == "str":
@@ -1007,8 +1008,16 @@ class FunctionCoder(object):
 
     def __str__(self, api: Api = Api.PYTHON):
         result = self.declaration_code(api)
-        docstring = ""
-        result += f'\n    """{docstring}"""'
+        xr_fn_name = f"xr.{self.function.name(Api.PYTHON)}"
+        if xr_fn_name in function_docstrings:
+            docstring = function_docstrings[xr_fn_name]["docstring"]
+            result += f'\n    """'
+            for line in docstring.split("\n"):
+                result += f"\n    {line}"
+            result += f'\n    """'
+        else:
+            docstring = ""
+            # result += f'\n    """{docstring}"""'
         for p, c in self.param_coders:
             for line in c.pre_body_code():
                 result += f"\n    {line}"
@@ -1033,11 +1042,18 @@ class FunctionCoder(object):
         result += f"\n    if result.is_exception():"
         result += f"\n        raise result"
         result_values = []
+        returns_ctypes_array_type = False  # prepare to put "noqa" comment on array types
         for p, c in self.param_coders:
             for r in c.result_value_code(Api.PYTHON):
                 result_values.append(r)
+                # prepare to noqa the return type maybe
+                for t in c.result_type_code():
+                    if t.startswith("Sequence["):
+                        returns_ctypes_array_type = True
         if len(result_values) > 0:
             result += f"\n    return {', '.join(result_values)}"
+            if returns_ctypes_array_type:
+                result += "  # noqa"
         return result
 
 
