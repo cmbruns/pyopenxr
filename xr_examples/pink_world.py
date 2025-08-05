@@ -5,11 +5,13 @@ This example renders a solid pink field to each eye.
 
 from OpenGL import GL
 import xr
-import xr.utils
+from xr.utils.gl import ContextObject
+from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
 
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.utils.ContextObject(
+with ContextObject(
+    context_provider=GLFWOffscreenContextProvider(),
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)

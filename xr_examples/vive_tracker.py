@@ -12,7 +12,11 @@ import ctypes
 from ctypes import cast, byref
 import logging
 import time
-import xr.utils
+import xr
+from xr.utils.gl import ContextObject
+from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
+import xr.ext.HTCX.vive_tracker_interaction as vive_tracker_interaction
+import xr.ext.KHR.opengl_enable as opengl_enable
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -20,12 +24,13 @@ log = logging.getLogger(__name__)
 print("Warning: trackers with role 'Handheld object' won't be detected.")
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.utils.ContextObject(
+with ContextObject(
+    context_provider=GLFWOffscreenContextProvider(),
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
-            xr.KHR_OPENGL_ENABLE_EXTENSION_NAME,
-            xr.extension.HTCX_vive_tracker_interaction.NAME,
+            opengl_enable.NAME,
+            vive_tracker_interaction.NAME,
         ],
     ),
 ) as context:

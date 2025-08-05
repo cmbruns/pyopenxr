@@ -22,7 +22,7 @@ import platform
 from typing import List, Optional
 
 import xr.raw_functions
-import xr.utils
+import xr.utils.gl.glfw_util
 
 from .graphics_plugin import Cube, IGraphicsPlugin
 from .platform_plugin import IPlatformPlugin
@@ -175,7 +175,7 @@ class OpenXRProgram(object):
         extensions.extend(self.platform_plugin.instance_extensions)
         extensions.extend(self.graphics_plugin.instance_extensions)
 
-        self.instance = xr.utils.InstanceObject(
+        self.instance = xr.utils.gl.glfw_util.InstanceObject(
             enabled_extensions=extensions,
             application_name="hello_xr.py",
             application_version=xr.Version(0, 0, 1),
@@ -523,7 +523,7 @@ class OpenXRProgram(object):
         assert self.instance is not None
         assert self.system is None
         form_factor = Options.get_xr_form_factor(self.options.form_factor)
-        self.system = xr.utils.SystemObject(instance=self.instance, form_factor=form_factor)
+        self.system = xr.utils.gl.glfw_util.SystemObject(instance=self.instance, form_factor=form_factor)
         logger.debug(f"Using system {hex(self.system.id.value)} for form factor {str(form_factor)}")
         assert self.instance.handle is not None
         assert self.system.id is not None

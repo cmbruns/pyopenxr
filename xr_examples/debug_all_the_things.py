@@ -47,11 +47,11 @@ if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in xr.enumerate_instance_extension_properti
 # Define helper function for our logging callback
 def openxr_log_level(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT) -> int:
     """Convert OpenXR message severities to python logging severities."""
-    if severity_flags & xr.DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+    if severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT:
         return logging.ERROR
-    elif severity_flags & xr.DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+    elif severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT:
         return logging.WARNING
-    elif severity_flags & xr.DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+    elif severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.INFO_BIT:
         return logging.INFO
     else:
         return logging.DEBUG
@@ -74,16 +74,16 @@ def xr_debug_callback(
 pfn_xr_debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(xr_debug_callback)
 debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
     message_severities=(
-            xr.DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
-            | xr.DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
-            | xr.DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
-            | xr.DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+            xr.DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT
+            | xr.DebugUtilsMessageSeverityFlagsEXT.INFO_BIT
+            | xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT
+            | xr.DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT
     ),
     message_types=(
-                xr.DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT
-                | xr.DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
-                | xr.DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-                | xr.DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+                xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
+                | xr.DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT
+                | xr.DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
+                | xr.DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT
     ),
     user_callback=pfn_xr_debug_callback,
 )

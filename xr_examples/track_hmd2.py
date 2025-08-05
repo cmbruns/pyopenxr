@@ -5,10 +5,13 @@ Prints the position of your head-mounted display for 30 frames.
 """
 
 import time
-import xr.utils
+import xr
+from xr.utils.gl import ContextObject
+from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.utils.ContextObject(
+with ContextObject(
+    context_provider=GLFWOffscreenContextProvider(),
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)

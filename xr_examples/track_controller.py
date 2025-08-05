@@ -6,10 +6,14 @@ Prints the position of your right-hand controller for 30 frames.
 
 import ctypes
 import time
-import xr.utils
+import xr
+from xr.utils.gl import ContextObject
+from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
+
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.utils.ContextObject(
+with ContextObject(
+    context_provider=GLFWOffscreenContextProvider(),
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
@@ -92,6 +96,8 @@ with xr.utils.ContextObject(
     for frame_index, frame_state in enumerate(context.frame_loop()):
 
         if context.session_state == xr.SessionState.FOCUSED:
+            # TODO: race condition possible if session state changes during
+            # execution of this block. Maybe catch not focused error.
             session_was_focused = True
             active_action_set = xr.ActiveActionSet(
                 action_set=context.default_action_set,

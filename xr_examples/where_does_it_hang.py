@@ -20,6 +20,7 @@ from OpenGL import GL
 import xr
 import xr.utils
 import xr.utils.gl
+from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
 
 run_frame_loop = True
 
@@ -138,6 +139,7 @@ system_id = xr.get_system(
 graphics = xr.utils.gl.OpenGLGraphics(
     instance=instance,
     system=system_id,
+    context_provider=GLFWOffscreenContextProvider(),
 )
 
 # OpenGL can report debug messages too

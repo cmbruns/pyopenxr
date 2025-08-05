@@ -4,20 +4,21 @@ pyopenxr example program green_blue.py
 Different way to get similar display to the venerable gl_example.py
 """
 
-import os
 from OpenGL import GL
 import xr
-import xr.utils
+from xr.utils.gl import ContextObject
+from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
 
 
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
-with xr.utils.ContextObject(
+with ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
             xr.KHR_OPENGL_ENABLE_EXTENSION_NAME,
         ],
     ),
+    context_provider=GLFWOffscreenContextProvider()
 ) as context:
     eye_colors = [
         (0, 1, 0, 1),  # Left eye green
