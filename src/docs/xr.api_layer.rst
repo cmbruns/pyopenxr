@@ -7,9 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   xr.api_layer.linux
-   xr.api_layer.windows
-
 Submodules
 ----------
 

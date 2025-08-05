@@ -113,7 +113,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#related-modules">Related Modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
 </ul>
 </li>
 </ul>
@@ -246,65 +245,54 @@ and subject to refinement as best practices emerge.</p>
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">GraphicsContextProvider</span></span><a class="headerlink" href="#xr.utils.GraphicsContextProvider" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Abstract interface for activating an OpenGL rendering context on a given surface.</p>
-<p>Implementations are responsible for managing context binding and unbinding—
-typically using framework-specific mechanisms like Qt or GLFW. This interface
-supports both manual activation and scoped usage via <cite>GLContextScope</cite>.</p>
-<p>Implementors must ensure thread-safe behavior and appropriate sharing semantics
-for offscreen contexts.</p>
-<p>Typical usage:</p>
-<blockquote>
-<div><p>provider.make_current()
-# Perform rendering…
-provider.done_current()</p>
-<p># or using a scoped context:
-with provider.scope():</p>
-<blockquote>
-<div><p>GL.glDrawArrays(…)</p>
-</div></blockquote>
-</div></blockquote>
+<p>Abstract base class for activating an OpenGL rendering context.</p>
+<p>Concrete implementations should manage context binding/unbinding
+using framework-specific mechanisms (e.g., Qt, GLFW). Supports both
+manual and scoped activation models.</p>
+<p>Thread safety and proper context sharing must be enforced for offscreen usage.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.GLContextScope">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GLContextScope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.GraphicsContextProvider" title="xr.utils.graphics_context_provider.GraphicsContextProvider"><span class="pre">GraphicsContextProvider</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Scoped activator for an OpenGL rendering context.</p>
-<p>This class wraps an <cite>OffscreenContextProvider</cite>, allowing safe and reversible
-context activation via either manual calls or Python’s <cite>with</cite> statement.</p>
-<p>It does not create or destroy the context—it simply manages when it is bound
-and unbound on the current thread.</p>
+<p>Scoped context activator for OpenGL rendering.</p>
+<p>Wraps a <cite>GraphicsContextProvider</cite> and ensures safe and reversible context
+activation, either manually or using the <cite>with</cite> statement.</p>
+<p>This does not create or destroy the context—it only manages bindings on
+the current thread.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>provider</strong> (<a class="reference internal" href="#xr.utils.GraphicsContextProvider" title="xr.utils.GraphicsContextProvider"><em>GraphicsContextProvider</em></a>) – The context provider to activate.</p>
+<dd class="field-odd"><p><strong>provider</strong> (<a class="reference internal" href="#xr.utils.GraphicsContextProvider" title="xr.utils.GraphicsContextProvider"><em>GraphicsContextProvider</em></a>) – The context provider instance</p>
 </dd>
 </dl>
-<p>Typical usage:</p>
+<p><strong>Example (manual usage):</strong></p>
 <blockquote>
-<div><p># Manual lifecycle
-scope = provider.scope()
+<div><p>scope = provider.scope()
 scope.make_current()
 GL.glDrawArrays(…)
 scope.done_current()</p>
-<p># Scoped lifecycle
-with provider.scope():</p>
+</div></blockquote>
+<p><strong>Example (scoped usage):</strong></p>
 <blockquote>
-<div><p>GL.glClear(GL.GL_COLOR_BUFFER_BIT)</p>
+<div><dl class="simple">
+<dt>with provider.scope():</dt><dd><p>GL.glClear(GL.GL_COLOR_BUFFER_BIT)</p>
+</dd>
+</dl>
 </div></blockquote>
-</div></blockquote>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>Designed for cross-backend compatibility (e.g., Qt, GLFW).</p></li>
-<li><p>May be extended to support context validation, debugging, or profiling.</p></li>
-</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Designed for cross-backend compatibility (e.g., Qt, GLFW).
+May be extended to support profiling, validation, or debugging.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.GLContextScope.done_current">
 <span class="sig-name descname"><span class="pre">done_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope.done_current" title="Link to this definition"></a></dt>
-<dd><p>Deactivate the provider’s context.</p>
+<dd><p>Deactivate the OpenGL context via the provider.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.GLContextScope.make_current">
 <span class="sig-name descname"><span class="pre">make_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope.make_current" title="Link to this definition"></a></dt>
-<dd><p>Activate the provider’s context.</p>
+<dd><p>Activate the OpenGL context via the provider.</p>
 </dd></dl>
 
 </dd></dl>
@@ -312,24 +300,36 @@ with provider.scope():</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.destroy">
 <span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.destroy" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Optional cleanup method invoked during <cite>__exit__</cite>.
+Override to release platform-specific resources.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.done_current">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">done_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.done_current" title="Link to this definition"></a></dt>
-<dd><p>Unbind this context from the current thread.</p>
+<dd><p>Unbind the context from the current thread.
+Typically used after rendering operations.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.make_current">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.make_current" title="Link to this definition"></a></dt>
-<dd><p>Bind this context and surface to the current thread.</p>
+<dd><p>Bind this context and surface to the current thread.
+Must be thread-safe and idempotent.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.scope">
 <span class="sig-name descname"><span class="pre">scope</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.scope" title="Link to this definition"></a></dt>
-<dd><p>Return a scoped context activator for use with <cite>with</cite> or manual control.</p>
+<dd><p>Create a scoped context activator compatible with <cite>with</cite> statement usage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A new scoped context manager</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#xr.utils.GraphicsContextProvider.GLContextScope" title="xr.utils.GraphicsContextProvider.GLContextScope">GraphicsContextProvider.GLContextScope</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -611,13 +611,6 @@ OpenXR and graphics API conventions.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="xr.html#module-xr" title="xr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr</span></code></a> — Core OpenXR bindings</p></li>
 <li><p><a class="reference internal" href="xr.ext.html#module-xr.ext" title="xr.ext"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr.ext</span></code></a> — Extension modules for OpenXR (e.g., <code class="docutils literal notranslate"><span class="pre">XR_KHR_opengl_enable</span></code>)</p></li>
-</ul>
-</section>
-<section id="see-also">
-<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><span class="xref std std-doc">xr/index</span></p></li>
-<li><p><span class="xref std std-doc">xr/ext/index</span></p></li>
 </ul>
 </section>
 </section>

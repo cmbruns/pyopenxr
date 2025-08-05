@@ -21,9 +21,3 @@ Related Modules
 
 - :mod:`xr` — Core OpenXR bindings
 - :mod:`xr.ext` — Extension modules for OpenXR (e.g., ``XR_KHR_opengl_enable``)
-
-See Also
---------
-
-- :doc:`xr/index`
-- :doc:`xr/ext/index`
