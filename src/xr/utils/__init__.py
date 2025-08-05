@@ -19,25 +19,158 @@ Contents may include:
 
 :seealso: :mod:`xr`
 """
-
+import enum
+from abc import ABC, abstractmethod
+from ctypes import cast, byref, POINTER
+import logging
 from math import tan
-from typing import Generic, Optional, Type, TypeVar
+import time
+from typing import Callable, Generic, List, Optional, Type, TypeVar
 
 import numpy
 import xr
 
-from . import classes
-from . import context_object
-from . import graphics_context_provider
 from . import matrix4x4f
-
-from .classes import *
-from .context_object import *
-from .graphics_context_provider import *
 from .matrix4x4f import *
 
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())  # To avoid complaints about missing handler
 
 SWAPCHAIN_IMAGE_TYPE = TypeVar("SWAPCHAIN_IMAGE_TYPE")
+
+
+class GraphicsContextProvider(ABC):
+    """
+    Abstract base class for activating an OpenGL rendering context.
+
+    Concrete implementations should manage context binding/unbinding
+    using framework-specific mechanisms (e.g., Qt, GLFW). Supports both
+    manual and scoped activation models.
+
+    Thread safety and proper context sharing must be enforced for offscreen usage.
+    """
+
+    def __enter__(self):
+        """
+        Enter the context manager.
+
+        :return: self
+        :rtype: GraphicsContextProvider
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Exit the context manager, releasing any held resources.
+
+        :param exc_type: Exception type, if any
+        :param exc_val: Exception value, if any
+        :param exc_tb: Exception traceback, if any
+        """
+        self.destroy()
+
+    def destroy(self):
+        """
+        Optional cleanup method invoked during `__exit__`.
+        Override to release platform-specific resources.
+        """
+        pass
+
+    @abstractmethod
+    def make_current(self) -> None:
+        """
+        Bind this context and surface to the current thread.
+        Must be thread-safe and idempotent.
+        """
+        pass
+
+    @abstractmethod
+    def done_current(self) -> None:
+        """
+        Unbind the context from the current thread.
+        Typically used after rendering operations.
+        """
+        pass
+
+    def scope(self):
+        """
+        Create a scoped context activator compatible with `with` statement usage.
+
+        :return: A new scoped context manager
+        :rtype: GraphicsContextProvider.GLContextScope
+        """
+        return self.GLContextScope(self)
+
+    class GLContextScope:
+        """
+        Scoped context activator for OpenGL rendering.
+
+        Wraps a `GraphicsContextProvider` and ensures safe and reversible context
+        activation, either manually or using the `with` statement.
+
+        This does not create or destroy the context—it only manages bindings on
+        the current thread.
+
+        :param provider: The context provider instance
+        :type provider: GraphicsContextProvider
+
+        **Example (manual usage):**
+
+            scope = provider.scope()
+            scope.make_current()
+            GL.glDrawArrays(...)
+            scope.done_current()
+
+        **Example (scoped usage):**
+
+            with provider.scope():
+                GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+
+        .. note::
+            Designed for cross-backend compatibility (e.g., Qt, GLFW).
+            May be extended to support profiling, validation, or debugging.
+        """
+
+        def __init__(self, provider: "GraphicsContextProvider"):
+            """
+            Initialize scoped context activator.
+
+            :param provider: The context provider to activate
+            :type provider: GraphicsContextProvider
+            """
+            self.provider = provider
+
+        def make_current(self):
+            """
+            Activate the OpenGL context via the provider.
+            """
+            self.provider.make_current()
+
+        def done_current(self):
+            """
+            Deactivate the OpenGL context via the provider.
+            """
+            self.provider.done_current()
+
+        def __enter__(self):
+            """
+            Enter the scoped context.
+
+            :return: self
+            :rtype: GraphicsContextProvider.GLContextScope
+            """
+            self.make_current()
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            """
+            Exit the scoped context.
+
+            :param exc_type: Exception type
+            :param exc_val: Exception value
+            :param exc_tb: Exception traceback
+            """
+            self.done_current()
 
 
 def projection_from_fovf(fov: xr.Fovf, near: float = 0.05, far: Optional[float] = None) -> numpy.ndarray:
@@ -215,6 +348,143 @@ def view_matrix_inverse_from_posef(pose: xr.Posef) -> numpy.ndarray:
     return numpy.array(transform, dtype=numpy.float32, order='F')
 
 
+class SessionStateManager:
+    """
+    Handles OpenXR session state transitions, lifecycle control, and frame loop integration.
+
+    This class manages the transition between session states, receives runtime events,
+    and coordinates rendering activity. It also gracefully winds down the session
+    during context exit or shutdown.
+
+    Raises:
+        ExitRenderLoop: When the session transitions into an exit state.
+    """
+
+    class ExitRenderLoop(BaseException):
+        """Signal raised to indicate the frame loop should exit immediately."""
+        pass
+
+    def __init__(
+        self,
+        instance: xr.Instance,
+        session: xr.Session,
+        view_configuration_type: xr.ViewConfigurationType,
+    ) -> None:
+        self.instance = instance
+        self.session = session
+        self.view_configuration_type = view_configuration_type
+
+        self.session_state = xr.SessionState.IDLE
+        self.session_is_running = False
+        self.request_restart = False
+        self.exit_render_loop = False
+
+    def begin_frame(self) -> Optional[xr.FrameState]:
+        """
+        Poll OpenXR events and start a frame if the session is running.
+
+        Returns:
+            FrameState if the frame is started, None otherwise.
+        """
+        if self.exit_render_loop:
+            raise self.ExitRenderLoop()
+
+        if self.session_is_running and self.session_state in (
+            xr.SessionState.READY,
+            xr.SessionState.SYNCHRONIZED,
+            xr.SessionState.VISIBLE,
+            xr.SessionState.FOCUSED,
+        ):
+            frame_state = xr.wait_frame(self.session)
+            xr.begin_frame(self.session)
+            return frame_state
+
+        return None
+
+    def _simple_end_frame(self, frame_state: xr.FrameState) -> None:
+        """
+        End a frame without rendering any layers.
+
+        Used for wind-down behavior or minimal rendering.
+
+        Args:
+            frame_state: The frame state returned by `wait_frame()`.
+        """
+        xr.end_frame(
+            self.session,
+            frame_end_info=xr.FrameEndInfo(
+                display_time=frame_state.predicted_display_time,
+                environment_blend_mode=xr.EnvironmentBlendMode.OPAQUE,
+                layers=[],
+            )
+        )
+
+    def __enter__(self) -> "SessionStateManager":
+        return self
+
+    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
+        """
+        Gracefully unwind the session lifecycle during context exit.
+
+        This attempts to exit the session, processes events, and runs several
+        no-op frames to help the runtime shut down cleanly.
+        """
+        try:
+            xr.request_exit_session(self.session)
+        except xr.exception.SessionNotRunningError:
+            pass  # Session already exited or never started
+        for _ in range(20):
+            while True:
+                try:
+                    event = xr.poll_event(self.instance)
+                    self.handle_xr_event(event)
+                except xr.EventUnavailable:
+                    break
+            if self.exit_render_loop:
+                break
+            if self.session_is_running:
+                frame_state = self.begin_frame()
+                time.sleep(0.050)  # Yield time for other subsystems
+                if frame_state:
+                    self._simple_end_frame(frame_state)
+
+    def handle_xr_event(self, event_buffer: xr.EventDataBuffer) -> None:
+        """
+        Dispatch and handle runtime OpenXR events relevant to the session.
+
+        Args:
+            event_buffer: A buffer containing one OpenXR event.
+        """
+        event_type = xr.StructureType(event_buffer.type)
+
+        if event_type == xr.StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
+            self.exit_render_loop = True
+            self.request_restart = True
+
+        elif event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED and self.session:
+            event = cast(
+                byref(event_buffer),
+                POINTER(xr.EventDataSessionStateChanged)
+            ).contents
+            self.session_state = xr.SessionState(event.state)
+            logger.info(f"OpenXR session state changed to {self.session_state.name}")
+
+            if self.session_state == xr.SessionState.READY:
+                xr.begin_session(
+                    session=self.session,
+                    begin_info=xr.SessionBeginInfo(self.view_configuration_type)
+                )
+                self.session_is_running = True
+
+            elif self.session_state == xr.SessionState.STOPPING:
+                self.session_is_running = False
+                xr.end_session(self.session)
+
+            elif self.session_state in (xr.SessionState.EXITING, xr.SessionState.LOSS_PENDING):
+                self.exit_render_loop = True
+                self.request_restart = (self.session_state == xr.SessionState.LOSS_PENDING)
+
+
 class SwapchainInfo(Generic[SWAPCHAIN_IMAGE_TYPE]):
     """
     Encapsulates rendering resources for a single OpenXR view.
@@ -281,16 +551,123 @@ class SwapchainInfo(Generic[SWAPCHAIN_IMAGE_TYPE]):
         xr.destroy_swapchain(self.swapchain)
 
 
+class SwapchainSet(Generic[SWAPCHAIN_IMAGE_TYPE]):
+    """
+    Aggregates swapchains for multiple OpenXR views.
+
+    This class creates and manages a collection of per-view :class:`xr.Swapchain` instances,
+    typically one for each eye in a stereo configuration. It uses an internal :class:`contextlib.ExitStack`
+    to ensure lifecycle safety and deterministic resource cleanup.
+
+    Swapchains are initialized using the recommended parameters from the runtime, as reported
+    by :func:`xr.enumerate_view_configuration_views`.
+
+    :param instance: The OpenXR runtime instance.
+    :type instance: xr.Instance
+    :param system_id: The headset or rendering system providing view capabilities.
+    :type system_id: xr.SystemId
+    :param session: The active OpenXR session used to create swapchains.
+    :type session: xr.Session
+    :param color_texture_format: OpenGL format used for swapchain images (e.g., :data:`GL_RGBA8`).
+    :type color_texture_format: int
+    :param swapchain_image_type: ctypes structure representing each swapchain image.
+    :type swapchain_image_type: Type[SWAPCHAIN_IMAGE_TYPE]
+    :param view_configuration_type: The view configuration, such as stereo or mono.
+    :type view_configuration_type: xr.ViewConfigurationType
+
+    :ivar views: List of view-specific swapchain resources.
+    :vartype views: List[SwapchainInfo]
+    :ivar exit_stack: Internal context manager for cleanup logic.
+    :vartype exit_stack: contextlib.ExitStack
+
+    :seealso: :class:`SwapchainInfo`, :class:`xr.ViewConfigurationView`
+    """
+    def __init__(
+            self,
+            instance: xr.Instance,
+            system_id: xr.SystemId,
+            session: xr.Session,
+            color_texture_format: int,
+            swapchain_image_type: Type[SWAPCHAIN_IMAGE_TYPE],
+            view_configuration_type: xr.ViewConfigurationType = xr.ViewConfigurationType.PRIMARY_STEREO,
+    ):
+        self.exit_stack = ExitStack()  # noqa
+        self.views: list[SwapchainInfo] = []
+        # Enumerate views (typically left/right eyes), and create a swapchain for each
+        config_views = xr.enumerate_view_configuration_views(
+            instance=instance,
+            system_id=system_id,
+            view_configuration_type=view_configuration_type,
+        )
+        for view_index, view in enumerate(config_views):
+            view_data = self.exit_stack.enter_context(
+                SwapchainInfo(
+                    view=view,
+                    session=session,
+                    color_texture_format=color_texture_format,
+                    swapchain_image_type=swapchain_image_type,
+                )
+            )
+            self.views.append(view_data)
+
+    def __enter__(self) -> "SwapchainSet":
+        """Support usage with `with` statements for lifecycle safety."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        """Destroy all managed swapchains in reverse creation order."""
+        self.exit_stack.__exit__(exc_type, exc_val, exc_tb)
+
+
+class XrEventDispatcher:
+    """
+    Polls OpenXR events and dispatches them to subscribed handlers.
+
+    Subscribers must be callables that accept a single event argument.
+    """
+
+    def __init__(self, instance):
+        self.instance = instance
+        self.subscribers: List[Callable[[xr.EventDataBuffer], None]] = []
+
+    def subscribe(self, callback: Callable[[xr.EventDataBuffer], None]):
+        """
+        Register a callback to receive OpenXR events.
+
+        Args:
+            callback: A callable that takes one event argument.
+        """
+        self.subscribers.append(callback)
+
+    def poll(self):
+        """
+        Polls events from the OpenXR runtime and dispatches them to all subscribers.
+        """
+        while True:
+            try:
+                event = xr.poll_event(self.instance)
+                for subscriber in self.subscribers:
+                    subscriber(event)
+            except xr.EventUnavailable:
+                break
+
+
 __all__ = [
+    "GraphicsContextProvider",
     "projection_from_fovf",
     "projection_inverse_from_fovf",
     "rotation_from_quaternionf",
     "view_matrix_from_posef",
     "view_matrix_inverse_from_posef",
+    "SessionStateManager",
     "SwapchainInfo",
+    "SwapchainSet",
+    "XrEventDispatcher",
 ]
 
-__all__.extend(classes.__all__)
-__all__.extend(context_object.__all__)
-__all__.extend(graphics_context_provider.__all__)
 __all__.extend(matrix4x4f.__all__)
+
+
+class Eye(enum.IntEnum):
+    LEFT = 0
+    RIGHT = 1

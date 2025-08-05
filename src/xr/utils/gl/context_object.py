@@ -1,17 +1,14 @@
 import time
-from ctypes import byref, c_int32, c_void_p, cast, POINTER, pointer, Structure
+from ctypes import byref, c_int32, cast, POINTER, Structure
 
 import xr
-from xr.enums import *
-from xr.exception import *
-from xr.typedefs import *
-from xr.functions import *
-from xr.utils.gl import OpenGLGraphics
+from . import OpenGLGraphics
+from .. import GraphicsContextProvider
 
 
 class SwapchainStruct(Structure):
     _fields_ = [
-        ("handle", Swapchain),
+        ("handle", xr.Swapchain),
         ("width", c_int32),
         ("height", c_int32),
     ]
@@ -20,18 +17,20 @@ class SwapchainStruct(Structure):
 class ContextObject(object):
     def __init__(
             self,
-            instance_create_info: InstanceCreateInfo = InstanceCreateInfo(),
-            session_create_info: SessionCreateInfo = SessionCreateInfo(),
-            reference_space_create_info: ReferenceSpaceCreateInfo = ReferenceSpaceCreateInfo(),
-            view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
-            environment_blend_mode=EnvironmentBlendMode.OPAQUE,
-            form_factor=FormFactor.HEAD_MOUNTED_DISPLAY,
+            context_provider: GraphicsContextProvider,
+            instance_create_info: xr.InstanceCreateInfo = xr.InstanceCreateInfo(),
+            session_create_info: xr.SessionCreateInfo = xr.SessionCreateInfo(),
+            reference_space_create_info: xr.ReferenceSpaceCreateInfo = xr.ReferenceSpaceCreateInfo(),
+            view_configuration_type: xr.ViewConfigurationType = xr.ViewConfigurationType.PRIMARY_STEREO,
+            environment_blend_mode=xr.EnvironmentBlendMode.OPAQUE,
+            form_factor=xr.FormFactor.HEAD_MOUNTED_DISPLAY,
     ):
+        self.context_provider = context_provider
         self._instance_create_info = instance_create_info
         self.instance = None
         self._session_create_info = session_create_info
         self.session = None
-        self.session_state = SessionState.IDLE
+        self.session_state = xr.SessionState.IDLE
         self._reference_space_create_info = reference_space_create_info
         self.view_configuration_type = view_configuration_type
         self.environment_blend_mode = environment_blend_mode
@@ -48,12 +47,12 @@ class ContextObject(object):
         self.session_is_running = False
 
     def __enter__(self):
-        self.instance = create_instance(
+        self.instance = xr.create_instance(
             create_info=self._instance_create_info,
         )
-        self.system_id = get_system(
+        self.system_id = xr.get_system(
             instance=self.instance,
-            get_info=SystemGetInfo(
+            get_info=xr.SystemGetInfo(
                 form_factor=self.form_factor,
             ),
         )
@@ -62,6 +61,7 @@ class ContextObject(object):
             self.graphics = OpenGLGraphics(
                 instance=self.instance,
                 system=self.system_id,
+                context_provider=self.context_provider,
             )
             self.graphics_binding_pointer = self.graphics.graphics_binding.pointer
             self._session_create_info.next = self.graphics_binding_pointer
@@ -69,17 +69,17 @@ class ContextObject(object):
             self.graphics_binding_pointer = self._session_create_info.next
 
         self._session_create_info.system_id = self.system_id
-        self.session = create_session(
+        self.session = xr.create_session(
             instance=self.instance,
             create_info=self._session_create_info,
         )
-        self.space = create_reference_space(
+        self.space = xr.create_reference_space(
             session=self.session,
             create_info=self._reference_space_create_info
         )
-        self.default_action_set = create_action_set(
+        self.default_action_set = xr.create_action_set(
             instance=self.instance,
-            create_info=ActionSetCreateInfo(
+            create_info=xr.ActionSetCreateInfo(
                 action_set_name="default_action_set",
                 localized_action_set_name="Default Action Set",
                 priority=0,
@@ -139,27 +139,27 @@ class ContextObject(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.default_action_set is not None:
-            destroy_action_set(self.default_action_set)
+            xr.destroy_action_set(self.default_action_set)
             self.default_action_set = None
         if self.space is not None:
-            destroy_space(self.space)
+            xr.destroy_space(self.space)
             self.space = None
         if self.session is not None:
-            destroy_session(self.session)
+            xr.destroy_session(self.session)
             self.session = None
         if self.graphics is not None:
             self.graphics.destroy()
             self.graphics = None
         if self.instance is not None:
-            destroy_instance(self.instance)
+            xr.destroy_instance(self.instance)
             self.instance = None
 
     def frame_loop(self):
-        attach_session_action_sets(
+        xr.attach_session_action_sets(
             session=self.session,
-            attach_info=SessionActionSetsAttachInfo(
+            attach_info=xr.SessionActionSetsAttachInfo(
                 count_action_sets=len(self.action_sets),
-                action_sets=(ActionSet * len(self.action_sets))(
+                action_sets=(xr.ActionSet * len(self.action_sets))(
                     *self.action_sets
                 )
             ),
@@ -171,21 +171,21 @@ class ContextObject(object):
                 break
             if self.session_is_running:
                 if self.session_state in (
-                        SessionState.READY,
-                        SessionState.SYNCHRONIZED,
-                        SessionState.VISIBLE,
-                        SessionState.FOCUSED,
+                        xr.SessionState.READY,
+                        xr.SessionState.SYNCHRONIZED,
+                        xr.SessionState.VISIBLE,
+                        xr.SessionState.FOCUSED,
                 ):
-                    frame_state = wait_frame(self.session)
-                    begin_frame(self.session)
+                    frame_state = xr.wait_frame(self.session)
+                    xr.begin_frame(self.session)
                     self.render_layers = []
                     self.graphics.make_current()
 
                     yield frame_state
 
-                    end_frame(
+                    xr.end_frame(
                         self.session,
-                        frame_end_info=FrameEndInfo(
+                        frame_end_info=xr.FrameEndInfo(
                             display_time=frame_state.predicted_display_time,
                             environment_blend_mode=self.environment_blend_mode,
                             layers=self.render_layers,
@@ -200,51 +200,44 @@ class ContextObject(object):
         self.request_restart = False
         while True:
             try:
-                event_buffer = poll_event(self.instance)
-                event_type = StructureType(event_buffer.type)
-                if event_type == StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
+                event_buffer = xr.poll_event(self.instance)
+                event_type = xr.StructureType(event_buffer.type)
+                if event_type == xr.StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING:
                     # still handle rest of the events instead of immediately quitting
                     self.exit_render_loop = True
                     self.request_restart = True
-                elif event_type == StructureType.EVENT_DATA_SESSION_STATE_CHANGED \
+                elif event_type == xr.StructureType.EVENT_DATA_SESSION_STATE_CHANGED \
                         and self.session is not None:
                     event = cast(
                         byref(event_buffer),
-                        POINTER(EventDataSessionStateChanged)).contents
-                    self.session_state = SessionState(event.state)
-                    if self.session_state == SessionState.READY:
-                        begin_session(
+                        POINTER(xr.EventDataSessionStateChanged)).contents
+                    self.session_state = xr.SessionState(event.state)
+                    if self.session_state == xr.SessionState.READY:
+                        xr.begin_session(
                             session=self.session,
-                            begin_info=SessionBeginInfo(
+                            begin_info=xr.SessionBeginInfo(
                                 self.view_configuration_type,
                             ),
                         )
                         self.session_is_running = True
-                    elif self.session_state == SessionState.STOPPING:
+                    elif self.session_state == xr.SessionState.STOPPING:
                         self.session_is_running = False
                         xr.end_session(self.session)
-                    elif self.session_state == SessionState.EXITING:
+                    elif self.session_state == xr.SessionState.EXITING:
                         self.exit_render_loop = True
                         self.request_restart = False
-                    elif self.session_state == SessionState.LOSS_PENDING:
+                    elif self.session_state == xr.SessionState.LOSS_PENDING:
                         self.exit_render_loop = True
                         self.request_restart = True
-                elif event_type == StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX:
-                    vive_tracker_connected = cast(byref(event_buffer), POINTER(EventDataViveTrackerConnectedHTCX)).contents
+                elif event_type == xr.StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX:
+                    vive_tracker_connected = cast(byref(event_buffer), POINTER(xr.EventDataViveTrackerConnectedHTCX)).contents
                     paths = vive_tracker_connected.paths.contents
-                    persistent_path_str = xr.path_to_string(self.instance, paths.persistent_path)
-                    # print(f"Vive Tracker connected: {persistent_path_str}")
-                    if paths.role_path != xr.NULL_PATH:
-                        role_path_str = xr.path_to_string(self.instance, paths.role_path)
-                        # print(f" New role is: {role_path_str}")
-                    else:
-                        # print(f" No role path.")
-                        pass
-                elif event_type == StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED:
+                    # TODO:
+                elif event_type == xr.StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED:
                     # print("data interaction profile changed")
                     # TODO:
                     pass
-            except EventUnavailable:
+            except xr.EventUnavailable:
                 break
 
     def view_loop(self, frame_state):

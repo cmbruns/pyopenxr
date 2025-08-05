@@ -1,17 +1,22 @@
 from abc import ABC, abstractmethod
 from ctypes import byref, c_void_p, cast, pointer
-from typing import Optional
 
 from OpenGL import GL
 
 import xr
 
-
-from .glfw_util import GLFWOffscreenContextProvider
-from ..graphics_context_provider import GraphicsContextProvider
+from .. import GraphicsContextProvider
 
 
-def create_graphics_binding(context_provider: GraphicsContextProvider):
+class GraphicsBinding(ABC):
+    @property
+    @abstractmethod
+    def pointer(self):
+        """Return the native pointer or ctypes handle backing this graphics binding."""
+        pass
+
+
+def create_graphics_binding(context_provider: GraphicsContextProvider) -> GraphicsBinding:
     try:
         from .egl_util import EGLGraphicsBinding
         return EGLGraphicsBinding(context_provider)
@@ -26,14 +31,6 @@ def create_graphics_binding(context_provider: GraphicsContextProvider):
     except AttributeError:
         pass
     raise RuntimeError("No supported graphics backend found.")
-
-
-class GraphicsBinding(ABC):
-    @property
-    @abstractmethod
-    def pointer(self):
-        """Return the native pointer or ctypes handle backing this graphics binding."""
-        pass
 
 
 class GLXGraphicsBinding(GraphicsBinding):
@@ -74,10 +71,8 @@ class OpenGLGraphics(object):
             self,
             instance: xr.Instance,
             system: xr.SystemId,
-            context_provider: Optional[GraphicsContextProvider] = None,
+            context_provider: GraphicsContextProvider,
     ) -> None:
-        if context_provider is None:
-            context_provider = GLFWOffscreenContextProvider()
         self.context_provider = context_provider
         self.pxrGetOpenGLGraphicsRequirementsKHR = cast(
             xr.get_instance_proc_addr(
@@ -177,3 +172,16 @@ class OpenGLGraphics(object):
     @property
     def swapchain_image_type(self):
         return xr.SwapchainImageOpenGLKHR
+
+
+__all__ = [
+    "create_graphics_binding",
+    "GLXGraphicsBinding",
+    "GraphicsBinding",
+    "OpenGLGraphics",
+    "WGLGraphicsBinding",
+]
+
+from . import context_object
+from .context_object import *
+__all__.extend(context_object.__all__)
