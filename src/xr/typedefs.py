@@ -1059,7 +1059,7 @@ class SwapchainImageAcquireInfo(Structure):
 class SwapchainImageWaitInfo(Structure):
     def __init__(
         self,
-        timeout: Duration = 0,
+        timeout: int = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_WAIT_INFO,
     ) -> None:

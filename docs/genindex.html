@@ -43,6 +43,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xr.html">xr — Python Bindings for OpenXR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xr.utils.html">xr.utils</a></li>
 </ul>
 
         </div>
@@ -216,33 +218,13 @@
       <ul>
         <li><a href="xr.html#xr.GraphicsRequirementsD3D12KHR.adapter_luid">(xr.GraphicsRequirementsD3D12KHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D11KHR.adapter_luid">(xr.platform.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D12KHR.adapter_luid">(xr.platform.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D11KHR.adapter_luid">(xr.platform.windows.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D12KHR.adapter_luid">(xr.platform.windows.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
       </ul></li>
       <li><a href="xr.api_layer.html#xr.api_layer.layer_path.add_folder_to_api_layer_path">add_folder_to_api_layer_path() (in module xr.api_layer.layer_path)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.VulkanSwapchainCreateInfoMETA.additional_create_flags">additional_create_flags (xr.platform.VulkanSwapchainCreateInfoMETA attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainCreateInfoMETA.additional_create_flags">(xr.platform.windows.VulkanSwapchainCreateInfoMETA attribute)</a>
+      <li><a href="xr.html#xr.VulkanSwapchainCreateInfoMETA.additional_create_flags">additional_create_flags (xr.VulkanSwapchainCreateInfoMETA attribute)</a>
 </li>
-        <li><a href="xr.html#xr.VulkanSwapchainCreateInfoMETA.additional_create_flags">(xr.VulkanSwapchainCreateInfoMETA attribute)</a>
+      <li><a href="xr.html#xr.VulkanSwapchainCreateInfoMETA.additional_usage_flags">additional_usage_flags (xr.VulkanSwapchainCreateInfoMETA attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="xr.platform.html#xr.platform.VulkanSwapchainCreateInfoMETA.additional_usage_flags">additional_usage_flags (xr.platform.VulkanSwapchainCreateInfoMETA attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainCreateInfoMETA.additional_usage_flags">(xr.platform.windows.VulkanSwapchainCreateInfoMETA attribute)</a>
-</li>
-        <li><a href="xr.html#xr.VulkanSwapchainCreateInfoMETA.additional_usage_flags">(xr.VulkanSwapchainCreateInfoMETA attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.EnvironmentBlendMode.ADDITIVE">ADDITIVE (xr.EnvironmentBlendMode attribute)</a>
 </li>
       <li><a href="xr.html#xr.ColorSpaceFB.ADOBE_RGB">ADOBE_RGB (xr.ColorSpaceFB attribute)</a>
@@ -273,8 +255,6 @@
 </li>
       <li><a href="xr.html#xr.TrackingOptimizationSettingsDomainQCOM.ALL">ALL (xr.TrackingOptimizationSettingsDomainQCOM attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.BodyJointLocationsBD.all_joint_poses_tracked">all_joint_poses_tracked (xr.BodyJointLocationsBD attribute)</a>
 </li>
       <li><a href="xr.html#xr.PassthroughColorHTC.alpha">alpha (xr.PassthroughColorHTC attribute)</a>
@@ -285,6 +265,8 @@
 </li>
       <li><a href="xr.html#xr.HapticVibration.amplitude">amplitude (xr.HapticVibration attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.HapticAmplitudeEnvelopeVibrationFB.amplitude_count">amplitude_count (xr.HapticAmplitudeEnvelopeVibrationFB attribute)</a>
 </li>
       <li><a href="xr.html#xr.HapticAmplitudeEnvelopeVibrationFB.amplitudes">amplitudes (xr.HapticAmplitudeEnvelopeVibrationFB property)</a>
@@ -430,6 +412,8 @@
 </li>
         <li><a href="xr.html#xr.Quaternionf.as_numpy">(xr.Quaternionf method)</a>
 </li>
+        <li><a href="xr.utils.html#xr.utils.Matrix4x4f.as_numpy">(xr.utils.Matrix4x4f method)</a>
+</li>
         <li><a href="xr.html#xr.Vector2f.as_numpy">(xr.Vector2f method)</a>
 </li>
         <li><a href="xr.html#xr.Vector3f.as_numpy">(xr.Vector3f method)</a>
@@ -514,7 +498,11 @@
       <li><a href="xr.html#xr.SemanticLabelBD.BED">BED (xr.SemanticLabelBD attribute)</a>
 </li>
       <li><a href="xr.html#xr.begin_frame">begin_frame() (in module xr)</a>
+
+      <ul>
+        <li><a href="xr.utils.html#xr.utils.SessionObject.begin_frame">(xr.utils.SessionObject method)</a>
 </li>
+      </ul></li>
       <li><a href="xr.html#xr.begin_session">begin_session() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.CompositionLayerEquirectKHR.bias">bias (xr.CompositionLayerEquirectKHR attribute)</a>
@@ -623,12 +611,12 @@
 </li>
       <li><a href="xr.html#xr.BodyJointsLocateInfoFB">BodyJointsLocateInfoFB (class in xr)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.BodyJointsLocateInfoHTC">BodyJointsLocateInfoHTC (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.BodySkeletonFB">BodySkeletonFB (class in xr)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.BodySkeletonHTC">BodySkeletonHTC (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.BodySkeletonJointFB">BodySkeletonJointFB (class in xr)</a>
@@ -659,14 +647,8 @@
 </li>
       <li><a href="xr.html#xr.PerfSettingsLevelEXT.BOOST">BOOST (xr.PerfSettingsLevelEXT attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.border_color">border_color (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.border_color">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.border_color">border_color (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.border_color">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.EyeVisibility.BOTH">BOTH (xr.EyeVisibility attribute)</a>
 </li>
       <li><a href="xr.html#xr.SpatialComponentBounded2DListEXT.bound_count">bound_count (xr.SpatialComponentBounded2DListEXT attribute)</a>
@@ -1271,6 +1253,8 @@
       </ul></li>
       <li><a href="xr.html#xr.NewSceneComputeInfoMSFT.consistency">consistency (xr.NewSceneComputeInfoMSFT attribute)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.ContextObject">ContextObject (class in xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.MarkerDetectorCornerRefineMethodML.CONTOUR">CONTOUR (xr.MarkerDetectorCornerRefineMethodML attribute)</a>
 </li>
       <li><a href="xr.html#xr.PassthroughBrightnessContrastSaturationFB.contrast">contrast (xr.PassthroughBrightnessContrastSaturationFB attribute)</a>
@@ -1310,13 +1294,7 @@
       <li><a href="xr.html#xr.StructureType.COORDINATE_SPACE_CREATE_INFO_ML">COORDINATE_SPACE_CREATE_INFO_ML (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.HolographicWindowAttachmentMSFT.core_window">core_window (xr.HolographicWindowAttachmentMSFT attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.HolographicWindowAttachmentMSFT.core_window">(xr.platform.HolographicWindowAttachmentMSFT attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.HolographicWindowAttachmentMSFT.core_window">(xr.platform.windows.HolographicWindowAttachmentMSFT attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.MarkerDetectorCustomProfileInfoML.corner_refine_method">corner_refine_method (xr.MarkerDetectorCustomProfileInfoML attribute)</a>
 </li>
       <li><a href="xr.html#xr.CompositionLayerFlags.CORRECT_CHROMATIC_ABERRATION_BIT">CORRECT_CHROMATIC_ABERRATION_BIT (xr.CompositionLayerFlags attribute)</a>
@@ -1374,14 +1352,6 @@
 </li>
         <li><a href="xr.html#xr.InstanceCreateInfo.create_flags">(xr.InstanceCreateInfo attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.create_flags">(xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR.create_flags">(xr.platform.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.create_flags">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR.create_flags">(xr.platform.windows.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
         <li><a href="xr.html#xr.SessionCreateInfo.create_flags">(xr.SessionCreateInfo attribute)</a>
 </li>
         <li><a href="xr.html#xr.SessionCreateInfoOverlayEXTX.create_flags">(xr.SessionCreateInfoOverlayEXTX attribute)</a>
@@ -1393,11 +1363,19 @@
         <li><a href="xr.html#xr.VulkanInstanceCreateInfoKHR.create_flags">(xr.VulkanInstanceCreateInfoKHR attribute)</a>
 </li>
       </ul></li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_from_quaternion">create_from_quaternion() (xr.utils.Matrix4x4f static method)</a>
+</li>
       <li><a href="xr.html#xr.create_instance">create_instance() (in module xr)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_projection">create_projection() (xr.utils.Matrix4x4f static method)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_projection_fov">create_projection_fov() (xr.utils.Matrix4x4f static method)</a>
 </li>
       <li><a href="xr.html#xr.create_reference_space">create_reference_space() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.CreateSpatialPersistenceContextCompletionEXT.create_result">create_result (xr.CreateSpatialPersistenceContextCompletionEXT attribute)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_scale">create_scale() (xr.utils.Matrix4x4f static method)</a>
 </li>
       <li><a href="xr.html#xr.create_session">create_session() (in module xr)</a>
 </li>
@@ -1412,6 +1390,10 @@
       <li><a href="xr.html#xr.StructureType.CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT">CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.create_swapchain">create_swapchain() (in module xr)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_translation">create_translation() (xr.utils.Matrix4x4f static method)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_translation_rotation_scale">create_translation_rotation_scale() (xr.utils.Matrix4x4f static method)</a>
 </li>
       <li><a href="xr.html#xr.CreateSpatialAnchorsCompletionML">CreateSpatialAnchorsCompletionML (class in xr)</a>
 </li>
@@ -1457,6 +1439,8 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xr.utils.html#xr.utils.GraphicsAPI.D3D">D3D (xr.utils.GraphicsAPI attribute)</a>
+</li>
       <li><a href="xr.html#xr.LocalizationMapImportInfoML.data">data (xr.LocalizationMapImportInfoML attribute)</a>
 
       <ul>
@@ -1543,6 +1527,14 @@
 </li>
       <li><a href="xr.html#xr.DeserializeSceneFragmentMSFT">DeserializeSceneFragmentMSFT (class in xr)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider.destroy">destroy() (xr.utils.GraphicsContextProvider method)</a>
+
+      <ul>
+        <li><a href="xr.utils.html#xr.utils.InstanceObject.destroy">(xr.utils.InstanceObject method)</a>
+</li>
+        <li><a href="xr.utils.html#xr.utils.SessionObject.destroy">(xr.utils.SessionObject method)</a>
+</li>
+      </ul></li>
       <li><a href="xr.html#xr.destroy_action">destroy_action() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.destroy_action_set">destroy_action_set() (in module xr)</a>
@@ -1557,6 +1549,8 @@
 </li>
       <li><a href="xr.html#xr.destroy_space">destroy_space() (in module xr)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.destroy_swapchain">destroy_swapchain() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingD3D11KHR.device">device (xr.GraphicsBindingD3D11KHR attribute)</a>
@@ -1566,21 +1560,7 @@
 </li>
         <li><a href="xr.html#xr.GraphicsBindingVulkanKHR.device">(xr.GraphicsBindingVulkanKHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D11KHR.device">(xr.platform.GraphicsBindingD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D12KHR.device">(xr.platform.GraphicsBindingD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR.device">(xr.platform.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D11KHR.device">(xr.platform.windows.GraphicsBindingD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D12KHR.device">(xr.platform.windows.GraphicsBindingD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR.device">(xr.platform.windows.GraphicsBindingVulkanKHR attribute)</a>
-</li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.DEVICE_PCM_SAMPLE_RATE_GET_INFO_FB">DEVICE_PCM_SAMPLE_RATE_GET_INFO_FB (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.DEVICE_PCM_SAMPLE_RATE_STATE_FB">DEVICE_PCM_SAMPLE_RATE_STATE_FB (xr.StructureType attribute)</a>
@@ -1647,6 +1627,12 @@
 </li>
       <li><a href="xr.html#xr.PlaneDetectionStateEXT.DONE">DONE (xr.PlaneDetectionStateEXT attribute)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider.done_current">done_current() (xr.utils.GraphicsContextProvider method)</a>
+
+      <ul>
+        <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider.GLContextScope.done_current">(xr.utils.GraphicsContextProvider.GLContextScope method)</a>
+</li>
+      </ul></li>
       <li><a href="xr.html#xr.SemanticLabelBD.DOOR">DOOR (xr.SemanticLabelBD attribute)</a>
 </li>
       <li><a href="xr.html#xr.BlendFactorFB.DST_ALPHA">DST_ALPHA (xr.BlendFactorFB attribute)</a>
@@ -1758,7 +1744,11 @@
       <li><a href="xr.html#xr.SecondaryViewConfigurationSessionBeginInfoMSFT.enabled_view_configuration_types">enabled_view_configuration_types (xr.SecondaryViewConfigurationSessionBeginInfoMSFT property)</a>
 </li>
       <li><a href="xr.html#xr.end_frame">end_frame() (in module xr)</a>
+
+      <ul>
+        <li><a href="xr.utils.html#xr.utils.SessionObject.end_frame">(xr.utils.SessionObject method)</a>
 </li>
+      </ul></li>
       <li><a href="xr.html#xr.end_session">end_session() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.ApplicationInfo.engine_name">engine_name (xr.ApplicationInfo attribute)</a>
@@ -2435,6 +2425,8 @@
 </li>
       <li><a href="xr.html#xr.ExternalCameraOCULUS.extrinsics">extrinsics (xr.ExternalCameraOCULUS attribute)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.Eye">Eye (class in xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.FacialTrackingTypeHTC.EYE_DEFAULT">EYE_DEFAULT (xr.FacialTrackingTypeHTC attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.EYE_GAZE_SAMPLE_TIME_EXT">EYE_GAZE_SAMPLE_TIME_EXT (xr.StructureType attribute)</a>
@@ -2791,10 +2783,10 @@
 </li>
       <li><a href="xr.html#xr.ForceFeedbackCurlLocationMNDX">ForceFeedbackCurlLocationMNDX (class in xr)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.PassthroughCreateInfoHTC.form">form (xr.PassthroughCreateInfoHTC attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SystemGetInfo.form_factor">form_factor (xr.SystemGetInfo attribute)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainCreateInfo.format">format (xr.SwapchainCreateInfo attribute)</a>
@@ -2904,6 +2896,8 @@
       <li><a href="xr.html#xr.StructureType.FRAME_END_INFO">FRAME_END_INFO (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.FRAME_END_INFO_ML">FRAME_END_INFO_ML (xr.StructureType attribute)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.ContextObject.frame_loop">frame_loop() (xr.utils.ContextObject method)</a>
 </li>
       <li><a href="xr.html#xr.CompositionLayerSpaceWarpInfoFlagsFB.FRAME_SKIP_BIT">FRAME_SKIP_BIT (xr.CompositionLayerSpaceWarpInfoFlagsFB attribute)</a>
 </li>
@@ -3097,6 +3091,10 @@
       </ul></li>
       <li><a href="xr.html#xr.get_instance_properties">get_instance_properties() (in module xr)</a>
 </li>
+      <li><a href="xr.ext.html#xr.ext.KHR.opengl_enable.get_opengl_graphics_requirements">get_opengl_graphics_requirements() (in module xr.ext.KHR.opengl_enable)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.InstanceObject.get_properties">get_properties() (xr.utils.InstanceObject method)</a>
+</li>
       <li><a href="xr.html#xr.get_reference_space_bounds_rect">get_reference_space_bounds_rect() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.get_system">get_system() (in module xr)</a>
@@ -3104,6 +3102,8 @@
       <li><a href="xr.html#xr.get_system_properties">get_system_properties() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.get_view_configuration_properties">get_view_configuration_properties() (in module xr)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.GlfwWindow">GlfwWindow (class in xr.utils)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.GLOBAL_DIMMER_FRAME_END_INFO_ML">GLOBAL_DIMMER_FRAME_END_INFO_ML (xr.StructureType attribute)</a>
 </li>
@@ -3117,6 +3117,8 @@
 </li>
       <li><a href="xr.html#xr.RenderModelCreateInfoEXT.gltf_extensions">gltf_extensions (xr.RenderModelCreateInfoEXT property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.LocalizationMapConfidenceML.GOOD">GOOD (xr.LocalizationMapConfidenceML attribute)</a>
 </li>
       <li><a href="xr.html#xr.HeadsetFitStatusML.GOOD_FIT">GOOD_FIT (xr.HeadsetFitStatusML attribute)</a>
@@ -3137,8 +3139,6 @@
 </li>
       <li><a href="xr.html#xr.StructureType.GRAPHICS_BINDING_OPENGL_WIN32_KHR">GRAPHICS_BINDING_OPENGL_WIN32_KHR (xr.StructureType attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.GRAPHICS_BINDING_OPENGL_XCB_KHR">GRAPHICS_BINDING_OPENGL_XCB_KHR (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.GRAPHICS_BINDING_OPENGL_XLIB_KHR">GRAPHICS_BINDING_OPENGL_XLIB_KHR (xr.StructureType attribute)</a>
@@ -3163,86 +3163,32 @@
 </li>
       <li><a href="xr.html#xr.StructureType.GRAPHICS_REQUIREMENTS_VULKAN_KHR">GRAPHICS_REQUIREMENTS_VULKAN_KHR (xr.StructureType attribute)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.GraphicsAPI">GraphicsAPI (class in xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.GraphicsBindingD3D11KHR">GraphicsBindingD3D11KHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D11KHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D11KHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsBindingD3D12KHR">GraphicsBindingD3D12KHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D12KHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D12KHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsBindingOpenGLWin32KHR">GraphicsBindingOpenGLWin32KHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingOpenGLWin32KHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingOpenGLWin32KHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsBindingVulkan2KHR">GraphicsBindingVulkan2KHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkan2KHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkan2KHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsBindingVulkanKHR">GraphicsBindingVulkanKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR">(class in xr.platform.windows)</a>
+      <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider">GraphicsContextProvider (class in xr.utils)</a>
 </li>
-      </ul></li>
+      <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider.GLContextScope">GraphicsContextProvider.GLContextScope (class in xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.GraphicsRequirementsD3D11KHR">GraphicsRequirementsD3D11KHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D11KHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D11KHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsRequirementsD3D12KHR">GraphicsRequirementsD3D12KHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D12KHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D12KHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsRequirementsOpenGLKHR">GraphicsRequirementsOpenGLKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsOpenGLKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsOpenGLKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsRequirementsVulkan2KHR">GraphicsRequirementsVulkan2KHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsVulkan2KHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsVulkan2KHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsRequirementsVulkanKHR">GraphicsRequirementsVulkanKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsVulkanKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsVulkanKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.CompareOpFB.GREATER">GREATER (xr.CompareOpFB attribute)</a>
 </li>
       <li><a href="xr.html#xr.CompareOpFB.GREATER_OR_EQUAL">GREATER_OR_EQUAL (xr.CompareOpFB attribute)</a>
@@ -3260,21 +3206,9 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.GraphicsBindingOpenGLWin32KHR.h_dc">h_dc (xr.GraphicsBindingOpenGLWin32KHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingOpenGLWin32KHR.h_dc">(xr.platform.GraphicsBindingOpenGLWin32KHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingOpenGLWin32KHR.h_dc">(xr.platform.windows.GraphicsBindingOpenGLWin32KHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsBindingOpenGLWin32KHR.h_glrc">h_glrc (xr.GraphicsBindingOpenGLWin32KHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingOpenGLWin32KHR.h_glrc">(xr.platform.GraphicsBindingOpenGLWin32KHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingOpenGLWin32KHR.h_glrc">(xr.platform.windows.GraphicsBindingOpenGLWin32KHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.HandTrackerCreateInfoEXT.hand">hand (xr.HandTrackerCreateInfoEXT attribute)</a>
 </li>
       <li><a href="xr.html#xr.VirtualKeyboardInputSourceMETA.HAND_DIRECT_INDEX_TIP_LEFT">HAND_DIRECT_INDEX_TIP_LEFT (xr.VirtualKeyboardInputSourceMETA attribute)</a>
@@ -3379,10 +3313,10 @@
 </li>
       <li><a href="xr.html#xr.HandTrackerEXT_T">HandTrackerEXT_T (class in xr)</a>
 </li>
-      <li><a href="xr.html#xr.HandTrackingAimFlagsFB">HandTrackingAimFlagsFB (class in xr)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xr.html#xr.HandTrackingAimFlagsFB">HandTrackingAimFlagsFB (class in xr)</a>
+</li>
       <li><a href="xr.html#xr.HandTrackingAimFlagsFBCInt">HandTrackingAimFlagsFBCInt (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.HandTrackingAimStateFB">HandTrackingAimStateFB (class in xr)</a>
@@ -3442,10 +3376,6 @@
 </li>
         <li><a href="xr.html#xr.Extent3Df.height">(xr.Extent3Df attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageFoveationVulkanFB.height">(xr.platform.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageFoveationVulkanFB.height">(xr.platform.windows.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
         <li><a href="xr.html#xr.SwapchainCreateInfo.height">(xr.SwapchainCreateInfo attribute)</a>
 </li>
         <li><a href="xr.html#xr.SwapchainImageFoveationVulkanFB.height">(xr.SwapchainImageFoveationVulkanFB attribute)</a>
@@ -3480,23 +3410,11 @@
       <li><a href="xr.html#xr.ExternalCameraAttachedToDeviceOCULUS.HMD">HMD (xr.ExternalCameraAttachedToDeviceOCULUS attribute)</a>
 </li>
       <li><a href="xr.html#xr.HolographicWindowAttachmentMSFT.holographic_space">holographic_space (xr.HolographicWindowAttachmentMSFT attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.HolographicWindowAttachmentMSFT.holographic_space">(xr.platform.HolographicWindowAttachmentMSFT attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.HolographicWindowAttachmentMSFT.holographic_space">(xr.platform.windows.HolographicWindowAttachmentMSFT attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.StructureType.HOLOGRAPHIC_WINDOW_ATTACHMENT_MSFT">HOLOGRAPHIC_WINDOW_ATTACHMENT_MSFT (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.HolographicWindowAttachmentMSFT">HolographicWindowAttachmentMSFT (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.HolographicWindowAttachmentMSFT">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.HolographicWindowAttachmentMSFT">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.ScenePlaneAlignmentTypeMSFT.HORIZONTAL">HORIZONTAL (xr.ScenePlaneAlignmentTypeMSFT attribute)</a>
 </li>
       <li><a href="xr.html#xr.PlaneDetectorOrientationEXT.HORIZONTAL_DOWNWARD">HORIZONTAL_DOWNWARD (xr.PlaneDetectorOrientationEXT attribute)</a>
@@ -3531,21 +3449,9 @@
       </ul></li>
       <li><a href="xr.html#xr.SessionState.IDLE">IDLE (xr.SessionState attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainImageFoveationVulkanFB.image">image (xr.platform.SwapchainImageFoveationVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainImageFoveationVulkanFB.image">image (xr.SwapchainImageFoveationVulkanFB attribute)</a>
 
       <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageOpenGLKHR.image">(xr.platform.SwapchainImageOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageVulkanKHR.image">(xr.platform.SwapchainImageVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageFoveationVulkanFB.image">(xr.platform.windows.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageOpenGLKHR.image">(xr.platform.windows.SwapchainImageOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageVulkanKHR.image">(xr.platform.windows.SwapchainImageVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.SwapchainImageFoveationVulkanFB.image">(xr.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
         <li><a href="xr.html#xr.SwapchainImageOpenGLKHR.image">(xr.SwapchainImageOpenGLKHR attribute)</a>
 </li>
         <li><a href="xr.html#xr.SwapchainImageVulkanKHR.image">(xr.SwapchainImageVulkanKHR attribute)</a>
@@ -3693,10 +3599,10 @@
         <li><a href="xr.html#xr.FacialBlendShapeML.INNER_BROW_RAISER_R">(xr.FacialBlendShapeML attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SwapchainUsageFlags.INPUT_ATTACHMENT_BIT_KHR">INPUT_ATTACHMENT_BIT_KHR (xr.SwapchainUsageFlags attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SwapchainUsageFlags.INPUT_ATTACHMENT_BIT_MND">INPUT_ATTACHMENT_BIT_MND (xr.SwapchainUsageFlags attribute)</a>
 </li>
       <li><a href="xr.html#xr.VirtualKeyboardInputInfoMETA.input_pose_in_space">input_pose_in_space (xr.VirtualKeyboardInputInfoMETA attribute)</a>
@@ -3715,18 +3621,12 @@
 </li>
       <li><a href="xr.html#xr.InputSourceLocalizedNameGetInfo">InputSourceLocalizedNameGetInfo (class in xr)</a>
 </li>
-      <li><a href="xr.html#xr.Instance">Instance (in module xr)</a>
+      <li><a href="xr.html#xr.Instance">Instance (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingVulkanKHR.instance">instance (xr.GraphicsBindingVulkanKHR attribute)</a>
 </li>
       <li><a href="xr.html#xr.ObjectType.INSTANCE">INSTANCE (xr.ObjectType attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR.instance">instance (xr.platform.GraphicsBindingVulkanKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR.instance">(xr.platform.windows.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.StructureType.INSTANCE_CREATE_INFO">INSTANCE_CREATE_INFO (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.INSTANCE_CREATE_INFO_ANDROID_KHR">INSTANCE_CREATE_INFO_ANDROID_KHR (xr.StructureType attribute)</a>
@@ -3740,6 +3640,8 @@
       <li><a href="xr.html#xr.InstanceCreateFlagsCInt">InstanceCreateFlagsCInt (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.InstanceCreateInfo">InstanceCreateInfo (class in xr)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.InstanceObject">InstanceObject (class in xr.utils)</a>
 </li>
       <li><a href="xr.html#xr.InstanceProperties">InstanceProperties (class in xr)</a>
 </li>
@@ -3789,6 +3691,8 @@
         <li><a href="xr.html#xr.SpaceStorageLocationFB.INVALID">(xr.SpaceStorageLocationFB attribute)</a>
 </li>
       </ul></li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f.invert_rigid_body">invert_rigid_body() (xr.utils.Matrix4x4f method)</a>
+</li>
       <li><a href="xr.html#xr.CompositionLayerFlags.INVERTED_ALPHA_BIT_EXT">INVERTED_ALPHA_BIT_EXT (xr.CompositionLayerFlags attribute)</a>
 </li>
       <li><a href="xr.html#xr.ActionStateBoolean.is_active">is_active (xr.ActionStateBoolean attribute)</a>
@@ -4097,6 +4001,8 @@
         <li><a href="xr.html#xr.EyeVisibility.LEFT">(xr.EyeVisibility attribute)</a>
 </li>
         <li><a href="xr.html#xr.HandEXT.LEFT">(xr.HandEXT attribute)</a>
+</li>
+        <li><a href="xr.utils.html#xr.utils.Eye.LEFT">(xr.utils.Eye attribute)</a>
 </li>
       </ul></li>
       <li><a href="xr.html#xr.BodyJointBD.LEFT_ANKLE">LEFT_ANKLE (xr.BodyJointBD attribute)</a>
@@ -4702,7 +4608,11 @@
       <li><a href="xr.html#xr.locate_spaces">locate_spaces() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.locate_views">locate_views() (in module xr)</a>
+
+      <ul>
+        <li><a href="xr.utils.html#xr.utils.SessionObject.locate_views">(xr.utils.SessionObject method)</a>
 </li>
+      </ul></li>
       <li><a href="xr.html#xr.EventDataSpaceEraseCompleteFB.location">location (xr.EventDataSpaceEraseCompleteFB attribute)</a>
 
       <ul>
@@ -4839,12 +4749,12 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.mag_filter">mag_filter (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.mag_filter">mag_filter (xr.SwapchainStateSamplerVulkanFB attribute)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider.make_current">make_current() (xr.utils.GraphicsContextProvider method)</a>
 
       <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.mag_filter">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.mag_filter">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
+        <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider.GLContextScope.make_current">(xr.utils.GraphicsContextProvider.GLContextScope method)</a>
 </li>
       </ul></li>
       <li><a href="xr.html#xr.EventDataLocalizationChangedML.map">map (xr.EventDataLocalizationChangedML attribute)</a>
@@ -4975,20 +4885,16 @@
 </li>
       <li><a href="xr.html#xr.MarkerTypeML">MarkerTypeML (class in xr)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.Matrix4x4f">Matrix4x4f (class in xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.MarkerDetectorFpsML.MAX">MAX (xr.MarkerDetectorFpsML attribute)</a>
 
       <ul>
         <li><a href="xr.html#xr.MarkerDetectorFullAnalysisIntervalML.MAX">(xr.MarkerDetectorFullAnalysisIntervalML attribute)</a>
 </li>
       </ul></li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.max_anisotropy">max_anisotropy (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.max_anisotropy">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.max_anisotropy">max_anisotropy (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.max_anisotropy">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.api_layer.html#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.max_api_version">max_api_version (xr.api_layer.loader_interfaces.NegotiateLoaderInfo attribute)</a>
 
       <ul>
@@ -5001,14 +4907,6 @@
 
       <ul>
         <li><a href="xr.html#xr.GraphicsRequirementsVulkanKHR.max_api_version_supported">(xr.GraphicsRequirementsVulkanKHR property)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsOpenGLKHR.max_api_version_supported">(xr.platform.GraphicsRequirementsOpenGLKHR property)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsVulkanKHR.max_api_version_supported">(xr.platform.GraphicsRequirementsVulkanKHR property)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsOpenGLKHR.max_api_version_supported">(xr.platform.windows.GraphicsRequirementsOpenGLKHR property)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsVulkanKHR.max_api_version_supported">(xr.platform.windows.GraphicsRequirementsVulkanKHR property)</a>
 </li>
       </ul></li>
       <li><a href="xr.html#xr.WorldMeshBufferRecommendedSizeInfoML.max_block_count">max_block_count (xr.WorldMeshBufferRecommendedSizeInfoML attribute)</a>
@@ -5083,6 +4981,8 @@
 </li>
       <li><a href="xr.html#xr.SenseDataProviderTypeBD.MESH">MESH (xr.SenseDataProviderTypeBD attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SpatialComponentTypeEXT.MESH_2D">MESH_2D (xr.SpatialComponentTypeEXT attribute)</a>
 </li>
       <li><a href="xr.html#xr.SpatialComponentTypeEXT.MESH_3D">MESH_3D (xr.SpatialComponentTypeEXT attribute)</a>
@@ -5091,8 +4991,6 @@
 </li>
       <li><a href="xr.html#xr.WorldMeshStateRequestCompletionML.mesh_block_state_count_output">mesh_block_state_count_output (xr.WorldMeshStateRequestCompletionML attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.WorldMeshStateRequestCompletionML.mesh_block_states">mesh_block_states (xr.WorldMeshStateRequestCompletionML attribute)</a>
 </li>
       <li><a href="xr.html#xr.WorldMeshBlockStateML.mesh_bounding_box_center">mesh_bounding_box_center (xr.WorldMeshBlockStateML attribute)</a>
@@ -5184,14 +5082,6 @@
       <ul>
         <li><a href="xr.html#xr.GraphicsRequirementsVulkanKHR.min_api_version_supported">(xr.GraphicsRequirementsVulkanKHR property)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsOpenGLKHR.min_api_version_supported">(xr.platform.GraphicsRequirementsOpenGLKHR property)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsVulkanKHR.min_api_version_supported">(xr.platform.GraphicsRequirementsVulkanKHR property)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsOpenGLKHR.min_api_version_supported">(xr.platform.windows.GraphicsRequirementsOpenGLKHR property)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsVulkanKHR.min_api_version_supported">(xr.platform.windows.GraphicsRequirementsVulkanKHR property)</a>
-</li>
       </ul></li>
       <li><a href="xr.html#xr.PlaneDetectorBeginInfoEXT.min_area">min_area (xr.PlaneDetectorBeginInfoEXT attribute)</a>
 </li>
@@ -5208,23 +5098,9 @@
       <ul>
         <li><a href="xr.html#xr.GraphicsRequirementsD3D12KHR.min_feature_level">(xr.GraphicsRequirementsD3D12KHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D11KHR.min_feature_level">(xr.platform.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D12KHR.min_feature_level">(xr.platform.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D11KHR.min_feature_level">(xr.platform.windows.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D12KHR.min_feature_level">(xr.platform.windows.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
       </ul></li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.min_filter">min_filter (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.min_filter">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.min_filter">min_filter (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.min_filter">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.api_layer.html#xr.api_layer.loader_interfaces.NegotiateLoaderInfo.min_interface_version">min_interface_version (xr.api_layer.loader_interfaces.NegotiateLoaderInfo attribute)</a>
 
       <ul>
@@ -5239,14 +5115,8 @@
 </li>
       <li><a href="xr.html#xr.SwapchainCreateInfo.mip_count">mip_count (xr.SwapchainCreateInfo attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.mipmap_mode">mipmap_mode (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.mipmap_mode">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.mipmap_mode">mipmap_mode (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.mipmap_mode">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.FoveationApplyInfoHTC.mode">mode (xr.FoveationApplyInfoHTC attribute)</a>
 </li>
       <li><a href="xr.html#xr.ControllerModelKeyStateMSFT.model_key">model_key (xr.ControllerModelKeyStateMSFT attribute)</a>
@@ -5273,21 +5143,17 @@
 </li>
         <li><a href="xr.api_layer.html#module-xr.api_layer.layer_path">xr.api_layer.layer_path</a>
 </li>
-        <li><a href="xr.api_layer.linux.html#module-xr.api_layer.linux">xr.api_layer.linux</a>
-</li>
         <li><a href="xr.api_layer.html#module-xr.api_layer.loader_interfaces">xr.api_layer.loader_interfaces</a>
 </li>
         <li><a href="xr.api_layer.html#module-xr.api_layer.raw_functions">xr.api_layer.raw_functions</a>
 </li>
         <li><a href="xr.api_layer.html#module-xr.api_layer.steamvr_linux_destroyinstance_layer">xr.api_layer.steamvr_linux_destroyinstance_layer</a>
 </li>
-        <li><a href="xr.api_layer.windows.html#module-xr.api_layer.windows">xr.api_layer.windows</a>
+        <li><a href="xr.ext.html#module-xr.ext">xr.ext</a>
 </li>
-        <li><a href="xr.library.html#module-xr.library">xr.library</a>
+        <li><a href="xr.ext.html#module-xr.ext.KHR.opengl_enable">xr.ext.KHR.opengl_enable</a>
 </li>
-        <li><a href="xr.platform.html#module-xr.platform">xr.platform</a>
-</li>
-        <li><a href="xr.platform.html#module-xr.platform.windows">xr.platform.windows</a>
+        <li><a href="xr.utils.html#module-xr.utils">xr.utils</a>
 </li>
       </ul></li>
       <li><a href="xr.html#xr.FrameSynthesisInfoEXT.motion_vector_offset">motion_vector_offset (xr.FrameSynthesisInfoEXT attribute)</a>
@@ -6061,86 +5927,6 @@
 </li>
         <li><a href="xr.html#xr.PlaneDetectorPolygonBufferEXT.next">(xr.PlaneDetectorPolygonBufferEXT attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D11KHR.next">(xr.platform.GraphicsBindingD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D12KHR.next">(xr.platform.GraphicsBindingD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingOpenGLWin32KHR.next">(xr.platform.GraphicsBindingOpenGLWin32KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR.next">(xr.platform.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D11KHR.next">(xr.platform.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D12KHR.next">(xr.platform.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsOpenGLKHR.next">(xr.platform.GraphicsRequirementsOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsVulkanKHR.next">(xr.platform.GraphicsRequirementsVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.HolographicWindowAttachmentMSFT.next">(xr.platform.HolographicWindowAttachmentMSFT attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D11KHR.next">(xr.platform.SwapchainImageD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D12KHR.next">(xr.platform.SwapchainImageD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageFoveationVulkanFB.next">(xr.platform.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageOpenGLKHR.next">(xr.platform.SwapchainImageOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageVulkanKHR.next">(xr.platform.SwapchainImageVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.next">(xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.next">(xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanGraphicsDeviceGetInfoKHR.next">(xr.platform.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR.next">(xr.platform.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanSwapchainCreateInfoMETA.next">(xr.platform.VulkanSwapchainCreateInfoMETA attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanSwapchainFormatListCreateInfoKHR.next">(xr.platform.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D11KHR.next">(xr.platform.windows.GraphicsBindingD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D12KHR.next">(xr.platform.windows.GraphicsBindingD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingOpenGLWin32KHR.next">(xr.platform.windows.GraphicsBindingOpenGLWin32KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR.next">(xr.platform.windows.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D11KHR.next">(xr.platform.windows.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D12KHR.next">(xr.platform.windows.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsOpenGLKHR.next">(xr.platform.windows.GraphicsRequirementsOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsVulkanKHR.next">(xr.platform.windows.GraphicsRequirementsVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.HolographicWindowAttachmentMSFT.next">(xr.platform.windows.HolographicWindowAttachmentMSFT attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D11KHR.next">(xr.platform.windows.SwapchainImageD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D12KHR.next">(xr.platform.windows.SwapchainImageD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageFoveationVulkanFB.next">(xr.platform.windows.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageOpenGLKHR.next">(xr.platform.windows.SwapchainImageOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageVulkanKHR.next">(xr.platform.windows.SwapchainImageVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.next">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.next">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR.next">(xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR.next">(xr.platform.windows.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainCreateInfoMETA.next">(xr.platform.windows.VulkanSwapchainCreateInfoMETA attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR.next">(xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
-</li>
         <li><a href="xr.html#xr.QueriedSenseDataBD.next">(xr.QueriedSenseDataBD attribute)</a>
 </li>
         <li><a href="xr.html#xr.QueriedSenseDataGetInfoBD.next">(xr.QueriedSenseDataGetInfoBD attribute)</a>
@@ -6829,14 +6615,6 @@
 </li>
         <li><a href="xr.html#xr.PlaneDetectorFlagsEXT.NONE">(xr.PlaneDetectorFlagsEXT attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateFlagsKHR.NONE">(xr.platform.VulkanDeviceCreateFlagsKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateFlagsKHR.NONE">(xr.platform.VulkanInstanceCreateFlagsKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateFlagsKHR.NONE">(xr.platform.windows.VulkanDeviceCreateFlagsKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateFlagsKHR.NONE">(xr.platform.windows.VulkanInstanceCreateFlagsKHR attribute)</a>
-</li>
         <li><a href="xr.html#xr.RenderModelFlagsFB.NONE">(xr.RenderModelFlagsFB attribute)</a>
 </li>
         <li><a href="xr.html#xr.SceneComputeStateMSFT.NONE">(xr.SceneComputeStateMSFT attribute)</a>
@@ -6980,6 +6758,8 @@
         <li><a href="xr.html#xr.InteractionProfileDpadBindingEXT.on_haptic">(xr.InteractionProfileDpadBindingEXT attribute)</a>
 </li>
       </ul></li>
+      <li><a href="xr.utils.html#xr.utils.SessionObject.on_state_changed">on_state_changed() (xr.utils.SessionObject method)</a>
+</li>
       <li><a href="xr.html#xr.InteractionProfileAnalogThresholdVALVE.on_threshold">on_threshold (xr.InteractionProfileAnalogThresholdVALVE attribute)</a>
 </li>
       <li><a href="xr.html#xr.BlendFactorFB.ONE">ONE (xr.BlendFactorFB attribute)</a>
@@ -6990,10 +6770,14 @@
 </li>
       <li><a href="xr.html#xr.EnvironmentBlendMode.OPAQUE">OPAQUE (xr.EnvironmentBlendMode attribute)</a>
 </li>
-      <li><a href="xr.html#xr.SemanticLabelBD.OPENING">OPENING (xr.SemanticLabelBD attribute)</a>
+      <li><a href="xr.utils.html#xr.utils.GraphicsAPI.OPENGL">OPENGL (xr.utils.GraphicsAPI attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xr.utils.html#xr.utils.GraphicsAPI.OPENGL_ES">OPENGL_ES (xr.utils.GraphicsAPI attribute)</a>
+</li>
+      <li><a href="xr.html#xr.SemanticLabelBD.OPENING">OPENING (xr.SemanticLabelBD attribute)</a>
+</li>
       <li><a href="xr.html#xr.SpatialMarkerStaticOptimizationEXT.optimize_for_static_marker">optimize_for_static_marker (xr.SpatialMarkerStaticOptimizationEXT attribute)</a>
 </li>
       <li><a href="xr.html#xr.CompositionLayerCubeKHR.orientation">orientation (xr.CompositionLayerCubeKHR attribute)</a>
@@ -7312,17 +7096,9 @@
 </li>
       <li><a href="xr.html#xr.PersistSpatialEntityCompletionEXT">PersistSpatialEntityCompletionEXT (class in xr)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.pfn_get_instance_proc_addr">pfn_get_instance_proc_addr (xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
+      <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.pfn_get_instance_proc_addr">pfn_get_instance_proc_addr (xr.VulkanDeviceCreateInfoKHR attribute)</a>
 
       <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR.pfn_get_instance_proc_addr">(xr.platform.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.pfn_get_instance_proc_addr">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR.pfn_get_instance_proc_addr">(xr.platform.windows.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.pfn_get_instance_proc_addr">(xr.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
         <li><a href="xr.html#xr.VulkanInstanceCreateInfoKHR.pfn_get_instance_proc_addr">(xr.VulkanInstanceCreateInfoKHR attribute)</a>
 </li>
       </ul></li>
@@ -7359,37 +7135,13 @@
       <li><a href="xr.html#xr.PFN_xrComputeNewSceneMSFT">PFN_xrComputeNewSceneMSFT (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrConvertTimespecTimeToTimeKHR">PFN_xrConvertTimespecTimeToTimeKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrConvertTimespecTimeToTimeKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrConvertTimespecTimeToTimeKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrConvertTimeToTimespecTimeKHR">PFN_xrConvertTimeToTimespecTimeKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrConvertTimeToTimespecTimeKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrConvertTimeToTimespecTimeKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrConvertTimeToWin32PerformanceCounterKHR">PFN_xrConvertTimeToWin32PerformanceCounterKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrConvertTimeToWin32PerformanceCounterKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrConvertTimeToWin32PerformanceCounterKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrConvertWin32PerformanceCounterToTimeKHR">PFN_xrConvertWin32PerformanceCounterToTimeKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrConvertWin32PerformanceCounterToTimeKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrConvertWin32PerformanceCounterToTimeKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrCreateAction">PFN_xrCreateAction (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrCreateActionSet">PFN_xrCreateActionSet (in module xr)</a>
@@ -7485,13 +7237,7 @@
       <li><a href="xr.html#xr.PFN_xrCreateSpatialAnchorFB">PFN_xrCreateSpatialAnchorFB (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT">PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrCreateSpatialAnchorFromPersistedNameMSFT">PFN_xrCreateSpatialAnchorFromPersistedNameMSFT (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrCreateSpatialAnchorHTC">PFN_xrCreateSpatialAnchorHTC (in module xr)</a>
@@ -7537,21 +7283,9 @@
       <li><a href="xr.html#xr.PFN_xrCreateVirtualKeyboardSpaceMETA">PFN_xrCreateVirtualKeyboardSpaceMETA (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrCreateVulkanDeviceKHR">PFN_xrCreateVulkanDeviceKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrCreateVulkanDeviceKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrCreateVulkanDeviceKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrCreateVulkanInstanceKHR">PFN_xrCreateVulkanInstanceKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrCreateVulkanInstanceKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrCreateVulkanInstanceKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrCreateWorldMeshDetectorML">PFN_xrCreateWorldMeshDetectorML (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrDebugUtilsMessengerCallbackEXT">PFN_xrDebugUtilsMessengerCallbackEXT (in module xr)</a>
@@ -7737,21 +7471,9 @@
       <li><a href="xr.html#xr.PFN_xrGetAnchorUuidBD">PFN_xrGetAnchorUuidBD (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetAudioInputDeviceGuidOculus">PFN_xrGetAudioInputDeviceGuidOculus (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetAudioInputDeviceGuidOculus">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetAudioInputDeviceGuidOculus">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetAudioOutputDeviceGuidOculus">PFN_xrGetAudioOutputDeviceGuidOculus (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetAudioOutputDeviceGuidOculus">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetAudioOutputDeviceGuidOculus">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetBodySkeletonFB">PFN_xrGetBodySkeletonFB (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetBodySkeletonHTC">PFN_xrGetBodySkeletonHTC (in module xr)</a>
@@ -7765,21 +7487,9 @@
       <li><a href="xr.html#xr.PFN_xrGetCurrentInteractionProfile">PFN_xrGetCurrentInteractionProfile (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetD3D11GraphicsRequirementsKHR">PFN_xrGetD3D11GraphicsRequirementsKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetD3D11GraphicsRequirementsKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetD3D11GraphicsRequirementsKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetD3D12GraphicsRequirementsKHR">PFN_xrGetD3D12GraphicsRequirementsKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetD3D12GraphicsRequirementsKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetD3D12GraphicsRequirementsKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetDeviceSampleRateFB">PFN_xrGetDeviceSampleRateFB (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetDisplayRefreshRateFB">PFN_xrGetDisplayRefreshRateFB (in module xr)</a>
@@ -7808,8 +7518,6 @@
 </li>
       <li><a href="xr.html#xr.PFN_xrGetInstanceProperties">PFN_xrGetInstanceProperties (in module xr)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.PFN_xrGetMarkerDetectorStateML">PFN_xrGetMarkerDetectorStateML (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetMarkerLengthML">PFN_xrGetMarkerLengthML (in module xr)</a>
@@ -7822,16 +7530,12 @@
 </li>
       <li><a href="xr.html#xr.PFN_xrGetMarkersML">PFN_xrGetMarkersML (in module xr)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.PFN_xrGetMarkerStringML">PFN_xrGetMarkerStringML (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetOpenGLGraphicsRequirementsKHR">PFN_xrGetOpenGLGraphicsRequirementsKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetOpenGLGraphicsRequirementsKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetOpenGLGraphicsRequirementsKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetPassthroughPreferencesMETA">PFN_xrGetPassthroughPreferencesMETA (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetPerformanceMetricsStateMETA">PFN_xrGetPerformanceMetricsStateMETA (in module xr)</a>
@@ -7937,53 +7641,17 @@
       <li><a href="xr.html#xr.PFN_xrGetVisibilityMaskKHR">PFN_xrGetVisibilityMaskKHR (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrGetVulkanDeviceExtensionsKHR">PFN_xrGetVulkanDeviceExtensionsKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetVulkanDeviceExtensionsKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetVulkanDeviceExtensionsKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetVulkanGraphicsDevice2KHR">PFN_xrGetVulkanGraphicsDevice2KHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetVulkanGraphicsDevice2KHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetVulkanGraphicsDevice2KHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetVulkanGraphicsDeviceKHR">PFN_xrGetVulkanGraphicsDeviceKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetVulkanGraphicsDeviceKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetVulkanGraphicsDeviceKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetVulkanGraphicsRequirements2KHR">PFN_xrGetVulkanGraphicsRequirements2KHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetVulkanGraphicsRequirements2KHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetVulkanGraphicsRequirements2KHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetVulkanGraphicsRequirementsKHR">PFN_xrGetVulkanGraphicsRequirementsKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetVulkanGraphicsRequirementsKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetVulkanGraphicsRequirementsKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetVulkanInstanceExtensionsKHR">PFN_xrGetVulkanInstanceExtensionsKHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrGetVulkanInstanceExtensionsKHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrGetVulkanInstanceExtensionsKHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrGetWorldMeshBufferRecommendSizeML">PFN_xrGetWorldMeshBufferRecommendSizeML (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrImportLocalizationMapML">PFN_xrImportLocalizationMapML (in module xr)</a>
@@ -8209,13 +7877,7 @@
       <li><a href="xr.html#xr.PFN_xrTryCreateSpatialGraphStaticNodeBindingMSFT">PFN_xrTryCreateSpatialGraphStaticNodeBindingMSFT (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT">PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.PFN_xrUnpersistSpatialAnchorAsyncBD">PFN_xrUnpersistSpatialAnchorAsyncBD (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrUnpersistSpatialAnchorCompleteBD">PFN_xrUnpersistSpatialAnchorCompleteBD (in module xr)</a>
@@ -8243,13 +7905,7 @@
       <li><a href="xr.html#xr.PFN_xrWaitSwapchainImage">PFN_xrWaitSwapchainImage (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingVulkanKHR.physical_device">physical_device (xr.GraphicsBindingVulkanKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR.physical_device">(xr.platform.GraphicsBindingVulkanKHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR.physical_device">(xr.platform.windows.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.HandTrackingAimStateFB.pinch_strength_index">pinch_strength_index (xr.HandTrackingAimStateFB attribute)</a>
 </li>
       <li><a href="xr.html#xr.HandTrackingAimStateFB.pinch_strength_little">pinch_strength_little (xr.HandTrackingAimStateFB attribute)</a>
@@ -8360,6 +8016,12 @@
 </li>
       <li><a href="xr.html#xr.poll_event">poll_event() (in module xr)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.ContextObject.poll_xr_events">poll_xr_events() (xr.utils.ContextObject method)</a>
+
+      <ul>
+        <li><a href="xr.utils.html#xr.utils.SessionObject.poll_xr_events">(xr.utils.SessionObject method)</a>
+</li>
+      </ul></li>
       <li><a href="xr.html#xr.SpatialEntityComponentTypeBD.POLYGON">POLYGON (xr.SpatialEntityComponentTypeBD attribute)</a>
 </li>
       <li><a href="xr.html#xr.SpatialComponentTypeEXT.POLYGON_2D">POLYGON_2D (xr.SpatialComponentTypeEXT attribute)</a>
@@ -8534,6 +8196,10 @@
         <li><a href="xr.html#xr.PassthroughLayerPurposeFB.PROJECTED">(xr.PassthroughLayerPurposeFB attribute)</a>
 </li>
       </ul></li>
+      <li><a href="xr.utils.html#xr.utils.projection_from_fovf">projection_from_fovf() (in module xr.utils)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.projection_inverse_from_fovf">projection_inverse_from_fovf() (in module xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.FrameEndInfoFlagsML.PROTECTED_BIT">PROTECTED_BIT (xr.FrameEndInfoFlagsML attribute)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainCreateFlags.PROTECTED_CONTENT_BIT">PROTECTED_CONTENT_BIT (xr.SwapchainCreateFlags attribute)</a>
@@ -8574,14 +8240,14 @@
 </li>
       <li><a href="xr.html#xr.Quaternionf">Quaternionf (class in xr)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.QUERIED_SENSE_DATA_BD">QUERIED_SENSE_DATA_BD (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.QUERIED_SENSE_DATA_GET_INFO_BD">QUERIED_SENSE_DATA_GET_INFO_BD (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.QueriedSenseDataBD">QueriedSenseDataBD (class in xr)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.QueriedSenseDataGetInfoBD">QueriedSenseDataGetInfoBD (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SpaceQueryInfoFB.query_action">query_action (xr.SpaceQueryInfoFB attribute)</a>
@@ -8589,29 +8255,11 @@
       <li><a href="xr.html#xr.ColorSpaceFB.QUEST">QUEST (xr.ColorSpaceFB attribute)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingD3D12KHR.queue">queue (xr.GraphicsBindingD3D12KHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D12KHR.queue">(xr.platform.GraphicsBindingD3D12KHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D12KHR.queue">(xr.platform.windows.GraphicsBindingD3D12KHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsBindingVulkanKHR.queue_family_index">queue_family_index (xr.GraphicsBindingVulkanKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR.queue_family_index">(xr.platform.GraphicsBindingVulkanKHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR.queue_family_index">(xr.platform.windows.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.GraphicsBindingVulkanKHR.queue_index">queue_index (xr.GraphicsBindingVulkanKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR.queue_index">(xr.platform.GraphicsBindingVulkanKHR attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR.queue_index">(xr.platform.windows.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -8975,6 +8623,8 @@
 </li>
         <li><a href="xr.html#xr.HandEXT.RIGHT">(xr.HandEXT attribute)</a>
 </li>
+        <li><a href="xr.utils.html#xr.utils.Eye.RIGHT">(xr.utils.Eye attribute)</a>
+</li>
       </ul></li>
       <li><a href="xr.html#xr.BodyJointBD.RIGHT_ANKLE">RIGHT_ANKLE (xr.BodyJointBD attribute)</a>
 
@@ -9286,6 +8936,8 @@
         <li><a href="xr.html#xr.FullBodyJointMETA.ROOT">(xr.FullBodyJointMETA attribute)</a>
 </li>
       </ul></li>
+      <li><a href="xr.utils.html#xr.utils.rotation_from_quaternionf">rotation_from_quaternionf() (in module xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.ExternalCameraAttachedToDeviceOCULUS.RTOUCH">RTOUCH (xr.ExternalCameraAttachedToDeviceOCULUS attribute)</a>
 </li>
       <li><a href="xr.html#xr.SenseDataProviderStateBD.RUNNING">RUNNING (xr.SenseDataProviderStateBD attribute)</a>
@@ -9496,6 +9148,8 @@
 </li>
       <li><a href="xr.html#xr.SpatialPersistenceContextCreateInfoEXT.scope">scope (xr.SpatialPersistenceContextCreateInfoEXT attribute)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.GraphicsContextProvider.scope">scope() (xr.utils.GraphicsContextProvider method)</a>
+</li>
       <li><a href="xr.html#xr.SemanticLabelBD.SCREEN">SCREEN (xr.SemanticLabelBD attribute)</a>
 </li>
       <li><a href="xr.html#xr.ViewConfigurationType.SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT">SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT (xr.ViewConfigurationType attribute)</a>
@@ -9669,6 +9323,8 @@
       <li><a href="xr.html#xr.SessionCreateInfo">SessionCreateInfo (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SessionCreateInfoOverlayEXTX">SessionCreateInfoOverlayEXTX (class in xr)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.SessionObject">SessionObject (class in xr.utils)</a>
 </li>
       <li><a href="xr.html#xr.SessionState">SessionState (class in xr)</a>
 </li>
@@ -9901,6 +9557,8 @@
       <li><a href="xr.html#xr.SpaceLocations">SpaceLocations (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SpaceLocationsKHR">SpaceLocationsKHR (in module xr)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.SpaceObject">SpaceObject (class in xr.utils)</a>
 </li>
       <li><a href="xr.html#xr.SpacePersistenceModeFB">SpacePersistenceModeFB (class in xr)</a>
 </li>
@@ -10162,6 +9820,8 @@
 </li>
       <li><a href="xr.html#xr.SpatialAnchorCreateCompletionBD">SpatialAnchorCreateCompletionBD (class in xr)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SpatialAnchorCreateInfoBD">SpatialAnchorCreateInfoBD (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SpatialAnchorCreateInfoEXT">SpatialAnchorCreateInfoEXT (class in xr)</a>
@@ -10190,8 +9850,6 @@
 </li>
       <li><a href="xr.html#xr.SpatialAnchorsCreateInfoFromPoseML">SpatialAnchorsCreateInfoFromPoseML (class in xr)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SpatialAnchorsCreateInfoFromUuidsML">SpatialAnchorsCreateInfoFromUuidsML (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SpatialAnchorsCreateStorageInfoML">SpatialAnchorsCreateStorageInfoML (class in xr)</a>
@@ -10795,56 +10453,22 @@
       <li><a href="xr.html#xr.SwapchainImageBaseHeader">SwapchainImageBaseHeader (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainImageD3D11KHR">SwapchainImageD3D11KHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D11KHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D11KHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SwapchainImageD3D12KHR">SwapchainImageD3D12KHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D12KHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D12KHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SwapchainImageFoveationVulkanFB">SwapchainImageFoveationVulkanFB (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageFoveationVulkanFB">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageFoveationVulkanFB">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SwapchainImageOpenGLKHR">SwapchainImageOpenGLKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageOpenGLKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageOpenGLKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SwapchainImageReleaseInfo">SwapchainImageReleaseInfo (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainImageVulkan2KHR">SwapchainImageVulkan2KHR (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageVulkan2KHR">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageVulkan2KHR">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SwapchainImageVulkanKHR">SwapchainImageVulkanKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageVulkanKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageVulkanKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SwapchainImageWaitInfo">SwapchainImageWaitInfo (class in xr)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.SwapchainInfo">SwapchainInfo (class in xr.utils)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainStateBaseHeaderFB">SwapchainStateBaseHeaderFB (class in xr)</a>
 </li>
@@ -10855,51 +10479,21 @@
       <li><a href="xr.html#xr.SwapchainStateFoveationFlagsFBCInt">SwapchainStateFoveationFlagsFBCInt (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB">SwapchainStateSamplerVulkanFB (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SwapchainSubImage">SwapchainSubImage (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainUsageFlags">SwapchainUsageFlags (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SwapchainUsageFlagsCInt">SwapchainUsageFlagsCInt (in module xr)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.swizzle_alpha">swizzle_alpha (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.swizzle_alpha">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_alpha">swizzle_alpha (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_alpha">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_blue">swizzle_blue (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.swizzle_blue">swizzle_blue (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.swizzle_blue">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_green">swizzle_green (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_blue">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_red">swizzle_red (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.swizzle_green">swizzle_green (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.swizzle_green">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_green">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.swizzle_red">swizzle_red (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.swizzle_red">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.swizzle_red">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.SceneMarkerQRCodeMSFT.symbol_type">symbol_type (xr.SceneMarkerQRCodeMSFT attribute)</a>
 </li>
       <li><a href="xr.html#xr.sync_actions">sync_actions() (in module xr)</a>
@@ -10948,21 +10542,9 @@
 </li>
       <li><a href="xr.html#xr.StructureType.SYSTEM_HEADSET_ID_PROPERTIES_META">SYSTEM_HEADSET_ID_PROPERTIES_META (xr.StructureType attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.system_id">system_id (xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
+      <li><a href="xr.html#xr.SessionCreateInfo.system_id">system_id (xr.SessionCreateInfo attribute)</a>
 
       <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanGraphicsDeviceGetInfoKHR.system_id">(xr.platform.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR.system_id">(xr.platform.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.system_id">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR.system_id">(xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR.system_id">(xr.platform.windows.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.SessionCreateInfo.system_id">(xr.SessionCreateInfo attribute)</a>
-</li>
         <li><a href="xr.html#xr.SystemProperties.system_id">(xr.SystemProperties attribute)</a>
 </li>
         <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.system_id">(xr.VulkanDeviceCreateInfoKHR attribute)</a>
@@ -11076,6 +10658,8 @@
 </li>
       <li><a href="xr.html#xr.SystemNotificationsSetInfoML">SystemNotificationsSetInfoML (class in xr)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.SystemObject">SystemObject (class in xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.SystemPassthroughColorLutPropertiesMETA">SystemPassthroughColorLutPropertiesMETA (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.SystemPassthroughProperties2FB">SystemPassthroughProperties2FB (class in xr)</a>
@@ -11136,17 +10720,9 @@
 </li>
       <li><a href="xr.html#xr.VirtualKeyboardTextContextChangeInfoMETA.text_context">text_context (xr.VirtualKeyboardTextContextChangeInfoMETA attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D11KHR.texture">texture (xr.platform.SwapchainImageD3D11KHR attribute)</a>
+      <li><a href="xr.html#xr.SwapchainImageD3D11KHR.texture">texture (xr.SwapchainImageD3D11KHR attribute)</a>
 
       <ul>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D12KHR.texture">(xr.platform.SwapchainImageD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D11KHR.texture">(xr.platform.windows.SwapchainImageD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D12KHR.texture">(xr.platform.windows.SwapchainImageD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.SwapchainImageD3D11KHR.texture">(xr.SwapchainImageD3D11KHR attribute)</a>
-</li>
         <li><a href="xr.html#xr.SwapchainImageD3D12KHR.texture">(xr.SwapchainImageD3D12KHR attribute)</a>
 </li>
       </ul></li>
@@ -11273,13 +10849,7 @@
       <li><a href="xr.html#xr.Result.TIMEOUT_EXPIRED">TIMEOUT_EXPIRED (xr.Result attribute)</a>
 </li>
       <li><a href="xr.html#xr.timespec">timespec (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.timespec">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.timespec">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.WorldMeshStateRequestCompletionML.timestamp">timestamp (xr.WorldMeshStateRequestCompletionML attribute)</a>
 </li>
       <li><a href="xr.html#xr.EventDataDisplayRefreshRateChangedFB.to_display_refresh_rate">to_display_refresh_rate (xr.EventDataDisplayRefreshRateChangedFB attribute)</a>
@@ -11870,86 +11440,6 @@
         <li><a href="xr.html#xr.PlaneDetectorLocationsEXT.type">(xr.PlaneDetectorLocationsEXT attribute)</a>
 </li>
         <li><a href="xr.html#xr.PlaneDetectorPolygonBufferEXT.type">(xr.PlaneDetectorPolygonBufferEXT attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D11KHR.type">(xr.platform.GraphicsBindingD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingD3D12KHR.type">(xr.platform.GraphicsBindingD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingOpenGLWin32KHR.type">(xr.platform.GraphicsBindingOpenGLWin32KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsBindingVulkanKHR.type">(xr.platform.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D11KHR.type">(xr.platform.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsD3D12KHR.type">(xr.platform.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsOpenGLKHR.type">(xr.platform.GraphicsRequirementsOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.GraphicsRequirementsVulkanKHR.type">(xr.platform.GraphicsRequirementsVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.HolographicWindowAttachmentMSFT.type">(xr.platform.HolographicWindowAttachmentMSFT attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D11KHR.type">(xr.platform.SwapchainImageD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageD3D12KHR.type">(xr.platform.SwapchainImageD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageFoveationVulkanFB.type">(xr.platform.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageOpenGLKHR.type">(xr.platform.SwapchainImageOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageVulkanKHR.type">(xr.platform.SwapchainImageVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.type">(xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.type">(xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanGraphicsDeviceGetInfoKHR.type">(xr.platform.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR.type">(xr.platform.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanSwapchainCreateInfoMETA.type">(xr.platform.VulkanSwapchainCreateInfoMETA attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.VulkanSwapchainFormatListCreateInfoKHR.type">(xr.platform.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D11KHR.type">(xr.platform.windows.GraphicsBindingD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingD3D12KHR.type">(xr.platform.windows.GraphicsBindingD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingOpenGLWin32KHR.type">(xr.platform.windows.GraphicsBindingOpenGLWin32KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsBindingVulkanKHR.type">(xr.platform.windows.GraphicsBindingVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D11KHR.type">(xr.platform.windows.GraphicsRequirementsD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsD3D12KHR.type">(xr.platform.windows.GraphicsRequirementsD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsOpenGLKHR.type">(xr.platform.windows.GraphicsRequirementsOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.GraphicsRequirementsVulkanKHR.type">(xr.platform.windows.GraphicsRequirementsVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.HolographicWindowAttachmentMSFT.type">(xr.platform.windows.HolographicWindowAttachmentMSFT attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D11KHR.type">(xr.platform.windows.SwapchainImageD3D11KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageD3D12KHR.type">(xr.platform.windows.SwapchainImageD3D12KHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageFoveationVulkanFB.type">(xr.platform.windows.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageOpenGLKHR.type">(xr.platform.windows.SwapchainImageOpenGLKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageVulkanKHR.type">(xr.platform.windows.SwapchainImageVulkanKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.type">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.type">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR.type">(xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR.type">(xr.platform.windows.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainCreateInfoMETA.type">(xr.platform.windows.VulkanSwapchainCreateInfoMETA attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR.type">(xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
 </li>
         <li><a href="xr.html#xr.QueriedSenseDataBD.type">(xr.QueriedSenseDataBD attribute)</a>
 </li>
@@ -12926,40 +12416,34 @@
         <li><a href="xr.html#xr.ViewLocateInfo.view_configuration_type">(xr.ViewLocateInfo attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.VIEW_CONFIGURATION_VIEW">VIEW_CONFIGURATION_VIEW (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.VIEW_CONFIGURATION_VIEW_FOV_EPIC">VIEW_CONFIGURATION_VIEW_FOV_EPIC (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.CompositionLayerProjection.view_count">view_count (xr.CompositionLayerProjection attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.VulkanSwapchainFormatListCreateInfoKHR.view_format_count">view_format_count (xr.platform.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR.view_format_count">(xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
+      <li><a href="xr.html#xr.VulkanSwapchainFormatListCreateInfoKHR.view_format_count">view_format_count (xr.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
 </li>
-        <li><a href="xr.html#xr.VulkanSwapchainFormatListCreateInfoKHR.view_format_count">(xr.VulkanSwapchainFormatListCreateInfoKHR attribute)</a>
+      <li><a href="xr.html#xr.VulkanSwapchainFormatListCreateInfoKHR.view_formats">view_formats (xr.VulkanSwapchainFormatListCreateInfoKHR property)</a>
 </li>
-      </ul></li>
-      <li><a href="xr.platform.html#xr.platform.VulkanSwapchainFormatListCreateInfoKHR.view_formats">view_formats (xr.platform.VulkanSwapchainFormatListCreateInfoKHR property)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR.view_formats">(xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR property)</a>
-</li>
-        <li><a href="xr.html#xr.VulkanSwapchainFormatListCreateInfoKHR.view_formats">(xr.VulkanSwapchainFormatListCreateInfoKHR property)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.EventDataVisibilityMaskChangedKHR.view_index">view_index (xr.EventDataVisibilityMaskChangedKHR attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.VIEW_LOCATE_FOVEATED_RENDERING_VARJO">VIEW_LOCATE_FOVEATED_RENDERING_VARJO (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.VIEW_LOCATE_INFO">VIEW_LOCATE_INFO (xr.StructureType attribute)</a>
 </li>
+      <li><a href="xr.utils.html#xr.utils.ContextObject.view_loop">view_loop() (xr.utils.ContextObject method)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.view_matrix_from_posef">view_matrix_from_posef() (in module xr.utils)</a>
+</li>
+      <li><a href="xr.utils.html#xr.utils.view_matrix_inverse_from_posef">view_matrix_inverse_from_posef() (in module xr.utils)</a>
+</li>
       <li><a href="xr.html#xr.StructureType.VIEW_STATE">VIEW_STATE (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.ViewState.view_state_flags">view_state_flags (xr.ViewState attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.ViewConfigurationDepthRangeEXT">ViewConfigurationDepthRangeEXT (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.ViewConfigurationProperties">ViewConfigurationProperties (class in xr)</a>
@@ -13074,31 +12558,17 @@
 </li>
       <li><a href="xr.html#xr.ViveTrackerPathsHTCX">ViveTrackerPathsHTCX (class in xr)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.vulkan_allocator">vulkan_allocator (xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
+      <li><a href="xr.utils.html#xr.utils.GraphicsAPI.VULKAN">VULKAN (xr.utils.GraphicsAPI attribute)</a>
+</li>
+      <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.vulkan_allocator">vulkan_allocator (xr.VulkanDeviceCreateInfoKHR attribute)</a>
 
       <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR.vulkan_allocator">(xr.platform.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.vulkan_allocator">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR.vulkan_allocator">(xr.platform.windows.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.vulkan_allocator">(xr.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
         <li><a href="xr.html#xr.VulkanInstanceCreateInfoKHR.vulkan_allocator">(xr.VulkanInstanceCreateInfoKHR attribute)</a>
 </li>
       </ul></li>
-      <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.vulkan_create_info">vulkan_create_info (xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
+      <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.vulkan_create_info">vulkan_create_info (xr.VulkanDeviceCreateInfoKHR attribute)</a>
 
       <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR.vulkan_create_info">(xr.platform.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.vulkan_create_info">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR.vulkan_create_info">(xr.platform.windows.VulkanInstanceCreateInfoKHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.vulkan_create_info">(xr.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
         <li><a href="xr.html#xr.VulkanInstanceCreateInfoKHR.vulkan_create_info">(xr.VulkanInstanceCreateInfoKHR attribute)</a>
 </li>
       </ul></li>
@@ -13106,100 +12576,34 @@
 </li>
       <li><a href="xr.html#xr.StructureType.VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR">VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR (xr.StructureType attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.VulkanGraphicsDeviceGetInfoKHR.vulkan_instance">vulkan_instance (xr.platform.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR.vulkan_instance">(xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
+      <li><a href="xr.html#xr.VulkanGraphicsDeviceGetInfoKHR.vulkan_instance">vulkan_instance (xr.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
 </li>
-        <li><a href="xr.html#xr.VulkanGraphicsDeviceGetInfoKHR.vulkan_instance">(xr.VulkanGraphicsDeviceGetInfoKHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.StructureType.VULKAN_INSTANCE_CREATE_INFO_KHR">VULKAN_INSTANCE_CREATE_INFO_KHR (xr.StructureType attribute)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR.vulkan_physical_device">vulkan_physical_device (xr.platform.VulkanDeviceCreateInfoKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR.vulkan_physical_device">(xr.platform.windows.VulkanDeviceCreateInfoKHR attribute)</a>
+      <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.vulkan_physical_device">vulkan_physical_device (xr.VulkanDeviceCreateInfoKHR attribute)</a>
 </li>
-        <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR.vulkan_physical_device">(xr.VulkanDeviceCreateInfoKHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.StructureType.VULKAN_SWAPCHAIN_CREATE_INFO_META">VULKAN_SWAPCHAIN_CREATE_INFO_META (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR">VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.VulkanDeviceCreateFlagsKHR">VulkanDeviceCreateFlagsKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateFlagsKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateFlagsKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanDeviceCreateFlagsKHRCInt">VulkanDeviceCreateFlagsKHRCInt (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateFlagsKHRCInt">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateFlagsKHRCInt">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanDeviceCreateInfoKHR">VulkanDeviceCreateInfoKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanDeviceCreateInfoKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanDeviceCreateInfoKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanGraphicsDeviceGetInfoKHR">VulkanGraphicsDeviceGetInfoKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanGraphicsDeviceGetInfoKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanGraphicsDeviceGetInfoKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanInstanceCreateFlagsKHR">VulkanInstanceCreateFlagsKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateFlagsKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateFlagsKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanInstanceCreateFlagsKHRCInt">VulkanInstanceCreateFlagsKHRCInt (in module xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateFlagsKHRCInt">(in module xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateFlagsKHRCInt">(in module xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanInstanceCreateInfoKHR">VulkanInstanceCreateInfoKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanInstanceCreateInfoKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanInstanceCreateInfoKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanSwapchainCreateInfoMETA">VulkanSwapchainCreateInfoMETA (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanSwapchainCreateInfoMETA">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainCreateInfoMETA">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VulkanSwapchainFormatListCreateInfoKHR">VulkanSwapchainFormatListCreateInfoKHR (class in xr)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.VulkanSwapchainFormatListCreateInfoKHR">(class in xr.platform)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.windows.VulkanSwapchainFormatListCreateInfoKHR">(class in xr.platform.windows)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -13217,7 +12621,11 @@
       <li><a href="xr.html#xr.BodyJointHTC.WAIST">WAIST (xr.BodyJointHTC attribute)</a>
 </li>
       <li><a href="xr.html#xr.wait_frame">wait_frame() (in module xr)</a>
+
+      <ul>
+        <li><a href="xr.utils.html#xr.utils.SessionObject.wait_frame">(xr.utils.SessionObject method)</a>
 </li>
+      </ul></li>
       <li><a href="xr.html#xr.wait_swapchain_image">wait_swapchain_image() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PlaneDetectorSemanticTypeEXT.WALL">WALL (xr.PlaneDetectorSemanticTypeEXT attribute)</a>
@@ -13277,10 +12685,6 @@
 </li>
         <li><a href="xr.html#xr.Extent3Df.width">(xr.Extent3Df attribute)</a>
 </li>
-        <li><a href="xr.platform.html#xr.platform.SwapchainImageFoveationVulkanFB.width">(xr.platform.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainImageFoveationVulkanFB.width">(xr.platform.windows.SwapchainImageFoveationVulkanFB attribute)</a>
-</li>
         <li><a href="xr.html#xr.SwapchainCreateInfo.width">(xr.SwapchainCreateInfo attribute)</a>
 </li>
         <li><a href="xr.html#xr.SwapchainImageFoveationVulkanFB.width">(xr.SwapchainImageFoveationVulkanFB attribute)</a>
@@ -13292,12 +12696,12 @@
 </li>
       <li><a href="xr.html#xr.SemanticLabelBD.WINDOW">WINDOW (xr.SemanticLabelBD attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.MarkerDetectorCameraML.WORLD_CAMERAS">WORLD_CAMERAS (xr.MarkerDetectorCameraML attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.WORLD_MESH_BLOCK_ML">WORLD_MESH_BLOCK_ML (xr.StructureType attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.WORLD_MESH_BLOCK_REQUEST_ML">WORLD_MESH_BLOCK_REQUEST_ML (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.WORLD_MESH_BLOCK_STATE_ML">WORLD_MESH_BLOCK_STATE_ML (xr.StructureType attribute)</a>
@@ -13360,22 +12764,10 @@
 </li>
       <li><a href="xr.html#xr.WorldMeshStateRequestInfoML">WorldMeshStateRequestInfoML (class in xr)</a>
 </li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.wrap_mode_s">wrap_mode_s (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.wrap_mode_s">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.wrap_mode_s">wrap_mode_s (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.wrap_mode_s">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
+      <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.wrap_mode_t">wrap_mode_t (xr.SwapchainStateSamplerVulkanFB attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="xr.platform.html#xr.platform.SwapchainStateSamplerVulkanFB.wrap_mode_t">wrap_mode_t (xr.platform.SwapchainStateSamplerVulkanFB attribute)</a>
-
-      <ul>
-        <li><a href="xr.platform.html#xr.platform.windows.SwapchainStateSamplerVulkanFB.wrap_mode_t">(xr.platform.windows.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-        <li><a href="xr.html#xr.SwapchainStateSamplerVulkanFB.wrap_mode_t">(xr.SwapchainStateSamplerVulkanFB attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.HandForearmJointULTRALEAP.WRIST">WRIST (xr.HandForearmJointULTRALEAP attribute)</a>
 
       <ul>
@@ -13427,20 +12819,13 @@
         <li><a href="xr.api_layer.html#module-xr.api_layer.dynamic_api_layer_base">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     xr.api_layer.layer_path
 
       <ul>
         <li><a href="xr.api_layer.html#module-xr.api_layer.layer_path">module</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    xr.api_layer.linux
-
-      <ul>
-        <li><a href="xr.api_layer.linux.html#module-xr.api_layer.linux">module</a>
 </li>
       </ul></li>
       <li>
@@ -13465,31 +12850,24 @@
 </li>
       </ul></li>
       <li>
-    xr.api_layer.windows
+    xr.ext
 
       <ul>
-        <li><a href="xr.api_layer.windows.html#module-xr.api_layer.windows">module</a>
+        <li><a href="xr.ext.html#module-xr.ext">module</a>
 </li>
       </ul></li>
       <li>
-    xr.library
+    xr.ext.KHR.opengl_enable
 
       <ul>
-        <li><a href="xr.library.html#module-xr.library">module</a>
+        <li><a href="xr.ext.html#module-xr.ext.KHR.opengl_enable">module</a>
 </li>
       </ul></li>
       <li>
-    xr.platform
+    xr.utils
 
       <ul>
-        <li><a href="xr.platform.html#module-xr.platform">module</a>
-</li>
-      </ul></li>
-      <li>
-    xr.platform.windows
-
-      <ul>
-        <li><a href="xr.platform.html#module-xr.platform.windows">module</a>
+        <li><a href="xr.utils.html#module-xr.utils">module</a>
 </li>
       </ul></li>
   </ul></td>

@@ -1,0 +1,655 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xr.utils &mdash; pyopenxr 1.0.2404 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e423673f"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="xr — Python Bindings for OpenXR" href="xr.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyopenxr
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xr.html">xr — Python Bindings for OpenXR</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">xr.utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-xr.utils">Contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.ContextObject"><code class="docutils literal notranslate"><span class="pre">ContextObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.ContextObject.frame_loop"><code class="docutils literal notranslate"><span class="pre">ContextObject.frame_loop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.ContextObject.poll_xr_events"><code class="docutils literal notranslate"><span class="pre">ContextObject.poll_xr_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.ContextObject.view_loop"><code class="docutils literal notranslate"><span class="pre">ContextObject.view_loop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.Eye"><code class="docutils literal notranslate"><span class="pre">Eye</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Eye.LEFT"><code class="docutils literal notranslate"><span class="pre">Eye.LEFT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Eye.RIGHT"><code class="docutils literal notranslate"><span class="pre">Eye.RIGHT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.GlfwWindow"><code class="docutils literal notranslate"><span class="pre">GlfwWindow</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.GraphicsAPI"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsAPI.D3D"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI.D3D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsAPI.OPENGL"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI.OPENGL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsAPI.OPENGL_ES"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI.OPENGL_ES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsAPI.VULKAN"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI.VULKAN</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.GraphicsContextProvider"><code class="docutils literal notranslate"><span class="pre">GraphicsContextProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsContextProvider.GLContextScope"><code class="docutils literal notranslate"><span class="pre">GraphicsContextProvider.GLContextScope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsContextProvider.destroy"><code class="docutils literal notranslate"><span class="pre">GraphicsContextProvider.destroy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsContextProvider.done_current"><code class="docutils literal notranslate"><span class="pre">GraphicsContextProvider.done_current()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsContextProvider.make_current"><code class="docutils literal notranslate"><span class="pre">GraphicsContextProvider.make_current()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsContextProvider.scope"><code class="docutils literal notranslate"><span class="pre">GraphicsContextProvider.scope()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.InstanceObject"><code class="docutils literal notranslate"><span class="pre">InstanceObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.InstanceObject.destroy"><code class="docutils literal notranslate"><span class="pre">InstanceObject.destroy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.InstanceObject.get_properties"><code class="docutils literal notranslate"><span class="pre">InstanceObject.get_properties()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.Matrix4x4f"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.as_numpy"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.as_numpy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.create_from_quaternion"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.create_from_quaternion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.create_projection"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.create_projection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.create_projection_fov"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.create_projection_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.create_scale"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.create_scale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.create_translation"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.create_translation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.create_translation_rotation_scale"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.create_translation_rotation_scale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.invert_rigid_body"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.invert_rigid_body()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SessionObject"><code class="docutils literal notranslate"><span class="pre">SessionObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.begin_frame"><code class="docutils literal notranslate"><span class="pre">SessionObject.begin_frame()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.destroy"><code class="docutils literal notranslate"><span class="pre">SessionObject.destroy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.end_frame"><code class="docutils literal notranslate"><span class="pre">SessionObject.end_frame()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.locate_views"><code class="docutils literal notranslate"><span class="pre">SessionObject.locate_views()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.on_state_changed"><code class="docutils literal notranslate"><span class="pre">SessionObject.on_state_changed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.poll_xr_events"><code class="docutils literal notranslate"><span class="pre">SessionObject.poll_xr_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.wait_frame"><code class="docutils literal notranslate"><span class="pre">SessionObject.wait_frame()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SpaceObject"><code class="docutils literal notranslate"><span class="pre">SpaceObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SwapchainInfo"><code class="docutils literal notranslate"><span class="pre">SwapchainInfo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SystemObject"><code class="docutils literal notranslate"><span class="pre">SystemObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.projection_from_fovf"><code class="docutils literal notranslate"><span class="pre">projection_from_fovf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.projection_inverse_from_fovf"><code class="docutils literal notranslate"><span class="pre">projection_inverse_from_fovf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.rotation_from_quaternionf"><code class="docutils literal notranslate"><span class="pre">rotation_from_quaternionf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.view_matrix_from_posef"><code class="docutils literal notranslate"><span class="pre">view_matrix_from_posef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.view_matrix_inverse_from_posef"><code class="docutils literal notranslate"><span class="pre">view_matrix_inverse_from_posef()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#related-modules">Related Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyopenxr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">xr.utils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/xr.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="xr-utils">
+<h1>xr.utils<a class="headerlink" href="#xr-utils" title="Link to this heading"></a></h1>
+<p>High-level utilities and abstractions for OpenXR integration.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">xr.utils</span></code> module provides ergonomic helpers and glue code that complement the low-level OpenXR API exposed in <code class="docutils literal notranslate"><span class="pre">xr</span></code>. While <code class="docutils literal notranslate"><span class="pre">xr</span></code> aims to mirror the native OpenXR specification as closely as possible, <code class="docutils literal notranslate"><span class="pre">xr.utils</span></code> offers higher-level constructs that simplify common workflows such as matrix manipulation, swapchain management, and pose utilities.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The API surface of <code class="docutils literal notranslate"><span class="pre">xr.utils</span></code> is provisional and may evolve more rapidly than the stable <code class="docutils literal notranslate"><span class="pre">xr</span></code> namespace. Use with awareness of potential changes.</p>
+</div>
+<section id="module-xr.utils">
+<span id="contents"></span><h2>Contents<a class="headerlink" href="#module-xr.utils" title="Link to this heading"></a></h2>
+<p>High-level utilities and abstractions for OpenXR integration.</p>
+<p>The <a class="reference internal" href="#module-xr.utils" title="xr.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr.utils</span></code></a> module provides ergonomic helpers, glue code, and convenience
+constructs that complement the low-level OpenXR API exposed in <a class="reference internal" href="xr.html#module-xr" title="xr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr</span></code></a>. While
+<a class="reference internal" href="xr.html#module-xr" title="xr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr</span></code></a> aims to mirror the native OpenXR specification as closely as possible,
+<a class="reference internal" href="#module-xr.utils" title="xr.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr.utils</span></code></a> offers higher-level patterns that simplify common workflows,
+such as view matrix construction, swapchain management, and pose utilities.</p>
+<p>This module is intended for rapid iteration and may evolve more quickly than
+the stable <a class="reference internal" href="xr.html#module-xr" title="xr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr</span></code></a> namespace. Developers should treat its API as provisional
+and subject to refinement as best practices emerge.</p>
+<p>Contents may include:
+- Matrix and pose utilities for rendering and simulation
+- Swapchain wrappers for per-view resource management
+- Threading or lifecycle helpers for session orchestration
+- Experimental constructs for bridging OpenXR with graphics APIs</p>
+<dl class="field-list simple">
+<dt class="field-odd">seealso<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="xr.html#module-xr" title="xr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr</span></code></a></p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.ContextObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">ContextObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance_create_info:</span> <span class="pre">~xr.typedefs.InstanceCreateInfo</span> <span class="pre">=</span> <span class="pre">xr.InstanceCreateInfo(create_flags=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_info=xr.ApplicationInfo(application_name=b'__main__.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_version=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_name=b'pyopenxr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_version=16847654</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_version=281474976710705)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_api_layer_count=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_api_layer_names=&lt;xr.array_field.LP_c_char_p</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_extension_count=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_extension_names=&lt;xr.array_field.LP_c_char_p</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=3)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_create_info:</span> <span class="pre">~xr.typedefs.SessionCreateInfo</span> <span class="pre">=</span> <span class="pre">xr.SessionCreateInfo(create_flags=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_id=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_space_create_info:</span> <span class="pre">~xr.typedefs.ReferenceSpaceCreateInfo</span> <span class="pre">=</span> <span class="pre">xr.ReferenceSpaceCreateInfo(reference_space_type=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pose_in_reference_space=xr.Posef(orientation=xr.Quaternionf(x=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w=1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position=xr.Vector3f(x=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z=0.0))</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=37)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_configuration_type:</span> <span class="pre">~xr.enums.ViewConfigurationType</span> <span class="pre">=</span> <span class="pre">ViewConfigurationType.PRIMARY_STEREO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_blend_mode=EnvironmentBlendMode.OPAQUE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_factor=FormFactor.HEAD_MOUNTED_DISPLAY</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.ContextObject.frame_loop">
+<span class="sig-name descname"><span class="pre">frame_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject.frame_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.ContextObject.poll_xr_events">
+<span class="sig-name descname"><span class="pre">poll_xr_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject.poll_xr_events" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.ContextObject.view_loop">
+<span class="sig-name descname"><span class="pre">view_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject.view_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.Eye">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">Eye</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.Eye" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xr.utils.Eye.LEFT">
+<span class="sig-name descname"><span class="pre">LEFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#xr.utils.Eye.LEFT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xr.utils.Eye.RIGHT">
+<span class="sig-name descname"><span class="pre">RIGHT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#xr.utils.Eye.RIGHT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.GlfwWindow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">GlfwWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.SystemObject" title="xr.utils.classes.SystemObject"><span class="pre">SystemObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mirror_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GlfwWindow" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.GraphicsAPI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">GraphicsAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsAPI" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xr.utils.GraphicsAPI.D3D">
+<span class="sig-name descname"><span class="pre">D3D</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(3,)</span></em><a class="headerlink" href="#xr.utils.GraphicsAPI.D3D" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xr.utils.GraphicsAPI.OPENGL">
+<span class="sig-name descname"><span class="pre">OPENGL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(1,)</span></em><a class="headerlink" href="#xr.utils.GraphicsAPI.OPENGL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xr.utils.GraphicsAPI.OPENGL_ES">
+<span class="sig-name descname"><span class="pre">OPENGL_ES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(2,)</span></em><a class="headerlink" href="#xr.utils.GraphicsAPI.OPENGL_ES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xr.utils.GraphicsAPI.VULKAN">
+<span class="sig-name descname"><span class="pre">VULKAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0,)</span></em><a class="headerlink" href="#xr.utils.GraphicsAPI.VULKAN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">GraphicsContextProvider</span></span><a class="headerlink" href="#xr.utils.GraphicsContextProvider" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract interface for activating an OpenGL rendering context on a given surface.</p>
+<p>Implementations are responsible for managing context binding and unbinding—
+typically using framework-specific mechanisms like Qt or GLFW. This interface
+supports both manual activation and scoped usage via <cite>GLContextScope</cite>.</p>
+<p>Implementors must ensure thread-safe behavior and appropriate sharing semantics
+for offscreen contexts.</p>
+<p>Typical usage:</p>
+<blockquote>
+<div><p>provider.make_current()
+# Perform rendering…
+provider.done_current()</p>
+<p># or using a scoped context:
+with provider.scope():</p>
+<blockquote>
+<div><p>GL.glDrawArrays(…)</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.GLContextScope">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GLContextScope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.GraphicsContextProvider" title="xr.utils.graphics_context_provider.GraphicsContextProvider"><span class="pre">GraphicsContextProvider</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Scoped activator for an OpenGL rendering context.</p>
+<p>This class wraps an <cite>OffscreenContextProvider</cite>, allowing safe and reversible
+context activation via either manual calls or Python’s <cite>with</cite> statement.</p>
+<p>It does not create or destroy the context—it simply manages when it is bound
+and unbound on the current thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>provider</strong> (<a class="reference internal" href="#xr.utils.GraphicsContextProvider" title="xr.utils.GraphicsContextProvider"><em>GraphicsContextProvider</em></a>) – The context provider to activate.</p>
+</dd>
+</dl>
+<p>Typical usage:</p>
+<blockquote>
+<div><p># Manual lifecycle
+scope = provider.scope()
+scope.make_current()
+GL.glDrawArrays(…)
+scope.done_current()</p>
+<p># Scoped lifecycle
+with provider.scope():</p>
+<blockquote>
+<div><p>GL.glClear(GL.GL_COLOR_BUFFER_BIT)</p>
+</div></blockquote>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Designed for cross-backend compatibility (e.g., Qt, GLFW).</p></li>
+<li><p>May be extended to support context validation, debugging, or profiling.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.GLContextScope.done_current">
+<span class="sig-name descname"><span class="pre">done_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope.done_current" title="Link to this definition"></a></dt>
+<dd><p>Deactivate the provider’s context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.GLContextScope.make_current">
+<span class="sig-name descname"><span class="pre">make_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope.make_current" title="Link to this definition"></a></dt>
+<dd><p>Activate the provider’s context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.destroy">
+<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.destroy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.done_current">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">done_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.done_current" title="Link to this definition"></a></dt>
+<dd><p>Unbind this context from the current thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.make_current">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.make_current" title="Link to this definition"></a></dt>
+<dd><p>Bind this context and surface to the current thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.scope">
+<span class="sig-name descname"><span class="pre">scope</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.scope" title="Link to this definition"></a></dt>
+<dd><p>Return a scoped context activator for use with <cite>with</cite> or manual control.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.InstanceObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">InstanceObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled_extensions:</span> <span class="pre">~typing.Sequence[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_version:</span> <span class="pre">~xr.version.Version</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_version:</span> <span class="pre">~xr.version.Version</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_version=&lt;xr.version.Version</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.InstanceObject" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.InstanceObject.destroy">
+<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.InstanceObject.destroy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.InstanceObject.get_properties">
+<span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.InstanceProperties" title="xr.typedefs.InstanceProperties"><span class="pre">InstanceProperties</span></a></span></span><a class="headerlink" href="#xr.utils.InstanceObject.get_properties" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">Matrix4x4f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.Matrix4x4f" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Attempt to match Matrix4x4f_ctypes API with numpy backing July 24, 2025</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.as_numpy">
+<span class="sig-name descname"><span class="pre">as_numpy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.as_numpy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.create_from_quaternion">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_from_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Quaternionf" title="xr.typedefs.Quaternionf"><span class="pre">Quaternionf</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#xr.utils.Matrix4x4f" title="xr.utils.matrix4x4f.Matrix4x4f"><span class="pre">Matrix4x4f</span></a></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.create_from_quaternion" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.create_projection">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graphics_api</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.GraphicsAPI" title="xr.utils.matrix4x4f.GraphicsAPI"><span class="pre">GraphicsAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tan_left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tan_right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tan_up</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tan_down</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">near_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">far_z</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#xr.utils.Matrix4x4f" title="xr.utils.matrix4x4f.Matrix4x4f"><span class="pre">Matrix4x4f</span></a></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.create_projection" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.create_projection_fov">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_projection_fov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graphics_api</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.GraphicsAPI" title="xr.utils.matrix4x4f.GraphicsAPI"><span class="pre">GraphicsAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Fovf" title="xr.typedefs.Fovf"><span class="pre">Fovf</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">near_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">far_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#xr.utils.Matrix4x4f" title="xr.utils.matrix4x4f.Matrix4x4f"><span class="pre">Matrix4x4f</span></a></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.create_projection_fov" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.create_scale">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#xr.utils.Matrix4x4f" title="xr.utils.matrix4x4f.Matrix4x4f"><span class="pre">Matrix4x4f</span></a></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.create_scale" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.create_translation">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_translation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#xr.utils.Matrix4x4f" title="xr.utils.matrix4x4f.Matrix4x4f"><span class="pre">Matrix4x4f</span></a></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.create_translation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.create_translation_rotation_scale">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_translation_rotation_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">translation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Vector3f" title="xr.typedefs.Vector3f"><span class="pre">Vector3f</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Quaternionf" title="xr.typedefs.Quaternionf"><span class="pre">Quaternionf</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#xr.utils.Matrix4x4f" title="xr.utils.matrix4x4f.Matrix4x4f"><span class="pre">Matrix4x4f</span></a></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.create_translation_rotation_scale" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.Matrix4x4f.invert_rigid_body">
+<span class="sig-name descname"><span class="pre">invert_rigid_body</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#xr.utils.Matrix4x4f" title="xr.utils.matrix4x4f.Matrix4x4f"><span class="pre">Matrix4x4f</span></a></span></span><a class="headerlink" href="#xr.utils.Matrix4x4f.invert_rigid_body" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.SessionObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SessionObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.SystemObject" title="xr.utils.classes.SystemObject"><span class="pre">SystemObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphics_binding</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionObject.begin_frame">
+<span class="sig-name descname"><span class="pre">begin_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.begin_frame" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionObject.destroy">
+<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.destroy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionObject.end_frame">
+<span class="sig-name descname"><span class="pre">end_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.end_frame" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionObject.locate_views">
+<span class="sig-name descname"><span class="pre">locate_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'xr.typedefs.ViewState'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'_ctypes.Array'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.locate_views" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionObject.on_state_changed">
+<span class="sig-name descname"><span class="pre">on_state_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_state_changed_event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.on_state_changed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionObject.poll_xr_events">
+<span class="sig-name descname"><span class="pre">poll_xr_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.poll_xr_events" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionObject.wait_frame">
+<span class="sig-name descname"><span class="pre">wait_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.wait_frame" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.SpaceObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SpaceObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.SessionObject" title="xr.utils.classes.SessionObject"><span class="pre">SessionObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_space_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.ReferenceSpaceType" title="xr.enums.ReferenceSpaceType"><span class="pre">ReferenceSpaceType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ReferenceSpaceType.STAGE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pose_in_reference_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Posef" title="xr.typedefs.Posef"><span class="pre">Posef</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SpaceObject" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.SwapchainInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SwapchainInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.ViewConfigurationView" title="xr.typedefs.ViewConfigurationView"><span class="pre">ViewConfigurationView</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Session_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_texture_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swapchain_image_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">SWAPCHAIN_IMAGE_TYPE</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SwapchainInfo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">SWAPCHAIN_IMAGE_TYPE</span></code>]</p>
+<p>Encapsulates rendering resources for a single OpenXR view.</p>
+<p>This class manages the creation and lifecycle of an OpenXR swapchain associated
+with a single <a class="reference internal" href="xr.html#xr.ViewConfigurationView" title="xr.ViewConfigurationView"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.ViewConfigurationView</span></code></a>, typically corresponding to one eye.
+It handles swapchain allocation, image enumeration, and cleanup, and provides
+metadata useful for framebuffer setup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> (<a class="reference internal" href="xr.html#xr.ViewConfigurationView" title="xr.ViewConfigurationView"><em>xr.ViewConfigurationView</em></a>) – Configuration metadata for the current view, including recommended image size and sample count.</p></li>
+<li><p><strong>session</strong> (<em>xr.Session</em>) – Active OpenXR session used to create the swapchain.</p></li>
+<li><p><strong>color_texture_format</strong> (<em>int</em>) – OpenGL-compatible format constant (e.g., <code class="xref py py-data docutils literal notranslate"><span class="pre">GL_RGBA8</span></code>).</p></li>
+<li><p><strong>swapchain_image_type</strong> (<em>Type</em><em>[</em><em>SWAPCHAIN_IMAGE_TYPE</em><em>]</em>) – ctypes structure type representing swapchain image buffers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>swapchain</strong> (<em>xr.Swapchain</em>) – Handle to the OpenXR swapchain object.</p></li>
+<li><p><strong>size</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – Tuple of (width, height) from the view configuration.</p></li>
+<li><p><strong>images</strong> (<em>List</em><em>[</em><em>SWAPCHAIN_IMAGE_TYPE</em><em>]</em>) – List of swapchain image buffers suitable for GPU binding.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Seealso<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="xr.html#xr.create_swapchain" title="xr.create_swapchain"><code class="xref py py-func docutils literal notranslate"><span class="pre">xr.create_swapchain()</span></code></a>, <a class="reference internal" href="xr.html#xr.enumerate_swapchain_images" title="xr.enumerate_swapchain_images"><code class="xref py py-func docutils literal notranslate"><span class="pre">xr.enumerate_swapchain_images()</span></code></a>, <a class="reference internal" href="xr.html#xr.SwapchainCreateInfo" title="xr.SwapchainCreateInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.SwapchainCreateInfo</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.SystemObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SystemObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.InstanceObject" title="xr.utils.classes.InstanceObject"><span class="pre">InstanceObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.FormFactor" title="xr.enums.FormFactor"><span class="pre">FormFactor</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">FormFactor.HEAD_MOUNTED_DISPLAY</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SystemObject" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="xr.utils.projection_from_fovf">
+<span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">projection_from_fovf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Fovf" title="xr.typedefs.Fovf"><span class="pre">Fovf</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">near</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">far</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#xr.utils.projection_from_fovf" title="Link to this definition"></a></dt>
+<dd><p>Constructs a transposed forward projection matrix from OpenXR FOV angles.</p>
+<p>Produces a column-major matrix that maps eye-space to clip-space, suitable for VR rendering.
+Uses infinite reverse-Z projection by default. If <cite>far</cite> is specified, constructs a finite-depth variant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fov</strong> (<a class="reference internal" href="xr.html#xr.Fovf" title="xr.Fovf"><em>xr.Fovf</em></a>) – Field-of-view angles (radians) with left, right, up, and down.</p></li>
+<li><p><strong>near</strong> (<em>float</em>) – Near clipping plane distance; must be positive. Default is 0.05.</p></li>
+<li><p><strong>far</strong> (<em>float</em><em> | </em><em>None</em>) – Far clipping plane. If None, assumes infinity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transposed forward projection matrix (4x4) in column-major format (float32).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="xr.utils.projection_inverse_from_fovf">
+<span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">projection_inverse_from_fovf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Fovf" title="xr.typedefs.Fovf"><span class="pre">Fovf</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">near</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">far</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#xr.utils.projection_inverse_from_fovf" title="Link to this definition"></a></dt>
+<dd><p>Constructs a transposed inverse projection matrix from OpenXR FOV angles.</p>
+<p>Produces a column-major inverse matrix suitable for reversing clip-to-eye-space transformations in VR.
+Defaults to infinite reverse-Z depth unless <cite>far</cite> is provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fov</strong> (<a class="reference internal" href="xr.html#xr.Fovf" title="xr.Fovf"><em>xr.Fovf</em></a>) – Field-of-view angles (radians) with left, right, up, and down.</p></li>
+<li><p><strong>near</strong> (<em>float</em>) – Near clipping plane distance; must be positive. Default is 0.05.</p></li>
+<li><p><strong>far</strong> (<em>float</em><em> | </em><em>None</em>) – Far clipping plane. If None, assumes infinity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transposed inverse projection matrix (4x4) in column-major format (float32).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="xr.utils.rotation_from_quaternionf">
+<span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">rotation_from_quaternionf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Quaternionf" title="xr.typedefs.Quaternionf"><span class="pre">Quaternionf</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#xr.utils.rotation_from_quaternionf" title="Link to this definition"></a></dt>
+<dd><p>Constructs a transposed 3×3 rotation matrix from an OpenXR-style quaternion.</p>
+<p>Converts a unit quaternion (w, x, y, z) into a right-handed rotation matrix suitable for transforming
+vectors from local to world space or vice versa. Output is in column-major order to align with OpenGL-style usage,
+and assumes the quaternion is normalized (unit length). No scale or shear is applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>quat</strong> (<a class="reference internal" href="xr.html#xr.Quaternionf" title="xr.Quaternionf"><em>xr.Quaternionf</em></a>) – Quaternion representing rotation, with components (x, y, z, w).
+Expected to be normalized.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>3×3 rotation matrix (float32), transposed for column-major layout.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="xr.utils.view_matrix_from_posef">
+<span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">view_matrix_from_posef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Posef" title="xr.typedefs.Posef"><span class="pre">Posef</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#xr.utils.view_matrix_from_posef" title="Link to this definition"></a></dt>
+<dd><p>Construct a view matrix from an OpenXR pose.</p>
+<p>This function computes a 4×4 view matrix from a given <a class="reference internal" href="xr.html#xr.Posef" title="xr.Posef"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.Posef</span></code></a>, which
+includes orientation (as a quaternion) and position (as a 3D vector). The resulting
+matrix transforms world-space coordinates into view-space, suitable for rendering
+from the perspective of the pose.</p>
+<p>The view matrix is computed as the inverse of the world transform:
+<span class="math notranslate nohighlight">\(V = R^T \cdot T^{-1}\)</span>, where <cite>R</cite> is the rotation matrix and <cite>T</cite> is the
+translation matrix. The result is returned in column-major (Fortran-style) order
+to match OpenXR and graphics API conventions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<a class="reference internal" href="xr.html#xr.Posef" title="xr.Posef"><em>xr.Posef</em></a>) – The pose representing the viewer’s position and orientation in world space.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 4×4 view matrix in column-major order.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Seealso<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#xr.utils.rotation_from_quaternionf" title="xr.utils.rotation_from_quaternionf"><code class="xref py py-func docutils literal notranslate"><span class="pre">xr.utils.rotation_from_quaternionf()</span></code></a>, <a class="reference internal" href="xr.html#xr.Posef" title="xr.Posef"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.Posef</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="xr.utils.view_matrix_inverse_from_posef">
+<span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">view_matrix_inverse_from_posef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Posef" title="xr.typedefs.Posef"><span class="pre">Posef</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#xr.utils.view_matrix_inverse_from_posef" title="Link to this definition"></a></dt>
+<dd><p>Construct an inverse view matrix from an OpenXR pose.</p>
+<p>Computes a 4×4 world transform matrix from the given <a class="reference internal" href="xr.html#xr.Posef" title="xr.Posef"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.Posef</span></code></a>. This
+matrix applies the pose’s position and orientation in world-space coordinates
+and is commonly used for camera-relative rendering, physics simulations, or
+head-to-world transformations.</p>
+<p>The matrix is assembled from a rotation (derived from the pose’s quaternion)
+and translation (from the pose’s 3D position), in the form:
+<span class="math notranslate nohighlight">\(M = R \cdot T\)</span>.</p>
+<p>The result is returned in column-major (Fortran-style) order, matching
+OpenXR and graphics API conventions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<a class="reference internal" href="xr.html#xr.Posef" title="xr.Posef"><em>xr.Posef</em></a>) – The pose describing orientation and position in world space.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 4×4 transformation matrix in column-major order.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Seealso<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#xr.utils.rotation_from_quaternionf" title="xr.utils.rotation_from_quaternionf"><code class="xref py py-func docutils literal notranslate"><span class="pre">xr.utils.rotation_from_quaternionf()</span></code></a>, <a class="reference internal" href="xr.html#xr.Posef" title="xr.Posef"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.Posef</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="related-modules">
+<h2>Related Modules<a class="headerlink" href="#related-modules" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="xr.html#module-xr" title="xr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr</span></code></a> — Core OpenXR bindings</p></li>
+<li><p><a class="reference internal" href="xr.ext.html#module-xr.ext" title="xr.ext"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xr.ext</span></code></a> — Extension modules for OpenXR (e.g., <code class="docutils literal notranslate"><span class="pre">XR_KHR_opengl_enable</span></code>)</p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><span class="xref std std-doc">xr/index</span></p></li>
+<li><p><span class="xref std std-doc">xr/ext/index</span></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="xr.html" class="btn btn-neutral float-left" title="xr — Python Bindings for OpenXR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Christopher M. Bruns.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

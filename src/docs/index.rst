@@ -8,6 +8,7 @@ Whether you're integrating OpenXR into an existing pipeline, experimenting with 
 Start here:
  - 📦 See :doc:`xr` for core API documentation.
  - 🧩 Extensions: Explore pythonified OpenXR extensions under :doc:`xr.ext`
+ - 🧰 Utilities: Discover higher-level helpers in :doc:`xr.utils`
  - 🛠 Troubleshooting: Head to :doc:`support` if things get weird
 
 Contents
@@ -19,6 +20,8 @@ Contents
 
    install
    support
+   xr
+   xr.utils
 
 Indices and Tables
 ------------------

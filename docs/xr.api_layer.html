@@ -18,9 +18,7 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="xr.api_layer.linux package" href="xr.api_layer.linux.html" />
-    <link rel="prev" title="xr package" href="xr.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,30 +40,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="xr.html">xr package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="xr.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">xr.api_layer package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-xr.api_layer.dynamic_api_layer_base">xr.api_layer.dynamic_api_layer_base module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-xr.api_layer.layer_path">xr.api_layer.layer_path module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-xr.api_layer.loader_interfaces">xr.api_layer.loader_interfaces module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-xr.api_layer.raw_functions">xr.api_layer.raw_functions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-xr.api_layer.steamvr_linux_destroyinstance_layer">xr.api_layer.steamvr_linux_destroyinstance_layer module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-xr.api_layer">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="xr.extension.html">xr.extension package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="xr.platform.html">xr.platform package</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="xr.html#module-xr">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="xr.html">xr — Python Bindings for OpenXR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xr.utils.html">xr.utils</a></li>
 </ul>
 
         </div>
@@ -82,7 +62,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="xr.html">xr package</a></li>
       <li class="breadcrumb-item active">xr.api_layer package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/xr.api_layer.rst.txt" rel="nofollow"> View page source</a>
@@ -344,17 +323,17 @@ Designed to work around SteamVR linux bug.
 <a class="reference external" href="https://github.com/cmbruns/pyopenxr/pull/66">https://github.com/cmbruns/pyopenxr/pull/66</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.create_api_layer_instance">
-<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_InstanceCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_ApiLayerCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Instance_T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.create_api_layer_instance" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_api_layer_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_InstanceCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_layer_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_ApiLayerCreateInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Instance" title="xr.typedefs.Instance"><span class="pre">Instance</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.create_api_layer_instance" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.destroy_instance">
-<span class="sig-name descname"><span class="pre">destroy_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Instance_T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.destroy_instance" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">destroy_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Instance" title="xr.typedefs.Instance"><span class="pre">Instance</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.destroy_instance" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.get_instance_proc_addr">
-<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Instance_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">c_char_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_CFunctionType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.get_instance_proc_addr" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_instance_proc_addr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Instance" title="xr.typedefs.Instance"><span class="pre">Instance</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">c_char_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_CFunctionType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.Result" title="xr.enums.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.get_instance_proc_addr" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -574,10 +553,7 @@ Fill in pname:layerRequest→pname:createLayerInstance with a valid function poi
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="xr.html" class="btn btn-neutral float-left" title="xr package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="xr.api_layer.linux.html" class="btn btn-neutral float-right" title="xr.api_layer.linux package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

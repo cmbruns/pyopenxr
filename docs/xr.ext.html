@@ -1,0 +1,161 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xr.ext package &mdash; pyopenxr 1.0.2404 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e423673f"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyopenxr
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xr.html">xr — Python Bindings for OpenXR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xr.utils.html">xr.utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyopenxr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">xr.ext package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/xr.ext.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="xr-ext-package">
+<h1>xr.ext package<a class="headerlink" href="#xr-ext-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-xr.ext.KHR.opengl_enable">
+<span id="xr-ext-khr-opengl-enable-module"></span><h2>xr.ext.KHR.opengl_enable module<a class="headerlink" href="#module-xr.ext.KHR.opengl_enable" title="Link to this heading"></a></h2>
+<p>Module xr.ext.KHR.opengl_enable — Python bindings for the XR_KHR_opengl_enable extension.</p>
+<p>This module provides access to OpenGL-specific graphics requirements via OpenXR.
+It exposes a Pythonic wrapper around <cite>xrGetOpenGLGraphicsRequirementsKHR</cite>, allowing
+applications to query the minimum and maximum supported OpenGL versions for a given system.</p>
+<p>To use this extension, ensure <cite>“XR_KHR_opengl_enable”</cite> is included in the list of
+enabled extensions during instance creation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">see<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_KHR_opengl_enable.html">https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_KHR_opengl_enable.html</a></p>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="xr.ext.KHR.opengl_enable.get_opengl_graphics_requirements">
+<span class="sig-prename descclassname"><span class="pre">xr.ext.KHR.opengl_enable.</span></span><span class="sig-name descname"><span class="pre">get_opengl_graphics_requirements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Instance" title="xr.typedefs.Instance"><span class="pre">Instance</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">c_ulonglong</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.platform.html#xr.platform.windows.GraphicsRequirementsOpenGLKHR" title="xr.platform.windows.GraphicsRequirementsOpenGLKHR"><span class="pre">GraphicsRequirementsOpenGLKHR</span></a></span></span><a class="headerlink" href="#xr.ext.KHR.opengl_enable.get_opengl_graphics_requirements" title="Link to this definition"></a></dt>
+<dd><p>Query the OpenGL graphics requirements for a given system.</p>
+<p>This function wraps <cite>xrGetOpenGLGraphicsRequirementsKHR</cite>, returning the minimum and
+maximum OpenGL versions supported by the runtime for the specified system. It is
+typically called before creating a graphics context to ensure compatibility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<a class="reference internal" href="xr.html#xr.Instance" title="xr.Instance"><em>xr.Instance</em></a>) – The OpenXR instance with the <cite>XR_KHR_opengl_enable</cite> extension enabled.</p></li>
+<li><p><strong>system_id</strong> (<em>xr.SystemId</em>) – The system identifier obtained via <cite>xr.get_system()</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A structure containing the OpenGL graphics requirements.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="xr.html#xr.GraphicsRequirementsOpenGLKHR" title="xr.GraphicsRequirementsOpenGLKHR">xr.GraphicsRequirementsOpenGLKHR</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>xr.FunctionUnsupportedError</strong> – If the extension function is unavailable.</p></li>
+<li><p><strong>xr.HandleInvalidError</strong> – If the instance handle is invalid.</p></li>
+<li><p><strong>xr.SystemInvalidError</strong> – If the system ID is not recognized.</p></li>
+<li><p><strong>xr.InstanceLossPendingError</strong> – If the instance is in a loss-pending state.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Seealso<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="xr.html#xr.GraphicsRequirementsOpenGLKHR" title="xr.GraphicsRequirementsOpenGLKHR"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.GraphicsRequirementsOpenGLKHR</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-xr.ext">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xr.ext" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Christopher M. Bruns.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
