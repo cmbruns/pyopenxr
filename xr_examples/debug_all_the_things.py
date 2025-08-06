@@ -129,7 +129,8 @@ gl_debug_message_proc = GL.GLDEBUGPROC(gl_debug_message_callback)
 glfw.init()
 window = glfw.create_window(16, 16, "glfw window", None, None)
 glfw.make_context_current(window)
-GL.glDebugMessageCallback(gl_debug_message_proc, None)
+if GL.glDebugMessageCallback:
+    GL.glDebugMessageCallback(gl_debug_message_proc, None)
 
 
 # Clean up
