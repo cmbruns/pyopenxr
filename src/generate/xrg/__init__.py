@@ -24,7 +24,7 @@ if platform.system() == "Windows":
     lib_clang = resource_filename("xrg", "libclang.dll")
 elif platform.system() == "Linux":
     # TODO: don't hardcode this file name
-    lib_clang = resource_filename("xrg", "libclang-14.so")
+    lib_clang = resource_filename("xrg", "libclang-12.so")
 else:
     raise NotImplementedError
 if os.path.isfile(lib_clang):

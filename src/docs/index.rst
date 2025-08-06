@@ -1,5 +1,5 @@
 Getting Started with pyopenxr: VR in Python, Made Simple
-====================================
+========================================================
 
 **pyopenxr** is an unofficial Python binding for the OpenXR SDK, designed to make VR and AR development approachable, expressive, and interoperable. These docs cover everything from installation and environment setup to using the OpenXR core API and extensions.
 

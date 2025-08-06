@@ -16,7 +16,6 @@ Subpackages
 
 .. toctree::
    :maxdepth: 2
-   :caption:
 
    xr.api_layer
    xr.ext

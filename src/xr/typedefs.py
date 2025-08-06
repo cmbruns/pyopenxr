@@ -53,6 +53,9 @@ class Instance(POINTER(Instance_T)):
 
     `Instance` supports context management protocols and may be used in a `with` block
     for automatic cleanup:
+
+    .. code-block:: python
+
         with xr.Instance(...) as instance:
             ...
 
