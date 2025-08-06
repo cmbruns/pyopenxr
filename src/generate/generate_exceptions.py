@@ -95,6 +95,9 @@ def main():
             name = re.sub(r"(?:\b|_)([^_])([^_]*)", camel_word, name)
             if name.startswith("Error"):
                 name = name[5:] + name[:5]
+            if name.startswith("ANDROID"):  # 'ANDROIDThreadSettingsIdInvalidKHRError'
+                # It's not a vendor tag if it's at the beginning of the error name
+                name = f"Android{name[7:]}"
             # Each result value type gets its own exception
             if result_item.value < 0:
                 base = "ErrorResult"
