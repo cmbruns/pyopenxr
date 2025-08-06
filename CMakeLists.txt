@@ -6,10 +6,12 @@ option(PYOPENXR_BUILD_BINDINGS "Generate pyopenxr bindings" OFF)
 option(PYOPENXR_BUILD_DOCS "Build Sphinx documentation" OFF)
 
 # Use local python venv if available
-if(EXISTS "${CMAKE_SOURCE_DIR}/.venv")
-    set(ENV{VIRTUAL_ENV} "${CMAKE_SOURCE_DIR}/.venv")
-    set(Python_FIND_VIRTUALENV ONLY)
-endif()
+foreach(VENV_DIR "${CMAKE_SOURCE_DIR}/.venv" "$ENV{HOME}/pyopenxr-venv")
+    if(EXISTS "${VENV_DIR}")
+        set(ENV{VIRTUAL_ENV} "${VENV_DIR}")
+        set(Python_FIND_VIRTUALENV ONLY)
+    endif()
+endforeach()
 find_package(Python COMPONENTS Interpreter REQUIRED)
 message("python = ${Python_EXECUTABLE}")
 
