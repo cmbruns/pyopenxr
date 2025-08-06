@@ -934,13 +934,13 @@ class PermissionInsufficientError(ErrorResult):
         return Result.ERROR_PERMISSION_INSUFFICIENT
 
 
-class ANDROIDThreadSettingsIdInvalidKHRError(ErrorResult):
+class AndroidThreadSettingsIdInvalidKHRError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR
 
 
-class ANDROIDThreadSettingsFailureKHRError(ErrorResult):
+class AndroidThreadSettingsFailureKHRError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR
@@ -1646,8 +1646,8 @@ _exception_map = {
     Result.ERROR_RUNTIME_UNAVAILABLE: RuntimeUnavailableError,
     Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED: ExtensionDependencyNotEnabledError,
     Result.ERROR_PERMISSION_INSUFFICIENT: PermissionInsufficientError,
-    Result.ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR: ANDROIDThreadSettingsIdInvalidKHRError,
-    Result.ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR: ANDROIDThreadSettingsFailureKHRError,
+    Result.ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR: AndroidThreadSettingsIdInvalidKHRError,
+    Result.ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR: AndroidThreadSettingsFailureKHRError,
     Result.ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT: CreateSpatialAnchorFailedMSFTError,
     Result.ERROR_SECONDARY_VIEW_CONFIGURATION_TYPE_NOT_ENABLED_MSFT: SecondaryViewConfigurationTypeNotEnabledMSFTError,
     Result.ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT: ControllerModelKeyInvalidMSFTError,
@@ -1778,8 +1778,6 @@ def check_result(
 
 
 __all__ = [
-    "ANDROIDThreadSettingsFailureKHRError",
-    "ANDROIDThreadSettingsIdInvalidKHRError",
     "ActionTypeMismatchError",
     "ActionsetNotAttachedError",
     "ActionsetsAlreadyAttachedError",
@@ -1788,6 +1786,8 @@ __all__ = [
     "AnchorNotOwnedByCallerANDROIDError",
     "AnchorNotSupportedForEntityBDError",
     "AnchorNotTrackingANDROIDError",
+    "AndroidThreadSettingsFailureKHRError",
+    "AndroidThreadSettingsIdInvalidKHRError",
     "ApiLayerNotPresentError",
     "ApiVersionUnsupportedError",
     "CallOrderInvalidError",
