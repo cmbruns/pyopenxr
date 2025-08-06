@@ -16,6 +16,78 @@ mark_as_advanced(
     LIBRARY_OUTPUT_PATH
 )
 
+# TODO: Maybe auto update OpenXR-SDK-Source repo
+find_path(OPENXR_SDK_SOURCE_REPO_PATH
+    NAMES src/tests/hello_xr
+    HINTS
+        "${CMAKE_SOURCE_DIR}/../OpenXR-SDK-Source"
+    DOC "The file location of the OpenXR-SDK-Source local git repo"
+)
+if (OPENXR_SDK_SOURCE_REPO_PATH)
+    # Set desired version behavior: AS-IS, LATEST, or a specific tag like release-1.1.50
+    set(OPENXR_TAG_SELECTION "AS-IS" CACHE STRING
+    "Set desired version behavior: AS-IS, LATEST, or a specific tag like release-1.1.50")
+    set_property(CACHE OPENXR_TAG_SELECTION PROPERTY STRINGS "AS-IS" "LATEST")
+    
+    # Fetch latest tags from origin
+    execute_process(
+        COMMAND git fetch --tags
+        WORKING_DIRECTORY "${OPENXR_SDK_SOURCE_REPO_PATH}"
+        RESULT_VARIABLE FETCH_RESULT
+    )
+    if(NOT FETCH_RESULT EQUAL 0)
+        message(WARNING "Failed to fetch tags from origin.")
+    endif()
+    
+    # Get all release tags
+    execute_process(
+        COMMAND git tag --list release-*
+        WORKING_DIRECTORY "${OPENXR_SDK_SOURCE_REPO_PATH}"
+        OUTPUT_VARIABLE RELEASE_TAGS_RAW
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    string(REPLACE "\n" ";" RELEASE_TAGS "${RELEASE_TAGS_RAW}")
+    list(SORT RELEASE_TAGS ORDER DESCENDING)
+    list(GET RELEASE_TAGS 0 LATEST_TAG)
+    message(STATUS "Latest OpenXR-SDK-Source release tag is ${LATEST_TAG}")
+    
+    # Get current HEAD tag (if any)
+    execute_process(
+        COMMAND git describe --tags --exact-match
+        WORKING_DIRECTORY "${OPENXR_SDK_SOURCE_REPO_PATH}"
+        OUTPUT_VARIABLE CURRENT_TAG
+        RESULT_VARIABLE DESCRIBE_RESULT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    
+    # Determine desired tag based on selection
+    set(DESIRED_TAG "")
+    if(OPENXR_TAG_SELECTION STREQUAL "LATEST")
+        set(DESIRED_TAG "${LATEST_TAG}")
+    elseif(OPENXR_TAG_SELECTION STREQUAL "AS-IS")
+        set(DESIRED_TAG "${CURRENT_TAG}")  # No checkout; preserve current
+    else()
+        set(DESIRED_TAG "${OPENXR_TAG_SELECTION}")  # Use explicit tag
+    endif()
+    
+    # Checkout logic
+    if(NOT DESIRED_TAG STREQUAL "${CURRENT_TAG}" AND NOT OPENXR_TAG_SELECTION STREQUAL "AS-IS")
+        message(STATUS "Switching to desired OpenXR-SDK-Source release tag: ${DESIRED_TAG}")
+        execute_process(
+            COMMAND git checkout "${DESIRED_TAG}"
+            WORKING_DIRECTORY "${OPENXR_SDK_SOURCE_REPO_PATH}"
+            RESULT_VARIABLE CHECKOUT_RESULT
+        )
+        if(CHECKOUT_RESULT EQUAL 0)
+            message(STATUS "Switched to ${DESIRED_TAG}")
+        else()
+            message(WARNING "Failed to switch to ${DESIRED_TAG}. It may not exist.")
+        endif()
+    else()
+        message(STATUS "Repo already at desired release tag: ${DESIRED_TAG}")
+    endif()
+endif()
+
 # Workaround for trouble parsing $ENV{ProgramFiles(x86)}
 set(PF86 "ProgramFiles(x86)")
 
