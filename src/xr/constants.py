@@ -394,6 +394,9 @@ META_HAND_TRACKING_MICROGESTURES_EXTENSION_NAME = "XR_META_hand_tracking_microge
 META_recommended_layer_resolution = 1
 META_recommended_layer_resolution_SPEC_VERSION = 1
 META_RECOMMENDED_LAYER_RESOLUTION_EXTENSION_NAME = "XR_META_recommended_layer_resolution"
+META_spatial_entity_persistence = 1
+META_spatial_entity_persistence_SPEC_VERSION = 1
+META_SPATIAL_ENTITY_PERSISTENCE_EXTENSION_NAME = "XR_META_spatial_entity_persistence"
 META_passthrough_color_lut = 1
 META_passthrough_color_lut_SPEC_VERSION = 1
 META_PASSTHROUGH_COLOR_LUT_EXTENSION_NAME = "XR_META_passthrough_color_lut"
@@ -412,6 +415,9 @@ META_TOUCH_CONTROLLER_PLUS_EXTENSION_NAME = "XR_META_touch_controller_plus"
 META_passthrough_layer_resumed_event = 1
 META_passthrough_layer_resumed_event_SPEC_VERSION = 1
 META_PASSTHROUGH_LAYER_RESUMED_EVENT_EXTENSION_NAME = "XR_META_passthrough_layer_resumed_event"
+META_body_tracking_calibration = 1
+META_body_tracking_calibration_SPEC_VERSION = 1
+META_BODY_TRACKING_CALIBRATION_EXTENSION_NAME = "XR_META_body_tracking_calibration"
 FB_face_tracking2 = 1
 FB_face_tracking2_SPEC_VERSION = 1
 FB_FACE_TRACKING2_EXTENSION_NAME = "XR_FB_face_tracking2"
@@ -472,7 +478,7 @@ BD_spatial_sensing = 1
 BD_spatial_sensing_SPEC_VERSION = 1
 BD_SPATIAL_SENSING_EXTENSION_NAME = "XR_BD_spatial_sensing"
 BD_spatial_anchor = 1
-BD_spatial_anchor_SPEC_VERSION = 1
+BD_spatial_anchor_SPEC_VERSION = 2
 BD_SPATIAL_ANCHOR_EXTENSION_NAME = "XR_BD_spatial_anchor"
 BD_spatial_anchor_sharing = 1
 BD_spatial_anchor_sharing_SPEC_VERSION = 2
@@ -501,6 +507,22 @@ EXT_PLANE_DETECTION_EXTENSION_NAME = "XR_EXT_plane_detection"
 OPPO_controller_interaction = 1
 OPPO_controller_interaction_SPEC_VERSION = 1
 OPPO_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_OPPO_controller_interaction"
+ANDROID_trackables = 1
+NULL_TRACKABLE_ANDROID = 0
+ANDROID_trackables_SPEC_VERSION = 1
+ANDROID_TRACKABLES_EXTENSION_NAME = "XR_ANDROID_trackables"
+ANDROID_device_anchor_persistence = 1
+ANDROID_device_anchor_persistence_SPEC_VERSION = 1
+ANDROID_DEVICE_ANCHOR_PERSISTENCE_EXTENSION_NAME = "XR_ANDROID_device_anchor_persistence"
+ANDROID_passthrough_camera_state = 1
+ANDROID_passthrough_camera_state_SPEC_VERSION = 1
+ANDROID_PASSTHROUGH_CAMERA_STATE_EXTENSION_NAME = "XR_ANDROID_passthrough_camera_state"
+ANDROID_raycast = 1
+ANDROID_raycast_SPEC_VERSION = 1
+ANDROID_RAYCAST_EXTENSION_NAME = "XR_ANDROID_raycast"
+ANDROID_trackables_object = 1
+ANDROID_trackables_object_SPEC_VERSION = 1
+ANDROID_TRACKABLES_OBJECT_EXTENSION_NAME = "XR_ANDROID_trackables_object"
 EXT_future = 1
 EXT_future_SPEC_VERSION = 1
 EXT_FUTURE_EXTENSION_NAME = "XR_EXT_future"
@@ -539,6 +561,9 @@ META_COLOCATION_DISCOVERY_EXTENSION_NAME = "XR_META_colocation_discovery"
 META_spatial_entity_group_sharing = 1
 META_spatial_entity_group_sharing_SPEC_VERSION = 1
 META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME = "XR_META_spatial_entity_group_sharing"
+ANDROID_trackables_marker = 1
+ANDROID_trackables_marker_SPEC_VERSION = 1
+ANDROID_TRACKABLES_MARKER_EXTENSION_NAME = "XR_ANDROID_trackables_marker"
 EXT_spatial_entity = 1
 NULL_SPATIAL_ENTITY_ID_EXT = 0
 NULL_SPATIAL_BUFFER_ID_EXT = 0
@@ -562,6 +587,9 @@ EXT_SPATIAL_PERSISTENCE_EXTENSION_NAME = "XR_EXT_spatial_persistence"
 EXT_spatial_persistence_operations = 1
 EXT_spatial_persistence_operations_SPEC_VERSION = 1
 EXT_SPATIAL_PERSISTENCE_OPERATIONS_EXTENSION_NAME = "XR_EXT_spatial_persistence_operations"
+EXT_loader_init_properties = 1
+EXT_loader_init_properties_SPEC_VERSION = 1
+EXT_LOADER_INIT_PROPERTIES_EXTENSION_NAME = "XR_EXT_loader_init_properties"
 SPACE_VELOCITY_LINEAR_VALID_BIT = 0x00000001
 SPACE_VELOCITY_ANGULAR_VALID_BIT = 0x00000002
 SPACE_LOCATION_ORIENTATION_VALID_BIT = 0x00000001
@@ -690,6 +718,24 @@ __all__ = [
     "ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME",
     "ALMALENCE_digital_lens_control",
     "ALMALENCE_digital_lens_control_SPEC_VERSION",
+    "ANDROID_DEVICE_ANCHOR_PERSISTENCE_EXTENSION_NAME",
+    "ANDROID_PASSTHROUGH_CAMERA_STATE_EXTENSION_NAME",
+    "ANDROID_RAYCAST_EXTENSION_NAME",
+    "ANDROID_TRACKABLES_EXTENSION_NAME",
+    "ANDROID_TRACKABLES_MARKER_EXTENSION_NAME",
+    "ANDROID_TRACKABLES_OBJECT_EXTENSION_NAME",
+    "ANDROID_device_anchor_persistence",
+    "ANDROID_device_anchor_persistence_SPEC_VERSION",
+    "ANDROID_passthrough_camera_state",
+    "ANDROID_passthrough_camera_state_SPEC_VERSION",
+    "ANDROID_raycast",
+    "ANDROID_raycast_SPEC_VERSION",
+    "ANDROID_trackables",
+    "ANDROID_trackables_SPEC_VERSION",
+    "ANDROID_trackables_marker",
+    "ANDROID_trackables_marker_SPEC_VERSION",
+    "ANDROID_trackables_object",
+    "ANDROID_trackables_object_SPEC_VERSION",
     "BD_BODY_TRACKING_EXTENSION_NAME",
     "BD_CONTROLLER_INTERACTION_EXTENSION_NAME",
     "BD_FUTURE_PROGRESS_EXTENSION_NAME",
@@ -769,6 +815,7 @@ __all__ = [
     "EXT_HAND_TRACKING_EXTENSION_NAME",
     "EXT_HP_MIXED_REALITY_CONTROLLER_EXTENSION_NAME",
     "EXT_INTERACTION_RENDER_MODEL_EXTENSION_NAME",
+    "EXT_LOADER_INIT_PROPERTIES_EXTENSION_NAME",
     "EXT_LOCAL_FLOOR_EXTENSION_NAME",
     "EXT_PALM_POSE_EXTENSION_NAME",
     "EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME",
@@ -814,6 +861,8 @@ __all__ = [
     "EXT_hp_mixed_reality_controller_SPEC_VERSION",
     "EXT_interaction_render_model",
     "EXT_interaction_render_model_SPEC_VERSION",
+    "EXT_loader_init_properties",
+    "EXT_loader_init_properties_SPEC_VERSION",
     "EXT_local_floor",
     "EXT_local_floor_SPEC_VERSION",
     "EXT_palm_pose",
@@ -1108,6 +1157,7 @@ __all__ = [
     "MAX_SYSTEM_NAME_SIZE",
     "MAX_VIRTUAL_KEYBOARD_COMMIT_TEXT_SIZE_META",
     "META_AUTOMATIC_LAYER_FILTER_EXTENSION_NAME",
+    "META_BODY_TRACKING_CALIBRATION_EXTENSION_NAME",
     "META_BODY_TRACKING_FULL_BODY_EXTENSION_NAME",
     "META_COLOCATION_DISCOVERY_EXTENSION_NAME",
     "META_DETACHED_CONTROLLERS_EXTENSION_NAME",
@@ -1124,11 +1174,14 @@ __all__ = [
     "META_SIMULTANEOUS_HANDS_AND_CONTROLLERS_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_MESH_EXTENSION_NAME",
+    "META_SPATIAL_ENTITY_PERSISTENCE_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_SHARING_EXTENSION_NAME",
     "META_TOUCH_CONTROLLER_PLUS_EXTENSION_NAME",
     "META_VIRTUAL_KEYBOARD_EXTENSION_NAME",
     "META_automatic_layer_filter",
     "META_automatic_layer_filter_SPEC_VERSION",
+    "META_body_tracking_calibration",
+    "META_body_tracking_calibration_SPEC_VERSION",
     "META_body_tracking_full_body",
     "META_body_tracking_full_body_SPEC_VERSION",
     "META_colocation_discovery",
@@ -1161,6 +1214,8 @@ __all__ = [
     "META_spatial_entity_group_sharing_SPEC_VERSION",
     "META_spatial_entity_mesh",
     "META_spatial_entity_mesh_SPEC_VERSION",
+    "META_spatial_entity_persistence",
+    "META_spatial_entity_persistence_SPEC_VERSION",
     "META_spatial_entity_sharing",
     "META_spatial_entity_sharing_SPEC_VERSION",
     "META_touch_controller_plus",
@@ -1263,6 +1318,7 @@ __all__ = [
     "NULL_SPATIAL_BUFFER_ID_EXT",
     "NULL_SPATIAL_ENTITY_ID_EXT",
     "NULL_SYSTEM_ID",
+    "NULL_TRACKABLE_ANDROID",
     "OCULUS_ANDROID_SESSION_STATE_ENABLE_EXTENSION_NAME",
     "OCULUS_EXTERNAL_CAMERA_EXTENSION_NAME",
     "OCULUS_android_session_state_enable",

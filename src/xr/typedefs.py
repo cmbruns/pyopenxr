@@ -1059,7 +1059,7 @@ class SwapchainImageAcquireInfo(Structure):
 class SwapchainImageWaitInfo(Structure):
     def __init__(
         self,
-        timeout: int = 0,
+        timeout: Duration = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_WAIT_INFO,
     ) -> None:
@@ -12838,6 +12838,207 @@ class RecommendedLayerResolutionGetInfoMETA(Structure):
 PFN_xrGetRecommendedLayerResolutionMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(RecommendedLayerResolutionGetInfoMETA), POINTER(RecommendedLayerResolutionMETA))
 
 
+class SystemSpacePersistencePropertiesMETA(Structure):
+    def __init__(
+        self,
+        supports_space_persistence: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPACE_PERSISTENCE_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_space_persistence=supports_space_persistence,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpacePersistencePropertiesMETA(supports_space_persistence={repr(self.supports_space_persistence)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpacePersistencePropertiesMETA(supports_space_persistence={self.supports_space_persistence}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_space_persistence", Bool32),
+    ]
+
+
+class SpacesSaveInfoMETA(Structure):
+    def __init__(
+        self,
+        space_count: Optional[int] = None,
+        spaces: ArrayFieldParamType[Space] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACES_SAVE_INFO_META,
+    ) -> None:
+        space_count, spaces = array_field_helper(
+            Space, space_count, spaces)
+        super().__init__(
+            space_count=space_count,
+            _spaces=spaces,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpacesSaveInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpacesSaveInfoMETA(space_count={self.space_count}, spaces={self._spaces}, next={self.next}, type={self.type})"
+
+    @property
+    def spaces(self):
+        if self.space_count == 0:
+            return (Space * 0)()
+        else:
+            return (Space * self.space_count).from_address(
+                ctypes.addressof(self._spaces.contents))
+
+    @spaces.setter
+    def spaces(self, value):
+        # noinspection PyAttributeOutsideInit
+        self.space_count, self._spaces = array_field_helper(
+            Space, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space_count", c_uint32),
+        ("_spaces", POINTER(Space)),
+    ]
+
+
+class EventDataSpacesSaveResultMETA(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),  # noqa
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SPACES_SAVE_RESULT_META,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpacesSaveResultMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpacesSaveResultMETA(request_id={self.request_id}, result={self.result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+    ]
+
+
+class SpacesEraseInfoMETA(Structure):
+    def __init__(
+        self,
+        space_count: Optional[int] = None,
+        spaces: ArrayFieldParamType[Space] = None,
+        uuid_count: Optional[int] = None,
+        uuids: ArrayFieldParamType[UuidEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACES_ERASE_INFO_META,
+    ) -> None:
+        space_count, spaces = array_field_helper(
+            Space, space_count, spaces)
+        uuid_count, uuids = array_field_helper(
+            UuidEXT, uuid_count, uuids)
+        super().__init__(
+            space_count=space_count,
+            _spaces=spaces,
+            uuid_count=uuid_count,
+            _uuids=uuids,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpacesEraseInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpacesEraseInfoMETA(space_count={self.space_count}, spaces={self._spaces}, uuid_count={self.uuid_count}, uuids={self._uuids}, next={self.next}, type={self.type})"
+
+    @property
+    def spaces(self):
+        if self.space_count == 0:
+            return (Space * 0)()
+        else:
+            return (Space * self.space_count).from_address(
+                ctypes.addressof(self._spaces.contents))
+
+    @spaces.setter
+    def spaces(self, value):
+        # noinspection PyAttributeOutsideInit
+        self.space_count, self._spaces = array_field_helper(
+            Space, None, value)
+
+    @property
+    def uuids(self):
+        if self.uuid_count == 0:
+            return (UuidEXT * 0)()
+        else:
+            return (UuidEXT * self.uuid_count).from_address(
+                ctypes.addressof(self._uuids.contents))
+
+    @uuids.setter
+    def uuids(self, value):
+        # noinspection PyAttributeOutsideInit
+        self.uuid_count, self._uuids = array_field_helper(
+            UuidEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space_count", c_uint32),
+        ("_spaces", POINTER(Space)),
+        ("uuid_count", c_uint32),
+        ("_uuids", POINTER(UuidEXT)),
+    ]
+
+
+class EventDataSpacesEraseResultMETA(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),  # noqa
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SPACES_ERASE_RESULT_META,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpacesEraseResultMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpacesEraseResultMETA(request_id={self.request_id}, result={self.result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+    ]
+
+
+PFN_xrSaveSpacesMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SpacesSaveInfoMETA), POINTER(AsyncRequestIdFB))
+
+PFN_xrEraseSpacesMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SpacesEraseInfoMETA), POINTER(AsyncRequestIdFB))
+
+
 class PassthroughColorLutMETA_T(Structure):
     pass
 
@@ -13141,6 +13342,89 @@ class EventDataPassthroughLayerResumedMETA(Structure):
         ("next", c_void_p),
         ("layer", PassthroughLayerFB),
     ]
+
+
+class BodyTrackingCalibrationStatusMETA(Structure):
+    def __init__(
+        self,
+        status: BodyTrackingCalibrationStateMETA = BodyTrackingCalibrationStateMETA(),  # noqa
+        next: c_void_p = None,
+        type: StructureType = StructureType.BODY_TRACKING_CALIBRATION_STATUS_META,
+    ) -> None:
+        super().__init__(
+            status=BodyTrackingCalibrationStateMETA(status).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyTrackingCalibrationStatusMETA(status={repr(self.status)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyTrackingCalibrationStatusMETA(status={self.status}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("status", BodyTrackingCalibrationStateMETA.ctype()),
+    ]
+
+
+class BodyTrackingCalibrationInfoMETA(Structure):
+    def __init__(
+        self,
+        body_height: float = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.BODY_TRACKING_CALIBRATION_INFO_META,
+    ) -> None:
+        super().__init__(
+            body_height=body_height,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyTrackingCalibrationInfoMETA(body_height={repr(self.body_height)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyTrackingCalibrationInfoMETA(body_height={self.body_height:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("body_height", c_float),
+    ]
+
+
+class SystemPropertiesBodyTrackingCalibrationMETA(Structure):
+    def __init__(
+        self,
+        supports_height_override: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_PROPERTIES_BODY_TRACKING_CALIBRATION_META,
+    ) -> None:
+        super().__init__(
+            supports_height_override=supports_height_override,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPropertiesBodyTrackingCalibrationMETA(supports_height_override={repr(self.supports_height_override)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPropertiesBodyTrackingCalibrationMETA(supports_height_override={self.supports_height_override}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_height_override", Bool32),
+    ]
+
+
+PFN_xrSuggestBodyTrackingCalibrationOverrideMETA = CFUNCTYPE(Result.ctype(), BodyTrackerFB, POINTER(BodyTrackingCalibrationInfoMETA))
+
+PFN_xrResetBodyTrackingCalibrationMETA = CFUNCTYPE(Result.ctype(), BodyTrackerFB)
 
 
 class FaceTracker2FB_T(Structure):
@@ -16038,31 +16322,31 @@ class SpatialAnchorCreateCompletionBD(Structure):
     def __init__(
         self,
         future_result: Result = Result(),  # noqa
-        anchor: AnchorBD = None,
         uuid: UuidEXT = 0,
+        anchor: AnchorBD = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_COMPLETION_BD,
     ) -> None:
         super().__init__(
             future_result=Result(future_result).value,
-            anchor=anchor,
             uuid=uuid,
+            anchor=anchor,
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateCompletionBD(future_result={repr(self.future_result)}, anchor={repr(self.anchor)}, uuid={repr(self.uuid)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SpatialAnchorCreateCompletionBD(future_result={repr(self.future_result)}, uuid={repr(self.uuid)}, anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SpatialAnchorCreateCompletionBD(future_result={self.future_result}, anchor={self.anchor}, uuid={self.uuid}, next={self.next}, type={self.type})"
+        return f"xr.SpatialAnchorCreateCompletionBD(future_result={self.future_result}, uuid={self.uuid}, anchor={self.anchor}, next={self.next}, type={self.type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("future_result", Result.ctype()),
-        ("anchor", AnchorBD),
         ("uuid", UuidEXT),
+        ("anchor", AnchorBD),
     ]
 
 
@@ -16836,6 +17120,597 @@ PFN_xrGetPlaneDetectionStateEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, PO
 PFN_xrGetPlaneDetectionsEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, POINTER(PlaneDetectorGetInfoEXT), POINTER(PlaneDetectorLocationsEXT))
 
 PFN_xrGetPlanePolygonBufferEXT = CFUNCTYPE(Result.ctype(), PlaneDetectorEXT, c_uint64, c_uint32, POINTER(PlaneDetectorPolygonBufferEXT))
+
+TrackableANDROID = c_uint64
+
+
+class TrackableTrackerANDROID_T(Structure):
+    pass
+
+
+TrackableTrackerANDROID = POINTER(TrackableTrackerANDROID_T)
+
+
+class TrackableTrackerCreateInfoANDROID(Structure):
+    def __init__(
+        self,
+        trackable_type: TrackableTypeANDROID = TrackableTypeANDROID(),  # noqa
+        next: c_void_p = None,
+        type: StructureType = StructureType.TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            trackable_type=TrackableTypeANDROID(trackable_type).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableTrackerCreateInfoANDROID(trackable_type={repr(self.trackable_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableTrackerCreateInfoANDROID(trackable_type={self.trackable_type}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("trackable_type", TrackableTypeANDROID.ctype()),
+    ]
+
+
+class TrackableGetInfoANDROID(Structure):
+    def __init__(
+        self,
+        trackable: TrackableANDROID = 0,
+        base_space: Space = None,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.TRACKABLE_GET_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            trackable=trackable,
+            base_space=base_space,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableGetInfoANDROID(trackable={repr(self.trackable)}, base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableGetInfoANDROID(trackable={self.trackable}, base_space={self.base_space}, time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("trackable", TrackableANDROID),
+        ("base_space", Space),
+        ("time", Time),
+    ]
+
+
+class TrackablePlaneANDROID(Structure):
+    def __init__(
+        self,
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID(),  # noqa
+        center_pose: Posef = Posef(),
+        extents: Extent2Df = None,
+        plane_type: PlaneTypeANDROID = PlaneTypeANDROID(),  # noqa
+        plane_label: PlaneLabelANDROID = PlaneLabelANDROID(),  # noqa
+        subsumed_by_plane: TrackableANDROID = 0,
+        last_updated_time: Time = 0,
+        vertex_capacity_input: int = 0,
+        vertex_count_output: int = 0,
+        vertices: POINTER(Vector2f) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.TRACKABLE_PLANE_ANDROID,
+    ) -> None:
+        if extents is None:
+            extents = Extent2Df()
+        super().__init__(
+            tracking_state=TrackingStateANDROID(tracking_state).value,
+            center_pose=center_pose,
+            extents=extents,
+            plane_type=PlaneTypeANDROID(plane_type).value,
+            plane_label=PlaneLabelANDROID(plane_label).value,
+            subsumed_by_plane=subsumed_by_plane,
+            last_updated_time=last_updated_time,
+            vertex_capacity_input=vertex_capacity_input,
+            vertex_count_output=vertex_count_output,
+            vertices=vertices,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackablePlaneANDROID(tracking_state={repr(self.tracking_state)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, plane_type={repr(self.plane_type)}, plane_label={repr(self.plane_label)}, subsumed_by_plane={repr(self.subsumed_by_plane)}, last_updated_time={repr(self.last_updated_time)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackablePlaneANDROID(tracking_state={self.tracking_state}, center_pose={self.center_pose}, extents={self.extents}, plane_type={self.plane_type}, plane_label={self.plane_label}, subsumed_by_plane={self.subsumed_by_plane}, last_updated_time={self.last_updated_time}, vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("tracking_state", TrackingStateANDROID.ctype()),
+        ("center_pose", Posef),
+        ("extents", Extent2Df),
+        ("plane_type", PlaneTypeANDROID.ctype()),
+        ("plane_label", PlaneLabelANDROID.ctype()),
+        ("subsumed_by_plane", TrackableANDROID),
+        ("last_updated_time", Time),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertices", POINTER(Vector2f)),
+    ]
+
+
+class AnchorSpaceCreateInfoANDROID(Structure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        pose: Posef = Posef(),
+        trackable: TrackableANDROID = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.ANCHOR_SPACE_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            space=space,
+            time=time,
+            pose=pose,
+            trackable=trackable,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AnchorSpaceCreateInfoANDROID(space={repr(self.space)}, time={repr(self.time)}, pose={repr(self.pose)}, trackable={repr(self.trackable)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AnchorSpaceCreateInfoANDROID(space={self.space}, time={self.time}, pose={self.pose}, trackable={self.trackable}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("space", Space),
+        ("time", Time),
+        ("pose", Posef),
+        ("trackable", TrackableANDROID),
+    ]
+
+
+class SystemTrackablesPropertiesANDROID(Structure):
+    def __init__(
+        self,
+        supports_anchor: Bool32 = 0,
+        max_anchors: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_TRACKABLES_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_anchor=supports_anchor,
+            max_anchors=max_anchors,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemTrackablesPropertiesANDROID(supports_anchor={repr(self.supports_anchor)}, max_anchors={repr(self.max_anchors)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemTrackablesPropertiesANDROID(supports_anchor={self.supports_anchor}, max_anchors={self.max_anchors}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_anchor", Bool32),
+        ("max_anchors", c_uint32),
+    ]
+
+
+PFN_xrEnumerateSupportedTrackableTypesANDROID = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(TrackableTypeANDROID.ctype()))
+
+PFN_xrEnumerateSupportedAnchorTrackableTypesANDROID = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(TrackableTypeANDROID.ctype()))
+
+PFN_xrCreateTrackableTrackerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(TrackableTrackerCreateInfoANDROID), POINTER(TrackableTrackerANDROID))
+
+PFN_xrDestroyTrackableTrackerANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID)
+
+PFN_xrGetAllTrackablesANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, c_uint32, POINTER(c_uint32), POINTER(TrackableANDROID))
+
+PFN_xrGetTrackablePlaneANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, POINTER(TrackableGetInfoANDROID), POINTER(TrackablePlaneANDROID))
+
+PFN_xrCreateAnchorSpaceANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(AnchorSpaceCreateInfoANDROID), POINTER(Space))
+
+
+class DeviceAnchorPersistenceANDROID_T(Structure):
+    pass
+
+
+DeviceAnchorPersistenceANDROID = POINTER(DeviceAnchorPersistenceANDROID_T)
+
+
+class DeviceAnchorPersistenceCreateInfoANDROID(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.DEVICE_ANCHOR_PERSISTENCE_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class PersistedAnchorSpaceCreateInfoANDROID(Structure):
+    def __init__(
+        self,
+        anchor_id: UuidEXT = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PERSISTED_ANCHOR_SPACE_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            anchor_id=anchor_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PersistedAnchorSpaceCreateInfoANDROID(anchor_id={repr(self.anchor_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PersistedAnchorSpaceCreateInfoANDROID(anchor_id={self.anchor_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("anchor_id", UuidEXT),
+    ]
+
+
+class PersistedAnchorSpaceInfoANDROID(Structure):
+    def __init__(
+        self,
+        anchor: Space = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PERSISTED_ANCHOR_SPACE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            anchor=anchor,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PersistedAnchorSpaceInfoANDROID(anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PersistedAnchorSpaceInfoANDROID(anchor={self.anchor}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("anchor", Space),
+    ]
+
+
+class SystemDeviceAnchorPersistencePropertiesANDROID(Structure):
+    def __init__(
+        self,
+        supports_anchor_persistence: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_DEVICE_ANCHOR_PERSISTENCE_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_anchor_persistence=supports_anchor_persistence,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemDeviceAnchorPersistencePropertiesANDROID(supports_anchor_persistence={repr(self.supports_anchor_persistence)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemDeviceAnchorPersistencePropertiesANDROID(supports_anchor_persistence={self.supports_anchor_persistence}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_anchor_persistence", Bool32),
+    ]
+
+
+PFN_xrEnumerateSupportedPersistenceAnchorTypesANDROID = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(TrackableTypeANDROID.ctype()))
+
+PFN_xrCreateDeviceAnchorPersistenceANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(DeviceAnchorPersistenceCreateInfoANDROID), POINTER(DeviceAnchorPersistenceANDROID))
+
+PFN_xrDestroyDeviceAnchorPersistenceANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID)
+
+PFN_xrPersistAnchorANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID, POINTER(PersistedAnchorSpaceInfoANDROID), POINTER(UuidEXT))
+
+PFN_xrGetAnchorPersistStateANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID, POINTER(Uuid), POINTER(AnchorPersistStateANDROID.ctype()))
+
+PFN_xrCreatePersistedAnchorSpaceANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID, POINTER(PersistedAnchorSpaceCreateInfoANDROID), POINTER(Space))
+
+PFN_xrEnumeratePersistedAnchorsANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID, c_uint32, POINTER(c_uint32), POINTER(UuidEXT))
+
+PFN_xrUnpersistAnchorANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID, POINTER(Uuid))
+
+
+class SystemPassthroughCameraStatePropertiesANDROID(Structure):
+    def __init__(
+        self,
+        supports_passthrough_camera_state: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_PASSTHROUGH_CAMERA_STATE_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_passthrough_camera_state=supports_passthrough_camera_state,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPassthroughCameraStatePropertiesANDROID(supports_passthrough_camera_state={repr(self.supports_passthrough_camera_state)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPassthroughCameraStatePropertiesANDROID(supports_passthrough_camera_state={self.supports_passthrough_camera_state}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_passthrough_camera_state", Bool32),
+    ]
+
+
+class PassthroughCameraStateGetInfoANDROID(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.PASSTHROUGH_CAMERA_STATE_GET_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughCameraStateGetInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughCameraStateGetInfoANDROID(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+PFN_xrGetPassthroughCameraStateANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(PassthroughCameraStateGetInfoANDROID), POINTER(PassthroughCameraStateANDROID.ctype()))
+
+
+class RaycastInfoANDROID(Structure):
+    def __init__(
+        self,
+        max_results: int = 0,
+        tracker_count: Optional[int] = None,
+        trackers: ArrayFieldParamType[POINTER(TrackableTrackerANDROID_T)] = None,
+        origin: Vector3f = None,
+        trajectory: Vector3f = None,
+        space: Space = None,
+        time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RAYCAST_INFO_ANDROID,
+    ) -> None:
+        tracker_count, trackers = array_field_helper(
+            POINTER(TrackableTrackerANDROID_T), tracker_count, trackers)
+        if origin is None:
+            origin = Vector3f()
+        if trajectory is None:
+            trajectory = Vector3f()
+        super().__init__(
+            max_results=max_results,
+            tracker_count=tracker_count,
+            _trackers=trackers,
+            origin=origin,
+            trajectory=trajectory,
+            space=space,
+            time=time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RaycastInfoANDROID(max_results={repr(self.max_results)}, tracker_count={repr(self.tracker_count)}, trackers={repr(self._trackers)}, origin={repr(self.origin)}, trajectory={repr(self.trajectory)}, space={repr(self.space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RaycastInfoANDROID(max_results={self.max_results}, tracker_count={self.tracker_count}, trackers={self._trackers}, origin={self.origin}, trajectory={self.trajectory}, space={self.space}, time={self.time}, next={self.next}, type={self.type})"
+
+    @property
+    def trackers(self):
+        if self.tracker_count == 0:
+            return (POINTER(TrackableTrackerANDROID_T) * 0)()
+        else:
+            return (POINTER(TrackableTrackerANDROID_T) * self.tracker_count).from_address(
+                ctypes.addressof(self._trackers.contents))
+
+    @trackers.setter
+    def trackers(self, value):
+        # noinspection PyAttributeOutsideInit
+        self.tracker_count, self._trackers = array_field_helper(
+            POINTER(TrackableTrackerANDROID_T), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("max_results", c_uint32),
+        ("tracker_count", c_uint32),
+        ("_trackers", POINTER(POINTER(TrackableTrackerANDROID_T))),
+        ("origin", Vector3f),
+        ("trajectory", Vector3f),
+        ("space", Space),
+        ("time", Time),
+    ]
+
+
+class RaycastHitResultANDROID(Structure):
+    def __init__(
+        self,
+        type: TrackableTypeANDROID = TrackableTypeANDROID(),  # noqa
+        trackable: TrackableANDROID = 0,
+        pose: Posef = Posef(),
+    ) -> None:
+        super().__init__(
+            type=TrackableTypeANDROID(type).value,
+            trackable=trackable,
+            pose=pose,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RaycastHitResultANDROID(type={repr(self.type)}, trackable={repr(self.trackable)}, pose={repr(self.pose)})"
+
+    def __str__(self) -> str:
+        return f"xr.RaycastHitResultANDROID(type={self.type}, trackable={self.trackable}, pose={self.pose})"
+
+    _fields_ = [
+        ("type", TrackableTypeANDROID.ctype()),
+        ("trackable", TrackableANDROID),
+        ("pose", Posef),
+    ]
+
+
+class RaycastHitResultsANDROID(Structure):
+    def __init__(
+        self,
+        results_capacity_input: int = 0,
+        results_count_output: int = 0,
+        results: POINTER(RaycastHitResultANDROID) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.RAYCAST_HIT_RESULTS_ANDROID,
+    ) -> None:
+        super().__init__(
+            results_capacity_input=results_capacity_input,
+            results_count_output=results_count_output,
+            results=results,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RaycastHitResultsANDROID(results_capacity_input={repr(self.results_capacity_input)}, results_count_output={repr(self.results_count_output)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RaycastHitResultsANDROID(results_capacity_input={self.results_capacity_input}, results_count_output={self.results_count_output}, results={self.results}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("results_capacity_input", c_uint32),
+        ("results_count_output", c_uint32),
+        ("results", POINTER(RaycastHitResultANDROID)),
+    ]
+
+
+PFN_xrEnumerateRaycastSupportedTrackableTypesANDROID = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(TrackableTypeANDROID.ctype()))
+
+PFN_xrRaycastANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(RaycastInfoANDROID), POINTER(RaycastHitResultsANDROID))
+
+
+class TrackableObjectANDROID(Structure):
+    def __init__(
+        self,
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID(),  # noqa
+        center_pose: Posef = Posef(),
+        extents: Extent3DfEXT = 0,
+        object_label: ObjectLabelANDROID = ObjectLabelANDROID(),  # noqa
+        last_updated_time: Time = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.TRACKABLE_OBJECT_ANDROID,
+    ) -> None:
+        super().__init__(
+            tracking_state=TrackingStateANDROID(tracking_state).value,
+            center_pose=center_pose,
+            extents=extents,
+            object_label=ObjectLabelANDROID(object_label).value,
+            last_updated_time=last_updated_time,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableObjectANDROID(tracking_state={repr(self.tracking_state)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, object_label={repr(self.object_label)}, last_updated_time={repr(self.last_updated_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableObjectANDROID(tracking_state={self.tracking_state}, center_pose={self.center_pose}, extents={self.extents}, object_label={self.object_label}, last_updated_time={self.last_updated_time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("tracking_state", TrackingStateANDROID.ctype()),
+        ("center_pose", Posef),
+        ("extents", Extent3DfEXT),
+        ("object_label", ObjectLabelANDROID.ctype()),
+        ("last_updated_time", Time),
+    ]
+
+
+class TrackableObjectConfigurationANDROID(Structure):
+    def __init__(
+        self,
+        label_count: Optional[int] = None,
+        active_labels: ArrayFieldParamType[c_int] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.TRACKABLE_OBJECT_CONFIGURATION_ANDROID,
+    ) -> None:
+        label_count, active_labels = array_field_helper(
+            c_int, label_count, active_labels)
+        super().__init__(
+            label_count=label_count,
+            _active_labels=active_labels,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableObjectConfigurationANDROID(label_count={repr(self.label_count)}, active_labels={repr(self._active_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableObjectConfigurationANDROID(label_count={self.label_count}, active_labels={self._active_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def active_labels(self):
+        if self.label_count == 0:
+            return (c_int * 0)()
+        else:
+            return (c_int * self.label_count).from_address(
+                ctypes.addressof(self._active_labels.contents))
+
+    @active_labels.setter
+    def active_labels(self, value):
+        # noinspection PyAttributeOutsideInit
+        self.label_count, self._active_labels = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("label_count", c_uint32),
+        ("_active_labels", POINTER(c_int)),
+    ]
+
+
+PFN_xrGetTrackableObjectANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, POINTER(TrackableGetInfoANDROID), POINTER(TrackableObjectANDROID))
 
 
 class FutureCancelInfoEXT(Structure):
@@ -18244,6 +19119,180 @@ class SpaceGroupUuidFilterInfoMETA(Structure):
         ("group_uuid", Uuid),
     ]
 
+
+class SystemMarkerTrackingPropertiesANDROID(Structure):
+    def __init__(
+        self,
+        supports_marker_tracking: Bool32 = 0,
+        supports_marker_size_estimation: Bool32 = 0,
+        max_marker_count: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_MARKER_TRACKING_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_marker_tracking=supports_marker_tracking,
+            supports_marker_size_estimation=supports_marker_size_estimation,
+            max_marker_count=max_marker_count,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemMarkerTrackingPropertiesANDROID(supports_marker_tracking={repr(self.supports_marker_tracking)}, supports_marker_size_estimation={repr(self.supports_marker_size_estimation)}, max_marker_count={repr(self.max_marker_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemMarkerTrackingPropertiesANDROID(supports_marker_tracking={self.supports_marker_tracking}, supports_marker_size_estimation={self.supports_marker_size_estimation}, max_marker_count={self.max_marker_count}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_marker_tracking", Bool32),
+        ("supports_marker_size_estimation", Bool32),
+        ("max_marker_count", c_uint16),
+    ]
+
+
+class TrackableMarkerDatabaseEntryANDROID(Structure):
+    def __init__(
+        self,
+        id: int = 0,
+        edge_size: float = 0,
+    ) -> None:
+        super().__init__(
+            id=id,
+            edge_size=edge_size,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableMarkerDatabaseEntryANDROID(id={repr(self.id)}, edge_size={repr(self.edge_size)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableMarkerDatabaseEntryANDROID(id={self.id}, edge_size={self.edge_size:.3f})"
+
+    _fields_ = [
+        ("id", c_int32),
+        ("edge_size", c_float),
+    ]
+
+
+class TrackableMarkerDatabaseANDROID(Structure):
+    def __init__(
+        self,
+        dictionary: TrackableMarkerDictionaryANDROID = TrackableMarkerDictionaryANDROID(),  # noqa
+        entry_count: int = 0,
+        entries: POINTER(TrackableMarkerDatabaseEntryANDROID) = None,
+    ) -> None:
+        super().__init__(
+            dictionary=TrackableMarkerDictionaryANDROID(dictionary).value,
+            entry_count=entry_count,
+            entries=entries,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableMarkerDatabaseANDROID(dictionary={repr(self.dictionary)}, entry_count={repr(self.entry_count)}, entries={repr(self.entries)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableMarkerDatabaseANDROID(dictionary={self.dictionary}, entry_count={self.entry_count}, entries={self.entries})"
+
+    _fields_ = [
+        ("dictionary", TrackableMarkerDictionaryANDROID.ctype()),
+        ("entry_count", c_uint32),
+        ("entries", POINTER(TrackableMarkerDatabaseEntryANDROID)),
+    ]
+
+
+class TrackableMarkerConfigurationANDROID(Structure):
+    def __init__(
+        self,
+        tracking_mode: TrackableMarkerTrackingModeANDROID = TrackableMarkerTrackingModeANDROID(),  # noqa
+        database_count: Optional[int] = None,
+        databases: ArrayFieldParamType[TrackableMarkerDatabaseANDROID] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.TRACKABLE_MARKER_CONFIGURATION_ANDROID,
+    ) -> None:
+        database_count, databases = array_field_helper(
+            TrackableMarkerDatabaseANDROID, database_count, databases)
+        super().__init__(
+            tracking_mode=TrackableMarkerTrackingModeANDROID(tracking_mode).value,
+            database_count=database_count,
+            _databases=databases,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableMarkerConfigurationANDROID(tracking_mode={repr(self.tracking_mode)}, database_count={repr(self.database_count)}, databases={repr(self._databases)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableMarkerConfigurationANDROID(tracking_mode={self.tracking_mode}, database_count={self.database_count}, databases={self._databases}, next={self.next}, type={self.type})"
+
+    @property
+    def databases(self):
+        if self.database_count == 0:
+            return (TrackableMarkerDatabaseANDROID * 0)()
+        else:
+            return (TrackableMarkerDatabaseANDROID * self.database_count).from_address(
+                ctypes.addressof(self._databases.contents))
+
+    @databases.setter
+    def databases(self, value):
+        # noinspection PyAttributeOutsideInit
+        self.database_count, self._databases = array_field_helper(
+            TrackableMarkerDatabaseANDROID, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("tracking_mode", TrackableMarkerTrackingModeANDROID.ctype()),
+        ("database_count", c_uint32),
+        ("_databases", POINTER(TrackableMarkerDatabaseANDROID)),
+    ]
+
+
+class TrackableMarkerANDROID(Structure):
+    def __init__(
+        self,
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID(),  # noqa
+        last_updated_time: Time = 0,
+        dictionary: TrackableMarkerDictionaryANDROID = TrackableMarkerDictionaryANDROID(),  # noqa
+        marker_id: int = 0,
+        center_pose: Posef = Posef(),
+        extents: Extent2Df = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.TRACKABLE_MARKER_ANDROID,
+    ) -> None:
+        if extents is None:
+            extents = Extent2Df()
+        super().__init__(
+            tracking_state=TrackingStateANDROID(tracking_state).value,
+            last_updated_time=last_updated_time,
+            dictionary=TrackableMarkerDictionaryANDROID(dictionary).value,
+            marker_id=marker_id,
+            center_pose=center_pose,
+            extents=extents,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableMarkerANDROID(tracking_state={repr(self.tracking_state)}, last_updated_time={repr(self.last_updated_time)}, dictionary={repr(self.dictionary)}, marker_id={repr(self.marker_id)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableMarkerANDROID(tracking_state={self.tracking_state}, last_updated_time={self.last_updated_time}, dictionary={self.dictionary}, marker_id={self.marker_id}, center_pose={self.center_pose}, extents={self.extents}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("tracking_state", TrackingStateANDROID.ctype()),
+        ("last_updated_time", Time),
+        ("dictionary", TrackableMarkerDictionaryANDROID.ctype()),
+        ("marker_id", c_int32),
+        ("center_pose", Posef),
+        ("extents", Extent2Df),
+    ]
+
+
+PFN_xrGetTrackableMarkerANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, POINTER(TrackableGetInfoANDROID), POINTER(TrackableMarkerANDROID))
 
 SpatialEntityIdEXT = c_uint64
 
@@ -20128,6 +21177,74 @@ PFN_xrUnpersistSpatialEntityAsyncEXT = CFUNCTYPE(Result.ctype(), SpatialPersiste
 PFN_xrUnpersistSpatialEntityCompleteEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT, FutureEXT, POINTER(UnpersistSpatialEntityCompletionEXT))
 
 
+class LoaderInitPropertyValueEXT(Structure):
+    def __init__(
+        self,
+        name: str = "",
+        value: str = "",
+    ) -> None:
+        super().__init__(
+            name=name.encode(),
+            value=value.encode(),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LoaderInitPropertyValueEXT(name={repr(self.name)}, value={repr(self.value)})"
+
+    def __str__(self) -> str:
+        return f"xr.LoaderInitPropertyValueEXT(name={self.name}, value={self.value})"
+
+    _fields_ = [
+        ("name", c_char_p),
+        ("value", c_char_p),
+    ]
+
+
+class LoaderInitInfoPropertiesEXT(Structure):
+    def __init__(
+        self,
+        property_value_count: Optional[int] = None,
+        property_values: ArrayFieldParamType[LoaderInitPropertyValueEXT] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.LOADER_INIT_INFO_PROPERTIES_EXT,
+    ) -> None:
+        property_value_count, property_values = array_field_helper(
+            LoaderInitPropertyValueEXT, property_value_count, property_values)
+        super().__init__(
+            property_value_count=property_value_count,
+            _property_values=property_values,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LoaderInitInfoPropertiesEXT(property_value_count={repr(self.property_value_count)}, property_values={repr(self._property_values)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LoaderInitInfoPropertiesEXT(property_value_count={self.property_value_count}, property_values={self._property_values}, next={self.next}, type={self.type})"
+
+    @property
+    def property_values(self):
+        if self.property_value_count == 0:
+            return (LoaderInitPropertyValueEXT * 0)()
+        else:
+            return (LoaderInitPropertyValueEXT * self.property_value_count).from_address(
+                ctypes.addressof(self._property_values.contents))
+
+    @property_values.setter
+    def property_values(self, value):
+        # noinspection PyAttributeOutsideInit
+        self.property_value_count, self._property_values = array_field_helper(
+            LoaderInitPropertyValueEXT, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("property_value_count", c_uint32),
+        ("_property_values", POINTER(LoaderInitPropertyValueEXT)),
+    ]
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -20148,6 +21265,7 @@ __all__ = [
     "ActiveActionSetPriorityEXT",
     "AnchorBD",
     "AnchorBD_T",
+    "AnchorSpaceCreateInfoANDROID",
     "AnchorSpaceCreateInfoBD",
     "ApiLayerProperties",
     "ApplicationInfo",
@@ -20178,6 +21296,8 @@ __all__ = [
     "BodyTrackerFB_T",
     "BodyTrackerHTC",
     "BodyTrackerHTC_T",
+    "BodyTrackingCalibrationInfoMETA",
+    "BodyTrackingCalibrationStatusMETA",
     "Bool32",
     "BoundSourcesForActionEnumerateInfo",
     "Boundary2DFB",
@@ -20236,6 +21356,9 @@ __all__ = [
     "DebugUtilsMessengerEXT_T",
     "DebugUtilsObjectNameInfoEXT",
     "DeserializeSceneFragmentMSFT",
+    "DeviceAnchorPersistenceANDROID",
+    "DeviceAnchorPersistenceANDROID_T",
+    "DeviceAnchorPersistenceCreateInfoANDROID",
     "DevicePcmSampleRateGetInfoFB",
     "DevicePcmSampleRateStateFB",
     "DigitalLensControlALMALENCE",
@@ -20285,6 +21408,8 @@ __all__ = [
     "EventDataSpaceSaveCompleteFB",
     "EventDataSpaceSetStatusCompleteFB",
     "EventDataSpaceShareCompleteFB",
+    "EventDataSpacesEraseResultMETA",
+    "EventDataSpacesSaveResultMETA",
     "EventDataSpatialAnchorCreateCompleteFB",
     "EventDataSpatialDiscoveryRecommendedEXT",
     "EventDataStartColocationAdvertisementCompleteMETA",
@@ -20432,6 +21557,8 @@ __all__ = [
     "KeyboardTrackingQueryFB",
     "KeyboardTrackingQueryFlagsFBCInt",
     "LoaderInitInfoBaseHeaderKHR",
+    "LoaderInitInfoPropertiesEXT",
+    "LoaderInitPropertyValueEXT",
     "LocalDimmingFrameEndInfoMETA",
     "LocalizationEnableEventsInfoML",
     "LocalizationMapErrorFlagsMLCInt",
@@ -20476,11 +21603,13 @@ __all__ = [
     "PFN_xrCreateAction",
     "PFN_xrCreateActionSet",
     "PFN_xrCreateActionSpace",
+    "PFN_xrCreateAnchorSpaceANDROID",
     "PFN_xrCreateAnchorSpaceBD",
     "PFN_xrCreateBodyTrackerBD",
     "PFN_xrCreateBodyTrackerFB",
     "PFN_xrCreateBodyTrackerHTC",
     "PFN_xrCreateDebugUtilsMessengerEXT",
+    "PFN_xrCreateDeviceAnchorPersistenceANDROID",
     "PFN_xrCreateEnvironmentDepthProviderMETA",
     "PFN_xrCreateEnvironmentDepthSwapchainMETA",
     "PFN_xrCreateExportedLocalizationMapML",
@@ -20502,6 +21631,7 @@ __all__ = [
     "PFN_xrCreatePassthroughFB",
     "PFN_xrCreatePassthroughHTC",
     "PFN_xrCreatePassthroughLayerFB",
+    "PFN_xrCreatePersistedAnchorSpaceANDROID",
     "PFN_xrCreatePlaneDetectorEXT",
     "PFN_xrCreateReferenceSpace",
     "PFN_xrCreateRenderModelAssetEXT",
@@ -20535,6 +21665,7 @@ __all__ = [
     "PFN_xrCreateSpatialPersistenceContextCompleteEXT",
     "PFN_xrCreateSpatialUpdateSnapshotEXT",
     "PFN_xrCreateSwapchain",
+    "PFN_xrCreateTrackableTrackerANDROID",
     "PFN_xrCreateTriangleMeshFB",
     "PFN_xrCreateVirtualKeyboardMETA",
     "PFN_xrCreateVirtualKeyboardSpaceMETA",
@@ -20550,6 +21681,7 @@ __all__ = [
     "PFN_xrDestroyBodyTrackerFB",
     "PFN_xrDestroyBodyTrackerHTC",
     "PFN_xrDestroyDebugUtilsMessengerEXT",
+    "PFN_xrDestroyDeviceAnchorPersistenceANDROID",
     "PFN_xrDestroyEnvironmentDepthProviderMETA",
     "PFN_xrDestroyEnvironmentDepthSwapchainMETA",
     "PFN_xrDestroyExportedLocalizationMapML",
@@ -20586,6 +21718,7 @@ __all__ = [
     "PFN_xrDestroySpatialPersistenceContextEXT",
     "PFN_xrDestroySpatialSnapshotEXT",
     "PFN_xrDestroySwapchain",
+    "PFN_xrDestroyTrackableTrackerANDROID",
     "PFN_xrDestroyTriangleMeshFB",
     "PFN_xrDestroyVirtualKeyboardMETA",
     "PFN_xrDestroyWorldMeshDetectorML",
@@ -20605,7 +21738,9 @@ __all__ = [
     "PFN_xrEnumerateInstanceExtensionProperties",
     "PFN_xrEnumerateInteractionRenderModelIdsEXT",
     "PFN_xrEnumeratePerformanceMetricsCounterPathsMETA",
+    "PFN_xrEnumeratePersistedAnchorsANDROID",
     "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
+    "PFN_xrEnumerateRaycastSupportedTrackableTypesANDROID",
     "PFN_xrEnumerateReferenceSpaces",
     "PFN_xrEnumerateRenderModelPathsFB",
     "PFN_xrEnumerateRenderModelSubactionPathsEXT",
@@ -20617,18 +21752,24 @@ __all__ = [
     "PFN_xrEnumerateSpatialCapabilityFeaturesEXT",
     "PFN_xrEnumerateSpatialEntityComponentTypesBD",
     "PFN_xrEnumerateSpatialPersistenceScopesEXT",
+    "PFN_xrEnumerateSupportedAnchorTrackableTypesANDROID",
+    "PFN_xrEnumerateSupportedPersistenceAnchorTypesANDROID",
+    "PFN_xrEnumerateSupportedTrackableTypesANDROID",
     "PFN_xrEnumerateSwapchainFormats",
     "PFN_xrEnumerateSwapchainImages",
     "PFN_xrEnumerateViewConfigurationViews",
     "PFN_xrEnumerateViewConfigurations",
     "PFN_xrEnumerateViveTrackerPathsHTCX",
     "PFN_xrEraseSpaceFB",
+    "PFN_xrEraseSpacesMETA",
     "PFN_xrFreeWorldMeshBufferML",
     "PFN_xrGeometryInstanceSetTransformFB",
     "PFN_xrGetActionStateBoolean",
     "PFN_xrGetActionStateFloat",
     "PFN_xrGetActionStatePose",
     "PFN_xrGetActionStateVector2f",
+    "PFN_xrGetAllTrackablesANDROID",
+    "PFN_xrGetAnchorPersistStateANDROID",
     "PFN_xrGetAnchorUuidBD",
     "PFN_xrGetBodySkeletonFB",
     "PFN_xrGetBodySkeletonHTC",
@@ -20657,6 +21798,7 @@ __all__ = [
     "PFN_xrGetMarkerSizeVARJO",
     "PFN_xrGetMarkerStringML",
     "PFN_xrGetMarkersML",
+    "PFN_xrGetPassthroughCameraStateANDROID",
     "PFN_xrGetPassthroughPreferencesMETA",
     "PFN_xrGetPerformanceMetricsStateMETA",
     "PFN_xrGetPlaneDetectionStateEXT",
@@ -20703,6 +21845,9 @@ __all__ = [
     "PFN_xrGetSwapchainStateFB",
     "PFN_xrGetSystem",
     "PFN_xrGetSystemProperties",
+    "PFN_xrGetTrackableMarkerANDROID",
+    "PFN_xrGetTrackableObjectANDROID",
+    "PFN_xrGetTrackablePlaneANDROID",
     "PFN_xrGetViewConfigurationProperties",
     "PFN_xrGetVirtualKeyboardDirtyTexturesMETA",
     "PFN_xrGetVirtualKeyboardModelAnimationStatesMETA",
@@ -20732,6 +21877,7 @@ __all__ = [
     "PFN_xrPathToString",
     "PFN_xrPauseSimultaneousHandsAndControllersTrackingMETA",
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
+    "PFN_xrPersistAnchorANDROID",
     "PFN_xrPersistSpatialAnchorAsyncBD",
     "PFN_xrPersistSpatialAnchorCompleteBD",
     "PFN_xrPersistSpatialAnchorMSFT",
@@ -20750,6 +21896,7 @@ __all__ = [
     "PFN_xrQuerySpatialAnchorsCompleteML",
     "PFN_xrQuerySpatialComponentDataEXT",
     "PFN_xrQuerySystemTrackedKeyboardFB",
+    "PFN_xrRaycastANDROID",
     "PFN_xrReleaseSwapchainImage",
     "PFN_xrRequestDisplayRefreshRateFB",
     "PFN_xrRequestExitSession",
@@ -20759,11 +21906,13 @@ __all__ = [
     "PFN_xrRequestWorldMeshCompleteML",
     "PFN_xrRequestWorldMeshStateAsyncML",
     "PFN_xrRequestWorldMeshStateCompleteML",
+    "PFN_xrResetBodyTrackingCalibrationMETA",
     "PFN_xrResultToString",
     "PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA",
     "PFN_xrRetrieveSpaceQueryResultsFB",
     "PFN_xrSaveSpaceFB",
     "PFN_xrSaveSpaceListFB",
+    "PFN_xrSaveSpacesMETA",
     "PFN_xrSendVirtualKeyboardInputMETA",
     "PFN_xrSessionBeginDebugUtilsLabelRegionEXT",
     "PFN_xrSessionEndDebugUtilsLabelRegionEXT",
@@ -20806,6 +21955,7 @@ __all__ = [
     "PFN_xrStructureTypeToString",
     "PFN_xrStructureTypeToString2KHR",
     "PFN_xrSubmitDebugUtilsMessageEXT",
+    "PFN_xrSuggestBodyTrackingCalibrationOverrideMETA",
     "PFN_xrSuggestInteractionProfileBindings",
     "PFN_xrSuggestVirtualKeyboardLocationMETA",
     "PFN_xrSyncActions",
@@ -20817,6 +21967,7 @@ __all__ = [
     "PFN_xrTriangleMeshGetIndexBufferFB",
     "PFN_xrTriangleMeshGetVertexBufferFB",
     "PFN_xrTryCreateSpatialGraphStaticNodeBindingMSFT",
+    "PFN_xrUnpersistAnchorANDROID",
     "PFN_xrUnpersistSpatialAnchorAsyncBD",
     "PFN_xrUnpersistSpatialAnchorCompleteBD",
     "PFN_xrUnpersistSpatialAnchorMSFT",
@@ -20831,6 +21982,7 @@ __all__ = [
     "PFN_xrWaitFrame",
     "PFN_xrWaitSwapchainImage",
     "PassthroughBrightnessContrastSaturationFB",
+    "PassthroughCameraStateGetInfoANDROID",
     "PassthroughCapabilityFlagsFBCInt",
     "PassthroughColorHTC",
     "PassthroughColorLutCreateInfoMETA",
@@ -20863,6 +22015,8 @@ __all__ = [
     "PerformanceMetricsCounterMETA",
     "PerformanceMetricsStateMETA",
     "PersistSpatialEntityCompletionEXT",
+    "PersistedAnchorSpaceCreateInfoANDROID",
+    "PersistedAnchorSpaceInfoANDROID",
     "PlaneDetectionCapabilityFlagsEXTCInt",
     "PlaneDetectorBeginInfoEXT",
     "PlaneDetectorCreateInfoEXT",
@@ -20877,6 +22031,9 @@ __all__ = [
     "Quaternionf",
     "QueriedSenseDataBD",
     "QueriedSenseDataGetInfoBD",
+    "RaycastHitResultANDROID",
+    "RaycastHitResultsANDROID",
+    "RaycastInfoANDROID",
     "RecommendedLayerResolutionGetInfoMETA",
     "RecommendedLayerResolutionMETA",
     "Rect2Df",
@@ -21018,8 +22175,10 @@ __all__ = [
     "SpaceVelocityDataKHR",
     "SpaceVelocityFlagsCInt",
     "Space_T",
+    "SpacesEraseInfoMETA",
     "SpacesLocateInfo",
     "SpacesLocateInfoKHR",
+    "SpacesSaveInfoMETA",
     "SpatialAnchorCompletionResultML",
     "SpatialAnchorCreateCompletionBD",
     "SpatialAnchorCreateInfoBD",
@@ -21151,6 +22310,7 @@ __all__ = [
     "SystemBodyTrackingPropertiesHTC",
     "SystemColocationDiscoveryPropertiesMETA",
     "SystemColorSpacePropertiesFB",
+    "SystemDeviceAnchorPersistencePropertiesANDROID",
     "SystemEnvironmentDepthPropertiesMETA",
     "SystemEyeGazeInteractionPropertiesEXT",
     "SystemEyeTrackingPropertiesFB",
@@ -21168,17 +22328,21 @@ __all__ = [
     "SystemHeadsetIdPropertiesMETA",
     "SystemId",
     "SystemKeyboardTrackingPropertiesFB",
+    "SystemMarkerTrackingPropertiesANDROID",
     "SystemMarkerTrackingPropertiesVARJO",
     "SystemMarkerUnderstandingPropertiesML",
     "SystemNotificationsSetInfoML",
+    "SystemPassthroughCameraStatePropertiesANDROID",
     "SystemPassthroughColorLutPropertiesMETA",
     "SystemPassthroughProperties2FB",
     "SystemPassthroughPropertiesFB",
     "SystemPlaneDetectionPropertiesEXT",
     "SystemProperties",
+    "SystemPropertiesBodyTrackingCalibrationMETA",
     "SystemPropertiesBodyTrackingFullBodyMETA",
     "SystemRenderModelPropertiesFB",
     "SystemSimultaneousHandsAndControllersPropertiesMETA",
+    "SystemSpacePersistencePropertiesMETA",
     "SystemSpaceWarpPropertiesFB",
     "SystemSpatialAnchorPropertiesBD",
     "SystemSpatialAnchorSharingPropertiesBD",
@@ -21189,10 +22353,23 @@ __all__ = [
     "SystemSpatialPlanePropertiesBD",
     "SystemSpatialScenePropertiesBD",
     "SystemSpatialSensingPropertiesBD",
+    "SystemTrackablesPropertiesANDROID",
     "SystemTrackingProperties",
     "SystemUserPresencePropertiesEXT",
     "SystemVirtualKeyboardPropertiesMETA",
     "Time",
+    "TrackableANDROID",
+    "TrackableGetInfoANDROID",
+    "TrackableMarkerANDROID",
+    "TrackableMarkerConfigurationANDROID",
+    "TrackableMarkerDatabaseANDROID",
+    "TrackableMarkerDatabaseEntryANDROID",
+    "TrackableObjectANDROID",
+    "TrackableObjectConfigurationANDROID",
+    "TrackablePlaneANDROID",
+    "TrackableTrackerANDROID",
+    "TrackableTrackerANDROID_T",
+    "TrackableTrackerCreateInfoANDROID",
     "TriangleMeshCreateInfoFB",
     "TriangleMeshFB",
     "TriangleMeshFB_T",

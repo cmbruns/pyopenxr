@@ -934,13 +934,13 @@ class PermissionInsufficientError(ErrorResult):
         return Result.ERROR_PERMISSION_INSUFFICIENT
 
 
-class AndroidThreadSettingsIdInvalidKHRError(ErrorResult):
+class ANDROIDThreadSettingsIdInvalidKHRError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR
 
 
-class AndroidThreadSettingsFailureKHRError(ErrorResult):
+class ANDROIDThreadSettingsFailureKHRError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR
@@ -1252,6 +1252,48 @@ class SpaceCloudStorageDisabledFBError(ErrorResult):
         return Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB
 
 
+class SpaceInsufficientResourcesMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_INSUFFICIENT_RESOURCES_META
+
+
+class SpaceStorageAtCapacityMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_STORAGE_AT_CAPACITY_META
+
+
+class SpaceInsufficientViewMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_INSUFFICIENT_VIEW_META
+
+
+class SpacePermissionInsufficientMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_PERMISSION_INSUFFICIENT_META
+
+
+class SpaceRateLimitedMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_RATE_LIMITED_META
+
+
+class SpaceTooDarkMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_TOO_DARK_META
+
+
+class SpaceTooBrightMETAError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPACE_TOO_BRIGHT_META
+
+
 class PassthroughColorLutBufferSizeMismatchMETAError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1372,6 +1414,42 @@ class PlaneDetectionPermissionDeniedEXTError(ErrorResult):
         return Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT
 
 
+class MismatchingTrackableTypeANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MISMATCHING_TRACKABLE_TYPE_ANDROID
+
+
+class TrackableTypeNotSupportedANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_TRACKABLE_TYPE_NOT_SUPPORTED_ANDROID
+
+
+class AnchorIdNotFoundANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_ANCHOR_ID_NOT_FOUND_ANDROID
+
+
+class AnchorAlreadyPersistedANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_ANCHOR_ALREADY_PERSISTED_ANDROID
+
+
+class AnchorNotTrackingANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_ANCHOR_NOT_TRACKING_ANDROID
+
+
+class PersistedDataNotReadyANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_PERSISTED_DATA_NOT_READY_ANDROID
+
+
 class FuturePendingEXTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1442,6 +1520,12 @@ class SpaceGroupNotFoundMETAError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_SPACE_GROUP_NOT_FOUND_META
+
+
+class AnchorNotOwnedByCallerANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_ANCHOR_NOT_OWNED_BY_CALLER_ANDROID
 
 
 class SpatialCapabilityUnsupportedEXTError(ErrorResult):
@@ -1562,8 +1646,8 @@ _exception_map = {
     Result.ERROR_RUNTIME_UNAVAILABLE: RuntimeUnavailableError,
     Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED: ExtensionDependencyNotEnabledError,
     Result.ERROR_PERMISSION_INSUFFICIENT: PermissionInsufficientError,
-    Result.ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR: AndroidThreadSettingsIdInvalidKHRError,
-    Result.ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR: AndroidThreadSettingsFailureKHRError,
+    Result.ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR: ANDROIDThreadSettingsIdInvalidKHRError,
+    Result.ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR: ANDROIDThreadSettingsFailureKHRError,
     Result.ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT: CreateSpatialAnchorFailedMSFTError,
     Result.ERROR_SECONDARY_VIEW_CONFIGURATION_TYPE_NOT_ENABLED_MSFT: SecondaryViewConfigurationTypeNotEnabledMSFTError,
     Result.ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT: ControllerModelKeyInvalidMSFTError,
@@ -1615,6 +1699,13 @@ _exception_map = {
     Result.ERROR_SPACE_NETWORK_TIMEOUT_FB: SpaceNetworkTimeoutFBError,
     Result.ERROR_SPACE_NETWORK_REQUEST_FAILED_FB: SpaceNetworkRequestFailedFBError,
     Result.ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB: SpaceCloudStorageDisabledFBError,
+    Result.ERROR_SPACE_INSUFFICIENT_RESOURCES_META: SpaceInsufficientResourcesMETAError,
+    Result.ERROR_SPACE_STORAGE_AT_CAPACITY_META: SpaceStorageAtCapacityMETAError,
+    Result.ERROR_SPACE_INSUFFICIENT_VIEW_META: SpaceInsufficientViewMETAError,
+    Result.ERROR_SPACE_PERMISSION_INSUFFICIENT_META: SpacePermissionInsufficientMETAError,
+    Result.ERROR_SPACE_RATE_LIMITED_META: SpaceRateLimitedMETAError,
+    Result.ERROR_SPACE_TOO_DARK_META: SpaceTooDarkMETAError,
+    Result.ERROR_SPACE_TOO_BRIGHT_META: SpaceTooBrightMETAError,
     Result.ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META: PassthroughColorLutBufferSizeMismatchMETAError,
     Result.ENVIRONMENT_DEPTH_NOT_AVAILABLE_META: EnvironmentDepthNotAvailableMETA,
     Result.ERROR_RENDER_MODEL_ID_INVALID_EXT: RenderModelIdInvalidEXTError,
@@ -1635,6 +1726,12 @@ _exception_map = {
     Result.ERROR_SCENE_CAPTURE_FAILURE_BD: SceneCaptureFailureBDError,
     Result.ERROR_SPACE_NOT_LOCATABLE_EXT: SpaceNotLocatableEXTError,
     Result.ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT: PlaneDetectionPermissionDeniedEXTError,
+    Result.ERROR_MISMATCHING_TRACKABLE_TYPE_ANDROID: MismatchingTrackableTypeANDROIDError,
+    Result.ERROR_TRACKABLE_TYPE_NOT_SUPPORTED_ANDROID: TrackableTypeNotSupportedANDROIDError,
+    Result.ERROR_ANCHOR_ID_NOT_FOUND_ANDROID: AnchorIdNotFoundANDROIDError,
+    Result.ERROR_ANCHOR_ALREADY_PERSISTED_ANDROID: AnchorAlreadyPersistedANDROIDError,
+    Result.ERROR_ANCHOR_NOT_TRACKING_ANDROID: AnchorNotTrackingANDROIDError,
+    Result.ERROR_PERSISTED_DATA_NOT_READY_ANDROID: PersistedDataNotReadyANDROIDError,
     Result.ERROR_FUTURE_PENDING_EXT: FuturePendingEXTError,
     Result.ERROR_FUTURE_INVALID_EXT: FutureInvalidEXTError,
     Result.ERROR_SYSTEM_NOTIFICATION_PERMISSION_DENIED_ML: SystemNotificationPermissionDeniedMLError,
@@ -1647,6 +1744,7 @@ _exception_map = {
     Result.COLOCATION_DISCOVERY_ALREADY_ADVERTISING_META: ColocationDiscoveryAlreadyAdvertisingMETA,
     Result.COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META: ColocationDiscoveryAlreadyDiscoveringMETA,
     Result.ERROR_SPACE_GROUP_NOT_FOUND_META: SpaceGroupNotFoundMETAError,
+    Result.ERROR_ANCHOR_NOT_OWNED_BY_CALLER_ANDROID: AnchorNotOwnedByCallerANDROIDError,
     Result.ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT: SpatialCapabilityUnsupportedEXTError,
     Result.ERROR_SPATIAL_ENTITY_ID_INVALID_EXT: SpatialEntityIdInvalidEXTError,
     Result.ERROR_SPATIAL_BUFFER_ID_INVALID_EXT: SpatialBufferIdInvalidEXTError,
@@ -1680,12 +1778,16 @@ def check_result(
 
 
 __all__ = [
+    "ANDROIDThreadSettingsFailureKHRError",
+    "ANDROIDThreadSettingsIdInvalidKHRError",
     "ActionTypeMismatchError",
     "ActionsetNotAttachedError",
     "ActionsetsAlreadyAttachedError",
+    "AnchorAlreadyPersistedANDROIDError",
+    "AnchorIdNotFoundANDROIDError",
+    "AnchorNotOwnedByCallerANDROIDError",
     "AnchorNotSupportedForEntityBDError",
-    "AndroidThreadSettingsFailureKHRError",
-    "AndroidThreadSettingsIdInvalidKHRError",
+    "AnchorNotTrackingANDROIDError",
     "ApiLayerNotPresentError",
     "ApiVersionUnsupportedError",
     "CallOrderInvalidError",
@@ -1744,6 +1846,7 @@ __all__ = [
     "MarkerIdInvalidVarjoError",
     "MarkerInvalidMLError",
     "MarkerNotTrackedVarjoError",
+    "MismatchingTrackableTypeANDROIDError",
     "NameDuplicatedError",
     "NameInvalidError",
     "NotAnAnchorHTCError",
@@ -1757,6 +1860,7 @@ __all__ = [
     "PathUnsupportedError",
     "PermissionInsufficientError",
     "PermissionInsufficientKHRError",
+    "PersistedDataNotReadyANDROIDError",
     "PlaneDetectionPermissionDeniedEXTError",
     "PoseInvalidError",
     "QualifiedSuccessResult",
@@ -1793,11 +1897,18 @@ __all__ = [
     "SpaceComponentStatusAlreadySetFBError",
     "SpaceComponentStatusPendingFBError",
     "SpaceGroupNotFoundMETAError",
+    "SpaceInsufficientResourcesMETAError",
+    "SpaceInsufficientViewMETAError",
     "SpaceLocalizationFailedFBError",
     "SpaceMappingInsufficientFBError",
     "SpaceNetworkRequestFailedFBError",
     "SpaceNetworkTimeoutFBError",
     "SpaceNotLocatableEXTError",
+    "SpacePermissionInsufficientMETAError",
+    "SpaceRateLimitedMETAError",
+    "SpaceStorageAtCapacityMETAError",
+    "SpaceTooBrightMETAError",
+    "SpaceTooDarkMETAError",
     "SpatialAnchorNameInvalidMSFTError",
     "SpatialAnchorNameNotFoundMSFTError",
     "SpatialAnchorNotFoundBDError",
@@ -1829,6 +1940,7 @@ __all__ = [
     "SystemNotificationPermissionDeniedMLError",
     "TimeInvalidError",
     "TimeoutExpired",
+    "TrackableTypeNotSupportedANDROIDError",
     "UnexpectedStatePassthroughFBError",
     "UnknownPassthroughFBError",
     "ValidationFailureError",

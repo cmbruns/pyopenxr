@@ -49,18 +49,6 @@
 <li class="toctree-l1"><a class="reference internal" href="xr.html">xr — Python Bindings for OpenXR</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">xr.utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-xr.utils">Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#xr.utils.ContextObject"><code class="docutils literal notranslate"><span class="pre">ContextObject</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.ContextObject.frame_loop"><code class="docutils literal notranslate"><span class="pre">ContextObject.frame_loop()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.ContextObject.poll_xr_events"><code class="docutils literal notranslate"><span class="pre">ContextObject.poll_xr_events()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.ContextObject.view_loop"><code class="docutils literal notranslate"><span class="pre">ContextObject.view_loop()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#xr.utils.Eye"><code class="docutils literal notranslate"><span class="pre">Eye</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Eye.LEFT"><code class="docutils literal notranslate"><span class="pre">Eye.LEFT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.Eye.RIGHT"><code class="docutils literal notranslate"><span class="pre">Eye.RIGHT</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#xr.utils.GlfwWindow"><code class="docutils literal notranslate"><span class="pre">GlfwWindow</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#xr.utils.GraphicsAPI"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsAPI.D3D"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI.D3D</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsAPI.OPENGL"><code class="docutils literal notranslate"><span class="pre">GraphicsAPI.OPENGL</span></code></a></li>
@@ -76,11 +64,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#xr.utils.GraphicsContextProvider.scope"><code class="docutils literal notranslate"><span class="pre">GraphicsContextProvider.scope()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#xr.utils.InstanceObject"><code class="docutils literal notranslate"><span class="pre">InstanceObject</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.InstanceObject.destroy"><code class="docutils literal notranslate"><span class="pre">InstanceObject.destroy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.InstanceObject.get_properties"><code class="docutils literal notranslate"><span class="pre">InstanceObject.get_properties()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="#xr.utils.Matrix4x4f"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.as_numpy"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.as_numpy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.create_from_quaternion"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.create_from_quaternion()</span></code></a></li>
@@ -92,19 +75,19 @@
 <li class="toctree-l4"><a class="reference internal" href="#xr.utils.Matrix4x4f.invert_rigid_body"><code class="docutils literal notranslate"><span class="pre">Matrix4x4f.invert_rigid_body()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SessionObject"><code class="docutils literal notranslate"><span class="pre">SessionObject</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.begin_frame"><code class="docutils literal notranslate"><span class="pre">SessionObject.begin_frame()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.destroy"><code class="docutils literal notranslate"><span class="pre">SessionObject.destroy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.end_frame"><code class="docutils literal notranslate"><span class="pre">SessionObject.end_frame()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.locate_views"><code class="docutils literal notranslate"><span class="pre">SessionObject.locate_views()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.on_state_changed"><code class="docutils literal notranslate"><span class="pre">SessionObject.on_state_changed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.poll_xr_events"><code class="docutils literal notranslate"><span class="pre">SessionObject.poll_xr_events()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionObject.wait_frame"><code class="docutils literal notranslate"><span class="pre">SessionObject.wait_frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SessionStateManager"><code class="docutils literal notranslate"><span class="pre">SessionStateManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionStateManager.ExitRenderLoop"><code class="docutils literal notranslate"><span class="pre">SessionStateManager.ExitRenderLoop</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionStateManager.begin_frame"><code class="docutils literal notranslate"><span class="pre">SessionStateManager.begin_frame()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.SessionStateManager.handle_xr_event"><code class="docutils literal notranslate"><span class="pre">SessionStateManager.handle_xr_event()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SpaceObject"><code class="docutils literal notranslate"><span class="pre">SpaceObject</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#xr.utils.SwapchainInfo"><code class="docutils literal notranslate"><span class="pre">SwapchainInfo</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SystemObject"><code class="docutils literal notranslate"><span class="pre">SystemObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.SwapchainSet"><code class="docutils literal notranslate"><span class="pre">SwapchainSet</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xr.utils.XrEventDispatcher"><code class="docutils literal notranslate"><span class="pre">XrEventDispatcher</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.XrEventDispatcher.poll"><code class="docutils literal notranslate"><span class="pre">XrEventDispatcher.poll()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xr.utils.XrEventDispatcher.subscribe"><code class="docutils literal notranslate"><span class="pre">XrEventDispatcher.subscribe()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#xr.utils.projection_from_fovf"><code class="docutils literal notranslate"><span class="pre">projection_from_fovf()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#xr.utils.projection_inverse_from_fovf"><code class="docutils literal notranslate"><span class="pre">projection_inverse_from_fovf()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#xr.utils.rotation_from_quaternionf"><code class="docutils literal notranslate"><span class="pre">rotation_from_quaternionf()</span></code></a></li>
@@ -171,50 +154,6 @@ and subject to refinement as best practices emerge.</p>
 </dd>
 </dl>
 <dl class="py class">
-<dt class="sig sig-object py" id="xr.utils.ContextObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">ContextObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance_create_info:</span> <span class="pre">~xr.typedefs.InstanceCreateInfo</span> <span class="pre">=</span> <span class="pre">xr.InstanceCreateInfo(create_flags=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_info=xr.ApplicationInfo(application_name=b'__main__.py'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_version=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_name=b'pyopenxr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_version=16847654</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_version=281474976710705)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_api_layer_count=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_api_layer_names=&lt;xr.array_field.LP_c_char_p</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_extension_count=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled_extension_names=&lt;xr.array_field.LP_c_char_p</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=3)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_create_info:</span> <span class="pre">~xr.typedefs.SessionCreateInfo</span> <span class="pre">=</span> <span class="pre">xr.SessionCreateInfo(create_flags=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_id=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_space_create_info:</span> <span class="pre">~xr.typedefs.ReferenceSpaceCreateInfo</span> <span class="pre">=</span> <span class="pre">xr.ReferenceSpaceCreateInfo(reference_space_type=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pose_in_reference_space=xr.Posef(orientation=xr.Quaternionf(x=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w=1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position=xr.Vector3f(x=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z=0.0))</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=37)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_configuration_type:</span> <span class="pre">~xr.enums.ViewConfigurationType</span> <span class="pre">=</span> <span class="pre">ViewConfigurationType.PRIMARY_STEREO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_blend_mode=EnvironmentBlendMode.OPAQUE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_factor=FormFactor.HEAD_MOUNTED_DISPLAY</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.ContextObject.frame_loop">
-<span class="sig-name descname"><span class="pre">frame_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject.frame_loop" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.ContextObject.poll_xr_events">
-<span class="sig-name descname"><span class="pre">poll_xr_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject.poll_xr_events" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.ContextObject.view_loop">
-<span class="sig-name descname"><span class="pre">view_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.ContextObject.view_loop" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="xr.utils.Eye">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">Eye</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.Eye" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
-<p>An enumeration.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="xr.utils.Eye.LEFT">
-<span class="sig-name descname"><span class="pre">LEFT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#xr.utils.Eye.LEFT" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="xr.utils.Eye.RIGHT">
-<span class="sig-name descname"><span class="pre">RIGHT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#xr.utils.Eye.RIGHT" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="xr.utils.GlfwWindow">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">GlfwWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.SystemObject" title="xr.utils.classes.SystemObject"><span class="pre">SystemObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mirror_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GlfwWindow" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="xr.utils.GraphicsAPI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">GraphicsAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsAPI" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
@@ -252,7 +191,7 @@ manual and scoped activation models.</p>
 <p>Thread safety and proper context sharing must be enforced for offscreen usage.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="xr.utils.GraphicsContextProvider.GLContextScope">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GLContextScope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.GraphicsContextProvider" title="xr.utils.graphics_context_provider.GraphicsContextProvider"><span class="pre">GraphicsContextProvider</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GLContextScope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.GraphicsContextProvider" title="xr.utils.GraphicsContextProvider"><span class="pre">GraphicsContextProvider</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.GraphicsContextProvider.GLContextScope" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Scoped context activator for OpenGL rendering.</p>
 <p>Wraps a <cite>GraphicsContextProvider</cite> and ensures safe and reversible context
@@ -335,22 +274,6 @@ Must be thread-safe and idempotent.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="xr.utils.InstanceObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">InstanceObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled_extensions:</span> <span class="pre">~typing.Sequence[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">application_version:</span> <span class="pre">~xr.version.Version</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_version:</span> <span class="pre">~xr.version.Version</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_version=&lt;xr.version.Version</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">next=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.InstanceObject" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.InstanceObject.destroy">
-<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.InstanceObject.destroy" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.InstanceObject.get_properties">
-<span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.InstanceProperties" title="xr.typedefs.InstanceProperties"><span class="pre">InstanceProperties</span></a></span></span><a class="headerlink" href="#xr.utils.InstanceObject.get_properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="xr.utils.Matrix4x4f">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">Matrix4x4f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.Matrix4x4f" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -398,50 +321,47 @@ Must be thread-safe and idempotent.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="xr.utils.SessionObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SessionObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.SystemObject" title="xr.utils.classes.SystemObject"><span class="pre">SystemObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphics_binding</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="xr.utils.SessionStateManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SessionStateManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Instance" title="xr.typedefs.Instance"><span class="pre">Instance</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Session_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_configuration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.ViewConfigurationType" title="xr.enums.ViewConfigurationType"><span class="pre">ViewConfigurationType</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionStateManager" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.SessionObject.begin_frame">
-<span class="sig-name descname"><span class="pre">begin_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.begin_frame" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.SessionObject.destroy">
-<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.destroy" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.SessionObject.end_frame">
-<span class="sig-name descname"><span class="pre">end_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.end_frame" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.SessionObject.locate_views">
-<span class="sig-name descname"><span class="pre">locate_views</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'xr.typedefs.ViewState'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'_ctypes.Array'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.locate_views" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.SessionObject.on_state_changed">
-<span class="sig-name descname"><span class="pre">on_state_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session_state_changed_event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.on_state_changed" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.SessionObject.poll_xr_events">
-<span class="sig-name descname"><span class="pre">poll_xr_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.poll_xr_events" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xr.utils.SessionObject.wait_frame">
-<span class="sig-name descname"><span class="pre">wait_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SessionObject.wait_frame" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>Handles OpenXR session state transitions, lifecycle control, and frame loop integration.</p>
+<p>This class manages the transition between session states, receives runtime events,
+and coordinates rendering activity. It also gracefully winds down the session
+during context exit or shutdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#xr.utils.SessionStateManager.ExitRenderLoop" title="xr.utils.SessionStateManager.ExitRenderLoop"><strong>ExitRenderLoop</strong></a> – When the session transitions into an exit state.</p>
+</dd>
+</dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="xr.utils.SessionStateManager.ExitRenderLoop">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ExitRenderLoop</span></span><a class="headerlink" href="#xr.utils.SessionStateManager.ExitRenderLoop" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseException</span></code></p>
+<p>Signal raised to indicate the frame loop should exit immediately.</p>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="xr.utils.SpaceObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SpaceObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.SessionObject" title="xr.utils.classes.SessionObject"><span class="pre">SessionObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_space_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.ReferenceSpaceType" title="xr.enums.ReferenceSpaceType"><span class="pre">ReferenceSpaceType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ReferenceSpaceType.STAGE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pose_in_reference_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Posef" title="xr.typedefs.Posef"><span class="pre">Posef</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SpaceObject" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionStateManager.begin_frame">
+<span class="sig-name descname"><span class="pre">begin_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="xr.html#xr.FrameState" title="xr.typedefs.FrameState"><span class="pre">FrameState</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#xr.utils.SessionStateManager.begin_frame" title="Link to this definition"></a></dt>
+<dd><p>Poll OpenXR events and start a frame if the session is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FrameState if the frame is started, None otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.SessionStateManager.handle_xr_event">
+<span class="sig-name descname"><span class="pre">handle_xr_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.EventDataBuffer" title="xr.typedefs.EventDataBuffer"><span class="pre">EventDataBuffer</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#xr.utils.SessionStateManager.handle_xr_event" title="Link to this definition"></a></dt>
+<dd><p>Dispatch and handle runtime OpenXR events relevant to the session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event_buffer</strong> – A buffer containing one OpenXR event.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -476,9 +396,61 @@ metadata useful for framebuffer setup.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="xr.utils.SystemObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SystemObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#xr.utils.InstanceObject" title="xr.utils.classes.InstanceObject"><span class="pre">InstanceObject</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.FormFactor" title="xr.enums.FormFactor"><span class="pre">FormFactor</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">FormFactor.HEAD_MOUNTED_DISPLAY</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SystemObject" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="xr.utils.SwapchainSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">SwapchainSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.Instance" title="xr.typedefs.Instance"><span class="pre">Instance</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">c_ulonglong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LP_Session_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_texture_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swapchain_image_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">SWAPCHAIN_IMAGE_TYPE</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_configuration_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="xr.html#xr.ViewConfigurationType" title="xr.enums.ViewConfigurationType"><span class="pre">ViewConfigurationType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">ViewConfigurationType.PRIMARY_STEREO</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.SwapchainSet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">SWAPCHAIN_IMAGE_TYPE</span></code>]</p>
+<p>Aggregates swapchains for multiple OpenXR views.</p>
+<p>This class creates and manages a collection of per-view <a class="reference internal" href="xr.html#xr.Swapchain" title="xr.Swapchain"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.Swapchain</span></code></a> instances,
+typically one for each eye in a stereo configuration. It uses an internal <code class="xref py py-class docutils literal notranslate"><span class="pre">contextlib.ExitStack</span></code>
+to ensure lifecycle safety and deterministic resource cleanup.</p>
+<p>Swapchains are initialized using the recommended parameters from the runtime, as reported
+by <a class="reference internal" href="xr.html#xr.enumerate_view_configuration_views" title="xr.enumerate_view_configuration_views"><code class="xref py py-func docutils literal notranslate"><span class="pre">xr.enumerate_view_configuration_views()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> (<a class="reference internal" href="xr.html#xr.Instance" title="xr.Instance"><em>xr.Instance</em></a>) – The OpenXR runtime instance.</p></li>
+<li><p><strong>system_id</strong> (<em>xr.SystemId</em>) – The headset or rendering system providing view capabilities.</p></li>
+<li><p><strong>session</strong> (<em>xr.Session</em>) – The active OpenXR session used to create swapchains.</p></li>
+<li><p><strong>color_texture_format</strong> (<em>int</em>) – OpenGL format used for swapchain images (e.g., <code class="xref py py-data docutils literal notranslate"><span class="pre">GL_RGBA8</span></code>).</p></li>
+<li><p><strong>swapchain_image_type</strong> (<em>Type</em><em>[</em><em>SWAPCHAIN_IMAGE_TYPE</em><em>]</em>) – ctypes structure representing each swapchain image.</p></li>
+<li><p><strong>view_configuration_type</strong> (<a class="reference internal" href="xr.html#xr.ViewConfigurationType" title="xr.ViewConfigurationType"><em>xr.ViewConfigurationType</em></a>) – The view configuration, such as stereo or mono.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>views</strong> (<em>List</em><em>[</em><a class="reference internal" href="#xr.utils.SwapchainInfo" title="xr.utils.SwapchainInfo"><em>SwapchainInfo</em></a><em>]</em>) – List of view-specific swapchain resources.</p></li>
+<li><p><strong>exit_stack</strong> (<em>contextlib.ExitStack</em>) – Internal context manager for cleanup logic.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Seealso<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#xr.utils.SwapchainInfo" title="xr.utils.SwapchainInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">SwapchainInfo</span></code></a>, <a class="reference internal" href="xr.html#xr.ViewConfigurationView" title="xr.ViewConfigurationView"><code class="xref py py-class docutils literal notranslate"><span class="pre">xr.ViewConfigurationView</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="xr.utils.XrEventDispatcher">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xr.utils.</span></span><span class="sig-name descname"><span class="pre">XrEventDispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.XrEventDispatcher" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Polls OpenXR events and dispatches them to subscribed handlers.</p>
+<p>Subscribers must be callables that accept a single event argument.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.XrEventDispatcher.poll">
+<span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.XrEventDispatcher.poll" title="Link to this definition"></a></dt>
+<dd><p>Polls events from the OpenXR runtime and dispatches them to all subscribers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xr.utils.XrEventDispatcher.subscribe">
+<span class="sig-name descname"><span class="pre">subscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="xr.html#xr.EventDataBuffer" title="xr.typedefs.EventDataBuffer"><span class="pre">EventDataBuffer</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xr.utils.XrEventDispatcher.subscribe" title="Link to this definition"></a></dt>
+<dd><p>Register a callback to receive OpenXR events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callback</strong> – A callable that takes one event argument.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">

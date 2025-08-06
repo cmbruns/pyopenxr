@@ -1,5 +1,6 @@
 
 vendor_tags = [
+    "ANDROID",
     "BD",  # ByteDance?
     "EXT",
     "FB",
