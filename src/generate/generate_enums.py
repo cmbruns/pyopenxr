@@ -56,31 +56,10 @@ def main():
             return c_int
     
 
-    class FlagBase(enum.Flag, metaclass=DefaultEnumMeta):
+    class FlagBase(enum.IntFlag, metaclass=DefaultEnumMeta):
         @staticmethod
         def ctype():
             return c_uint64
-
-        def __and__(self, other):
-            return type(self)(self.value & other)
-    
-        def __rand__(self, other):
-            return type(self)(other & self.value)
-    
-        def __invert__(self):
-            return type(self)(~self.value)
-    
-        def __or__(self, other):
-            return type(self)(self.value | other)
-    
-        def __ror__(self, other):
-            return type(self)(other | self.value)
-    
-        def __xor__(self, other):
-            return type(self)(self.value ^ other)
-    
-        def __rxor__(self, other):
-            return type(self)(other ^ self.value)
     '''))
     cg.print_items()
 
