@@ -58,14 +58,14 @@ def openxr_log_level(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT) -> in
 
 
 def xr_debug_callback(
-            severity: xr.DebugUtilsMessageSeverityFlagsEXT,
-            _type: xr.DebugUtilsMessageTypeFlagsEXT,
+            severity: xr.DebugUtilsMessageSeverityFlagsEXTCInt,
+            _type: xr.DebugUtilsMessageTypeFlagsEXTCInt,
             data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
             _user_data: ctypes.c_void_p) -> bool:
     """Redirect OpenXR messages to our python logger."""
     d = data.contents
     pyopenxr_logger.log(
-        level=openxr_log_level(severity),
+        level=openxr_log_level(xr.DebugUtilsMessageSeverityFlagsEXT(severity)),
         msg=f"OpenXR: {d.function_name.decode()}: {d.message.decode()}")
     return True
 
@@ -74,13 +74,15 @@ def xr_debug_callback(
 pfn_xr_debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(xr_debug_callback)
 debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
     message_severities=(
-            xr.DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT
+            xr.DebugUtilsMessageSeverityFlagsEXT(0)  # to keep the pycharm linter happy
+            | xr.DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT
             | xr.DebugUtilsMessageSeverityFlagsEXT.INFO_BIT
             | xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT
             | xr.DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT
     ),
     message_types=(
-                xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
+                xr.DebugUtilsMessageTypeFlagsEXT(0)  # to keep the pycharm linter happy
+                | xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
                 | xr.DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT
                 | xr.DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
                 | xr.DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT

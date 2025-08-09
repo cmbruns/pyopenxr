@@ -27,14 +27,14 @@ ALL_TYPES = (
 )
 
 
-def py_log_level(severity_flags: int):
-    if severity_flags & 0x0001:  # VERBOSE
+def py_log_level(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT):
+    if severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT:
         return logging.DEBUG
-    if severity_flags & 0x0010:  # INFO
+    if severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.INFO_BIT:
         return logging.INFO
-    if severity_flags & 0x0100:  # WARNING
+    if severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT:
         return logging.WARNING
-    if severity_flags & 0x1000:  # ERROR
+    if severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT:
         return logging.ERROR
     return logging.CRITICAL
 
@@ -149,14 +149,15 @@ class OpenXrExample(object):
 
     def debug_callback_py(
             self,
-            severity: xr.DebugUtilsMessageSeverityFlagsEXT,
-            _type: xr.DebugUtilsMessageTypeFlagsEXT,
+            severity: xr.DebugUtilsMessageSeverityFlagsEXTCInt,
+            _type: xr.DebugUtilsMessageTypeFlagsEXTCInt,
             data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
             _user_data: ctypes.c_void_p,
     ) -> bool:
         d = data.contents
         # TODO structure properties to return unicode strings
-        self.logger.log(py_log_level(severity), f"{d.function_name.decode()}: {d.message.decode()}")
+        log_level = py_log_level(xr.DebugUtilsMessageSeverityFlagsEXT(severity))
+        self.logger.log(log_level, f"{d.function_name.decode()}: {d.message.decode()}")
         return True
 
     def run(self):
@@ -259,7 +260,7 @@ class OpenXrExample(object):
             self.graphics_binding.glx_context = GLX.glXGetCurrentContext()
             self.graphics_binding.glx_drawable = GLX.glXGetCurrentDrawable()
         pp = ctypes.cast(ctypes.pointer(self.graphics_binding), ctypes.c_void_p)
-        sci = xr.SessionCreateInfo(0, self.system_id, next=pp)
+        sci = xr.SessionCreateInfo(xr.SessionCreateFlags.NONE, self.system_id, next=pp)
         self.session = xr.create_session(self.instance, sci)
         reference_spaces = xr.enumerate_reference_spaces(self.session)
         for rs in reference_spaces:
