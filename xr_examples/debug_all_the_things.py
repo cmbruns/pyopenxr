@@ -110,8 +110,8 @@ instance = xr.create_instance(
     )
 )
 
-# OpenGL can report debug messages too
-# Create a sub-logger for messages from OpenGL
+# OpenGL can report debug messages too.
+# Create a sub-logger for messages from OpenGL.
 gl_logger = logging.getLogger("pyopenxr.opengl")
 
 

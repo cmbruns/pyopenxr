@@ -397,6 +397,7 @@ class OpenXrExample(object):
                 layer_view.pose = eye_view.pose
             frame_end_info.layers = [ctypes.byref(self.projection_layer), ]
         xr.end_frame(self.session, frame_end_info)
+        GL.glGetError()  # workaround Linux SteamVR problem
 
     def update_xr_views(self):
         vi = xr.ViewLocateInfo(
