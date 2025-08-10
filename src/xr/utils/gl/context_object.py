@@ -1,6 +1,8 @@
 import time
 from ctypes import byref, c_int32, cast, POINTER, Structure
 
+from OpenGL import GL
+
 import xr
 from . import OpenGLGraphics
 from .. import GraphicsContextProvider
@@ -191,6 +193,9 @@ class ContextObject(object):
                             layers=self.render_layers,
                         )
                     )
+                    # workaround for Linux SteamVR problem
+                    # https://github.com/ValveSoftware/SteamVR-for-Linux/issues/799
+                    GL.glGetError()
             else:
                 # Throttle loop since xrWaitFrame won't be called.
                 time.sleep(0.250)
