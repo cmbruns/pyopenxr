@@ -1,6 +1,6 @@
 import abc
 import ctypes
-from typing import List, Union
+from typing import List, Sequence
 
 import xr
 
@@ -59,7 +59,7 @@ class IGraphicsPlugin(abc.ABC):
         """Render to a swapchain image for a projection view."""
 
     @abc.abstractmethod
-    def select_color_swapchain_format(self, runtime_formats: Union[List[int], ctypes.Array]) -> int:
+    def select_color_swapchain_format(self, runtime_formats: Sequence[int]) -> int:
         """Select the preferred swapchain format from the list of available formats."""
 
     @property

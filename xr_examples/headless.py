@@ -87,7 +87,7 @@ action_set = xr.create_action_set(
         priority=0,
     ),
 )
-controller_paths = (xr.Path * 2)(
+controller_paths = (xr.Path * 2)(  # noqa
     xr.string_to_path(instance, "/user/hand/left"),
     xr.string_to_path(instance, "/user/hand/right"),
 )

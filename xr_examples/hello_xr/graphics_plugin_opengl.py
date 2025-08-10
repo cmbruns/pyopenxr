@@ -2,7 +2,7 @@ from ctypes import byref, c_void_p, cast, sizeof, POINTER, Structure
 import inspect
 import logging
 import platform
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Sequence
 
 import numpy
 from OpenGL import GL
@@ -325,7 +325,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         GL.glUseProgram(0)
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0)
 
-    def select_color_swapchain_format(self, runtime_formats):
+    def select_color_swapchain_format(self, runtime_formats: Sequence[int]):
         # List of supported color swapchain formats.
         supported_color_swapchain_formats = [
             GL.GL_RGB10_A2,

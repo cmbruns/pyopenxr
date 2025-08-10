@@ -22,7 +22,7 @@ with ContextObject(
     ),
 ) as context:
     # Set up the controller pose action
-    controller_paths = (xr.Path * 2)(
+    controller_paths = (xr.Path * 2)(  # noqa
         xr.string_to_path(context.instance, "/user/hand/left"),
         xr.string_to_path(context.instance, "/user/hand/right"),
     )

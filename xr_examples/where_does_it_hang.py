@@ -5,15 +5,14 @@ The goal here is to create the simplest case to demonstrate the hang that occurs
 in xr.destroy_instance() on Linux with SteamVR.
 
 The hang does not occur on Windows; it *does* occur on linux.
-The hang does not occur when calling xr.destroy_instance() without out any frame loop calls.
+The hang does not occur when calling xr.destroy_instance() without any frame loop calls.
   it *does* occur when calling xr.destroy_instance after running a frame loop.
 """
 
 import ctypes
-from ctypes import byref, c_int32, c_void_p, cast, POINTER, pointer, Structure
+from ctypes import byref, c_int32, cast, POINTER, Structure
 import logging  # 1) Use the python logging system
 import os
-import platform
 import time
 
 from OpenGL import GL
@@ -142,8 +141,8 @@ graphics = xr.utils.gl.OpenGLGraphics(
     context_provider=GLFWOffscreenContextProvider(),
 )
 
-# OpenGL can report debug messages too
-# Create a sub-logger for messages from OpenGL
+# OpenGL can report debug messages too.
+# Create a sub-logger for messages from OpenGL.
 gl_logger = logging.getLogger("pyopenxr.opengl")
 
 
@@ -254,6 +253,7 @@ if run_frame_loop:
         frame_count += 1
         # poll_xr_events
         exit_render_loop = False
+        session_state = xr.SessionState.IDLE
         while True:
             try:
                 event_buffer = xr.poll_event(instance)
@@ -330,6 +330,7 @@ if run_frame_loop:
                         layers=render_layers,
                     )
                 )
+                GL.glGetError()  # work around SteamVR Linux OpenGL problem
                 # xr.request_exit_session(session)  # Request exit here allows clean exit but steamvr is hosed.
             if frame_count > 100:
                 xr.request_exit_session(session)

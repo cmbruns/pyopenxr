@@ -26,7 +26,7 @@ with ContextObject(
         inspect.cleandoc("""
         #version 430
         
-        // Adapted from @jherico's RiftDemo.py in pyovr
+        // Adapted from @jherico's RiftDemo.py in pyopenvr
         
         /*  Draws a cube:
         

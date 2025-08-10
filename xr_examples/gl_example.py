@@ -197,13 +197,13 @@ class OpenXrExample(object):
             application_info=app_info,
             enabled_extension_names=requested_extensions,
         )
-        dumci = xr.DebugUtilsMessengerCreateInfoEXT()
+        dum_create_info = xr.DebugUtilsMessengerCreateInfoEXT()
         if self.enable_debug:
-            dumci.message_severities = ALL_SEVERITIES
-            dumci.message_types = ALL_TYPES
-            dumci.user_data = None  # TODO
-            dumci.user_callback = self.debug_callback
-            ici.next = ctypes.cast(ctypes.pointer(dumci), ctypes.c_void_p)  # TODO: yuck
+            dum_create_info.message_severities = ALL_SEVERITIES
+            dum_create_info.message_types = ALL_TYPES
+            dum_create_info.user_data = None  # TODO
+            dum_create_info.user_callback = self.debug_callback
+            ici.next = ctypes.cast(ctypes.pointer(dum_create_info), ctypes.c_void_p)  # TODO: yuck
         self.instance = xr.create_instance(ici)
         # TODO: pythonic wrapper
         self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(
@@ -213,7 +213,7 @@ class OpenXrExample(object):
             ),
             xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
         )
-        instance_props = xr.get_instance_properties(self.instance)
+        # instance_props = xr.get_instance_properties(self.instance)
 
     def prepare_xr_system(self):
         get_info = xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY)
@@ -247,7 +247,7 @@ class OpenXrExample(object):
         if self.window is None:
             raise RuntimeError("Failed to create GLFW window")
         glfw.make_context_current(self.window)
-        # Attempt to disable vsync on the desktop window or
+        # Attempt to disable vsync on the desktop window, or
         # it will interfere with the OpenXR frame loop timing
         glfw.swap_interval(0)
 
@@ -266,11 +266,11 @@ class OpenXrExample(object):
         for rs in reference_spaces:
             self.logger.debug(f"Session supports reference space {xr.ReferenceSpaceType(rs)}")
         # TODO: default constructors for Quaternion, Vector3f, Posef, ReferenceSpaceCreateInfo
-        rsci = xr.ReferenceSpaceCreateInfo(
+        rs_create_info = xr.ReferenceSpaceCreateInfo(
             xr.ReferenceSpaceType.STAGE,
             xr.Posef(xr.Quaternionf(0, 0, 0, 1), xr.Vector3f(0, 0, 0))
         )
-        self.projection_layer.space = xr.create_reference_space(self.session, rsci)
+        self.projection_layer.space = xr.create_reference_space(self.session, rs_create_info)
         swapchain_formats = xr.enumerate_swapchain_formats(self.session)
         for scf in swapchain_formats:
             self.logger.debug(f"Session supports swapchain format {stringForFormat[scf]}")
@@ -406,11 +406,6 @@ class OpenXrExample(object):
             self.projection_layer.space,
         )
         vs, self.eye_view_states = xr.locate_views(self.session, vi)
-        for eye_index, view_state in enumerate(self.eye_view_states):
-            # These aren't actually used in this simple example...
-            # self.eye_projections[eye_index] = something(view_state.fov)  # TODO:
-            # print(view_state.pose)
-            pass
 
     def render(self):
         ai = xr.SwapchainImageAcquireInfo(None)

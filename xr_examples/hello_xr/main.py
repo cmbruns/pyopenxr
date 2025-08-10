@@ -23,7 +23,7 @@ key_press_event = threading.Event()
 logger = logging.getLogger("hello_xr.main")
 
 
-def create_graphics_plugin(options: argparse.Namespace) -> IGraphicsPlugin:
+def create_graphics_plugin(options: [argparse.Namespace, Options]) -> IGraphicsPlugin:
     """Create a graphics plugin for the graphics API specified in the options."""
     graphics_plugin_map = {
         "OpenGL": OpenGLGraphicsPlugin,
@@ -33,7 +33,7 @@ def create_graphics_plugin(options: argparse.Namespace) -> IGraphicsPlugin:
     return graphics_plugin_map[options.graphics_plugin](options)
 
 
-def create_platform_plugin(_options: argparse.Namespace) -> IPlatformPlugin:
+def create_platform_plugin(_options: [argparse.Namespace, Options]) -> IPlatformPlugin:
     if platform.system() == "Windows":
         return Win32PlatformPlugin()
     elif platform.system() == "Linux":

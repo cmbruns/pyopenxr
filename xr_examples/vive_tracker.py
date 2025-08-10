@@ -66,7 +66,7 @@ with ContextObject(
     ]
     role_path_strings = [f"/user/vive_tracker_htcx/role/{role}"
                          for role in role_strings]
-    role_paths = (xr.Path * len(role_path_strings))(
+    role_paths = (xr.Path * len(role_path_strings))(  # noqa
         *[xr.string_to_path(instance, role_string) for role_string in role_path_strings],
     )
     pose_action = xr.create_action(

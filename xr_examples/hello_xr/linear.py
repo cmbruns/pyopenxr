@@ -37,7 +37,7 @@ class GraphicsAPI(enum.Enum):
 
 # Column-major, pre-multiplied. This type does not exist in the OpenXR API and is provided for convenience.
 class Matrix4x4f(Structure):
-    _fields_ = [("m", c_float * 16), ]
+    _fields_ = [("m", c_float * 16), ]  # noqa
 
     def __init__(self):
         super().__init__()
@@ -49,7 +49,7 @@ class Matrix4x4f(Structure):
     def as_numpy(self):
         if not hasattr(self, "_numpy") or self._numpy is None:
             # Just in time construction
-            buffer = (c_float * 16).from_address(addressof(self))
+            buffer = (c_float * 16).from_address(addressof(self))  # noqa
             buffer._wrapper = self  # To link lifetime of buffer to self
             self._numpy = numpy.ctypeslib.as_array(buffer)
         return self._numpy
