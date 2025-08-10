@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "Unofficial Python bindings for OpenXR VR/AR device access"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
 authors = [{ name = "Christopher M. Bruns", email = "cmbruns@rotatingpenguin.com" }]
 dependencies = [
     "glfw",
@@ -22,7 +22,6 @@ classifiers = [
     "Environment :: Win32 (MS Windows)",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3 :: Only",
