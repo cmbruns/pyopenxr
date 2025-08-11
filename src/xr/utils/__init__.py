@@ -21,6 +21,7 @@ Contents may include:
 """
 import enum
 from abc import ABC, abstractmethod
+from contextlib import ExitStack
 from ctypes import cast, byref, POINTER
 import logging
 from math import tan
