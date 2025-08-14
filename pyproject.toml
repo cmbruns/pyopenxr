@@ -39,8 +39,8 @@ package-dir = {"" = "src"}
 packages = [
     "xr",
     "xr.api_layer",
-    "xr.api_layer.windows",
     "xr.api_layer.linux",
+    "xr.api_layer.windows",
     "xr.ext",
     "xr.ext.HTCX",
     "xr.ext.KHR",
@@ -48,6 +48,7 @@ packages = [
     "xr.platform",
     "xr.utils",
     "xr.utils.gl",
+    "xr.utils.gl.glfw_util",
 ]
 
 [tool.setuptools.package-data]
