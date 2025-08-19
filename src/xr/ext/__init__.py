@@ -18,3 +18,9 @@ To use an extension, ensure its name (e.g. `"XR_EXT_debug_utils"`) is included i
 
 :seealso: https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#extensions
 """
+
+from . import ext_debug_utils
+from .ext_debug_utils import *
+
+__all__ = []
+__all__.extend(ext_debug_utils.__all__)
