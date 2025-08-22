@@ -1,6 +1,5 @@
 import inspect
 
-
 class_docstrings = {
     "xr.Instance": {
         "docstring": inspect.cleandoc("""

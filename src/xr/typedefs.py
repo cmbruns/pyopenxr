@@ -106,6 +106,10 @@ class Instance(POINTER(Instance_T)):
             byref(self),
         ))
         if result.is_exception():
+            from .exception import RuntimeFailureError
+            if isinstance(result, RuntimeFailureError):
+                msg = f"{result} Is your headset connected and working?"
+                raise RuntimeFailureError(msg)
             raise result
 
     def __enter__(self) -> "Instance":
