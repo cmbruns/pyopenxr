@@ -6,6 +6,7 @@ import textwrap
 import requests
 
 import xr
+import xr.ext
 from class_docstring_data import class_docstrings
 
 
@@ -135,6 +136,31 @@ def write_docstrings(entries: dict[str, dict[str, str]], label="class", file=sys
 
 def exercise_docstring_roundtrip():
     updated_class_docstrings = copy.deepcopy(class_docstrings)
+
+    for module in [xr, xr.ext]:
+        for name in dir(module):
+            obj = getattr(module, name)
+            doc = getattr(obj, "__doc__", None)
+            if not doc or doc in {"An enumeration."}:
+                continue
+            if not inspect.isclass(obj):
+                continue
+            qualified_name = f"{module.__name__}.{name}"
+
+            c_name = f"Xr{name}"  # TODO: cases
+            url = f"https://registry.khronos.org/OpenXR/specs/1.1/man/html/{c_name}.html"
+            try:
+                response = requests.head(url, allow_redirects=True, timeout=5)
+                if response.status_code != 200:
+                    url = None
+            except requests.RequestException:
+                url = None
+            
+            updated_class_docstrings[qualified_name] = {}
+            if url is not None:
+                updated_class_docstrings[qualified_name]["spec_url"] = url
+            updated_class_docstrings[qualified_name]["docstring"] = doc
+
     with open("class_docstring_data.py", "w") as file:
         write_docstrings(updated_class_docstrings, label="class", file=file)
 
