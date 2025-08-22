@@ -135,8 +135,8 @@ def write_docstrings(entries: dict[str, dict[str, str]], label="class", file=sys
 
 def exercise_docstring_roundtrip():
     updated_class_docstrings = copy.deepcopy(class_docstrings)
-    with open("class_docstring_data.py", "r") as file:
-        pass
+    with open("class_docstring_data.py", "w") as file:
+        write_docstrings(updated_class_docstrings, label="class", file=file)
 
 
 if __name__ == "__main__":
