@@ -147,15 +147,18 @@ def exercise_docstring_roundtrip():
                 continue
             qualified_name = f"{module.__name__}.{name}"
 
-            c_name = f"Xr{name}"  # TODO: cases
-            url = f"https://registry.khronos.org/OpenXR/specs/1.1/man/html/{c_name}.html"
-            try:
-                response = requests.head(url, allow_redirects=True, timeout=5)
-                if response.status_code != 200:
+            if issubclass(obj, xr.ResultException):
+                url = "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrResult.html"
+            else:
+                c_name = f"Xr{name}"  # TODO: cases
+                url = f"https://registry.khronos.org/OpenXR/specs/1.1/man/html/{c_name}.html"
+                try:
+                    response = requests.head(url, allow_redirects=True, timeout=5)
+                    if response.status_code != 200:
+                        url = None
+                except requests.RequestException:
                     url = None
-            except requests.RequestException:
-                url = None
-            
+
             updated_class_docstrings[qualified_name] = {}
             if url is not None:
                 updated_class_docstrings[qualified_name]["spec_url"] = url
