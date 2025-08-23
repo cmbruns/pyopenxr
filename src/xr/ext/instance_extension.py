@@ -1,19 +1,9 @@
-"""
-xr.ext.base_extension — Base class for Pythonic OpenXR extensions
-
-This module defines the BaseExtension class, which provides common utilities
-for resolving and invoking OpenXR instance-bound functions in extension
-implementations. It centralizes boilerplate around function lookup,
-casting, and result checking, speeding manual development while retaining
-the option to inline calls later for simpler tracebacks.
-"""
-
 from ctypes import cast
 
 import xr
 
 
-class BaseExtension:
+class InstanceExtension:
     """
     Base class for Pythonic OpenXR extension implementations.
 
@@ -68,5 +58,5 @@ class BaseExtension:
 
 
 __all__ = [
-    "BaseExtension",
+    "InstanceExtension",
 ]

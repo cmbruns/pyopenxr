@@ -17,11 +17,13 @@ Contents
 .. toctree::
    :maxdepth: 2
    :caption: Documentation
+   :hidden:
 
    install
    support
    xr
    xr.utils
+   xr.ext
 
 Indices and Tables
 ------------------

@@ -1,5 +1,5 @@
 """
-Module xr.ext.KHR.opengl_enable — Python bindings for the XR_KHR_opengl_enable extension.
+Python bindings for the XR_KHR_opengl_enable extension.
 
 This module provides access to OpenGL-specific graphics requirements via OpenXR.
 It exposes a Pythonic wrapper around `xrGetOpenGLGraphicsRequirementsKHR`, allowing
@@ -14,10 +14,10 @@ enabled extensions during instance creation.
 
 from ctypes import byref, cast
 import xr
-from .base_extension import BaseExtension
+from .instance_extension import InstanceExtension
 
 
-class KhrOpenGLEnable(BaseExtension):
+class KhrOpenGLEnable(InstanceExtension):
     NAME = "XR_KHR_opengl_enable"
 
     @staticmethod

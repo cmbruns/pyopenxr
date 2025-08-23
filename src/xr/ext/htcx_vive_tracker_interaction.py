@@ -1,7 +1,7 @@
-from .base_extension import BaseExtension
+from .instance_extension import InstanceExtension
 
 
-class HtcxViveTrackerInteraction(BaseExtension):
+class HtcxViveTrackerInteraction(InstanceExtension):
     NAME = "XR_HTCX_vive_tracker_interaction"
 
 

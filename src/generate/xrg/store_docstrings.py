@@ -8,6 +8,7 @@ import requests
 import xr
 import xr.ext
 from class_docstring_data import class_docstrings
+from function_docstring_data import function_docstrings
 
 
 def get_instance_docstring():

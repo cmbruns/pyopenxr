@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="xr.html">xr — Python Bindings for OpenXR</a></li>
 <li class="toctree-l1"><a class="reference internal" href="xr.utils.html">xr.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xr.ext.html">xr.ext package</a></li>
 </ul>
 
         </div>
@@ -565,6 +566,8 @@
         <li><a href="xr.utils.html#xr.utils.SessionStateManager.begin_frame">(xr.utils.SessionStateManager method)</a>
 </li>
       </ul></li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.begin_label_region">begin_label_region() (xr.ext.DebugUtils method)</a>
+</li>
       <li><a href="xr.html#xr.begin_session">begin_session() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.CompositionLayerEquirectKHR.bias">bias (xr.CompositionLayerEquirectKHR attribute)</a>
@@ -677,10 +680,10 @@
 </li>
       <li><a href="xr.html#xr.BodyJointsLocateInfoBD">BodyJointsLocateInfoBD (class in xr)</a>
 </li>
-      <li><a href="xr.html#xr.BodyJointsLocateInfoFB">BodyJointsLocateInfoFB (class in xr)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xr.html#xr.BodyJointsLocateInfoFB">BodyJointsLocateInfoFB (class in xr)</a>
+</li>
       <li><a href="xr.html#xr.BodyJointsLocateInfoHTC">BodyJointsLocateInfoHTC (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.BodySkeletonFB">BodySkeletonFB (class in xr)</a>
@@ -1205,10 +1208,10 @@
 </li>
       <li><a href="xr.html#xr.StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_FB">COMPOSITION_LAYER_IMAGE_LAYOUT_FB (xr.StructureType attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.COMPOSITION_LAYER_PASSTHROUGH_FB">COMPOSITION_LAYER_PASSTHROUGH_FB (xr.StructureType attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.COMPOSITION_LAYER_PASSTHROUGH_HTC">COMPOSITION_LAYER_PASSTHROUGH_HTC (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.COMPOSITION_LAYER_PROJECTION">COMPOSITION_LAYER_PROJECTION (xr.StructureType attribute)</a>
@@ -1321,8 +1324,6 @@
         <li><a href="xr.html#xr.FaceExpressionWeightsFB.confidences">(xr.FaceExpressionWeightsFB property)</a>
 </li>
       </ul></li>
-      <li><a href="xr.html#xr.GraphicsBindingEGLMNDX.config">config (xr.GraphicsBindingEGLMNDX attribute)</a>
-</li>
       <li><a href="xr.html#xr.FoveationCustomModeInfoHTC.config_count">config_count (xr.FoveationCustomModeInfoHTC attribute)</a>
 </li>
       <li><a href="xr.html#xr.SenseDataProviderCreateInfoSpatialMeshBD.config_flags">config_flags (xr.SenseDataProviderCreateInfoSpatialMeshBD attribute)</a>
@@ -1339,11 +1340,7 @@
         <li><a href="xr.html#xr.KeyboardTrackingFlagsFB.CONNECTED_BIT">(xr.KeyboardTrackingFlagsFB attribute)</a>
 </li>
       </ul></li>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR.connection">connection (xr.GraphicsBindingOpenGLXcbKHR attribute)</a>
-</li>
       <li><a href="xr.html#xr.NewSceneComputeInfoMSFT.consistency">consistency (xr.NewSceneComputeInfoMSFT attribute)</a>
-</li>
-      <li><a href="xr.html#xr.GraphicsBindingEGLMNDX.context">context (xr.GraphicsBindingEGLMNDX attribute)</a>
 </li>
       <li><a href="xr.html#xr.MarkerDetectorCornerRefineMethodML.CONTOUR">CONTOUR (xr.MarkerDetectorCornerRefineMethodML attribute)</a>
 </li>
@@ -1457,6 +1454,8 @@
 </li>
       <li><a href="xr.html#xr.create_instance">create_instance() (in module xr)</a>
 </li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.create_messenger">create_messenger() (xr.ext.DebugUtils method)</a>
+</li>
       <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_projection">create_projection() (xr.utils.Matrix4x4f static method)</a>
 </li>
       <li><a href="xr.utils.html#xr.utils.Matrix4x4f.create_projection_fov">create_projection_fov() (xr.utils.Matrix4x4f static method)</a>
@@ -1563,6 +1562,8 @@
 </li>
       <li><a href="xr.html#xr.StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_EXT">DEBUG_UTILS_OBJECT_NAME_INFO_EXT (xr.StructureType attribute)</a>
 </li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils">DebugUtils (class in xr.ext)</a>
+</li>
       <li><a href="xr.html#xr.DebugUtilsLabelEXT">DebugUtilsLabelEXT (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.DebugUtilsMessageSeverityFlagsEXT">DebugUtilsMessageSeverityFlagsEXT (class in xr)</a>
@@ -1637,6 +1638,8 @@
         <li><a href="xr.api_layer.html#xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer.destroy_instance">(xr.api_layer.steamvr_linux_destroyinstance_layer.SteamVrLinuxDestroyInstanceLayer method)</a>
 </li>
       </ul></li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.destroy_messenger">destroy_messenger() (xr.ext.DebugUtils method)</a>
+</li>
       <li><a href="xr.html#xr.destroy_session">destroy_session() (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.destroy_space">destroy_space() (in module xr)</a>
@@ -1721,12 +1724,6 @@
         <li><a href="xr.html#xr.EventDataColocationDiscoveryResultMETA.discovery_request_id">(xr.EventDataColocationDiscoveryResultMETA attribute)</a>
 </li>
         <li><a href="xr.html#xr.EventDataStartColocationDiscoveryCompleteMETA.discovery_request_id">(xr.EventDataStartColocationDiscoveryCompleteMETA attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="xr.html#xr.GraphicsBindingEGLMNDX.display">display (xr.GraphicsBindingEGLMNDX attribute)</a>
-
-      <ul>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLWaylandKHR.display">(xr.GraphicsBindingOpenGLWaylandKHR attribute)</a>
 </li>
       </ul></li>
       <li><a href="xr.html#xr.EnvironmentDepthImageAcquireInfoMETA.display_time">display_time (xr.EnvironmentDepthImageAcquireInfoMETA attribute)</a>
@@ -1866,6 +1863,8 @@
       <li><a href="xr.html#xr.SecondaryViewConfigurationSessionBeginInfoMSFT.enabled_view_configuration_types">enabled_view_configuration_types (xr.SecondaryViewConfigurationSessionBeginInfoMSFT property)</a>
 </li>
       <li><a href="xr.html#xr.end_frame">end_frame() (in module xr)</a>
+</li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.end_label_region">end_label_region() (xr.ext.DebugUtils method)</a>
 </li>
       <li><a href="xr.html#xr.end_session">end_session() (in module xr)</a>
 </li>
@@ -2235,10 +2234,10 @@
 </li>
       <li><a href="xr.html#xr.Result.ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT">ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT (xr.Result attribute)</a>
 </li>
-      <li><a href="xr.html#xr.Result.ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT">ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT (xr.Result attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xr.html#xr.Result.ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT">ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT (xr.Result attribute)</a>
+</li>
       <li><a href="xr.html#xr.Result.ERROR_SPATIAL_ANCHOR_NOT_FOUND_BD">ERROR_SPATIAL_ANCHOR_NOT_FOUND_BD (xr.Result attribute)</a>
 </li>
       <li><a href="xr.html#xr.Result.ERROR_SPATIAL_ANCHOR_SHARING_AUTHENTICATION_FAILURE_BD">ERROR_SPATIAL_ANCHOR_SHARING_AUTHENTICATION_FAILURE_BD (xr.Result attribute)</a>
@@ -2835,8 +2834,6 @@
 </li>
       <li><a href="xr.html#xr.PlaneDetectionStateEXT.FATAL">FATAL (xr.PlaneDetectionStateEXT attribute)</a>
 </li>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR.fbconfigid">fbconfigid (xr.GraphicsBindingOpenGLXcbKHR attribute)</a>
-</li>
       <li><a href="xr.html#xr.WorldMeshGetInfoML.fill_hole_length">fill_hole_length (xr.WorldMeshGetInfoML attribute)</a>
 </li>
       <li><a href="xr.html#xr.SpaceQueryInfoFB.filter">filter (xr.SpaceQueryInfoFB attribute)</a>
@@ -2939,6 +2936,8 @@
 </li>
       <li><a href="xr.html#xr.SessionState.FOCUSED">FOCUSED (xr.SessionState attribute)</a>
 </li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.foo">foo() (xr.ext.DebugUtils method)</a>
+</li>
       <li><a href="xr.html#xr.StructureType.FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX">FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX (xr.StructureType attribute)</a>
 </li>
       <li><a href="xr.html#xr.InteractionProfileDpadBindingEXT.force_threshold">force_threshold (xr.InteractionProfileDpadBindingEXT attribute)</a>
@@ -2949,10 +2948,10 @@
 </li>
       <li><a href="xr.html#xr.ForceFeedbackCurlApplyLocationsMNDX">ForceFeedbackCurlApplyLocationsMNDX (class in xr)</a>
 </li>
-      <li><a href="xr.html#xr.ForceFeedbackCurlLocationMNDX">ForceFeedbackCurlLocationMNDX (class in xr)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xr.html#xr.ForceFeedbackCurlLocationMNDX">ForceFeedbackCurlLocationMNDX (class in xr)</a>
+</li>
       <li><a href="xr.html#xr.PassthroughCreateInfoHTC.form">form (xr.PassthroughCreateInfoHTC attribute)</a>
 </li>
       <li><a href="xr.html#xr.SystemGetInfo.form_factor">form_factor (xr.SystemGetInfo attribute)</a>
@@ -3257,9 +3256,7 @@
       </ul></li>
       <li><a href="xr.html#xr.get_instance_properties">get_instance_properties() (in module xr)</a>
 </li>
-      <li><a href="xr.ext.html#xr.ext.KHR.opengl_enable.get_opengl_graphics_requirements">get_opengl_graphics_requirements() (in module xr.ext.KHR.opengl_enable)</a>
-</li>
-      <li><a href="xr.html#xr.GraphicsBindingEGLMNDX.get_proc_address">get_proc_address (xr.GraphicsBindingEGLMNDX attribute)</a>
+      <li><a href="xr.ext.html#xr.ext.KhrOpenGLEnable.get_opengl_graphics_requirements">get_opengl_graphics_requirements() (xr.ext.KhrOpenGLEnable static method)</a>
 </li>
       <li><a href="xr.html#xr.get_reference_space_bounds_rect">get_reference_space_bounds_rect() (in module xr)</a>
 </li>
@@ -3283,19 +3280,8 @@
 </li>
       <li><a href="xr.html#xr.LocalizationMapConfidenceML.GOOD">GOOD (xr.LocalizationMapConfidenceML attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR.glx_drawable">glx_drawable (xr.GraphicsBindingOpenGLXcbKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLXlibKHR.glx_drawable">(xr.GraphicsBindingOpenGLXlibKHR attribute)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXlibKHR.glx_fbconfig">glx_fbconfig (xr.GraphicsBindingOpenGLXlibKHR attribute)</a>
-</li>
-      <li><a href="xr.html#xr.LocalizationMapConfidenceML.GOOD">GOOD (xr.LocalizationMapConfidenceML attribute)</a>
-</li>
       <li><a href="xr.html#xr.HeadsetFitStatusML.GOOD_FIT">GOOD_FIT (xr.HeadsetFitStatusML attribute)</a>
 </li>
       <li><a href="xr.html#xr.PerfSettingsDomainEXT.GPU">GPU (xr.PerfSettingsDomainEXT attribute)</a>
@@ -3341,15 +3327,10 @@
       <li><a href="xr.utils.html#xr.utils.GraphicsAPI">GraphicsAPI (class in xr.utils)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingD3D11KHR">GraphicsBindingD3D11KHR (class in xr)</a>
-      <li><a href="xr.html#xr.GraphicsBindingEGLMNDX">GraphicsBindingEGLMNDX (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingD3D12KHR">GraphicsBindingD3D12KHR (class in xr)</a>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLWaylandKHR">GraphicsBindingOpenGLWaylandKHR (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingOpenGLWin32KHR">GraphicsBindingOpenGLWin32KHR (class in xr)</a>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR">GraphicsBindingOpenGLXcbKHR (class in xr)</a>
-</li>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXlibKHR">GraphicsBindingOpenGLXlibKHR (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.GraphicsBindingVulkan2KHR">GraphicsBindingVulkan2KHR (in module xr)</a>
 </li>
@@ -3497,10 +3478,10 @@
 </li>
       <li><a href="xr.html#xr.HandTrackingAimFlagsFB">HandTrackingAimFlagsFB (class in xr)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.HandTrackingAimFlagsFBCInt">HandTrackingAimFlagsFBCInt (in module xr)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.HandTrackingAimStateFB">HandTrackingAimStateFB (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.HandTrackingCapsulesStateFB">HandTrackingCapsulesStateFB (class in xr)</a>
@@ -3544,6 +3525,8 @@
 </li>
       </ul></li>
       <li><a href="xr.html#xr.FormFactor.HEAD_MOUNTED_DISPLAY">HEAD_MOUNTED_DISPLAY (xr.FormFactor attribute)</a>
+</li>
+      <li><a href="xr.ext.html#xr.ext.Headless">Headless (class in xr.ext)</a>
 </li>
       <li><a href="xr.html#xr.LocalizationMapErrorFlagsML.HEADPOSE_BIT">HEADPOSE_BIT (xr.LocalizationMapErrorFlagsML attribute)</a>
 </li>
@@ -3618,6 +3601,8 @@
 </li>
       </ul></li>
       <li><a href="xr.html#xr.PlaneTypeANDROID.HORIZONTAL_UPWARD_FACING">HORIZONTAL_UPWARD_FACING (xr.PlaneTypeANDROID attribute)</a>
+</li>
+      <li><a href="xr.ext.html#xr.ext.HtcxViveTrackerInteraction">HtcxViveTrackerInteraction (class in xr.ext)</a>
 </li>
       <li><a href="xr.html#xr.SemanticLabelBD.HUMAN">HUMAN (xr.SemanticLabelBD attribute)</a>
 </li>
@@ -3789,10 +3774,10 @@
         <li><a href="xr.html#xr.FacialBlendShapeML.INNER_BROW_RAISER_R">(xr.FacialBlendShapeML attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SwapchainUsageFlags.INPUT_ATTACHMENT_BIT_KHR">INPUT_ATTACHMENT_BIT_KHR (xr.SwapchainUsageFlags attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.SwapchainUsageFlags.INPUT_ATTACHMENT_BIT_MND">INPUT_ATTACHMENT_BIT_MND (xr.SwapchainUsageFlags attribute)</a>
 </li>
       <li><a href="xr.html#xr.VirtualKeyboardInputInfoMETA.input_pose_in_space">input_pose_in_space (xr.VirtualKeyboardInputInfoMETA attribute)</a>
@@ -3810,6 +3795,8 @@
       <li><a href="xr.html#xr.InputSourceLocalizedNameFlagsCInt">InputSourceLocalizedNameFlagsCInt (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.InputSourceLocalizedNameGetInfo">InputSourceLocalizedNameGetInfo (class in xr)</a>
+</li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.insert_label">insert_label() (xr.ext.DebugUtils method)</a>
 </li>
       <li><a href="xr.html#xr.Instance">Instance (class in xr)</a>
 </li>
@@ -3830,6 +3817,8 @@
       <li><a href="xr.html#xr.InstanceCreateFlagsCInt">InstanceCreateFlagsCInt (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.InstanceCreateInfo">InstanceCreateInfo (class in xr)</a>
+</li>
+      <li><a href="xr.ext.html#xr.ext.InstanceExtension">InstanceExtension (class in xr.ext)</a>
 </li>
       <li><a href="xr.html#xr.InstanceProperties">InstanceProperties (class in xr)</a>
 </li>
@@ -4053,10 +4042,10 @@
 </li>
       <li><a href="xr.html#xr.StructureType.KEYBOARD_SPACE_CREATE_INFO_FB">KEYBOARD_SPACE_CREATE_INFO_FB (xr.StructureType attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.StructureType.KEYBOARD_TRACKING_QUERY_FB">KEYBOARD_TRACKING_QUERY_FB (xr.StructureType attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.KeyboardSpaceCreateInfoFB">KeyboardSpaceCreateInfoFB (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.KeyboardTrackingDescriptionFB">KeyboardTrackingDescriptionFB (class in xr)</a>
@@ -4070,6 +4059,8 @@
       <li><a href="xr.html#xr.KeyboardTrackingQueryFlagsFB">KeyboardTrackingQueryFlagsFB (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.KeyboardTrackingQueryFlagsFBCInt">KeyboardTrackingQueryFlagsFBCInt (in module xr)</a>
+</li>
+      <li><a href="xr.ext.html#xr.ext.KhrOpenGLEnable">KhrOpenGLEnable (class in xr.ext)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -5191,8 +5182,6 @@
         <li><a href="xr.html#xr.WorldMeshDetectorLodML.MEDIUM">(xr.WorldMeshDetectorLodML attribute)</a>
 </li>
       </ul></li>
-      <li><a href="xr.html#xr.HandTrackingAimFlagsFB.MENU_PRESSED_BIT">MENU_PRESSED_BIT (xr.HandTrackingAimFlagsFB attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xr.html#xr.HandTrackingAimFlagsFB.MENU_PRESSED_BIT">MENU_PRESSED_BIT (xr.HandTrackingAimFlagsFB attribute)</a>
@@ -5368,8 +5357,6 @@
         <li><a href="xr.api_layer.html#module-xr.api_layer.steamvr_linux_destroyinstance_layer">xr.api_layer.steamvr_linux_destroyinstance_layer</a>
 </li>
         <li><a href="xr.ext.html#module-xr.ext">xr.ext</a>
-</li>
-        <li><a href="xr.ext.html#module-xr.ext.KHR.opengl_enable">xr.ext.KHR.opengl_enable</a>
 </li>
         <li><a href="xr.utils.html#module-xr.utils">xr.utils</a>
 </li>
@@ -5583,8 +5570,20 @@
 </li>
         <li><a href="xr.html#xr.DynamicApiLayerBase.name">(xr.DynamicApiLayerBase property)</a>
 </li>
-        <li><a href="xr.html#xr.ExternalCameraOCULUS.name">(xr.ExternalCameraOCULUS attribute)</a>
+      </ul></li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.NAME">NAME (xr.ext.DebugUtils attribute)</a>
+
+      <ul>
+        <li><a href="xr.ext.html#xr.ext.Headless.NAME">(xr.ext.Headless attribute)</a>
 </li>
+        <li><a href="xr.ext.html#xr.ext.HtcxViveTrackerInteraction.NAME">(xr.ext.HtcxViveTrackerInteraction attribute)</a>
+</li>
+        <li><a href="xr.ext.html#xr.ext.KhrOpenGLEnable.NAME">(xr.ext.KhrOpenGLEnable attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="xr.html#xr.ExternalCameraOCULUS.name">name (xr.ExternalCameraOCULUS attribute)</a>
+
+      <ul>
         <li><a href="xr.html#xr.KeyboardTrackingDescriptionFB.name">(xr.KeyboardTrackingDescriptionFB attribute)</a>
 </li>
         <li><a href="xr.html#xr.LoaderInitPropertyValueEXT.name">(xr.LoaderInitPropertyValueEXT attribute)</a>
@@ -5998,15 +5997,10 @@
         <li><a href="xr.html#xr.GlobalDimmerFrameEndInfoML.next">(xr.GlobalDimmerFrameEndInfoML attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingD3D11KHR.next">(xr.GraphicsBindingD3D11KHR attribute)</a>
-        <li><a href="xr.html#xr.GraphicsBindingEGLMNDX.next">(xr.GraphicsBindingEGLMNDX attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingD3D12KHR.next">(xr.GraphicsBindingD3D12KHR attribute)</a>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLWaylandKHR.next">(xr.GraphicsBindingOpenGLWaylandKHR attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingOpenGLWin32KHR.next">(xr.GraphicsBindingOpenGLWin32KHR attribute)</a>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR.next">(xr.GraphicsBindingOpenGLXcbKHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLXlibKHR.next">(xr.GraphicsBindingOpenGLXlibKHR attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingVulkanKHR.next">(xr.GraphicsBindingVulkanKHR attribute)</a>
 </li>
@@ -7718,8 +7712,6 @@
       <li><a href="xr.html#xr.PFN_xrDownloadSharedSpatialAnchorAsyncBD">PFN_xrDownloadSharedSpatialAnchorAsyncBD (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrDownloadSharedSpatialAnchorCompleteBD">PFN_xrDownloadSharedSpatialAnchorCompleteBD (in module xr)</a>
-</li>
-      <li><a href="xr.html#xr.PFN_xrEglGetProcAddressMNDX">PFN_xrEglGetProcAddressMNDX (in module xr)</a>
 </li>
       <li><a href="xr.html#xr.PFN_xrEnableLocalizationEventsML">PFN_xrEnableLocalizationEventsML (in module xr)</a>
 </li>
@@ -9555,8 +9547,6 @@
 </li>
       <li><a href="xr.html#xr.SemanticLabelBD.SCREEN">SCREEN (xr.SemanticLabelBD attribute)</a>
 </li>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR.screen_number">screen_number (xr.GraphicsBindingOpenGLXcbKHR attribute)</a>
-</li>
       <li><a href="xr.html#xr.ViewConfigurationType.SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT">SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT (xr.ViewConfigurationType attribute)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_MSFT">SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_MSFT (xr.StructureType attribute)</a>
@@ -9734,6 +9724,8 @@
       <li><a href="xr.utils.html#xr.utils.SessionStateManager">SessionStateManager (class in xr.utils)</a>
 </li>
       <li><a href="xr.utils.html#xr.utils.SessionStateManager.ExitRenderLoop">SessionStateManager.ExitRenderLoop</a>
+</li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.set_object_name">set_object_name() (xr.ext.DebugUtils method)</a>
 </li>
       <li><a href="xr.api_layer.html#xr.api_layer.ApiLayerCreateInfo.settings_file_location">settings_file_location (xr.api_layer.ApiLayerCreateInfo attribute)</a>
 
@@ -10711,6 +10703,8 @@
       </ul></li>
       <li><a href="xr.html#xr.ActionCreateInfo.subaction_paths">subaction_paths (xr.ActionCreateInfo property)</a>
 </li>
+      <li><a href="xr.ext.html#xr.ext.DebugUtils.submit_message">submit_message() (xr.ext.DebugUtils method)</a>
+</li>
       <li><a href="xr.html#xr.MarkerDetectorCornerRefineMethodML.SUBPIX">SUBPIX (xr.MarkerDetectorCornerRefineMethodML attribute)</a>
 </li>
       <li><a href="xr.utils.html#xr.utils.XrEventDispatcher.subscribe">subscribe() (xr.utils.XrEventDispatcher method)</a>
@@ -11515,10 +11509,6 @@
 </li>
       <li><a href="xr.html#xr.TriangleMeshFlagsFBCInt">TriangleMeshFlagsFBCInt (in module xr)</a>
 </li>
-      <li><a href="xr.html#xr.timespec.tv_nsec">tv_nsec (xr.timespec attribute)</a>
-</li>
-      <li><a href="xr.html#xr.timespec.tv_sec">tv_sec (xr.timespec attribute)</a>
-</li>
       <li><a href="xr.html#xr.ActionCreateInfo.type">type (xr.ActionCreateInfo attribute)</a>
 
       <ul>
@@ -11861,15 +11851,10 @@
         <li><a href="xr.html#xr.GlobalDimmerFrameEndInfoML.type">(xr.GlobalDimmerFrameEndInfoML attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingD3D11KHR.type">(xr.GraphicsBindingD3D11KHR attribute)</a>
-        <li><a href="xr.html#xr.GraphicsBindingEGLMNDX.type">(xr.GraphicsBindingEGLMNDX attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingD3D12KHR.type">(xr.GraphicsBindingD3D12KHR attribute)</a>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLWaylandKHR.type">(xr.GraphicsBindingOpenGLWaylandKHR attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingOpenGLWin32KHR.type">(xr.GraphicsBindingOpenGLWin32KHR attribute)</a>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR.type">(xr.GraphicsBindingOpenGLXcbKHR attribute)</a>
-</li>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLXlibKHR.type">(xr.GraphicsBindingOpenGLXlibKHR attribute)</a>
 </li>
         <li><a href="xr.html#xr.GraphicsBindingVulkanKHR.type">(xr.GraphicsBindingVulkanKHR attribute)</a>
 </li>
@@ -13204,12 +13189,6 @@
       </ul></li>
       <li><a href="xr.html#xr.StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_MSFT">VISUAL_MESH_COMPUTE_LOD_INFO_MSFT (xr.StructureType attribute)</a>
 </li>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXcbKHR.visualid">visualid (xr.GraphicsBindingOpenGLXcbKHR attribute)</a>
-
-      <ul>
-        <li><a href="xr.html#xr.GraphicsBindingOpenGLXlibKHR.visualid">(xr.GraphicsBindingOpenGLXlibKHR attribute)</a>
-</li>
-      </ul></li>
       <li><a href="xr.html#xr.VisualMeshComputeLodInfoMSFT">VisualMeshComputeLodInfoMSFT (class in xr)</a>
 </li>
       <li><a href="xr.html#xr.StructureType.VIVE_TRACKER_PATHS_HTCX">VIVE_TRACKER_PATHS_HTCX (xr.StructureType attribute)</a>
@@ -13454,8 +13433,6 @@
         <li><a href="xr.html#xr.Vector4sFB.x">(xr.Vector4sFB attribute)</a>
 </li>
       </ul></li>
-      <li><a href="xr.html#xr.GraphicsBindingOpenGLXlibKHR.x_display">x_display (xr.GraphicsBindingOpenGLXlibKHR attribute)</a>
-</li>
       <li>
     xr
 
@@ -13512,13 +13489,6 @@
 
       <ul>
         <li><a href="xr.ext.html#module-xr.ext">module</a>
-</li>
-      </ul></li>
-      <li>
-    xr.ext.KHR.opengl_enable
-
-      <ul>
-        <li><a href="xr.ext.html#module-xr.ext.KHR.opengl_enable">module</a>
 </li>
       </ul></li>
       <li>

@@ -16,10 +16,10 @@ To enable headless mode, include `"XR_MND_headless"` in the
 :extension: XR_MND_headless
 :seealso: https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#XR_MND_headless
 """
-from xr.ext.base_extension import BaseExtension
+from xr.ext.instance_extension import InstanceExtension
 
 
-class Headless(BaseExtension):
+class Headless(InstanceExtension):
     NAME = "XR_MND_headless"
 
 

@@ -3,7 +3,7 @@ import logging
 from typing import Callable
 
 import xr
-from .base_extension import BaseExtension
+from .instance_extension import InstanceExtension
 
 xr_logger = logging.getLogger("xr")
 
@@ -34,7 +34,7 @@ def log_level_for_severity(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT)
         return logging.DEBUG
 
 
-class DebugUtils(BaseExtension):
+class DebugUtils(InstanceExtension):
     NAME = "XR_EXT_debug_utils"
 
     # TODO: context manager for label regions
