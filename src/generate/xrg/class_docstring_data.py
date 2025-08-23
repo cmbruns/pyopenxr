@@ -391,6 +391,21 @@ class_docstrings = {
             Base class for all OpenXR exceptions.
         """),
     },
+    "xr.ext.InstanceExtension": {
+        "docstring": inspect.cleandoc("""
+
+                Base class for Pythonic OpenXR extension implementations.
+
+                Provides a helper for calling extension entry points obtained via
+                :func:`xr.get_instance_proc_addr`, casting them to the correct
+                function-pointer type, invoking with the supplied arguments, and
+                checking the :class:`xr.Result`.
+
+                :param instance: The OpenXR instance to which this extension is bound.
+                :type instance: xr.Instance
+    
+        """),
+    },
 }
 
 __all__ = [
