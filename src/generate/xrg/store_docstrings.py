@@ -1,5 +1,7 @@
 import copy
 import inspect
+from typing import Optional
+
 import sys
 import textwrap
 
@@ -135,36 +137,44 @@ def write_docstrings(entries: dict[str, dict[str, str]], label="class", file=sys
     file.write("\n")
 
 
-def exercise_docstring_roundtrip():
-    updated_class_docstrings = copy.deepcopy(class_docstrings)
-
-    for module in [xr, xr.ext]:
+def enumerate_docstrings(modules=(xr, xr.ext)):
+    for module in modules:
         for name in dir(module):
             obj = getattr(module, name)
             doc = getattr(obj, "__doc__", None)
-            if not doc or doc in {"An enumeration."}:
+            if not doc:
                 continue
-            if not inspect.isclass(obj):
+            if doc in {"An enumeration."}:
                 continue
-            qualified_name = f"{module.__name__}.{name}"
+            yield module, obj, doc
 
-            if issubclass(obj, xr.ResultException):
-                url = "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrResult.html"
-            else:
-                c_name = f"Xr{name}"  # TODO: cases
-                url = f"https://registry.khronos.org/OpenXR/specs/1.1/man/html/{c_name}.html"
-                try:
-                    response = requests.head(url, allow_redirects=True, timeout=5)
-                    if response.status_code != 200:
-                        url = None
-                except requests.RequestException:
-                    url = None
 
-            updated_class_docstrings[qualified_name] = {}
-            if url is not None:
-                updated_class_docstrings[qualified_name]["spec_url"] = url
-            updated_class_docstrings[qualified_name]["docstring"] = doc
+def get_class_url(module, class_) -> Optional[str]:
+    if issubclass(class_, xr.ResultException):
+        return "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrResult.html"
+    else:
+        c_name = f"Xr{class_.__name__}"  # TODO: cases
+        url = f"https://registry.khronos.org/OpenXR/specs/1.1/man/html/{c_name}.html"
+        try:
+            response = requests.head(url, allow_redirects=True, timeout=5)
+            if response.status_code == 200:
+                return url
+        except requests.RequestException:
+            pass
+        return None
 
+
+def store_class_docstrings():
+    updated_class_docstrings = copy.deepcopy(class_docstrings)
+    for module, obj, doc in enumerate_docstrings():
+        if not inspect.isclass(obj):
+            continue
+        url = get_class_url(module, obj)
+        qualified_name = f"{module.__name__}.{obj.__name__}"
+        updated_class_docstrings[qualified_name] = {}
+        if url is not None:
+            updated_class_docstrings[qualified_name]["spec_url"] = url
+        updated_class_docstrings[qualified_name]["docstring"] = doc
     with open("class_docstring_data.py", "w") as file:
         write_docstrings(updated_class_docstrings, label="class", file=file)
 
@@ -173,4 +183,4 @@ if __name__ == "__main__":
     # check_instance_docstring()
     # count_xr_docstrings()
     # write_docstrings(class_docstrings)
-    exercise_docstring_roundtrip()
+    store_class_docstrings()

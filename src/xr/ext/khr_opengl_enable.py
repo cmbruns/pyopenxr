@@ -20,9 +20,8 @@ from .instance_extension import InstanceExtension
 class KhrOpenGLEnable(InstanceExtension):
     NAME = "XR_KHR_opengl_enable"
 
-    @staticmethod
     def get_opengl_graphics_requirements(
-            instance: xr.Instance,
+            self,
             system_id: xr.SystemId,
     ) -> xr.GraphicsRequirementsOpenGLKHR:
         """
@@ -32,8 +31,6 @@ class KhrOpenGLEnable(InstanceExtension):
         maximum OpenGL versions supported by the runtime for the specified system. It is
         typically called before creating a graphics context to ensure compatibility.
 
-        :param instance: The OpenXR instance with the `XR_KHR_opengl_enable` extension enabled.
-        :type instance: xr.Instance
         :param system_id: The system identifier obtained via `xr.get_system()`.
         :type system_id: xr.SystemId
         :return: A structure containing the OpenGL graphics requirements.
@@ -46,14 +43,14 @@ class KhrOpenGLEnable(InstanceExtension):
         """
         pfn = cast(
             xr.get_instance_proc_addr(
-                instance=instance,
+                instance=self.instance,
                 name="xrGetOpenGLGraphicsRequirementsKHR",
             ),
             xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
         )
         graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
         result = pfn(
-            instance,
+            self.instance,
             system_id,
             byref(graphics_requirements))
         result = xr.check_result(xr.Result(result))
