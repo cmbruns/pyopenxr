@@ -1,4 +1,0 @@
-glfw
-numpy
-PyOpenGL
-setuptools

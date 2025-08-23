@@ -34,7 +34,7 @@ def log_level_for_severity(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT)
         return logging.DEBUG
 
 
-class DebugUtils(InstanceExtension):
+class ExtDebugUtils(InstanceExtension):
     NAME = "XR_EXT_debug_utils"
 
     # TODO: context manager for label regions
@@ -130,5 +130,5 @@ class DebugUtils(InstanceExtension):
 
 
 __all__ = [
-    "DebugUtils",
+    "ExtDebugUtils",
 ]

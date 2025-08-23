@@ -3,7 +3,7 @@ from ctypes import POINTER, c_void_p
 import logging
 
 import xr
-from xr.ext import DebugUtils
+from xr.ext import ExtDebugUtils
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -19,7 +19,7 @@ def debug_callback(
     """Redirect OpenXR messages to our python logger."""
     d = data.contents
     logger.log(
-        level=DebugUtils.log_level_for_severity(severity),
+        level=ExtDebugUtils.log_level_for_severity(severity),
         msg=f"{d.function_name.decode()}: {d.message.decode()}")
     return True
 
@@ -38,13 +38,13 @@ def test_debug_utils_basic():
         instance = exit_stack.enter_context(xr.Instance(
             create_info=xr.InstanceCreateInfo(
                 enabled_extension_names=[
-                    DebugUtils.NAME,
+                    ExtDebugUtils.NAME,
                     xr.MND_HEADLESS_EXTENSION_NAME,
                 ]
             )
         ))
 
-        debug_utils = DebugUtils(instance)
+        debug_utils = ExtDebugUtils(instance)
         messenger = debug_utils.create_messenger(messenger_create_info)
 
         # Trigger a message manually
