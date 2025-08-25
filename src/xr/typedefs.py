@@ -3,13 +3,13 @@
 from ctypes import (
     CFUNCTYPE, POINTER, Structure, addressof, byref, c_char, c_char_p, c_float,
     c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8,
-    c_void_p, cast,
+    c_void_p, cast, py_object
 )
 import ctypes
 
 import os
 import sys
-from typing import Generator, Optional
+from typing import Any, Callable, Generator, Optional
 
 import numpy
 
@@ -3889,21 +3889,100 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
 PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeverityFlagsEXTCInt, DebugUtilsMessageTypeFlagsEXTCInt, POINTER(DebugUtilsMessengerCallbackDataEXT), c_void_p)
 
 
+def _default_debug_callback(
+        severity: DebugUtilsMessageSeverityFlagsEXT,
+        type_flags: DebugUtilsMessageTypeFlagsEXT,
+        callback_data: POINTER(DebugUtilsMessengerCallbackDataEXT),
+        _user_data: c_void_p,
+):
+    """
+    Default diagnostic callback for `XR_EXT_debug_utils`.
+
+    This function is invoked by the OpenXR runtime when a debug message is emitted.
+    It prints the message to standard output, including severity, type, and function name.
+
+    This is a minimal implementation intended primarily as a reference or starting point
+    for client applications. Users are encouraged to implement their own callback to
+    integrate with logging frameworks, telemetry systems, or custom filtering logic.
+
+    :param severity: Bitmask of message severity flags.
+    :type severity: xr.DebugUtilsMessageSeverityFlagsEXT
+    :param type_flags: Bitmask of message type flags.
+    :type type_flags: xr.DebugUtilsMessageTypeFlagsEXT
+    :param callback_data: Pointer to a populated `DebugUtilsMessengerCallbackDataEXT` structure.
+    :type callback_data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT)
+    :param _user_data: Optional user data passed during messenger creation. Unused by default.
+    :type _user_data: ctypes.c_void_p
+
+    :seealso: :class:`xr.DebugUtilsMessengerCreateInfoEXT`, :class:`xr.DebugUtilsMessengerEXT`
+    """
+
+    data = callback_data.contents
+    message = data.message.decode("utf-8", errors="replace")
+    func_name = data.function_name.decode("utf-8", errors="replace")
+    print(f"[XR DEBUG] Severity={severity} Type={type_flags} Message={message} Function={func_name}")
+
+
 class DebugUtilsMessengerCreateInfoEXT(Structure):
+    """
+    Descriptor for creating a debug messenger via `XR_EXT_debug_utils`.
+
+    This structure configures the behavior of a debug messenger, including which
+    message severities and types to receive, and the callback function to invoke.
+
+    A default instance may be constructed with no arguments, enabling all message
+    types and severities and using the built-in `_default_debug_callback`.
+
+    :param message_severities: Bitmask of message severities to receive.
+    :type message_severities: xr.DebugUtilsMessageSeverityFlagsEXT
+    :param message_types: Bitmask of message types to receive.
+    :type message_types: xr.DebugUtilsMessageTypeFlagsEXT
+    :param user_callback: Python callable accepting `(severity, type_flags, callback_data, user_data)`.
+                          This will be wrapped into a native function pointer.
+    :type user_callback: Callable[[xr.DebugUtilsMessageSeverityFlagsEXT, xr.DebugUtilsMessageTypeFlagsEXT,
+                                   ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT), ctypes.c_void_p], bool]
+    :param user_data: Optional Python object passed to the callback.
+    :type user_data: Any
+    :param next: Optional pointer to extension-specific structures.
+    :type next: ctypes.c_void_p
+    :param type: Structure type identifier. Defaults to `DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT`.
+    :type type: xr.StructureType
+
+    :seealso: :class:`xr.DebugUtilsMessengerEXT`, :func:`xr.ext.EXT.debug_utils._default_debug_callback`
+    :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerCreateInfoEXT.html
+    """
     def __init__(
         self,
-        message_severities: DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT(),  # noqa
-        message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT(),  # noqa
-        user_callback: PFN_xrDebugUtilsMessengerCallbackEXT = cast(None, PFN_xrDebugUtilsMessengerCallbackEXT),
-        user_data: c_void_p = None,
+        message_severities: DebugUtilsMessageSeverityFlagsEXT = (
+            DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT |
+            DebugUtilsMessageSeverityFlagsEXT.INFO_BIT |
+            DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT |
+            DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT),
+        message_types: DebugUtilsMessageTypeFlagsEXT = (
+            DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT |
+            DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT |
+            DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT |
+            DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT
+        ),
+        user_callback: Callable[
+            [
+                DebugUtilsMessageSeverityFlagsEXT,
+                DebugUtilsMessageTypeFlagsEXT,
+                POINTER(DebugUtilsMessengerCallbackDataEXT),
+                c_void_p,
+            ],
+            bool] = _default_debug_callback,
+        user_data: Any = None,
         next: c_void_p = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
+        _wrapped_callback = PFN_xrDebugUtilsMessengerCallbackEXT(user_callback) if user_callback else None
+        _user_data = cast(py_object(user_data), c_void_p) if user_data else None
         super().__init__(
             message_severities=DebugUtilsMessageSeverityFlagsEXT(message_severities).value,
             message_types=DebugUtilsMessageTypeFlagsEXT(message_types).value,
-            user_callback=user_callback,
-            user_data=user_data,
+            user_callback=_wrapped_callback,
+            user_data=_user_data,
             next=next,
             type=type,
         )
