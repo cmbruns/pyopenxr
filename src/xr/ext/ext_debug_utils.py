@@ -35,7 +35,28 @@ def log_level_for_severity(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT)
 
 
 class ExtDebugUtils(InstanceExtension):
+    """
+    Python bindings for the `XR_EXT_debug_utils` extension.
+
+    This extension provides standardized debugging and logging capabilities for OpenXR applications.
+    It allows developers to create debug messengers, assign human-readable names to objects, and
+    submit diagnostic messages to the runtime. These features are useful for validation, profiling,
+    and runtime introspection.
+
+    The current implementation includes basic support for messenger creation, message submission,
+    and object naming. Additional functionality such as label regions and context managers is
+    planned but not yet implemented.
+
+    To enable debug utilities, include `"XR_EXT_debug_utils"` in the `enabled_extension_names` list
+    when calling :func:`xr.create_instance`.
+
+    See the Khronos registry for full specification:
+    https://registry.khronos.org/OpenXR/specs/1.0/man/html/XR_EXT_debug_utils.html
+    """
+
     NAME = "XR_EXT_debug_utils"
+    SPEC_VERSION = 5
+    VENDOR_TAG = "EXT"
 
     # TODO: context manager for label regions
     def begin_label_region(self):
@@ -129,6 +150,10 @@ class ExtDebugUtils(InstanceExtension):
         )
 
 
+EXT_debug_utils = ExtDebugUtils
+
+
 __all__ = [
+    "EXT_debug_utils",
     "ExtDebugUtils",
 ]

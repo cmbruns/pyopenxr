@@ -1,24 +1,26 @@
-"""
-Python bindings for the XR_KHR_opengl_enable extension.
-
-This module provides access to OpenGL-specific graphics requirements via OpenXR.
-It exposes a Pythonic wrapper around `xrGetOpenGLGraphicsRequirementsKHR`, allowing
-applications to query the minimum and maximum supported OpenGL versions for a given system.
-
-To use this extension, ensure `"XR_KHR_opengl_enable"` is included in the list of
-enabled extensions during instance creation.
-
-:see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_KHR_opengl_enable.html
-"""
-
-
 from ctypes import byref, cast
 import xr
 from .instance_extension import InstanceExtension
 
 
 class KhrOpenGLEnable(InstanceExtension):
+    """
+    Python bindings for the `XR_KHR_opengl_enable` extension.
+
+    This extension provides access to OpenGL-specific graphics requirements via OpenXR.
+    It wraps `xrGetOpenGLGraphicsRequirementsKHR`, allowing applications to query the
+    minimum and maximum supported OpenGL versions for a given system.
+
+    To use this extension, include `"XR_KHR_opengl_enable"` in the list of enabled
+    extensions during instance creation.
+
+    See the Khronos registry for full specification:
+    https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_KHR_opengl_enable.html
+    """
+
     NAME = "XR_KHR_opengl_enable"
+    SPEC_VERSION = 11
+    VENDOR_TAG = "KHR"
 
     def get_opengl_graphics_requirements(
             self,
@@ -40,6 +42,7 @@ class KhrOpenGLEnable(InstanceExtension):
         :raises xr.SystemInvalidError: If the system ID is not recognized.
         :raises xr.InstanceLossPendingError: If the instance is in a loss-pending state.
         :seealso: :class:`xr.GraphicsRequirementsOpenGLKHR`
+        :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/xrGetOpenGLGraphicsRequirementsKHR.html
         """
         pfn = cast(
             xr.get_instance_proc_addr(
@@ -59,6 +62,11 @@ class KhrOpenGLEnable(InstanceExtension):
         return graphics_requirements
 
 
+# Alias closer to the native OpenXR spec name.
+KHR_opengl_enable = KhrOpenGLEnable
+
+
 __all__ = [
     "KhrOpenGLEnable",
+    "KHR_opengl_enable",
 ]
