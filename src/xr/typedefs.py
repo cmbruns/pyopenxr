@@ -46,13 +46,13 @@ class Instance(POINTER(Instance_T)):
     object for most OpenXR operations, including system queries, session creation,
     and extension dispatch.
 
-    This object may be instantiated directly with an optional `xr.InstanceCreateInfo`
+    This object may be instantiated directly with an optional :class:`xr.InstanceCreateInfo`
     descriptor. If none is provided, a default descriptor will be used. Initialization
-    is performed lazily, with runtime bindings deferred to minimize import-time overhead
-    and avoid ordering issues.
+    wraps the native :func:`xrCreateInstance` call and is performed lazily, with runtime
+    bindings imported just-in-time to avoid circular dependencies and import-time overhead.
 
     `Instance` supports context management protocols and may be used in a `with` block
-    for automatic cleanup:
+    for automatic teardown via :func:`xr.destroy_instance`:
 
     .. code-block:: python
 
@@ -63,40 +63,28 @@ class Instance(POINTER(Instance_T)):
     interactions to the runtime via raw API functions. It is opaque and cannot be
     directly inspected or modified.
 
-    :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
-    """
+    :param create_info: Optional descriptor specifying application info, enabled extensions,
+                        and platform-specific parameters.
+    :type create_info: xr.InstanceCreateInfo or None
 
+    :raises xr.ValidationFailureError: If validation layers reject the configuration.
+    :raises xr.RuntimeFailureError: If the runtime fails to initialize.
+    :raises xr.OutOfMemoryError: If memory allocation fails.
+    :raises xr.LimitReachedError: If the runtime cannot support additional instances.
+    :raises xr.RuntimeUnavailableError: If no runtime is available.
+    :raises xr.NameInvalidError: If the application name is empty.
+    :raises xr.InitializationFailedError: If platform-specific initialization fails.
+    :raises xr.ExtensionNotPresentError: If a requested extension is missing.
+    :raises xr.ExtensionDependencyNotEnabledError: If an extension dependency is missing.
+    :raises xr.ApiVersionUnsupportedError: If the requested API version is not supported.
+    :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
+
+    :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
+    :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstance.html
+    """
     _type_ = Instance_T  # ctypes idiosyncrasy
 
     def __init__(self, create_info: Optional["InstanceCreateInfo"] = None):
-        """
-        Construct and initialize an OpenXR instance.
-
-        This constructor wraps the native :func:`xrCreateInstance` call, creating a new
-        OpenXR instance and binding it to this object. If `create_info` is not provided,
-        a default descriptor will be used.
-
-        Initialization is performed lazily, with runtime bindings imported just-in-time
-        to avoid circular dependencies and ordering issues. This object supports context
-        management for automatic teardown via :func:`xr.destroy_instance`.
-
-        :param create_info: Optional descriptor specifying application info, enabled extensions,
-                            and platform-specific parameters.
-        :type create_info: xr.InstanceCreateInfo or None
-        :raises xr.ValidationFailureError: If validation layers reject the configuration.
-        :raises xr.RuntimeFailureError: If the runtime fails to initialize.
-        :raises xr.OutOfMemoryError: If memory allocation fails.
-        :raises xr.LimitReachedError: If the runtime cannot support additional instances.
-        :raises xr.RuntimeUnavailableError: If no runtime is available.
-        :raises xr.NameInvalidError: If the application name is empty.
-        :raises xr.InitializationFailedError: If platform-specific initialization fails.
-        :raises xr.ExtensionNotPresentError: If a requested extension is missing.
-        :raises xr.ExtensionDependencyNotEnabledError: If an extension dependency is missing.
-        :raises xr.ApiVersionUnsupportedError: If the requested API version is not supported.
-        :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
-        :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
-        """
-
         if create_info is None:
             create_info = InstanceCreateInfo()
         # Import function just-in-time to avoid initialization order problem
@@ -314,6 +302,41 @@ class ApplicationInfo(Structure):
 
 
 class InstanceCreateInfo(Structure):
+    """
+    Descriptor for creating an OpenXR instance.
+
+    This structure configures the parameters required to initialize an OpenXR runtime
+    connection. It includes application metadata, optional API layers, requested extensions,
+    and platform-specific chaining via the `next` pointer.
+
+    A default instance may be constructed with no arguments, which will populate the
+    `application_info` field with generic values and leave extensions and layers empty.
+    The `enabled_api_layer_names` and `enabled_extension_names` properties provide access
+    to the underlying string arrays and may be set directly.
+
+    :param create_flags: Optional bitmask of creation flags. Reserved for future use.
+    :type create_flags: xr.InstanceCreateFlags
+    :param application_info: Metadata describing the application name, engine name, and API version.
+    :type application_info: xr.ApplicationInfo
+    :param enabled_api_layer_count: Number of API layers to enable. If None, inferred from `enabled_api_layer_names`.
+    :type enabled_api_layer_count: int or None
+    :param enabled_api_layer_names: List of API layer names to enable. Typically used for validation.
+    :type enabled_api_layer_names: List[str] or None
+    :param enabled_extension_count: Number of extensions to enable. If None, inferred from `enabled_extension_names`.
+    :type enabled_extension_count: int or None
+    :param enabled_extension_names: List of extension names to enable during instance creation.
+    :type enabled_extension_names: List[str] or None
+    :param next: Optional pointer to extension-specific structures for platform chaining.
+    :type next: ctypes.c_void_p
+    :param type: Structure type identifier. Defaults to `XR_TYPE_INSTANCE_CREATE_INFO`.
+    :type type: xr.StructureType
+
+    :property enabled_api_layer_names: Accessor for the API layer name array.
+    :property enabled_extension_names: Accessor for the extension name array.
+
+    :seealso: :class:`xr.Instance`, :class:`xr.ApplicationInfo`, :func:`xr.create_instance`
+    :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstanceCreateInfo.html
+    """
     def __init__(
         self,
         create_flags: InstanceCreateFlags = InstanceCreateFlags(),  # noqa
@@ -3745,7 +3768,69 @@ class DebugUtilsMessengerEXT_T(Structure):
     pass
 
 
-DebugUtilsMessengerEXT = POINTER(DebugUtilsMessengerEXT_T)
+class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
+    """
+    Opaque handle to an OpenXR debug messenger object.
+
+    A `xr.DebugUtilsMessengerEXT` enables runtime diagnostics and logging via the
+    `XR_EXT_debug_utils` extension. It allows applications to receive structured
+    messages from the runtime, including validation errors, warnings, and performance
+    hints.
+
+    This object wraps the native `xrCreateDebugUtilsMessengerEXT` and
+    `xrDestroyDebugUtilsMessengerEXT` calls, and supports context management for
+    automatic teardown:
+
+    .. code-block:: python
+
+        with xr.DebugUtilsMessengerEXT(instance, callback=...) as messenger:
+            ...
+
+    The callback must be a Python callable accepting `(severity, type_flags, callback_data)`
+    and will be invoked from the runtime thread. Internally, this object manages the
+    lifetime of the native function pointer and user data.
+
+    :seealso: :func:`xr.ext.EXT.debug_utils.create_debug_utils_messenger`
+    """
+
+    _type_ = DebugUtilsMessengerEXT_T
+
+    def __init__(
+        self,
+        instance: Instance,
+        create_info: Optional["DebugUtilsMessengerCreateInfoEXT"] = None,
+    ):
+        self._destroy_func = None
+        from .functions import get_instance_proc_addr
+        if create_info is None:
+            create_info = DebugUtilsMessengerCreateInfoEXT()
+        self._callback = create_info.user_callback  # avoid premature gc of callback
+        create_messenger = cast(
+            get_instance_proc_addr(instance, "xrCreateDebugUtilsMessengerEXT"),
+            PFN_xrCreateDebugUtilsMessengerEXT,
+        )
+        result = check_result(create_messenger(
+            instance,
+            byref(create_info),
+            byref(self),
+        ))
+        if result.is_exception():
+            raise result
+        self._destroy_func = cast(
+            get_instance_proc_addr(instance, "xrDestroyDebugUtilsMessengerEXT"),
+            PFN_xrDestroyDebugUtilsMessengerEXT,
+        )
+
+    def __enter__(self) -> "DebugUtilsMessengerEXT":
+        return self
+
+    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
+        if self._destroy_func:
+            result = self._destroy_func(self)
+            checked = check_result(result)
+            if checked.is_exception():
+                raise checked
+
 
 DebugUtilsMessageSeverityFlagsEXTCInt = Flags64
 
@@ -3890,11 +3975,11 @@ PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeveri
 
 
 def _default_debug_callback(
-        severity: DebugUtilsMessageSeverityFlagsEXT,
-        type_flags: DebugUtilsMessageTypeFlagsEXT,
+        severity: int,
+        type_flags: int,
         callback_data: POINTER(DebugUtilsMessengerCallbackDataEXT),
         _user_data: c_void_p,
-):
+) -> bool:
     """
     Default diagnostic callback for `XR_EXT_debug_utils`.
 
@@ -3920,7 +4005,10 @@ def _default_debug_callback(
     data = callback_data.contents
     message = data.message.decode("utf-8", errors="replace")
     func_name = data.function_name.decode("utf-8", errors="replace")
-    print(f"[XR DEBUG] Severity={severity} Type={type_flags} Message={message} Function={func_name}")
+    severity = DebugUtilsMessageSeverityFlagsEXT(severity)
+    type_flags = DebugUtilsMessageTypeFlagsEXT(type_flags)
+    print(f"[XR DEBUG] Severity={severity.name} Type={type_flags.name} Message={message} Function={func_name}")
+    return True  # important!
 
 
 class DebugUtilsMessengerCreateInfoEXT(Structure):
@@ -3966,12 +4054,11 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         ),
         user_callback: Callable[
             [
-                DebugUtilsMessageSeverityFlagsEXT,
-                DebugUtilsMessageTypeFlagsEXT,
+                int,
+                int,
                 POINTER(DebugUtilsMessengerCallbackDataEXT),
-                c_void_p,
-            ],
-            bool] = _default_debug_callback,
+                c_void_p
+            ], bool] = _default_debug_callback,
         user_data: Any = None,
         next: c_void_p = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,

@@ -15,14 +15,12 @@ To use an extension, ensure its name (e.g. `"XR_EXT_debug_utils"`) is included i
 
 from . import (
     instance_extension,
-    ext_debug_utils,
     htcx_vive_tracker_interaction,
     khr_opengl_enable,
     mnd_headless,
 )
 
 from .instance_extension import *
-from .ext_debug_utils import *
 from .htcx_vive_tracker_interaction import *
 from .khr_opengl_enable import *
 from .mnd_headless import *
@@ -31,7 +29,6 @@ __all__ = []
 
 for subpackage in (
     instance_extension,
-    ext_debug_utils,
     htcx_vive_tracker_interaction,
     khr_opengl_enable,
     mnd_headless,
