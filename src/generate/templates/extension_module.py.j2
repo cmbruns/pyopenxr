@@ -28,20 +28,20 @@ VENDOR_TAG = "{{ extension.vendor_tag }}"
 # Custom helpers or callbacks may be inserted here.
 {% endblock %}
 
-{% for func in extension.functions %}
-def {{ func.alias }}({{ func.signature }}) -> None:
+{% for command in extension.commands %}
+def {{ command.py_name }}({{ command.signature }}) -> None:
     """
-    Wrapper for `{{ func.name }}`.
+    Wrapper for `{{ command.name }}`.
 
-    :param {{ func.params | join(':\n    :param ') }}:
-    :raises {{ func.raises | join(', ') }}:
-    :see: {{ func.spec_url }}
+    :param {{ command.params | join(':\n    :param ') }}:
+    :raises {{ command.raises | join(', ') }}:
+    :see: {{ command.spec_url }}
     """
     pfn = cast(
-        xr.get_instance_proc_addr(instance, "{{ func.name }}"),
-        xr.PFN_{{ func.name }}
+        xr.get_instance_proc_addr(instance, "{{ command.name }}"),
+        xr.PFN_{{ command.name }}
     )
-    result = pfn({{ func.call_args }})
+    result = pfn({{ command.call_args }})
     checked = xr.check_result(xr.Result(result))
     if checked.is_exception():
         raise checked
@@ -49,13 +49,16 @@ def {{ func.alias }}({{ func.signature }}) -> None:
 {% endfor %}
 
 __all__ = [
+    {% for name in ((extension.aliases | map(attribute='name') | list + extension.functions | map(attribute='alias') | list | sort) %}
+    "{{ name }}",
+    {% endfor %}
     "EXTENSION_NAME",
     "SPEC_VERSION",
     "VENDOR_TAG",
     {% for alias in extension.aliases %}
     "{{ alias.name }}",
     {% endfor %}
-    {% for func in extension.functions %}
-    "{{ func.alias }}",
+    {% for command in extension.commands %}
+    "{{ command.py_name }}",
     {% endfor %}
 ]

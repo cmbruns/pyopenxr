@@ -1531,12 +1531,19 @@ def snake_from_camel(camel: str) -> str:
     return snake
 
 
+def camel_from_snake(snake: str) -> str:
+    words = snake.split("_")
+    words = [word.capitalize() for word in words]
+    return "".join(words)
+
+
 def structure_type_enum_name(struct: StructItem):
     type_enum_name = snake_from_camel(struct.name()).upper()
     return type_enum_name
 
 
 __all__ = [
+    "camel_from_snake",
     "CodeItem",
     "DefinitionItem",
     "EnumItem",
