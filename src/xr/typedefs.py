@@ -3778,19 +3778,34 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
     hints.
 
     This object wraps the native `xrCreateDebugUtilsMessengerEXT` and
-    `xrDestroyDebugUtilsMessengerEXT` calls, and supports context management for
-    automatic teardown:
+    `xrDestroyDebugUtilsMessengerEXT` calls. It supports context management for
+    automatic teardown, though manual destruction via :func:`xr.ext.EXT.debug_utils.destroy_messenger`
+    is preferred for explicit control.
 
     .. code-block:: python
 
-        with xr.DebugUtilsMessengerEXT(instance, callback=...) as messenger:
+        from xr.ext.EXT import debug_utils
+
+        with xr.DebugUtilsMessengerEXT(instance) as messenger:
             ...
 
-    The callback must be a Python callable accepting `(severity, type_flags, callback_data)`
-    and will be invoked from the runtime thread. Internally, this object manages the
-    lifetime of the native function pointer and user data.
+    The `create_info` parameter may be omitted to use default settings, which enable all
+    message types and severities and use the built-in `_default_debug_callback`.
 
-    :seealso: :func:`xr.ext.EXT.debug_utils.create_debug_utils_messenger`
+    :param instance: The OpenXR instance to bind the messenger to.
+    :type instance: xr.Instance
+    :param create_info: Optional descriptor specifying callback behavior and message filtering.
+    :type create_info: xr.DebugUtilsMessengerCreateInfoEXT or None
+
+    :raises xr.FunctionUnsupportedError: If `XR_EXT_debug_utils` is not enabled or the function is unavailable.
+    :raises xr.ValidationFailureError: If the callback or parameters are rejected by the runtime.
+    :raises xr.RuntimeFailureError: If the runtime encounters an internal error.
+    :raises xr.HandleInvalidError: If the instance handle is invalid.
+    :raises xr.InstanceLostError: If the instance has been lost.
+    :raises xr.OutOfMemoryError: If the runtime cannot allocate the messenger.
+    :raises xr.LimitReachedError: If the runtime cannot support additional messengers.
+    :seealso: :class:`xr.DebugUtilsMessengerCreateInfoEXT`, :func:`xr.ext.EXT.debug_utils.destroy_messenger`
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrDebugUtilsMessengerEXT.html
     """
 
     _type_ = DebugUtilsMessengerEXT_T
@@ -3830,6 +3845,7 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
             checked = check_result(result)
             if checked.is_exception():
                 raise checked
+            self._destroy_func = None
 
 
 DebugUtilsMessageSeverityFlagsEXTCInt = Flags64
@@ -4027,7 +4043,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     :type message_types: xr.DebugUtilsMessageTypeFlagsEXT
     :param user_callback: Python callable accepting `(severity, type_flags, callback_data, user_data)`.
                           This will be wrapped into a native function pointer.
-    :type user_callback: Callable[[xr.DebugUtilsMessageSeverityFlagsEXT, xr.DebugUtilsMessageTypeFlagsEXT,
+    :type user_callback: Callable[[int, int,
                                    ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT), ctypes.c_void_p], bool]
     :param user_data: Optional Python object passed to the callback.
     :type user_data: Any

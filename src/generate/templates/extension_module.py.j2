@@ -1,0 +1,61 @@
+"""
+Python bindings for the `{{ extension.name }}` extension.
+
+This module provides Python wrappers for OpenXR functions defined in the
+`{{ extension.name }}` specification. These wrappers expose runtime diagnostics,
+object naming, and other extension-specific features.
+
+To enable this extension, include `"{{ extension.name }}"` in your
+`enabled_extension_names` when calling :func:`xr.create_instance`.
+
+See the Khronos registry for full specification:
+{{ extension.spec_url }}
+"""
+
+from ctypes import byref, cast
+from typing import Optional
+import xr
+
+EXTENSION_NAME = "{{ extension.name }}"
+SPEC_VERSION = {{ extension.version }}
+VENDOR_TAG = "{{ extension.vendor_tag }}"
+
+{% for alias in extension.aliases %}
+{{ alias.name }} = xr.{{ alias.target }}
+{% endfor %}
+
+{% block custom_helpers %}
+# Custom helpers or callbacks may be inserted here.
+{% endblock %}
+
+{% for func in extension.functions %}
+def {{ func.alias }}({{ func.signature }}) -> None:
+    """
+    Wrapper for `{{ func.name }}`.
+
+    :param {{ func.params | join(':\n    :param ') }}:
+    :raises {{ func.raises | join(', ') }}:
+    :see: {{ func.spec_url }}
+    """
+    pfn = cast(
+        xr.get_instance_proc_addr(instance, "{{ func.name }}"),
+        xr.PFN_{{ func.name }}
+    )
+    result = pfn({{ func.call_args }})
+    checked = xr.check_result(xr.Result(result))
+    if checked.is_exception():
+        raise checked
+
+{% endfor %}
+
+__all__ = [
+    "EXTENSION_NAME",
+    "SPEC_VERSION",
+    "VENDOR_TAG",
+    {% for alias in extension.aliases %}
+    "{{ alias.name }}",
+    {% endfor %}
+    {% for func in extension.functions %}
+    "{{ func.alias }}",
+    {% endfor %}
+]

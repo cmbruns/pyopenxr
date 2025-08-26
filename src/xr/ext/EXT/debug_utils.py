@@ -6,129 +6,307 @@ It allows developers to create debug messengers, assign human-readable names to 
 submit diagnostic messages to the runtime. These features are useful for validation, profiling,
 and runtime introspection.
 
-The current implementation includes basic support for messenger creation, message submission,
-and object naming. Additional functionality such as label regions and context managers is
-planned but not yet implemented.
-
-To enable debug utilities, include `"XR_EXT_debug_utils"` in the `enabled_extension_names` list
-when calling :func:`xr.create_instance`.
+To enable debug utilities, include `"XR_EXT_debug_utils"` in your
+`enabled_extension_names` when calling :func:`xr.create_instance`.
 
 See the Khronos registry for full specification:
 https://registry.khronos.org/OpenXR/specs/1.0/man/html/XR_EXT_debug_utils.html
 """
 
-from ctypes import byref, c_void_p, cast, pointer, POINTER
+from ctypes import byref, c_void_p, cast, POINTER
 import logging
-from typing import Callable
+from typing import Optional
 
 import xr
-from xr.ext.instance_extension import InstanceExtension
 
 xr_logger = logging.getLogger("xr")
-
-
-def default_user_callback(
-        severity: xr.DebugUtilsMessageSeverityFlagsEXT,
-        _type: xr.DebugUtilsMessageTypeFlagsEXT,
-        data: POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
-        _user_data: c_void_p
-) -> bool:
-    """Redirect OpenXR messages to our python logger."""
-    d = data.contents
-    xr_logger.log(
-        level=log_level_for_severity(severity),
-        msg=f"XR.EXT.debug_utils: {d.function_name.decode()}: {d.message.decode()}")
-    return True
-
-
-def log_level_for_severity(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT) -> int:
-    """Convert OpenXR message severities to python logging severities."""
-    if severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT:
-        return logging.ERROR
-    elif severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT:
-        return logging.WARNING
-    elif severity_flags & xr.DebugUtilsMessageSeverityFlagsEXT.INFO_BIT:
-        return logging.INFO
-    else:
-        return logging.DEBUG
-
 
 EXTENSION_NAME = "XR_EXT_debug_utils"
 SPEC_VERSION = 5
 VENDOR_TAG = "EXT"
 
+# Aliases for core types
+MessageSeverityFlags = xr.DebugUtilsMessageSeverityFlagsEXT
+Messenger = xr.DebugUtilsMessengerEXT
+MessengerCallbackData = xr.DebugUtilsMessengerCallbackDataEXT
+MessengerCreateInfo = xr.DebugUtilsMessengerCreateInfoEXT
+Label = xr.DebugUtilsLabelEXT
+ObjectNameInfo = xr.DebugUtilsObjectNameInfoEXT
 
-# TODO: context manager for label regions
-def begin_label_region(self):
-    pass
+
+def _default_user_callback(
+    severity: int,
+    _type_flags: int,
+    callback_data: POINTER(MessengerCallbackData),
+    _user_data: c_void_p
+) -> bool:
+    """
+    Minimal default debug callback for `XR_EXT_debug_utils`.
+
+    Redirects all messages into the Python `xr` logger at a level
+    corresponding to the message severity. Clients should override
+    this and install their own handler for structured logging,
+    custom filtering, or integration with telemetry.
+
+    :param severity: Bitmask of message severity flags.
+    :param _type_flags: Bitmask of message type flags (unused here).
+    :param callback_data: Pointer to a populated `MessengerCallbackData` structure.
+    :param _user_data: User-data pointer passed through the create_info (unused).
+    :returns: Always returns True to indicate the message was handled.
+
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrCreateDebugUtilsMessengerEXT.html
+    """
+    data = callback_data.contents
+    xr_logger.log(
+        level=log_level_for_severity(MessageSeverityFlags(severity)),
+        msg=f"XR.EXT.debug_utils: {data.function_name.decode()}: {data.message.decode()}"
+    )
+    return True
+
+
+def log_level_for_severity(severity_flags: MessageSeverityFlags) -> int:
+    """
+    Convert OpenXR message severities to Python logging levels.
+
+    :param severity_flags: Bitmask of message severity flags.
+    :type severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT
+    :returns: One of logging.DEBUG, INFO, WARNING, or ERROR.
+    """
+    if severity_flags & MessageSeverityFlags.ERROR_BIT:
+        return logging.ERROR
+    if severity_flags & MessageSeverityFlags.WARNING_BIT:
+        return logging.WARNING
+    if severity_flags & MessageSeverityFlags.INFO_BIT:
+        return logging.INFO
+    return logging.DEBUG
+
+
+def begin_label_region(
+    instance: xr.Instance,
+    session: xr.Session,
+    label_info: Label
+) -> None:
+    """
+    Begin a labeled debug region in the specified session.
+
+    This marks the start of a profiling or annotation region in the runtime.
+
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
+    :param session: The OpenXR session.
+    :type session: xr.Session
+    :param label_info: A `DebugUtilsLabelEXT` structure describing the region.
+    :type label_info: xr.DebugUtilsLabelEXT
+
+    :raises xr.FunctionUnsupportedError: If the function is unavailable.
+    :raises xr.HandleInvalidError: If `session` is not a valid handle.
+    :raises xr.InstanceLostError: If the session’s instance has been lost.
+
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionBeginDebugUtilsLabelRegionEXT.html
+    """
+    pfn = cast(
+        xr.get_instance_proc_addr(instance, "xrSessionBeginDebugUtilsLabelRegionEXT"),
+        xr.PFN_xrSessionBeginDebugUtilsLabelRegionEXT
+    )
+    result = pfn(session, byref(label_info))
+    checked = xr.check_result(xr.Result(result))
+    if checked.is_exception():
+        raise checked
+
+
+def end_label_region(
+    instance: xr.Instance,
+    session: xr.Session
+) -> None:
+    """
+    End the current labeled debug region in the specified session.
+
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
+    :param session: The OpenXR session.
+    :type session: xr.Session
+
+    :raises xr.FunctionUnsupportedError: If the function is unavailable.
+    :raises xr.HandleInvalidError: If `session` is not a valid handle.
+    :raises xr.InstanceLostError: If the session’s instance has been lost.
+
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionEndDebugUtilsLabelRegionEXT.html
+    """
+    pfn = cast(
+        xr.get_instance_proc_addr(instance, "xrSessionEndDebugUtilsLabelRegionEXT"),
+        xr.PFN_xrSessionEndDebugUtilsLabelRegionEXT
+    )
+    result = pfn(session)
+    checked = xr.check_result(xr.Result(result))
+    if checked.is_exception():
+        raise checked
+
+
+def insert_label(
+    instance: xr.Instance,
+    session: xr.Session,
+    label_info: Label
+) -> None:
+    """
+    Insert a single debug label into the command stream.
+
+    Use this for point-in-time annotations rather than begin/end regions.
+
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
+    :param session: The OpenXR session.
+    :type session: xr.Session
+    :param label_info: A `DebugUtilsLabelEXT` structure with the label text.
+    :type label_info: xr.DebugUtilsLabelEXT
+
+    :raises xr.FunctionUnsupportedError: If the function is unavailable.
+    :raises xr.HandleInvalidError: If `session` is not a valid handle.
+    :raises xr.InstanceLostError: If the session’s instance has been lost.
+
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionInsertDebugUtilsLabelEXT.html
+    """
+    pfn = cast(
+        xr.get_instance_proc_addr(instance, "xrSessionInsertDebugUtilsLabelEXT"),
+        xr.PFN_xrSessionInsertDebugUtilsLabelEXT
+    )
+    result = pfn(session, byref(label_info))
+    checked = xr.check_result(xr.Result(result))
+    if checked.is_exception():
+        raise checked
 
 
 def create_messenger(
-        self,
-        # TODO: transform callback in xr.DebugUtilsMessengerCreateInfoEXT constructor
-        create_info: xr.DebugUtilsMessengerCreateInfoEXT = xr.DebugUtilsMessengerCreateInfoEXT(
-            message_severities=(
-                    xr.DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT
-                    | xr.DebugUtilsMessageSeverityFlagsEXT.INFO_BIT
-                    | xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT
-                    | xr.DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT
-            ),
-            message_types=(
-                    xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
-                    | xr.DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT
-                    | xr.DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
-                    | xr.DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT
-            ),
-            user_callback=xr.PFN_xrDebugUtilsMessengerCallbackEXT(default_user_callback),
-        )
-) -> xr.DebugUtilsMessengerEXT:
-    # TODO: context manager for messenger
-    messenger = xr.DebugUtilsMessengerEXT()
-    self._call_raw(
-        "xrCreateDebugUtilsMessengerEXT",
-        self.instance,
-        create_info,
-        byref(messenger),
+    instance: xr.Instance,
+    create_info: Optional[MessengerCreateInfo] = None
+) -> Messenger:
+    """
+    Create a debug messenger for the given instance.
+
+    Thin wrapper over `xr.DebugUtilsMessengerEXT`. If `create_info` is omitted,
+    defaults will enable all severities/types and route messages to the Python logger.
+
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
+    :param create_info: Optional create-info descriptor.
+    :type create_info: xr.DebugUtilsMessengerCreateInfoEXT or None
+
+    :returns: A new `DebugUtilsMessengerEXT` handle.
+    :rtype: xr.DebugUtilsMessengerEXT
+
+    :raises xr.FunctionUnsupportedError: If the extension isn’t enabled.
+    :raises xr.ValidationFailureError: If parameters are rejected by the runtime.
+    :raises xr.RuntimeFailureError: On internal runtime errors.
+    :raises xr.OutOfMemoryError: If allocation fails.
+    :raises xr.LimitReachedError: If no more messengers can be created.
+
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrCreateDebugUtilsMessengerEXT.html
+    """
+    return Messenger(instance, create_info)
+
+
+def destroy_messenger(
+    instance: xr.Instance,
+    messenger: Messenger
+) -> None:
+    """
+    Destroy a debug messenger, releasing its native resources.
+
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
+    :param messenger: The messenger to destroy.
+    :type messenger: xr.DebugUtilsMessengerEXT
+
+    :raises xr.FunctionUnsupportedError: If the function is unavailable.
+    :raises xr.HandleInvalidError: If `messenger` is not a valid handle.
+
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrDestroyDebugUtilsMessengerEXT.html
+    """
+    pfn = cast(
+        xr.get_instance_proc_addr(instance, "xrDestroyDebugUtilsMessengerEXT"),
+        xr.PFN_xrDestroyDebugUtilsMessengerEXT
     )
-    return messenger
+    result = pfn(messenger)
+    checked = xr.check_result(xr.Result(result))
+    if checked.is_exception():
+        raise checked
 
 
-def destroy_messenger(instance: xr.Instance, messenger: xr.DebugUtilsMessengerEXT) -> None:
-    self._call_raw("xrDestroyDebugUtilsMessengerEXT", messenger)
+def set_object_name(
+    instance: xr.Instance,
+    name_info: ObjectNameInfo
+) -> None:
+    """
+    Assign a human-readable name to an OpenXR object.
 
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
+    :param name_info: A `DebugUtilsObjectNameInfoEXT` structure.
+    :type name_info: xr.DebugUtilsObjectNameInfoEXT
 
-def end_label_region(self):
-    pass
+    :raises xr.FunctionUnsupportedError: If the function is unavailable.
+    :raises xr.HandleInvalidError: If `name_info.objectHandle` is invalid.
 
-
-def insert_label(self):
-    pass
-
-
-def set_object_name(self, name_info: xr.DebugUtilsObjectNameInfoEXT) -> None:
-    self._call_raw(
-        "xrSetDebugUtilsObjectNameEXT",
-        self.instance,
-        name_info,
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSetDebugUtilsObjectNameEXT.html
+    """
+    pfn = cast(
+        xr.get_instance_proc_addr(instance, "xrSetDebugUtilsObjectNameEXT"),
+        xr.PFN_xrSetDebugUtilsObjectNameEXT
     )
+    result = pfn(instance, byref(name_info))
+    checked = xr.check_result(xr.Result(result))
+    if checked.is_exception():
+        raise checked
 
 
 def submit_message(
-        instance: xr.Instance,
-        message_severity: xr.DebugUtilsMessageSeverityFlagsEXT,
-        message_type: xr.DebugUtilsMessageTypeFlagsEXT,
-        callback_data: xr.DebugUtilsMessengerCallbackDataEXT,
+    instance: xr.Instance,
+    message_severity: MessageSeverityFlags,
+    message_type: xr.DebugUtilsMessageTypeFlagsEXT,
+    callback_data: MessengerCallbackData
 ) -> None:
-    func = cast(
+    """
+    Submit a user-generated debug message to the runtime.
+
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
+    :param message_severity: Severity bitmask for this message.
+    :type message_severity: xr.DebugUtilsMessageSeverityFlagsEXT
+    :param message_type: Type bitmask for this message.
+    :type message_type: xr.DebugUtilsMessageTypeFlagsEXT
+    :param callback_data: Prepopulated callback data structure.
+    :type callback_data: xr.DebugUtilsMessengerCallbackDataEXT
+
+    :raises xr.FunctionUnsupportedError: If the function is unavailable.
+    :raises xr.RuntimeFailureError: On internal runtime errors.
+    :raises xr.OutOfMemoryError: If allocation fails.
+
+    :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSubmitDebugUtilsMessageEXT.html
+    """
+    pfn = cast(
         xr.get_instance_proc_addr(instance, "xrSubmitDebugUtilsMessageEXT"),
-        xr.PFN_xrSubmitDebugUtilsMessageEXT,
+        xr.PFN_xrSubmitDebugUtilsMessageEXT
     )
-    result_code = func(instance, message_severity, message_type, callback_data)
+    result_code = pfn(instance, message_severity, message_type, callback_data)
     checked = xr.check_result(xr.Result(result_code))
     if checked.is_exception():
         raise checked
 
 
 __all__ = [
+    "EXTENSION_NAME",
+    "SPEC_VERSION",
+    "VENDOR_TAG",
+    "MessageSeverityFlags",
+    "Messenger",
+    "MessengerCallbackData",
+    "MessengerCreateInfo",
+    "Label",
+    "ObjectNameInfo",
+    "begin_label_region",
+    "end_label_region",
+    "insert_label",
+    "create_messenger",
     "destroy_messenger",
+    "set_object_name",
+    "submit_message",
 ]

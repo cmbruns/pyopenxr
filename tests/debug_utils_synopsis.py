@@ -16,7 +16,7 @@ def debug_callback(
         callback_data: POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
         _user_data: c_void_p
 ) -> bool:
-    """Redirect OpenXR messages to our python logger."""
+    """Redirect OpenXR messages to a python logger."""
     data = callback_data.contents
     message = data.message.decode("utf-8", errors="replace")
     func_name = data.function_name.decode("utf-8", errors="replace")
