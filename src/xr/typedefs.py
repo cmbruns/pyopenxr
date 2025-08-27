@@ -112,7 +112,29 @@ class Session_T(Structure):
     pass
 
 
-Session = POINTER(Session_T)
+class Session(POINTER(Session_T)):
+    _type_ = Session_T
+
+    def __init__(self, instance: Instance, create_info: Optional["SessionCreateInfo"] = None):
+        from .raw_functions import xrCreateSession
+        self.instance = instance
+        if create_info is None:
+            createInfo = SessionCreateInfo()
+        result_code = xrCreateSession(
+            instance,
+            byref(create_info),
+            byref(self),
+        )
+        checked = check_result(result_code)
+        if checked.is_exception():
+            raise checked
+
+    def __enter__(self) -> "Session":
+        return self
+
+    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
+        from .functions import destroy_session
+        destroy_session(self)
 
 
 class Space_T(Structure):
@@ -3815,8 +3837,8 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
         instance: Instance,
         create_info: Optional["DebugUtilsMessengerCreateInfoEXT"] = None,
     ):
-        self._destroy_func = None
         from .functions import get_instance_proc_addr
+        self.instance = instance
         if create_info is None:
             create_info = DebugUtilsMessengerCreateInfoEXT()
         self._callback = create_info.user_callback  # avoid premature gc of callback
@@ -3840,13 +3862,11 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
         return self
 
     def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
-        if self._destroy_func:
-            result = self._destroy_func(self)
-            checked = check_result(result)
-            if checked.is_exception():
-                raise checked
-            self._destroy_func = None
-
+        if self.instance is None:
+            return
+        from xr.ext.EXT.debug_utils import destroy_messenger
+        destroy_messenger(self)
+        self.instance = None
 
 DebugUtilsMessageSeverityFlagsEXTCInt = Flags64
 

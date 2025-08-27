@@ -284,18 +284,7 @@ def create_session(
     instance: Instance,
     create_info: SessionCreateInfo = None,
 ) -> Session:
-    if create_info is None:
-        create_info = SessionCreateInfo()
-    session = Session()
-    fxn = raw_functions.xrCreateSession
-    result = check_result(fxn(
-        instance,
-        create_info,
-        byref(session),
-    ))
-    if result.is_exception():
-        raise result
-    return session
+    return Session(instance, create_info)
 
 
 def destroy_session(

@@ -81,8 +81,7 @@ def log_level_for_severity(severity_flags: MessageSeverityFlags) -> int:
     return logging.DEBUG
 
 
-def begin_label_region(
-    instance: xr.Instance,
+def session_begin_label_region(
     session: xr.Session,
     label_info: Label
 ) -> None:
@@ -105,7 +104,7 @@ def begin_label_region(
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionBeginDebugUtilsLabelRegionEXT.html
     """
     pfn = cast(
-        xr.get_instance_proc_addr(instance, "xrSessionBeginDebugUtilsLabelRegionEXT"),
+        xr.get_instance_proc_addr(session.instance, "xrSessionBeginDebugUtilsLabelRegionEXT"),
         xr.PFN_xrSessionBeginDebugUtilsLabelRegionEXT
     )
     result = pfn(session, byref(label_info))
@@ -114,8 +113,7 @@ def begin_label_region(
         raise checked
 
 
-def end_label_region(
-    instance: xr.Instance,
+def session_end_label_region(
     session: xr.Session
 ) -> None:
     """
@@ -133,7 +131,7 @@ def end_label_region(
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionEndDebugUtilsLabelRegionEXT.html
     """
     pfn = cast(
-        xr.get_instance_proc_addr(instance, "xrSessionEndDebugUtilsLabelRegionEXT"),
+        xr.get_instance_proc_addr(session.instance, "xrSessionEndDebugUtilsLabelRegionEXT"),
         xr.PFN_xrSessionEndDebugUtilsLabelRegionEXT
     )
     result = pfn(session)
@@ -142,8 +140,7 @@ def end_label_region(
         raise checked
 
 
-def insert_label(
-    instance: xr.Instance,
+def session_insert_label(
     session: xr.Session,
     label_info: Label
 ) -> None:
@@ -166,7 +163,7 @@ def insert_label(
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionInsertDebugUtilsLabelEXT.html
     """
     pfn = cast(
-        xr.get_instance_proc_addr(instance, "xrSessionInsertDebugUtilsLabelEXT"),
+        xr.get_instance_proc_addr(session.instance, "xrSessionInsertDebugUtilsLabelEXT"),
         xr.PFN_xrSessionInsertDebugUtilsLabelEXT
     )
     result = pfn(session, byref(label_info))
@@ -205,7 +202,6 @@ def create_messenger(
 
 
 def destroy_messenger(
-    instance: xr.Instance,
     messenger: Messenger
 ) -> None:
     """
@@ -222,7 +218,7 @@ def destroy_messenger(
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrDestroyDebugUtilsMessengerEXT.html
     """
     pfn = cast(
-        xr.get_instance_proc_addr(instance, "xrDestroyDebugUtilsMessengerEXT"),
+        xr.get_instance_proc_addr(messenger.instance, "xrDestroyDebugUtilsMessengerEXT"),
         xr.PFN_xrDestroyDebugUtilsMessengerEXT
     )
     result = pfn(messenger)
