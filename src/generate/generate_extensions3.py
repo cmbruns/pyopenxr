@@ -1,4 +1,5 @@
 import inspect
+import textwrap
 from xml.etree.ElementTree import Element
 
 from generate.xrg.declarations import camel_from_snake, snake_from_camel
@@ -70,11 +71,42 @@ class ExtensionCommandItem:
 
     def code(self) -> str:
         result = ""
-        result += inspect.cleandoc(f"""
-        def {self.py_name}(
-        ) -> {self.return_type}:
-            pass
-        """)
+        result += f"def {self.py_name}("
+        decl_param_count = 0
+        output_parameters = []
+        for param in self.parameters:
+            if param.is_output:
+                output_parameters.append(param)
+                continue
+            # TODO: default value
+            result += f"\n    {param.py_name}: {param.type_py_name},"
+            decl_param_count += 1
+        if decl_param_count > 0:
+            result += "\n"
+        result += f") -> {self.return_type}:\n"
+        # TODO: docstring
+        result += textwrap.indent(inspect.cleandoc(f"""
+            pfn = cast(
+                xr.get_instance_proc_addr(instance, "{self.c_name}"),
+                xr.PFN_{self.c_name},
+            )        
+        """), "    ") + "\n"
+        for param in output_parameters:
+            result += f"    {param.py_name} = {param.type_py_name}()\n"
+        result += "    result_code = pfn(\n"
+        for param in self.parameters:
+            if param.is_pointer:
+                result += f"        byref({param.py_name}),\n"
+            else:
+                result += f"        {param.py_name},\n"
+        result += textwrap.indent(inspect.cleandoc(f"""
+            )
+            checked = xr.check_result(xr.Result(result_code))
+            if checked.is_exception():
+                raise checked
+        """), "    ")
+        if len(output_parameters) > 0:
+            result += f"\n    return {','.join([p.py_name for p in output_parameters])}"
         return result
 
 
