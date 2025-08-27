@@ -12,25 +12,3 @@ To use an extension, ensure its name (e.g. `"XR_EXT_debug_utils"`) is included i
 
 :seealso: https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#extensions
 """
-
-from . import (
-    instance_extension,
-    htcx_vive_tracker_interaction,
-    khr_opengl_enable,
-    mnd_headless,
-)
-
-from .instance_extension import *
-from .htcx_vive_tracker_interaction import *
-from .khr_opengl_enable import *
-from .mnd_headless import *
-
-__all__ = []
-
-for subpackage in (
-    instance_extension,
-    htcx_vive_tracker_interaction,
-    khr_opengl_enable,
-    mnd_headless,
-):
-    __all__.extend(subpackage.__all__)

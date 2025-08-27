@@ -1,4 +1,4 @@
-from .instance_extension import InstanceExtension
+from xr.ext.instance_extension import InstanceExtension
 
 
 class MndHeadless(InstanceExtension):

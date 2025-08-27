@@ -1,5 +1,7 @@
 import copy
+import importlib
 import inspect
+import pkgutil
 from typing import Optional
 
 import sys
@@ -265,9 +267,23 @@ def store_function_docstrings():
         write_docstrings(updated_function_docstrings, label="function", file=file)
 
 
+def find_extension_modules():
+    xr_ext = importlib.import_module("xr.ext")
+    for finder, name, is_pkg in pkgutil.iter_modules(xr_ext.__path__, "xr.ext" + "."):
+        try:
+            submod = importlib.import_module(name)
+            if hasattr(submod, '__path__'):  # It's a package
+                for _, subname, _ in pkgutil.iter_modules(submod.__path__, name + "."):
+                    yield subname
+        except Exception as e:
+            print(f"Skipping {name}: {e}")
+
+
 if __name__ == "__main__":
     # check_instance_docstring()
     # count_xr_docstrings()
     # write_docstrings(class_docstrings)
     # store_class_docstrings()
-    store_function_docstrings()
+    # store_function_docstrings()
+    for module in find_extension_modules():
+        print(module)

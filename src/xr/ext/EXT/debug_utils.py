@@ -10,7 +10,7 @@ To enable debug utilities, include `"XR_EXT_debug_utils"` in your
 `enabled_extension_names` when calling :func:`xr.create_instance`.
 
 See the Khronos registry for full specification:
-https://registry.khronos.org/OpenXR/specs/1.0/man/html/XR_EXT_debug_utils.html
+https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_EXT_debug_utils.html
 """
 
 from ctypes import byref, c_void_p, cast, POINTER
