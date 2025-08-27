@@ -31,6 +31,8 @@ def get_opengl_graphics_requirements(
     maximum OpenGL versions supported by the runtime for the specified system. It is
     typically called before creating a graphics context to ensure compatibility.
 
+    :param instance: The OpenXR instance.
+    :type instance: xr.Instance
     :param system_id: The system identifier obtained via `xr.get_system()`.
     :type system_id: xr.SystemId
     :return: A structure containing the OpenGL graphics requirements.

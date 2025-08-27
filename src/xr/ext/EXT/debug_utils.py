@@ -90,8 +90,6 @@ def session_begin_label_region(
 
     This marks the start of a profiling or annotation region in the runtime.
 
-    :param instance: The OpenXR instance.
-    :type instance: xr.Instance
     :param session: The OpenXR session.
     :type session: xr.Session
     :param label_info: A `DebugUtilsLabelEXT` structure describing the region.
@@ -119,8 +117,6 @@ def session_end_label_region(
     """
     End the current labeled debug region in the specified session.
 
-    :param instance: The OpenXR instance.
-    :type instance: xr.Instance
     :param session: The OpenXR session.
     :type session: xr.Session
 
@@ -149,8 +145,6 @@ def session_insert_label(
 
     Use this for point-in-time annotations rather than begin/end regions.
 
-    :param instance: The OpenXR instance.
-    :type instance: xr.Instance
     :param session: The OpenXR session.
     :type session: xr.Session
     :param label_info: A `DebugUtilsLabelEXT` structure with the label text.
@@ -207,8 +201,6 @@ def destroy_messenger(
     """
     Destroy a debug messenger, releasing its native resources.
 
-    :param instance: The OpenXR instance.
-    :type instance: xr.Instance
     :param messenger: The messenger to destroy.
     :type messenger: xr.DebugUtilsMessengerEXT
 
