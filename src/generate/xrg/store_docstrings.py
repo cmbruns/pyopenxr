@@ -274,7 +274,7 @@ def find_extension_modules():
             submod = importlib.import_module(name)
             if hasattr(submod, '__path__'):  # It's a package
                 for _, subname, _ in pkgutil.iter_modules(submod.__path__, name + "."):
-                    yield subname
+                    yield importlib.import_module(name)
         except Exception as e:
             print(f"Skipping {name}: {e}")
 
@@ -286,4 +286,4 @@ if __name__ == "__main__":
     # store_class_docstrings()
     # store_function_docstrings()
     for module in find_extension_modules():
-        print(module)
+        print(module.__name__)

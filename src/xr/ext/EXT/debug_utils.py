@@ -13,9 +13,28 @@ See the Khronos registry for full specification:
 https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_EXT_debug_utils.html
 """
 
+__all__ = [
+    "EXTENSION_NAME",
+    "SPEC_VERSION",
+    "VENDOR_TAG",
+    "MessageSeverityFlags",
+    "Messenger",
+    "MessengerCallbackData",
+    "MessengerCreateInfo",
+    "Label",
+    "ObjectNameInfo",
+    "session_begin_label_region",
+    "session_end_label_region",
+    "session_insert_label",
+    "create_messenger",
+    "destroy_messenger",
+    "set_object_name",
+    "submit_message",
+]
+
 from ctypes import byref, c_void_p, cast, POINTER
 import logging
-from typing import Optional
+from typing import Optional, Any
 
 import xr
 
@@ -35,10 +54,10 @@ ObjectNameInfo = xr.DebugUtilsObjectNameInfoEXT
 
 
 def _default_user_callback(
-    severity: int,
-    _type_flags: int,
-    callback_data: POINTER(MessengerCallbackData),
-    _user_data: c_void_p
+    severity: xr.DebugUtilsMessageSeverityFlagsEXT,
+    _type_flags: xr.DebugUtilsMessageTypeFlagsEXT,
+    callback_data: MessengerCallbackData,
+    _user_data: Any,
 ) -> bool:
     """
     Minimal default debug callback for `XR_EXT_debug_utils`.
@@ -56,10 +75,9 @@ def _default_user_callback(
 
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrCreateDebugUtilsMessengerEXT.html
     """
-    data = callback_data.contents
     xr_logger.log(
         level=log_level_for_severity(MessageSeverityFlags(severity)),
-        msg=f"XR.EXT.debug_utils: {data.function_name.decode()}: {data.message.decode()}"
+        msg=f"XR.EXT.debug_utils: {callback_data.function_name}: {callback_data.message}"
     )
     return True
 
@@ -278,23 +296,3 @@ def submit_message(
     checked = xr.check_result(xr.Result(result_code))
     if checked.is_exception():
         raise checked
-
-
-__all__ = [
-    "EXTENSION_NAME",
-    "SPEC_VERSION",
-    "VENDOR_TAG",
-    "MessageSeverityFlags",
-    "Messenger",
-    "MessengerCallbackData",
-    "MessengerCreateInfo",
-    "Label",
-    "ObjectNameInfo",
-    "session_begin_label_region",
-    "session_end_label_region",
-    "session_insert_label",
-    "create_messenger",
-    "destroy_messenger",
-    "set_object_name",
-    "submit_message",
-]

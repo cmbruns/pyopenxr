@@ -119,7 +119,7 @@ class Session(POINTER(Session_T)):
         from .raw_functions import xrCreateSession
         self.instance = instance
         if create_info is None:
-            createInfo = SessionCreateInfo()
+            create_info = SessionCreateInfo()
         result_code = xrCreateSession(
             instance,
             byref(create_info),
@@ -3838,7 +3838,7 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
         create_info: Optional["DebugUtilsMessengerCreateInfoEXT"] = None,
     ):
         from .functions import get_instance_proc_addr
-        self.instance = instance
+        self.instance: Optional[Instance] = instance
         if create_info is None:
             create_info = DebugUtilsMessengerCreateInfoEXT()
         self._callback = create_info.user_callback  # avoid premature gc of callback
@@ -3867,6 +3867,7 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
         from xr.ext.EXT.debug_utils import destroy_messenger
         destroy_messenger(self)
         self.instance = None
+
 
 DebugUtilsMessageSeverityFlagsEXTCInt = Flags64
 
@@ -3949,9 +3950,9 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         session_label_count, session_labels = array_field_helper(
             DebugUtilsLabelEXT, session_label_count, session_labels)
         super().__init__(
-            message_id=message_id.encode(),
-            function_name=function_name.encode(),
-            message=message.encode(),
+            _message_id=message_id.encode(),
+            _function_name=function_name.encode(),
+            _message=message.encode(),
             object_count=object_count,
             _objects=objects,
             session_label_count=session_label_count,
@@ -3965,6 +3966,18 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
 
     def __str__(self) -> str:
         return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self.message_id}, function_name={self.function_name}, message={self.message}, object_count={self.object_count}, objects={self._objects}, session_label_count={self.session_label_count}, session_labels={self._session_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def message_id(self) -> str:
+        return self._message_id.decode()
+
+    @property
+    def function_name(self) -> str:
+        return self._function_name.decode()
+
+    @property
+    def message(self) -> str:
+        return self._message.decode()
 
     @property
     def objects(self):
@@ -3997,9 +4010,9 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("message_id", c_char_p),
-        ("function_name", c_char_p),
-        ("message", c_char_p),
+        ("_message_id", c_char_p),
+        ("_function_name", c_char_p),
+        ("_message", c_char_p),
         ("object_count", c_uint32),
         ("_objects", POINTER(DebugUtilsObjectNameInfoEXT)),
         ("session_label_count", c_uint32),
@@ -4090,16 +4103,30 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         ),
         user_callback: Callable[
             [
-                int,
-                int,
-                POINTER(DebugUtilsMessengerCallbackDataEXT),
-                c_void_p
+                DebugUtilsMessageSeverityFlagsEXT,  # severity
+                DebugUtilsMessageTypeFlagsEXT,  # type_flags
+                DebugUtilsMessengerCallbackDataEXT,  # callback_data
+                Any,  # user_data
             ], bool] = _default_debug_callback,
         user_data: Any = None,
         next: c_void_p = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
-        _wrapped_callback = PFN_xrDebugUtilsMessengerCallbackEXT(user_callback) if user_callback else None
+        def _shim(
+            severity: int, type_flags: int,
+            callback_data_ptr: POINTER(DebugUtilsMessengerCallbackDataEXT),
+            _user_data_ptr: c_void_p,
+        ) -> bool:
+            try:
+                severity_enum = DebugUtilsMessageSeverityFlagsEXT(severity)
+                type_enum = DebugUtilsMessageTypeFlagsEXT(type_flags)
+                callback_data = callback_data_ptr.contents
+                return user_callback(severity_enum, type_enum, callback_data, user_data)
+            except Exception as e:
+                # Log or suppress errors to avoid crashing native callback
+                print(f"Exception in debug callback: {e}")
+                return False
+        _wrapped_callback = PFN_xrDebugUtilsMessengerCallbackEXT(_shim) if user_callback else None
         _user_data = cast(py_object(user_data), c_void_p) if user_data else None
         super().__init__(
             message_severities=DebugUtilsMessageSeverityFlagsEXT(message_severities).value,
