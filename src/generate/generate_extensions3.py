@@ -1,28 +1,61 @@
 import inspect
 import textwrap
+from typing import Optional
 from xml.etree.ElementTree import Element
 
 from generate.xrg.declarations import camel_from_snake, snake_from_camel
 from xrg.registry import xr_registry
 
 
-class CommandParameterItem:
-    def __init__(self, element, extension):
-        assert element.tag == "param"
-        self.c_name = element.find("name").text
-        self.py_name = snake_from_camel(self.c_name)
-        self.type_c_name = element.find("type").text
-        # TODO: look up extension aliases
-        if self.type_c_name in extension.aliases:
-            alias = extension.aliases[self.type_c_name]
-            self.type_py_name = alias.alias
+class ParameterType:
+    def __init__(
+            self,
+            name: str,
+            is_pointer: bool = False,
+            is_const: bool = False,
+    ) -> None:
+        self.name = name
+        self.is_pointer = is_pointer
+        self.is_const = is_const
+
+    @classmethod
+    def from_xml(
+            cls,
+            parameter_element,
+            extension: Optional["ExtensionModuleItem"],
+    ) -> "ParameterType":
+        assert parameter_element.tag == "param"
+        c_name = parameter_element.find("type").text
+        if c_name in extension.aliases:
+            name = f"{extension.aliases[c_name].alias}"  # TODO: prepend extension module name?
         else:
-            assert self.type_c_name.startswith("Xr")
-            self.type_py_name = "xr." + self.type_c_name[len("Xr"):]
-        full_text = "".join(element.itertext())
-        self.is_pointer = "*" in full_text
-        self.is_const = "const" in full_text.split(self.type_c_name)[0]
-        self.is_output = False  # might be overwritten in a moment...
+            assert c_name.startswith("Xr")
+            name = f'xr.{c_name[len("Xr"):]}'
+        full_text = "".join(parameter_element.itertext())
+        is_pointer = "*" in full_text
+        is_const = "const" in full_text.split(c_name)[0]
+        return cls(name, is_pointer, is_const)
+
+    def __str__(self):
+        return self.name
+
+
+class CommandParameterItem:
+    def __init__(self, c_name, parameter_type: ParameterType):
+        self.c_name = c_name
+        self.type = parameter_type
+        self.py_name = snake_from_camel(self.c_name)
+
+    @classmethod
+    def from_xml(
+            cls,
+            parameter_element,
+            extension: Optional["ExtensionModuleItem"],
+    ) -> "CommandParameterItem":
+        assert parameter_element.tag == "param"
+        c_name = parameter_element.find("name").text
+        parameter_type = ParameterType.from_xml(parameter_element, extension)
+        return cls(c_name, parameter_type)
 
 
 class ExtensionCommandItem:
@@ -57,14 +90,13 @@ class ExtensionCommandItem:
         assert proto.find("type").text == "XrResult"
         self.parameters = []  # list because order matters
         for param in command.findall("param"):
-            self.parameters.append(CommandParameterItem(param, extension))
+            self.parameters.append(CommandParameterItem.from_xml(param, extension))
         # Look for output parameter
         self.return_type = "None"
         if len(self.parameters) > 0:
             final = self.parameters[-1]
-            if final.is_pointer and not final.is_const:
-                final.is_output = True
-                self.return_type = final.type_py_name
+            if final.type.is_pointer and not final.type.is_const:
+                self.return_type = final.type
 
     def __lt__(self, other):
         return self.py_name < other.py_name
@@ -74,12 +106,17 @@ class ExtensionCommandItem:
         result += f"def {self.py_name}("
         decl_param_count = 0
         output_parameters = []
-        for param in self.parameters:
-            if param.is_output:
+        for param_ix, param in enumerate(self.parameters):
+            is_output = (
+                param.type.is_pointer
+                and not param.type.is_const
+                and param_ix == len(self.parameters) - 1
+            )
+            if is_output:
                 output_parameters.append(param)
                 continue
             # TODO: default value
-            result += f"\n    {param.py_name}: {param.type_py_name},"
+            result += f"\n    {param.py_name}: {param.type},"
             decl_param_count += 1
         if decl_param_count > 0:
             result += "\n"
@@ -92,10 +129,10 @@ class ExtensionCommandItem:
             )        
         """), "    ") + "\n"
         for param in output_parameters:
-            result += f"    {param.py_name} = {param.type_py_name}()\n"
+            result += f"    {param.py_name} = {param.type}()\n"
         result += "    result_code = pfn(\n"
         for param in self.parameters:
-            if param.is_pointer:
+            if param.type.is_pointer:
                 result += f"        byref({param.py_name}),\n"
             else:
                 result += f"        {param.py_name},\n"
@@ -118,6 +155,7 @@ class ExtensionModuleItem:
         short_name = element.attrib["name"][len("XR_"):]
         self.vendor_tag = short_name.split("_")[0]  # e.g. "EXT"
         self.short_name = short_name[len(self.vendor_tag) + 1:]  # e.g "debug_utils"
+        self.module_name = f"xr.ext.{self.vendor_tag}.{self.short_name}"
         self.camel_short_name = camel_from_snake(self.short_name)  # e.g. "DebugUtils"
         require = element.find("require")
         version = require.find(f"enum[@name='{self.name}_SPEC_VERSION']")

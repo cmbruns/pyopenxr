@@ -163,8 +163,8 @@ def enumerate_class_docstrings(clazz):
                 yield doc, (clazz, *path)
 
 
-def enumerate_docstrings(modules=(xr, xr.ext)):
-    for module in modules:
+def enumerate_docstrings():
+    for module in enumerate_modules():
         if not hasattr(module, "__name__"):
             continue
         for name in dir(module):
@@ -177,6 +177,20 @@ def enumerate_docstrings(modules=(xr, xr.ext)):
             if inspect.isclass(obj):
                 for doc, path in enumerate_class_docstrings(obj):
                     yield doc, (module, *path)
+
+
+def enumerate_modules():
+    yield xr
+    # All the extension modules, two levels below xr.ext
+    xr_ext = importlib.import_module("xr.ext")
+    for _, name, is_pkg in pkgutil.iter_modules(xr_ext.__path__, "xr.ext" + "."):
+        try:
+            submodule = importlib.import_module(name)
+            if is_pkg:
+                for _, subname, _ in pkgutil.iter_modules(submodule.__path__, name + "."):
+                    yield importlib.import_module(subname)
+        except Exception as e:
+            print(f"Skipping {name}: {e}")
 
 
 def get_class_url(class_) -> Optional[str]:
@@ -267,23 +281,11 @@ def store_function_docstrings():
         write_docstrings(updated_function_docstrings, label="function", file=file)
 
 
-def find_extension_modules():
-    xr_ext = importlib.import_module("xr.ext")
-    for finder, name, is_pkg in pkgutil.iter_modules(xr_ext.__path__, "xr.ext" + "."):
-        try:
-            submod = importlib.import_module(name)
-            if hasattr(submod, '__path__'):  # It's a package
-                for _, subname, _ in pkgutil.iter_modules(submod.__path__, name + "."):
-                    yield importlib.import_module(name)
-        except Exception as e:
-            print(f"Skipping {name}: {e}")
-
-
 if __name__ == "__main__":
     # check_instance_docstring()
     # count_xr_docstrings()
     # write_docstrings(class_docstrings)
     # store_class_docstrings()
     # store_function_docstrings()
-    for module in find_extension_modules():
-        print(module.__name__)
+    for mod in enumerate_modules():
+        print(mod.__name__)
