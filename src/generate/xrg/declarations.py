@@ -1109,7 +1109,12 @@ class FunctionCoder(object):
 
 class AtomCreationFunctionCoder(FunctionCoder):
     def body_code(self) -> str:
-        return "\n    return Instance(create_info)"
+        return_type = self.function.parameters[-1].type
+        assert return_type.clang_type.kind == TypeKind.POINTER
+        assert not return_type.clang_type.get_pointee().is_const_qualified()
+        type_name = return_type.pointee.name()
+        params = ",".join(p.name() for p in self.function.parameters)
+        return f"\n    return {type_name}({params})"
 
 
 class FieldCoder(object):
