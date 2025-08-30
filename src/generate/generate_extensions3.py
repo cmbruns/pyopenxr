@@ -59,9 +59,22 @@ class CommandParameterItem:
 
 
 class ExtensionCommandItem:
-    def __init__(self, name, extension):
-        self.c_name = name  # e.g. 'xrSetDebugUtilsObjectNameEXT'
-        py_name = self.c_name
+    def __init__(self, c_name, py_name, parameters) -> None:
+        self.c_name = c_name  # e.g. 'xrSetDebugUtilsObjectNameEXT'
+        self.py_name = py_name
+        self.parameters = parameters
+        self.parameter_index = {parameter.py_name: parameter for parameter in self.parameters}
+        # Look for output parameter
+        self.return_type = "None"
+        if len(self.parameters) > 0:
+            final = self.parameters[-1]
+            if final.type.is_pointer and not final.type.is_const:
+                self.return_type = final.type
+
+    @classmethod
+    def from_xml(cls, command_entity, extension: Optional["ExtensionModuleItem"]) -> "ExtensionCommandItem":
+        c_name = command_entity.attrib["name"]
+        py_name = c_name
         prefix = f"xr"
         assert py_name.startswith(prefix)
         py_name = py_name[len(prefix):]
@@ -71,7 +84,7 @@ class ExtensionCommandItem:
         assert extension.camel_short_name in py_name
         py_name = py_name.replace(extension.camel_short_name, "")
         py_name = snake_from_camel(py_name)
-        self.py_name = py_name
+        py_name = py_name
         command = None
         for commands in xr_registry.findall("commands"):
             assert commands
@@ -80,7 +93,7 @@ class ExtensionCommandItem:
                 pn = cmd.find("proto/name")
                 if pn is None:
                     continue
-                if pn.text == self.c_name:
+                if pn.text == c_name:
                     command = cmd
                     break
             if command is not None:
@@ -88,15 +101,10 @@ class ExtensionCommandItem:
         assert command is not None
         proto = command.find("proto")
         assert proto.find("type").text == "XrResult"
-        self.parameters = []  # list because order matters
+        parameters = []  # list because order matters
         for param in command.findall("param"):
-            self.parameters.append(CommandParameterItem.from_xml(param, extension))
-        # Look for output parameter
-        self.return_type = "None"
-        if len(self.parameters) > 0:
-            final = self.parameters[-1]
-            if final.type.is_pointer and not final.type.is_const:
-                self.return_type = final.type
+            parameters.append(CommandParameterItem.from_xml(param, extension))
+        return cls(c_name, py_name, parameters)
 
     def __lt__(self, other):
         return self.py_name < other.py_name
@@ -122,9 +130,14 @@ class ExtensionCommandItem:
             result += "\n"
         result += f") -> {self.return_type}:\n"
         # TODO: docstring
+        # Where to get instance for get_instance_proc_addr?
+        instance_name = "instance"
+        if "instance" not in self.parameter_index:
+            # Presume the first argument is a handle with an instance attribute
+            instance_name = f"{self.parameters[0].py_name}.instance"
         result += textwrap.indent(inspect.cleandoc(f"""
             pfn = cast(
-                xr.get_instance_proc_addr(instance, "{self.c_name}"),
+                xr.get_instance_proc_addr({instance_name}, "{self.c_name}"),
                 xr.PFN_{self.c_name},
             )        
         """), "    ") + "\n"
@@ -189,7 +202,7 @@ class ExtensionModuleItem:
         # TODO: extension function pointers
         self.commands = set()
         for command in require.findall("command"):
-            cmd = ExtensionCommandItem(command.attrib["name"], self)
+            cmd = ExtensionCommandItem.from_xml(command, self)
             self.commands.add(cmd)
             self.all.add(cmd.py_name)
         self.ctypes_types = set()
