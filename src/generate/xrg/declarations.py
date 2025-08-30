@@ -481,6 +481,8 @@ class StructFieldItem(CodeItem):
             StructFieldItem.Kind.VERSION,
         ]:
             return f"_{n}"  # Prepend with underscore
+        elif self.type.name(Api.CTYPES) == "c_char_p":
+            return f"_{n}"  # Prepend with underscore
         else:
             return n
 
@@ -642,8 +644,11 @@ class StructItem(CodeItem):
         result = f"class {self.name(api)}(Structure):"
         doc_key = f"xr.{self.name()}"
         if doc_key in class_docstrings:
-            docstring = class_docstrings[doc_key]
-            x = 3
+            docstring = class_docstrings[doc_key]["docstring"]
+            assert len(docstring) > 0
+            docstring = f'\n"""\n{inspect.cleandoc(docstring)}\n"""'
+            docstring = textwrap.indent(docstring, " " * 4)
+            result += docstring
         if len(self.fields) == 0:
             # Empty structure
             result += "\n    pass"
@@ -1162,7 +1167,7 @@ class FieldCoder(object):
             # setter
             yield ""
             yield f"@{self.name}.setter"
-            yield f"def {self.name}(self, value):"
+            yield f"def {self.name}(self, value) -> None:"
             yield f"    # noinspection PyAttributeOutsideInit"
             yield f"    self.{self.inner_name} = value"
 
@@ -1240,7 +1245,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         # yield ""
         # yield "# noinspection PyAttributeOutsideInit"
         yield f"@{self.name}.setter"
-        yield f"def {self.name}(self, value):"
+        yield f"def {self.name}(self, value) -> None:"
         yield f"    # noinspection PyAttributeOutsideInit"
         if element_type == "c_char_p":
             yield f"    self.{count}, self.{self.inner_name} = string_array_field_helper("
@@ -1326,7 +1331,20 @@ class StringFieldCoder(FieldCoder):
         yield f'{self.name}: str = {default}'
 
     def call_code(self) -> Generator[str, None, None]:
-        yield f"{self.field.name()}={self.name}.encode()"
+        yield f"{self.inner_name}={self.name}.encode()"
+
+    def property_code(self) -> Generator[str, None, None]:
+        if self.inner_name != self.name:
+            # getter
+            yield "@property"
+            yield f"def {self.name}(self) -> str:"
+            yield f"    return self.{self.inner_name}.decode()"
+            # setter
+            yield ""
+            yield f"@{self.name}.setter"
+            yield f"def {self.name}(self, value: str) -> None:"
+            yield f"    # noinspection PyAttributeOutsideInit"
+            yield f"    self.{self.inner_name} = value.encode()"
 
 
 class VersionFieldCoder(FieldCoder):
@@ -1343,12 +1361,12 @@ class VersionFieldCoder(FieldCoder):
         if self.inner_name != self.name:
             # getter
             yield "@property"
-            yield f"def {self.name}(self):"
+            yield f"def {self.name}(self) -> Version:"
             yield f"    return Version(self.{self.inner_name})"
             # setter
             yield ""
             yield f"@{self.name}.setter"
-            yield f"def {self.name}(self, value: Version):"
+            yield f"def {self.name}(self, value: Version) -> None:"
             yield f"    if hasattr(value, 'number'):"
             yield f"        # noinspection PyAttributeOutsideInit"
             yield f"        self.{self.inner_name} = value.number()"

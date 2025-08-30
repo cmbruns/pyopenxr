@@ -101,7 +101,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
                 ctypes.addressof(self._view_formats.contents))
 
     @view_formats.setter
-    def view_formats(self, value):
+    def view_formats(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.view_format_count, self._view_formats = array_field_helper(
             c_int, None, value)
@@ -191,11 +191,11 @@ class GraphicsRequirementsOpenGLKHR(Structure):
         return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
 
     @property
-    def min_api_version_supported(self):
+    def min_api_version_supported(self) -> Version:
         return Version(self._min_api_version_supported)
     
     @min_api_version_supported.setter
-    def min_api_version_supported(self, value: Version):
+    def min_api_version_supported(self, value: Version) -> None:
         if hasattr(value, 'number'):
             # noinspection PyAttributeOutsideInit
             self._min_api_version_supported = value.number()
@@ -204,11 +204,11 @@ class GraphicsRequirementsOpenGLKHR(Structure):
             self._min_api_version_supported = value
 
     @property
-    def max_api_version_supported(self):
+    def max_api_version_supported(self) -> Version:
         return Version(self._max_api_version_supported)
     
     @max_api_version_supported.setter
-    def max_api_version_supported(self, value: Version):
+    def max_api_version_supported(self, value: Version) -> None:
         if hasattr(value, 'number'):
             # noinspection PyAttributeOutsideInit
             self._max_api_version_supported = value.number()
@@ -313,11 +313,11 @@ class GraphicsRequirementsVulkanKHR(Structure):
         return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
 
     @property
-    def min_api_version_supported(self):
+    def min_api_version_supported(self) -> Version:
         return Version(self._min_api_version_supported)
     
     @min_api_version_supported.setter
-    def min_api_version_supported(self, value: Version):
+    def min_api_version_supported(self, value: Version) -> None:
         if hasattr(value, 'number'):
             # noinspection PyAttributeOutsideInit
             self._min_api_version_supported = value.number()
@@ -326,11 +326,11 @@ class GraphicsRequirementsVulkanKHR(Structure):
             self._min_api_version_supported = value
 
     @property
-    def max_api_version_supported(self):
+    def max_api_version_supported(self) -> Version:
         return Version(self._max_api_version_supported)
     
     @max_api_version_supported.setter
-    def max_api_version_supported(self, value: Version):
+    def max_api_version_supported(self, value: Version) -> None:
         if hasattr(value, 'number'):
             # noinspection PyAttributeOutsideInit
             self._max_api_version_supported = value.number()
