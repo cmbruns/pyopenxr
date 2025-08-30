@@ -3,7 +3,8 @@ import textwrap
 from typing import Optional
 from xml.etree.ElementTree import Element
 
-from generate.xrg.declarations import camel_from_snake, snake_from_camel
+from xrg.declarations import camel_from_snake, snake_from_camel
+from xrg.function_docstring_data import function_docstrings
 from xrg.registry import xr_registry
 
 
@@ -59,10 +60,11 @@ class CommandParameterItem:
 
 
 class ExtensionCommandItem:
-    def __init__(self, c_name, py_name, parameters) -> None:
+    def __init__(self, c_name: str, py_name: str, parameters, module_name: str = "xr") -> None:
         self.c_name = c_name  # e.g. 'xrSetDebugUtilsObjectNameEXT'
         self.py_name = py_name
         self.parameters = parameters
+        self.module_name = module_name
         self.parameter_index = {parameter.py_name: parameter for parameter in self.parameters}
         # Look for output parameter
         self.return_type = "None"
@@ -104,7 +106,7 @@ class ExtensionCommandItem:
         parameters = []  # list because order matters
         for param in command.findall("param"):
             parameters.append(CommandParameterItem.from_xml(param, extension))
-        return cls(c_name, py_name, parameters)
+        return cls(c_name, py_name, parameters, extension.module_name)
 
     def __lt__(self, other):
         return self.py_name < other.py_name
@@ -129,6 +131,13 @@ class ExtensionCommandItem:
         if decl_param_count > 0:
             result += "\n"
         result += f") -> {self.return_type}:\n"
+        if f"{self.module_name}.{self.py_name}" in function_docstrings:
+            fd = function_docstrings[f"{self.module_name}.{self.py_name}"]
+            docstring = fd["docstring"]
+            assert len(docstring) > 0
+            docstring = f'"""\n{docstring}\n"""\n'
+            docstring = textwrap.indent(docstring, " " * 4)
+            result += docstring
         # TODO: docstring
         # Where to get instance for get_instance_proc_addr?
         instance_name = "instance"

@@ -640,6 +640,10 @@ class StructItem(CodeItem):
         if api == Api.C:
             raise NotImplementedError
         result = f"class {self.name(api)}(Structure):"
+        doc_key = f"xr.{self.name()}"
+        if doc_key in class_docstrings:
+            docstring = class_docstrings[doc_key]
+            x = 3
         if len(self.fields) == 0:
             # Empty structure
             result += "\n    pass"
@@ -714,24 +718,23 @@ class TypeDefItem(CodeItem):
             docstring = ""
             doc_key = f"xr.{self.name(api)}"
             if doc_key in class_docstrings:
-                docstring = f'\n"""\n{class_docstrings[doc_key]["docstring"]}\n"""\n'
+                docstring = f'\n"""\n{class_docstrings[doc_key]["docstring"]}\n"""'
                 docstring = textwrap.indent(docstring, " " * 20)
-            init_docstring = ""
-            init_key = f"{doc_key}.__init__"
-            if init_key in function_docstrings:
-                init_docstring = f'\n"""\n{function_docstrings[init_key]["docstring"]}\n"""\n'
-                init_docstring = textwrap.indent(init_docstring, " " * 24)
             # TODO: generalize for non-Instance handles
+            handle_name = "Instance"
+            snake = snake_from_camel(handle_name)
+            # TODO: extension handle case
+            # TODO: non-Instance case
             result = inspect.cleandoc(f'''
                 class {self.name(api)}({self.type.name(Api.CTYPES)}):{docstring}
                     _type_ = {self.type.pointee.name(Api.CTYPES)}  # ctypes idiosyncrasy
                 
-                    def __init__(self, create_info: Optional["InstanceCreateInfo"] = None):{init_docstring}
+                    def __init__(self, create_info: Optional["{handle_name}CreateInfo"] = None):
                         if create_info is None:
-                            create_info = InstanceCreateInfo()
+                            create_info = {handle_name}CreateInfo()
                         # Import function just-in-time to avoid initialization order problem
-                        from .raw_functions import xrCreateInstance
-                        result = check_result(xrCreateInstance(
+                        from .raw_functions import xrCreate{handle_name}
+                        result = check_result(xrCreate{handle_name}(
                             create_info,
                             byref(self),
                         ))
@@ -742,8 +745,8 @@ class TypeDefItem(CodeItem):
                         return self
                 
                     def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
-                        from .functions import destroy_instance
-                        destroy_instance(self)
+                        from .functions import destroy_{snake}
+                        destroy_{snake}(self)
             ''')
             return result
         else:

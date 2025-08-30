@@ -257,18 +257,10 @@ def store_function_docstrings():
         if not inspect.isfunction(func):
             continue
         n = func.__name__
-        if n.startswith("_") and n != "__init__":
+        if n.startswith("_"):
             continue
         qualified_name = ".".join([x.__name__ for x in path])
         vendor_prefix = ""
-        extension = path[-2]
-        if inspect.isclass(extension) and issubclass(extension, xr.ext.InstanceExtension):
-            extension_name = getattr(extension, "NAME")
-            parts = extension_name.split("_")
-            if len(parts) > 1:
-                vendor_prefix = parts[1]
-        if hasattr(extension, "VENDOR_PREFIX"):
-            vendor_prefix = extension.VENDOR_PREFIX
         c_name = f"xr{camelize_function_name(func.__name__)}{vendor_prefix}"
         url = check_url(f"https://registry.khronos.org/OpenXR/specs/1.1/man/html/{c_name}.html")
         updated_function_docstrings[qualified_name] = {}
@@ -286,6 +278,6 @@ if __name__ == "__main__":
     # count_xr_docstrings()
     # write_docstrings(class_docstrings)
     # store_class_docstrings()
-    # store_function_docstrings()
-    for mod in enumerate_modules():
-        print(mod.__name__)
+    store_function_docstrings()
+    # for mod in enumerate_modules():
+    #     print(mod.__name__)

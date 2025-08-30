@@ -37,6 +37,81 @@ class_docstrings = {
         """),
         "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrResult.html",
     },
+    "xr.DebugUtilsMessengerCreateInfoEXT": {
+        "docstring": inspect.cleandoc("""
+
+                Descriptor for creating a debug messenger via `XR_EXT_debug_utils`.
+
+                This structure configures the behavior of a debug messenger, including which
+                message severities and types to receive, and the callback function to invoke.
+
+                A default instance may be constructed with no arguments, enabling all message
+                types and severities and using the built-in `_default_debug_callback`.
+
+                :param message_severities: Bitmask of message severities to receive.
+                :type message_severities: xr.DebugUtilsMessageSeverityFlagsEXT
+                :param message_types: Bitmask of message types to receive.
+                :type message_types: xr.DebugUtilsMessageTypeFlagsEXT
+                :param user_callback: Python callable accepting `(severity, type_flags, callback_data, user_data)`.
+                                      This will be wrapped into a native function pointer.
+                :type user_callback: Callable[[int, int,
+                                               ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT), ctypes.c_void_p], bool]
+                :param user_data: Optional Python object passed to the callback.
+                :type user_data: Any
+                :param next: Optional pointer to extension-specific structures.
+                :type next: ctypes.c_void_p
+                :param type: Structure type identifier. Defaults to `DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT`.
+                :type type: xr.StructureType
+
+                :seealso: :class:`xr.DebugUtilsMessengerEXT`, :func:`xr.ext.EXT.debug_utils._default_debug_callback`
+                :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerCreateInfoEXT.html
+    
+        """),
+        "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerCreateInfoEXT.html",
+    },
+    "xr.DebugUtilsMessengerEXT": {
+        "docstring": inspect.cleandoc("""
+
+                Opaque handle to an OpenXR debug messenger object.
+
+                A `xr.DebugUtilsMessengerEXT` enables runtime diagnostics and logging via the
+                `XR_EXT_debug_utils` extension. It allows applications to receive structured
+                messages from the runtime, including validation errors, warnings, and performance
+                hints.
+
+                This object wraps the native `xrCreateDebugUtilsMessengerEXT` and
+                `xrDestroyDebugUtilsMessengerEXT` calls. It supports context management for
+                automatic teardown, though manual destruction via :func:`xr.ext.EXT.debug_utils.destroy_messenger`
+                is preferred for explicit control.
+
+                .. code-block:: python
+
+                    from xr.ext.EXT import debug_utils
+
+                    with xr.DebugUtilsMessengerEXT(instance) as messenger:
+                        ...
+
+                The `create_info` parameter may be omitted to use default settings, which enable all
+                message types and severities and use the built-in `_default_debug_callback`.
+
+                :param instance: The OpenXR instance to bind the messenger to.
+                :type instance: xr.Instance
+                :param create_info: Optional descriptor specifying callback behavior and message filtering.
+                :type create_info: xr.DebugUtilsMessengerCreateInfoEXT or None
+
+                :raises xr.FunctionUnsupportedError: If `XR_EXT_debug_utils` is not enabled or the function is unavailable.
+                :raises xr.ValidationFailureError: If the callback or parameters are rejected by the runtime.
+                :raises xr.RuntimeFailureError: If the runtime encounters an internal error.
+                :raises xr.HandleInvalidError: If the instance handle is invalid.
+                :raises xr.InstanceLostError: If the instance has been lost.
+                :raises xr.OutOfMemoryError: If the runtime cannot allocate the messenger.
+                :raises xr.LimitReachedError: If the runtime cannot support additional messengers.
+                :seealso: :class:`xr.DebugUtilsMessengerCreateInfoEXT`, :func:`xr.ext.EXT.debug_utils.destroy_messenger`
+                :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrDebugUtilsMessengerEXT.html
+    
+        """),
+        "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerEXT.html",
+    },
     "xr.DynamicApiLayerBase": {
         "docstring": inspect.cleandoc("""
             Base class for temporary dynamic runtime python OpenXR API layers.
@@ -148,13 +223,13 @@ class_docstrings = {
                 object for most OpenXR operations, including system queries, session creation,
                 and extension dispatch.
 
-                This object may be instantiated directly with an optional `xr.InstanceCreateInfo`
+                This object may be instantiated directly with an optional :class:`xr.InstanceCreateInfo`
                 descriptor. If none is provided, a default descriptor will be used. Initialization
-                is performed lazily, with runtime bindings deferred to minimize import-time overhead
-                and avoid ordering issues.
+                wraps the native :func:`xrCreateInstance` call and is performed lazily, with runtime
+                bindings imported just-in-time to avoid circular dependencies and import-time overhead.
 
                 `Instance` supports context management protocols and may be used in a `with` block
-                for automatic cleanup:
+                for automatic teardown via :func:`xr.destroy_instance`:
 
                 .. code-block:: python
 
@@ -165,10 +240,67 @@ class_docstrings = {
                 interactions to the runtime via raw API functions. It is opaque and cannot be
                 directly inspected or modified.
 
+                :param create_info: Optional descriptor specifying application info, enabled extensions,
+                                    and platform-specific parameters.
+                :type create_info: xr.InstanceCreateInfo or None
+
+                :raises xr.ValidationFailureError: If validation layers reject the configuration.
+                :raises xr.RuntimeFailureError: If the runtime fails to initialize.
+                :raises xr.OutOfMemoryError: If memory allocation fails.
+                :raises xr.LimitReachedError: If the runtime cannot support additional instances.
+                :raises xr.RuntimeUnavailableError: If no runtime is available.
+                :raises xr.NameInvalidError: If the application name is empty.
+                :raises xr.InitializationFailedError: If platform-specific initialization fails.
+                :raises xr.ExtensionNotPresentError: If a requested extension is missing.
+                :raises xr.ExtensionDependencyNotEnabledError: If an extension dependency is missing.
+                :raises xr.ApiVersionUnsupportedError: If the requested API version is not supported.
+                :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
+
                 :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
+                :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstance.html
     
         """),
         "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstance.html",
+    },
+    "xr.InstanceCreateInfo": {
+        "docstring": inspect.cleandoc("""
+
+                Descriptor for creating an OpenXR instance.
+
+                This structure configures the parameters required to initialize an OpenXR runtime
+                connection. It includes application metadata, optional API layers, requested extensions,
+                and platform-specific chaining via the `next` pointer.
+
+                A default instance may be constructed with no arguments, which will populate the
+                `application_info` field with generic values and leave extensions and layers empty.
+                The `enabled_api_layer_names` and `enabled_extension_names` properties provide access
+                to the underlying string arrays and may be set directly.
+
+                :param create_flags: Optional bitmask of creation flags. Reserved for future use.
+                :type create_flags: xr.InstanceCreateFlags
+                :param application_info: Metadata describing the application name, engine name, and API version.
+                :type application_info: xr.ApplicationInfo
+                :param enabled_api_layer_count: Number of API layers to enable. If None, inferred from `enabled_api_layer_names`.
+                :type enabled_api_layer_count: int or None
+                :param enabled_api_layer_names: List of API layer names to enable. Typically used for validation.
+                :type enabled_api_layer_names: List[str] or None
+                :param enabled_extension_count: Number of extensions to enable. If None, inferred from `enabled_extension_names`.
+                :type enabled_extension_count: int or None
+                :param enabled_extension_names: List of extension names to enable during instance creation.
+                :type enabled_extension_names: List[str] or None
+                :param next: Optional pointer to extension-specific structures for platform chaining.
+                :type next: ctypes.c_void_p
+                :param type: Structure type identifier. Defaults to `XR_TYPE_INSTANCE_CREATE_INFO`.
+                :type type: xr.StructureType
+
+                :property enabled_api_layer_names: Accessor for the API layer name array.
+                :property enabled_extension_names: Accessor for the extension name array.
+
+                :seealso: :class:`xr.Instance`, :class:`xr.ApplicationInfo`, :func:`xr.create_instance`
+                :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstanceCreateInfo.html
+    
+        """),
+        "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstanceCreateInfo.html",
     },
     "xr.InstanceLostError": {
         "docstring": inspect.cleandoc("""
@@ -391,20 +523,80 @@ class_docstrings = {
             Base class for all OpenXR exceptions.
         """),
     },
-    "xr.ext.InstanceExtension": {
+    "xr.ext.EXT.debug_utils.DebugUtilsMessengerCreateInfoEXT": {
         "docstring": inspect.cleandoc("""
 
-                Base class for Pythonic OpenXR extension implementations.
+                Descriptor for creating a debug messenger via `XR_EXT_debug_utils`.
 
-                Provides a helper for calling extension entry points obtained via
-                :func:`xr.get_instance_proc_addr`, casting them to the correct
-                function-pointer type, invoking with the supplied arguments, and
-                checking the :class:`xr.Result`.
+                This structure configures the behavior of a debug messenger, including which
+                message severities and types to receive, and the callback function to invoke.
 
-                :param instance: The OpenXR instance to which this extension is bound.
-                :type instance: xr.Instance
+                A default instance may be constructed with no arguments, enabling all message
+                types and severities and using the built-in `_default_debug_callback`.
+
+                :param message_severities: Bitmask of message severities to receive.
+                :type message_severities: xr.DebugUtilsMessageSeverityFlagsEXT
+                :param message_types: Bitmask of message types to receive.
+                :type message_types: xr.DebugUtilsMessageTypeFlagsEXT
+                :param user_callback: Python callable accepting `(severity, type_flags, callback_data, user_data)`.
+                                      This will be wrapped into a native function pointer.
+                :type user_callback: Callable[[int, int,
+                                               ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT), ctypes.c_void_p], bool]
+                :param user_data: Optional Python object passed to the callback.
+                :type user_data: Any
+                :param next: Optional pointer to extension-specific structures.
+                :type next: ctypes.c_void_p
+                :param type: Structure type identifier. Defaults to `DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT`.
+                :type type: xr.StructureType
+
+                :seealso: :class:`xr.DebugUtilsMessengerEXT`, :func:`xr.ext.EXT.debug_utils._default_debug_callback`
+                :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerCreateInfoEXT.html
     
         """),
+        "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerCreateInfoEXT.html",
+    },
+    "xr.ext.EXT.debug_utils.DebugUtilsMessengerEXT": {
+        "docstring": inspect.cleandoc("""
+
+                Opaque handle to an OpenXR debug messenger object.
+
+                A `xr.DebugUtilsMessengerEXT` enables runtime diagnostics and logging via the
+                `XR_EXT_debug_utils` extension. It allows applications to receive structured
+                messages from the runtime, including validation errors, warnings, and performance
+                hints.
+
+                This object wraps the native `xrCreateDebugUtilsMessengerEXT` and
+                `xrDestroyDebugUtilsMessengerEXT` calls. It supports context management for
+                automatic teardown, though manual destruction via :func:`xr.ext.EXT.debug_utils.destroy_messenger`
+                is preferred for explicit control.
+
+                .. code-block:: python
+
+                    from xr.ext.EXT import debug_utils
+
+                    with xr.DebugUtilsMessengerEXT(instance) as messenger:
+                        ...
+
+                The `create_info` parameter may be omitted to use default settings, which enable all
+                message types and severities and use the built-in `_default_debug_callback`.
+
+                :param instance: The OpenXR instance to bind the messenger to.
+                :type instance: xr.Instance
+                :param create_info: Optional descriptor specifying callback behavior and message filtering.
+                :type create_info: xr.DebugUtilsMessengerCreateInfoEXT or None
+
+                :raises xr.FunctionUnsupportedError: If `XR_EXT_debug_utils` is not enabled or the function is unavailable.
+                :raises xr.ValidationFailureError: If the callback or parameters are rejected by the runtime.
+                :raises xr.RuntimeFailureError: If the runtime encounters an internal error.
+                :raises xr.HandleInvalidError: If the instance handle is invalid.
+                :raises xr.InstanceLostError: If the instance has been lost.
+                :raises xr.OutOfMemoryError: If the runtime cannot allocate the messenger.
+                :raises xr.LimitReachedError: If the runtime cannot support additional messengers.
+                :seealso: :class:`xr.DebugUtilsMessengerCreateInfoEXT`, :func:`xr.ext.EXT.debug_utils.destroy_messenger`
+                :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrDebugUtilsMessengerEXT.html
+    
+        """),
+        "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerEXT.html",
     },
 }
 
