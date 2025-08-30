@@ -375,7 +375,10 @@ class FunctionItem(CodeItem):
             return result
         elif api == Api.PYTHON:
             # Custom code for atom create functions
-            if self.name() == "create_instance":
+            if (self.name().startswith("create")
+                and len(self.parameters) in (2, 3)
+                and self.parameters[-2].name() == "create_info"
+            ):
                 return str(AtomCreationFunctionCoder(self))
             else:
                 return str(FunctionCoder(self))
@@ -1113,7 +1116,7 @@ class AtomCreationFunctionCoder(FunctionCoder):
         assert return_type.clang_type.kind == TypeKind.POINTER
         assert not return_type.clang_type.get_pointee().is_const_qualified()
         type_name = return_type.pointee.name()
-        params = ",".join(p.name() for p in self.function.parameters)
+        params = ", ".join(p.name() for p in self.function.parameters[:-1])
         return f"\n    return {type_name}({params})"
 
 
