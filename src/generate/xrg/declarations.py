@@ -375,10 +375,11 @@ class FunctionItem(CodeItem):
             return result
         elif api == Api.PYTHON:
             # Custom code for atom create functions
-            if (self.name().startswith("create")
-                and len(self.parameters) in (2, 3)
-                and self.parameters[-2].name() == "create_info"
-            ):
+            if (
+                    self.name().startswith("create")
+                    and len(self.parameters) in (2, 3)
+                    and self.parameters[-2].name() == "create_info"
+               ):
                 return str(AtomCreationFunctionCoder(self))
             else:
                 return str(FunctionCoder(self))
@@ -696,10 +697,10 @@ class TypeDefItem(CodeItem):
             pointee = cursor.underlying_typedef_type.get_pointee()
             if pointee.kind == TypeKind.ELABORATED:
                 if pointee.spelling.endswith("_T"):
-                    # This is a HANDLE type
-                    # self._py_name += "Handle"  # To distinguish Instance from InstanceHandle
-                    self.is_handle = True
-                    self._ctypes_name = self._py_name
+                    if cursor.spelling not in ["XrFutureEXT"]:
+                        # This is a HANDLE type
+                        self.is_handle = True
+                        self._ctypes_name = self._py_name
         if self.type.name() == "Flags64":
             self._py_name = self._ctypes_name = self._py_name + "CInt"
         if self._py_name == "Version":
@@ -718,29 +719,85 @@ class TypeDefItem(CodeItem):
     def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
-        # TODO - special case for elaborated handle types
-        if self.is_handle and self.name(Api.PYTHON) == "Instance":
+        # Special case for elaborated handle types
+        if self.is_handle and self.name(api) not in ["SenseDataSnapshotBD"]:
             docstring = ""
             doc_key = f"xr.{self.name(api)}"
             if doc_key in class_docstrings:
                 docstring = f'\n"""\n{class_docstrings[doc_key]["docstring"]}\n"""'
                 docstring = textwrap.indent(docstring, " " * 20)
-            # TODO: generalize for non-Instance handles
-            handle_name = "Instance"
+            handle_name = self.name(api)
+            handle_base = handle_name
+            vendor_tag = ""
+            create_prefix = ""
+            for vt in vendor_tags:
+                if handle_name.endswith(vt):
+                    handle_base = handle_name[:-len(vt)]
+                    vendor_tag = vt
+                    break
+            # TODO: all these special cases might need better parsing and architecture
+            if handle_name == "Space":
+                create_types = ["ReferenceSpace", "ActionSpace"]
+            elif handle_name == "SpatialGraphNodeBindingMSFT":
+                create_types = ["SpatialGraphStaticNodeBinding",]
+                create_prefix = "Try"
+            elif handle_name == "AnchorBD":
+                create_types = ["SpatialEntityAnchor"]
+            else:
+                create_types = [handle_base, ]
+            create_info_type_names = [f"{create_type}CreateInfo{vendor_tag}" for create_type in create_types]
+            if handle_name == "ExportedLocalizationMapML":
+                create_info_type_names = ["Uuid", ]
+            elif handle_name == "SpatialAnchorsStorageML":
+                create_info_type_names = ["SpatialAnchorsCreateStorageInfoML", ]
+            elif handle_name == "SpatialAnchorStoreConnectionMSFT":
+                create_info_type_names = []
+            elif handle_name == "FaceTracker2FB":
+                create_info_type_names = ["FaceTrackerCreateInfo2FB"]  # TODO: additional name rule?
+            elif handle_name == "AnchorBD":
+                create_info_type_names = ["SpatialEntityAnchorCreateInfoBD"]
+            create_info_types = [getattr(xr, n) for n in create_info_type_names]
+            if vendor_tag == "":
+                create_functions = [getattr(xr.raw_functions, f"xrCreate{create_type}{vendor_tag}") for create_type in create_types]
+            else:
+                create_functions = [getattr(xr, f"PFN_xr{create_prefix}Create{create_type}{vendor_tag}") for create_type in create_types]
             snake = snake_from_camel(handle_name)
             # TODO: extension handle case
             # TODO: non-Instance case
             result = inspect.cleandoc(f'''
                 class {self.name(api)}({self.type.name(Api.CTYPES)}):{docstring}
                     _type_ = {self.type.pointee.name(Api.CTYPES)}  # ctypes idiosyncrasy
-                
-                    def __init__(self, create_info: Optional["{handle_name}CreateInfo"] = None):
+            ''')
+            if handle_name == "Instance":
+                result += f'\n\n    def __init__(self, create_info: Optional["{handle_name}CreateInfo"] = None):\n'
+            else:
+                if len(create_info_type_names) == 0:
+                    result += f'\n\n    def __init__(self, instance: Instance):\n'
+                elif len(create_info_type_names) == 1:
+                    ci_type = f'Optional["{create_info_type_names[0]}"] = None'
+                    result += f'\n\n    def __init__(self, instance: Instance, create_info: {ci_type}):\n'
+                else:
+                    ci_type = f'Union[{", ".join(create_info_type_names)}] = None'
+                    result += f'\n\n    def __init__(self, instance: Instance, create_info: {ci_type}):\n'
+                result += f'        self.instance = instance\n'
+            if len(create_info_type_names) > 0:
+                result += textwrap.indent(inspect.cleandoc(f'''
                         if create_info is None:
-                            create_info = {handle_name}CreateInfo()
-                        # Import function just-in-time to avoid initialization order problem
-                        from .raw_functions import xrCreate{handle_name}
-                        result = check_result(xrCreate{handle_name}(
-                            create_info,
+                            create_info = {create_info_type_names[0]}()
+                '''), prefix=8 * " ")
+                result += "\n"
+            result += textwrap.indent(inspect.cleandoc(f'''
+                    # Import function just-in-time to avoid initialization order problem
+                    from .raw_functions import xrCreate{handle_name}
+                    result = check_result(xrCreate{handle_name}(
+            '''), prefix=8 * " ")
+            if handle_name == "Instance":
+                result += "\n"
+            else:
+                result += f'\n{12 * " "}instance,\n'
+            if len(create_info_type_names) > 0:
+                result += f"{' ' * 12}byref(create_info),\n"
+            result += textwrap.indent(inspect.cleandoc(f'''
                             byref(self),
                         ))
                         if result.is_exception():
@@ -752,7 +809,7 @@ class TypeDefItem(CodeItem):
                     def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
                         from .functions import destroy_{snake}
                         destroy_{snake}(self)
-            ''')
+            '''), prefix=4 * " ")
             return result
         else:
             return f"{self.name(api)} = {self.type.name(Api.CTYPES)}"

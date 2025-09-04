@@ -86,7 +86,7 @@ class Instance(POINTER(Instance_T)):
 
     def __init__(self, create_info: Optional["InstanceCreateInfo"] = None):
         if create_info is None:
-            create_info = InstanceCreateInfo()
+            return  # Leave instance uninitialized
         # Import function just-in-time to avoid initialization order problem
         from .raw_functions import xrCreateInstance
         result = check_result(xrCreateInstance(
@@ -100,12 +100,25 @@ class Instance(POINTER(Instance_T)):
                 raise RuntimeFailureError(msg)
             raise result
 
+    def __eq__(self, other) -> bool:
+        sv = cast(self, ctypes.c_void_p).value
+        if other is None and sv is None:
+            return True
+        try:
+            ov = ctypes.cast(other, ctypes.c_void_p).value
+            return sv == ov
+        except ctypes.ArgumentError:
+            return super().__eq__(other)
+
     def __enter__(self) -> "Instance":
         return self
 
     def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
-        from .functions import destroy_instance
-        destroy_instance(self)
+        if self:
+            from .functions import destroy_instance
+            destroy_instance(self)
+            cast(self, ctypes.c_void_p).value = None
+            assert not self
 
 
 class Session_T(Structure):

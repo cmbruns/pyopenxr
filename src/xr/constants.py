@@ -1,8 +1,9 @@
 # Warning: this file is auto-generated. Do not edit.
+import ctypes
 
 VERSION_1_0 = 1
 MIN_COMPOSITION_LAYERS_SUPPORTED = 16
-NULL_HANDLE = 0
+NULL_HANDLE = None
 NULL_SYSTEM_ID = 0
 NULL_PATH = 0
 NO_DURATION = 0
