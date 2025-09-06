@@ -238,7 +238,7 @@ class SwapchainImageOpenGLESKHR(Structure):
         self,
         image: int = 0,
         next: c_void_p = None,
-        type: StructureType = StructureType.SWAPCHAIN_IMAGE_OPENGL_ESKHR,
+        type: StructureType = StructureType.SWAPCHAIN_IMAGE_OPENGL_ES_KHR,
     ) -> None:
         super().__init__(
             image=image,
@@ -265,7 +265,7 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
         min_api_version_supported: Version = Version(),
         max_api_version_supported: Version = Version(),
         next: c_void_p = None,
-        type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_OPENGL_ESKHR,
+        type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_OPENGL_ES_KHR,
     ) -> None:
         super().__init__(
             _min_api_version_supported=min_api_version_supported.number(),
@@ -852,7 +852,7 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
         max_anisotropy: float = 0,
         border_color: Color4f = None,
         next: c_void_p = None,
-        type: StructureType = StructureType.SWAPCHAIN_STATE_SAMPLER_OPENGL_ESFB,
+        type: StructureType = StructureType.SWAPCHAIN_STATE_SAMPLER_OPENGL_ES_FB,
     ) -> None:
         if border_color is None:
             border_color = Color4f()

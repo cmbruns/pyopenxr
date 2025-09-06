@@ -28,8 +28,8 @@ def main():
         
         from .array_field import *
         from .enums import *
-        from .exception import check_result
         from .version import *
+        from .handle import HandleMixin
     """))
 
     cg.print_items()
