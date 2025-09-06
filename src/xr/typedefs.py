@@ -3,20 +3,20 @@
 from ctypes import (
     CFUNCTYPE, POINTER, Structure, addressof, byref, c_char, c_char_p, c_float,
     c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8,
-    c_void_p, cast, py_object
+    c_void_p, cast,
 )
 import ctypes
 
 import os
 import sys
-from typing import Any, Callable, Generator, Optional
+from typing import Generator, Optional
 
 import numpy
 
 from .array_field import *
 from .enums import *
-from .exception import check_result
 from .version import *
+from .handle import HandleMixin
 
 VersionNumber = c_uint64
 
@@ -37,7 +37,7 @@ class Instance_T(Structure):
     pass
 
 
-class Instance(POINTER(Instance_T)):
+class Instance(POINTER(Instance_T), HandleMixin):
     """
     Opaque handle to an OpenXR instance object.
 
@@ -46,136 +46,62 @@ class Instance(POINTER(Instance_T)):
     object for most OpenXR operations, including system queries, session creation,
     and extension dispatch.
 
-    This object may be instantiated directly with an optional :class:`xr.InstanceCreateInfo`
-    descriptor. If none is provided, a default descriptor will be used. Initialization
-    wraps the native :func:`xrCreateInstance` call and is performed lazily, with runtime
-    bindings imported just-in-time to avoid circular dependencies and import-time overhead.
-
     `Instance` supports context management protocols and may be used in a `with` block
     for automatic teardown via :func:`xr.destroy_instance`:
 
     .. code-block:: python
 
-        with xr.Instance(...) as instance:
+        with xr.create_instance(...) as instance:
             ...
 
     Internally, this object wraps a pointer to the OpenXR instance and delegates all
     interactions to the runtime via raw API functions. It is opaque and cannot be
     directly inspected or modified.
 
-    :param create_info: Optional descriptor specifying application info, enabled extensions,
-                        and platform-specific parameters.
-    :type create_info: xr.InstanceCreateInfo or None
-
-    :raises xr.ValidationFailureError: If validation layers reject the configuration.
-    :raises xr.RuntimeFailureError: If the runtime fails to initialize.
-    :raises xr.OutOfMemoryError: If memory allocation fails.
-    :raises xr.LimitReachedError: If the runtime cannot support additional instances.
-    :raises xr.RuntimeUnavailableError: If no runtime is available.
-    :raises xr.NameInvalidError: If the application name is empty.
-    :raises xr.InitializationFailedError: If platform-specific initialization fails.
-    :raises xr.ExtensionNotPresentError: If a requested extension is missing.
-    :raises xr.ExtensionDependencyNotEnabledError: If an extension dependency is missing.
-    :raises xr.ApiVersionUnsupportedError: If the requested API version is not supported.
-    :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
-
     :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
     :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstance.html
     """
     _type_ = Instance_T  # ctypes idiosyncrasy
-
-    def __init__(self, create_info: Optional["InstanceCreateInfo"] = None):
-        if create_info is None:
-            return  # Leave instance uninitialized
-        # Import function just-in-time to avoid initialization order problem
-        from .raw_functions import xrCreateInstance
-        result = check_result(xrCreateInstance(
-            create_info,
-            byref(self),
-        ))
-        if result.is_exception():
-            from .exception import RuntimeFailureError
-            if isinstance(result, RuntimeFailureError):
-                msg = f"{result} Is your headset connected and working?"
-                raise RuntimeFailureError(msg)
-            raise result
-
-    def __eq__(self, other) -> bool:
-        sv = cast(self, ctypes.c_void_p).value
-        if other is None and sv is None:
-            return True
-        try:
-            ov = ctypes.cast(other, ctypes.c_void_p).value
-            return sv == ov
-        except ctypes.ArgumentError:
-            return super().__eq__(other)
-
-    def __enter__(self) -> "Instance":
-        return self
-
-    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
-        if self:
-            from .functions import destroy_instance
-            destroy_instance(self)
-            cast(self, ctypes.c_void_p).value = None
-            assert not self
 
 
 class Session_T(Structure):
     pass
 
 
-class Session(POINTER(Session_T)):
-    _type_ = Session_T
-
-    def __init__(self, instance: Instance, create_info: Optional["SessionCreateInfo"] = None):
-        from .raw_functions import xrCreateSession
-        self.instance = instance
-        if create_info is None:
-            create_info = SessionCreateInfo()
-        result_code = xrCreateSession(
-            instance,
-            byref(create_info),
-            byref(self),
-        )
-        checked = check_result(result_code)
-        if checked.is_exception():
-            raise checked
-
-    def __enter__(self) -> "Session":
-        return self
-
-    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
-        from .functions import destroy_session
-        destroy_session(self)
+class Session(POINTER(Session_T), HandleMixin):
+    _type_ = Session_T  # ctypes idiosyncrasy
 
 
 class Space_T(Structure):
     pass
 
 
-Space = POINTER(Space_T)
+class Space(POINTER(Space_T), HandleMixin):
+    _type_ = Space_T  # ctypes idiosyncrasy
 
 
 class Action_T(Structure):
     pass
 
 
-Action = POINTER(Action_T)
+class Action(POINTER(Action_T), HandleMixin):
+    _type_ = Action_T  # ctypes idiosyncrasy
 
 
 class Swapchain_T(Structure):
     pass
 
 
-Swapchain = POINTER(Swapchain_T)
+class Swapchain(POINTER(Swapchain_T), HandleMixin):
+    _type_ = Swapchain_T  # ctypes idiosyncrasy
 
 
 class ActionSet_T(Structure):
     pass
 
 
-ActionSet = POINTER(ActionSet_T)
+class ActionSet(POINTER(ActionSet_T), HandleMixin):
+    _type_ = ActionSet_T  # ctypes idiosyncrasy
 
 InstanceCreateFlagsCInt = Flags64
 
@@ -232,11 +158,11 @@ class ApiLayerProperties(Structure):
         return self.layer_name.decode()
 
     @property
-    def spec_version(self):
+    def spec_version(self) -> Version:
         return Version(self._spec_version)
     
     @spec_version.setter
-    def spec_version(self, value: Version):
+    def spec_version(self, value: Version) -> None:
         if hasattr(value, 'number'):
             # noinspection PyAttributeOutsideInit
             self._spec_version = value.number()
@@ -315,11 +241,11 @@ class ApplicationInfo(Structure):
         return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self.application_version}, engine_name={self.engine_name}, engine_version={self.engine_version}, api_version={self._api_version})"
 
     @property
-    def api_version(self):
+    def api_version(self) -> Version:
         return Version(self._api_version)
     
     @api_version.setter
-    def api_version(self, value: Version):
+    def api_version(self, value: Version) -> None:
         if hasattr(value, 'number'):
             # noinspection PyAttributeOutsideInit
             self._api_version = value.number()
@@ -415,7 +341,7 @@ class InstanceCreateInfo(Structure):
                 ctypes.addressof(self._enabled_api_layer_names.contents))
 
     @enabled_api_layer_names.setter
-    def enabled_api_layer_names(self, value):
+    def enabled_api_layer_names(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_api_layer_count, self._enabled_api_layer_names = string_array_field_helper(
             None, value)
@@ -429,7 +355,7 @@ class InstanceCreateInfo(Structure):
                 ctypes.addressof(self._enabled_extension_names.contents))
 
     @enabled_extension_names.setter
-    def enabled_extension_names(self, value):
+    def enabled_extension_names(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_extension_count, self._enabled_extension_names = string_array_field_helper(
             None, value)
@@ -468,11 +394,11 @@ class InstanceProperties(Structure):
         return f"xr.InstanceProperties(runtime_version={self._runtime_version}, runtime_name={self.runtime_name}, next={self.next}, type={self.type})"
 
     @property
-    def runtime_version(self):
+    def runtime_version(self) -> Version:
         return Version(self._runtime_version)
     
     @runtime_version.setter
-    def runtime_version(self, value: Version):
+    def runtime_version(self, value: Version) -> None:
         if hasattr(value, 'number'):
             # noinspection PyAttributeOutsideInit
             self._runtime_version = value.number()
@@ -1339,7 +1265,7 @@ class FrameEndInfo(Structure):
                 ctypes.addressof(self._layers.contents))
 
     @layers.setter
-    def layers(self, value):
+    def layers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.layer_count, self._layers = base_array_field_helper(
             POINTER(CompositionLayerBaseHeader), None, value)
@@ -1565,7 +1491,7 @@ class ActionCreateInfo(Structure):
                 ctypes.addressof(self._subaction_paths.contents))
 
     @subaction_paths.setter
-    def subaction_paths(self, value):
+    def subaction_paths(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.count_subaction_paths, self._subaction_paths = array_field_helper(
             c_uint64, None, value)
@@ -1638,7 +1564,7 @@ class InteractionProfileSuggestedBinding(Structure):
                 ctypes.addressof(self._suggested_bindings.contents))
 
     @suggested_bindings.setter
-    def suggested_bindings(self, value):
+    def suggested_bindings(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.count_suggested_bindings, self._suggested_bindings = array_field_helper(
             ActionSuggestedBinding, None, value)
@@ -1684,7 +1610,7 @@ class SessionActionSetsAttachInfo(Structure):
                 ctypes.addressof(self._action_sets.contents))
 
     @action_sets.setter
-    def action_sets(self, value):
+    def action_sets(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.count_action_sets, self._action_sets = array_field_helper(
             POINTER(ActionSet_T), None, value)
@@ -1984,7 +1910,7 @@ class ActionsSyncInfo(Structure):
                 ctypes.addressof(self._active_action_sets.contents))
 
     @active_action_sets.setter
-    def active_action_sets(self, value):
+    def active_action_sets(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.count_active_action_sets, self._active_action_sets = array_field_helper(
             ActiveActionSet, None, value)
@@ -2371,7 +2297,7 @@ class CompositionLayerProjection(Structure):
                 ctypes.addressof(self._views.contents))
 
     @views.setter
-    def views(self, value):
+    def views(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.view_count, self._views = array_field_helper(
             CompositionLayerProjectionView, None, value)
@@ -3149,7 +3075,7 @@ class SpacesLocateInfo(Structure):
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
-    def spaces(self, value):
+    def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
             POINTER(Space_T), None, value)
@@ -3219,7 +3145,7 @@ class SpaceLocations(Structure):
                 ctypes.addressof(self._locations.contents))
 
     @locations.setter
-    def locations(self, value):
+    def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.location_count, self._locations = array_field_helper(
             SpaceLocationData, None, value)
@@ -3721,7 +3647,7 @@ class BindingModificationsKHR(Structure):
                 ctypes.addressof(self._binding_modifications.contents))
 
     @binding_modifications.setter
-    def binding_modifications(self, value):
+    def binding_modifications(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.binding_modification_count, self._binding_modifications = base_array_field_helper(
             POINTER(BindingModificationBaseHeaderKHR), None, value)
@@ -3803,7 +3729,7 @@ class DebugUtilsMessengerEXT_T(Structure):
     pass
 
 
-class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
+class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T), HandleMixin):
     """
     Opaque handle to an OpenXR debug messenger object.
 
@@ -3842,45 +3768,7 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T)):
     :seealso: :class:`xr.DebugUtilsMessengerCreateInfoEXT`, :func:`xr.ext.EXT.debug_utils.destroy_messenger`
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrDebugUtilsMessengerEXT.html
     """
-
-    _type_ = DebugUtilsMessengerEXT_T
-
-    def __init__(
-        self,
-        instance: Instance,
-        create_info: Optional["DebugUtilsMessengerCreateInfoEXT"] = None,
-    ):
-        from .functions import get_instance_proc_addr
-        self.instance: Optional[Instance] = instance
-        if create_info is None:
-            create_info = DebugUtilsMessengerCreateInfoEXT()
-        self._callback = create_info.user_callback  # avoid premature gc of callback
-        create_messenger = cast(
-            get_instance_proc_addr(instance, "xrCreateDebugUtilsMessengerEXT"),
-            PFN_xrCreateDebugUtilsMessengerEXT,
-        )
-        result = check_result(create_messenger(
-            instance,
-            byref(create_info),
-            byref(self),
-        ))
-        if result.is_exception():
-            raise result
-        self._destroy_func = cast(
-            get_instance_proc_addr(instance, "xrDestroyDebugUtilsMessengerEXT"),
-            PFN_xrDestroyDebugUtilsMessengerEXT,
-        )
-
-    def __enter__(self) -> "DebugUtilsMessengerEXT":
-        return self
-
-    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
-        if self.instance is None:
-            return
-        from xr.ext.EXT.debug_utils import destroy_messenger
-        destroy_messenger(self)
-        self.instance = None
-
+    _type_ = DebugUtilsMessengerEXT_T  # ctypes idiosyncrasy
 
 DebugUtilsMessageSeverityFlagsEXTCInt = Flags64
 
@@ -3899,23 +3787,32 @@ class DebugUtilsObjectNameInfoEXT(Structure):
         super().__init__(
             object_type=ObjectType(object_type).value,
             object_handle=object_handle,
-            object_name=object_name.encode(),
+            _object_name=object_name.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={repr(self.object_type)}, object_handle={repr(self.object_handle)}, object_name={repr(self.object_name)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={repr(self.object_type)}, object_handle={repr(self.object_handle)}, object_name={repr(self._object_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={self.object_type}, object_handle={self.object_handle}, object_name={self.object_name}, next={self.next}, type={self.type})"
+        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={self.object_type}, object_handle={self.object_handle}, object_name={self._object_name}, next={self.next}, type={self.type})"
+
+    @property
+    def object_name(self) -> str:
+        return self._object_name.decode()
+    
+    @object_name.setter
+    def object_name(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._object_name = value.encode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("object_type", ObjectType.ctype()),
         ("object_handle", c_uint64),
-        ("object_name", c_char_p),
+        ("_object_name", c_char_p),
     ]
 
 
@@ -3927,21 +3824,30 @@ class DebugUtilsLabelEXT(Structure):
         type: StructureType = StructureType.DEBUG_UTILS_LABEL_EXT,
     ) -> None:
         super().__init__(
-            label_name=label_name.encode(),
+            _label_name=label_name.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsLabelEXT(label_name={repr(self.label_name)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.DebugUtilsLabelEXT(label_name={repr(self._label_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsLabelEXT(label_name={self.label_name}, next={self.next}, type={self.type})"
+        return f"xr.DebugUtilsLabelEXT(label_name={self._label_name}, next={self.next}, type={self.type})"
+
+    @property
+    def label_name(self) -> str:
+        return self._label_name.decode()
+    
+    @label_name.setter
+    def label_name(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._label_name = value.encode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("label_name", c_char_p),
+        ("_label_name", c_char_p),
     ]
 
 
@@ -3975,22 +3881,37 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self.object_count)}, objects={repr(self._objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self._session_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self._message_id)}, function_name={repr(self._function_name)}, message={repr(self._message)}, object_count={repr(self.object_count)}, objects={repr(self._objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self._session_labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self.message_id}, function_name={self.function_name}, message={self.message}, object_count={self.object_count}, objects={self._objects}, session_label_count={self.session_label_count}, session_labels={self._session_labels}, next={self.next}, type={self.type})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self._message_id}, function_name={self._function_name}, message={self._message}, object_count={self.object_count}, objects={self._objects}, session_label_count={self.session_label_count}, session_labels={self._session_labels}, next={self.next}, type={self.type})"
 
     @property
     def message_id(self) -> str:
         return self._message_id.decode()
+    
+    @message_id.setter
+    def message_id(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._message_id = value.encode()
 
     @property
     def function_name(self) -> str:
         return self._function_name.decode()
+    
+    @function_name.setter
+    def function_name(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._function_name = value.encode()
 
     @property
     def message(self) -> str:
         return self._message.decode()
+    
+    @message.setter
+    def message(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._message = value.encode()
 
     @property
     def objects(self):
@@ -4001,7 +3922,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
                 ctypes.addressof(self._objects.contents))
 
     @objects.setter
-    def objects(self, value):
+    def objects(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.object_count, self._objects = array_field_helper(
             DebugUtilsObjectNameInfoEXT, None, value)
@@ -4015,7 +3936,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
                 ctypes.addressof(self._session_labels.contents))
 
     @session_labels.setter
-    def session_labels(self, value):
+    def session_labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.session_label_count, self._session_labels = array_field_helper(
             DebugUtilsLabelEXT, None, value)
@@ -4103,25 +4024,10 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     """
     def __init__(
         self,
-        message_severities: DebugUtilsMessageSeverityFlagsEXT = (
-            DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT |
-            DebugUtilsMessageSeverityFlagsEXT.INFO_BIT |
-            DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT |
-            DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT),
-        message_types: DebugUtilsMessageTypeFlagsEXT = (
-            DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT |
-            DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT |
-            DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT |
-            DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT
-        ),
-        user_callback: Callable[
-            [
-                DebugUtilsMessageSeverityFlagsEXT,  # severity
-                DebugUtilsMessageTypeFlagsEXT,  # type_flags
-                DebugUtilsMessengerCallbackDataEXT,  # callback_data
-                Any,  # user_data
-            ], bool] = _default_debug_callback,
-        user_data: Any = None,
+        message_severities: DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT(),  # noqa
+        message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT(),  # noqa
+        user_callback: PFN_xrDebugUtilsMessengerCallbackEXT = cast(None, PFN_xrDebugUtilsMessengerCallbackEXT),
+        user_data: c_void_p = None,
         next: c_void_p = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
@@ -4300,7 +4206,8 @@ class SpatialAnchorMSFT_T(Structure):
     pass
 
 
-SpatialAnchorMSFT = POINTER(SpatialAnchorMSFT_T)
+class SpatialAnchorMSFT(POINTER(SpatialAnchorMSFT_T), HandleMixin):
+    _type_ = SpatialAnchorMSFT_T  # ctypes idiosyncrasy
 
 
 class SpatialAnchorCreateInfoMSFT(Structure):
@@ -4484,7 +4391,8 @@ class SpatialGraphNodeBindingMSFT_T(Structure):
     pass
 
 
-SpatialGraphNodeBindingMSFT = POINTER(SpatialGraphNodeBindingMSFT_T)
+class SpatialGraphNodeBindingMSFT(POINTER(SpatialGraphNodeBindingMSFT_T), HandleMixin):
+    _type_ = SpatialGraphNodeBindingMSFT_T  # ctypes idiosyncrasy
 
 
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
@@ -4612,7 +4520,8 @@ class HandTrackerEXT_T(Structure):
     pass
 
 
-HandTrackerEXT = POINTER(HandTrackerEXT_T)
+class HandTrackerEXT(POINTER(HandTrackerEXT_T), HandleMixin):
+    _type_ = HandTrackerEXT_T  # ctypes idiosyncrasy
 
 
 class SystemHandTrackingPropertiesEXT(Structure):
@@ -4789,7 +4698,7 @@ class HandJointLocationsEXT(Structure):
                 ctypes.addressof(self._joint_locations.contents))
 
     @joint_locations.setter
-    def joint_locations(self, value):
+    def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.joint_count, self._joint_locations = array_field_helper(
             HandJointLocationEXT, None, value)
@@ -4835,7 +4744,7 @@ class HandJointVelocitiesEXT(Structure):
                 ctypes.addressof(self._joint_velocities.contents))
 
     @joint_velocities.setter
-    def joint_velocities(self, value):
+    def joint_velocities(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.joint_count, self._joint_velocities = array_field_helper(
             HandJointVelocityEXT, None, value)
@@ -5135,7 +5044,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
                 ctypes.addressof(self._enabled_view_configuration_types.contents))
 
     @enabled_view_configuration_types.setter
-    def enabled_view_configuration_types(self, value):
+    def enabled_view_configuration_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.view_configuration_count, self._enabled_view_configuration_types = array_field_helper(
             c_int, None, value)
@@ -5209,7 +5118,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
                 ctypes.addressof(self._view_configuration_states.contents))
 
     @view_configuration_states.setter
-    def view_configuration_states(self, value):
+    def view_configuration_states(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.view_configuration_count, self._view_configuration_states = array_field_helper(
             SecondaryViewConfigurationStateMSFT, None, value)
@@ -5258,7 +5167,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
                 ctypes.addressof(self._layers.contents))
 
     @layers.setter
-    def layers(self, value):
+    def layers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.layer_count, self._layers = base_array_field_helper(
             POINTER(CompositionLayerBaseHeader), None, value)
@@ -5645,7 +5554,8 @@ class BodyTrackerFB_T(Structure):
     pass
 
 
-BodyTrackerFB = POINTER(BodyTrackerFB_T)
+class BodyTrackerFB(POINTER(BodyTrackerFB_T), HandleMixin):
+    _type_ = BodyTrackerFB_T  # ctypes idiosyncrasy
 
 
 class BodyJointLocationFB(Structure):
@@ -5781,7 +5691,7 @@ class BodySkeletonFB(Structure):
                 ctypes.addressof(self._joints.contents))
 
     @joints.setter
-    def joints(self, value):
+    def joints(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.joint_count, self._joints = array_field_helper(
             BodySkeletonJointFB, None, value)
@@ -5863,7 +5773,7 @@ class BodyJointLocationsFB(Structure):
                 ctypes.addressof(self._joint_locations.contents))
 
     @joint_locations.setter
-    def joint_locations(self, value):
+    def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.joint_count, self._joint_locations = array_field_helper(
             BodyJointLocationFB, None, value)
@@ -6010,14 +5920,16 @@ class SceneObserverMSFT_T(Structure):
     pass
 
 
-SceneObserverMSFT = POINTER(SceneObserverMSFT_T)
+class SceneObserverMSFT(POINTER(SceneObserverMSFT_T), HandleMixin):
+    _type_ = SceneObserverMSFT_T  # ctypes idiosyncrasy
 
 
 class SceneMSFT_T(Structure):
     pass
 
 
-SceneMSFT = POINTER(SceneMSFT_T)
+class SceneMSFT(POINTER(SceneMSFT_T), HandleMixin):
+    _type_ = SceneMSFT_T  # ctypes idiosyncrasy
 
 
 class UuidMSFT(Structure):
@@ -6206,7 +6118,7 @@ class SceneBoundsMSFT(Structure):
                 ctypes.addressof(self._spheres.contents))
 
     @spheres.setter
-    def spheres(self, value):
+    def spheres(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.sphere_count, self._spheres = array_field_helper(
             SceneSphereBoundMSFT, None, value)
@@ -6220,7 +6132,7 @@ class SceneBoundsMSFT(Structure):
                 ctypes.addressof(self._boxes.contents))
 
     @boxes.setter
-    def boxes(self, value):
+    def boxes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.box_count, self._boxes = array_field_helper(
             SceneOrientedBoxBoundMSFT, None, value)
@@ -6234,7 +6146,7 @@ class SceneBoundsMSFT(Structure):
                 ctypes.addressof(self._frustums.contents))
 
     @frustums.setter
-    def frustums(self, value):
+    def frustums(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.frustum_count, self._frustums = array_field_helper(
             SceneFrustumBoundMSFT, None, value)
@@ -6289,7 +6201,7 @@ class NewSceneComputeInfoMSFT(Structure):
                 ctypes.addressof(self._requested_features.contents))
 
     @requested_features.setter
-    def requested_features(self, value):
+    def requested_features(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.requested_feature_count, self._requested_features = array_field_helper(
             c_int, None, value)
@@ -6476,7 +6388,7 @@ class SceneComponentLocationsMSFT(Structure):
                 ctypes.addressof(self._locations.contents))
 
     @locations.setter
-    def locations(self, value):
+    def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.location_count, self._locations = array_field_helper(
             SceneComponentLocationMSFT, None, value)
@@ -6525,7 +6437,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
                 ctypes.addressof(self._component_ids.contents))
 
     @component_ids.setter
-    def component_ids(self, value):
+    def component_ids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.component_id_count, self._component_ids = array_field_helper(
             UuidMSFT, None, value)
@@ -6592,7 +6504,7 @@ class SceneObjectsMSFT(Structure):
                 ctypes.addressof(self._scene_objects.contents))
 
     @scene_objects.setter
-    def scene_objects(self, value):
+    def scene_objects(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.scene_object_count, self._scene_objects = array_field_helper(
             SceneObjectMSFT, None, value)
@@ -6665,7 +6577,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
                 ctypes.addressof(self._object_types.contents))
 
     @object_types.setter
-    def object_types(self, value):
+    def object_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.object_type_count, self._object_types = array_field_helper(
             c_int, None, value)
@@ -6741,7 +6653,7 @@ class ScenePlanesMSFT(Structure):
                 ctypes.addressof(self._scene_planes.contents))
 
     @scene_planes.setter
-    def scene_planes(self, value):
+    def scene_planes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.scene_plane_count, self._scene_planes = array_field_helper(
             ScenePlaneMSFT, None, value)
@@ -6786,7 +6698,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
                 ctypes.addressof(self._alignments.contents))
 
     @alignments.setter
-    def alignments(self, value):
+    def alignments(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.alignment_count, self._alignments = array_field_helper(
             c_int, None, value)
@@ -6854,7 +6766,7 @@ class SceneMeshesMSFT(Structure):
                 ctypes.addressof(self._scene_meshes.contents))
 
     @scene_meshes.setter
-    def scene_meshes(self, value):
+    def scene_meshes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.scene_mesh_count, self._scene_meshes = array_field_helper(
             SceneMeshMSFT, None, value)
@@ -7116,7 +7028,7 @@ class SceneDeserializeInfoMSFT(Structure):
                 ctypes.addressof(self._fragments.contents))
 
     @fragments.setter
-    def fragments(self, value):
+    def fragments(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.fragment_count, self._fragments = array_field_helper(
             DeserializeSceneFragmentMSFT, None, value)
@@ -7232,7 +7144,8 @@ class FacialTrackerHTC_T(Structure):
     pass
 
 
-FacialTrackerHTC = POINTER(FacialTrackerHTC_T)
+class FacialTrackerHTC(POINTER(FacialTrackerHTC_T), HandleMixin):
+    _type_ = FacialTrackerHTC_T  # ctypes idiosyncrasy
 
 
 class SystemFacialTrackingPropertiesHTC(Structure):
@@ -7300,7 +7213,7 @@ class FacialExpressionsHTC(Structure):
                 ctypes.addressof(self._expression_weightings.contents))
 
     @expression_weightings.setter
-    def expression_weightings(self, value):
+    def expression_weightings(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.expression_count, self._expression_weightings = array_field_helper(
             c_float, None, value)
@@ -7821,7 +7734,8 @@ class FoveationProfileFB_T(Structure):
     pass
 
 
-FoveationProfileFB = POINTER(FoveationProfileFB_T)
+class FoveationProfileFB(POINTER(FoveationProfileFB_T), HandleMixin):
+    _type_ = FoveationProfileFB_T  # ctypes idiosyncrasy
 
 SwapchainCreateFoveationFlagsFBCInt = Flags64
 
@@ -8066,7 +7980,8 @@ class TriangleMeshFB_T(Structure):
     pass
 
 
-TriangleMeshFB = POINTER(TriangleMeshFB_T)
+class TriangleMeshFB(POINTER(TriangleMeshFB_T), HandleMixin):
+    _type_ = TriangleMeshFB_T  # ctypes idiosyncrasy
 
 TriangleMeshFlagsFBCInt = Flags64
 
@@ -8133,21 +8048,24 @@ class PassthroughFB_T(Structure):
     pass
 
 
-PassthroughFB = POINTER(PassthroughFB_T)
+class PassthroughFB(POINTER(PassthroughFB_T), HandleMixin):
+    _type_ = PassthroughFB_T  # ctypes idiosyncrasy
 
 
 class PassthroughLayerFB_T(Structure):
     pass
 
 
-PassthroughLayerFB = POINTER(PassthroughLayerFB_T)
+class PassthroughLayerFB(POINTER(PassthroughLayerFB_T), HandleMixin):
+    _type_ = PassthroughLayerFB_T  # ctypes idiosyncrasy
 
 
 class GeometryInstanceFB_T(Structure):
     pass
 
 
-GeometryInstanceFB = POINTER(GeometryInstanceFB_T)
+class GeometryInstanceFB(POINTER(GeometryInstanceFB_T), HandleMixin):
+    _type_ = GeometryInstanceFB_T  # ctypes idiosyncrasy
 
 PassthroughCapabilityFlagsFBCInt = Flags64
 
@@ -9005,7 +8923,8 @@ class MarkerDetectorML_T(Structure):
     pass
 
 
-MarkerDetectorML = POINTER(MarkerDetectorML_T)
+class MarkerDetectorML(POINTER(MarkerDetectorML_T), HandleMixin):
+    _type_ = MarkerDetectorML_T  # ctypes idiosyncrasy
 
 
 class SystemMarkerUnderstandingPropertiesML(Structure):
@@ -9288,7 +9207,8 @@ class ExportedLocalizationMapML_T(Structure):
     pass
 
 
-ExportedLocalizationMapML = POINTER(ExportedLocalizationMapML_T)
+class ExportedLocalizationMapML(POINTER(ExportedLocalizationMapML_T), HandleMixin):
+    _type_ = ExportedLocalizationMapML_T  # ctypes idiosyncrasy
 
 LocalizationMapErrorFlagsMLCInt = Flags64
 
@@ -9424,22 +9344,31 @@ class LocalizationMapImportInfoML(Structure):
     ) -> None:
         super().__init__(
             size=size,
-            data=data.encode(),
+            _data=data.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.LocalizationMapImportInfoML(size={repr(self.size)}, data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.LocalizationMapImportInfoML(size={repr(self.size)}, data={repr(self._data)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.LocalizationMapImportInfoML(size={self.size}, data={self.data}, next={self.next}, type={self.type})"
+        return f"xr.LocalizationMapImportInfoML(size={self.size}, data={self._data}, next={self.next}, type={self.type})"
+
+    @property
+    def data(self) -> str:
+        return self._data.decode()
+    
+    @data.setter
+    def data(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._data = value.encode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("size", c_uint32),
-        ("data", c_char_p),
+        ("_data", c_char_p),
     ]
 
 
@@ -9580,7 +9509,7 @@ class CreateSpatialAnchorsCompletionML(Structure):
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
-    def spaces(self, value):
+    def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
             Space, None, value)
@@ -9631,7 +9560,8 @@ class SpatialAnchorsStorageML_T(Structure):
     pass
 
 
-SpatialAnchorsStorageML = POINTER(SpatialAnchorsStorageML_T)
+class SpatialAnchorsStorageML(POINTER(SpatialAnchorsStorageML_T), HandleMixin):
+    _type_ = SpatialAnchorsStorageML_T  # ctypes idiosyncrasy
 
 
 class SpatialAnchorsCreateStorageInfoML(Structure):
@@ -9786,7 +9716,7 @@ class SpatialAnchorsCreateInfoFromUuidsML(Structure):
                 ctypes.addressof(self._uuids.contents))
 
     @uuids.setter
-    def uuids(self, value):
+    def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.uuid_count, self._uuids = array_field_helper(
             Uuid, None, value)
@@ -9834,7 +9764,7 @@ class SpatialAnchorsPublishInfoML(Structure):
                 ctypes.addressof(self._anchors.contents))
 
     @anchors.setter
-    def anchors(self, value):
+    def anchors(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.anchor_count, self._anchors = array_field_helper(
             POINTER(Space_T), None, value)
@@ -9882,7 +9812,7 @@ class SpatialAnchorsPublishCompletionML(Structure):
                 ctypes.addressof(self._uuids.contents))
 
     @uuids.setter
-    def uuids(self, value):
+    def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.uuid_count, self._uuids = array_field_helper(
             UuidEXT, None, value)
@@ -9928,7 +9858,7 @@ class SpatialAnchorsDeleteInfoML(Structure):
                 ctypes.addressof(self._uuids.contents))
 
     @uuids.setter
-    def uuids(self, value):
+    def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.uuid_count, self._uuids = array_field_helper(
             Uuid, None, value)
@@ -10001,7 +9931,7 @@ class SpatialAnchorsUpdateExpirationInfoML(Structure):
                 ctypes.addressof(self._uuids.contents))
 
     @uuids.setter
-    def uuids(self, value):
+    def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.uuid_count, self._uuids = array_field_helper(
             Uuid, None, value)
@@ -10096,7 +10026,7 @@ class SpatialAnchorsPublishCompletionDetailsML(Structure):
                 ctypes.addressof(self._results.contents))
 
     @results.setter
-    def results(self, value):
+    def results(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.result_count, self._results = array_field_helper(
             SpatialAnchorCompletionResultML, None, value)
@@ -10141,7 +10071,7 @@ class SpatialAnchorsDeleteCompletionDetailsML(Structure):
                 ctypes.addressof(self._results.contents))
 
     @results.setter
-    def results(self, value):
+    def results(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.result_count, self._results = array_field_helper(
             SpatialAnchorCompletionResultML, None, value)
@@ -10186,7 +10116,7 @@ class SpatialAnchorsUpdateExpirationCompletionDetailsML(Structure):
                 ctypes.addressof(self._results.contents))
 
     @results.setter
-    def results(self, value):
+    def results(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.result_count, self._results = array_field_helper(
             SpatialAnchorCompletionResultML, None, value)
@@ -10224,7 +10154,8 @@ class SpatialAnchorStoreConnectionMSFT_T(Structure):
     pass
 
 
-SpatialAnchorStoreConnectionMSFT = POINTER(SpatialAnchorStoreConnectionMSFT_T)
+class SpatialAnchorStoreConnectionMSFT(POINTER(SpatialAnchorStoreConnectionMSFT_T), HandleMixin):
+    _type_ = SpatialAnchorStoreConnectionMSFT_T  # ctypes idiosyncrasy
 
 
 class SpatialAnchorPersistenceNameMSFT(Structure):
@@ -10418,7 +10349,7 @@ class SceneMarkerTypeFilterMSFT(Structure):
                 ctypes.addressof(self._marker_types.contents))
 
     @marker_types.setter
-    def marker_types(self, value):
+    def marker_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.marker_type_count, self._marker_types = array_field_helper(
             SceneMarkerTypeMSFT.ctype(), None, value)
@@ -10630,7 +10561,7 @@ class SpaceUuidFilterInfoFB(Structure):
                 ctypes.addressof(self._uuids.contents))
 
     @uuids.setter
-    def uuids(self, value):
+    def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.uuid_count, self._uuids = array_field_helper(
             UuidEXT, None, value)
@@ -10930,7 +10861,8 @@ class SpaceUserFB_T(Structure):
     pass
 
 
-SpaceUserFB = POINTER(SpaceUserFB_T)
+class SpaceUserFB(POINTER(SpaceUserFB_T), HandleMixin):
+    _type_ = SpaceUserFB_T  # ctypes idiosyncrasy
 
 
 class SpaceShareInfoFB(Structure):
@@ -10971,7 +10903,7 @@ class SpaceShareInfoFB(Structure):
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
-    def spaces(self, value):
+    def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
             Space, None, value)
@@ -10985,7 +10917,7 @@ class SpaceShareInfoFB(Structure):
                 ctypes.addressof(self._users.contents))
 
     @users.setter
-    def users(self, value):
+    def users(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.user_count, self._users = array_field_helper(
             SpaceUserFB, None, value)
@@ -11148,7 +11080,7 @@ class HapticAmplitudeEnvelopeVibrationFB(Structure):
                 ctypes.addressof(self._amplitudes.contents))
 
     @amplitudes.setter
-    def amplitudes(self, value):
+    def amplitudes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.amplitude_count, self._amplitudes = array_field_helper(
             c_float, None, value)
@@ -11252,23 +11184,32 @@ class SemanticLabelsFB(Structure):
         super().__init__(
             buffer_capacity_input=buffer_capacity_input,
             buffer_count_output=buffer_count_output,
-            buffer=buffer.encode(),
+            _buffer=buffer.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SemanticLabelsFB(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SemanticLabelsFB(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self._buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SemanticLabelsFB(buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next={self.next}, type={self.type})"
+        return f"xr.SemanticLabelsFB(buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self._buffer}, next={self.next}, type={self.type})"
+
+    @property
+    def buffer(self) -> str:
+        return self._buffer.decode()
+    
+    @buffer.setter
+    def buffer(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._buffer = value.encode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("buffer_capacity_input", c_uint32),
         ("buffer_count_output", c_uint32),
-        ("buffer", c_char_p),
+        ("_buffer", c_char_p),
     ]
 
 
@@ -11352,22 +11293,31 @@ class SemanticLabelsSupportInfoFB(Structure):
     ) -> None:
         super().__init__(
             flags=SemanticLabelsSupportFlagsFB(flags).value,
-            recognized_labels=recognized_labels.encode(),
+            _recognized_labels=recognized_labels.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SemanticLabelsSupportInfoFB(flags={repr(self.flags)}, recognized_labels={repr(self.recognized_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SemanticLabelsSupportInfoFB(flags={repr(self.flags)}, recognized_labels={repr(self._recognized_labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SemanticLabelsSupportInfoFB(flags={self.flags}, recognized_labels={self.recognized_labels}, next={self.next}, type={self.type})"
+        return f"xr.SemanticLabelsSupportInfoFB(flags={self.flags}, recognized_labels={self._recognized_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def recognized_labels(self) -> str:
+        return self._recognized_labels.decode()
+    
+    @recognized_labels.setter
+    def recognized_labels(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._recognized_labels = value.encode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("flags", SemanticLabelsSupportFlagsFBCInt),
-        ("recognized_labels", c_char_p),
+        ("_recognized_labels", c_char_p),
     ]
 
 
@@ -11452,22 +11402,31 @@ class SceneCaptureRequestInfoFB(Structure):
     ) -> None:
         super().__init__(
             request_byte_count=request_byte_count,
-            request=request.encode(),
+            _request=request.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={repr(self.request_byte_count)}, request={repr(self.request)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={repr(self.request_byte_count)}, request={repr(self._request)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={self.request_byte_count}, request={self.request}, next={self.next}, type={self.type})"
+        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={self.request_byte_count}, request={self._request}, next={self.next}, type={self.type})"
+
+    @property
+    def request(self) -> str:
+        return self._request.decode()
+    
+    @request.setter
+    def request(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._request = value.encode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("request_byte_count", c_uint32),
-        ("request", c_char_p),
+        ("_request", c_char_p),
     ]
 
 
@@ -11599,7 +11558,8 @@ class FaceTrackerFB_T(Structure):
     pass
 
 
-FaceTrackerFB = POINTER(FaceTrackerFB_T)
+class FaceTrackerFB(POINTER(FaceTrackerFB_T), HandleMixin):
+    _type_ = FaceTrackerFB_T  # ctypes idiosyncrasy
 
 
 class SystemFaceTrackingPropertiesFB(Structure):
@@ -11747,7 +11707,7 @@ class FaceExpressionWeightsFB(Structure):
                 ctypes.addressof(self._weights.contents))
 
     @weights.setter
-    def weights(self, value):
+    def weights(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.weight_count, self._weights = array_field_helper(
             c_float, None, value)
@@ -11761,7 +11721,7 @@ class FaceExpressionWeightsFB(Structure):
                 ctypes.addressof(self._confidences.contents))
 
     @confidences.setter
-    def confidences(self, value):
+    def confidences(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.confidence_count, self._confidences = array_field_helper(
             c_float, None, value)
@@ -11789,7 +11749,8 @@ class EyeTrackerFB_T(Structure):
     pass
 
 
-EyeTrackerFB = POINTER(EyeTrackerFB_T)
+class EyeTrackerFB(POINTER(EyeTrackerFB_T), HandleMixin):
+    _type_ = EyeTrackerFB_T  # ctypes idiosyncrasy
 
 
 class EyeGazeFB(Structure):
@@ -12242,7 +12203,8 @@ class VirtualKeyboardMETA_T(Structure):
     pass
 
 
-VirtualKeyboardMETA = POINTER(VirtualKeyboardMETA_T)
+class VirtualKeyboardMETA(POINTER(VirtualKeyboardMETA_T), HandleMixin):
+    _type_ = VirtualKeyboardMETA_T  # ctypes idiosyncrasy
 
 VirtualKeyboardInputStateFlagsMETACInt = Flags64
 
@@ -12531,21 +12493,30 @@ class VirtualKeyboardTextContextChangeInfoMETA(Structure):
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_TEXT_CONTEXT_CHANGE_INFO_META,
     ) -> None:
         super().__init__(
-            text_context=text_context.encode(),
+            _text_context=text_context.encode(),
             next=next,
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={repr(self.text_context)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={repr(self._text_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={self.text_context}, next={self.next}, type={self.type})"
+        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={self._text_context}, next={self.next}, type={self.type})"
+
+    @property
+    def text_context(self) -> str:
+        return self._text_context.decode()
+    
+    @text_context.setter
+    def text_context(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._text_context = value.encode()
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("text_context", c_char_p),
+        ("_text_context", c_char_p),
     ]
 
 
@@ -12917,7 +12888,7 @@ class SpaceListSaveInfoFB(Structure):
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
-    def spaces(self, value):
+    def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
             Space, None, value)
@@ -13145,7 +13116,7 @@ class SpacesSaveInfoMETA(Structure):
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
-    def spaces(self, value):
+    def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
             Space, None, value)
@@ -13225,7 +13196,7 @@ class SpacesEraseInfoMETA(Structure):
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
-    def spaces(self, value):
+    def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
             Space, None, value)
@@ -13239,7 +13210,7 @@ class SpacesEraseInfoMETA(Structure):
                 ctypes.addressof(self._uuids.contents))
 
     @uuids.setter
-    def uuids(self, value):
+    def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.uuid_count, self._uuids = array_field_helper(
             UuidEXT, None, value)
@@ -13292,7 +13263,8 @@ class PassthroughColorLutMETA_T(Structure):
     pass
 
 
-PassthroughColorLutMETA = POINTER(PassthroughColorLutMETA_T)
+class PassthroughColorLutMETA(POINTER(PassthroughColorLutMETA_T), HandleMixin):
+    _type_ = PassthroughColorLutMETA_T  # ctypes idiosyncrasy
 
 
 class PassthroughColorLutDataMETA(Structure):
@@ -13680,7 +13652,8 @@ class FaceTracker2FB_T(Structure):
     pass
 
 
-FaceTracker2FB = POINTER(FaceTracker2FB_T)
+class FaceTracker2FB(POINTER(FaceTracker2FB_T), HandleMixin):
+    _type_ = FaceTracker2FB_T  # ctypes idiosyncrasy
 
 
 class SystemFaceTrackingProperties2FB(Structure):
@@ -13746,7 +13719,7 @@ class FaceTrackerCreateInfo2FB(Structure):
                 ctypes.addressof(self._requested_data_sources.contents))
 
     @requested_data_sources.setter
-    def requested_data_sources(self, value):
+    def requested_data_sources(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.requested_data_source_count, self._requested_data_sources = array_field_helper(
             FaceTrackingDataSource2FB.ctype(), None, value)
@@ -13832,7 +13805,7 @@ class FaceExpressionWeights2FB(Structure):
                 ctypes.addressof(self._weights.contents))
 
     @weights.setter
-    def weights(self, value):
+    def weights(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.weight_count, self._weights = array_field_helper(
             c_float, None, value)
@@ -13846,7 +13819,7 @@ class FaceExpressionWeights2FB(Structure):
                 ctypes.addressof(self._confidences.contents))
 
     @confidences.setter
-    def confidences(self, value):
+    def confidences(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.confidence_count, self._confidences = array_field_helper(
             c_float, None, value)
@@ -13955,7 +13928,7 @@ class ShareSpacesInfoMETA(Structure):
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
-    def spaces(self, value):
+    def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
             Space, None, value)
@@ -14005,14 +13978,16 @@ class EnvironmentDepthProviderMETA_T(Structure):
     pass
 
 
-EnvironmentDepthProviderMETA = POINTER(EnvironmentDepthProviderMETA_T)
+class EnvironmentDepthProviderMETA(POINTER(EnvironmentDepthProviderMETA_T), HandleMixin):
+    _type_ = EnvironmentDepthProviderMETA_T  # ctypes idiosyncrasy
 
 
 class EnvironmentDepthSwapchainMETA_T(Structure):
     pass
 
 
-EnvironmentDepthSwapchainMETA = POINTER(EnvironmentDepthSwapchainMETA_T)
+class EnvironmentDepthSwapchainMETA(POINTER(EnvironmentDepthSwapchainMETA_T), HandleMixin):
+    _type_ = EnvironmentDepthSwapchainMETA_T  # ctypes idiosyncrasy
 
 EnvironmentDepthProviderCreateFlagsMETACInt = Flags64
 
@@ -14275,14 +14250,16 @@ class RenderModelEXT_T(Structure):
     pass
 
 
-RenderModelEXT = POINTER(RenderModelEXT_T)
+class RenderModelEXT(POINTER(RenderModelEXT_T), HandleMixin):
+    _type_ = RenderModelEXT_T  # ctypes idiosyncrasy
 
 
 class RenderModelAssetEXT_T(Structure):
     pass
 
 
-RenderModelAssetEXT = POINTER(RenderModelAssetEXT_T)
+class RenderModelAssetEXT(POINTER(RenderModelAssetEXT_T), HandleMixin):
+    _type_ = RenderModelAssetEXT_T  # ctypes idiosyncrasy
 
 
 class RenderModelCreateInfoEXT(Structure):
@@ -14319,7 +14296,7 @@ class RenderModelCreateInfoEXT(Structure):
                 ctypes.addressof(self._gltf_extensions.contents))
 
     @gltf_extensions.setter
-    def gltf_extensions(self, value):
+    def gltf_extensions(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.gltf_extension_count, self._gltf_extensions = string_array_field_helper(
             None, value)
@@ -14492,7 +14469,7 @@ class RenderModelStateEXT(Structure):
                 ctypes.addressof(self._node_states.contents))
 
     @node_states.setter
-    def node_states(self, value):
+    def node_states(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.node_state_count, self._node_states = array_field_helper(
             RenderModelNodeStateEXT, None, value)
@@ -14755,7 +14732,7 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(Structure):
                 ctypes.addressof(self._top_level_user_paths.contents))
 
     @top_level_user_paths.setter
-    def top_level_user_paths(self, value):
+    def top_level_user_paths(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.top_level_user_path_count, self._top_level_user_paths = array_field_helper(
             c_uint64, None, value)
@@ -14804,7 +14781,8 @@ class PassthroughHTC_T(Structure):
     pass
 
 
-PassthroughHTC = POINTER(PassthroughHTC_T)
+class PassthroughHTC(POINTER(PassthroughHTC_T), HandleMixin):
+    _type_ = PassthroughHTC_T  # ctypes idiosyncrasy
 
 
 class PassthroughCreateInfoHTC(Structure):
@@ -14986,7 +14964,7 @@ class FoveationApplyInfoHTC(Structure):
                 ctypes.addressof(self._sub_images.contents))
 
     @sub_images.setter
-    def sub_images(self, value):
+    def sub_images(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.sub_image_count, self._sub_images = array_field_helper(
             SwapchainSubImage, None, value)
@@ -15086,7 +15064,7 @@ class FoveationCustomModeInfoHTC(Structure):
                 ctypes.addressof(self._configs.contents))
 
     @configs.setter
-    def configs(self, value):
+    def configs(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.config_count, self._configs = array_field_helper(
             FoveationConfigurationHTC, None, value)
@@ -15191,7 +15169,8 @@ class BodyTrackerHTC_T(Structure):
     pass
 
 
-BodyTrackerHTC = POINTER(BodyTrackerHTC_T)
+class BodyTrackerHTC(POINTER(BodyTrackerHTC_T), HandleMixin):
+    _type_ = BodyTrackerHTC_T  # ctypes idiosyncrasy
 
 
 class SystemBodyTrackingPropertiesHTC(Structure):
@@ -15336,7 +15315,7 @@ class BodyJointLocationsHTC(Structure):
                 ctypes.addressof(self._joint_locations.contents))
 
     @joint_locations.setter
-    def joint_locations(self, value):
+    def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.joint_location_count, self._joint_locations = array_field_helper(
             BodyJointLocationHTC, None, value)
@@ -15404,7 +15383,7 @@ class BodySkeletonHTC(Structure):
                 ctypes.addressof(self._joints.contents))
 
     @joints.setter
-    def joints(self, value):
+    def joints(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.joint_count, self._joints = array_field_helper(
             BodySkeletonJointHTC, None, value)
@@ -15559,7 +15538,7 @@ class ForceFeedbackCurlApplyLocationsMNDX(Structure):
                 ctypes.addressof(self._locations.contents))
 
     @locations.setter
-    def locations(self, value):
+    def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.location_count, self._locations = array_field_helper(
             ForceFeedbackCurlApplyLocationMNDX, None, value)
@@ -15579,7 +15558,8 @@ class BodyTrackerBD_T(Structure):
     pass
 
 
-BodyTrackerBD = POINTER(BodyTrackerBD_T)
+class BodyTrackerBD(POINTER(BodyTrackerBD_T), HandleMixin):
+    _type_ = BodyTrackerBD_T  # ctypes idiosyncrasy
 
 
 class SystemBodyTrackingPropertiesBD(Structure):
@@ -15720,7 +15700,7 @@ class BodyJointLocationsBD(Structure):
                 ctypes.addressof(self._joint_locations.contents))
 
     @joint_locations.setter
-    def joint_locations(self, value):
+    def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.joint_location_count, self._joint_locations = array_field_helper(
             BodyJointLocationBD, None, value)
@@ -15747,21 +15727,24 @@ class SenseDataProviderBD_T(Structure):
     pass
 
 
-SenseDataProviderBD = POINTER(SenseDataProviderBD_T)
+class SenseDataProviderBD(POINTER(SenseDataProviderBD_T), HandleMixin):
+    _type_ = SenseDataProviderBD_T  # ctypes idiosyncrasy
 
 
 class SenseDataSnapshotBD_T(Structure):
     pass
 
 
-SenseDataSnapshotBD = POINTER(SenseDataSnapshotBD_T)
+class SenseDataSnapshotBD(POINTER(SenseDataSnapshotBD_T), HandleMixin):
+    _type_ = SenseDataSnapshotBD_T  # ctypes idiosyncrasy
 
 
 class AnchorBD_T(Structure):
     pass
 
 
-AnchorBD = POINTER(AnchorBD_T)
+class AnchorBD(POINTER(AnchorBD_T), HandleMixin):
+    _type_ = AnchorBD_T  # ctypes idiosyncrasy
 
 
 class SystemSpatialSensingPropertiesBD(Structure):
@@ -16332,7 +16315,7 @@ class SenseDataFilterUuidBD(Structure):
                 ctypes.addressof(self._uuids.contents))
 
     @uuids.setter
-    def uuids(self, value):
+    def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.uuid_count, self._uuids = array_field_helper(
             Uuid, None, value)
@@ -16377,7 +16360,7 @@ class SenseDataFilterSemanticBD(Structure):
                 ctypes.addressof(self._labels.contents))
 
     @labels.setter
-    def labels(self, value):
+    def labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.label_count, self._labels = array_field_helper(
             c_int, None, value)
@@ -16981,7 +16964,7 @@ class SenseDataFilterPlaneOrientationBD(Structure):
                 ctypes.addressof(self._orientations.contents))
 
     @orientations.setter
-    def orientations(self, value):
+    def orientations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.orientation_count, self._orientations = array_field_helper(
             PlaneOrientationBD.ctype(), None, value)
@@ -17026,7 +17009,7 @@ class HandTrackingDataSourceInfoEXT(Structure):
                 ctypes.addressof(self._requested_data_sources.contents))
 
     @requested_data_sources.setter
-    def requested_data_sources(self, value):
+    def requested_data_sources(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.requested_data_source_count, self._requested_data_sources = array_field_helper(
             HandTrackingDataSourceEXT.ctype(), None, value)
@@ -17072,7 +17055,8 @@ class PlaneDetectorEXT_T(Structure):
     pass
 
 
-PlaneDetectorEXT = POINTER(PlaneDetectorEXT_T)
+class PlaneDetectorEXT(POINTER(PlaneDetectorEXT_T), HandleMixin):
+    _type_ = PlaneDetectorEXT_T  # ctypes idiosyncrasy
 
 PlaneDetectionCapabilityFlagsEXTCInt = Flags64
 
@@ -17184,7 +17168,7 @@ class PlaneDetectorBeginInfoEXT(Structure):
                 ctypes.addressof(self._orientations.contents))
 
     @orientations.setter
-    def orientations(self, value):
+    def orientations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.orientation_count, self._orientations = array_field_helper(
             c_int, None, value)
@@ -17198,7 +17182,7 @@ class PlaneDetectorBeginInfoEXT(Structure):
                 ctypes.addressof(self._semantic_types.contents))
 
     @semantic_types.setter
-    def semantic_types(self, value):
+    def semantic_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.semantic_type_count, self._semantic_types = array_field_helper(
             c_int, None, value)
@@ -17377,7 +17361,8 @@ class TrackableTrackerANDROID_T(Structure):
     pass
 
 
-TrackableTrackerANDROID = POINTER(TrackableTrackerANDROID_T)
+class TrackableTrackerANDROID(POINTER(TrackableTrackerANDROID_T), HandleMixin):
+    _type_ = TrackableTrackerANDROID_T  # ctypes idiosyncrasy
 
 
 class TrackableTrackerCreateInfoANDROID(Structure):
@@ -17576,7 +17561,8 @@ class DeviceAnchorPersistenceANDROID_T(Structure):
     pass
 
 
-DeviceAnchorPersistenceANDROID = POINTER(DeviceAnchorPersistenceANDROID_T)
+class DeviceAnchorPersistenceANDROID(POINTER(DeviceAnchorPersistenceANDROID_T), HandleMixin):
+    _type_ = DeviceAnchorPersistenceANDROID_T  # ctypes idiosyncrasy
 
 
 class DeviceAnchorPersistenceCreateInfoANDROID(Structure):
@@ -17795,7 +17781,7 @@ class RaycastInfoANDROID(Structure):
                 ctypes.addressof(self._trackers.contents))
 
     @trackers.setter
-    def trackers(self, value):
+    def trackers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.tracker_count, self._trackers = array_field_helper(
             POINTER(TrackableTrackerANDROID_T), None, value)
@@ -17946,7 +17932,7 @@ class TrackableObjectConfigurationANDROID(Structure):
                 ctypes.addressof(self._active_labels.contents))
 
     @active_labels.setter
-    def active_labels(self, value):
+    def active_labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.label_count, self._active_labels = array_field_helper(
             c_int, None, value)
@@ -18243,7 +18229,8 @@ class WorldMeshDetectorML_T(Structure):
     pass
 
 
-WorldMeshDetectorML = POINTER(WorldMeshDetectorML_T)
+class WorldMeshDetectorML(POINTER(WorldMeshDetectorML_T), HandleMixin):
+    _type_ = WorldMeshDetectorML_T  # ctypes idiosyncrasy
 
 WorldMeshDetectorFlagsMLCInt = Flags64
 
@@ -18530,7 +18517,7 @@ class WorldMeshGetInfoML(Structure):
                 ctypes.addressof(self._blocks.contents))
 
     @blocks.setter
-    def blocks(self, value):
+    def blocks(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.block_count, self._blocks = array_field_helper(
             WorldMeshBlockRequestML, None, value)
@@ -18668,7 +18655,7 @@ class WorldMeshRequestCompletionML(Structure):
                 ctypes.addressof(self._blocks.contents))
 
     @blocks.setter
-    def blocks(self, value):
+    def blocks(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.block_count, self._blocks = array_field_helper(
             WorldMeshBlockML, None, value)
@@ -18705,7 +18692,8 @@ class FacialExpressionClientML_T(Structure):
     pass
 
 
-FacialExpressionClientML = POINTER(FacialExpressionClientML_T)
+class FacialExpressionClientML(POINTER(FacialExpressionClientML_T), HandleMixin):
+    _type_ = FacialExpressionClientML_T  # ctypes idiosyncrasy
 
 FacialExpressionBlendShapePropertiesFlagsMLCInt = Flags64
 
@@ -18768,7 +18756,7 @@ class FacialExpressionClientCreateInfoML(Structure):
                 ctypes.addressof(self._requested_facial_blend_shapes.contents))
 
     @requested_facial_blend_shapes.setter
-    def requested_facial_blend_shapes(self, value):
+    def requested_facial_blend_shapes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.requested_count, self._requested_facial_blend_shapes = array_field_helper(
             c_int, None, value)
@@ -19328,7 +19316,7 @@ class ShareSpacesRecipientGroupsMETA(Structure):
                 ctypes.addressof(self._groups.contents))
 
     @groups.setter
-    def groups(self, value):
+    def groups(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.group_count, self._groups = array_field_helper(
             Uuid, None, value)
@@ -19484,7 +19472,7 @@ class TrackableMarkerConfigurationANDROID(Structure):
                 ctypes.addressof(self._databases.contents))
 
     @databases.setter
-    def databases(self, value):
+    def databases(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.database_count, self._databases = array_field_helper(
             TrackableMarkerDatabaseANDROID, None, value)
@@ -19552,21 +19540,24 @@ class SpatialEntityEXT_T(Structure):
     pass
 
 
-SpatialEntityEXT = POINTER(SpatialEntityEXT_T)
+class SpatialEntityEXT(POINTER(SpatialEntityEXT_T), HandleMixin):
+    _type_ = SpatialEntityEXT_T  # ctypes idiosyncrasy
 
 
 class SpatialContextEXT_T(Structure):
     pass
 
 
-SpatialContextEXT = POINTER(SpatialContextEXT_T)
+class SpatialContextEXT(POINTER(SpatialContextEXT_T), HandleMixin):
+    _type_ = SpatialContextEXT_T  # ctypes idiosyncrasy
 
 
 class SpatialSnapshotEXT_T(Structure):
     pass
 
 
-SpatialSnapshotEXT = POINTER(SpatialSnapshotEXT_T)
+class SpatialSnapshotEXT(POINTER(SpatialSnapshotEXT_T), HandleMixin):
+    _type_ = SpatialSnapshotEXT_T  # ctypes idiosyncrasy
 
 
 class SpatialCapabilityComponentTypesEXT(Structure):
@@ -19635,7 +19626,7 @@ class SpatialCapabilityConfigurationBaseHeaderEXT(Structure):
                 ctypes.addressof(self._enabled_components.contents))
 
     @enabled_components.setter
-    def enabled_components(self, value):
+    def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_component_count, self._enabled_components = array_field_helper(
             c_int, None, value)
@@ -19681,7 +19672,7 @@ class SpatialContextCreateInfoEXT(Structure):
                 ctypes.addressof(self._capability_configs.contents))
 
     @capability_configs.setter
-    def capability_configs(self, value):
+    def capability_configs(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.capability_config_count, self._capability_configs = base_array_field_helper(
             POINTER(SpatialCapabilityConfigurationBaseHeaderEXT), None, value)
@@ -19755,7 +19746,7 @@ class SpatialDiscoverySnapshotCreateInfoEXT(Structure):
                 ctypes.addressof(self._component_types.contents))
 
     @component_types.setter
-    def component_types(self, value):
+    def component_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.component_type_count, self._component_types = array_field_helper(
             c_int, None, value)
@@ -19861,7 +19852,7 @@ class SpatialComponentDataQueryConditionEXT(Structure):
                 ctypes.addressof(self._component_types.contents))
 
     @component_types.setter
-    def component_types(self, value):
+    def component_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.component_type_count, self._component_types = array_field_helper(
             c_int, None, value)
@@ -20021,7 +20012,7 @@ class SpatialComponentBounded2DListEXT(Structure):
                 ctypes.addressof(self._bounds.contents))
 
     @bounds.setter
-    def bounds(self, value):
+    def bounds(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.bound_count, self._bounds = array_field_helper(
             SpatialBounded2DDataEXT, None, value)
@@ -20066,7 +20057,7 @@ class SpatialComponentBounded3DListEXT(Structure):
                 ctypes.addressof(self._bounds.contents))
 
     @bounds.setter
-    def bounds(self, value):
+    def bounds(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.bound_count, self._bounds = array_field_helper(
             Boxf, None, value)
@@ -20111,7 +20102,7 @@ class SpatialComponentParentListEXT(Structure):
                 ctypes.addressof(self._parents.contents))
 
     @parents.setter
-    def parents(self, value):
+    def parents(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.parent_count, self._parents = array_field_helper(
             SpatialEntityIdEXT, None, value)
@@ -20186,7 +20177,7 @@ class SpatialComponentMesh3DListEXT(Structure):
                 ctypes.addressof(self._meshes.contents))
 
     @meshes.setter
-    def meshes(self, value):
+    def meshes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.mesh_count, self._meshes = array_field_helper(
             SpatialMeshDataEXT, None, value)
@@ -20265,7 +20256,7 @@ class SpatialUpdateSnapshotCreateInfoEXT(Structure):
                 ctypes.addressof(self._component_types.contents))
 
     @component_types.setter
-    def component_types(self, value):
+    def component_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.component_type_count, self._component_types = array_field_helper(
             c_int, None, value)
@@ -20409,7 +20400,7 @@ class SpatialCapabilityConfigurationPlaneTrackingEXT(Structure):
                 ctypes.addressof(self._enabled_components.contents))
 
     @enabled_components.setter
-    def enabled_components(self, value):
+    def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_component_count, self._enabled_components = array_field_helper(
             c_int, None, value)
@@ -20455,7 +20446,7 @@ class SpatialComponentPlaneAlignmentListEXT(Structure):
                 ctypes.addressof(self._plane_alignments.contents))
 
     @plane_alignments.setter
-    def plane_alignments(self, value):
+    def plane_alignments(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.plane_alignment_count, self._plane_alignments = array_field_helper(
             SpatialPlaneAlignmentEXT.ctype(), None, value)
@@ -20500,7 +20491,7 @@ class SpatialComponentMesh2DListEXT(Structure):
                 ctypes.addressof(self._meshes.contents))
 
     @meshes.setter
-    def meshes(self, value):
+    def meshes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.mesh_count, self._meshes = array_field_helper(
             SpatialMeshDataEXT, None, value)
@@ -20570,7 +20561,7 @@ class SpatialComponentPolygon2DListEXT(Structure):
                 ctypes.addressof(self._polygons.contents))
 
     @polygons.setter
-    def polygons(self, value):
+    def polygons(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.polygon_count, self._polygons = array_field_helper(
             SpatialPolygon2DDataEXT, None, value)
@@ -20615,7 +20606,7 @@ class SpatialComponentPlaneSemanticLabelListEXT(Structure):
                 ctypes.addressof(self._semantic_labels.contents))
 
     @semantic_labels.setter
-    def semantic_labels(self, value):
+    def semantic_labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.semantic_label_count, self._semantic_labels = array_field_helper(
             SpatialPlaneSemanticLabelEXT.ctype(), None, value)
@@ -20662,7 +20653,7 @@ class SpatialCapabilityConfigurationQrCodeEXT(Structure):
                 ctypes.addressof(self._enabled_components.contents))
 
     @enabled_components.setter
-    def enabled_components(self, value):
+    def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_component_count, self._enabled_components = array_field_helper(
             c_int, None, value)
@@ -20710,7 +20701,7 @@ class SpatialCapabilityConfigurationMicroQrCodeEXT(Structure):
                 ctypes.addressof(self._enabled_components.contents))
 
     @enabled_components.setter
-    def enabled_components(self, value):
+    def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_component_count, self._enabled_components = array_field_helper(
             c_int, None, value)
@@ -20760,7 +20751,7 @@ class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
                 ctypes.addressof(self._enabled_components.contents))
 
     @enabled_components.setter
-    def enabled_components(self, value):
+    def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_component_count, self._enabled_components = array_field_helper(
             c_int, None, value)
@@ -20811,7 +20802,7 @@ class SpatialCapabilityConfigurationAprilTagEXT(Structure):
                 ctypes.addressof(self._enabled_components.contents))
 
     @enabled_components.setter
-    def enabled_components(self, value):
+    def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_component_count, self._enabled_components = array_field_helper(
             c_int, None, value)
@@ -20938,7 +20929,7 @@ class SpatialComponentMarkerListEXT(Structure):
                 ctypes.addressof(self._markers.contents))
 
     @markers.setter
-    def markers(self, value):
+    def markers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.marker_count, self._markers = array_field_helper(
             SpatialMarkerDataEXT, None, value)
@@ -20985,7 +20976,7 @@ class SpatialCapabilityConfigurationAnchorEXT(Structure):
                 ctypes.addressof(self._enabled_components.contents))
 
     @enabled_components.setter
-    def enabled_components(self, value):
+    def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.enabled_component_count, self._enabled_components = array_field_helper(
             c_int, None, value)
@@ -21031,7 +21022,7 @@ class SpatialComponentAnchorListEXT(Structure):
                 ctypes.addressof(self._locations.contents))
 
     @locations.setter
-    def locations(self, value):
+    def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.location_count, self._locations = array_field_helper(
             Posef, None, value)
@@ -21083,7 +21074,8 @@ class SpatialPersistenceContextEXT_T(Structure):
     pass
 
 
-SpatialPersistenceContextEXT = POINTER(SpatialPersistenceContextEXT_T)
+class SpatialPersistenceContextEXT(POINTER(SpatialPersistenceContextEXT_T), HandleMixin):
+    _type_ = SpatialPersistenceContextEXT_T  # ctypes idiosyncrasy
 
 
 class SpatialPersistenceContextCreateInfoEXT(Structure):
@@ -21176,7 +21168,7 @@ class SpatialContextPersistenceConfigEXT(Structure):
                 ctypes.addressof(self._persistence_contexts.contents))
 
     @persistence_contexts.setter
-    def persistence_contexts(self, value):
+    def persistence_contexts(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.persistence_context_count, self._persistence_contexts = array_field_helper(
             POINTER(SpatialPersistenceContextEXT_T), None, value)
@@ -21221,7 +21213,7 @@ class SpatialDiscoveryPersistenceUuidFilterEXT(Structure):
                 ctypes.addressof(self._persisted_uuids.contents))
 
     @persisted_uuids.setter
-    def persisted_uuids(self, value):
+    def persisted_uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.persisted_uuid_count, self._persisted_uuids = array_field_helper(
             Uuid, None, value)
@@ -21433,19 +21425,37 @@ class LoaderInitPropertyValueEXT(Structure):
         value: str = "",
     ) -> None:
         super().__init__(
-            name=name.encode(),
-            value=value.encode(),
+            _name=name.encode(),
+            _value=value.encode(),
         )
 
     def __repr__(self) -> str:
-        return f"xr.LoaderInitPropertyValueEXT(name={repr(self.name)}, value={repr(self.value)})"
+        return f"xr.LoaderInitPropertyValueEXT(name={repr(self._name)}, value={repr(self._value)})"
 
     def __str__(self) -> str:
-        return f"xr.LoaderInitPropertyValueEXT(name={self.name}, value={self.value})"
+        return f"xr.LoaderInitPropertyValueEXT(name={self._name}, value={self._value})"
+
+    @property
+    def name(self) -> str:
+        return self._name.decode()
+    
+    @name.setter
+    def name(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._name = value.encode()
+
+    @property
+    def value(self) -> str:
+        return self._value.decode()
+    
+    @value.setter
+    def value(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._value = value.encode()
 
     _fields_ = [
-        ("name", c_char_p),
-        ("value", c_char_p),
+        ("_name", c_char_p),
+        ("_value", c_char_p),
     ]
 
 
@@ -21481,7 +21491,7 @@ class LoaderInitInfoPropertiesEXT(Structure):
                 ctypes.addressof(self._property_values.contents))
 
     @property_values.setter
-    def property_values(self, value):
+    def property_values(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.property_value_count, self._property_values = array_field_helper(
             LoaderInitPropertyValueEXT, None, value)

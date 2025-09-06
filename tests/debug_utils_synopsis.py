@@ -34,7 +34,7 @@ def test_debug_utils_basic():
             user_callback=debug_callback,
         )
 
-        instance = exit_stack.enter_context(xr.Instance(
+        instance = exit_stack.enter_context(xr.create_instance(
             create_info=xr.InstanceCreateInfo(
                 enabled_extension_names=[
                     debug_utils.EXTENSION_NAME,

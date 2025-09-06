@@ -30,6 +30,9 @@ KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME = "XR_KHR_vulkan_swapchain_forma
 KHR_opengl_enable = 1
 KHR_opengl_enable_SPEC_VERSION = 11
 KHR_OPENGL_ENABLE_EXTENSION_NAME = "XR_KHR_opengl_enable"
+KHR_opengl_es_enable = 1
+KHR_opengl_es_enable_SPEC_VERSION = 9
+KHR_OPENGL_ES_ENABLE_EXTENSION_NAME = "XR_KHR_opengl_es_enable"
 KHR_vulkan_enable = 1
 KHR_vulkan_enable_SPEC_VERSION = 9
 KHR_VULKAN_ENABLE_EXTENSION_NAME = "XR_KHR_vulkan_enable"
@@ -61,6 +64,9 @@ MAX_AUDIO_DEVICE_STR_SIZE_OCULUS = 128
 FB_foveation_vulkan = 1
 FB_foveation_vulkan_SPEC_VERSION = 1
 FB_FOVEATION_VULKAN_EXTENSION_NAME = "XR_FB_foveation_vulkan"
+FB_swapchain_update_state_opengl_es = 1
+FB_swapchain_update_state_opengl_es_SPEC_VERSION = 1
+FB_SWAPCHAIN_UPDATE_STATE_OPENGL_ES_EXTENSION_NAME = "XR_FB_swapchain_update_state_opengl_es"
 FB_swapchain_update_state_vulkan = 1
 FB_swapchain_update_state_vulkan_SPEC_VERSION = 1
 FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME = "XR_FB_swapchain_update_state_vulkan"
@@ -225,6 +231,90 @@ class GraphicsRequirementsOpenGLKHR(Structure):
 
 
 PFN_xrGetOpenGLGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsOpenGLKHR))
+
+
+class SwapchainImageOpenGLESKHR(Structure):
+    def __init__(
+        self,
+        image: int = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SWAPCHAIN_IMAGE_OPENGL_ESKHR,
+    ) -> None:
+        super().__init__(
+            image=image,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SwapchainImageOpenGLESKHR(image={repr(self.image)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SwapchainImageOpenGLESKHR(image={self.image}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("image", c_uint32),
+    ]
+
+
+class GraphicsRequirementsOpenGLESKHR(Structure):
+    def __init__(
+        self,
+        min_api_version_supported: Version = Version(),
+        max_api_version_supported: Version = Version(),
+        next: c_void_p = None,
+        type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_OPENGL_ESKHR,
+    ) -> None:
+        super().__init__(
+            _min_api_version_supported=min_api_version_supported.number(),
+            _max_api_version_supported=max_api_version_supported.number(),
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
+
+    @property
+    def min_api_version_supported(self) -> Version:
+        return Version(self._min_api_version_supported)
+    
+    @min_api_version_supported.setter
+    def min_api_version_supported(self, value: Version) -> None:
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._min_api_version_supported = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._min_api_version_supported = value
+
+    @property
+    def max_api_version_supported(self) -> Version:
+        return Version(self._max_api_version_supported)
+    
+    @max_api_version_supported.setter
+    def max_api_version_supported(self, value: Version) -> None:
+        if hasattr(value, 'number'):
+            # noinspection PyAttributeOutsideInit
+            self._max_api_version_supported = value.number()
+        else:
+            # noinspection PyAttributeOutsideInit
+            self._max_api_version_supported = value
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("_min_api_version_supported", VersionNumber),
+        ("_max_api_version_supported", VersionNumber),
+    ]
+
+
+PFN_xrGetOpenGLESGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsOpenGLESKHR))
 
 
 class GraphicsBindingVulkanKHR(Structure):
@@ -748,6 +838,61 @@ class SwapchainImageFoveationVulkanFB(Structure):
     ]
 
 
+class SwapchainStateSamplerOpenGLESFB(Structure):
+    def __init__(
+        self,
+        min_filter: int = 0,
+        mag_filter: int = 0,
+        wrap_mode_s: int = 0,
+        wrap_mode_t: int = 0,
+        swizzle_red: int = 0,
+        swizzle_green: int = 0,
+        swizzle_blue: int = 0,
+        swizzle_alpha: int = 0,
+        max_anisotropy: float = 0,
+        border_color: Color4f = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SWAPCHAIN_STATE_SAMPLER_OPENGL_ESFB,
+    ) -> None:
+        if border_color is None:
+            border_color = Color4f()
+        super().__init__(
+            min_filter=min_filter,
+            mag_filter=mag_filter,
+            wrap_mode_s=wrap_mode_s,
+            wrap_mode_t=wrap_mode_t,
+            swizzle_red=swizzle_red,
+            swizzle_green=swizzle_green,
+            swizzle_blue=swizzle_blue,
+            swizzle_alpha=swizzle_alpha,
+            max_anisotropy=max_anisotropy,
+            border_color=border_color,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("min_filter", c_int),
+        ("mag_filter", c_int),
+        ("wrap_mode_s", c_int),
+        ("wrap_mode_t", c_int),
+        ("swizzle_red", c_int),
+        ("swizzle_green", c_int),
+        ("swizzle_blue", c_int),
+        ("swizzle_alpha", c_int),
+        ("max_anisotropy", c_float),
+        ("border_color", Color4f),
+    ]
+
+
 class SwapchainStateSamplerVulkanFB(Structure):
     def __init__(
         self,
@@ -837,9 +982,12 @@ class VulkanSwapchainCreateInfoMETA(Structure):
 
 __all__ = [
     "FB_FOVEATION_VULKAN_EXTENSION_NAME",
+    "FB_SWAPCHAIN_UPDATE_STATE_OPENGL_ES_EXTENSION_NAME",
     "FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME",
     "FB_foveation_vulkan",
     "FB_foveation_vulkan_SPEC_VERSION",
+    "FB_swapchain_update_state_opengl_es",
+    "FB_swapchain_update_state_opengl_es_SPEC_VERSION",
     "FB_swapchain_update_state_vulkan",
     "FB_swapchain_update_state_vulkan_SPEC_VERSION",
     "GraphicsBindingD3D11KHR",
@@ -849,6 +997,7 @@ __all__ = [
     "GraphicsBindingVulkanKHR",
     "GraphicsRequirementsD3D11KHR",
     "GraphicsRequirementsD3D12KHR",
+    "GraphicsRequirementsOpenGLESKHR",
     "GraphicsRequirementsOpenGLKHR",
     "GraphicsRequirementsVulkan2KHR",
     "GraphicsRequirementsVulkanKHR",
@@ -861,6 +1010,7 @@ __all__ = [
     "KHR_D3D12_enable",
     "KHR_D3D12_enable_SPEC_VERSION",
     "KHR_OPENGL_ENABLE_EXTENSION_NAME",
+    "KHR_OPENGL_ES_ENABLE_EXTENSION_NAME",
     "KHR_VULKAN_ENABLE2_EXTENSION_NAME",
     "KHR_VULKAN_ENABLE_EXTENSION_NAME",
     "KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME",
@@ -869,6 +1019,8 @@ __all__ = [
     "KHR_convert_timespec_time_SPEC_VERSION",
     "KHR_opengl_enable",
     "KHR_opengl_enable_SPEC_VERSION",
+    "KHR_opengl_es_enable",
+    "KHR_opengl_es_enable_SPEC_VERSION",
     "KHR_vulkan_enable",
     "KHR_vulkan_enable2",
     "KHR_vulkan_enable2_SPEC_VERSION",
@@ -901,6 +1053,7 @@ __all__ = [
     "PFN_xrGetAudioOutputDeviceGuidOculus",
     "PFN_xrGetD3D11GraphicsRequirementsKHR",
     "PFN_xrGetD3D12GraphicsRequirementsKHR",
+    "PFN_xrGetOpenGLESGraphicsRequirementsKHR",
     "PFN_xrGetOpenGLGraphicsRequirementsKHR",
     "PFN_xrGetVulkanDeviceExtensionsKHR",
     "PFN_xrGetVulkanGraphicsDevice2KHR",
@@ -912,9 +1065,11 @@ __all__ = [
     "SwapchainImageD3D11KHR",
     "SwapchainImageD3D12KHR",
     "SwapchainImageFoveationVulkanFB",
+    "SwapchainImageOpenGLESKHR",
     "SwapchainImageOpenGLKHR",
     "SwapchainImageVulkan2KHR",
     "SwapchainImageVulkanKHR",
+    "SwapchainStateSamplerOpenGLESFB",
     "SwapchainStateSamplerVulkanFB",
     "VulkanDeviceCreateFlagsKHR",
     "VulkanDeviceCreateFlagsKHRCInt",

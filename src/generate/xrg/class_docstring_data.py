@@ -223,38 +223,17 @@ class_docstrings = {
                 object for most OpenXR operations, including system queries, session creation,
                 and extension dispatch.
 
-                This object may be instantiated directly with an optional :class:`xr.InstanceCreateInfo`
-                descriptor. If none is provided, a default descriptor will be used. Initialization
-                wraps the native :func:`xrCreateInstance` call and is performed lazily, with runtime
-                bindings imported just-in-time to avoid circular dependencies and import-time overhead.
-
                 `Instance` supports context management protocols and may be used in a `with` block
                 for automatic teardown via :func:`xr.destroy_instance`:
 
                 .. code-block:: python
 
-                    with xr.Instance(...) as instance:
+                    with xr.create_instance(...) as instance:
                         ...
 
                 Internally, this object wraps a pointer to the OpenXR instance and delegates all
                 interactions to the runtime via raw API functions. It is opaque and cannot be
                 directly inspected or modified.
-
-                :param create_info: Optional descriptor specifying application info, enabled extensions,
-                                    and platform-specific parameters.
-                :type create_info: xr.InstanceCreateInfo or None
-
-                :raises xr.ValidationFailureError: If validation layers reject the configuration.
-                :raises xr.RuntimeFailureError: If the runtime fails to initialize.
-                :raises xr.OutOfMemoryError: If memory allocation fails.
-                :raises xr.LimitReachedError: If the runtime cannot support additional instances.
-                :raises xr.RuntimeUnavailableError: If no runtime is available.
-                :raises xr.NameInvalidError: If the application name is empty.
-                :raises xr.InitializationFailedError: If platform-specific initialization fails.
-                :raises xr.ExtensionNotPresentError: If a requested extension is missing.
-                :raises xr.ExtensionDependencyNotEnabledError: If an extension dependency is missing.
-                :raises xr.ApiVersionUnsupportedError: If the requested API version is not supported.
-                :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
 
                 :seealso: :func:`xr.create_instance`, :func:`xr.destroy_instance`, :class:`xr.InstanceCreateInfo`
                 :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrInstance.html

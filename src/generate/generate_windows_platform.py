@@ -15,6 +15,7 @@ def main():
         "-DXR_USE_GRAPHICS_API_D3D11",
         "-DXR_USE_GRAPHICS_API_D3D12",
         "-DXR_USE_TIMESPEC",
+        "-DXR_CPP_NULLPTR_SUPPORTED",
     ]
     cg = xrg.CodeGenerator(
         header=xrg.Header.PLATFORM,

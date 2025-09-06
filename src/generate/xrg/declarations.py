@@ -73,6 +73,8 @@ class DefinitionItem(CodeItem):
             self.value = self.value[:-1]
         if self.value.startswith("XR_"):
             self.value = self.value[3:]
+        if self.value == "0" and self._capi_name in ["XR_NULL_HANDLE"]:
+            self.value = "None"
 
     @staticmethod
     def blank_lines_before():
@@ -374,15 +376,7 @@ class FunctionItem(CodeItem):
             result += "\n]"
             return result
         elif api == Api.PYTHON:
-            # Custom code for atom create functions
-            if (
-                    self.name().startswith("create")
-                    and len(self.parameters) in (2, 3)
-                    and self.parameters[-2].name() == "create_info"
-               ):
-                return str(AtomCreationFunctionCoder(self))
-            else:
-                return str(FunctionCoder(self))
+            return str(FunctionCoder(self))
         else:
             raise NotImplementedError
 
@@ -720,96 +714,16 @@ class TypeDefItem(CodeItem):
         if api == Api.C:
             raise NotImplementedError
         # Special case for elaborated handle types
-        if self.is_handle and self.name(api) not in ["SenseDataSnapshotBD"]:
+        if self.is_handle:  # and self.name(api) not in ["SenseDataSnapshotBD"]:
             docstring = ""
             doc_key = f"xr.{self.name(api)}"
             if doc_key in class_docstrings:
                 docstring = f'\n"""\n{class_docstrings[doc_key]["docstring"]}\n"""'
                 docstring = textwrap.indent(docstring, " " * 20)
-            handle_name = self.name(api)
-            handle_base = handle_name
-            vendor_tag = ""
-            create_prefix = ""
-            for vt in vendor_tags:
-                if handle_name.endswith(vt):
-                    handle_base = handle_name[:-len(vt)]
-                    vendor_tag = vt
-                    break
-            # TODO: all these special cases might need better parsing and architecture
-            if handle_name == "Space":
-                create_types = ["ReferenceSpace", "ActionSpace"]
-            elif handle_name == "SpatialGraphNodeBindingMSFT":
-                create_types = ["SpatialGraphStaticNodeBinding",]
-                create_prefix = "Try"
-            elif handle_name == "AnchorBD":
-                create_types = ["SpatialEntityAnchor"]
-            else:
-                create_types = [handle_base, ]
-            create_info_type_names = [f"{create_type}CreateInfo{vendor_tag}" for create_type in create_types]
-            if handle_name == "ExportedLocalizationMapML":
-                create_info_type_names = ["Uuid", ]
-            elif handle_name == "SpatialAnchorsStorageML":
-                create_info_type_names = ["SpatialAnchorsCreateStorageInfoML", ]
-            elif handle_name == "SpatialAnchorStoreConnectionMSFT":
-                create_info_type_names = []
-            elif handle_name == "FaceTracker2FB":
-                create_info_type_names = ["FaceTrackerCreateInfo2FB"]  # TODO: additional name rule?
-            elif handle_name == "AnchorBD":
-                create_info_type_names = ["SpatialEntityAnchorCreateInfoBD"]
-            create_info_types = [getattr(xr, n) for n in create_info_type_names]
-            if vendor_tag == "":
-                create_functions = [getattr(xr.raw_functions, f"xrCreate{create_type}{vendor_tag}") for create_type in create_types]
-            else:
-                create_functions = [getattr(xr, f"PFN_xr{create_prefix}Create{create_type}{vendor_tag}") for create_type in create_types]
-            snake = snake_from_camel(handle_name)
-            # TODO: extension handle case
-            # TODO: non-Instance case
             result = inspect.cleandoc(f'''
-                class {self.name(api)}({self.type.name(Api.CTYPES)}):{docstring}
+                class {self.name(api)}({self.type.name(Api.CTYPES)}, HandleMixin):{docstring}
                     _type_ = {self.type.pointee.name(Api.CTYPES)}  # ctypes idiosyncrasy
             ''')
-            if handle_name == "Instance":
-                result += f'\n\n    def __init__(self, create_info: Optional["{handle_name}CreateInfo"] = None):\n'
-            else:
-                if len(create_info_type_names) == 0:
-                    result += f'\n\n    def __init__(self, instance: Instance):\n'
-                elif len(create_info_type_names) == 1:
-                    ci_type = f'Optional["{create_info_type_names[0]}"] = None'
-                    result += f'\n\n    def __init__(self, instance: Instance, create_info: {ci_type}):\n'
-                else:
-                    ci_type = f'Union[{", ".join(create_info_type_names)}] = None'
-                    result += f'\n\n    def __init__(self, instance: Instance, create_info: {ci_type}):\n'
-                result += f'        self.instance = instance\n'
-            if len(create_info_type_names) > 0:
-                result += textwrap.indent(inspect.cleandoc(f'''
-                        if create_info is None:
-                            create_info = {create_info_type_names[0]}()
-                '''), prefix=8 * " ")
-                result += "\n"
-            result += textwrap.indent(inspect.cleandoc(f'''
-                    # Import function just-in-time to avoid initialization order problem
-                    from .raw_functions import xrCreate{handle_name}
-                    result = check_result(xrCreate{handle_name}(
-            '''), prefix=8 * " ")
-            if handle_name == "Instance":
-                result += "\n"
-            else:
-                result += f'\n{12 * " "}instance,\n'
-            if len(create_info_type_names) > 0:
-                result += f"{' ' * 12}byref(create_info),\n"
-            result += textwrap.indent(inspect.cleandoc(f'''
-                            byref(self),
-                        ))
-                        if result.is_exception():
-                            raise result
-                
-                    def __enter__(self) -> "{self.name(api)}":
-                        return self
-                
-                    def __exit__(self, _exc_type, _exc_val, _exc_tb) -> None:
-                        from .functions import destroy_{snake}
-                        destroy_{snake}(self)
-            '''), prefix=4 * " ")
             return result
         else:
             return f"{self.name(api)} = {self.type.name(Api.CTYPES)}"
@@ -970,6 +884,24 @@ class OutputParameterCoder(ParameterCoderBase):
             yield f"{self.parameter.name(api)}"
 
 
+class CreatedHandleOutputParameterCoder(OutputParameterCoder):
+    def __init__(self, parameter: FunctionParameterItem, parent_parameter: FunctionParameterItem = None):
+        super().__init__(parameter)
+        self.parent_parameter = parent_parameter
+
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+        yield from super().pre_body_code(api=api)
+        # Set the "instance" attribute of the newly created handle.
+        n = self.parameter.name(api)
+        if self.parent_parameter is None:
+            assert self.parameter.type.pointee.name(api) == "Instance"
+            yield f"{n}.instance = {n}"
+        elif self.parent_parameter.type.name() == "Instance":
+            yield f"{n}.instance = {self.parent_parameter.name(api)}"
+        else:
+            yield f"{n}.instance = {self.parent_parameter.name(api)}.instance"
+
+
 class BufferCoder(ParameterCoderBase):
     """
     Output array parameter designed to use the two-call idiom in C.
@@ -1083,7 +1015,19 @@ class FunctionCoder(object):
                 continue
             ct = p.type.clang_type
             if ct.kind == TypeKind.POINTER and not ct.get_pointee().is_const_qualified():
-                pc[1] = OutputParameterCoder(p)
+                # Is it a create_<handle> type function?
+                if (self.function.name().startswith("create_")
+                    and len(self.function.parameters) in (2, 3)
+                    and ix == len(self.function.parameters) - 1
+                    and p.type.pointee.is_handle
+                ):
+                    parent = None
+                    pp = self.function.parameters[0]
+                    if pp.type.is_handle:
+                        parent = pp
+                    pc[1] = CreatedHandleOutputParameterCoder(p, parent)
+                else:
+                    pc[1] = OutputParameterCoder(p)
                 continue
             if ct.kind == TypeKind.TYPEDEF:
                 ut = ct.get_declaration().underlying_typedef_type
@@ -1173,16 +1117,6 @@ class FunctionCoder(object):
             pass
         result += self.body_code()
         return result
-
-
-class AtomCreationFunctionCoder(FunctionCoder):
-    def body_code(self) -> str:
-        return_type = self.function.parameters[-1].type
-        assert return_type.clang_type.kind == TypeKind.POINTER
-        assert not return_type.clang_type.get_pointee().is_const_qualified()
-        type_name = return_type.pointee.name()
-        params = ", ".join(p.name() for p in self.function.parameters[:-1])
-        return f"\n    return {type_name}({params})"
 
 
 class FieldCoder(object):
@@ -1605,8 +1539,8 @@ def snake_from_camel(camel: str) -> str:
         # e.g. StructureType.SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_3D_BD
         # e.g. StructureType.SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT
         "3D": "_3d",
-        "OpenGL": "Opengl",
         "OpenGLES": "OpenglEs",
+        "OpenGL": "Opengl",
         "QRCode": "QrCode",
         "EGL": "Egl",
     }

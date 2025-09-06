@@ -144,7 +144,18 @@ def create_instance(
     :raises xr.ApiLayerNotPresentError: If a requested API layer is missing.
     :seealso: :class:`xr.Instance`, :class:`xr.InstanceCreateInfo`
     """
-    return Instance(create_info)
+    if create_info is None:
+        create_info = InstanceCreateInfo()
+    instance = Instance()
+    instance.instance = instance
+    fxn = raw_functions.xrCreateInstance
+    result = check_result(fxn(
+        create_info,
+        byref(instance),
+    ))
+    if result.is_exception():
+        raise result
+    return instance
 
 
 def destroy_instance(
@@ -284,7 +295,19 @@ def create_session(
     instance: Instance,
     create_info: SessionCreateInfo = None,
 ) -> Session:
-    return Session(instance, create_info)
+    if create_info is None:
+        create_info = SessionCreateInfo()
+    session = Session()
+    session.instance = instance
+    fxn = raw_functions.xrCreateSession
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(session),
+    ))
+    if result.is_exception():
+        raise result
+    return session
 
 
 def destroy_session(
@@ -331,6 +354,7 @@ def create_reference_space(
     if create_info is None:
         create_info = ReferenceSpaceCreateInfo()
     space = Space()
+    space.instance = session.instance
     fxn = raw_functions.xrCreateReferenceSpace
     result = check_result(fxn(
         session,
@@ -365,6 +389,7 @@ def create_action_space(
     if create_info is None:
         create_info = ActionSpaceCreateInfo()
     space = Space()
+    space.instance = session.instance
     fxn = raw_functions.xrCreateActionSpace
     result = check_result(fxn(
         session,
@@ -514,7 +539,19 @@ def create_swapchain(
     session: Session,
     create_info: SwapchainCreateInfo = None,
 ) -> Swapchain:
-    return Swapchain(session, create_info)
+    if create_info is None:
+        create_info = SwapchainCreateInfo()
+    swapchain = Swapchain()
+    swapchain.instance = session.instance
+    fxn = raw_functions.xrCreateSwapchain
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(swapchain),
+    ))
+    if result.is_exception():
+        raise result
+    return swapchain
 
 
 def destroy_swapchain(
@@ -757,7 +794,19 @@ def create_action_set(
     instance: Instance,
     create_info: ActionSetCreateInfo = None,
 ) -> ActionSet:
-    return ActionSet(instance, create_info)
+    if create_info is None:
+        create_info = ActionSetCreateInfo()
+    action_set = ActionSet()
+    action_set.instance = instance
+    fxn = raw_functions.xrCreateActionSet
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(action_set),
+    ))
+    if result.is_exception():
+        raise result
+    return action_set
 
 
 def destroy_action_set(
@@ -775,7 +824,19 @@ def create_action(
     action_set: ActionSet,
     create_info: ActionCreateInfo = None,
 ) -> Action:
-    return Action(action_set, create_info)
+    if create_info is None:
+        create_info = ActionCreateInfo()
+    action = Action()
+    action.instance = action_set.instance
+    fxn = raw_functions.xrCreateAction
+    result = check_result(fxn(
+        action_set,
+        create_info,
+        byref(action),
+    ))
+    if result.is_exception():
+        raise result
+    return action
 
 
 def destroy_action(

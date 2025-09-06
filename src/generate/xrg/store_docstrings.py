@@ -277,7 +277,7 @@ if __name__ == "__main__":
     # check_instance_docstring()
     # count_xr_docstrings()
     # write_docstrings(class_docstrings)
-    # store_class_docstrings()
-    store_function_docstrings()
+    store_class_docstrings()
+    # store_function_docstrings()
     # for mod in enumerate_modules():
     #     print(mod.__name__)

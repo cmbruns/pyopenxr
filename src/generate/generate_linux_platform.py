@@ -15,6 +15,7 @@ def main():
         "-DXR_USE_PLATFORM_XCB",
         "-DXR_USE_PLATFORM_XLIB",
         "-DXR_USE_TIMESPEC",
+        "-DXR_CPP_NULLPTR_SUPPORTED",
     ]
     cg = xrg.CodeGenerator(
         header=xrg.Header.PLATFORM,
