@@ -1,7 +1,7 @@
 from xml.etree import ElementTree
 
 
-def main():
+def parse_manageable_handles_xml():
     # Open official OpenXR registry xml file
     with open("headers/xr.xml", "rb") as stream:
         xr_registry = ElementTree.parse(stream).getroot()
@@ -64,15 +64,11 @@ def main():
                     if "create" not in h:
                         h["create"] = []
                     h["create"].append(command)
-
-    print(f"{len(handles)} handles found")
-    print(f"\n{create_count} create commands found")
-    print(f"\n{destroy_count} destroy commands found")
     assert destroy_count == len(handles)
 
     # TODO: report on multiple create commands
+    best_create_count = 0
     for handle in handles:
-        name = handle
         d = handles[handle]
         assert "destroy" in d
         if "create" not in d:
@@ -80,11 +76,13 @@ def main():
             # print(f"Skipping presumably async creation for {name}")
         else:
             creates = d["create"]
-            if len(creates) > 1:
+            if len(creates) > 0:
                 # Choose one create function to use the constructor as a convenience for
-                # print(f"Multiple creation functions for {name}:")
-                # 1) filter by minimum parameters count
+                # Use the first defined create function, except for XrInstance
+                # So use the rule "first defined create function with 3 arguments"
+                # filter by minimum parameters count
                 min_param_count = None
+                best_create = None
                 creates_by_count = {}
                 for c in creates:
                     params = c.findall("param")
@@ -93,13 +91,24 @@ def main():
                     creates_by_count[len(params)].append(c)
                     if min_param_count is None or min_param_count > len(params):
                         min_param_count = len(params)
-                if len(creates_by_count[min_param_count]) > 1:
-                    print(f"Multiple creation functions for {name}:")
-                    for c in creates_by_count[min_param_count]:
-                        params = c.findall("param")
-                        ps = ", ".join(f"{p.find('name').text}: {p.find('type').text}" for p in params)
-                        print(f"  {c.find('proto').find('name').text}({ps})")
+                        best_create = c
+                assert best_create is not None
+                d["best_create"] = best_create
+                best_create_count += 1
+    manageable_handles = {}
+    for h in handles:
+        d = handles[h]
+        if "destroy" not in d:
+            continue
+        if "best_create" not in d:
+            continue
+        manageable_handles[h] = {
+            "create": d["best_create"],
+            "destroy": d["destroy"],
+        }
+    return manageable_handles
 
 
 if __name__ == "__main__":
-    main()
+    manageable_handles = parse_manageable_handles_xml()
+    print(f"{len(manageable_handles)} manageable handles found")

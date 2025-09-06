@@ -9,6 +9,7 @@ def main():
     compiler_args = [
         "-DWIN32_LEAN_AND_MEAN",
         "-DXR_USE_PLATFORM_WIN32",
+        "-DXR_USE_GRAPHICS_API_OPENGL_ES",
         "-DXR_USE_GRAPHICS_API_OPENGL",
         "-DXR_USE_GRAPHICS_API_VULKAN",
         "-DXR_USE_GRAPHICS_API_D3D11",

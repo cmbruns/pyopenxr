@@ -8,6 +8,7 @@ import xrg
 def main():
     compiler_args = [
         "-DXR_USE_GRAPHICS_API_OPENGL",
+        "-DXR_USE_GRAPHICS_API_OPENGL_ES",
         "-DXR_USE_GRAPHICS_API_VULKAN",
         "-DXR_USE_PLATFORM_EGL",
         "-DXR_USE_PLATFORM_WAYLAND",
