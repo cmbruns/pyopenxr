@@ -52,6 +52,9 @@ class HandleMixin:
         except AttributeError:
             return None
 
+    @instance.setter
+    def instance(self, instance: "xr.Instance"):
+        self._instance = instance
 
 __all__ = [
     "HandleMixin",

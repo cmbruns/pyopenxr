@@ -1,5 +1,5 @@
 from contextlib import ExitStack
-from ctypes import POINTER, c_void_p
+from ctypes import c_void_p
 import logging
 
 import xr
@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 
 
 def debug_callback(
-        severity: int,
-        type_flags: int,
-        callback_data: POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
-        _user_data: c_void_p
+        severity: debug_utils.MessageSeverityFlags,
+        _type_flags: debug_utils.MessageTypeFlags,
+        callback_data: debug_utils.MessengerCallbackData,
+        _user_data: c_void_p,
 ) -> bool:
     """Redirect OpenXR messages to a python logger."""
     data = callback_data.contents
@@ -24,8 +24,8 @@ def debug_callback(
     type_flags = xr.DebugUtilsMessageTypeFlagsEXT(type_flags)
     logger.log(
         level=debug_utils.log_level_for_severity(severity),
-        msg=f"{data.function_name.decode()}: {data.message.decode()}")
-    return True
+        msg=f"{callback_data.function_name}: {callback_data.message}")
+    return False
 
 
 def test_debug_utils_basic():
@@ -48,12 +48,14 @@ def test_debug_utils_basic():
             messenger_create_info,
         )
 
+        print(messenger._callback)
+
         # Trigger a message manually
         debug_utils.submit_message(
             instance,
-            message_severity=xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT,
-            message_types=xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT,
-            callback_data=xr.DebugUtilsMessengerCallbackDataEXT(
+            message_severity=debug_utils.MessageSeverityFlags.WARNING_BIT,
+            message_types=debug_utils.MessageTypeFlags.GENERAL_BIT,
+            callback_data=debug_utils.MessengerCallbackData(
                 message_id="TestMessage",
                 message="This is a test debug message."
             )

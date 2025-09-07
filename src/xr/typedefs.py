@@ -4025,6 +4025,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT(),  # noqa
         user_callback: Callable[[
             DebugUtilsMessageSeverityFlagsEXT,
+            DebugUtilsMessageTypeFlagsEXT,
             DebugUtilsMessengerCallbackDataEXT,
             c_void_p
         ], bool] = _default_debug_callback,

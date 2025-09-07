@@ -33,6 +33,7 @@ __all__ = [
 ]
 
 from ctypes import byref, cast
+import logging
 
 import xr
 
@@ -48,6 +49,23 @@ Messenger = xr.DebugUtilsMessengerEXT
 MessengerCallbackData = xr.DebugUtilsMessengerCallbackDataEXT
 MessengerCreateInfo = xr.DebugUtilsMessengerCreateInfoEXT
 ObjectNameInfo = xr.DebugUtilsObjectNameInfoEXT
+
+
+def log_level_for_severity(severity_flags: MessageSeverityFlags) -> int:
+    """
+    Convert OpenXR message severities to Python logging levels.
+
+    :param severity_flags: Bitmask of message severity flags.
+    :type severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT
+    :returns: One of logging.DEBUG, INFO, WARNING, or ERROR.
+    """
+    if severity_flags & MessageSeverityFlags.ERROR_BIT:
+        return logging.ERROR
+    if severity_flags & MessageSeverityFlags.WARNING_BIT:
+        return logging.WARNING
+    if severity_flags & MessageSeverityFlags.INFO_BIT:
+        return logging.INFO
+    return logging.DEBUG
 
 
 def create_messenger(
@@ -82,6 +100,7 @@ def create_messenger(
     )        
     messenger = Messenger()
     messenger.instance = instance
+    messenger._callback = create_info.user_callback  # Tie lifetime to messenger object
     result_code = pfn(
         instance,
         byref(create_info),
