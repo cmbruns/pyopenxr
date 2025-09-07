@@ -17,11 +17,6 @@ def debug_callback(
         _user_data: c_void_p,
 ) -> bool:
     """Redirect OpenXR messages to a python logger."""
-    data = callback_data.contents
-    message = data.message.decode("utf-8", errors="replace")
-    func_name = data.function_name.decode("utf-8", errors="replace")
-    severity = xr.DebugUtilsMessageSeverityFlagsEXT(severity)
-    type_flags = xr.DebugUtilsMessageTypeFlagsEXT(type_flags)
     logger.log(
         level=debug_utils.log_level_for_severity(severity),
         msg=f"{callback_data.function_name}: {callback_data.message}")
@@ -47,8 +42,6 @@ def test_debug_utils_basic():
             instance,
             messenger_create_info,
         )
-
-        print(messenger._callback)
 
         # Trigger a message manually
         debug_utils.submit_message(

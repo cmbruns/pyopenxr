@@ -4021,8 +4021,16 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     """
     def __init__(
         self,
-        message_severities: DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT(),  # noqa
-        message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT(),  # noqa
+        message_severities: DebugUtilsMessageSeverityFlagsEXT = (
+            DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT
+            | DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT
+            | DebugUtilsMessageSeverityFlagsEXT.INFO_BIT
+            | DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT),
+        message_types: DebugUtilsMessageTypeFlagsEXT = (
+            DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT
+            | DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
+            | DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
+            | DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT),
         user_callback: Callable[[
             DebugUtilsMessageSeverityFlagsEXT,
             DebugUtilsMessageTypeFlagsEXT,
