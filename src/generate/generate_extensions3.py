@@ -1,4 +1,5 @@
 import inspect
+import os
 import textwrap
 from typing import Optional
 from xml.etree.ElementTree import Element
@@ -14,10 +15,12 @@ class ParameterType:
             name: str,
             is_pointer: bool = False,
             is_const: bool = False,
+            default: Optional[str] = None,
     ) -> None:
         self.name = name
         self.is_pointer = is_pointer
         self.is_const = is_const
+        self.default = default
 
     @classmethod
     def from_xml(
@@ -35,7 +38,12 @@ class ParameterType:
         full_text = "".join(parameter_element.itertext())
         is_pointer = "*" in full_text
         is_const = "const" in full_text.split(c_name)[0]
-        return cls(name, is_pointer, is_const)
+        default_value = None
+        if c_name in type_index:
+            xr_type = type_index[c_name]
+            if xr_type.attrib["category"] == "struct":
+                default_value = f"{name}()"
+        return cls(name, is_pointer, is_const, default=default_value)
 
     def __str__(self):
         return self.name
@@ -46,6 +54,7 @@ class CommandParameterItem:
         self.c_name = c_name
         self.type = parameter_type
         self.py_name = snake_from_camel(self.c_name)
+        self.default = parameter_type.default
 
     @classmethod
     def from_xml(
@@ -126,7 +135,10 @@ class ExtensionCommandItem:
                 output_parameters.append(param)
                 continue
             # TODO: default value
-            result += f"\n    {param.py_name}: {param.type},"
+            default = ""
+            if param.default is not None:
+                default = f" = {param.default}"
+            result += f"\n    {param.py_name}: {param.type}{default},"
             decl_param_count += 1
         if decl_param_count > 0:
             result += "\n"
@@ -138,7 +150,6 @@ class ExtensionCommandItem:
             docstring = f'"""\n{docstring}\n"""\n'
             docstring = textwrap.indent(docstring, " " * 4)
             result += docstring
-        # TODO: docstring
         # Where to get instance for get_instance_proc_addr?
         instance_name = "instance"
         if "instance" not in self.parameter_index:
@@ -152,6 +163,12 @@ class ExtensionCommandItem:
         """), "    ") + "\n"
         for param in output_parameters:
             result += f"    {param.py_name} = {param.type}()\n"
+        # Is this a xrCreate<Handle> method?
+        if (
+                self.py_name.startswith("create_")
+                and len(output_parameters) == 1
+        ):
+            result += f"    {param.py_name}.instance = {instance_name}\n"
         result += "    result_code = pfn(\n"
         for param in self.parameters:
             if param.type.is_pointer:
@@ -293,7 +310,28 @@ class ExtensionTypeAliasItem:
         return f"{self.alias} = xr.{self.core_name}"
 
 
+def index_types():
+    # Enumerate all types to help with parameter default values
+    index = {}
+    xr_types = xr_registry.find("types")
+    assert xr_types
+    for xr_type in xr_types.findall("type"):
+        if xr_type.tag != "type":
+            continue
+        try:
+            type_name = xr_type.attrib["name"]
+        except KeyError:
+            type_name = xr_type.find("name").text
+        index[type_name] = xr_type
+    return index
+
+
+type_index = {}
+
+
 def generate_extensions():
+    global type_index
+    type_index = index_types()
     # Enumerate wrappable OpenXR extensions
     extension_entities = xr_registry.find("extensions")
     assert extension_entities
@@ -305,7 +343,14 @@ def generate_extensions():
         if ext.attrib["name"] not in ["XR_EXT_debug_utils"]:  # for starters
             continue
         extension = ExtensionModuleItem(ext)
-        print(extension.code())
+        do_write = True
+        if do_write:
+            f_name = f"../xr/ext/{extension.vendor_tag}/{extension.short_name}.py"
+            assert os.path.exists(f_name)
+            with open(f_name, "w") as f:
+                f.write(extension.code())
+        else:
+            print(extension.code())
 
 
 if __name__ == "__main__":

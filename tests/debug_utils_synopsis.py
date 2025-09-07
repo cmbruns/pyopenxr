@@ -43,7 +43,7 @@ def test_debug_utils_basic():
             )
         ))
 
-        messenger = xr.DebugUtilsMessengerEXT(
+        messenger = debug_utils.create_messenger(
             instance,
             messenger_create_info,
         )
