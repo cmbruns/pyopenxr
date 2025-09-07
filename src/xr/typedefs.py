@@ -3,13 +3,13 @@
 from ctypes import (
     CFUNCTYPE, POINTER, Structure, addressof, byref, c_char, c_char_p, c_float,
     c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8,
-    c_void_p, cast,
+    c_void_p, cast, py_object
 )
 import ctypes
 
 import os
 import sys
-from typing import Generator, Optional
+from typing import Callable, Generator, Optional
 
 import numpy
 
@@ -3958,9 +3958,9 @@ PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeveri
 
 
 def _default_debug_callback(
-        severity: int,
-        type_flags: int,
-        callback_data: POINTER(DebugUtilsMessengerCallbackDataEXT),
+        severity: DebugUtilsMessageSeverityFlagsEXT,
+        type_flags: DebugUtilsMessageTypeFlagsEXT,
+        callback_data: DebugUtilsMessengerCallbackDataEXT,
         _user_data: c_void_p,
 ) -> bool:
     """
@@ -3985,13 +3985,10 @@ def _default_debug_callback(
     :seealso: :class:`xr.DebugUtilsMessengerCreateInfoEXT`, :class:`xr.DebugUtilsMessengerEXT`
     """
 
-    data = callback_data.contents
-    message = data.message.decode("utf-8", errors="replace")
-    func_name = data.function_name.decode("utf-8", errors="replace")
-    severity = DebugUtilsMessageSeverityFlagsEXT(severity)
-    type_flags = DebugUtilsMessageTypeFlagsEXT(type_flags)
-    print(f"[XR DEBUG] Severity={severity.name} Type={type_flags.name} Message={message} Function={func_name}")
-    return True  # important!
+    message = callback_data.message
+    func_name = callback_data.function_name
+    print(f"[XR DEBUG] Severity={severity} Type={type_flags} Message={message} Function={func_name}")
+    return False  # important!
 
 
 class DebugUtilsMessengerCreateInfoEXT(Structure):
@@ -4026,7 +4023,11 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         self,
         message_severities: DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT(),  # noqa
         message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT(),  # noqa
-        user_callback: PFN_xrDebugUtilsMessengerCallbackEXT = cast(None, PFN_xrDebugUtilsMessengerCallbackEXT),
+        user_callback: Callable[[
+            DebugUtilsMessageSeverityFlagsEXT,
+            DebugUtilsMessengerCallbackDataEXT,
+            c_void_p
+        ], bool] = _default_debug_callback,
         user_data: c_void_p = None,
         next: c_void_p = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
@@ -4045,7 +4046,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
                 # Log or suppress errors to avoid crashing native callback
                 print(f"Exception in debug callback: {e}")
                 return False
-        _wrapped_callback = PFN_xrDebugUtilsMessengerCallbackEXT(_shim) if user_callback else None
+        _wrapped_callback = PFN_xrDebugUtilsMessengerCallbackEXT(_shim)
         _user_data = cast(py_object(user_data), c_void_p) if user_data else None
         super().__init__(
             message_severities=DebugUtilsMessageSeverityFlagsEXT(message_severities).value,

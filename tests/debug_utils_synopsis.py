@@ -30,10 +30,6 @@ def debug_callback(
 
 def test_debug_utils_basic():
     with ExitStack() as exit_stack:  # noqa
-        messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
-            user_callback=debug_callback,
-        )
-
         instance = exit_stack.enter_context(xr.create_instance(
             create_info=xr.InstanceCreateInfo(
                 enabled_extension_names=[
@@ -42,6 +38,10 @@ def test_debug_utils_basic():
                 ]
             )
         ))
+
+        messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
+            user_callback=debug_callback,
+        )
 
         messenger = debug_utils.create_messenger(
             instance,
@@ -52,7 +52,7 @@ def test_debug_utils_basic():
         debug_utils.submit_message(
             instance,
             message_severity=xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT,
-            message_type=xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT,
+            message_types=xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT,
             callback_data=xr.DebugUtilsMessengerCallbackDataEXT(
                 message_id="TestMessage",
                 message="This is a test debug message."

@@ -217,6 +217,8 @@ class ExtensionModuleItem:
                 continue  # TODO: function pointers
             assert type_name.startswith(f"Xr{self.camel_short_name}")
             assert type_name.endswith(self.vendor_tag)
+            if type_name.endswith(f"FlagBits{self.vendor_tag}"):
+                continue
             alias = ExtensionTypeAliasItem(type_name, self)
             self.aliases[alias.c_name] = alias
         # 2) Find more extension object types in the enum area
@@ -226,12 +228,16 @@ class ExtensionModuleItem:
         for alias in self.aliases.values():
             self.all.add(alias.alias)
         # TODO: extension function pointers
+        self.ctypes_types = set()
         self.commands = set()
         for command in require.findall("command"):
+            self.ctypes_types.add("cast")
             cmd = ExtensionCommandItem.from_xml(command, self)
             self.commands.add(cmd)
             self.all.add(cmd.py_name)
-        self.ctypes_types = set()
+            for param in cmd.parameters:
+                if param.type.is_pointer:
+                    self.ctypes_types.add("byref")
 
     def code(self) -> str:
         result = ""
@@ -261,7 +267,10 @@ class ExtensionModuleItem:
             result += "\n"
         result += inspect.cleandoc(f'''
             ]
-
+        ''') + "\n"
+        if len(self.ctypes_types) > 0:
+            result += f"\nfrom ctypes import {', '.join([c for c in sorted(self.ctypes_types)])}\n\n"
+        result += inspect.cleandoc(f'''
             import xr
 
             EXTENSION_NAME = "{self.name}"
@@ -274,7 +283,7 @@ class ExtensionModuleItem:
                 result += f"{alias.code()}\n"
         if len(self.commands) > 0:
             for command in sorted(self.commands):
-                result += f"\n\n{command.code()}"
+                result += f"\n\n{command.code()}\n"
         return result
 
 
@@ -347,7 +356,7 @@ def generate_extensions():
         if do_write:
             f_name = f"../xr/ext/{extension.vendor_tag}/{extension.short_name}.py"
             assert os.path.exists(f_name)
-            with open(f_name, "w") as f:
+            with open(f_name, "w", encoding="utf-8") as f:
                 f.write(extension.code())
         else:
             print(extension.code())

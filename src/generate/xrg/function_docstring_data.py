@@ -109,13 +109,11 @@ function_docstrings = {
     },
     "xr.ext.EXT.debug_utils.log_level_for_severity": {
         "docstring": inspect.cleandoc("""
+            Convert OpenXR message severities to Python logging levels.
 
-                Convert OpenXR message severities to Python logging levels.
-
-                :param severity_flags: Bitmask of message severity flags.
-                :type severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT
-                :returns: One of logging.DEBUG, INFO, WARNING, or ERROR.
-    
+            :param severity_flags: Bitmask of message severity flags.
+            :type severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT
+            :returns: One of logging.DEBUG, INFO, WARNING, or ERROR.
         """),
     },
     "xr.ext.EXT.debug_utils.session_begin_label_region": {
@@ -200,8 +198,8 @@ function_docstrings = {
                 :type instance: xr.Instance
                 :param message_severity: Severity bitmask for this message.
                 :type message_severity: xr.DebugUtilsMessageSeverityFlagsEXT
-                :param message_type: Type bitmask for this message.
-                :type message_type: xr.DebugUtilsMessageTypeFlagsEXT
+                :param message_types: Type bitmask for this message.
+                :type message_types: xr.DebugUtilsMessageTypeFlagsEXT
                 :param callback_data: Prepopulated callback data structure.
                 :type callback_data: xr.DebugUtilsMessengerCallbackDataEXT
 

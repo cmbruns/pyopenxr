@@ -8,10 +8,6 @@ class HandleMixin:
 
     :see: https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#fundamentals-handles
     """
-    def __init__(self):
-        super().__init__()
-        # self.instance to be later set in an xr.create_<handle>() function
-        self.instance = None
 
     def __enter__(self):
         return self
@@ -43,11 +39,18 @@ class HandleMixin:
         if checked.is_exception():
             raise checked
         self.instance = None
-        cast(self, c_void_p).value = None
-        assert not self
 
     def __repr__(self):
         return f"<xr.{self.__class__.__name__} handle at {cast(self, ctypes.c_void_p).value:#x}>"
+
+    @property
+    def instance(self):
+        if self.__class__.__name__ == "Instance":
+            return self
+        try:
+            return self._instance
+        except AttributeError:
+            return None
 
 
 __all__ = [

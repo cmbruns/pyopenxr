@@ -895,11 +895,11 @@ class CreatedHandleOutputParameterCoder(OutputParameterCoder):
         n = self.parameter.name(api)
         if self.parent_parameter is None:
             assert self.parameter.type.pointee.name(api) == "Instance"
-            yield f"{n}.instance = {n}"
+            yield f"{n}._instance = {n}"
         elif self.parent_parameter.type.name() == "Instance":
-            yield f"{n}.instance = {self.parent_parameter.name(api)}"
+            yield f"{n}._instance = {self.parent_parameter.name(api)}"
         else:
-            yield f"{n}.instance = {self.parent_parameter.name(api)}.instance"
+            yield f"{n}._instance = {self.parent_parameter.name(api)}.instance"
 
 
 class BufferCoder(ParameterCoderBase):

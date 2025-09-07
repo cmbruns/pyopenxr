@@ -15,9 +15,7 @@ https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_EXT_debug_util
 __all__ = [
     "EXTENSION_NAME",
     "Label",
-    "MessageSeverityFlagBits",
     "MessageSeverityFlags",
-    "MessageTypeFlagBits",
     "MessageTypeFlags",
     "Messenger",
     "MessengerCallbackData",
@@ -34,6 +32,8 @@ __all__ = [
     "submit_message",
 ]
 
+from ctypes import byref, cast
+
 import xr
 
 EXTENSION_NAME = "XR_EXT_debug_utils"
@@ -42,9 +42,7 @@ VENDOR_TAG = "EXT"
 
 # Aliases for xr core types
 Label = xr.DebugUtilsLabelEXT
-MessageSeverityFlagBits = xr.DebugUtilsMessageSeverityFlagBitsEXT
 MessageSeverityFlags = xr.DebugUtilsMessageSeverityFlagsEXT
-MessageTypeFlagBits = xr.DebugUtilsMessageTypeFlagBitsEXT
 MessageTypeFlags = xr.DebugUtilsMessageTypeFlagsEXT
 Messenger = xr.DebugUtilsMessengerEXT
 MessengerCallbackData = xr.DebugUtilsMessengerCallbackDataEXT
@@ -70,7 +68,7 @@ def create_messenger(
     :returns: A new `DebugUtilsMessengerEXT` handle.
     :rtype: xr.DebugUtilsMessengerEXT
 
-    :raises xr.FunctionUnsupportedError: If the extension isn’t enabled.
+    :raises xr.FunctionUnsupportedError: If the extension isnâ€™t enabled.
     :raises xr.ValidationFailureError: If parameters are rejected by the runtime.
     :raises xr.RuntimeFailureError: On internal runtime errors.
     :raises xr.OutOfMemoryError: If allocation fails.
@@ -93,6 +91,7 @@ def create_messenger(
     if checked.is_exception():
         raise checked
     return messenger
+
 
 def destroy_messenger(
     messenger: Messenger,
@@ -119,6 +118,7 @@ def destroy_messenger(
     if checked.is_exception():
         raise checked
 
+
 def session_begin_label_region(
     session: xr.Session,
     label_info: Label = Label(),
@@ -135,7 +135,7 @@ def session_begin_label_region(
 
     :raises xr.FunctionUnsupportedError: If the function is unavailable.
     :raises xr.HandleInvalidError: If `session` is not a valid handle.
-    :raises xr.InstanceLostError: If the session’s instance has been lost.
+    :raises xr.InstanceLostError: If the sessionâ€™s instance has been lost.
 
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionBeginDebugUtilsLabelRegionEXT.html
     """
@@ -151,6 +151,7 @@ def session_begin_label_region(
     if checked.is_exception():
         raise checked
 
+
 def session_end_label_region(
     session: xr.Session,
 ) -> None:
@@ -162,7 +163,7 @@ def session_end_label_region(
 
     :raises xr.FunctionUnsupportedError: If the function is unavailable.
     :raises xr.HandleInvalidError: If `session` is not a valid handle.
-    :raises xr.InstanceLostError: If the session’s instance has been lost.
+    :raises xr.InstanceLostError: If the sessionâ€™s instance has been lost.
 
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionEndDebugUtilsLabelRegionEXT.html
     """
@@ -176,6 +177,7 @@ def session_end_label_region(
     checked = xr.check_result(xr.Result(result_code))
     if checked.is_exception():
         raise checked
+
 
 def session_insert_label(
     session: xr.Session,
@@ -193,7 +195,7 @@ def session_insert_label(
 
     :raises xr.FunctionUnsupportedError: If the function is unavailable.
     :raises xr.HandleInvalidError: If `session` is not a valid handle.
-    :raises xr.InstanceLostError: If the session’s instance has been lost.
+    :raises xr.InstanceLostError: If the sessionâ€™s instance has been lost.
 
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSessionInsertDebugUtilsLabelEXT.html
     """
@@ -208,6 +210,7 @@ def session_insert_label(
     checked = xr.check_result(xr.Result(result_code))
     if checked.is_exception():
         raise checked
+
 
 def set_object_name(
     instance: xr.Instance,
@@ -238,6 +241,7 @@ def set_object_name(
     if checked.is_exception():
         raise checked
 
+
 def submit_message(
     instance: xr.Instance,
     message_severity: MessageSeverityFlags,
@@ -251,8 +255,8 @@ def submit_message(
     :type instance: xr.Instance
     :param message_severity: Severity bitmask for this message.
     :type message_severity: xr.DebugUtilsMessageSeverityFlagsEXT
-    :param message_type: Type bitmask for this message.
-    :type message_type: xr.DebugUtilsMessageTypeFlagsEXT
+    :param message_types: Type bitmask for this message.
+    :type message_types: xr.DebugUtilsMessageTypeFlagsEXT
     :param callback_data: Prepopulated callback data structure.
     :type callback_data: xr.DebugUtilsMessengerCallbackDataEXT
 
