@@ -1,12 +1,14 @@
 """
 file array_field.py
 
-Helper functions for Structures containing arrays specified as length/pointer pairs.
+Helper functions for OpenXR-style ctypes Structures containing array fields
+defined as (count, pointer) pairs. Supports automatic conversion from Python
+sequences, single elements, or ctypes pointers, with optional encoding flavors.
 """
 
 import enum
 from ctypes import Array, c_char_p, cast, POINTER, pointer, Structure
-from typing import TypeVar, Union, Sequence, Optional
+from typing import Any, TypeVar, Union, Sequence, Tuple, Optional
 
 
 E = TypeVar("E")
@@ -35,9 +37,9 @@ StringArrayFieldParamType = Union[
 
 
 class ArrayFlavor(enum.Enum):
-    ARRAY = 1,
-    STRING = 2,
-    BASE_HEADER = 3,
+    ARRAY = 1
+    STRING = 2
+    BASE_HEADER = 3
 
 
 def array_field_helper(
@@ -45,8 +47,19 @@ def array_field_helper(
         count: Optional[int] = None,
         array: ArrayFieldParamType["element_type"] = None,
         flavor: ArrayFlavor = ArrayFlavor.ARRAY
-) -> (int, POINTER):
-    """Helper function for pythonic interface to sequence fields"""
+) -> Tuple[int, POINTER]:
+    """
+    Helper function for pythonic interface to sequence fields.
+
+    Accepts any Python sequence (not just lists) that supports `len()` and iteration.
+    Handles conversion to ctypes arrays or pointers, depending on the specified flavor.
+
+    :param element_type: The ctypes type of each element.
+    :param count: Optional explicit count; inferred from array if not provided.
+    :param array: A sequence, pointer, or single element to be normalized.
+    :param flavor: Specifies how the array should be encoded (raw, string, header).
+    :return: A tuple of (count, ctypes pointer to array).
+    """
     # Default construction yields a null pointer and a zero length
     if array is None:
         count = 0
@@ -69,6 +82,9 @@ def array_field_helper(
             array = (element_type * count)(*[s.encode() for s in array])
         elif flavor == ArrayFlavor.BASE_HEADER:
             array = (element_type * count)(*[cast(p, element_type) for p in array])
+        else:
+            raise NotImplementedError  # Is there a new flavor?
+    array = cast(array, POINTER(element_type))
     return count, array
 
 
@@ -76,7 +92,7 @@ def base_array_field_helper(
         element_type: type,
         count: Optional[int] = None,
         array: BaseArrayFieldParamType = None,
-) -> (int, POINTER):
+) -> Tuple[int, POINTER]:
     """Helper function for pythonic interface to sequence fields"""
     return array_field_helper(element_type, count, array, flavor=ArrayFlavor.BASE_HEADER)
 
@@ -84,7 +100,7 @@ def base_array_field_helper(
 def string_array_field_helper(
         count: Optional[int] = None,
         array: StringArrayFieldParamType = None,
-) -> (int, POINTER(c_char_p)):
+) -> Tuple[int, POINTER(c_char_p)]:
     """Helper function for pythonic interface to sequence fields"""
     return array_field_helper(c_char_p, count, array, flavor=ArrayFlavor.STRING)
 

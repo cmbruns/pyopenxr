@@ -9,7 +9,7 @@ import ctypes
 
 import os
 import sys
-from typing import Callable, Generator, Optional
+from typing import Any, Callable, Generator, Optional
 
 import numpy
 
@@ -1582,12 +1582,12 @@ class SessionActionSetsAttachInfo(Structure):
     def __init__(
         self,
         count_action_sets: Optional[int] = None,
-        action_sets: ArrayFieldParamType[POINTER(ActionSet_T)] = None,
+        action_sets: ArrayFieldParamType[ActionSet] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SESSION_ACTION_SETS_ATTACH_INFO,
     ) -> None:
         count_action_sets, action_sets = array_field_helper(
-            POINTER(ActionSet_T), count_action_sets, action_sets)
+            ActionSet, count_action_sets, action_sets)
         super().__init__(
             count_action_sets=count_action_sets,
             _action_sets=action_sets,
@@ -1604,22 +1604,22 @@ class SessionActionSetsAttachInfo(Structure):
     @property
     def action_sets(self):
         if self.count_action_sets == 0:
-            return (POINTER(ActionSet_T) * 0)()
+            return (ActionSet * 0)()
         else:
-            return (POINTER(ActionSet_T) * self.count_action_sets).from_address(
+            return (ActionSet * self.count_action_sets).from_address(
                 ctypes.addressof(self._action_sets.contents))
 
     @action_sets.setter
     def action_sets(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.count_action_sets, self._action_sets = array_field_helper(
-            POINTER(ActionSet_T), None, value)
+            ActionSet, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("count_action_sets", c_uint32),
-        ("_action_sets", POINTER(POINTER(ActionSet_T))),
+        ("_action_sets", POINTER(ActionSet)),
     ]
 
 
@@ -3045,12 +3045,12 @@ class SpacesLocateInfo(Structure):
         base_space: Space = None,
         time: Time = 0,
         space_count: Optional[int] = None,
-        spaces: ArrayFieldParamType[POINTER(Space_T)] = None,
+        spaces: ArrayFieldParamType[Space] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SPACES_LOCATE_INFO,
     ) -> None:
         space_count, spaces = array_field_helper(
-            POINTER(Space_T), space_count, spaces)
+            Space, space_count, spaces)
         super().__init__(
             base_space=base_space,
             time=time,
@@ -3069,16 +3069,16 @@ class SpacesLocateInfo(Structure):
     @property
     def spaces(self):
         if self.space_count == 0:
-            return (POINTER(Space_T) * 0)()
+            return (Space * 0)()
         else:
-            return (POINTER(Space_T) * self.space_count).from_address(
+            return (Space * self.space_count).from_address(
                 ctypes.addressof(self._spaces.contents))
 
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.space_count, self._spaces = array_field_helper(
-            POINTER(Space_T), None, value)
+            Space, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4019,6 +4019,13 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     :seealso: :class:`xr.DebugUtilsMessengerEXT`, :func:`xr.ext.EXT.debug_utils._default_debug_callback`
     :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerCreateInfoEXT.html
     """
+    UserCallbackType = Callable[[
+            DebugUtilsMessageSeverityFlagsEXT,
+            DebugUtilsMessageTypeFlagsEXT,
+            DebugUtilsMessengerCallbackDataEXT,
+            c_void_p
+        ], bool]
+
     def __init__(
         self,
         message_severities: DebugUtilsMessageSeverityFlagsEXT = (
@@ -4031,40 +4038,57 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
             | DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
             | DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
             | DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT),
-        user_callback: Callable[[
-            DebugUtilsMessageSeverityFlagsEXT,
-            DebugUtilsMessageTypeFlagsEXT,
-            DebugUtilsMessengerCallbackDataEXT,
-            c_void_p
-        ], bool] = _default_debug_callback,
-        user_data: c_void_p = None,
+        user_callback: UserCallbackType = _default_debug_callback,
+        user_data: Any = None,
         next: c_void_p = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
+        self._cached_user_data = user_data  # in case it does not fit in a c_void_p
+        super().__init__(
+            message_severities=DebugUtilsMessageSeverityFlagsEXT(message_severities).value,
+            message_types=DebugUtilsMessageTypeFlagsEXT(message_types).value,
+            _user_callback=self._wrap_debug_callback(user_callback, user_data),
+            _user_data=cast(py_object(user_data), c_void_p) if user_data else None,
+            next=next,
+            type=type,
+        )
+
+    def _wrap_debug_callback(self, user_callback: UserCallbackType, user_data: Any):
         def _shim(
-            severity: int, type_flags: int,
-            callback_data_ptr: POINTER(DebugUtilsMessengerCallbackDataEXT),
-            _user_data_ptr: c_void_p,
-        ) -> bool:
+                severity: int,
+                type_flags: int,
+                callback_data_ptr: POINTER(DebugUtilsMessengerCallbackDataEXT),
+                _user_data_ptr: c_void_p,
+        ):
             try:
                 severity_enum = DebugUtilsMessageSeverityFlagsEXT(severity)
                 type_enum = DebugUtilsMessageTypeFlagsEXT(type_flags)
                 callback_data = callback_data_ptr.contents
                 return user_callback(severity_enum, type_enum, callback_data, user_data)
             except Exception as e:
-                # Log or suppress errors to avoid crashing native callback
                 print(f"Exception in debug callback: {e}")
                 return False
-        _wrapped_callback = PFN_xrDebugUtilsMessengerCallbackEXT(_shim)
-        _user_data = cast(py_object(user_data), c_void_p) if user_data else None
-        super().__init__(
-            message_severities=DebugUtilsMessageSeverityFlagsEXT(message_severities).value,
-            message_types=DebugUtilsMessageTypeFlagsEXT(message_types).value,
-            user_callback=_wrapped_callback,
-            user_data=_user_data,
-            next=next,
-            type=type,
-        )
+        return PFN_xrDebugUtilsMessengerCallbackEXT(_shim)
+
+    @property
+    def user_data(self):
+        return self._cached_user_data
+
+    @user_data.setter
+    def user_data(self, value: Any):
+        self._cached_user_data = value
+        self._user_data = cast(py_object(user_data), c_void_p) if user_data else None
+
+    @property
+    def user_callback(self) -> PFN_xrDebugUtilsMessengerCallbackEXT:
+        return self._user_callback
+
+    @user_callback.setter
+    def user_callback(
+            self,
+            user_callback: UserCallbackType,
+    ) -> None:
+        self._user_callback = self._wrap_debug_callback(user_callback, self._cached_user_data)
 
     def __repr__(self) -> str:
         return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={repr(self.message_severities)}, message_types={repr(self.message_types)}, user_callback={repr(self.user_callback)}, user_data={repr(self.user_data)}, next={repr(self.next)}, type={repr(self.type)})"
@@ -4077,7 +4101,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         ("next", c_void_p),
         ("message_severities", DebugUtilsMessageSeverityFlagsEXTCInt),
         ("message_types", DebugUtilsMessageTypeFlagsEXTCInt),
-        ("user_callback", PFN_xrDebugUtilsMessengerCallbackEXT),
+        ("_user_callback", PFN_xrDebugUtilsMessengerCallbackEXT),
         ("user_data", c_void_p),
     ]
 
@@ -9744,13 +9768,13 @@ class SpatialAnchorsPublishInfoML(Structure):
     def __init__(
         self,
         anchor_count: Optional[int] = None,
-        anchors: ArrayFieldParamType[POINTER(Space_T)] = None,
+        anchors: ArrayFieldParamType[Space] = None,
         expiration: int = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_PUBLISH_INFO_ML,
     ) -> None:
         anchor_count, anchors = array_field_helper(
-            POINTER(Space_T), anchor_count, anchors)
+            Space, anchor_count, anchors)
         super().__init__(
             anchor_count=anchor_count,
             _anchors=anchors,
@@ -9768,22 +9792,22 @@ class SpatialAnchorsPublishInfoML(Structure):
     @property
     def anchors(self):
         if self.anchor_count == 0:
-            return (POINTER(Space_T) * 0)()
+            return (Space * 0)()
         else:
-            return (POINTER(Space_T) * self.anchor_count).from_address(
+            return (Space * self.anchor_count).from_address(
                 ctypes.addressof(self._anchors.contents))
 
     @anchors.setter
     def anchors(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.anchor_count, self._anchors = array_field_helper(
-            POINTER(Space_T), None, value)
+            Space, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("anchor_count", c_uint32),
-        ("_anchors", POINTER(POINTER(Space_T))),
+        ("_anchors", POINTER(Space)),
         ("expiration", c_uint64),
     ]
 
@@ -17750,7 +17774,7 @@ class RaycastInfoANDROID(Structure):
         self,
         max_results: int = 0,
         tracker_count: Optional[int] = None,
-        trackers: ArrayFieldParamType[POINTER(TrackableTrackerANDROID_T)] = None,
+        trackers: ArrayFieldParamType[TrackableTrackerANDROID] = None,
         origin: Vector3f = None,
         trajectory: Vector3f = None,
         space: Space = None,
@@ -17759,7 +17783,7 @@ class RaycastInfoANDROID(Structure):
         type: StructureType = StructureType.RAYCAST_INFO_ANDROID,
     ) -> None:
         tracker_count, trackers = array_field_helper(
-            POINTER(TrackableTrackerANDROID_T), tracker_count, trackers)
+            TrackableTrackerANDROID, tracker_count, trackers)
         if origin is None:
             origin = Vector3f()
         if trajectory is None:
@@ -17785,23 +17809,23 @@ class RaycastInfoANDROID(Structure):
     @property
     def trackers(self):
         if self.tracker_count == 0:
-            return (POINTER(TrackableTrackerANDROID_T) * 0)()
+            return (TrackableTrackerANDROID * 0)()
         else:
-            return (POINTER(TrackableTrackerANDROID_T) * self.tracker_count).from_address(
+            return (TrackableTrackerANDROID * self.tracker_count).from_address(
                 ctypes.addressof(self._trackers.contents))
 
     @trackers.setter
     def trackers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.tracker_count, self._trackers = array_field_helper(
-            POINTER(TrackableTrackerANDROID_T), None, value)
+            TrackableTrackerANDROID, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("max_results", c_uint32),
         ("tracker_count", c_uint32),
-        ("_trackers", POINTER(POINTER(TrackableTrackerANDROID_T))),
+        ("_trackers", POINTER(TrackableTrackerANDROID)),
         ("origin", Vector3f),
         ("trajectory", Vector3f),
         ("space", Space),
@@ -20230,7 +20254,7 @@ class SpatialUpdateSnapshotCreateInfoEXT(Structure):
     def __init__(
         self,
         entity_count: int = 0,
-        entities: POINTER(POINTER(SpatialEntityEXT_T)) = None,
+        entities: POINTER(SpatialEntityEXT) = None,
         component_type_count: Optional[int] = None,
         component_types: ArrayFieldParamType[c_int] = None,
         base_space: Space = None,
@@ -20275,7 +20299,7 @@ class SpatialUpdateSnapshotCreateInfoEXT(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("entity_count", c_uint32),
-        ("entities", POINTER(POINTER(SpatialEntityEXT_T))),
+        ("entities", POINTER(SpatialEntityEXT)),
         ("component_type_count", c_uint32),
         ("_component_types", POINTER(c_int)),
         ("base_space", Space),
@@ -21150,12 +21174,12 @@ class SpatialContextPersistenceConfigEXT(Structure):
     def __init__(
         self,
         persistence_context_count: Optional[int] = None,
-        persistence_contexts: ArrayFieldParamType[POINTER(SpatialPersistenceContextEXT_T)] = None,
+        persistence_contexts: ArrayFieldParamType[SpatialPersistenceContextEXT] = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SPATIAL_CONTEXT_PERSISTENCE_CONFIG_EXT,
     ) -> None:
         persistence_context_count, persistence_contexts = array_field_helper(
-            POINTER(SpatialPersistenceContextEXT_T), persistence_context_count, persistence_contexts)
+            SpatialPersistenceContextEXT, persistence_context_count, persistence_contexts)
         super().__init__(
             persistence_context_count=persistence_context_count,
             _persistence_contexts=persistence_contexts,
@@ -21172,22 +21196,22 @@ class SpatialContextPersistenceConfigEXT(Structure):
     @property
     def persistence_contexts(self):
         if self.persistence_context_count == 0:
-            return (POINTER(SpatialPersistenceContextEXT_T) * 0)()
+            return (SpatialPersistenceContextEXT * 0)()
         else:
-            return (POINTER(SpatialPersistenceContextEXT_T) * self.persistence_context_count).from_address(
+            return (SpatialPersistenceContextEXT * self.persistence_context_count).from_address(
                 ctypes.addressof(self._persistence_contexts.contents))
 
     @persistence_contexts.setter
     def persistence_contexts(self, value) -> None:
         # noinspection PyAttributeOutsideInit
         self.persistence_context_count, self._persistence_contexts = array_field_helper(
-            POINTER(SpatialPersistenceContextEXT_T), None, value)
+            SpatialPersistenceContextEXT, None, value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("persistence_context_count", c_uint32),
-        ("_persistence_contexts", POINTER(POINTER(SpatialPersistenceContextEXT_T))),
+        ("_persistence_contexts", POINTER(SpatialPersistenceContextEXT)),
     ]
 
 
