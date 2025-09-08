@@ -72,9 +72,6 @@ class OpenXRProgram(object):
         self.options = options
         self.platform_plugin = platform_plugin
         self.graphics_plugin = graphics_plugin
-
-        self.debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(xr_debug_callback)
-
         self.instance = None
         self.session = None
         self.app_space = None
@@ -164,7 +161,7 @@ class OpenXRProgram(object):
             dum_create_info.message_severities = all_severities
             dum_create_info.message_types = all_types
             dum_create_info.user_data = None
-            dum_create_info.user_callback = self.debug_callback
+            dum_create_info.user_callback = xr_debug_callback
             if next_structure is None:
                 next_structure = cast(pointer(dum_create_info), c_void_p)
             else:
@@ -942,11 +939,11 @@ def openxr_log_level(severity_flags: int) -> int:
 
 
 def xr_debug_callback(
-            severity: xr.DebugUtilsMessageSeverityFlagsEXT,
-            _type: xr.DebugUtilsMessageTypeFlagsEXT,
-            data: POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
-            _user_data: c_void_p) -> bool:
-    d = data.contents
-    # TODO structure properties to return unicode strings
-    logger.log(openxr_log_level(severity), f"OpenXR: {d.function_name.decode()}: {d.message.decode()}")
-    return True
+        severity: xr.DebugUtilsMessageSeverityFlagsEXT,
+        type_flags: xr.DebugUtilsMessageTypeFlagsEXT,
+        callback_data: xr.DebugUtilsMessengerCallbackDataEXT,
+        _user_data: c_void_p,
+) -> bool:
+    d = callback_data
+    logger.log(openxr_log_level(severity), f"OpenXR: {d.function_name}: {d.message}")
+    return False

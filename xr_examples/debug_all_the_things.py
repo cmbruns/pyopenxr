@@ -11,6 +11,7 @@ import os
 
 import glfw
 from OpenGL import GL  # OpenGL can report debug messages too
+
 import xr
 
 # 2) Hook into the pyopenxr logger hierarchy.
@@ -58,20 +59,19 @@ def openxr_log_level(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT) -> in
 
 
 def xr_debug_callback(
-            severity: xr.DebugUtilsMessageSeverityFlagsEXTCInt,
-            _type: xr.DebugUtilsMessageTypeFlagsEXTCInt,
-            data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
-            _user_data: ctypes.c_void_p) -> bool:
+        severity: xr.DebugUtilsMessageSeverityFlagsEXT,
+        _type_flags: xr.DebugUtilsMessageTypeFlagsEXT,
+        callback_data: xr.DebugUtilsMessengerCallbackDataEXT,
+        _user_data: ctypes.c_void_p,
+) -> bool:
     """Redirect OpenXR messages to our python logger."""
-    d = data.contents
     pyopenxr_logger.log(
-        level=openxr_log_level(xr.DebugUtilsMessageSeverityFlagsEXT(severity)),
-        msg=f"OpenXR: {d.function_name.decode()}: {d.message.decode()}")
+        level=openxr_log_level(severity),
+        msg=f"{callback_data.function_name}: {callback_data.message}")
     return True
 
 
 # Prepare to create a debug utils messenger
-pfn_xr_debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(xr_debug_callback)
 debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
     message_severities=(
             xr.DebugUtilsMessageSeverityFlagsEXT(0)  # to keep the pycharm linter happy
@@ -87,7 +87,7 @@ debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
                 | xr.DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
                 | xr.DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT
     ),
-    user_callback=pfn_xr_debug_callback,
+    user_callback=xr_debug_callback,
 )
 
 ptr_debug_messenger = None

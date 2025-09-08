@@ -29,8 +29,8 @@ with ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
-            opengl_enable.NAME,
-            vive_tracker_interaction.NAME,
+            opengl_enable.EXTENSION_NAME,
+            vive_tracker_interaction.EXTENSION_NAME,
         ],
     ),
 ) as context:

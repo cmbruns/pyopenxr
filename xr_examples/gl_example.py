@@ -114,7 +114,6 @@ class OpenXrExample(object):
         logging.basicConfig()
         self.logger = logging.getLogger("gl_example")
         self.logger.setLevel(log_level)
-        self.debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(self.debug_callback_py)
         self.mirror_window = False
         self.instance = None
         self.system_id = None
@@ -149,15 +148,15 @@ class OpenXrExample(object):
 
     def debug_callback_py(
             self,
-            severity: xr.DebugUtilsMessageSeverityFlagsEXTCInt,
-            _type: xr.DebugUtilsMessageTypeFlagsEXTCInt,
-            data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
+            severity: xr.DebugUtilsMessageSeverityFlagsEXT,
+            _type: xr.DebugUtilsMessageTypeFlagsEXT,
+            data: xr.DebugUtilsMessengerCallbackDataEXT,
             _user_data: ctypes.c_void_p,
     ) -> bool:
-        d = data.contents
+        d = data
         # TODO structure properties to return unicode strings
-        log_level = py_log_level(xr.DebugUtilsMessageSeverityFlagsEXT(severity))
-        self.logger.log(log_level, f"{d.function_name.decode()}: {d.message.decode()}")
+        log_level = py_log_level(severity)
+        self.logger.log(log_level, f"{d.function_name}: {d.message}")
         return True
 
     def run(self):
@@ -201,9 +200,8 @@ class OpenXrExample(object):
         if self.enable_debug:
             dum_create_info.message_severities = ALL_SEVERITIES
             dum_create_info.message_types = ALL_TYPES
-            dum_create_info.user_data = None  # TODO
-            dum_create_info.user_callback = self.debug_callback
-            ici.next = ctypes.cast(ctypes.pointer(dum_create_info), ctypes.c_void_p)  # TODO: yuck
+            dum_create_info.user_data = None
+            dum_create_info.user_callback = self.debug_callback_py
         self.instance = xr.create_instance(ici)
         # TODO: pythonic wrapper
         self.pxrGetOpenGLGraphicsRequirementsKHR = ctypes.cast(

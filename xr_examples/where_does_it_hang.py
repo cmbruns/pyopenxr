@@ -77,20 +77,20 @@ def openxr_log_level(severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT) -> in
 
 
 def xr_debug_callback(
-            severity: xr.DebugUtilsMessageSeverityFlagsEXT,
-            _type: xr.DebugUtilsMessageTypeFlagsEXT,
-            data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT),
-            _user_data: ctypes.c_void_p) -> bool:
+        severity: xr.DebugUtilsMessageSeverityFlagsEXT,
+        type_flags: xr.DebugUtilsMessageTypeFlagsEXT,
+        callback_data: xr.DebugUtilsMessengerCallbackDataEXT,
+        _user_data: ctypes.c_void_p,
+) -> bool:
     """Redirect OpenXR messages to our python logger."""
-    d = data.contents
+    d = callback_data
     pyopenxr_logger.log(
         level=openxr_log_level(severity),
-        msg=f"OpenXR: {d.function_name.decode()}: {d.message.decode()}")
+        msg=f"OpenXR: {d.function_name}: {d.message}")
     return True
 
 
 # Prepare to create a debug utils messenger
-pfn_xr_debug_callback = xr.PFN_xrDebugUtilsMessengerCallbackEXT(xr_debug_callback)
 debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
     message_severities=(
             xr.DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
@@ -104,7 +104,7 @@ debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
                 | xr.DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
                 | xr.DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
     ),
-    user_callback=pfn_xr_debug_callback,
+    user_callback=xr_debug_callback,
 )
 
 ptr_debug_messenger = None

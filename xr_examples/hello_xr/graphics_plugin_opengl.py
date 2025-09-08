@@ -1,4 +1,4 @@
-from ctypes import byref, c_void_p, cast, sizeof, POINTER, Structure
+from ctypes import byref, c_void_p, cast, sizeof, string_at, POINTER, Structure
 import inspect
 import logging
 import platform
@@ -128,8 +128,8 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             GL.GL_DEBUG_SEVERITY_MEDIUM: logging.WARNING,
             GL.GL_DEBUG_SEVERITY_LOW: logging.INFO,
             GL.GL_DEBUG_SEVERITY_NOTIFICATION: logging.DEBUG,
-        }[severity]
-        logger.log(log_level, f"OpenGL Message: {raw[0:length].decode()}")
+        }.get(severity, logging.INFO)
+        logger.log(log_level, f"OpenGL Message: {string_at(raw, length).decode()}")
 
     def focus_window(self):
         glfw.focus_window(self.window)
