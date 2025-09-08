@@ -416,6 +416,9 @@ def parse_type(clang_type: clang.cindex.Type) -> TypeBase:
                 return TypedefType(clang_type)
             elif clang_type.spelling.startswith("PFN_"):
                 return TypedefType(clang_type)
+            elif (underlying_type.spelling.endswith("_T *")  # Handle
+                    and underlying_type.spelling.startswith("struct ")):
+                return TypedefType(clang_type)
             else:
                 return parse_type(underlying_type)
     elif clang_type.kind == TypeKind.UCHAR:
