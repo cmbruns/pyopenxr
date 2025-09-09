@@ -285,18 +285,18 @@ class ExtensionModuleItem:
             result += "\n"
         result += inspect.cleandoc(f'''
             ]
-        ''') + "\n"
+        ''') + "\n\n"
         if len(self.ctypes_types) > 0:
-            result += f"\nfrom ctypes import {', '.join([c for c in sorted(self.ctypes_types)])}\n\n"
+            result += f"from ctypes import {', '.join([c for c in sorted(self.ctypes_types)])}\n\n"
         result += inspect.cleandoc(f'''
             import xr
 
             EXTENSION_NAME = "{self.name}"
             SPEC_VERSION = {self.version}
             VENDOR_TAG = "{self.vendor_tag}"
-        ''')
+        ''') + "\n"
         if len(self.aliases) > 0:
-            result += "\n\n# Aliases for xr core types\n"
+            result += "\n# Aliases for xr core types\n"
             for alias in sorted(self.aliases.values()):
                 result += f"{alias.code()}\n"
         if len(self.commands) > 0:
@@ -367,7 +367,7 @@ def generate_extensions():
             continue
         assert ext.attrib["type"] == "instance"
         # Over-filter for initial development TODO: remove this for production
-        if ext.attrib["name"] not in ["XR_EXT_debug_utils"]:  # for starters
+        if ext.attrib["name"] not in ["XR_MND_headless", "XR_EXT_debug_utils"]:  # for starters
             continue
         extension = ExtensionModuleItem(ext)
         do_write = True
