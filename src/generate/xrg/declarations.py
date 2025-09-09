@@ -1553,7 +1553,16 @@ def snake_from_camel(camel: str) -> str:
 
 def camel_from_snake(snake: str) -> str:
     words = snake.split("_")
-    words = [word.capitalize() for word in words]
+    known_words = {
+        "d3d11": "D3D11",
+        "opengl": "OpenGL",
+        "2d": "2D",
+        "3d": "3D",
+        "es": "ES",
+        "qr": "QR",
+        "egl": "EGL",
+    }
+    words = [known_words.get(word, word.capitalize()) for word in words]
     return "".join(words)
 
 

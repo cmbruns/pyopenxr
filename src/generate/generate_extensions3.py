@@ -214,6 +214,8 @@ class ExtensionModuleItem:
         self.short_name = short_name[len(self.vendor_tag) + 1:]  # e.g "debug_utils"
         self.module_name = f"xr.ext.{self.vendor_tag}.{self.short_name}"
         self.camel_short_name = camel_from_snake(self.short_name)  # e.g. "DebugUtils"
+        if self.camel_short_name.endswith("Enable"):  # e.g. opengl_enable
+            self.camel_short_name = self.camel_short_name[:-len("Enable")]
         require = element.find("require")
         version = require.find(f"enum[@name='{self.name}_SPEC_VERSION']")
         self.version = version.attrib["value"]
@@ -233,8 +235,8 @@ class ExtensionModuleItem:
                 continue
             if type_name.startswith(f"PFN_xr{self.camel_short_name}"):
                 continue  # TODO: function pointers
-            assert type_name.startswith(f"Xr{self.camel_short_name}")
-            assert type_name.endswith(self.vendor_tag)
+            # assert type_name.startswith(f"Xr{self.camel_short_name}")  # not XrGraphicsBindingOpenGLWin32KHR
+            # assert type_name.endswith(self.vendor_tag)  # not XrSwapchainStateSamplerOpenGLESFB
             if type_name.endswith(f"FlagBits{self.vendor_tag}"):
                 continue
             alias = ExtensionTypeAliasItem(type_name, self)
@@ -316,8 +318,9 @@ class ExtensionTypeAliasItem:
         self.core_name = core_name
         # alias is the local in-extension type name alias
         alias = core_name  # e.g. "DebugUtilsObjectNameInfoEXT"
-        assert alias.endswith(extension.vendor_tag)
-        alias = alias[:-len(extension.vendor_tag)]  # e.g. "DebugUtilsObjectNameInfo"
+        # assert alias.endswith(extension.vendor_tag)  # not SwapchainStateSamplerOpenGLESFB
+        if alias.endswith(extension.vendor_tag):
+            alias = alias[:-len(extension.vendor_tag)]  # e.g. "DebugUtilsObjectNameInfo"
         assert extension.camel_short_name in alias
         alias = alias.replace(extension.camel_short_name, "")  # e.g. "ObjectNameInfo"
         if alias.startswith("PFN_xr"):
@@ -367,7 +370,7 @@ def generate_extensions():
             continue
         assert ext.attrib["type"] == "instance"
         # Over-filter for initial development TODO: remove this for production
-        if ext.attrib["name"] not in ["XR_MND_headless", "XR_EXT_debug_utils"]:  # for starters
+        if ext.attrib["name"] not in ["XR_KHR_opengl_enable"]:  # for starters
             continue
         extension = ExtensionModuleItem(ext)
         do_write = True

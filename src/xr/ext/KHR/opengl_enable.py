@@ -1,29 +1,59 @@
 """
-Python bindings for the `XR_KHR_opengl_enable` extension.
+Python bindings for the `XR_KHR_opengl_enable` instance extension.
 
 This extension provides access to OpenGL-specific graphics requirements via OpenXR.
 It wraps `xrGetOpenGLGraphicsRequirementsKHR`, allowing applications to query the
 minimum and maximum supported OpenGL versions for a given system.
 
-To use this extension, include `"XR_KHR_opengl_enable"` in the list of enabled
-extensions during instance creation.
+To enable this extension, include `"XR_KHR_opengl_enable"` in your
+`enabled_extension_names` when calling :func:`xr.create_instance`.
 
 See the Khronos registry for full specification:
-https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_KHR_opengl_enable.html
+https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_KHR_opengl_enable
 """
 
+__all__ = [
+    "EXTENSION_NAME",
+    "GraphicsBindingESAndroid",
+    "GraphicsBindingWayland",
+    "GraphicsBindingWin32",
+    "GraphicsBindingXcb",
+    "GraphicsBindingXlib",
+    "GraphicsRequirements",
+    "GraphicsRequirementsES",
+    "SPEC_VERSION",
+    "SwapchainImage",
+    "SwapchainImageES",
+    "SwapchainStateSamplerESFB",
+    "VENDOR_TAG",
+    "get_graphics_requirements",
+]
+
 from ctypes import byref, cast
+
 import xr
 
 EXTENSION_NAME = "XR_KHR_opengl_enable"
 SPEC_VERSION = 11
 VENDOR_TAG = "KHR"
 
+# Aliases for xr core types
+GraphicsBindingESAndroid = xr.GraphicsBindingOpenGLESAndroidKHR
+GraphicsBindingWayland = xr.GraphicsBindingOpenGLWaylandKHR
+GraphicsBindingWin32 = xr.GraphicsBindingOpenGLWin32KHR
+GraphicsBindingXcb = xr.GraphicsBindingOpenGLXcbKHR
+GraphicsBindingXlib = xr.GraphicsBindingOpenGLXlibKHR
+GraphicsRequirements = xr.GraphicsRequirementsOpenGLKHR
+GraphicsRequirementsES = xr.GraphicsRequirementsOpenGLESKHR
+SwapchainImage = xr.SwapchainImageOpenGLKHR
+SwapchainImageES = xr.SwapchainImageOpenGLESKHR
+SwapchainStateSamplerESFB = xr.SwapchainStateSamplerOpenGLESFB
 
-def get_opengl_graphics_requirements(
-        instance: xr.Instance,
-        system_id: xr.SystemId,
-) -> xr.GraphicsRequirementsOpenGLKHR:
+
+def get_graphics_requirements(
+    instance: xr.Instance,
+    system_id: xr.SystemId,
+) -> GraphicsRequirements:
     """
     Query the OpenGL graphics requirements for a given system.
 
@@ -45,26 +75,16 @@ def get_opengl_graphics_requirements(
     :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/xrGetOpenGLGraphicsRequirementsKHR.html
     """
     pfn = cast(
-        xr.get_instance_proc_addr(
-            instance=instance,
-            name="xrGetOpenGLGraphicsRequirementsKHR",
-        ),
-        xr.PFN_xrGetOpenGLGraphicsRequirementsKHR
-    )
-    graphics_requirements = xr.GraphicsRequirementsOpenGLKHR()
-    result = pfn(
+        xr.get_instance_proc_addr(instance, "xrGetOpenGLGraphicsRequirementsKHR"),
+        xr.PFN_xrGetOpenGLGraphicsRequirementsKHR,
+    )        
+    graphics_requirements = GraphicsRequirements()
+    result_code = pfn(
         instance,
         system_id,
-        byref(graphics_requirements))
-    result = xr.check_result(xr.Result(result))
-    if result.is_exception():
-        raise result
+        byref(graphics_requirements),
+    )
+    checked = xr.check_result(xr.Result(result_code))
+    if checked.is_exception():
+        raise checked
     return graphics_requirements
-
-
-__all__ = [
-    "EXTENSION_NAME",
-    "SPEC_VERSION",
-    "VENDOR_TAG",
-    "get_opengl_graphics_requirements",
-]
