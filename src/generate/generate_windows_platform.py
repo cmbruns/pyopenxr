@@ -9,6 +9,11 @@ def main():
     compiler_args = [
         "-DWIN32_LEAN_AND_MEAN",
         "-DXR_USE_PLATFORM_WIN32",
+        "-DXR_USE_PLATFORM_EGL",
+        "-DXR_USE_PLATFORM_WAYLAND",
+        "-DXR_USE_PLATFORM_XCB",
+        "-DXR_USE_PLATFORM_XLIB",
+        "-DXR_USE_PLATFORM_ANDROID",
         "-DXR_USE_GRAPHICS_API_OPENGL_ES",
         "-DXR_USE_GRAPHICS_API_OPENGL",
         "-DXR_USE_GRAPHICS_API_VULKAN",

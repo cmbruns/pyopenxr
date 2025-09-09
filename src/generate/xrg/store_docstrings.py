@@ -263,6 +263,7 @@ def store_module_docstrings():
             continue
         url = None  # TODO
         qualified_name = ".".join([x.__name__ for x in path])
+        print(qualified_name)
         updated_module_docstrings[qualified_name] = {}
         entry = updated_module_docstrings[qualified_name]
         if url is not None:
