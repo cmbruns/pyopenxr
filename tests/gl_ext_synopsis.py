@@ -1,13 +1,13 @@
 import xr
-from xr.ext import KhrOpenGLEnable
+from xr.ext.KHR import opengl_enable
 
-assert KhrOpenGLEnable.NAME == xr.KHR_OPENGL_ENABLE_EXTENSION_NAME
-assert KhrOpenGLEnable.NAME == "XR_KHR_opengl_enable"
+assert opengl_enable.EXTENSION_NAME == xr.KHR_OPENGL_ENABLE_EXTENSION_NAME
+assert opengl_enable.EXTENSION_NAME == "XR_KHR_opengl_enable"
 
 instance = xr.create_instance(xr.InstanceCreateInfo(
-    enabled_extension_names=[KhrOpenGLEnable.NAME],
+    enabled_extension_names=[opengl_enable.EXTENSION_NAME],
 ))
 system_id = xr.get_system(instance)
-graphics_requirements = KhrOpenGLEnable.get_opengl_graphics_requirements(instance, system_id)
+graphics_requirements = opengl_enable.get_graphics_requirements(instance, system_id)
 
 assert isinstance(graphics_requirements, xr.GraphicsRequirementsOpenGLKHR)
