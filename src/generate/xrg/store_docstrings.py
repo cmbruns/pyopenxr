@@ -2,10 +2,9 @@ import copy
 import importlib
 import inspect
 import pkgutil
-from typing import Optional
-
 import sys
 import textwrap
+from typing import Optional
 
 import requests
 
@@ -13,6 +12,7 @@ import xr
 import xr.ext
 from class_docstring_data import class_docstrings
 from function_docstring_data import function_docstrings
+from module_docstring_data import module_docstrings
 
 
 def get_instance_docstring():
@@ -167,10 +167,15 @@ def enumerate_docstrings():
     for module in enumerate_modules():
         if not hasattr(module, "__name__"):
             continue
+        doc = get_doc(module)
+        if doc is not None:
+            yield doc, (module, )
         for name in dir(module):
             obj = getattr(module, name)
             if not hasattr(obj, "__name__"):
                 continue
+            if inspect.ismodule(obj):
+                continue  # We already have the full list of desired modules
             doc = get_doc(obj)
             if doc is not None:
                 yield doc, (module, obj)
@@ -250,6 +255,23 @@ def store_class_docstrings():
         write_docstrings(updated_class_docstrings, label="class", file=file)
 
 
+def store_module_docstrings():
+    updated_module_docstrings = copy.deepcopy(module_docstrings)
+    for doc, path in enumerate_docstrings():
+        module = path[-1]
+        if not inspect.ismodule(module):
+            continue
+        url = None  # TODO
+        qualified_name = ".".join([x.__name__ for x in path])
+        updated_module_docstrings[qualified_name] = {}
+        entry = updated_module_docstrings[qualified_name]
+        if url is not None:
+            entry["spec_url"] = url
+        entry["docstring"] = doc
+    with open("module_docstring_data.py", "w", encoding="utf-8") as file:
+        write_docstrings(updated_module_docstrings, label="module", file=file)
+
+
 def store_function_docstrings():
     updated_function_docstrings = copy.deepcopy(function_docstrings)
     for doc, path in enumerate_docstrings():
@@ -274,10 +296,6 @@ def store_function_docstrings():
 
 
 if __name__ == "__main__":
-    # check_instance_docstring()
-    # count_xr_docstrings()
-    # write_docstrings(class_docstrings)
     # store_class_docstrings()
-    store_function_docstrings()
-    # for mod in enumerate_modules():
-    #     print(mod.__name__)
+    # store_function_docstrings()
+    store_module_docstrings()
