@@ -35,7 +35,6 @@ if "android" in platform.release().lower():
         "GraphicsBindingESAndroid",
     ])
 
-
 from ctypes import byref, cast
 
 import xr
