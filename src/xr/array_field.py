@@ -7,8 +7,8 @@ sequences, single elements, or ctypes pointers, with optional encoding flavors.
 """
 
 import enum
-from ctypes import Array, c_char_p, cast, POINTER, pointer, Structure
-from typing import Any, TypeVar, Union, Sequence, Tuple, Optional
+from ctypes import Array, c_char_p, cast, POINTER, pointer
+from typing import TypeVar, Union, Sequence, Tuple, Optional
 
 
 E = TypeVar("E")
@@ -77,11 +77,11 @@ def array_field_helper(
         # Copy array into a ctypes array
         count = len(array)
         if flavor == ArrayFlavor.ARRAY:
-            array = (element_type * count)(*array)
+            array = (element_type * count)(*array)  # noqa
         elif flavor == ArrayFlavor.STRING:
-            array = (element_type * count)(*[s.encode() for s in array])
+            array = (element_type * count)(*[s.encode() for s in array])  # noqa
         elif flavor == ArrayFlavor.BASE_HEADER:
-            array = (element_type * count)(*[cast(p, element_type) for p in array])
+            array = (element_type * count)(*[cast(p, element_type) for p in array])  # noqa
         else:
             raise NotImplementedError  # Is there a new flavor?
     array = cast(array, POINTER(element_type))

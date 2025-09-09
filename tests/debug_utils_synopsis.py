@@ -10,6 +10,23 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
+def log_level_for_severity(severity_flags: debug_utils.MessageSeverityFlags) -> int:
+    """
+    Convert OpenXR message severities to Python logging levels.
+
+    :param severity_flags: Bitmask of message severity flags.
+    :type severity_flags: xr.DebugUtilsMessageSeverityFlagsEXT
+    :returns: One of logging.DEBUG, INFO, WARNING, or ERROR.
+    """
+    if severity_flags & debug_utils.MessageSeverityFlags.ERROR_BIT:
+        return logging.ERROR
+    if severity_flags & debug_utils.MessageSeverityFlags.WARNING_BIT:
+        return logging.WARNING
+    if severity_flags & debug_utils.MessageSeverityFlags.INFO_BIT:
+        return logging.INFO
+    return logging.DEBUG
+
+
 def debug_callback(
         severity: debug_utils.MessageSeverityFlags,
         _type_flags: debug_utils.MessageTypeFlags,
@@ -18,7 +35,7 @@ def debug_callback(
 ) -> bool:
     """Redirect OpenXR messages to a python logger."""
     logger.log(
-        level=debug_utils.log_level_for_severity(severity),
+        level=log_level_for_severity(severity),
         msg=f"{callback_data.function_name}: {callback_data.message}")
     return False
 
@@ -38,7 +55,7 @@ def test_debug_utils_basic():
             user_callback=debug_callback,
         )
 
-        messenger = debug_utils.create_messenger(
+        _messenger = debug_utils.create_messenger(
             instance,
             messenger_create_info,
         )

@@ -16,13 +16,14 @@ def main():
     cg.ctypes_names.add("addressof")
     cg.ctypes_names.add("byref")
     cg.ctypes_names.add("cast")
+    cg.ctypes_names.add("py_object")
     cg.print_header()
     print(inspect.cleandoc("""
         import ctypes
         
         import os
         import sys
-        from typing import Generator, Optional
+        from typing import Any, Callable, Generator, Optional
         
         import numpy
         
