@@ -29,6 +29,13 @@ __all__ = [
     "get_graphics_requirements",
 ]
 
+import platform
+if "android" in platform.release().lower():
+    __all__.extend([
+        "GraphicsBindingESAndroid",
+    ])
+
+
 from ctypes import byref, cast
 
 import xr
@@ -38,7 +45,8 @@ SPEC_VERSION = 11
 VENDOR_TAG = "KHR"
 
 # Aliases for xr core types
-GraphicsBindingESAndroid = xr.GraphicsBindingOpenGLESAndroidKHR
+if "android" in platform.release().lower():
+    GraphicsBindingESAndroid = xr.GraphicsBindingOpenGLESAndroidKHR
 GraphicsBindingWayland = xr.GraphicsBindingOpenGLWaylandKHR
 GraphicsBindingWin32 = xr.GraphicsBindingOpenGLWin32KHR
 GraphicsBindingXcb = xr.GraphicsBindingOpenGLXcbKHR
