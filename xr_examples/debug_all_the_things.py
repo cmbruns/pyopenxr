@@ -13,6 +13,7 @@ import glfw
 from OpenGL import GL  # OpenGL can report debug messages too
 
 import xr
+from xr.ext.EXT import debug_utils
 
 # 2) Hook into the pyopenxr logger hierarchy.
 logging.basicConfig()  # You might want also to study the parameters to basicConfig()...
@@ -41,8 +42,8 @@ if xr.LUNARG_api_dump_APILAYER_NAME in xr.enumerate_api_layer_properties():
 enabled_extensions = []
 # 6) XR_EXT_debug_utils can be used to redirect pyopenxr debugging messages to our logger,
 #    among other things.
-if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in xr.enumerate_instance_extension_properties():
-    enabled_extensions.append(xr.EXT_DEBUG_UTILS_EXTENSION_NAME)
+if debug_utils.EXTENSION_NAME in xr.enumerate_instance_extension_properties():
+    enabled_extensions.append(debug_utils.EXTENSION_NAME)
 
 
 # Define helper function for our logging callback
@@ -90,12 +91,6 @@ debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
     user_callback=xr_debug_callback,
 )
 
-ptr_debug_messenger = None
-if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in xr.enumerate_instance_extension_properties():
-    # Insert our debug_utils_messenger create_info
-    ptr_debug_messenger = ctypes.cast(
-        ctypes.pointer(debug_utils_messenger_create_info), ctypes.c_void_p)
-
 # 7) Turn on extra debugging messages in the OpenXR Loader
 os.environ["XR_LOADER_DEBUG"] = "all"
 os.environ["LD_BIND_NOW"] = "1"
@@ -106,9 +101,11 @@ instance = xr.create_instance(
     xr.InstanceCreateInfo(
         enabled_api_layer_names=enabled_api_layers,
         enabled_extension_names=enabled_extensions,
-        next=ptr_debug_messenger,
     )
 )
+
+if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in xr.enumerate_instance_extension_properties():
+    messenger = debug_utils.create_messenger(instance, debug_utils_messenger_create_info)
 
 # OpenGL can report debug messages too.
 # Create a sub-logger for messages from OpenGL.
