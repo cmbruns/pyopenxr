@@ -12,11 +12,13 @@ from xrg.registry import xr_registry
 class ParameterType:
     def __init__(
             self,
+            c_name: str,
             name: str,
             is_pointer: bool = False,
             is_const: bool = False,
             default: Optional[str] = None,
     ) -> None:
+        self.c_name = c_name
         self.name = name
         self.is_pointer = is_pointer
         self.is_const = is_const
@@ -43,7 +45,7 @@ class ParameterType:
             xr_type = type_index[c_name]
             if xr_type.attrib["category"] == "struct":
                 default_value = f"{name}()"
-        return cls(name, is_pointer, is_const, default=default_value)
+        return cls(c_name, name, is_pointer, is_const, default=default_value)
 
     def __str__(self):
         return self.name
@@ -163,12 +165,28 @@ class ExtensionCommandItem:
         """), "    ") + "\n"
         for param in output_parameters:
             result += f"    {param.py_name} = {param.type}()\n"
-        # Is this a xrCreate<Handle> method?
+        # Is this a xrCreate<Handle> method? If so, cache the instance.
         if (
                 self.py_name.startswith("create_")
                 and len(output_parameters) == 1
         ):
             result += f"    {param.py_name}.instance = {instance_name}\n"
+            # Does the create_info argument have a callback parameter?
+            # If so, cache the callback, to avoid early gc
+            # (This is very specific to debug_utils.MessengerCreateInfo)
+            if len(self.parameters) > 1 and self.parameters[1].py_name == "create_info":
+                p = self.parameters[1]
+                x = 3
+                tcn = p.type.c_name
+                for types in xr_registry.findall("types"):
+                    for type in types.findall("type"):
+                        if type.attrib.get("name", None) == tcn:
+                            for field in type.findall("member"):
+                                field_type_name = field.find("type").text
+                                if field_type_name.startswith("PFN_"):
+                                    field_name = snake_from_camel(field.find("name").text)
+                                    result += f"    # tie callback lifetime to that of the new handle\n"
+                                    result += f"    {param.py_name}._callback = create_info.{field_name}\n"
         result += "    result_code = pfn(\n"
         for param in self.parameters:
             if param.type.is_pointer:

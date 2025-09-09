@@ -82,7 +82,8 @@ def create_messenger(
     )        
     messenger = Messenger()
     messenger.instance = instance
-    messenger._callback = create_info.user_callback  # Tie lifetime to messenger object
+    # tie callback lifetime to that of the new handle
+    messenger._callback = create_info.user_callback
     result_code = pfn(
         instance,
         byref(create_info),
