@@ -191,7 +191,7 @@ function_docstrings = {
             :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/xrSubmitDebugUtilsMessageEXT.html
         """),
     },
-    "xr.ext.KHR.opengl_enable.get_opengl_graphics_requirements": {
+    "xr.ext.KHR.opengl_enable.get_graphics_requirements": {
         "docstring": inspect.cleandoc("""
             Query the OpenGL graphics requirements for a given system.
 
@@ -212,26 +212,6 @@ function_docstrings = {
             :seealso: :class:`xr.GraphicsRequirementsOpenGLKHR`
             :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/xrGetOpenGLGraphicsRequirementsKHR.html
         """),
-    },
-    "xr.ext.KhrOpenGLEnable.get_opengl_graphics_requirements": {
-        "docstring": inspect.cleandoc("""
-            Query the OpenGL graphics requirements for a given system.
-
-            This function wraps `xrGetOpenGLGraphicsRequirementsKHR`, returning the minimum and
-            maximum OpenGL versions supported by the runtime for the specified system. It is
-            typically called before creating a graphics context to ensure compatibility.
-
-            :param system_id: The system identifier obtained via `xr.get_system()`.
-            :type system_id: xr.SystemId
-            :return: A structure containing the OpenGL graphics requirements.
-            :rtype: xr.GraphicsRequirementsOpenGLKHR
-            :raises xr.FunctionUnsupportedError: If the extension function is unavailable.
-            :raises xr.HandleInvalidError: If the instance handle is invalid.
-            :raises xr.SystemInvalidError: If the system ID is not recognized.
-            :raises xr.InstanceLossPendingError: If the instance is in a loss-pending state.
-            :seealso: :class:`xr.GraphicsRequirementsOpenGLKHR`
-        """),
-        "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/xrGetOpenGLGraphicsRequirementsKHR.html",
     },
     "xr.get_instance_proc_addr": {
         "docstring": inspect.cleandoc("""
