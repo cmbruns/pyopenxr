@@ -297,6 +297,6 @@ def store_function_docstrings():
 
 
 if __name__ == "__main__":
-    # store_class_docstrings()
-    # store_function_docstrings()
+    store_class_docstrings()
+    store_function_docstrings()
     store_module_docstrings()
