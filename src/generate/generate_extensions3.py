@@ -220,7 +220,9 @@ class ExtensionModuleItem:
         version = require.find(f"enum[@name='{self.name}_SPEC_VERSION']")
         self.version = version.attrib["value"]
         self.all = {"EXTENSION_NAME", "SPEC_VERSION", "VENDOR_TAG"}
+        self.android_all = set()
         self.aliases = {}
+        self.android_aliases = {}
         # 1) Find extension object types in the main non-extension types area
         xr_types = xr_registry.find("types")
         assert xr_types
@@ -240,13 +242,21 @@ class ExtensionModuleItem:
             if type_name.endswith(f"FlagBits{self.vendor_tag}"):
                 continue
             alias = ExtensionTypeAliasItem(type_name, self)
-            self.aliases[alias.c_name] = alias
+            if "ANDROID" in alias.protect:
+                self.android_aliases[alias.c_name] = alias
+            else:
+                self.aliases[alias.c_name] = alias
         # 2) Find more extension object types in the enum area
         for ext_type in require.findall("enum[@extends='XrObjectType']"):
             alias = ExtensionTypeAliasItem(ext_type.attrib["comment"], self)
-            self.aliases[alias.c_name] = alias
+            if "ANDROID" in alias.protect:
+                self.android_aliases[alias.c_name] = alias
+            else:
+                self.aliases[alias.c_name] = alias
         for alias in self.aliases.values():
             self.all.add(alias.alias)
+        for alias in self.android_aliases.values():
+            self.android_all.add(alias.alias)
         # TODO: extension function pointers
         self.ctypes_types = set()
         self.commands = set()
@@ -263,7 +273,7 @@ class ExtensionModuleItem:
         result = ""
         indent1 = " " * 12
         indent2 = " " * 16
-        sorted_all = "".join([f'\n{indent2}"{a}",' for a in sorted(self.all)])
+        # __all__
         result += inspect.cleandoc(f'''
             """
             Python bindings for the `{self.name}` instance extension.
@@ -285,9 +295,18 @@ class ExtensionModuleItem:
             for all_item in sorted(self.all):
                 result += f'\n    "{all_item}",'
             result += "\n"
-        result += inspect.cleandoc(f'''
-            ]
-        ''') + "\n\n"
+        result += "]\n\n"
+        # android __all__
+        if len(self.android_all) > 0:
+            result += inspect.cleandoc(f'''
+                import platform
+                if "android" in platform.release().lower():
+                    __all__.extend([
+            ''')
+            for all_item in sorted(self.android_all):
+                result += f'\n        "{all_item}",'
+            result += "\n"
+            result += "    ])\n\n"
         if len(self.ctypes_types) > 0:
             result += f"from ctypes import {', '.join([c for c in sorted(self.ctypes_types)])}\n\n"
         result += inspect.cleandoc(f'''
@@ -301,6 +320,10 @@ class ExtensionModuleItem:
             result += "\n# Aliases for xr core types\n"
             for alias in sorted(self.aliases.values()):
                 result += f"{alias.code()}\n"
+        if len(self.android_aliases) > 0:
+            result += 'if "android" in platform.release().lower():\n'
+            for alias in sorted(self.android_aliases.values()):
+                result += f"    {alias.code()}\n"
         if len(self.commands) > 0:
             for command in sorted(self.commands):
                 result += f"\n\n{command.code()}\n"
@@ -326,6 +349,9 @@ class ExtensionTypeAliasItem:
         if alias.startswith("PFN_xr"):
             alias = f"PFN_{alias[len('PFN_xr'):]}"
         self.alias = alias
+        # TODO: do this for a generic TypeItem
+        type_entity = xr_registry.find(f".//types/type[@name='{self.c_name}']")
+        self.protect = type_entity.get("protect", "")
 
     def __eq__(self, other):
         return self.c_name == other.c_name

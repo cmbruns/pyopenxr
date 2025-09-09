@@ -14,7 +14,6 @@ https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_KHR_opengl_ena
 
 __all__ = [
     "EXTENSION_NAME",
-    "GraphicsBindingESAndroid",
     "GraphicsBindingWayland",
     "GraphicsBindingWin32",
     "GraphicsBindingXcb",
@@ -44,8 +43,6 @@ SPEC_VERSION = 11
 VENDOR_TAG = "KHR"
 
 # Aliases for xr core types
-if "android" in platform.release().lower():
-    GraphicsBindingESAndroid = xr.GraphicsBindingOpenGLESAndroidKHR
 GraphicsBindingWayland = xr.GraphicsBindingOpenGLWaylandKHR
 GraphicsBindingWin32 = xr.GraphicsBindingOpenGLWin32KHR
 GraphicsBindingXcb = xr.GraphicsBindingOpenGLXcbKHR
@@ -55,6 +52,8 @@ GraphicsRequirementsES = xr.GraphicsRequirementsOpenGLESKHR
 SwapchainImage = xr.SwapchainImageOpenGLKHR
 SwapchainImageES = xr.SwapchainImageOpenGLESKHR
 SwapchainStateSamplerESFB = xr.SwapchainStateSamplerOpenGLESFB
+if "android" in platform.release().lower():
+    GraphicsBindingESAndroid = xr.GraphicsBindingOpenGLESAndroidKHR
 
 
 def get_graphics_requirements(
