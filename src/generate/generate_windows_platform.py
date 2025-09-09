@@ -14,11 +14,13 @@ def main():
         "-DXR_USE_PLATFORM_XCB",
         "-DXR_USE_PLATFORM_XLIB",
         "-DXR_USE_PLATFORM_ANDROID",
+        "-DXR_USE_PLATFORM_ML",
         "-DXR_USE_GRAPHICS_API_OPENGL_ES",
         "-DXR_USE_GRAPHICS_API_OPENGL",
         "-DXR_USE_GRAPHICS_API_VULKAN",
         "-DXR_USE_GRAPHICS_API_D3D11",
         "-DXR_USE_GRAPHICS_API_D3D12",
+        "-DXR_USE_GRAPHICS_API_METAL",
         "-DXR_USE_TIMESPEC",
         "-DXR_CPP_NULLPTR_SUPPORTED",
     ]
@@ -32,6 +34,7 @@ def main():
     cg.ctypes_names.add("c_ulong")
     cg.ctypes_names.add("c_long")
     cg.ctypes_names.add("c_longlong")
+    cg.ctypes_names.add("cast")
 
     cg.print_header()
     print(inspect.cleandoc("""
@@ -52,7 +55,17 @@ def main():
                 ("high_part", c_long),
             ]
 
-        
+
+        # Forward declaration of a Wayland structure
+        class wl_display(Structure):
+            pass
+
+
+        # Forward declaration of an Android structure
+        class AIBinder(Structure):
+            pass
+
+                
         _LARGE_INTEGER = c_longlong
     """))
     print("")
