@@ -145,7 +145,7 @@ def get_doc(obj) -> Optional[str]:
         return None
     if doc in {"An enumeration."}:
         return None
-    return doc
+    return inspect.cleandoc(doc)
 
 
 def enumerate_class_docstrings(clazz):
