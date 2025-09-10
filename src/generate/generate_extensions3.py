@@ -35,17 +35,23 @@ class ParameterType:
         c_name = parameter_element.find("type").text
         if c_name in extension.aliases:
             name = f"{extension.aliases[c_name].alias}"  # TODO: prepend extension module name?
-        else:
-            assert c_name.startswith("Xr")
+        elif c_name.startswith("Xr"):
             name = f'xr.{c_name[len("Xr"):]}'
+        elif c_name in ["uint32_t"]:
+            name = "int"
+        else:
+            x = 3
         full_text = "".join(parameter_element.itertext())
         is_pointer = "*" in full_text
         is_const = "const" in full_text.split(c_name)[0]
         default_value = None
         if c_name in type_index:
             xr_type = type_index[c_name]
-            if xr_type.attrib["category"] == "struct":
-                default_value = f"{name}()"
+            try:
+                if xr_type.attrib["category"] == "struct":
+                    default_value = f"{name}()"
+            except KeyError:
+                pass
         return cls(c_name, name, is_pointer, is_const, default=default_value)
 
     def __str__(self):
@@ -95,6 +101,8 @@ class ExtensionCommandItem:
         suffix = extension.vendor_tag
         assert py_name.endswith(suffix)
         py_name = py_name[:-len(suffix)]
+        if extension.camel_short_name not in py_name:
+            x = 3
         assert extension.camel_short_name in py_name
         py_name = py_name.replace(extension.camel_short_name, "")
         py_name = snake_from_camel(py_name)
@@ -217,6 +225,8 @@ class ExtensionModuleItem:
         self.camel_short_name = camel_from_snake(self.short_name)  # e.g. "DebugUtils"
         if self.camel_short_name.endswith("Enable"):  # e.g. opengl_enable
             self.camel_short_name = self.camel_short_name[:-len("Enable")]
+        if self.camel_short_name == "ViveTrackerInteraction":
+            self.camel_short_name = "ViveTracker"
         require = element.find("require")
         version = require.find(f"enum[@name='{self.name}_SPEC_VERSION']")
         self.version = version.attrib["value"]
@@ -329,7 +339,10 @@ class ExtensionTypeAliasItem:
         self.alias = alias
         # TODO: do this for a generic TypeItem
         type_entity = xr_registry.find(f".//types/type[@name='{self.c_name}']")
-        self.protect = type_entity.get("protect", "")
+        if type_entity is None:
+            self.protect = ""
+        else:
+            self.protect = type_entity.get("protect", "")
 
     def __eq__(self, other):
         return self.c_name == other.c_name
@@ -374,7 +387,12 @@ def generate_extensions():
             continue
         assert ext.attrib["type"] == "instance"
         # Over-filter for initial development TODO: remove this for production
-        if ext.attrib["name"] not in ["XR_KHR_opengl_enable"]:  # for starters
+        if ext.attrib["name"] not in [
+            "XR_KHR_opengl_enable",
+            "XR_EXT_debug_utils",
+            "XR_MND_headless",
+            "XR_HTCX_vive_tracker_interaction",
+        ]:  # for starters
             continue
         extension = ExtensionModuleItem(ext)
         do_write = True
