@@ -6,6 +6,7 @@ from xml.etree.ElementTree import Element
 
 from xrg.declarations import camel_from_snake, snake_from_camel
 from xrg.function_docstring_data import function_docstrings
+from xrg.module_docstring_data import module_docstrings
 from xrg.registry import xr_registry
 
 
@@ -261,26 +262,28 @@ class ExtensionModuleItem:
 
     def code(self) -> str:
         result = ""
-        indent1 = " " * 12
-        indent2 = " " * 16
+        # docstring
+        if self.module_name in module_docstrings:
+            doc = inspect.cleandoc(module_docstrings[self.module_name]["docstring"])
+            result += f'"""\n{doc}\n"""\n\n'
+        else:
+            result += inspect.cleandoc(f'''
+                """
+                Python bindings for the `{self.name}` instance extension.
+    
+                This module provides Python wrappers for OpenXR functions defined in the
+                `{self.name}` specification. These wrappers expose runtime diagnostics,
+                object naming, and other extension-specific features.
+    
+                To enable this extension, include `"{self.name}"` in your
+                `enabled_extension_names` when calling :func:`xr.create_instance`.
+    
+                See the Khronos registry for full specification:
+                https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#{self.name}
+                """
+            ''') + "\n\n"
         # __all__
-        result += inspect.cleandoc(f'''
-            """
-            Python bindings for the `{self.name}` instance extension.
-
-            This module provides Python wrappers for OpenXR functions defined in the
-            `{self.name}` specification. These wrappers expose runtime diagnostics,
-            object naming, and other extension-specific features.
-
-            To enable this extension, include `"{self.name}"` in your
-            `enabled_extension_names` when calling :func:`xr.create_instance`.
-
-            See the Khronos registry for full specification:
-            https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#{self.name}
-            """
-
-            __all__ = [
-        ''')
+        result += "__all__ = ["
         if len(self.all) > 0:
             for all_item in sorted(self.all):
                 result += f'\n    "{all_item}",'

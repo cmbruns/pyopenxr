@@ -43,6 +43,21 @@ module_docstrings = {
             https://registry.khronos.org/OpenXR/specs/1.1/man/html/XR_HTCX_vive_tracker_interaction.html
         """),
     },
+    "xr.ext.KHR.opengl_enable": {
+        "docstring": inspect.cleandoc("""
+            Python bindings for the `XR_KHR_opengl_enable` instance extension.
+
+            This extension provides access to OpenGL-specific graphics requirements via OpenXR.
+            It wraps `xrGetOpenGLGraphicsRequirementsKHR`, allowing applications to query the
+            minimum and maximum supported OpenGL versions for a given system.
+
+            To enable this extension, include `"XR_KHR_opengl_enable"` in your
+            `enabled_extension_names` when calling :func:`xr.create_instance`.
+
+            See the Khronos registry for full specification:
+            https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_KHR_opengl_enable
+        """),
+    },
     "xr.ext.MND.headless": {
         "docstring": inspect.cleandoc("""
             Python bindings for the `XR_MND_headless` instance extension.
