@@ -1,3 +1,5 @@
+# TODO: support 2-call idiom
+
 import inspect
 import os
 import textwrap

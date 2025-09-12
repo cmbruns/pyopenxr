@@ -22,7 +22,8 @@ __all__ = [
     "enumerate_paths",
 ]
 
-from ctypes import byref, cast
+from ctypes import byref, cast, c_uint32
+from typing import Sequence
 
 import xr
 
@@ -35,23 +36,33 @@ EventDataConnected = xr.EventDataViveTrackerConnectedHTCX
 Paths = xr.ViveTrackerPathsHTCX
 
 
+# TODO: generate 2-call idiom like this
 def enumerate_paths(
     instance: xr.Instance,
-    path_capacity_input: int,
-    path_count_output: int,
-) -> Paths:
+) -> Sequence[Paths]:
     pfn = cast(
         xr.get_instance_proc_addr(instance, "xrEnumerateViveTrackerPathsHTCX"),
         xr.PFN_xrEnumerateViveTrackerPathsHTCX,
-    )        
-    paths = Paths()
+    )
+    path_capacity = c_uint32(0)
     result_code = pfn(
         instance,
-        path_capacity_input,
-        byref(path_count_output),
-        byref(paths),
+        0,
+        byref(path_capacity),
+        None,
     )
     checked = xr.check_result(xr.Result(result_code))
     if checked.is_exception():
         raise checked
-    return paths
+    print(path_capacity.value)
+    paths = (Paths * path_capacity.value)(*([Paths()] * path_capacity.value))  # noqa
+    result_code = pfn(
+        instance,
+        path_capacity,
+        byref(path_capacity),
+        paths,
+    )
+    checked = xr.check_result(xr.Result(result_code))
+    if checked.is_exception():
+        raise checked
+    return paths  # noqa
