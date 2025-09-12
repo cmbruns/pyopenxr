@@ -2,6 +2,7 @@
 
 import inspect
 import os
+from pathlib import Path
 import textwrap
 from typing import Optional
 from xml.etree.ElementTree import Element
@@ -248,6 +249,8 @@ class ExtensionModuleItem:
                 continue
             if type_name.startswith(f"PFN_xr{self.camel_short_name}"):
                 continue  # TODO: function pointers
+            if type_name.startswith(f"{self.camel_short_name}"):
+                continue
             # assert type_name.startswith(f"Xr{self.camel_short_name}")  # not XrGraphicsBindingOpenGLWin32KHR
             # assert type_name.endswith(self.vendor_tag)  # not XrSwapchainStateSamplerOpenGLESFB
             if type_name.endswith(f"FlagBits{self.vendor_tag}"):
@@ -393,14 +396,20 @@ def generate_extensions():
             "XR_KHR_opengl_enable",
             "XR_EXT_debug_utils",
             "XR_MND_headless",
-            "XR_HTCX_vive_tracker_interaction",
+            # "XR_HTCX_vive_tracker_interaction",  # TODO: needs work
+            "XR_MNDX_egl_enable",
+            "XR_KHR_opengl_es_enable",
+            "",
         ]:  # for starters
             continue
         extension = ExtensionModuleItem(ext)
         do_write = True
         if do_write:
             f_name = f"../xr/ext/{extension.vendor_tag}/{extension.short_name}.py"
-            assert os.path.exists(f_name)
+            path = Path(f_name)
+            parent = path.parent
+            if not parent.exists():
+                parent.mkdir(parents=True, exist_ok=True)
             with open(f_name, "w", encoding="utf-8") as f:
                 f.write(extension.code())
         else:
