@@ -166,6 +166,84 @@ execute_process(
 )
 message(STATUS "OpenXR Version = ${OPENXR_VERSION}")
 
+##########################################
+### Find OpenXR-Registry documentation ###
+##########################################
+
+string(REPLACE "." ";" OPENXR_VERSION_LIST ${OPENXR_VERSION})
+list(GET OPENXR_VERSION_LIST 0 OPENXR_VERSION_MAJOR)
+list(GET OPENXR_VERSION_LIST 1 OPENXR_VERSION_MINOR)
+list(GET OPENXR_VERSION_LIST 2 OPENXR_VERSION_PATCH)
+set(HTML_DIR "specs/${OPENXR_VERSION_MAJOR}.${OPENXR_VERSION_MINOR}/man/html")
+
+find_path(OPENXR_REGISTRY_PATH
+    NAMES "${HTML_DIR}/openxr.html"
+    HINTS
+        "$ENV{USERPROFILE}/Documents/git/OpenXR-Registry"
+        "$ENV{HOME}/git/OpenXR-Registry"
+    DOC "The file location of the OpenXR-Registry source code"
+)
+
+if (OPENXR_REGISTRY_PATH)
+    # Fetch latest tags from origin
+    execute_process(
+        COMMAND git fetch --tags
+        WORKING_DIRECTORY "${OPENXR_REGISTRY_PATH}"
+        RESULT_VARIABLE FETCH_RESULT
+    )
+    if(NOT FETCH_RESULT EQUAL 0)
+        message(WARNING "Failed to fetch tags from origin.")
+    endif()
+
+    # Get all release tags
+    execute_process(
+        COMMAND git tag --list release-*
+        WORKING_DIRECTORY "${OPENXR_REGISTRY_PATH}"
+        OUTPUT_VARIABLE RELEASE_TAGS_RAW
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    string(REPLACE "\n" ";" RELEASE_TAGS "${RELEASE_TAGS_RAW}")
+    list(SORT RELEASE_TAGS ORDER DESCENDING)
+    list(GET RELEASE_TAGS 0 LATEST_TAG)
+    message(STATUS "Latest OpenXR-Registry release tag is ${LATEST_TAG}")
+
+    # Get current HEAD tag (if any)
+    execute_process(
+        COMMAND git describe --tags --exact-match
+        WORKING_DIRECTORY "${OPENXR_REGISTRY_PATH}"
+        OUTPUT_VARIABLE CURRENT_TAG
+        RESULT_VARIABLE DESCRIBE_RESULT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    # Determine desired tag based on selection
+    set(DESIRED_TAG "")
+    if(OPENXR_TAG_SELECTION STREQUAL "LATEST")
+        set(DESIRED_TAG "${LATEST_TAG}")
+    elseif(OPENXR_TAG_SELECTION STREQUAL "AS-IS")
+        set(DESIRED_TAG "${CURRENT_TAG}")  # No checkout; preserve current
+    else()
+        set(DESIRED_TAG "${OPENXR_TAG_SELECTION}")  # Use explicit tag
+    endif()
+
+    # Checkout logic
+    if(NOT DESIRED_TAG STREQUAL "${CURRENT_TAG}" AND NOT OPENXR_TAG_SELECTION STREQUAL "AS-IS")
+        message(STATUS "Switching to desired OpenXR-Registry release tag: ${DESIRED_TAG}")
+        execute_process(
+            COMMAND git checkout "${DESIRED_TAG}"
+            WORKING_DIRECTORY "${OPENXR_REGISTRY_PATH}"
+            RESULT_VARIABLE CHECKOUT_RESULT
+        )
+        if(CHECKOUT_RESULT EQUAL 0)
+            message(STATUS "Switched to ${DESIRED_TAG}")
+        else()
+            message(WARNING "Failed to switch to ${DESIRED_TAG}. It may not exist.")
+        endif()
+    else()
+        message(STATUS "Repo already at desired release tag: ${DESIRED_TAG}")
+    endif()
+endif()
+
 #########################################
 ### Copy openxr_loader shared library ###
 #########################################
@@ -275,24 +353,6 @@ else()
     generate_source("generate_linux_platform.py" "linux.py" "platform")
 endif()
 generate_source("generate_exceptions.py" "exception.py" "")
-
-##########################################
-### Find OpenXR-Registry documentation ###
-##########################################
-
-string(REPLACE "." ";" OPENXR_VERSION_LIST ${OPENXR_VERSION})
-list(GET OPENXR_VERSION_LIST 0 OPENXR_VERSION_MAJOR)
-list(GET OPENXR_VERSION_LIST 1 OPENXR_VERSION_MINOR)
-list(GET OPENXR_VERSION_LIST 2 OPENXR_VERSION_PATCH)
-set(HTML_DIR "specs/${OPENXR_VERSION_MAJOR}.${OPENXR_VERSION_MINOR}/man/html")
-
-find_path(OPENXR_REGISTRY_PATH
-    NAMES "${HTML_DIR}/openxr.html"
-    HINTS
-        "$ENV{USERPROFILE}/Documents/git/OpenXR-Registry"
-        "$ENV{HOME}/git/OpenXR-Registry"
-    DOC "The file location of the OpenXR-Registry source code"
-)
 
 ######################################
 ### Final install into source tree ###
