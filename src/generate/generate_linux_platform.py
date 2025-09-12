@@ -1,4 +1,4 @@
-# This script creates an updated version of xr/platform/windows.py
+# This script creates an updated version of xr/platform/linux.py
 
 import inspect
 
@@ -7,13 +7,20 @@ import xrg
 
 def main():
     compiler_args = [
+        "-DWIN32_LEAN_AND_MEAN",
+        "-DXR_USE_PLATFORM_WIN32",
         "-DXR_USE_PLATFORM_EGL",
         "-DXR_USE_PLATFORM_WAYLAND",
         "-DXR_USE_PLATFORM_XCB",
         "-DXR_USE_PLATFORM_XLIB",
+        "-DXR_USE_PLATFORM_ANDROID",
+        "-DXR_USE_PLATFORM_ML",
         "-DXR_USE_GRAPHICS_API_OPENGL_ES",
         "-DXR_USE_GRAPHICS_API_OPENGL",
         "-DXR_USE_GRAPHICS_API_VULKAN",
+        "-DXR_USE_GRAPHICS_API_D3D11",
+        "-DXR_USE_GRAPHICS_API_D3D12",
+        "-DXR_USE_GRAPHICS_API_METAL",
         "-DXR_USE_TIMESPEC",
         "-DXR_CPP_NULLPTR_SUPPORTED",
     ]
