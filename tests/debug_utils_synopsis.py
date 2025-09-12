@@ -40,7 +40,7 @@ def debug_callback(
     return False
 
 
-def test_debug_utils_basic():
+def tst_debug_utils_basic():
     with ExitStack() as exit_stack:  # noqa
         instance = exit_stack.enter_context(xr.create_instance(
             create_info=xr.InstanceCreateInfo(
@@ -73,4 +73,4 @@ def test_debug_utils_basic():
 
 
 if __name__ == "__main__":
-    test_debug_utils_basic()
+    tst_debug_utils_basic()
