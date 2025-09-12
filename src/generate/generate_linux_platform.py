@@ -63,6 +63,11 @@ def main():
             pass
             
 
+        # Forward declaration of an Android structure
+        class AIBinder(Structure):
+            pass
+
+
         class timespec(Structure):
             _fields_ = [
                 ("tv_sec", c_longlong),  # TODO: is this the correct type?
