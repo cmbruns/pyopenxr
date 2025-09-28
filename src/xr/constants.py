@@ -69,6 +69,9 @@ KHR_LOCATE_SPACES_EXTENSION_NAME = "XR_KHR_locate_spaces"
 KHR_maintenance1 = 1
 KHR_maintenance1_SPEC_VERSION = 1
 KHR_MAINTENANCE1_EXTENSION_NAME = "XR_KHR_maintenance1"
+KHR_generic_controller = 1
+KHR_generic_controller_SPEC_VERSION = 1
+KHR_GENERIC_CONTROLLER_EXTENSION_NAME = "XR_KHR_generic_controller"
 EXT_performance_settings = 1
 EXT_performance_settings_SPEC_VERSION = 4
 EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME = "XR_EXT_performance_settings"
@@ -388,6 +391,9 @@ FB_SPATIAL_ENTITY_USER_EXTENSION_NAME = "XR_FB_spatial_entity_user"
 META_headset_id = 1
 META_headset_id_SPEC_VERSION = 2
 META_HEADSET_ID_EXTENSION_NAME = "XR_META_headset_id"
+META_spatial_entity_discovery = 1
+META_spatial_entity_discovery_SPEC_VERSION = 1
+META_SPATIAL_ENTITY_DISCOVERY_EXTENSION_NAME = "XR_META_spatial_entity_discovery"
 META_hand_tracking_microgestures = 1
 META_hand_tracking_microgestures_SPEC_VERSION = 1
 META_HAND_TRACKING_MICROGESTURES_EXTENSION_NAME = "XR_META_hand_tracking_microgestures"
@@ -441,7 +447,7 @@ EXT_interaction_render_model = 1
 EXT_interaction_render_model_SPEC_VERSION = 1
 EXT_INTERACTION_RENDER_MODEL_EXTENSION_NAME = "XR_EXT_interaction_render_model"
 EXT_hand_interaction = 1
-EXT_hand_interaction_SPEC_VERSION = 1
+EXT_hand_interaction_SPEC_VERSION = 2
 EXT_HAND_INTERACTION_EXTENSION_NAME = "XR_EXT_hand_interaction"
 QCOM_tracking_optimization_settings = 1
 QCOM_tracking_optimization_settings_SPEC_VERSION = 1
@@ -509,7 +515,7 @@ OPPO_controller_interaction_SPEC_VERSION = 1
 OPPO_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_OPPO_controller_interaction"
 ANDROID_trackables = 1
 NULL_TRACKABLE_ANDROID = 0
-ANDROID_trackables_SPEC_VERSION = 1
+ANDROID_trackables_SPEC_VERSION = 2
 ANDROID_TRACKABLES_EXTENSION_NAME = "XR_ANDROID_trackables"
 ANDROID_device_anchor_persistence = 1
 ANDROID_device_anchor_persistence_SPEC_VERSION = 1
@@ -1088,6 +1094,7 @@ __all__ = [
     "KHR_COMPOSITION_LAYER_EQUIRECT2_EXTENSION_NAME",
     "KHR_COMPOSITION_LAYER_EQUIRECT_EXTENSION_NAME",
     "KHR_EXTENDED_STRUCT_NAME_LENGTHS_EXTENSION_NAME",
+    "KHR_GENERIC_CONTROLLER_EXTENSION_NAME",
     "KHR_LOADER_INIT_EXTENSION_NAME",
     "KHR_LOCATE_SPACES_EXTENSION_NAME",
     "KHR_MAINTENANCE1_EXTENSION_NAME",
@@ -1109,6 +1116,8 @@ __all__ = [
     "KHR_composition_layer_equirect_SPEC_VERSION",
     "KHR_extended_struct_name_lengths",
     "KHR_extended_struct_name_lengths_SPEC_VERSION",
+    "KHR_generic_controller",
+    "KHR_generic_controller_SPEC_VERSION",
     "KHR_loader_init",
     "KHR_loader_init_SPEC_VERSION",
     "KHR_locate_spaces",
@@ -1172,6 +1181,7 @@ __all__ = [
     "META_PERFORMANCE_METRICS_EXTENSION_NAME",
     "META_RECOMMENDED_LAYER_RESOLUTION_EXTENSION_NAME",
     "META_SIMULTANEOUS_HANDS_AND_CONTROLLERS_EXTENSION_NAME",
+    "META_SPATIAL_ENTITY_DISCOVERY_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_GROUP_SHARING_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_MESH_EXTENSION_NAME",
     "META_SPATIAL_ENTITY_PERSISTENCE_EXTENSION_NAME",
@@ -1210,6 +1220,8 @@ __all__ = [
     "META_recommended_layer_resolution_SPEC_VERSION",
     "META_simultaneous_hands_and_controllers",
     "META_simultaneous_hands_and_controllers_SPEC_VERSION",
+    "META_spatial_entity_discovery",
+    "META_spatial_entity_discovery_SPEC_VERSION",
     "META_spatial_entity_group_sharing",
     "META_spatial_entity_group_sharing_SPEC_VERSION",
     "META_spatial_entity_mesh",

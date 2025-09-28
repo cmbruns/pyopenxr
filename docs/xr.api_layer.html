@@ -236,6 +236,8 @@
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataSenseDataUpdatedBD"><code class="docutils literal notranslate"><span class="pre">EventDataSenseDataUpdatedBD</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataSessionStateChanged"><code class="docutils literal notranslate"><span class="pre">EventDataSessionStateChanged</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataShareSpacesCompleteMETA"><code class="docutils literal notranslate"><span class="pre">EventDataShareSpacesCompleteMETA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataSpaceDiscoveryCompleteMETA"><code class="docutils literal notranslate"><span class="pre">EventDataSpaceDiscoveryCompleteMETA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataSpaceDiscoveryResultsAvailableMETA"><code class="docutils literal notranslate"><span class="pre">EventDataSpaceDiscoveryResultsAvailableMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataSpaceEraseCompleteFB"><code class="docutils literal notranslate"><span class="pre">EventDataSpaceEraseCompleteFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataSpaceListSaveCompleteFB"><code class="docutils literal notranslate"><span class="pre">EventDataSpaceListSaveCompleteFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.EventDataSpaceQueryCompleteFB"><code class="docutils literal notranslate"><span class="pre">EventDataSpaceQueryCompleteFB</span></code></a></li>
@@ -655,6 +657,7 @@
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrDestroyTriangleMeshFB"><code class="docutils literal notranslate"><span class="pre">PFN_xrDestroyTriangleMeshFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrDestroyVirtualKeyboardMETA"><code class="docutils literal notranslate"><span class="pre">PFN_xrDestroyVirtualKeyboardMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrDestroyWorldMeshDetectorML"><code class="docutils literal notranslate"><span class="pre">PFN_xrDestroyWorldMeshDetectorML</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrDiscoverSpacesMETA"><code class="docutils literal notranslate"><span class="pre">PFN_xrDiscoverSpacesMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrDownloadSharedSpatialAnchorAsyncBD"><code class="docutils literal notranslate"><span class="pre">PFN_xrDownloadSharedSpatialAnchorAsyncBD</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrDownloadSharedSpatialAnchorCompleteBD"><code class="docutils literal notranslate"><span class="pre">PFN_xrDownloadSharedSpatialAnchorCompleteBD</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrEglGetProcAddressMNDX"><code class="docutils literal notranslate"><span class="pre">PFN_xrEglGetProcAddressMNDX</span></code></a></li>
@@ -857,6 +860,7 @@
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrResetBodyTrackingCalibrationMETA"><code class="docutils literal notranslate"><span class="pre">PFN_xrResetBodyTrackingCalibrationMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrResultToString"><code class="docutils literal notranslate"><span class="pre">PFN_xrResultToString</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA"><code class="docutils literal notranslate"><span class="pre">PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrRetrieveSpaceDiscoveryResultsMETA"><code class="docutils literal notranslate"><span class="pre">PFN_xrRetrieveSpaceDiscoveryResultsMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrRetrieveSpaceQueryResultsFB"><code class="docutils literal notranslate"><span class="pre">PFN_xrRetrieveSpaceQueryResultsFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrSaveSpaceFB"><code class="docutils literal notranslate"><span class="pre">PFN_xrSaveSpaceFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.PFN_xrSaveSpaceListFB"><code class="docutils literal notranslate"><span class="pre">PFN_xrSaveSpaceListFB</span></code></a></li>
@@ -1138,8 +1142,14 @@
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceComponentStatusSetInfoFB"><code class="docutils literal notranslate"><span class="pre">SpaceComponentStatusSetInfoFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceComponentTypeFB"><code class="docutils literal notranslate"><span class="pre">SpaceComponentTypeFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceContainerFB"><code class="docutils literal notranslate"><span class="pre">SpaceContainerFB</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceDiscoveryInfoMETA"><code class="docutils literal notranslate"><span class="pre">SpaceDiscoveryInfoMETA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceDiscoveryResultMETA"><code class="docutils literal notranslate"><span class="pre">SpaceDiscoveryResultMETA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceDiscoveryResultsMETA"><code class="docutils literal notranslate"><span class="pre">SpaceDiscoveryResultsMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceEraseInfoFB"><code class="docutils literal notranslate"><span class="pre">SpaceEraseInfoFB</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceFilterBaseHeaderMETA"><code class="docutils literal notranslate"><span class="pre">SpaceFilterBaseHeaderMETA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceFilterComponentMETA"><code class="docutils literal notranslate"><span class="pre">SpaceFilterComponentMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceFilterInfoBaseHeaderFB"><code class="docutils literal notranslate"><span class="pre">SpaceFilterInfoBaseHeaderFB</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceFilterUuidMETA"><code class="docutils literal notranslate"><span class="pre">SpaceFilterUuidMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceGroupUuidFilterInfoMETA"><code class="docutils literal notranslate"><span class="pre">SpaceGroupUuidFilterInfoMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceListSaveInfoFB"><code class="docutils literal notranslate"><span class="pre">SpaceListSaveInfoFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SpaceLocation"><code class="docutils literal notranslate"><span class="pre">SpaceLocation</span></code></a></li>
@@ -1375,6 +1385,7 @@
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SystemPropertiesBodyTrackingFullBodyMETA"><code class="docutils literal notranslate"><span class="pre">SystemPropertiesBodyTrackingFullBodyMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SystemRenderModelPropertiesFB"><code class="docutils literal notranslate"><span class="pre">SystemRenderModelPropertiesFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SystemSimultaneousHandsAndControllersPropertiesMETA"><code class="docutils literal notranslate"><span class="pre">SystemSimultaneousHandsAndControllersPropertiesMETA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SystemSpaceDiscoveryPropertiesMETA"><code class="docutils literal notranslate"><span class="pre">SystemSpaceDiscoveryPropertiesMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SystemSpacePersistencePropertiesMETA"><code class="docutils literal notranslate"><span class="pre">SystemSpacePersistencePropertiesMETA</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SystemSpaceWarpPropertiesFB"><code class="docutils literal notranslate"><span class="pre">SystemSpaceWarpPropertiesFB</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="xr.html#xr.SystemSpatialAnchorPropertiesBD"><code class="docutils literal notranslate"><span class="pre">SystemSpatialAnchorPropertiesBD</span></code></a></li>

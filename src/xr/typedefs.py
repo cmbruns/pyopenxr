@@ -13033,6 +13033,286 @@ class SystemHeadsetIdPropertiesMETA(Structure):
     ]
 
 
+class SystemSpaceDiscoveryPropertiesMETA(Structure):
+    def __init__(
+        self,
+        supports_space_discovery: Bool32 = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SYSTEM_SPACE_DISCOVERY_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_space_discovery=supports_space_discovery,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpaceDiscoveryPropertiesMETA(supports_space_discovery={repr(self.supports_space_discovery)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpaceDiscoveryPropertiesMETA(supports_space_discovery={self.supports_space_discovery}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("supports_space_discovery", Bool32),
+    ]
+
+
+class SpaceFilterBaseHeaderMETA(Structure):
+    def __init__(
+        self,
+        next: c_void_p = None,
+        type: StructureType = StructureType.UNKNOWN,
+    ) -> None:
+        super().__init__(
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceFilterBaseHeaderMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceFilterBaseHeaderMETA(next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+    ]
+
+
+class SpaceDiscoveryInfoMETA(Structure):
+    def __init__(
+        self,
+        filter_count: Optional[int] = None,
+        filters: BaseArrayFieldParamType = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_DISCOVERY_INFO_META,
+    ) -> None:
+        filter_count, filters = base_array_field_helper(
+            POINTER(SpaceFilterBaseHeaderMETA), filter_count, filters)
+        super().__init__(
+            filter_count=filter_count,
+            _filters=filters,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceDiscoveryInfoMETA(filter_count={repr(self.filter_count)}, filters={repr(self._filters)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceDiscoveryInfoMETA(filter_count={self.filter_count}, filters={self._filters}, next={self.next}, type={self.type})"
+
+    @property
+    def filters(self):
+        if self.filter_count == 0:
+            return (POINTER(SpaceFilterBaseHeaderMETA) * 0)()
+        else:
+            return (POINTER(SpaceFilterBaseHeaderMETA) * self.filter_count).from_address(
+                ctypes.addressof(self._filters.contents))
+
+    @filters.setter
+    def filters(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.filter_count, self._filters = base_array_field_helper(
+            POINTER(SpaceFilterBaseHeaderMETA), None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("filter_count", c_uint32),
+        ("_filters", POINTER(POINTER(SpaceFilterBaseHeaderMETA))),
+    ]
+
+
+class SpaceFilterUuidMETA(Structure):
+    def __init__(
+        self,
+        uuid_count: Optional[int] = None,
+        uuids: ArrayFieldParamType[Uuid] = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_FILTER_UUID_META,
+    ) -> None:
+        uuid_count, uuids = array_field_helper(
+            Uuid, uuid_count, uuids)
+        super().__init__(
+            uuid_count=uuid_count,
+            _uuids=uuids,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceFilterUuidMETA(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceFilterUuidMETA(uuid_count={self.uuid_count}, uuids={self._uuids}, next={self.next}, type={self.type})"
+
+    @property
+    def uuids(self):
+        if self.uuid_count == 0:
+            return (Uuid * 0)()
+        else:
+            return (Uuid * self.uuid_count).from_address(
+                ctypes.addressof(self._uuids.contents))
+
+    @uuids.setter
+    def uuids(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.uuid_count, self._uuids = array_field_helper(
+            Uuid, None, value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("uuid_count", c_uint32),
+        ("_uuids", POINTER(Uuid)),
+    ]
+
+
+class SpaceFilterComponentMETA(Structure):
+    def __init__(
+        self,
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_FILTER_COMPONENT_META,
+    ) -> None:
+        super().__init__(
+            component_type=SpaceComponentTypeFB(component_type).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceFilterComponentMETA(component_type={repr(self.component_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceFilterComponentMETA(component_type={self.component_type}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("component_type", SpaceComponentTypeFB.ctype()),
+    ]
+
+
+class SpaceDiscoveryResultMETA(Structure):
+    def __init__(
+        self,
+        space: Space = None,
+        uuid: UuidEXT = 0,
+    ) -> None:
+        super().__init__(
+            space=space,
+            uuid=uuid,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceDiscoveryResultMETA(space={repr(self.space)}, uuid={repr(self.uuid)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceDiscoveryResultMETA(space={self.space}, uuid={self.uuid})"
+
+    _fields_ = [
+        ("space", Space),
+        ("uuid", UuidEXT),
+    ]
+
+
+class SpaceDiscoveryResultsMETA(Structure):
+    def __init__(
+        self,
+        result_capacity_input: int = 0,
+        result_count_output: int = 0,
+        results: POINTER(SpaceDiscoveryResultMETA) = None,
+        next: c_void_p = None,
+        type: StructureType = StructureType.SPACE_DISCOVERY_RESULTS_META,
+    ) -> None:
+        super().__init__(
+            result_capacity_input=result_capacity_input,
+            result_count_output=result_count_output,
+            results=results,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceDiscoveryResultsMETA(result_capacity_input={repr(self.result_capacity_input)}, result_count_output={repr(self.result_count_output)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceDiscoveryResultsMETA(result_capacity_input={self.result_capacity_input}, result_count_output={self.result_count_output}, results={self.results}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("result_capacity_input", c_uint32),
+        ("result_count_output", c_uint32),
+        ("results", POINTER(SpaceDiscoveryResultMETA)),
+    ]
+
+
+class EventDataSpaceDiscoveryResultsAvailableMETA(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SPACE_DISCOVERY_RESULTS_AVAILABLE_META,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceDiscoveryResultsAvailableMETA(request_id={repr(self.request_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceDiscoveryResultsAvailableMETA(request_id={self.request_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+    ]
+
+
+class EventDataSpaceDiscoveryCompleteMETA(Structure):
+    def __init__(
+        self,
+        request_id: AsyncRequestIdFB = 0,
+        result: Result = Result(),  # noqa
+        next: c_void_p = None,
+        type: StructureType = StructureType.EVENT_DATA_SPACE_DISCOVERY_COMPLETE_META,
+    ) -> None:
+        super().__init__(
+            request_id=request_id,
+            result=Result(result).value,
+            next=next,
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpaceDiscoveryCompleteMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpaceDiscoveryCompleteMETA(request_id={self.request_id}, result={self.result}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("next", c_void_p),
+        ("request_id", AsyncRequestIdFB),
+        ("result", Result.ctype()),
+    ]
+
+
+PFN_xrDiscoverSpacesMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SpaceDiscoveryInfoMETA), POINTER(AsyncRequestIdFB))
+
+PFN_xrRetrieveSpaceDiscoveryResultsMETA = CFUNCTYPE(Result.ctype(), Session, AsyncRequestIdFB, POINTER(SpaceDiscoveryResultsMETA))
+
+
 class RecommendedLayerResolutionMETA(Structure):
     def __init__(
         self,
@@ -17472,7 +17752,7 @@ class TrackablePlaneANDROID(Structure):
         subsumed_by_plane: TrackableANDROID = 0,
         last_updated_time: Time = 0,
         vertex_capacity_input: int = 0,
-        vertex_count_output: int = 0,
+        vertex_count_output: POINTER(c_uint32) = None,
         vertices: POINTER(Vector2f) = None,
         next: c_void_p = None,
         type: StructureType = StructureType.TRACKABLE_PLANE_ANDROID,
@@ -17511,7 +17791,7 @@ class TrackablePlaneANDROID(Structure):
         ("subsumed_by_plane", TrackableANDROID),
         ("last_updated_time", Time),
         ("vertex_capacity_input", c_uint32),
-        ("vertex_count_output", c_uint32),
+        ("vertex_count_output", POINTER(c_uint32)),
         ("vertices", POINTER(Vector2f)),
     ]
 
@@ -21698,6 +21978,8 @@ __all__ = [
     "EventDataSenseDataUpdatedBD",
     "EventDataSessionStateChanged",
     "EventDataShareSpacesCompleteMETA",
+    "EventDataSpaceDiscoveryCompleteMETA",
+    "EventDataSpaceDiscoveryResultsAvailableMETA",
     "EventDataSpaceEraseCompleteFB",
     "EventDataSpaceListSaveCompleteFB",
     "EventDataSpaceQueryCompleteFB",
@@ -22019,6 +22301,7 @@ __all__ = [
     "PFN_xrDestroyTriangleMeshFB",
     "PFN_xrDestroyVirtualKeyboardMETA",
     "PFN_xrDestroyWorldMeshDetectorML",
+    "PFN_xrDiscoverSpacesMETA",
     "PFN_xrDownloadSharedSpatialAnchorAsyncBD",
     "PFN_xrDownloadSharedSpatialAnchorCompleteBD",
     "PFN_xrEnableLocalizationEventsML",
@@ -22206,6 +22489,7 @@ __all__ = [
     "PFN_xrResetBodyTrackingCalibrationMETA",
     "PFN_xrResultToString",
     "PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA",
+    "PFN_xrRetrieveSpaceDiscoveryResultsMETA",
     "PFN_xrRetrieveSpaceQueryResultsFB",
     "PFN_xrSaveSpaceFB",
     "PFN_xrSaveSpaceListFB",
@@ -22441,8 +22725,14 @@ __all__ = [
     "SpaceComponentStatusFB",
     "SpaceComponentStatusSetInfoFB",
     "SpaceContainerFB",
+    "SpaceDiscoveryInfoMETA",
+    "SpaceDiscoveryResultMETA",
+    "SpaceDiscoveryResultsMETA",
     "SpaceEraseInfoFB",
+    "SpaceFilterBaseHeaderMETA",
+    "SpaceFilterComponentMETA",
     "SpaceFilterInfoBaseHeaderFB",
+    "SpaceFilterUuidMETA",
     "SpaceGroupUuidFilterInfoMETA",
     "SpaceListSaveInfoFB",
     "SpaceLocation",
@@ -22639,6 +22929,7 @@ __all__ = [
     "SystemPropertiesBodyTrackingFullBodyMETA",
     "SystemRenderModelPropertiesFB",
     "SystemSimultaneousHandsAndControllersPropertiesMETA",
+    "SystemSpaceDiscoveryPropertiesMETA",
     "SystemSpacePersistencePropertiesMETA",
     "SystemSpaceWarpPropertiesFB",
     "SystemSpatialAnchorPropertiesBD",
