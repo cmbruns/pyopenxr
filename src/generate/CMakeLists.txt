@@ -276,7 +276,7 @@ find_file(OPENXR_VALIDATION_LAYER_JSON
         "$ENV{ProgramW6432}/OPENXR"
         "$ENV{ProgramFiles}/OPENXR"
         "/usr/local/share/openxr/1/api_layers/explicit.d/"
-    PATH_SUFFIXES x64/bin/api_layers bin/api_layers lib
+    PATH_SUFFIXES bin/api_layers lib
     DOC "Pre-built validation API layer for packaging"
 )
 find_file(OPENXR_VALIDATION_LAYER_LIB

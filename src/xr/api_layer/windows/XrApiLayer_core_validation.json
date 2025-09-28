@@ -5,6 +5,7 @@
         "library_path": "./XrApiLayer_core_validation.dll",
         "api_version": "1.1",
         "implementation_version": "1",
-        "description": "API Layer to perform validation of api calls and parameters as they occur"
+        "description": "API Layer to perform validation of api calls and parameters as they occur",
+        "disable_environment": "LUNARG_core_validation_disabled"
     }
 }
