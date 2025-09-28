@@ -965,11 +965,13 @@ VulkanInstanceCreateFlagsKHRCInt = Flags64
 
 class VulkanInstanceCreateFlagsKHR(FlagBase):
     NONE = 0x00000000
+    ALL = NONE
 
 VulkanDeviceCreateFlagsKHRCInt = Flags64
 
 class VulkanDeviceCreateFlagsKHR(FlagBase):
     NONE = 0x00000000
+    ALL = NONE
 
 
 class VulkanInstanceCreateInfoKHR(Structure):
@@ -1173,6 +1175,7 @@ class AndroidSurfaceSwapchainFlagsFB(FlagBase):
     NONE = 0x00000000
     SYNCHRONOUS_BIT = 0x00000001
     USE_TIMESTAMPS_BIT = 0x00000002
+    ALL = SYNCHRONOUS_BIT | USE_TIMESTAMPS_BIT
 
 ANDROID_SURFACE_SWAPCHAIN_SYNCHRONOUS_BIT_FB = 0x00000001
 ANDROID_SURFACE_SWAPCHAIN_USE_TIMESTAMPS_BIT_FB = 0x00000002

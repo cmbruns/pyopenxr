@@ -289,6 +289,11 @@ class FlagsItem(CodeItem):
             result = f"class {self.name(api)}(FlagBase):\n    NONE = 0x00000000"
             for name, value in self.values:
                 result += f"\n    {name} = {value}"
+            if len(self.values) > 0:
+                all = " | ".join([entry[0] for entry in self.values])
+                result += f"\n    ALL = {all}"
+            else:
+                result += f"\n    ALL = NONE"
             return result
         else:
             raise NotImplementedError
