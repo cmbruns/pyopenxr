@@ -2,6 +2,8 @@
 *.pyc
 __pycache__/
 build_cmake/
+build_cmake2/
+build_android/
 /build
 /dist
 /src/pyopenxr.egg-info
@@ -12,7 +14,6 @@ build_cmake/
 /src/generate/xrg/headers/*.h
 src/generate/xrg/libclang*.so
 /.venv
-/build_cmake2
 /.pytest_cache
 /docs/.doctrees/
 /docs/.buildinfo

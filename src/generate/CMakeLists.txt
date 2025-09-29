@@ -366,12 +366,3 @@ if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
 endif()
 
 add_subdirectory(py_api_layer)
-
-# Define the option
-option(BUILD_ANDROID_BINDINGS "Build Android-specific bindings and libraries" OFF)
-
-# Conditionally include Android subdirectory
-if(BUILD_ANDROID_BINDINGS)
-    message(STATUS "Including Android bindings build")
-    add_subdirectory(android)
-endif()
