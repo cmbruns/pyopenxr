@@ -1,4 +1,4 @@
-# This script creates an updated version of xr/platform/windows.py
+# This script creates an updated version of xr/platform/android.py
 
 import inspect
 
@@ -7,21 +7,10 @@ import xrg
 
 def main():
     compiler_args = [
-        # On Windows we define EVERYTHING, so that unified docs can be introspected here
-        "-DWIN32_LEAN_AND_MEAN",
-        "-DXR_USE_PLATFORM_WIN32",
         "-DXR_USE_PLATFORM_EGL",
-        "-DXR_USE_PLATFORM_WAYLAND",
-        "-DXR_USE_PLATFORM_XCB",
-        "-DXR_USE_PLATFORM_XLIB",
         "-DXR_USE_PLATFORM_ANDROID",
-        "-DXR_USE_PLATFORM_ML",
         "-DXR_USE_GRAPHICS_API_OPENGL_ES",
-        "-DXR_USE_GRAPHICS_API_OPENGL",
         "-DXR_USE_GRAPHICS_API_VULKAN",
-        "-DXR_USE_GRAPHICS_API_D3D11",
-        "-DXR_USE_GRAPHICS_API_D3D12",
-        "-DXR_USE_GRAPHICS_API_METAL",
         "-DXR_USE_TIMESPEC",
         "-DXR_CPP_NULLPTR_SUPPORTED",
     ]
@@ -29,12 +18,14 @@ def main():
         header=xrg.Header.PLATFORM,
         compiler_args=compiler_args,
         header_preamble=inspect.cleandoc("""
-            #include <Windows.h>
+            #include <GLES3/gl3.h>              // OpenGL ES 3.x API
+            #include <EGL/egl.h>                // EGL core
+            #include <EGL/eglext.h>             // EGL extensions
+            // #include <android/native_window.h>  // ANativeWindow for swapchain integration
+            // #include <android/binder_ibinder.h> // AIBinder definition
         """),
     )
     cg.ctypes_names.add("c_ulong")
-    cg.ctypes_names.add("c_long")
-    cg.ctypes_names.add("c_longlong")
     cg.ctypes_names.add("cast")
 
     cg.print_header()
@@ -42,32 +33,15 @@ def main():
         import ctypes
         from typing import Optional
 
-        from OpenGL import WGL
-        
         from ..array_field import *
         from ..enums import *
         from ..typedefs import *
         from ..version import *
-
         
-        class _LUID(ctypes.Structure):
-            _fields_ = [
-                ("low_part", c_ulong),
-                ("high_part", c_long),
-            ]
-
-
-        # Forward declaration of a Wayland structure
-        class wl_display(Structure):
-            pass
-
-
+        
         # Forward declaration of an Android structure
         class AIBinder(Structure):
             pass
-
-                
-        _LARGE_INTEGER = c_longlong
     """))
     print("")
     cg.print_items()

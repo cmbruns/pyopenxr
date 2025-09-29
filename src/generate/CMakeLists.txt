@@ -349,6 +349,7 @@ generate_source("generate_raw_functions.py" "raw_functions.py" "")
 generate_source("generate_functions.py" "functions.py" "")
 if(WIN32)
     generate_source("generate_windows_platform.py" "windows.py" "platform")
+    generate_source("generate_android_platform.py" "android.py" "platform")
 else()
     generate_source("generate_linux_platform.py" "linux.py" "platform")
 endif()
@@ -365,3 +366,12 @@ if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
 endif()
 
 add_subdirectory(py_api_layer)
+
+# Define the option
+option(BUILD_ANDROID_BINDINGS "Build Android-specific bindings and libraries" OFF)
+
+# Conditionally include Android subdirectory
+if(BUILD_ANDROID_BINDINGS)
+    message(STATUS "Including Android bindings build")
+    add_subdirectory(android)
+endif()
