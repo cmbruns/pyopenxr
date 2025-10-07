@@ -23,6 +23,8 @@ def expose_packaged_api_layers():
         local_path = os.path.abspath(resource_filename("xr.api_layer", "windows"))
     elif platform.system() == "Linux":
         local_path = os.path.abspath(resource_filename("xr.api_layer", "linux"))
+    elif platform.system() == "Android":
+        local_path = os.path.abspath(resource_filename("xr.api_layer", "android"))
     else:
         raise NotImplementedError
     add_folder_to_api_layer_path(local_path)
@@ -35,6 +37,9 @@ def py_layer_library_path() -> str:
         name = "XrApiLayer_python.dll"
     elif platform.system() == "Linux":
         package = "xr.api_layer.linux"
+        name = "libXrApiLayer_python.so"
+    elif platform.system() == "Android":
+        package = "xr.api_layer.android"
         name = "libXrApiLayer_python.so"
     else:
         raise NotImplementedError
