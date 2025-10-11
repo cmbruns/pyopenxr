@@ -35,6 +35,30 @@ class timespec(Structure):
         ("tv_sec", c_longlong),  # TODO: is this the correct type?
         ("tv_nsec", c_long),
     ]
+    
+
+class _HandleBase(Structure):
+    pass
+
+
+VkInstance = POINTER(_HandleBase)
+VkDevice = POINTER(_HandleBase)
+VkImage = POINTER(_HandleBase)
+VkPhysicalDevice = POINTER(_HandleBase)
+PFN_vkVoidFunction = CFUNCTYPE(None)
+PFN_vkGetInstanceProcAddr = CFUNCTYPE(PFN_vkVoidFunction, VkInstance, c_char_p)
+
+
+class VkInstanceCreateInfo(Structure): 
+    pass
+
+        
+class VkAllocationCallbacks(Structure): 
+    pass
+    
+
+class VkDeviceCreateInfo(Structure): 
+    pass
 
 
 KHR_vulkan_swapchain_format_list = 1
@@ -393,9 +417,9 @@ PFN_xrGetOpenGLESGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, S
 class GraphicsBindingVulkanKHR(Structure):
     def __init__(
         self,
-        instance: int = 0,
-        physical_device: int = 0,
-        device: int = 0,
+        instance: VkInstance = None,
+        physical_device: VkPhysicalDevice = None,
+        device: VkDevice = None,
         queue_family_index: int = 0,
         queue_index: int = 0,
         next: c_void_p = None,
@@ -420,9 +444,9 @@ class GraphicsBindingVulkanKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("instance", c_int),
-        ("physical_device", c_int),
-        ("device", c_int),
+        ("instance", VkInstance),
+        ("physical_device", VkPhysicalDevice),
+        ("device", VkDevice),
         ("queue_family_index", c_uint32),
         ("queue_index", c_uint32),
     ]
@@ -431,7 +455,7 @@ class GraphicsBindingVulkanKHR(Structure):
 class SwapchainImageVulkanKHR(Structure):
     def __init__(
         self,
-        image: int = 0,
+        image: VkImage = None,
         next: c_void_p = None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_VULKAN_KHR,
     ) -> None:
@@ -450,7 +474,7 @@ class SwapchainImageVulkanKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("image", c_int),
+        ("image", VkImage),
     ]
 
 
@@ -513,7 +537,7 @@ PFN_xrGetVulkanInstanceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, Syste
 
 PFN_xrGetVulkanDeviceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
 
-PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_int, POINTER(c_int))
+PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, VkInstance, POINTER(VkPhysicalDevice))
 
 PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
@@ -523,11 +547,14 @@ PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), Instance, Time, P
 
 VulkanInstanceCreateFlagsKHRCInt = Flags64
 
+
 class VulkanInstanceCreateFlagsKHR(FlagBase):
     NONE = 0x00000000
     ALL = NONE
 
+
 VulkanDeviceCreateFlagsKHRCInt = Flags64
+
 
 class VulkanDeviceCreateFlagsKHR(FlagBase):
     NONE = 0x00000000
@@ -539,9 +566,9 @@ class VulkanInstanceCreateInfoKHR(Structure):
         self,
         system_id: SystemId = 0,
         create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR(),  # noqa
-        pfn_get_instance_proc_addr: int = 0,
-        vulkan_create_info: POINTER(c_int) = None,
-        vulkan_allocator: POINTER(c_int) = None,
+        pfn_get_instance_proc_addr: PFN_vkGetInstanceProcAddr = 0,
+        vulkan_create_info: POINTER(VkInstanceCreateInfo) = None,
+        vulkan_allocator: POINTER(VkAllocationCallbacks) = None,
         next: c_void_p = None,
         type: StructureType = StructureType.VULKAN_INSTANCE_CREATE_INFO_KHR,
     ) -> None:
@@ -566,9 +593,9 @@ class VulkanInstanceCreateInfoKHR(Structure):
         ("next", c_void_p),
         ("system_id", SystemId),
         ("create_flags", VulkanInstanceCreateFlagsKHRCInt),
-        ("pfn_get_instance_proc_addr", c_int),
-        ("vulkan_create_info", POINTER(c_int)),
-        ("vulkan_allocator", POINTER(c_int)),
+        ("pfn_get_instance_proc_addr", PFN_vkGetInstanceProcAddr),
+        ("vulkan_create_info", POINTER(VkInstanceCreateInfo)),
+        ("vulkan_allocator", POINTER(VkAllocationCallbacks)),
     ]
 
 
@@ -577,10 +604,10 @@ class VulkanDeviceCreateInfoKHR(Structure):
         self,
         system_id: SystemId = 0,
         create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR(),  # noqa
-        pfn_get_instance_proc_addr: int = 0,
-        vulkan_physical_device: int = 0,
-        vulkan_create_info: POINTER(c_int) = None,
-        vulkan_allocator: POINTER(c_int) = None,
+        pfn_get_instance_proc_addr: PFN_vkGetInstanceProcAddr = 0,
+        vulkan_physical_device: VkPhysicalDevice = None,
+        vulkan_create_info: POINTER(VkDeviceCreateInfo) = None,
+        vulkan_allocator: POINTER(VkAllocationCallbacks) = None,
         next: c_void_p = None,
         type: StructureType = StructureType.VULKAN_DEVICE_CREATE_INFO_KHR,
     ) -> None:
@@ -606,10 +633,10 @@ class VulkanDeviceCreateInfoKHR(Structure):
         ("next", c_void_p),
         ("system_id", SystemId),
         ("create_flags", VulkanDeviceCreateFlagsKHRCInt),
-        ("pfn_get_instance_proc_addr", c_int),
-        ("vulkan_physical_device", c_int),
-        ("vulkan_create_info", POINTER(c_int)),
-        ("vulkan_allocator", POINTER(c_int)),
+        ("pfn_get_instance_proc_addr", PFN_vkGetInstanceProcAddr),
+        ("vulkan_physical_device", VkPhysicalDevice),
+        ("vulkan_create_info", POINTER(VkDeviceCreateInfo)),
+        ("vulkan_allocator", POINTER(VkAllocationCallbacks)),
     ]
 
 
@@ -620,7 +647,7 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        vulkan_instance: int = 0,
+        vulkan_instance: VkInstance = None,
         next: c_void_p = None,
         type: StructureType = StructureType.VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR,
     ) -> None:
@@ -641,7 +668,7 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("system_id", SystemId),
-        ("vulkan_instance", c_int),
+        ("vulkan_instance", VkInstance),
     ]
 
 
@@ -649,11 +676,11 @@ SwapchainImageVulkan2KHR = SwapchainImageVulkanKHR
 
 GraphicsRequirementsVulkan2KHR = GraphicsRequirementsVulkanKHR
 
-PFN_xrCreateVulkanInstanceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanInstanceCreateInfoKHR), POINTER(c_int), POINTER(c_int))
+PFN_xrCreateVulkanInstanceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanInstanceCreateInfoKHR), POINTER(VkInstance), POINTER(c_int))
 
-PFN_xrCreateVulkanDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanDeviceCreateInfoKHR), POINTER(c_int), POINTER(c_int))
+PFN_xrCreateVulkanDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanDeviceCreateInfoKHR), POINTER(VkDevice), POINTER(c_int))
 
-PFN_xrGetVulkanGraphicsDevice2KHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanGraphicsDeviceGetInfoKHR), POINTER(c_int))
+PFN_xrGetVulkanGraphicsDevice2KHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanGraphicsDeviceGetInfoKHR), POINTER(VkPhysicalDevice))
 
 PFN_xrGetVulkanGraphicsRequirements2KHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
@@ -698,7 +725,7 @@ class GraphicsBindingEGLMNDX(Structure):
 class SwapchainImageFoveationVulkanFB(Structure):
     def __init__(
         self,
-        image: int = 0,
+        image: VkImage = None,
         width: int = 0,
         height: int = 0,
         next: c_void_p = None,
@@ -721,7 +748,7 @@ class SwapchainImageFoveationVulkanFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("image", c_int),
+        ("image", VkImage),
         ("width", c_uint32),
         ("height", c_uint32),
     ]
@@ -785,15 +812,15 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
 class SwapchainStateSamplerVulkanFB(Structure):
     def __init__(
         self,
-        min_filter: int = 0,
-        mag_filter: int = 0,
-        mipmap_mode: int = 0,
-        wrap_mode_s: int = 0,
-        wrap_mode_t: int = 0,
-        swizzle_red: int = 0,
-        swizzle_green: int = 0,
-        swizzle_blue: int = 0,
-        swizzle_alpha: int = 0,
+        min_filter: c_int = 0,
+        mag_filter: c_int = 0,
+        mipmap_mode: c_int = 0,
+        wrap_mode_s: c_int = 0,
+        wrap_mode_t: c_int = 0,
+        swizzle_red: c_int = 0,
+        swizzle_green: c_int = 0,
+        swizzle_blue: c_int = 0,
+        swizzle_alpha: c_int = 0,
         max_anisotropy: float = 0,
         border_color: Color4f = None,
         next: c_void_p = None,
@@ -864,8 +891,8 @@ class VulkanSwapchainCreateInfoMETA(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("additional_create_flags", c_int),
-        ("additional_usage_flags", c_int),
+        ("additional_create_flags", c_uint32),
+        ("additional_usage_flags", c_uint32),
     ]
 
 
