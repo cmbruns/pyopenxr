@@ -1,8 +1,8 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import (
-    CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong,
-    c_uint32, c_ulong, c_void_p, c_wchar, cast, wintypes,
+    CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_long,
+    c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, cast, create_string_buffer, wintypes,
 )
 import ctypes
 from typing import Optional
@@ -13,6 +13,7 @@ from ..array_field import *
 from ..enums import *
 from ..typedefs import *
 from ..version import *
+from ..exception import *
 
 
 class _LUID(ctypes.Structure):
@@ -148,7 +149,47 @@ class AndroidThreadTypeKHR(EnumBase):
 
 PFN_xrSetAndroidApplicationThreadKHR = CFUNCTYPE(Result.ctype(), Session, AndroidThreadTypeKHR.ctype(), c_uint32)
 
+
+def set_android_application_thread_khr(
+    session: Session,
+    thread_type: AndroidThreadTypeKHR,
+    thread_id: int,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrSetAndroidApplicationThreadKHR"),
+        PFN_xrSetAndroidApplicationThreadKHR,
+    )
+    result = check_result(fxn(
+        session,
+        thread_type.value,
+        thread_id,
+    ))
+    if result.is_exception():
+        raise result
+
+
 PFN_xrCreateSwapchainAndroidSurfaceKHR = CFUNCTYPE(Result.ctype(), Session, POINTER(SwapchainCreateInfo), POINTER(Swapchain), POINTER(c_int))
+
+
+def create_swapchain_android_surface_khr(
+    session: Session,
+    info: SwapchainCreateInfo,
+) -> (Swapchain, int):
+    swapchain = Swapchain()
+    surface = c_int()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSwapchainAndroidSurfaceKHR"),
+        PFN_xrCreateSwapchainAndroidSurfaceKHR,
+    )
+    result = check_result(fxn(
+        session,
+        info,
+        byref(swapchain),
+        byref(surface),
+    ))
+    if result.is_exception():
+        raise result
+    return swapchain, surface.value
 
 
 class InstanceCreateInfoAndroidKHR(Structure):
@@ -443,6 +484,25 @@ class GraphicsRequirementsOpenGLKHR(Structure):
 PFN_xrGetOpenGLGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsOpenGLKHR))
 
 
+def get_opengl_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsOpenGLKHR:
+    graphics_requirements = GraphicsRequirementsOpenGLKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetOpenGLGraphicsRequirementsKHR"),
+        PFN_xrGetOpenGLGraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
+
+
 class GraphicsBindingOpenGLESAndroidKHR(Structure):
     def __init__(
         self,
@@ -557,6 +617,25 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
 
 
 PFN_xrGetOpenGLESGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsOpenGLESKHR))
+
+
+def get_opengl_es_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsOpenGLESKHR:
+    graphics_requirements = GraphicsRequirementsOpenGLESKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetOpenGLESGraphicsRequirementsKHR"),
+        PFN_xrGetOpenGLESGraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
 
 
 class GraphicsBindingVulkanKHR(Structure):
@@ -680,11 +759,118 @@ class GraphicsRequirementsVulkanKHR(Structure):
 
 PFN_xrGetVulkanInstanceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
 
+
+def get_vulkan_instance_extensions_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> str:
+    buffer_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanInstanceExtensionsKHR"),
+        PFN_xrGetVulkanInstanceExtensionsKHR,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        system_id,
+        0,
+        byref(buffer_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    buffer = create_string_buffer(buffer_capacity_input.value)
+    result = check_result(fxn(
+        instance,
+        system_id,
+        buffer_capacity_input,
+        byref(buffer_capacity_input),
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+    return buffer.value.decode()
+
+
 PFN_xrGetVulkanDeviceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
+
+
+def get_vulkan_device_extensions_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> str:
+    buffer_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanDeviceExtensionsKHR"),
+        PFN_xrGetVulkanDeviceExtensionsKHR,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        system_id,
+        0,
+        byref(buffer_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    buffer = create_string_buffer(buffer_capacity_input.value)
+    result = check_result(fxn(
+        instance,
+        system_id,
+        buffer_capacity_input,
+        byref(buffer_capacity_input),
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+    return buffer.value.decode()
+
 
 PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, VkInstance, POINTER(VkPhysicalDevice))
 
+
+def get_vulkan_graphics_device_khr(
+    instance: Instance,
+    system_id: SystemId,
+    vk_instance: VkInstance,
+) -> VkPhysicalDevice:
+    vk_physical_device = VkPhysicalDevice()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsDeviceKHR"),
+        PFN_xrGetVulkanGraphicsDeviceKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        vk_instance,
+        byref(vk_physical_device),
+    ))
+    if result.is_exception():
+        raise result
+    return vk_physical_device
+
+
 PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
+
+
+def get_vulkan_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsVulkanKHR:
+    graphics_requirements = GraphicsRequirementsVulkanKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsRequirementsKHR"),
+        PFN_xrGetVulkanGraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
 
 
 class GraphicsBindingD3D11KHR(Structure):
@@ -769,6 +955,25 @@ class GraphicsRequirementsD3D11KHR(Structure):
 
 
 PFN_xrGetD3D11GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsD3D11KHR))
+
+
+def get_d3d11_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsD3D11KHR:
+    graphics_requirements = GraphicsRequirementsD3D11KHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetD3D11GraphicsRequirementsKHR"),
+        PFN_xrGetD3D11GraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
 
 
 class GraphicsBindingD3D12KHR(Structure):
@@ -858,6 +1063,25 @@ class GraphicsRequirementsD3D12KHR(Structure):
 PFN_xrGetD3D12GraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsD3D12KHR))
 
 
+def get_d3d12_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsD3D12KHR:
+    graphics_requirements = GraphicsRequirementsD3D12KHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetD3D12GraphicsRequirementsKHR"),
+        PFN_xrGetD3D12GraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
+
+
 class GraphicsBindingMetalKHR(Structure):
     def __init__(
         self,
@@ -938,9 +1162,68 @@ class GraphicsRequirementsMetalKHR(Structure):
 
 PFN_xrGetMetalGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsMetalKHR))
 
+
+def get_metal_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsMetalKHR:
+    graphics_requirements = GraphicsRequirementsMetalKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetMetalGraphicsRequirementsKHR"),
+        PFN_xrGetMetalGraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
+
+
 PFN_xrConvertWin32PerformanceCounterToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(_LARGE_INTEGER), POINTER(Time))
 
+
+def convert_win32_performance_counter_to_time_khr(
+    instance: Instance,
+    performance_counter: _LARGE_INTEGER,
+) -> Time:
+    time = Time()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrConvertWin32PerformanceCounterToTimeKHR"),
+        PFN_xrConvertWin32PerformanceCounterToTimeKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        performance_counter,
+        byref(time),
+    ))
+    if result.is_exception():
+        raise result
+    return time
+
+
 PFN_xrConvertTimeToWin32PerformanceCounterKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(_LARGE_INTEGER))
+
+
+def convert_time_to_win32_performance_counter_khr(
+    instance: Instance,
+    time: Time,
+) -> _LARGE_INTEGER:
+    performance_counter = _LARGE_INTEGER()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrConvertTimeToWin32PerformanceCounterKHR"),
+        PFN_xrConvertTimeToWin32PerformanceCounterKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        time,
+        byref(performance_counter),
+    ))
+    if result.is_exception():
+        raise result
+    return performance_counter
 
 
 class timespec(Structure):
@@ -950,11 +1233,49 @@ class timespec(Structure):
 PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(timespec), POINTER(Time))
 
 
+def convert_timespec_time_to_time_khr(
+    instance: Instance,
+    timespec_time: timespec,
+) -> Time:
+    time = Time()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrConvertTimespecTimeToTimeKHR"),
+        PFN_xrConvertTimespecTimeToTimeKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        timespec_time,
+        byref(time),
+    ))
+    if result.is_exception():
+        raise result
+    return time
+
+
 class timespec(Structure):
     pass
 
 
 PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(timespec))
+
+
+def convert_time_to_timespec_time_khr(
+    instance: Instance,
+    time: Time,
+) -> timespec:
+    timespec_time = timespec()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrConvertTimeToTimespecTimeKHR"),
+        PFN_xrConvertTimeToTimespecTimeKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        time,
+        byref(timespec_time),
+    ))
+    if result.is_exception():
+        raise result
+    return timespec_time
 
 
 class LoaderInitInfoAndroidKHR(Structure):
@@ -1119,11 +1440,99 @@ GraphicsRequirementsVulkan2KHR = GraphicsRequirementsVulkanKHR
 
 PFN_xrCreateVulkanInstanceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanInstanceCreateInfoKHR), POINTER(VkInstance), POINTER(c_int))
 
+
+def create_vulkan_instance_khr(
+    instance: Instance,
+    create_info: VulkanInstanceCreateInfoKHR = None,
+) -> (VkInstance, c_int):
+    if create_info is None:
+        create_info = VulkanInstanceCreateInfoKHR()
+    vulkan_instance = VkInstance()
+    vulkan_result = c_int()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrCreateVulkanInstanceKHR"),
+        PFN_xrCreateVulkanInstanceKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(vulkan_instance),
+        byref(vulkan_result),
+    ))
+    if result.is_exception():
+        raise result
+    return vulkan_instance, vulkan_result
+
+
 PFN_xrCreateVulkanDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanDeviceCreateInfoKHR), POINTER(VkDevice), POINTER(c_int))
+
+
+def create_vulkan_device_khr(
+    instance: Instance,
+    create_info: VulkanDeviceCreateInfoKHR = None,
+) -> (VkDevice, c_int):
+    if create_info is None:
+        create_info = VulkanDeviceCreateInfoKHR()
+    vulkan_device = VkDevice()
+    vulkan_result = c_int()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrCreateVulkanDeviceKHR"),
+        PFN_xrCreateVulkanDeviceKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(vulkan_device),
+        byref(vulkan_result),
+    ))
+    if result.is_exception():
+        raise result
+    return vulkan_device, vulkan_result
+
 
 PFN_xrGetVulkanGraphicsDevice2KHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanGraphicsDeviceGetInfoKHR), POINTER(VkPhysicalDevice))
 
+
+def get_vulkan_graphics_device2_khr(
+    instance: Instance,
+    get_info: VulkanGraphicsDeviceGetInfoKHR,
+) -> VkPhysicalDevice:
+    vulkan_physical_device = VkPhysicalDevice()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsDevice2KHR"),
+        PFN_xrGetVulkanGraphicsDevice2KHR,
+    )
+    result = check_result(fxn(
+        instance,
+        get_info,
+        byref(vulkan_physical_device),
+    ))
+    if result.is_exception():
+        raise result
+    return vulkan_physical_device
+
+
 PFN_xrGetVulkanGraphicsRequirements2KHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
+
+
+def get_vulkan_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsVulkanKHR:
+    graphics_requirements = GraphicsRequirementsVulkanKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsRequirementsKHR"),
+        PFN_xrGetVulkanGraphicsRequirements2KHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
+
 
 PFN_xrEglGetProcAddressMNDX = CFUNCTYPE(PFN_xrVoidFunction, c_char_p)
 
@@ -1165,7 +1574,47 @@ class GraphicsBindingEGLMNDX(Structure):
 
 PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT = CFUNCTYPE(Result.ctype(), Session, POINTER(c_int), POINTER(SpatialAnchorMSFT))
 
+
+def create_spatial_anchor_from_perception_anchor_msft(
+    session: Session,
+) -> (int, SpatialAnchorMSFT):
+    perception_anchor = c_int()
+    anchor = SpatialAnchorMSFT()
+    anchor.instance = session.instance
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorFromPerceptionAnchorMSFT"),
+        PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT,
+    )
+    result = check_result(fxn(
+        session,
+        byref(perception_anchor),
+        byref(anchor),
+    ))
+    if result.is_exception():
+        raise result
+    return perception_anchor.value, anchor
+
+
 PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT = CFUNCTYPE(Result.ctype(), Session, SpatialAnchorMSFT, POINTER(POINTER(c_int)))
+
+
+def try_get_perception_anchor_from_spatial_anchor_msft(
+    session: Session,
+    anchor: SpatialAnchorMSFT,
+) -> POINTER(c_int):
+    perception_anchor = POINTER(c_int)()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrTryGetPerceptionAnchorFromSpatialAnchorMSFT"),
+        PFN_xrTryGetPerceptionAnchorFromSpatialAnchorMSFT,
+    )
+    result = check_result(fxn(
+        session,
+        anchor,
+        byref(perception_anchor),
+    ))
+    if result.is_exception():
+        raise result
+    return perception_anchor
 
 
 class HolographicWindowAttachmentMSFT(Structure):
@@ -1268,9 +1717,65 @@ class CoordinateSpaceCreateInfoML(Structure):
 
 PFN_xrCreateSpaceFromCoordinateFrameUIDML = CFUNCTYPE(Result.ctype(), Session, POINTER(CoordinateSpaceCreateInfoML), POINTER(Space))
 
+
+def create_space_from_coordinate_frame_uidml(
+    session: Session,
+    create_info: CoordinateSpaceCreateInfoML = None,
+) -> Space:
+    if create_info is None:
+        create_info = CoordinateSpaceCreateInfoML()
+    space = Space()
+    space.instance = session.instance
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpaceFromCoordinateFrameUIDML"),
+        PFN_xrCreateSpaceFromCoordinateFrameUIDML,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(space),
+    ))
+    if result.is_exception():
+        raise result
+    return space
+
+
 PFN_xrGetAudioOutputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (c_wchar * 128))
 
+
+def get_audio_output_device_guid_oculus(
+    instance: Instance,
+    buffer: (c_wchar * 128),
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetAudioOutputDeviceGuidOculus"),
+        PFN_xrGetAudioOutputDeviceGuidOculus,
+    )
+    result = check_result(fxn(
+        instance,
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+
+
 PFN_xrGetAudioInputDeviceGuidOculus = CFUNCTYPE(Result.ctype(), Instance, (c_wchar * 128))
+
+
+def get_audio_input_device_guid_oculus(
+    instance: Instance,
+    buffer: (c_wchar * 128),
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetAudioInputDeviceGuidOculus"),
+        PFN_xrGetAudioInputDeviceGuidOculus,
+    )
+    result = check_result(fxn(
+        instance,
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
 
 
 class SwapchainImageFoveationVulkanFB(Structure):
@@ -1556,7 +2061,43 @@ class SystemAnchorSharingExportPropertiesANDROID(Structure):
 
 PFN_xrShareAnchorANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(AnchorSharingInfoANDROID), POINTER(AnchorSharingTokenANDROID))
 
+
+def share_anchor_android(
+    session: Session,
+    sharing_info: AnchorSharingInfoANDROID,
+) -> AnchorSharingTokenANDROID:
+    anchor_token = AnchorSharingTokenANDROID()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrShareAnchorANDROID"),
+        PFN_xrShareAnchorANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        sharing_info,
+        byref(anchor_token),
+    ))
+    if result.is_exception():
+        raise result
+    return anchor_token
+
+
 PFN_xrUnshareAnchorANDROID = CFUNCTYPE(Result.ctype(), Session, Space)
+
+
+def unshare_anchor_android(
+    session: Session,
+    anchor: Space,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrUnshareAnchorANDROID"),
+        PFN_xrUnshareAnchorANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        anchor,
+    ))
+    if result.is_exception():
+        raise result
 
 
 __all__ = [
@@ -1717,5 +2258,30 @@ __all__ = [
     "VulkanInstanceCreateInfoKHR",
     "VulkanSwapchainCreateInfoMETA",
     "VulkanSwapchainFormatListCreateInfoKHR",
+    "convert_time_to_timespec_time_khr",
+    "convert_time_to_win32_performance_counter_khr",
+    "convert_timespec_time_to_time_khr",
+    "convert_win32_performance_counter_to_time_khr",
+    "create_space_from_coordinate_frame_uidml",
+    "create_spatial_anchor_from_perception_anchor_msft",
+    "create_swapchain_android_surface_khr",
+    "create_vulkan_device_khr",
+    "create_vulkan_instance_khr",
+    "get_audio_input_device_guid_oculus",
+    "get_audio_output_device_guid_oculus",
+    "get_d3d11_graphics_requirements_khr",
+    "get_d3d12_graphics_requirements_khr",
+    "get_metal_graphics_requirements_khr",
+    "get_opengl_es_graphics_requirements_khr",
+    "get_opengl_graphics_requirements_khr",
+    "get_vulkan_device_extensions_khr",
+    "get_vulkan_graphics_device2_khr",
+    "get_vulkan_graphics_device_khr",
+    "get_vulkan_graphics_requirements_khr",
+    "get_vulkan_instance_extensions_khr",
+    "set_android_application_thread_khr",
+    "share_anchor_android",
     "timespec",
+    "try_get_perception_anchor_from_spatial_anchor_msft",
+    "unshare_anchor_android",
 ]

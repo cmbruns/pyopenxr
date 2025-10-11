@@ -34,10 +34,12 @@ def main():
             #include <vulkan/vulkan.h>
         """),
     )
+    cg.ctypes_names.add("byref")
     cg.ctypes_names.add("c_ulong")
     cg.ctypes_names.add("c_long")
     cg.ctypes_names.add("c_longlong")
     cg.ctypes_names.add("cast")
+    cg.ctypes_names.add("create_string_buffer")
 
     cg.print_header()
     print(inspect.cleandoc("""
@@ -50,6 +52,7 @@ def main():
         from ..enums import *
         from ..typedefs import *
         from ..version import *
+        from ..exception import *
 
         
         class _LUID(ctypes.Structure):

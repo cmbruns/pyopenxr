@@ -25,7 +25,9 @@ def main():
             // #include <android/binder_ibinder.h> // AIBinder definition
         """),
     )
+    cg.ctypes_names.add("byref")
     cg.ctypes_names.add("cast")
+    cg.ctypes_names.add("create_string_buffer")
 
     cg.print_header()
     print(inspect.cleandoc("""
@@ -36,6 +38,7 @@ def main():
         from ..enums import *
         from ..typedefs import *
         from ..version import *
+        from ..exception import *
         
         
         # Forward declaration of an Android structure
@@ -65,6 +68,7 @@ def main():
         
         class VkDeviceCreateInfo(Structure): 
             pass
+
 
     """))
     print("")

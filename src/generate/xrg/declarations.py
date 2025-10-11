@@ -313,8 +313,20 @@ class FlagsItem(CodeItem):
 class FunctionItem(CodeItem):
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
-        assert cursor.kind == CursorKind.FUNCTION_DECL
-        self._capi_name = cursor.spelling
+        if cursor.kind == CursorKind.TYPEDEF_DECL:
+            assert cursor.spelling.startswith("PFN_")
+            self._capi_name = cursor.spelling[len("PFN_"):]
+            command = xr_registry.find(f'commands/command[@name="{self._capi_name}"]')
+            if command is not None:
+                alias = command.attrib["alias"]
+                self._capi_name = alias
+            command2 = xr_registry.find(f'commands/command/proto[name="{self._capi_name}"]')
+            if command2 is None:
+                raise SkippableCodeItemException  # Probably a pure function pointer in xr.xml?
+        elif cursor.kind == CursorKind.FUNCTION_DECL:
+            self._capi_name = cursor.spelling
+        else:
+            raise NotImplementedError
         self._py_name = self._py_function_name(self._capi_name)
         self.parameters = []
         self.return_type = None
@@ -323,7 +335,7 @@ class FunctionItem(CodeItem):
                 assert self.return_type is None
                 self.return_type = parse_type(c.type)
             elif c.kind == CursorKind.PARM_DECL:
-                self.parameters.append(FunctionParameterItem(c))
+                self.parameters.append(FunctionParameterItem(c, self))
             else:
                 assert False
         if "Function" in default_values:
@@ -401,9 +413,10 @@ class FunctionItem(CodeItem):
 
 
 class FunctionParameterItem(CodeItem):
-    def __init__(self, cursor: Cursor):
+    def __init__(self, cursor: Cursor, function):
         super().__init__(cursor)
         assert cursor.kind == CursorKind.PARM_DECL
+        self.function = function
         self._capi_name = cursor.spelling
         self._py_name = snake_from_camel(self._capi_name)
         self.type = parse_type(cursor.type)
@@ -411,7 +424,7 @@ class FunctionParameterItem(CodeItem):
         self._default_value = None
         # Query xr registry to see if this parameter is optional
         if xr_registry:
-            function_c_name = cursor.semantic_parent.spelling
+            function_c_name = self.function._capi_name
             try:
                 command = xr_registry.find(f'commands/command/proto[name="{function_c_name}"]/..')
                 this_param = command.find(f'param[name="{self._capi_name}"]')
@@ -1054,7 +1067,19 @@ class FunctionCoder(object):
         for p, c in self.param_coders:
             for line in c.pre_body_code():
                 result += f"\n    {line}"
-        result += f"\n    fxn = raw_functions.{self.function.name(Api.CTYPES)}"
+        if self.function.cursor.kind == CursorKind.FUNCTION_DECL:
+            result += f"\n    fxn = raw_functions.{self.function.name(Api.CTYPES)}"
+        else:
+            # use get_instance_proc_addr to get the raw function pointer
+            # the first argument must be a handle type with an instance property
+            pfn_str = self.function.cursor.spelling
+            assert pfn_str.startswith("PFN_")
+            c_name = self.function.name(Api.CTYPES)
+            handle_name = self.function.parameters[0].name(Api.PYTHON)
+            result += f"\n    fxn = cast("
+            result += f'\n        get_instance_proc_addr({handle_name}.instance, "{c_name}"),'
+            result += f"\n        {pfn_str},"
+            result += f"\n    )"
         if self._needs_two_calls:
             result += f"\n    # First call of two, to retrieve buffer sizes"
             result += f"\n    result = check_result(fxn("

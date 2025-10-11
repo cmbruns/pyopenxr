@@ -148,7 +148,7 @@ def generate_code_items(
     compiler_args=None,
     header_preamble=None,
 ) -> Generator[CodeItem, None, None]:
-    # Separate pass to assemble Flag types
+    # This first pass assembles Flag types
     flag_types = {}
     # Which are accumulated from TYPEDEF and VAR_DECL cursors
     if kinds is None or len(kinds) == 0 or (
@@ -175,6 +175,19 @@ def generate_code_items(
                     continue
                 flags_type_name = ct.spelling.replace("const ", "")
                 flag_types[flags_type_name].add_value(cursor)
+    # This next pass stores regular function names, so we can skip them in the extension function pass
+    known_functions = set()
+    if kinds is None or len(kinds) == 0 or CursorKind.FUNCTION_DECL in kinds:
+        for cursor in generate_cursors(
+                header=header,
+                compiler_args=compiler_args,
+                header_preamble=header_preamble,
+        ):
+            if cursor.kind != CursorKind.FUNCTION_DECL:
+                continue
+            if cursor.spelling.startswith("xr"):
+                known_functions.add(cursor.spelling)  # TODO: test this code path
+    # This next pass emits everything
     for cursor in generate_cursors(
             header=header,
             compiler_args=compiler_args,
@@ -192,6 +205,10 @@ def generate_code_items(
                 if cursor.underlying_typedef_type.spelling == "XrFlags64":
                     if cursor.spelling in flag_types:
                         yield flag_types[cursor.spelling]
+                if cursor.spelling.startswith("PFN_xr"):
+                    fn_name = cursor.spelling[len("PFN_"):]
+                    if fn_name not in known_functions:
+                        yield FunctionItem(cursor)
         except SkippableCodeItemException:
             continue
 
