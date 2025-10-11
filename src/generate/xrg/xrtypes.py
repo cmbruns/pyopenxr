@@ -266,7 +266,7 @@ class TypedefType(TypeBase):
         )
         if isinstance(self.underlying_type, EnumType):
             self._ctypes_name += ".ctype()"
-        if not self._capi_name.upper()[:2] in ("XR", "PF", ):
+        if not self._capi_name.upper()[:2] in ("XR", "PF", "VK", "EG"):
             raise ValueError(self._capi_name)
         # Rename handle types
         if self.underlying_type.clang_type.kind == TypeKind.POINTER:

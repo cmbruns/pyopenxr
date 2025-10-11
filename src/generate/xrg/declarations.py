@@ -120,7 +120,7 @@ class EnumItem(CodeItem):
 
     @staticmethod
     def blank_lines_after():
-        return 1
+        return 2
 
     def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
@@ -283,6 +283,14 @@ class FlagsItem(CodeItem):
             return self._py_name
         else:
             raise NotImplementedError
+
+    @staticmethod
+    def blank_lines_before():
+        return 2
+
+    @staticmethod
+    def blank_lines_after():
+        return 2
 
     def code(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:

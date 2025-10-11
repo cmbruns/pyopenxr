@@ -352,6 +352,7 @@ if(WIN32)
     generate_source("generate_android_platform.py" "android.py" "platform")
 else()
     generate_source("generate_linux_platform.py" "linux.py" "platform")
+    generate_source("generate_android_platform.py" "android.py" "platform")
 endif()
 generate_source("generate_exceptions.py" "exception.py" "")
 

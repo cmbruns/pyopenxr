@@ -23,9 +23,9 @@ def main():
         header_preamble=inspect.cleandoc("""
             #include <GL/gl.h>
             #include <GL/glx.h>
+            #include <GLES3/gl3.h>              // OpenGL ES 3.x API
             #include <EGL/egl.h>
-            #include <EGL/eglext.h>
-            #include <EGL/eglplatform.h
+            #include <vulkan/vulkan.h>
         """),
     )
 
@@ -66,6 +66,27 @@ def main():
                 ("tv_sec", c_longlong),  # TODO: is this the correct type?
                 ("tv_nsec", c_long),
             ]
+            
+        
+        VkInstance = POINTER(Structure)
+        VkDevice = POINTER(Structure)
+        VkImage = POINTER(Structure)
+        VkPhysicalDevice = POINTER(Structure)
+        PFN_vkVoidFunction = CFUNCTYPE(None)
+        PFN_vkGetInstanceProcAddr = CFUNCTYPE(PFN_vkVoidFunction, VkInstance, c_char_p)
+
+
+        class VkInstanceCreateInfo(Structure): 
+            pass
+
+                
+        class VkAllocationCallbacks(Structure): 
+            pass
+            
+        
+        class VkDeviceCreateInfo(Structure): 
+            pass
+
     """))
     print("\n")
     cg.print_items()

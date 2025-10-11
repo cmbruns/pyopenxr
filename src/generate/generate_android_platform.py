@@ -20,12 +20,11 @@ def main():
         header_preamble=inspect.cleandoc("""
             #include <GLES3/gl3.h>              // OpenGL ES 3.x API
             #include <EGL/egl.h>                // EGL core
-            #include <EGL/eglext.h>             // EGL extensions
+            #include <vulkan/vulkan.h>
             // #include <android/native_window.h>  // ANativeWindow for swapchain integration
             // #include <android/binder_ibinder.h> // AIBinder definition
         """),
     )
-    cg.ctypes_names.add("c_ulong")
     cg.ctypes_names.add("cast")
 
     cg.print_header()
@@ -42,6 +41,27 @@ def main():
         # Forward declaration of an Android structure
         class AIBinder(Structure):
             pass
+            
+        
+        VkInstance = POINTER(Structure)
+        VkDevice = POINTER(Structure)
+        VkImage = POINTER(Structure)
+        VkPhysicalDevice = POINTER(Structure)
+        PFN_vkVoidFunction = CFUNCTYPE(None)
+        PFN_vkGetInstanceProcAddr = CFUNCTYPE(PFN_vkVoidFunction, VkInstance, c_char_p)
+
+
+        class VkInstanceCreateInfo(Structure): 
+            pass
+
+                
+        class VkAllocationCallbacks(Structure): 
+            pass
+            
+        
+        class VkDeviceCreateInfo(Structure): 
+            pass
+
     """))
     print("")
     cg.print_items()

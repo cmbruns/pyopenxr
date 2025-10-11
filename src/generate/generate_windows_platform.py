@@ -30,6 +30,8 @@ def main():
         compiler_args=compiler_args,
         header_preamble=inspect.cleandoc("""
             #include <Windows.h>
+            #include <EGL/egl.h>
+            #include <vulkan/vulkan.h>
         """),
     )
     cg.ctypes_names.add("c_ulong")
@@ -64,6 +66,26 @@ def main():
 
         # Forward declaration of an Android structure
         class AIBinder(Structure):
+            pass
+            
+        
+        VkInstance = POINTER(Structure)
+        VkDevice = POINTER(Structure)
+        VkImage = POINTER(Structure)
+        VkPhysicalDevice = POINTER(Structure)
+        PFN_vkVoidFunction = CFUNCTYPE(None)
+        PFN_vkGetInstanceProcAddr = CFUNCTYPE(PFN_vkVoidFunction, VkInstance, c_char_p)
+
+
+        class VkInstanceCreateInfo(Structure): 
+            pass
+
+                
+        class VkAllocationCallbacks(Structure): 
+            pass
+            
+        
+        class VkDeviceCreateInfo(Structure): 
             pass
 
                 
