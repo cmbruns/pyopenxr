@@ -43,10 +43,14 @@ def main():
             pass
             
         
-        VkInstance = POINTER(Structure)
-        VkDevice = POINTER(Structure)
-        VkImage = POINTER(Structure)
-        VkPhysicalDevice = POINTER(Structure)
+        class _HandleBase(Structure):
+            pass
+        
+        
+        VkInstance = POINTER(_HandleBase)
+        VkDevice = POINTER(_HandleBase)
+        VkImage = POINTER(_HandleBase)
+        VkPhysicalDevice = POINTER(_HandleBase)
         PFN_vkVoidFunction = CFUNCTYPE(None)
         PFN_vkGetInstanceProcAddr = CFUNCTYPE(PFN_vkVoidFunction, VkInstance, c_char_p)
 
