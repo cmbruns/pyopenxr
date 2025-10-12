@@ -318,8 +318,10 @@ class FunctionItem(CodeItem):
             self._capi_name = cursor.spelling[len("PFN_"):]
             command = xr_registry.find(f'commands/command[@name="{self._capi_name}"]')
             if command is not None:
-                alias = command.attrib["alias"]
-                self._capi_name = alias
+                # get_vulkan_graphics_requirements_khr
+                raise SkippableCodeItemException  # Don't take the alias, only the original
+                # alias = command.attrib["alias"]
+                # self._capi_name = alias
             command2 = xr_registry.find(f'commands/command/proto[name="{self._capi_name}"]')
             if command2 is None:
                 raise SkippableCodeItemException  # Probably a pure function pointer in xr.xml?
@@ -375,6 +377,8 @@ class FunctionItem(CodeItem):
 
     def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.CTYPES:
+            if self.cursor.kind == CursorKind.TYPEDEF_DECL:
+                raise SkippableCodeItemException
             # ctypes raw function definition
             result = ""
             result += inspect.cleandoc(
@@ -401,6 +405,8 @@ class FunctionItem(CodeItem):
             result += "\n]"
             return result
         elif api == Api.PYTHON:
+            if self._py_name == "create_scene_msft":
+                x = 3
             return str(FunctionCoder(self))
         else:
             raise NotImplementedError
@@ -1124,9 +1130,12 @@ class FunctionCoder(object):
         param_strings = []
         for p, c in reversed(self.param_coders):
             for s in c.declaration_code(api):
+                if p.name() == "create_info":
+                    x = 3
                 default = ","  # default suffix is no default value
                 if p.is_optional() and can_haz_default:
-                    default = f" = {p.default_value},"
+                    if " = " not in s:  # There might be a default value already there?
+                        default = f" = {p.default_value},"
                 if not p.is_optional():
                     can_haz_default = False
                 param_strings.append(f"\n{' ' * 16}{s}{default}")

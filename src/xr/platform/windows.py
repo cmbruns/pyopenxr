@@ -9,11 +9,12 @@ from typing import Optional
 
 from OpenGL import WGL
 
-from ..array_field import *
-from ..enums import *
+from ..array_field import array_field_helper, ArrayFieldParamType
+from ..enums import EnumBase, FlagBase, Result, StructureType
 from ..typedefs import *
-from ..version import *
-from ..exception import *
+from ..version import Version
+from ..exception import check_result
+from ..functions import get_instance_proc_addr
 
 
 class _LUID(ctypes.Structure):
@@ -1513,26 +1514,6 @@ def get_vulkan_graphics_device2_khr(
 
 
 PFN_xrGetVulkanGraphicsRequirements2KHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
-
-
-def get_vulkan_graphics_requirements_khr(
-    instance: Instance,
-    system_id: SystemId,
-) -> GraphicsRequirementsVulkanKHR:
-    graphics_requirements = GraphicsRequirementsVulkanKHR()
-    fxn = cast(
-        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsRequirementsKHR"),
-        PFN_xrGetVulkanGraphicsRequirements2KHR,
-    )
-    result = check_result(fxn(
-        instance,
-        system_id,
-        byref(graphics_requirements),
-    ))
-    if result.is_exception():
-        raise result
-    return graphics_requirements
-
 
 PFN_xrEglGetProcAddressMNDX = CFUNCTYPE(PFN_xrVoidFunction, c_char_p)
 

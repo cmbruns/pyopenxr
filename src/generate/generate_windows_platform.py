@@ -48,12 +48,13 @@ def main():
 
         from OpenGL import WGL
         
-        from ..array_field import *
-        from ..enums import *
+        from ..array_field import array_field_helper, ArrayFieldParamType
+        from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
-        from ..version import *
-        from ..exception import *
-
+        from ..version import Version
+        from ..exception import check_result
+        from ..functions import get_instance_proc_addr
+        
         
         class _LUID(ctypes.Structure):
             _fields_ = [

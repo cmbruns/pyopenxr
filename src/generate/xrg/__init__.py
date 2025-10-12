@@ -188,27 +188,38 @@ def generate_code_items(
             if cursor.spelling.startswith("xr"):
                 known_functions.add(cursor.spelling)  # TODO: test this code path
     # This next pass emits everything
+    has_functions = kinds is None or len(kinds) == 0 or CursorKind.FUNCTION_DECL in kinds
+    has_typedefs = kinds is None or len(kinds) == 0 or CursorKind.TYPEDEF_DECL in kinds
     for cursor in generate_cursors(
             header=header,
             compiler_args=compiler_args,
             header_preamble=header_preamble,
     ):
-        if kinds is not None and cursor.kind not in kinds:
+        is_extension_function = False
+        if (has_functions and
+            cursor.kind == CursorKind.TYPEDEF_DECL and
+            cursor.spelling.startswith("PFN_xr") and
+            cursor.spelling[len("PFN_"):] not in known_functions
+        ):
+            is_extension_function = True
+        elif kinds is not None and cursor.kind not in kinds:
             continue
         handler = _CursorHandlers[cursor.kind]
         if handler is None:
             continue
+
         try:
             item = handler(cursor)
-            yield item
-            if cursor.kind == CursorKind.TYPEDEF_DECL:
+            if cursor.kind == CursorKind.TYPEDEF_DECL and not has_typedefs:
+                pass  # We only let this typedef through for the extension function
+            else:
+                yield item
+            if cursor.kind == CursorKind.TYPEDEF_DECL and has_typedefs:
                 if cursor.underlying_typedef_type.spelling == "XrFlags64":
                     if cursor.spelling in flag_types:
                         yield flag_types[cursor.spelling]
-                if cursor.spelling.startswith("PFN_xr"):
-                    fn_name = cursor.spelling[len("PFN_"):]
-                    if fn_name not in known_functions:
-                        yield FunctionItem(cursor)
+            if is_extension_function:
+                yield FunctionItem(cursor)
         except SkippableCodeItemException:
             continue
 

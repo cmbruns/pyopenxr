@@ -41,10 +41,19 @@ def main():
 
     print("\n# ctypes Function definitions")
 
+    all_list = set()
     for fn in functions.items:
+        try:
+            s = fn.code(api=xrg.Api.CTYPES)
+        except Exception as exc:
+            continue
         print("")
-        print(fn.code(api=xrg.Api.CTYPES))
-    functions.print_all_list(api=xrg.Api.CTYPES)
+        print(s)
+        all_list.add(fn.name(api=xrg.Api.CTYPES))
+    print("\n\n__all__ = [")
+    for t in sorted(all_list):
+        print(f'    "{t}",')
+    print("]")
 
 
 if __name__ == "__main__":

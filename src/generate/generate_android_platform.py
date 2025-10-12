@@ -34,11 +34,12 @@ def main():
         import ctypes
         from typing import Optional
 
-        from ..array_field import *
-        from ..enums import *
+        from ..array_field import array_field_helper, ArrayFieldParamType
+        from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
-        from ..version import *
-        from ..exception import *
+        from ..version import Version
+        from ..exception import check_result
+        from ..functions import get_instance_proc_addr
         
         
         # Forward declaration of an Android structure
@@ -68,9 +69,8 @@ def main():
         
         class VkDeviceCreateInfo(Structure): 
             pass
-
-
     """))
+    print("")
     print("")
     cg.print_items()
     cg.print_all_list()
