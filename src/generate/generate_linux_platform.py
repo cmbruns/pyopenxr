@@ -29,7 +29,7 @@ def main():
         """),
     )
 
-    cg.ctypes.names.add("byref")
+    cg.ctypes_names.add("byref")
     cg.ctypes_names.add("c_long")
     cg.ctypes_names.add("c_longlong")
     cg.ctypes_names.add("cast")

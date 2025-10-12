@@ -1,8 +1,8 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import (
-    CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_long, c_longlong,
-    c_uint, c_uint32, c_void_p, cast, create_string_buffer,
+    CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_long,
+    c_longlong, c_uint, c_uint32, c_void_p, cast, create_string_buffer,
 )
 
 import ctypes
@@ -13,7 +13,7 @@ from OpenGL.platform.glx import GLXPlatform
 if not isinstance(_plat.PLATFORM, GLXPlatform):
     _plat.PLATFORM = GLXPlatform()  # override auto-selection
 from OpenGL import GLX
-
+    
 from ..array_field import array_field_helper, ArrayFieldParamType
 from ..enums import FlagBase, Result, StructureType
 from ..typedefs import *
