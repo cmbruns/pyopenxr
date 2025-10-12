@@ -29,10 +29,11 @@ def main():
         """),
     )
 
+    cg.ctypes.names.add("byref")
     cg.ctypes_names.add("c_long")
     cg.ctypes_names.add("c_longlong")
     cg.ctypes_names.add("cast")
-    cg.ctypes_names.add("c_ulong")
+    cg.ctypes_names.add("create_string_buffer")
     cg.print_header()
     print("")
     print(inspect.cleandoc("""
@@ -45,10 +46,12 @@ def main():
             _plat.PLATFORM = GLXPlatform()  # override auto-selection
         from OpenGL import GLX
             
-        from ..array_field import *
-        from ..enums import *
+        from ..array_field import array_field_helper, ArrayFieldParamType
+        from ..enums import FlagBase, Result, StructureType
         from ..typedefs import *
-        from ..version import *
+        from ..version import Version
+        from ..exception import check_result
+        from ..functions import get_instance_proc_addr
 
 
         # Forward declaration of a Wayland structure
@@ -90,7 +93,6 @@ def main():
         
         class VkDeviceCreateInfo(Structure): 
             pass
-
     """))
     print("\n")
     cg.print_items()

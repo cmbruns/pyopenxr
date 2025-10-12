@@ -1,8 +1,8 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import (
-    CFUNCTYPE, POINTER, Structure, c_char_p, c_float, c_int, c_long, c_longlong,
-    c_uint, c_uint32, c_ulong, c_void_p, cast,
+    CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_long, c_longlong,
+    c_uint, c_uint32, c_void_p, cast, create_string_buffer,
 )
 
 import ctypes
@@ -13,11 +13,13 @@ from OpenGL.platform.glx import GLXPlatform
 if not isinstance(_plat.PLATFORM, GLXPlatform):
     _plat.PLATFORM = GLXPlatform()  # override auto-selection
 from OpenGL import GLX
-    
-from ..array_field import *
-from ..enums import *
+
+from ..array_field import array_field_helper, ArrayFieldParamType
+from ..enums import FlagBase, Result, StructureType
 from ..typedefs import *
-from ..version import *
+from ..version import Version
+from ..exception import check_result
+from ..functions import get_instance_proc_addr
 
 
 # Forward declaration of a Wayland structure
@@ -330,6 +332,25 @@ class GraphicsRequirementsOpenGLKHR(Structure):
 PFN_xrGetOpenGLGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsOpenGLKHR))
 
 
+def get_opengl_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsOpenGLKHR:
+    graphics_requirements = GraphicsRequirementsOpenGLKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetOpenGLGraphicsRequirementsKHR"),
+        PFN_xrGetOpenGLGraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
+
+
 class SwapchainImageOpenGLESKHR(Structure):
     def __init__(
         self,
@@ -412,6 +433,25 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
 
 
 PFN_xrGetOpenGLESGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsOpenGLESKHR))
+
+
+def get_opengl_es_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsOpenGLESKHR:
+    graphics_requirements = GraphicsRequirementsOpenGLESKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetOpenGLESGraphicsRequirementsKHR"),
+        PFN_xrGetOpenGLESGraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
 
 
 class GraphicsBindingVulkanKHR(Structure):
@@ -535,15 +575,163 @@ class GraphicsRequirementsVulkanKHR(Structure):
 
 PFN_xrGetVulkanInstanceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
 
+
+def get_vulkan_instance_extensions_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> str:
+    buffer_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanInstanceExtensionsKHR"),
+        PFN_xrGetVulkanInstanceExtensionsKHR,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        system_id,
+        0,
+        byref(buffer_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    buffer = create_string_buffer(buffer_capacity_input.value)
+    result = check_result(fxn(
+        instance,
+        system_id,
+        buffer_capacity_input,
+        byref(buffer_capacity_input),
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+    return buffer.value.decode()
+
+
 PFN_xrGetVulkanDeviceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
+
+
+def get_vulkan_device_extensions_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> str:
+    buffer_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanDeviceExtensionsKHR"),
+        PFN_xrGetVulkanDeviceExtensionsKHR,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        system_id,
+        0,
+        byref(buffer_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    buffer = create_string_buffer(buffer_capacity_input.value)
+    result = check_result(fxn(
+        instance,
+        system_id,
+        buffer_capacity_input,
+        byref(buffer_capacity_input),
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+    return buffer.value.decode()
+
 
 PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, VkInstance, POINTER(VkPhysicalDevice))
 
+
+def get_vulkan_graphics_device_khr(
+    instance: Instance,
+    system_id: SystemId,
+    vk_instance: VkInstance,
+) -> VkPhysicalDevice:
+    vk_physical_device = VkPhysicalDevice()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsDeviceKHR"),
+        PFN_xrGetVulkanGraphicsDeviceKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        vk_instance,
+        byref(vk_physical_device),
+    ))
+    if result.is_exception():
+        raise result
+    return vk_physical_device
+
+
 PFN_xrGetVulkanGraphicsRequirementsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
+
+
+def get_vulkan_graphics_requirements_khr(
+    instance: Instance,
+    system_id: SystemId,
+) -> GraphicsRequirementsVulkanKHR:
+    graphics_requirements = GraphicsRequirementsVulkanKHR()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsRequirementsKHR"),
+        PFN_xrGetVulkanGraphicsRequirementsKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        byref(graphics_requirements),
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_requirements
+
 
 PFN_xrConvertTimespecTimeToTimeKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(timespec), POINTER(Time))
 
+
+def convert_timespec_time_to_time_khr(
+    instance: Instance,
+    timespec_time: timespec,
+) -> Time:
+    time = Time()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrConvertTimespecTimeToTimeKHR"),
+        PFN_xrConvertTimespecTimeToTimeKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        timespec_time,
+        byref(time),
+    ))
+    if result.is_exception():
+        raise result
+    return time
+
+
 PFN_xrConvertTimeToTimespecTimeKHR = CFUNCTYPE(Result.ctype(), Instance, Time, POINTER(timespec))
+
+
+def convert_time_to_timespec_time_khr(
+    instance: Instance,
+    time: Time,
+) -> timespec:
+    timespec_time = timespec()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrConvertTimeToTimespecTimeKHR"),
+        PFN_xrConvertTimeToTimespecTimeKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        time,
+        byref(timespec_time),
+    ))
+    if result.is_exception():
+        raise result
+    return timespec_time
+
 
 VulkanInstanceCreateFlagsKHRCInt = Flags64
 
@@ -678,9 +866,77 @@ GraphicsRequirementsVulkan2KHR = GraphicsRequirementsVulkanKHR
 
 PFN_xrCreateVulkanInstanceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanInstanceCreateInfoKHR), POINTER(VkInstance), POINTER(c_int))
 
+
+def create_vulkan_instance_khr(
+    instance: Instance,
+    create_info: VulkanInstanceCreateInfoKHR = None,
+) -> (VkInstance, c_int):
+    if create_info is None:
+        create_info = VulkanInstanceCreateInfoKHR()
+    vulkan_instance = VkInstance()
+    vulkan_result = c_int()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrCreateVulkanInstanceKHR"),
+        PFN_xrCreateVulkanInstanceKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(vulkan_instance),
+        byref(vulkan_result),
+    ))
+    if result.is_exception():
+        raise result
+    return vulkan_instance, vulkan_result
+
+
 PFN_xrCreateVulkanDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanDeviceCreateInfoKHR), POINTER(VkDevice), POINTER(c_int))
 
+
+def create_vulkan_device_khr(
+    instance: Instance,
+    create_info: VulkanDeviceCreateInfoKHR = None,
+) -> (VkDevice, c_int):
+    if create_info is None:
+        create_info = VulkanDeviceCreateInfoKHR()
+    vulkan_device = VkDevice()
+    vulkan_result = c_int()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrCreateVulkanDeviceKHR"),
+        PFN_xrCreateVulkanDeviceKHR,
+    )
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(vulkan_device),
+        byref(vulkan_result),
+    ))
+    if result.is_exception():
+        raise result
+    return vulkan_device, vulkan_result
+
+
 PFN_xrGetVulkanGraphicsDevice2KHR = CFUNCTYPE(Result.ctype(), Instance, POINTER(VulkanGraphicsDeviceGetInfoKHR), POINTER(VkPhysicalDevice))
+
+
+def get_vulkan_graphics_device2_khr(
+    instance: Instance,
+    get_info: VulkanGraphicsDeviceGetInfoKHR,
+) -> VkPhysicalDevice:
+    vulkan_physical_device = VkPhysicalDevice()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetVulkanGraphicsDevice2KHR"),
+        PFN_xrGetVulkanGraphicsDevice2KHR,
+    )
+    result = check_result(fxn(
+        instance,
+        get_info,
+        byref(vulkan_physical_device),
+    ))
+    if result.is_exception():
+        raise result
+    return vulkan_physical_device
+
 
 PFN_xrGetVulkanGraphicsRequirements2KHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, POINTER(GraphicsRequirementsVulkanKHR))
 
@@ -969,5 +1225,16 @@ __all__ = [
     "VulkanInstanceCreateInfoKHR",
     "VulkanSwapchainCreateInfoMETA",
     "VulkanSwapchainFormatListCreateInfoKHR",
+    "convert_time_to_timespec_time_khr",
+    "convert_timespec_time_to_time_khr",
+    "create_vulkan_device_khr",
+    "create_vulkan_instance_khr",
+    "get_opengl_es_graphics_requirements_khr",
+    "get_opengl_graphics_requirements_khr",
+    "get_vulkan_device_extensions_khr",
+    "get_vulkan_graphics_device2_khr",
+    "get_vulkan_graphics_device_khr",
+    "get_vulkan_graphics_requirements_khr",
+    "get_vulkan_instance_extensions_khr",
     "timespec",
 ]

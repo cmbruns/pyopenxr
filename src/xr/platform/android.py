@@ -1,8 +1,8 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import (
-    CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_uint32,
-    c_void_p, cast, create_string_buffer,
+    CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_uint,
+    c_uint32, c_void_p, cast, create_string_buffer,
 )
 import ctypes
 from typing import Optional
@@ -1062,14 +1062,14 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("min_filter", c_int),
-        ("mag_filter", c_int),
-        ("wrap_mode_s", c_int),
-        ("wrap_mode_t", c_int),
-        ("swizzle_red", c_int),
-        ("swizzle_green", c_int),
-        ("swizzle_blue", c_int),
-        ("swizzle_alpha", c_int),
+        ("min_filter", c_uint),
+        ("mag_filter", c_uint),
+        ("wrap_mode_s", c_uint),
+        ("wrap_mode_t", c_uint),
+        ("swizzle_red", c_uint),
+        ("swizzle_green", c_uint),
+        ("swizzle_blue", c_uint),
+        ("swizzle_alpha", c_uint),
         ("max_anisotropy", c_float),
         ("border_color", Color4f),
     ]
