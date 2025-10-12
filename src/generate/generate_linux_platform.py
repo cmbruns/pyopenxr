@@ -48,7 +48,7 @@ def main():
 
         try:
             from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface
-        except ImportError:
+        except (AttributeError, ImportError):
             EGLConfig = c_void_p
             EGLContext = c_void_p
             EGLDisplay = c_void_p

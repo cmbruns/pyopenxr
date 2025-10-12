@@ -9,6 +9,14 @@ from typing import Optional
 
 from OpenGL import WGL
 
+try:
+    from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface
+except (AttributeError, ImportError):
+    EGLConfig = c_void_p
+    EGLContext = c_void_p
+    EGLDisplay = c_void_p
+    EGLSurface = c_void_p
+
 from ..array_field import array_field_helper, ArrayFieldParamType
 from ..enums import EnumBase, FlagBase, Result, StructureType
 from ..typedefs import *
@@ -507,9 +515,9 @@ def get_opengl_graphics_requirements_khr(
 class GraphicsBindingOpenGLESAndroidKHR(Structure):
     def __init__(
         self,
-        display: c_void_p = None,
-        config: c_void_p = None,
-        context: c_void_p = None,
+        display: EGLDisplay = 0,
+        config: EGLConfig = 0,
+        context: EGLContext = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR,
     ) -> None:
@@ -530,9 +538,9 @@ class GraphicsBindingOpenGLESAndroidKHR(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("next", c_void_p),
-        ("display", c_void_p),
-        ("config", c_void_p),
-        ("context", c_void_p),
+        ("display", EGLDisplay),
+        ("config", EGLConfig),
+        ("context", EGLContext),
     ]
 
 
@@ -1522,9 +1530,9 @@ class GraphicsBindingEGLMNDX(Structure):
     def __init__(
         self,
         get_proc_address: PFN_xrEglGetProcAddressMNDX = cast(None, PFN_xrEglGetProcAddressMNDX),
-        display: c_void_p = None,
-        config: c_void_p = None,
-        context: c_void_p = None,
+        display: EGLDisplay = 0,
+        config: EGLConfig = 0,
+        context: EGLContext = 0,
         next: c_void_p = None,
         type: StructureType = StructureType.GRAPHICS_BINDING_EGL_MNDX,
     ) -> None:
@@ -1547,9 +1555,9 @@ class GraphicsBindingEGLMNDX(Structure):
         ("type", StructureType.ctype()),
         ("next", c_void_p),
         ("get_proc_address", PFN_xrEglGetProcAddressMNDX),
-        ("display", c_void_p),
-        ("config", c_void_p),
-        ("context", c_void_p),
+        ("display", EGLDisplay),
+        ("config", EGLConfig),
+        ("context", EGLContext),
     ]
 
 

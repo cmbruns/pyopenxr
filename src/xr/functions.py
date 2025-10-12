@@ -16,6 +16,7 @@ from . import raw_functions
 from .enums import *
 from .exception import check_result
 from .typedefs import *
+from .constants import NULL_HANDLE
 
 SWAPCHAIN_IMAGE_TYPE = TypeVar("SWAPCHAIN_IMAGE_TYPE")
 
@@ -1039,7 +1040,7 @@ def apply_haptic_feedback(
     result = check_result(fxn(
         session,
         haptic_action_info,
-        haptic_feedback,
+        cast(byref(haptic_feedback), POINTER(HapticBaseHeader)),
     ))
     if result.is_exception():
         raise result
@@ -1101,11 +1102,11 @@ def initialize_loader_khr(
     loader_init_info: LoaderInitInfoBaseHeaderKHR,
 ) -> None:
     fxn = cast(
-        get_instance_proc_addr(loader_init_info.instance, "xrInitializeLoaderKHR"),
+        get_instance_proc_addr(NULL_HANDLE, "xrInitializeLoaderKHR"),
         PFN_xrInitializeLoaderKHR,
     )
     result = check_result(fxn(
-        loader_init_info,
+        cast(byref(loader_init_info), POINTER(LoaderInitInfoBaseHeaderKHR)),
     ))
     if result.is_exception():
         raise result
@@ -1754,7 +1755,7 @@ def update_swapchain_fb(
     )
     result = check_result(fxn(
         swapchain,
-        state,
+        cast(byref(state), POINTER(SwapchainStateBaseHeaderFB)),
     ))
     if result.is_exception():
         raise result
@@ -1770,7 +1771,7 @@ def get_swapchain_state_fb(
     )
     result = check_result(fxn(
         swapchain,
-        byref(state),
+        cast(byref(state), POINTER(SwapchainStateBaseHeaderFB)),
     ))
     if result.is_exception():
         raise result
@@ -3237,7 +3238,7 @@ def query_localization_maps_ml(
     maps = (LocalizationMapML * map_capacity_input.value)(*([LocalizationMapML()] * map_capacity_input.value))  # noqa
     result = check_result(fxn(
         session,
-        query_info,
+        cast(byref(query_info), POINTER(LocalizationMapQueryInfoBaseHeaderML)),
         map_capacity_input,
         byref(map_capacity_input),
         maps,
@@ -3359,7 +3360,7 @@ def create_spatial_anchors_async_ml(
     )
     result = check_result(fxn(
         session,
-        create_info,
+        cast(byref(create_info), POINTER(SpatialAnchorsCreateInfoBaseHeaderML)),
         byref(future),
     ))
     if result.is_exception():
@@ -3450,7 +3451,7 @@ def query_spatial_anchors_async_ml(
     )
     result = check_result(fxn(
         storage,
-        query_info,
+        cast(byref(query_info), POINTER(SpatialAnchorsQueryInfoBaseHeaderML)),
         byref(future),
     ))
     if result.is_exception():
@@ -3793,7 +3794,7 @@ def query_spaces_fb(
     )
     result = check_result(fxn(
         session,
-        info,
+        cast(byref(info), POINTER(SpaceQueryInfoBaseHeaderFB)),
         byref(request_id),
     ))
     if result.is_exception():
@@ -5616,7 +5617,7 @@ def get_spatial_entity_component_data_bd(
     result = check_result(fxn(
         snapshot,
         get_info,
-        byref(component_data),
+        cast(byref(component_data), POINTER(SpatialEntityComponentDataBaseHeaderBD)),
     ))
     if result.is_exception():
         raise result
