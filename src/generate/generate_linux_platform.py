@@ -45,7 +45,15 @@ def main():
         if not isinstance(_plat.PLATFORM, GLXPlatform):
             _plat.PLATFORM = GLXPlatform()  # override auto-selection
         from OpenGL import GLX
-            
+
+        try:
+            from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface
+        except ImportError:
+            EGLConfig = c_void_p
+            EGLContext = c_void_p
+            EGLDisplay = c_void_p
+            EGLSurface = c_void_p
+
         from ..array_field import array_field_helper, ArrayFieldParamType
         from ..enums import FlagBase, Result, StructureType
         from ..typedefs import *

@@ -34,6 +34,7 @@ def main():
         from .enums import *
         from .exception import check_result
         from .typedefs import *
+        from .constants import NULL_HANDLE
         
         SWAPCHAIN_IMAGE_TYPE = TypeVar("SWAPCHAIN_IMAGE_TYPE")
     '''))

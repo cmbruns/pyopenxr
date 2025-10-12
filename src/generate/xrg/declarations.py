@@ -405,8 +405,6 @@ class FunctionItem(CodeItem):
             result += "\n]"
             return result
         elif api == Api.PYTHON:
-            if self._py_name == "create_scene_msft":
-                x = 3
             return str(FunctionCoder(self))
         else:
             raise NotImplementedError
@@ -1074,16 +1072,21 @@ class FunctionCoder(object):
             for line in c.pre_body_code():
                 result += f"\n    {line}"
         if self.function.cursor.kind == CursorKind.FUNCTION_DECL:
+            # Use the directly defined function in raw_functions
             result += f"\n    fxn = raw_functions.{self.function.name(Api.CTYPES)}"
         else:
             # use get_instance_proc_addr to get the raw function pointer
-            # the first argument must be a handle type with an instance property
             pfn_str = self.function.cursor.spelling
             assert pfn_str.startswith("PFN_")
             c_name = self.function.name(Api.CTYPES)
-            handle_name = self.function.parameters[0].name(Api.PYTHON)
+            # Usually the first argument is a handle, and thus should have an instance property
+            fp = self.function.parameters[0]
+            if fp.type.is_handle:
+                handle_str = f"{fp.name(Api.PYTHON)}.instance"
+            else:
+                handle_str = "NULL_HANDLE"  # e.g. for xrInitializeLoaderKHR()
             result += f"\n    fxn = cast("
-            result += f'\n        get_instance_proc_addr({handle_name}.instance, "{c_name}"),'
+            result += f'\n        get_instance_proc_addr({handle_str}, "{c_name}"),'
             result += f"\n        {pfn_str},"
             result += f"\n    )"
         if self._needs_two_calls:
@@ -1100,7 +1103,19 @@ class FunctionCoder(object):
                 result += f"\n    {line}"
         result += f"\n    result = check_result(fxn("
         for p, c in self.param_coders:
-            for param_name in c.main_call_code():
+            # Sometimes we need to cast the argument pointer to a base pointer
+            ptn = p.type.name()
+            an = list(c.main_call_code())
+            if "BaseHeader" in ptn and "POINTER" in ptn and len(an) > 0:
+                upd = []
+                for param_name in an:
+                    assert "cast" not in param_name  # was something upstream already clever?
+                    if not param_name.startswith("byref("):
+                        param_name = f"byref({param_name})"
+                    param_name = f"cast({param_name}, {ptn})"
+                    upd.append(param_name)
+                an = upd
+            for param_name in an:
                 result += f"\n        {param_name},"
         result += f"\n    ))"
         result += f"\n    if result.is_exception():"
@@ -1130,8 +1145,6 @@ class FunctionCoder(object):
         param_strings = []
         for p, c in reversed(self.param_coders):
             for s in c.declaration_code(api):
-                if p.name() == "create_info":
-                    x = 3
                 default = ","  # default suffix is no default value
                 if p.is_optional() and can_haz_default:
                     if " = " not in s:  # There might be a default value already there?

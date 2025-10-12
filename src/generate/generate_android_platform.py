@@ -34,6 +34,14 @@ def main():
         import ctypes
         from typing import Optional
 
+        try:
+            from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface
+        except ImportError:
+            EGLConfig = c_void_p
+            EGLContext = c_void_p
+            EGLDisplay = c_void_p
+            EGLSurface = c_void_p
+
         from ..array_field import array_field_helper, ArrayFieldParamType
         from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
