@@ -8,12 +8,13 @@ import ctypes
 from typing import Optional
 
 try:
-    from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface
+    from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface, EGLenum
 except (AttributeError, ImportError):
     EGLConfig = c_void_p
     EGLContext = c_void_p
     EGLDisplay = c_void_p
     EGLSurface = c_void_p
+    EGLenum = int
 
 from ..array_field import array_field_helper, ArrayFieldParamType, next_field_helper
 from ..enums import EnumBase, FlagBase, Result, StructureType
@@ -1175,14 +1176,14 @@ class SwapchainStateAndroidSurfaceDimensionsFB(Structure):
 class SwapchainStateSamplerOpenGLESFB(Structure):
     def __init__(
         self,
-        min_filter: int = 0,
-        mag_filter: int = 0,
-        wrap_mode_s: int = 0,
-        wrap_mode_t: int = 0,
-        swizzle_red: int = 0,
-        swizzle_green: int = 0,
-        swizzle_blue: int = 0,
-        swizzle_alpha: int = 0,
+        min_filter: EGLenum = 0,
+        mag_filter: EGLenum = 0,
+        wrap_mode_s: EGLenum = 0,
+        wrap_mode_t: EGLenum = 0,
+        swizzle_red: EGLenum = 0,
+        swizzle_green: EGLenum = 0,
+        swizzle_blue: EGLenum = 0,
+        swizzle_alpha: EGLenum = 0,
         max_anisotropy: float = 0,
         border_color: Color4f = None,
         next=None,
@@ -1223,14 +1224,14 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
     _fields_ = [
         ("type", StructureType.ctype()),
         ("_next", c_void_p),
-        ("min_filter", c_int),
-        ("mag_filter", c_int),
-        ("wrap_mode_s", c_int),
-        ("wrap_mode_t", c_int),
-        ("swizzle_red", c_int),
-        ("swizzle_green", c_int),
-        ("swizzle_blue", c_int),
-        ("swizzle_alpha", c_int),
+        ("min_filter", EGLenum),
+        ("mag_filter", EGLenum),
+        ("wrap_mode_s", EGLenum),
+        ("wrap_mode_t", EGLenum),
+        ("swizzle_red", EGLenum),
+        ("swizzle_green", EGLenum),
+        ("swizzle_blue", EGLenum),
+        ("swizzle_alpha", EGLenum),
         ("max_anisotropy", c_float),
         ("border_color", Color4f),
     ]

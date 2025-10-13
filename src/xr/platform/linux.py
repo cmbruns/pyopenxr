@@ -2,7 +2,7 @@
 
 from ctypes import (
     CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_long,
-    c_longlong, c_uint, c_uint32, c_void_p, cast, create_string_buffer,
+    c_longlong, c_uint32, c_void_p, cast, create_string_buffer,
 )
 
 import ctypes
@@ -13,8 +13,16 @@ from OpenGL.platform.glx import GLXPlatform
 if not isinstance(_plat.PLATFORM, GLXPlatform):
     _plat.PLATFORM = GLXPlatform()  # override auto-selection
 from OpenGL import GLX
-    
-from ..array_field import array_field_helper, ArrayFieldParamType
+
+try:
+    from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface
+except (AttributeError, ImportError):
+    EGLConfig = c_void_p
+    EGLContext = c_void_p
+    EGLDisplay = c_void_p
+    EGLSurface = c_void_p
+
+from ..array_field import array_field_helper, ArrayFieldParamType, next_field_helper
 from ..enums import FlagBase, Result, StructureType
 from ..typedefs import *
 from ..version import Version
@@ -103,7 +111,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         self,
         view_format_count: Optional[int] = None,
         view_formats: ArrayFieldParamType[c_int] = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
         view_format_count, view_formats = array_field_helper(
@@ -111,15 +119,15 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         super().__init__(
             view_format_count=view_format_count,
             _view_formats=view_formats,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self.view_format_count)}, view_formats={repr(self._view_formats)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self.view_format_count)}, view_formats={repr(self._view_formats)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self.view_format_count}, view_formats={self._view_formats}, next={self.next}, type={self.type})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self.view_format_count}, view_formats={self._view_formats}, next={self._next}, type={self.type})"
 
     @property
     def view_formats(self):
@@ -135,9 +143,18 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         self.view_format_count, self._view_formats = array_field_helper(
             c_int, None, value)
 
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("view_format_count", c_uint32),
         ("_view_formats", POINTER(c_int)),
     ]
@@ -151,7 +168,7 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
         glx_fbconfig: GLX.GLXFBConfig = None,
         glx_drawable: GLX.GLXDrawable = 0,
         glx_context: GLX.GLXContext = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_XLIB_KHR,
     ) -> None:
         super().__init__(
@@ -160,19 +177,28 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
             glx_fbconfig=glx_fbconfig,
             glx_drawable=glx_drawable,
             glx_context=glx_context,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={repr(self.x_display)}, visualid={repr(self.visualid)}, glx_fbconfig={repr(self.glx_fbconfig)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={repr(self.x_display)}, visualid={repr(self.visualid)}, glx_fbconfig={repr(self.glx_fbconfig)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={self.x_display}, visualid={self.visualid}, glx_fbconfig={self.glx_fbconfig}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={self.x_display}, visualid={self.visualid}, glx_fbconfig={self.glx_fbconfig}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("x_display", POINTER(GLX.Display)),
         ("visualid", c_uint32),
         ("glx_fbconfig", GLX.GLXFBConfig),
@@ -190,7 +216,7 @@ class GraphicsBindingOpenGLXcbKHR(Structure):
         visualid: int = 0,
         glx_drawable: int = 0,
         glx_context: int = 0,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_XCB_KHR,
     ) -> None:
         super().__init__(
@@ -200,19 +226,28 @@ class GraphicsBindingOpenGLXcbKHR(Structure):
             visualid=visualid,
             glx_drawable=glx_drawable,
             glx_context=glx_context,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={repr(self.connection)}, screen_number={repr(self.screen_number)}, fbconfigid={repr(self.fbconfigid)}, visualid={repr(self.visualid)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={repr(self.connection)}, screen_number={repr(self.screen_number)}, fbconfigid={repr(self.fbconfigid)}, visualid={repr(self.visualid)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={self.connection}, screen_number={self.screen_number}, fbconfigid={self.fbconfigid}, visualid={self.visualid}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={self.connection}, screen_number={self.screen_number}, fbconfigid={self.fbconfigid}, visualid={self.visualid}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("connection", POINTER(c_int)),
         ("screen_number", c_uint32),
         ("fbconfigid", c_int),
@@ -226,24 +261,33 @@ class GraphicsBindingOpenGLWaylandKHR(Structure):
     def __init__(
         self,
         display: POINTER(wl_display) = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_WAYLAND_KHR,
     ) -> None:
         super().__init__(
             display=display,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={repr(self.display)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={repr(self.display)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={self.display}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={self.display}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("display", POINTER(wl_display)),
     ]
 
@@ -252,24 +296,33 @@ class SwapchainImageOpenGLKHR(Structure):
     def __init__(
         self,
         image: int = 0,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_OPENGL_KHR,
     ) -> None:
         super().__init__(
             image=image,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageOpenGLKHR(image={repr(self.image)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SwapchainImageOpenGLKHR(image={repr(self.image)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageOpenGLKHR(image={self.image}, next={self.next}, type={self.type})"
+        return f"xr.SwapchainImageOpenGLKHR(image={self.image}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("image", c_uint32),
     ]
 
@@ -279,21 +332,21 @@ class GraphicsRequirementsOpenGLKHR(Structure):
         self,
         min_api_version_supported: Version = Version(),
         max_api_version_supported: Version = Version(),
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_OPENGL_KHR,
     ) -> None:
         super().__init__(
             _min_api_version_supported=min_api_version_supported.number(),
             _max_api_version_supported=max_api_version_supported.number(),
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self._next}, type={self.type})"
 
     @property
     def min_api_version_supported(self) -> Version:
@@ -321,9 +374,18 @@ class GraphicsRequirementsOpenGLKHR(Structure):
             # noinspection PyAttributeOutsideInit
             self._max_api_version_supported = value
 
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("_min_api_version_supported", VersionNumber),
         ("_max_api_version_supported", VersionNumber),
     ]
@@ -355,24 +417,33 @@ class SwapchainImageOpenGLESKHR(Structure):
     def __init__(
         self,
         image: int = 0,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_OPENGL_ES_KHR,
     ) -> None:
         super().__init__(
             image=image,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageOpenGLESKHR(image={repr(self.image)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SwapchainImageOpenGLESKHR(image={repr(self.image)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageOpenGLESKHR(image={self.image}, next={self.next}, type={self.type})"
+        return f"xr.SwapchainImageOpenGLESKHR(image={self.image}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("image", c_uint32),
     ]
 
@@ -382,21 +453,21 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
         self,
         min_api_version_supported: Version = Version(),
         max_api_version_supported: Version = Version(),
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_OPENGL_ES_KHR,
     ) -> None:
         super().__init__(
             _min_api_version_supported=min_api_version_supported.number(),
             _max_api_version_supported=max_api_version_supported.number(),
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self._next}, type={self.type})"
 
     @property
     def min_api_version_supported(self) -> Version:
@@ -424,9 +495,18 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
             # noinspection PyAttributeOutsideInit
             self._max_api_version_supported = value
 
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("_min_api_version_supported", VersionNumber),
         ("_max_api_version_supported", VersionNumber),
     ]
@@ -462,7 +542,7 @@ class GraphicsBindingVulkanKHR(Structure):
         device: VkDevice = None,
         queue_family_index: int = 0,
         queue_index: int = 0,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_VULKAN_KHR,
     ) -> None:
         super().__init__(
@@ -471,19 +551,28 @@ class GraphicsBindingVulkanKHR(Structure):
             device=device,
             queue_family_index=queue_family_index,
             queue_index=queue_index,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingVulkanKHR(instance={repr(self.instance)}, physical_device={repr(self.physical_device)}, device={repr(self.device)}, queue_family_index={repr(self.queue_family_index)}, queue_index={repr(self.queue_index)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsBindingVulkanKHR(instance={repr(self.instance)}, physical_device={repr(self.physical_device)}, device={repr(self.device)}, queue_family_index={repr(self.queue_family_index)}, queue_index={repr(self.queue_index)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingVulkanKHR(instance={self.instance}, physical_device={self.physical_device}, device={self.device}, queue_family_index={self.queue_family_index}, queue_index={self.queue_index}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsBindingVulkanKHR(instance={self.instance}, physical_device={self.physical_device}, device={self.device}, queue_family_index={self.queue_family_index}, queue_index={self.queue_index}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("instance", VkInstance),
         ("physical_device", VkPhysicalDevice),
         ("device", VkDevice),
@@ -496,24 +585,33 @@ class SwapchainImageVulkanKHR(Structure):
     def __init__(
         self,
         image: VkImage = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_VULKAN_KHR,
     ) -> None:
         super().__init__(
             image=image,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageVulkanKHR(image={repr(self.image)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SwapchainImageVulkanKHR(image={repr(self.image)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageVulkanKHR(image={self.image}, next={self.next}, type={self.type})"
+        return f"xr.SwapchainImageVulkanKHR(image={self.image}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("image", VkImage),
     ]
 
@@ -523,21 +621,21 @@ class GraphicsRequirementsVulkanKHR(Structure):
         self,
         min_api_version_supported: Version = Version(),
         max_api_version_supported: Version = Version(),
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_VULKAN_KHR,
     ) -> None:
         super().__init__(
             _min_api_version_supported=min_api_version_supported.number(),
             _max_api_version_supported=max_api_version_supported.number(),
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self._next}, type={self.type})"
 
     @property
     def min_api_version_supported(self) -> Version:
@@ -565,9 +663,18 @@ class GraphicsRequirementsVulkanKHR(Structure):
             # noinspection PyAttributeOutsideInit
             self._max_api_version_supported = value
 
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("_min_api_version_supported", VersionNumber),
         ("_max_api_version_supported", VersionNumber),
     ]
@@ -757,7 +864,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
         pfn_get_instance_proc_addr: PFN_vkGetInstanceProcAddr = 0,
         vulkan_create_info: POINTER(VkInstanceCreateInfo) = None,
         vulkan_allocator: POINTER(VkAllocationCallbacks) = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_INSTANCE_CREATE_INFO_KHR,
     ) -> None:
         super().__init__(
@@ -766,19 +873,28 @@ class VulkanInstanceCreateInfoKHR(Structure):
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanInstanceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.VulkanInstanceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanInstanceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self.next}, type={self.type})"
+        return f"xr.VulkanInstanceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("system_id", SystemId),
         ("create_flags", VulkanInstanceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", PFN_vkGetInstanceProcAddr),
@@ -796,7 +912,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
         vulkan_physical_device: VkPhysicalDevice = None,
         vulkan_create_info: POINTER(VkDeviceCreateInfo) = None,
         vulkan_allocator: POINTER(VkAllocationCallbacks) = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_DEVICE_CREATE_INFO_KHR,
     ) -> None:
         super().__init__(
@@ -806,19 +922,28 @@ class VulkanDeviceCreateInfoKHR(Structure):
             vulkan_physical_device=vulkan_physical_device,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanDeviceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_physical_device={repr(self.vulkan_physical_device)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.VulkanDeviceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_physical_device={repr(self.vulkan_physical_device)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanDeviceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_physical_device={self.vulkan_physical_device}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self.next}, type={self.type})"
+        return f"xr.VulkanDeviceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_physical_device={self.vulkan_physical_device}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("system_id", SystemId),
         ("create_flags", VulkanDeviceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", PFN_vkGetInstanceProcAddr),
@@ -836,25 +961,34 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
         self,
         system_id: SystemId = 0,
         vulkan_instance: VkInstance = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR,
     ) -> None:
         super().__init__(
             system_id=system_id,
             vulkan_instance=vulkan_instance,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={repr(self.system_id)}, vulkan_instance={repr(self.vulkan_instance)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={repr(self.system_id)}, vulkan_instance={repr(self.vulkan_instance)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={self.system_id}, vulkan_instance={self.vulkan_instance}, next={self.next}, type={self.type})"
+        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={self.system_id}, vulkan_instance={self.vulkan_instance}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("system_id", SystemId),
         ("vulkan_instance", VkInstance),
     ]
@@ -947,10 +1081,10 @@ class GraphicsBindingEGLMNDX(Structure):
     def __init__(
         self,
         get_proc_address: PFN_xrEglGetProcAddressMNDX = cast(None, PFN_xrEglGetProcAddressMNDX),
-        display: c_void_p = None,
-        config: c_void_p = None,
-        context: c_void_p = None,
-        next: c_void_p = None,
+        display: EGLDisplay = None,
+        config: EGLConfig = None,
+        context: EGLContext = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_EGL_MNDX,
     ) -> None:
         super().__init__(
@@ -958,23 +1092,32 @@ class GraphicsBindingEGLMNDX(Structure):
             display=display,
             config=config,
             context=context,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={repr(self.get_proc_address)}, display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={repr(self.get_proc_address)}, display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={self.get_proc_address}, display={self.display}, config={self.config}, context={self.context}, next={self.next}, type={self.type})"
+        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={self.get_proc_address}, display={self.display}, config={self.config}, context={self.context}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("get_proc_address", PFN_xrEglGetProcAddressMNDX),
-        ("display", c_void_p),
-        ("config", c_void_p),
-        ("context", c_void_p),
+        ("display", EGLDisplay),
+        ("config", EGLConfig),
+        ("context", EGLContext),
     ]
 
 
@@ -984,26 +1127,35 @@ class SwapchainImageFoveationVulkanFB(Structure):
         image: VkImage = None,
         width: int = 0,
         height: int = 0,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_FOVEATION_VULKAN_FB,
     ) -> None:
         super().__init__(
             image=image,
             width=width,
             height=height,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageFoveationVulkanFB(image={repr(self.image)}, width={repr(self.width)}, height={repr(self.height)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SwapchainImageFoveationVulkanFB(image={repr(self.image)}, width={repr(self.width)}, height={repr(self.height)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainImageFoveationVulkanFB(image={self.image}, width={self.width}, height={self.height}, next={self.next}, type={self.type})"
+        return f"xr.SwapchainImageFoveationVulkanFB(image={self.image}, width={self.width}, height={self.height}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("image", VkImage),
         ("width", c_uint32),
         ("height", c_uint32),
@@ -1013,17 +1165,17 @@ class SwapchainImageFoveationVulkanFB(Structure):
 class SwapchainStateSamplerOpenGLESFB(Structure):
     def __init__(
         self,
-        min_filter: int = 0,
-        mag_filter: int = 0,
-        wrap_mode_s: int = 0,
-        wrap_mode_t: int = 0,
-        swizzle_red: int = 0,
-        swizzle_green: int = 0,
-        swizzle_blue: int = 0,
-        swizzle_alpha: int = 0,
+        min_filter: EGLenum = 0,
+        mag_filter: EGLenum = 0,
+        wrap_mode_s: EGLenum = 0,
+        wrap_mode_t: EGLenum = 0,
+        swizzle_red: EGLenum = 0,
+        swizzle_green: EGLenum = 0,
+        swizzle_blue: EGLenum = 0,
+        swizzle_alpha: EGLenum = 0,
         max_anisotropy: float = 0,
         border_color: Color4f = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_SAMPLER_OPENGL_ES_FB,
     ) -> None:
         if border_color is None:
@@ -1039,27 +1191,36 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
             swizzle_alpha=swizzle_alpha,
             max_anisotropy=max_anisotropy,
             border_color=border_color,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next={self.next}, type={self.type})"
+        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
-        ("min_filter", c_uint),
-        ("mag_filter", c_uint),
-        ("wrap_mode_s", c_uint),
-        ("wrap_mode_t", c_uint),
-        ("swizzle_red", c_uint),
-        ("swizzle_green", c_uint),
-        ("swizzle_blue", c_uint),
-        ("swizzle_alpha", c_uint),
+        ("_next", c_void_p),
+        ("min_filter", EGLenum),
+        ("mag_filter", EGLenum),
+        ("wrap_mode_s", EGLenum),
+        ("wrap_mode_t", EGLenum),
+        ("swizzle_red", EGLenum),
+        ("swizzle_green", EGLenum),
+        ("swizzle_blue", EGLenum),
+        ("swizzle_alpha", EGLenum),
         ("max_anisotropy", c_float),
         ("border_color", Color4f),
     ]
@@ -1079,7 +1240,7 @@ class SwapchainStateSamplerVulkanFB(Structure):
         swizzle_alpha: c_int = 0,
         max_anisotropy: float = 0,
         border_color: Color4f = None,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_SAMPLER_VULKAN_FB,
     ) -> None:
         if border_color is None:
@@ -1096,19 +1257,28 @@ class SwapchainStateSamplerVulkanFB(Structure):
             swizzle_alpha=swizzle_alpha,
             max_anisotropy=max_anisotropy,
             border_color=border_color,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, mipmap_mode={repr(self.mipmap_mode)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, mipmap_mode={repr(self.mipmap_mode)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, mipmap_mode={self.mipmap_mode}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next={self.next}, type={self.type})"
+        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, mipmap_mode={self.mipmap_mode}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("min_filter", c_int),
         ("mag_filter", c_int),
         ("mipmap_mode", c_int),
@@ -1128,25 +1298,34 @@ class VulkanSwapchainCreateInfoMETA(Structure):
         self,
         additional_create_flags: int = 0,
         additional_usage_flags: int = 0,
-        next: c_void_p = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_SWAPCHAIN_CREATE_INFO_META,
     ) -> None:
         super().__init__(
             additional_create_flags=additional_create_flags,
             additional_usage_flags=additional_usage_flags,
-            next=next,
+            _next=next_field_helper(next),
             type=type,
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={repr(self.additional_create_flags)}, additional_usage_flags={repr(self.additional_usage_flags)}, next={repr(self.next)}, type={repr(self.type)})"
+        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={repr(self.additional_create_flags)}, additional_usage_flags={repr(self.additional_usage_flags)}, next={repr(self._next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
-        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={self.additional_create_flags}, additional_usage_flags={self.additional_usage_flags}, next={self.next}, type={self.type})"
+        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={self.additional_create_flags}, additional_usage_flags={self.additional_usage_flags}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
 
     _fields_ = [
         ("type", StructureType.ctype()),
-        ("next", c_void_p),
+        ("_next", c_void_p),
         ("additional_create_flags", c_uint32),
         ("additional_usage_flags", c_uint32),
     ]
