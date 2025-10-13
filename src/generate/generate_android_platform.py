@@ -42,7 +42,7 @@ def main():
             EGLDisplay = c_void_p
             EGLSurface = c_void_p
 
-        from ..array_field import array_field_helper, ArrayFieldParamType
+        from ..array_field import array_field_helper, ArrayFieldParamType, next_field_helper
         from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
         from ..version import Version

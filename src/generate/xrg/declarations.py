@@ -1373,7 +1373,7 @@ class NextFieldCoder(FieldCoder):
 
     def param_code(self) -> Generator[str, None, None]:
         # Avoid self reference in BaseInStructure
-        yield f"{self.name} = None"
+        yield f"next=None"
 
     def property_code(self) -> Generator[str, None, None]:
         if self.inner_name != self.name:
@@ -1387,6 +1387,7 @@ class NextFieldCoder(FieldCoder):
             yield f"def next(self, value) -> None:"
             yield f"    # noinspection PyAttributeOutsideInit"
             yield f"    self._next = next_field_helper(value)"
+
 
 class VoidPointerFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:

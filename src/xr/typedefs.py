@@ -131,7 +131,7 @@ class ApiLayerProperties(Structure):
         spec_version: Version = Version(),
         layer_version: int = 0,
         description: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.API_LAYER_PROPERTIES,
     ) -> None:
         super().__init__(
@@ -194,7 +194,7 @@ class ExtensionProperties(Structure):
         self,
         extension_name: str = "",
         extension_version: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EXTENSION_PROPERTIES,
     ) -> None:
         super().__init__(
@@ -324,7 +324,7 @@ class InstanceCreateInfo(Structure):
         enabled_api_layer_names: StringArrayFieldParamType = None,
         enabled_extension_count: Optional[int] = None,
         enabled_extension_names: StringArrayFieldParamType = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INSTANCE_CREATE_INFO,
     ) -> None:
         if application_info is None:
@@ -404,7 +404,7 @@ class InstanceProperties(Structure):
         self,
         runtime_version: Version = Version(),
         runtime_name: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.INSTANCE_PROPERTIES,
     ) -> None:
         super().__init__(
@@ -453,7 +453,7 @@ class InstanceProperties(Structure):
 class EventDataBuffer(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_BUFFER,
     ) -> None:
         super().__init__(
@@ -487,7 +487,7 @@ class SystemGetInfo(Structure):
     def __init__(
         self,
         form_factor: FormFactor = FormFactor(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_GET_INFO,
     ) -> None:
         super().__init__(
@@ -575,7 +575,7 @@ class SystemProperties(Structure):
         system_name: str = "",
         graphics_properties: SystemGraphicsProperties = None,
         tracking_properties: SystemTrackingProperties = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PROPERTIES,
     ) -> None:
         if graphics_properties is None:
@@ -623,7 +623,7 @@ class SessionCreateInfo(Structure):
         self,
         create_flags: SessionCreateFlags = SessionCreateFlags(),  # noqa
         system_id: SystemId = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SESSION_CREATE_INFO,
     ) -> None:
         super().__init__(
@@ -710,7 +710,7 @@ class SpaceVelocity(Structure):
         velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags(),  # noqa
         linear_velocity: Vector3f = None,
         angular_velocity: Vector3f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_VELOCITY,
     ) -> None:
         if linear_velocity is None:
@@ -833,7 +833,7 @@ class ReferenceSpaceCreateInfo(Structure):
         self,
         reference_space_type: ReferenceSpaceType = ReferenceSpaceType.STAGE,
         pose_in_reference_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.REFERENCE_SPACE_CREATE_INFO,
     ) -> None:
         super().__init__(
@@ -916,7 +916,7 @@ class ActionSpaceCreateInfo(Structure):
         action: Action = None,
         subaction_path: Path = 0,
         pose_in_action_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_SPACE_CREATE_INFO,
     ) -> None:
         super().__init__(
@@ -956,7 +956,7 @@ class SpaceLocation(Structure):
         self,
         location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
         pose: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_LOCATION,
     ) -> None:
         super().__init__(
@@ -994,7 +994,7 @@ class ViewConfigurationProperties(Structure):
         self,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
         fov_mutable: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW_CONFIGURATION_PROPERTIES,
     ) -> None:
         super().__init__(
@@ -1036,7 +1036,7 @@ class ViewConfigurationView(Structure):
         max_image_rect_height: int = 0,
         recommended_swapchain_sample_count: int = 0,
         max_swapchain_sample_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW_CONFIGURATION_VIEW,
     ) -> None:
         super().__init__(
@@ -1089,7 +1089,7 @@ class SwapchainCreateInfo(Structure):
         face_count: int = 0,
         array_size: int = 0,
         mip_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_CREATE_INFO,
     ) -> None:
         super().__init__(
@@ -1139,7 +1139,7 @@ class SwapchainCreateInfo(Structure):
 class SwapchainImageBaseHeader(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -1171,7 +1171,7 @@ class SwapchainImageBaseHeader(Structure):
 class SwapchainImageAcquireInfo(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO,
     ) -> None:
         super().__init__(
@@ -1204,7 +1204,7 @@ class SwapchainImageWaitInfo(Structure):
     def __init__(
         self,
         timeout: Duration = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_WAIT_INFO,
     ) -> None:
         super().__init__(
@@ -1238,7 +1238,7 @@ class SwapchainImageWaitInfo(Structure):
 class SwapchainImageReleaseInfo(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_RELEASE_INFO,
     ) -> None:
         super().__init__(
@@ -1271,7 +1271,7 @@ class SessionBeginInfo(Structure):
     def __init__(
         self,
         primary_view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SESSION_BEGIN_INFO,
     ) -> None:
         super().__init__(
@@ -1305,7 +1305,7 @@ class SessionBeginInfo(Structure):
 class FrameWaitInfo(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FRAME_WAIT_INFO,
     ) -> None:
         super().__init__(
@@ -1340,7 +1340,7 @@ class FrameState(Structure):
         predicted_display_time: Time = 0,
         predicted_display_period: Duration = 0,
         should_render: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FRAME_STATE,
     ) -> None:
         super().__init__(
@@ -1378,7 +1378,7 @@ class FrameState(Structure):
 class FrameBeginInfo(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FRAME_BEGIN_INFO,
     ) -> None:
         super().__init__(
@@ -1412,7 +1412,7 @@ class CompositionLayerBaseHeader(Structure):
         self,
         layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
         space: Space = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -1452,7 +1452,7 @@ class FrameEndInfo(Structure):
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),  # noqa
         layer_count: Optional[int] = None,
         layers: BaseArrayFieldParamType = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FRAME_END_INFO,
     ) -> None:
         layer_count, layers = base_array_field_helper(
@@ -1511,7 +1511,7 @@ class ViewLocateInfo(Structure):
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
         display_time: Time = 0,
         space: Space = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW_LOCATE_INFO,
     ) -> None:
         super().__init__(
@@ -1550,7 +1550,7 @@ class ViewState(Structure):
     def __init__(
         self,
         view_state_flags: ViewStateFlags = ViewStateFlags(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW_STATE,
     ) -> None:
         super().__init__(
@@ -1638,7 +1638,7 @@ class View(Structure):
         self,
         pose: Posef = Posef(),
         fov: Fovf = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW,
     ) -> None:
         if fov is None:
@@ -1679,7 +1679,7 @@ class ActionSetCreateInfo(Structure):
         action_set_name: str = "",
         localized_action_set_name: str = "",
         priority: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_SET_CREATE_INFO,
     ) -> None:
         super().__init__(
@@ -1722,7 +1722,7 @@ class ActionCreateInfo(Structure):
         count_subaction_paths: Optional[int] = None,
         subaction_paths: ArrayFieldParamType[c_uint64] = None,
         localized_action_name: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_CREATE_INFO,
     ) -> None:
         count_subaction_paths, subaction_paths = array_field_helper(
@@ -1806,7 +1806,7 @@ class InteractionProfileSuggestedBinding(Structure):
         interaction_profile: Path = 0,
         count_suggested_bindings: Optional[int] = None,
         suggested_bindings: ArrayFieldParamType[ActionSuggestedBinding] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INTERACTION_PROFILE_SUGGESTED_BINDING,
     ) -> None:
         count_suggested_bindings, suggested_bindings = array_field_helper(
@@ -1862,7 +1862,7 @@ class SessionActionSetsAttachInfo(Structure):
         self,
         count_action_sets: Optional[int] = None,
         action_sets: ArrayFieldParamType[ActionSet] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SESSION_ACTION_SETS_ATTACH_INFO,
     ) -> None:
         count_action_sets, action_sets = array_field_helper(
@@ -1915,7 +1915,7 @@ class InteractionProfileState(Structure):
     def __init__(
         self,
         interaction_profile: Path = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INTERACTION_PROFILE_STATE,
     ) -> None:
         super().__init__(
@@ -1951,7 +1951,7 @@ class ActionStateGetInfo(Structure):
         self,
         action: Action = None,
         subaction_path: Path = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_STATE_GET_INFO,
     ) -> None:
         super().__init__(
@@ -1991,7 +1991,7 @@ class ActionStateBoolean(Structure):
         changed_since_last_sync: Bool32 = 0,
         last_change_time: Time = 0,
         is_active: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_STATE_BOOLEAN,
     ) -> None:
         super().__init__(
@@ -2035,7 +2035,7 @@ class ActionStateFloat(Structure):
         changed_since_last_sync: Bool32 = 0,
         last_change_time: Time = 0,
         is_active: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_STATE_FLOAT,
     ) -> None:
         super().__init__(
@@ -2123,7 +2123,7 @@ class ActionStateVector2f(Structure):
         changed_since_last_sync: Bool32 = 0,
         last_change_time: Time = 0,
         is_active: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_STATE_VECTOR2F,
     ) -> None:
         if current_state is None:
@@ -2166,7 +2166,7 @@ class ActionStatePose(Structure):
     def __init__(
         self,
         is_active: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTION_STATE_POSE,
     ) -> None:
         super().__init__(
@@ -2225,7 +2225,7 @@ class ActionsSyncInfo(Structure):
         self,
         count_active_action_sets: Optional[int] = None,
         active_action_sets: ArrayFieldParamType[ActiveActionSet] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTIONS_SYNC_INFO,
     ) -> None:
         count_active_action_sets, active_action_sets = array_field_helper(
@@ -2278,7 +2278,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
     def __init__(
         self,
         action: Action = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO,
     ) -> None:
         super().__init__(
@@ -2314,7 +2314,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
         self,
         source_path: Path = 0,
         which_components: InputSourceLocalizedNameFlags = InputSourceLocalizedNameFlags(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.INPUT_SOURCE_LOCALIZED_NAME_GET_INFO,
     ) -> None:
         super().__init__(
@@ -2352,7 +2352,7 @@ class HapticActionInfo(Structure):
         self,
         action: Action = None,
         subaction_path: Path = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAPTIC_ACTION_INFO,
     ) -> None:
         super().__init__(
@@ -2388,7 +2388,7 @@ class HapticActionInfo(Structure):
 class HapticBaseHeader(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -2420,7 +2420,7 @@ class HapticBaseHeader(Structure):
 class BaseInStructure(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -2446,7 +2446,7 @@ BaseInStructure._fields_ = [
 class BaseOutStructure(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -2618,7 +2618,7 @@ class CompositionLayerProjectionView(Structure):
         pose: Posef = Posef(),
         fov: Fovf = None,
         sub_image: SwapchainSubImage = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION_VIEW,
     ) -> None:
         if fov is None:
@@ -2664,7 +2664,7 @@ class CompositionLayerProjection(Structure):
         space: Space = None,
         view_count: Optional[int] = None,
         views: ArrayFieldParamType[CompositionLayerProjectionView] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_PROJECTION,
     ) -> None:
         view_count, views = array_field_helper(
@@ -2726,7 +2726,7 @@ class CompositionLayerQuad(Structure):
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
         size: Extent2Df = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_QUAD,
     ) -> None:
         if sub_image is None:
@@ -2774,7 +2774,7 @@ class CompositionLayerQuad(Structure):
 class EventDataBaseHeader(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -2807,7 +2807,7 @@ class EventDataEventsLost(Structure):
     def __init__(
         self,
         lost_event_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_EVENTS_LOST,
     ) -> None:
         super().__init__(
@@ -2842,7 +2842,7 @@ class EventDataInstanceLossPending(Structure):
     def __init__(
         self,
         loss_time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_INSTANCE_LOSS_PENDING,
     ) -> None:
         super().__init__(
@@ -2879,7 +2879,7 @@ class EventDataSessionStateChanged(Structure):
         session: Session = None,
         state: SessionState = SessionState(),  # noqa
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SESSION_STATE_CHANGED,
     ) -> None:
         super().__init__(
@@ -2922,7 +2922,7 @@ class EventDataReferenceSpaceChangePending(Structure):
         change_time: Time = 0,
         pose_valid: Bool32 = 0,
         pose_in_previous_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING,
     ) -> None:
         super().__init__(
@@ -2965,7 +2965,7 @@ class EventDataInteractionProfileChanged(Structure):
     def __init__(
         self,
         session: Session = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_INTERACTION_PROFILE_CHANGED,
     ) -> None:
         super().__init__(
@@ -3002,7 +3002,7 @@ class HapticVibration(Structure):
         duration: Duration = 0,
         frequency: float = 0,
         amplitude: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAPTIC_VIBRATION,
     ) -> None:
         super().__init__(
@@ -3523,7 +3523,7 @@ class SpacesLocateInfo(Structure):
         time: Time = 0,
         space_count: Optional[int] = None,
         spaces: ArrayFieldParamType[Space] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACES_LOCATE_INFO,
     ) -> None:
         space_count, spaces = array_field_helper(
@@ -3604,7 +3604,7 @@ class SpaceLocations(Structure):
         self,
         location_count: Optional[int] = None,
         locations: ArrayFieldParamType[SpaceLocationData] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_LOCATIONS,
     ) -> None:
         location_count, locations = array_field_helper(
@@ -3688,7 +3688,7 @@ class SpaceVelocities(Structure):
         self,
         velocity_count: int = 0,
         velocities: POINTER(SpaceVelocityData) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_VELOCITIES,
     ) -> None:
         super().__init__(
@@ -3733,7 +3733,7 @@ class CompositionLayerCubeKHR(Structure):
         swapchain: Swapchain = None,
         image_array_index: int = 0,
         orientation: Quaternionf = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_CUBE_KHR,
     ) -> None:
         if orientation is None:
@@ -3784,7 +3784,7 @@ class CompositionLayerDepthInfoKHR(Structure):
         max_depth: float = 0,
         near_z: float = 0,
         far_z: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_DEPTH_INFO_KHR,
     ) -> None:
         if sub_image is None:
@@ -3836,7 +3836,7 @@ class CompositionLayerCylinderKHR(Structure):
         radius: float = 0,
         central_angle: float = 0,
         aspect_ratio: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_CYLINDER_KHR,
     ) -> None:
         if sub_image is None:
@@ -3894,7 +3894,7 @@ class CompositionLayerEquirectKHR(Structure):
         radius: float = 0,
         scale: Vector2f = None,
         bias: Vector2f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_EQUIRECT_KHR,
     ) -> None:
         if sub_image is None:
@@ -3954,7 +3954,7 @@ class VisibilityMaskKHR(Structure):
         index_capacity_input: int = 0,
         index_count_output: int = 0,
         indices: POINTER(c_uint32) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VISIBILITY_MASK_KHR,
     ) -> None:
         super().__init__(
@@ -4001,7 +4001,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
         session: Session = None,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
         view_index: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR,
     ) -> None:
         super().__init__(
@@ -4044,7 +4044,7 @@ class CompositionLayerColorScaleBiasKHR(Structure):
         self,
         color_scale: Color4f = None,
         color_bias: Color4f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR,
     ) -> None:
         if color_scale is None:
@@ -4084,7 +4084,7 @@ class CompositionLayerColorScaleBiasKHR(Structure):
 class LoaderInitInfoBaseHeaderKHR(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -4128,7 +4128,7 @@ class CompositionLayerEquirect2KHR(Structure):
         central_horizontal_angle: float = 0,
         upper_vertical_angle: float = 0,
         lower_vertical_angle: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_EQUIRECT2_KHR,
     ) -> None:
         if sub_image is None:
@@ -4180,7 +4180,7 @@ class CompositionLayerEquirect2KHR(Structure):
 class BindingModificationBaseHeaderKHR(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -4214,7 +4214,7 @@ class BindingModificationsKHR(Structure):
         self,
         binding_modification_count: Optional[int] = None,
         binding_modifications: BaseArrayFieldParamType = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BINDING_MODIFICATIONS_KHR,
     ) -> None:
         binding_modification_count, binding_modifications = base_array_field_helper(
@@ -4295,7 +4295,7 @@ class EventDataPerfSettingsEXT(Structure):
         sub_domain: PerfSettingsSubDomainEXT = PerfSettingsSubDomainEXT(),  # noqa
         from_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT(),  # noqa
         to_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_PERF_SETTINGS_EXT,
     ) -> None:
         super().__init__(
@@ -4393,7 +4393,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
         object_type: ObjectType = ObjectType(),  # noqa
         object_handle: int = 0,
         object_name: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -4441,7 +4441,7 @@ class DebugUtilsLabelEXT(Structure):
     def __init__(
         self,
         label_name: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.DEBUG_UTILS_LABEL_EXT,
     ) -> None:
         super().__init__(
@@ -4491,7 +4491,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         objects: ArrayFieldParamType[DebugUtilsObjectNameInfoEXT] = None,
         session_label_count: Optional[int] = None,
         session_labels: ArrayFieldParamType[DebugUtilsLabelEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT,
     ) -> None:
         object_count, objects = array_field_helper(
@@ -4685,7 +4685,6 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     :seealso: :class:`xr.DebugUtilsMessengerEXT`, :func:`xr.ext.EXT.debug_utils._default_debug_callback`
     :see: https://registry.khronos.org/OpenXR/specs/1.1/man/html/XrDebugUtilsMessengerCreateInfoEXT.html
     """
-
     def __init__(
         self,
         message_severities: DebugUtilsMessageSeverityFlagsEXT = (
@@ -4700,7 +4699,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
             | DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT),
         user_callback: DebugCallbackType = default_debug_callback,
         user_data: Any = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
         self._cached_user_data = user_data  # in case it does not fit in a c_void_p
@@ -4722,6 +4721,12 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         self._cached_user_data = value
         self._user_data = cast(py_object(value), c_void_p) if value else None
 
+    def __repr__(self) -> str:
+        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={repr(self.message_severities)}, message_types={repr(self.message_types)}, user_callback={repr(self.user_callback)}, user_data={repr(self.user_data)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={self.message_severities}, message_types={self.message_types}, user_callback={self.user_callback}, user_data={self.user_data}, next={self._next}, type={self.type})"
+
     @property
     def next(self) -> c_void_p:
         return self._next
@@ -4741,12 +4746,6 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
             user_callback: DebugCallbackType,
     ) -> None:
         self._user_callback = wrap_debug_callback(user_callback, self._cached_user_data)
-
-    def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={repr(self.message_severities)}, message_types={repr(self.message_types)}, user_callback={repr(self.user_callback)}, user_data={repr(self.user_data)}, next={repr(self.next)}, type={repr(self.type)})"
-
-    def __str__(self) -> str:
-        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={self.message_severities}, message_types={self.message_types}, user_callback={self.user_callback}, user_data={self.user_data}, next={self.next}, type={self.type})"
 
     _fields_ = [
         ("type", StructureType.ctype()),
@@ -4777,7 +4776,7 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
     def __init__(
         self,
         supports_eye_gaze_interaction: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_EYE_GAZE_INTERACTION_PROPERTIES_EXT,
     ) -> None:
         super().__init__(
@@ -4812,7 +4811,7 @@ class EyeGazeSampleTimeEXT(Structure):
     def __init__(
         self,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EYE_GAZE_SAMPLE_TIME_EXT,
     ) -> None:
         super().__init__(
@@ -4853,7 +4852,7 @@ class SessionCreateInfoOverlayEXTX(Structure):
         self,
         create_flags: OverlaySessionCreateFlagsEXTX = OverlaySessionCreateFlagsEXTX(),  # noqa
         session_layers_placement: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SESSION_CREATE_INFO_OVERLAY_EXTX,
     ) -> None:
         super().__init__(
@@ -4891,7 +4890,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
         self,
         visible: Bool32 = 0,
         flags: OverlayMainSessionFlagsEXTX = OverlayMainSessionFlagsEXTX(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX,
     ) -> None:
         super().__init__(
@@ -4938,7 +4937,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
         space: Space = None,
         pose: Posef = Posef(),
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -4978,7 +4977,7 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
         self,
         anchor: SpatialAnchorMSFT = None,
         pose_in_anchor_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_SPACE_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -5024,7 +5023,7 @@ class CompositionLayerImageLayoutFB(Structure):
     def __init__(
         self,
         flags: CompositionLayerImageLayoutFlagsFB = CompositionLayerImageLayoutFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_FB,
     ) -> None:
         super().__init__(
@@ -5062,7 +5061,7 @@ class CompositionLayerAlphaBlendFB(Structure):
         dst_factor_color: BlendFactorFB = BlendFactorFB(),  # noqa
         src_factor_alpha: BlendFactorFB = BlendFactorFB(),  # noqa
         dst_factor_alpha: BlendFactorFB = BlendFactorFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_ALPHA_BLEND_FB,
     ) -> None:
         super().__init__(
@@ -5106,7 +5105,7 @@ class ViewConfigurationDepthRangeEXT(Structure):
         min_near_z: float = 0,
         recommended_far_z: float = 0,
         max_far_z: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW_CONFIGURATION_DEPTH_RANGE_EXT,
     ) -> None:
         super().__init__(
@@ -5167,7 +5166,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
         self,
         node_type: SpatialGraphNodeTypeMSFT = SpatialGraphNodeTypeMSFT(),  # noqa
         pose: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -5207,7 +5206,7 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
         space: Space = None,
         pose_in_space: Posef = Posef(),
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_GRAPH_STATIC_NODE_BINDING_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -5245,7 +5244,7 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
 class SpatialGraphNodeBindingPropertiesGetInfoMSFT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_GRAPH_NODE_BINDING_PROPERTIES_GET_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -5278,7 +5277,7 @@ class SpatialGraphNodeBindingPropertiesMSFT(Structure):
     def __init__(
         self,
         pose_in_node_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_GRAPH_NODE_BINDING_PROPERTIES_MSFT,
     ) -> None:
         super().__init__(
@@ -5331,7 +5330,7 @@ class SystemHandTrackingPropertiesEXT(Structure):
     def __init__(
         self,
         supports_hand_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_HAND_TRACKING_PROPERTIES_EXT,
     ) -> None:
         super().__init__(
@@ -5367,7 +5366,7 @@ class HandTrackerCreateInfoEXT(Structure):
         self,
         hand: HandEXT = HandEXT(),  # noqa
         hand_joint_set: HandJointSetEXT = HandJointSetEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_TRACKER_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -5405,7 +5404,7 @@ class HandJointsLocateInfoEXT(Structure):
         self,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_JOINTS_LOCATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -5500,7 +5499,7 @@ class HandJointLocationsEXT(Structure):
         is_active: Bool32 = 0,
         joint_count: Optional[int] = None,
         joint_locations: ArrayFieldParamType[HandJointLocationEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_JOINT_LOCATIONS_EXT,
     ) -> None:
         joint_count, joint_locations = array_field_helper(
@@ -5556,7 +5555,7 @@ class HandJointVelocitiesEXT(Structure):
         self,
         joint_count: Optional[int] = None,
         joint_velocities: ArrayFieldParamType[HandJointVelocityEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_JOINT_VELOCITIES_EXT,
     ) -> None:
         joint_count, joint_velocities = array_field_helper(
@@ -5618,7 +5617,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
         supports_hand_tracking_mesh: Bool32 = 0,
         max_hand_mesh_index_count: int = 0,
         max_hand_mesh_vertex_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT,
     ) -> None:
         super().__init__(
@@ -5658,7 +5657,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
         self,
         hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(),  # noqa
         pose_in_hand_mesh_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_MESH_SPACE_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -5696,7 +5695,7 @@ class HandMeshUpdateInfoMSFT(Structure):
         self,
         time: Time = 0,
         hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_MESH_UPDATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -5822,7 +5821,7 @@ class HandMeshMSFT(Structure):
         vertex_buffer_changed: Bool32 = 0,
         index_buffer: HandMeshIndexBufferMSFT = None,
         vertex_buffer: HandMeshVertexBufferMSFT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_MESH_MSFT,
     ) -> None:
         if index_buffer is None:
@@ -5869,7 +5868,7 @@ class HandPoseTypeInfoMSFT(Structure):
     def __init__(
         self,
         hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_POSE_TYPE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -5910,7 +5909,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
         self,
         view_configuration_count: Optional[int] = None,
         enabled_view_configuration_types: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SESSION_BEGIN_INFO_MSFT,
     ) -> None:
         view_configuration_count, enabled_view_configuration_types = array_field_helper(
@@ -5964,7 +5963,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
         self,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
         active: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_MSFT,
     ) -> None:
         super().__init__(
@@ -6002,7 +6001,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
         self,
         view_configuration_count: Optional[int] = None,
         view_configuration_states: ArrayFieldParamType[SecondaryViewConfigurationStateMSFT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_STATE_MSFT,
     ) -> None:
         view_configuration_count, view_configuration_states = array_field_helper(
@@ -6058,7 +6057,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),  # noqa
         layer_count: Optional[int] = None,
         layers: BaseArrayFieldParamType = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_LAYER_INFO_MSFT,
     ) -> None:
         layer_count, layers = base_array_field_helper(
@@ -6116,7 +6115,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
         self,
         view_configuration_count: int = 0,
         view_configuration_layers_info: POINTER(SecondaryViewConfigurationLayerInfoMSFT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_FRAME_END_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -6153,7 +6152,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     def __init__(
         self,
         view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -6191,7 +6190,7 @@ class ControllerModelKeyStateMSFT(Structure):
     def __init__(
         self,
         model_key: ControllerModelKeyMSFT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CONTROLLER_MODEL_KEY_STATE_MSFT,
     ) -> None:
         super().__init__(
@@ -6227,7 +6226,7 @@ class ControllerModelNodePropertiesMSFT(Structure):
         self,
         parent_node_name: str = "",
         node_name: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.CONTROLLER_MODEL_NODE_PROPERTIES_MSFT,
     ) -> None:
         super().__init__(
@@ -6266,7 +6265,7 @@ class ControllerModelPropertiesMSFT(Structure):
         node_capacity_input: int = 0,
         node_count_output: int = 0,
         node_properties: POINTER(ControllerModelNodePropertiesMSFT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CONTROLLER_MODEL_PROPERTIES_MSFT,
     ) -> None:
         super().__init__(
@@ -6305,7 +6304,7 @@ class ControllerModelNodeStateMSFT(Structure):
     def __init__(
         self,
         node_pose: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.CONTROLLER_MODEL_NODE_STATE_MSFT,
     ) -> None:
         super().__init__(
@@ -6342,7 +6341,7 @@ class ControllerModelStateMSFT(Structure):
         node_capacity_input: int = 0,
         node_count_output: int = 0,
         node_states: POINTER(ControllerModelNodeStateMSFT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CONTROLLER_MODEL_STATE_MSFT,
     ) -> None:
         super().__init__(
@@ -6391,7 +6390,7 @@ class ViewConfigurationViewFovEPIC(Structure):
         self,
         recommended_fov: Fovf = None,
         max_mutable_fov: Fovf = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW_CONFIGURATION_VIEW_FOV_EPIC,
     ) -> None:
         if recommended_fov is None:
@@ -6432,7 +6431,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
     def __init__(
         self,
         reprojection_mode: ReprojectionModeMSFT = ReprojectionModeMSFT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -6469,7 +6468,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
         position: Vector3f = None,
         normal: Vector3f = None,
         velocity: Vector3f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_MSFT,
     ) -> None:
         if position is None:
@@ -6516,7 +6515,7 @@ PFN_xrEnumerateReprojectionModesMSFT = CFUNCTYPE(Result.ctype(), Instance, Syste
 class SwapchainStateBaseHeaderFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -6556,7 +6555,7 @@ class CompositionLayerSecureContentFB(Structure):
     def __init__(
         self,
         flags: CompositionLayerSecureContentFlagsFB = CompositionLayerSecureContentFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_SECURE_CONTENT_FB,
     ) -> None:
         super().__init__(
@@ -6622,7 +6621,7 @@ class SystemBodyTrackingPropertiesFB(Structure):
     def __init__(
         self,
         supports_body_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_BODY_TRACKING_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -6657,7 +6656,7 @@ class BodyTrackerCreateInfoFB(Structure):
     def __init__(
         self,
         body_joint_set: BodyJointSetFB = BodyJointSetFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_TRACKER_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -6719,7 +6718,7 @@ class BodySkeletonFB(Structure):
         self,
         joint_count: Optional[int] = None,
         joints: ArrayFieldParamType[BodySkeletonJointFB] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_SKELETON_FB,
     ) -> None:
         joint_count, joints = array_field_helper(
@@ -6773,7 +6772,7 @@ class BodyJointsLocateInfoFB(Structure):
         self,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_JOINTS_LOCATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -6815,7 +6814,7 @@ class BodyJointLocationsFB(Structure):
         joint_locations: ArrayFieldParamType[BodyJointLocationFB] = None,
         skeleton_changed_count: int = 0,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_JOINT_LOCATIONS_FB,
     ) -> None:
         joint_count, joint_locations = array_field_helper(
@@ -6893,7 +6892,7 @@ class InteractionProfileDpadBindingEXT(Structure):
         is_sticky: Bool32 = 0,
         on_haptic: POINTER(HapticBaseHeader) = None,
         off_haptic: POINTER(HapticBaseHeader) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INTERACTION_PROFILE_DPAD_BINDING_EXT,
     ) -> None:
         super().__init__(
@@ -6949,7 +6948,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
         off_threshold: float = 0,
         on_haptic: POINTER(HapticBaseHeader) = None,
         off_haptic: POINTER(HapticBaseHeader) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INTERACTION_PROFILE_ANALOG_THRESHOLD_VALVE,
     ) -> None:
         super().__init__(
@@ -6994,7 +6993,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
     def __init__(
         self,
         hand_joints_motion_range: HandJointsMotionRangeEXT = HandJointsMotionRangeEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_JOINTS_MOTION_RANGE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -7062,7 +7061,7 @@ class UuidMSFT(Structure):
 class SceneObserverCreateInfoMSFT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_OBSERVER_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -7094,7 +7093,7 @@ class SceneObserverCreateInfoMSFT(Structure):
 class SceneCreateInfoMSFT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_CREATE_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -7297,7 +7296,7 @@ class NewSceneComputeInfoMSFT(Structure):
         requested_features: ArrayFieldParamType[c_int] = None,
         consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT(),  # noqa
         bounds: SceneBoundsMSFT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.NEW_SCENE_COMPUTE_INFO_MSFT,
     ) -> None:
         requested_feature_count, requested_features = array_field_helper(
@@ -7356,7 +7355,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
     def __init__(
         self,
         lod: MeshComputeLodMSFT = MeshComputeLodMSFT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -7426,7 +7425,7 @@ class SceneComponentsMSFT(Structure):
         component_capacity_input: int = 0,
         component_count_output: int = 0,
         components: POINTER(SceneComponentMSFT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_COMPONENTS_MSFT,
     ) -> None:
         super().__init__(
@@ -7465,7 +7464,7 @@ class SceneComponentsGetInfoMSFT(Structure):
     def __init__(
         self,
         component_type: SceneComponentTypeMSFT = SceneComponentTypeMSFT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_COMPONENTS_GET_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -7524,7 +7523,7 @@ class SceneComponentLocationsMSFT(Structure):
         self,
         location_count: Optional[int] = None,
         locations: ArrayFieldParamType[SceneComponentLocationMSFT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_COMPONENT_LOCATIONS_MSFT,
     ) -> None:
         location_count, locations = array_field_helper(
@@ -7580,7 +7579,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
         time: Time = 0,
         component_id_count: Optional[int] = None,
         component_ids: ArrayFieldParamType[UuidMSFT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_COMPONENTS_LOCATE_INFO_MSFT,
     ) -> None:
         component_id_count, component_ids = array_field_helper(
@@ -7658,7 +7657,7 @@ class SceneObjectsMSFT(Structure):
         self,
         scene_object_count: Optional[int] = None,
         scene_objects: ArrayFieldParamType[SceneObjectMSFT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_OBJECTS_MSFT,
     ) -> None:
         scene_object_count, scene_objects = array_field_helper(
@@ -7711,7 +7710,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
     def __init__(
         self,
         parent_id: UuidMSFT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_COMPONENT_PARENT_FILTER_INFO_MSFT,
     ) -> None:
         if parent_id is None:
@@ -7749,7 +7748,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
         self,
         object_type_count: Optional[int] = None,
         object_types: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_OBJECT_TYPES_FILTER_INFO_MSFT,
     ) -> None:
         object_type_count, object_types = array_field_helper(
@@ -7834,7 +7833,7 @@ class ScenePlanesMSFT(Structure):
         self,
         scene_plane_count: Optional[int] = None,
         scene_planes: ArrayFieldParamType[ScenePlaneMSFT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_PLANES_MSFT,
     ) -> None:
         scene_plane_count, scene_planes = array_field_helper(
@@ -7888,7 +7887,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
         self,
         alignment_count: Optional[int] = None,
         alignments: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT,
     ) -> None:
         alignment_count, alignments = array_field_helper(
@@ -7965,7 +7964,7 @@ class SceneMeshesMSFT(Structure):
         self,
         scene_mesh_count: Optional[int] = None,
         scene_meshes: ArrayFieldParamType[SceneMeshMSFT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MESHES_MSFT,
     ) -> None:
         scene_mesh_count, scene_meshes = array_field_helper(
@@ -8018,7 +8017,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
     def __init__(
         self,
         mesh_buffer_id: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MESH_BUFFERS_GET_INFO_MSFT,
     ) -> None:
         super().__init__(
@@ -8052,7 +8051,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
 class SceneMeshBuffersMSFT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MESH_BUFFERS_MSFT,
     ) -> None:
         super().__init__(
@@ -8087,7 +8086,7 @@ class SceneMeshVertexBufferMSFT(Structure):
         vertex_capacity_input: int = 0,
         vertex_count_output: int = 0,
         vertices: POINTER(Vector3f) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MESH_VERTEX_BUFFER_MSFT,
     ) -> None:
         super().__init__(
@@ -8128,7 +8127,7 @@ class SceneMeshIndicesUint32MSFT(Structure):
         index_capacity_input: int = 0,
         index_count_output: int = 0,
         indices: POINTER(c_uint32) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MESH_INDICES_UINT32_MSFT,
     ) -> None:
         super().__init__(
@@ -8169,7 +8168,7 @@ class SceneMeshIndicesUint16MSFT(Structure):
         index_capacity_input: int = 0,
         index_count_output: int = 0,
         indices: POINTER(c_uint16) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MESH_INDICES_UINT16_MSFT,
     ) -> None:
         super().__init__(
@@ -8229,7 +8228,7 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
     def __init__(
         self,
         scene_fragment_id: UuidMSFT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_MSFT,
     ) -> None:
         if scene_fragment_id is None:
@@ -8290,7 +8289,7 @@ class SceneDeserializeInfoMSFT(Structure):
         self,
         fragment_count: Optional[int] = None,
         fragments: ArrayFieldParamType[DeserializeSceneFragmentMSFT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_DESERIALIZE_INFO_MSFT,
     ) -> None:
         fragment_count, fragments = array_field_helper(
@@ -8349,7 +8348,7 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
         self,
         from_display_refresh_rate: float = 0,
         to_display_refresh_rate: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB,
     ) -> None:
         super().__init__(
@@ -8394,7 +8393,7 @@ class ViveTrackerPathsHTCX(Structure):
         self,
         persistent_path: Path = 0,
         role_path: Path = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIVE_TRACKER_PATHS_HTCX,
     ) -> None:
         super().__init__(
@@ -8431,7 +8430,7 @@ class EventDataViveTrackerConnectedHTCX(Structure):
     def __init__(
         self,
         paths: POINTER(ViveTrackerPathsHTCX) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX,
     ) -> None:
         super().__init__(
@@ -8478,7 +8477,7 @@ class SystemFacialTrackingPropertiesHTC(Structure):
         self,
         support_eye_facial_tracking: Bool32 = 0,
         support_lip_facial_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_FACIAL_TRACKING_PROPERTIES_HTC,
     ) -> None:
         super().__init__(
@@ -8518,7 +8517,7 @@ class FacialExpressionsHTC(Structure):
         sample_time: Time = 0,
         expression_count: Optional[int] = None,
         expression_weightings: ArrayFieldParamType[c_float] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACIAL_EXPRESSIONS_HTC,
     ) -> None:
         expression_count, expression_weightings = array_field_helper(
@@ -8575,7 +8574,7 @@ class FacialTrackerCreateInfoHTC(Structure):
     def __init__(
         self,
         facial_tracking_type: FacialTrackingTypeHTC = FacialTrackingTypeHTC(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACIAL_TRACKER_CREATE_INFO_HTC,
     ) -> None:
         super().__init__(
@@ -8617,7 +8616,7 @@ class SystemColorSpacePropertiesFB(Structure):
     def __init__(
         self,
         color_space: ColorSpaceFB = ColorSpaceFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -8700,7 +8699,7 @@ class HandTrackingMeshFB(Structure):
         index_capacity_input: int = 0,
         index_count_output: int = 0,
         indices: POINTER(c_int16) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_TRACKING_MESH_FB,
     ) -> None:
         super().__init__(
@@ -8766,7 +8765,7 @@ class HandTrackingScaleFB(Structure):
         current_output: float = 0,
         override_hand_scale: Bool32 = 0,
         override_value_input: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_TRACKING_SCALE_FB,
     ) -> None:
         super().__init__(
@@ -8817,7 +8816,7 @@ class HandTrackingAimStateFB(Structure):
         pinch_strength_middle: float = 0,
         pinch_strength_ring: float = 0,
         pinch_strength_little: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_TRACKING_AIM_STATE_FB,
     ) -> None:
         super().__init__(
@@ -8885,7 +8884,7 @@ class HandCapsuleFB(Structure):
 class HandTrackingCapsulesStateFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_TRACKING_CAPSULES_STATE_FB,
     ) -> None:
         super().__init__(
@@ -8922,7 +8921,7 @@ class SystemSpatialEntityPropertiesFB(Structure):
     def __init__(
         self,
         supports_spatial_entity: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_ENTITY_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -8959,7 +8958,7 @@ class SpatialAnchorCreateInfoFB(Structure):
         space: Space = None,
         pose_in_space: Posef = Posef(),
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9000,7 +8999,7 @@ class SpaceComponentStatusSetInfoFB(Structure):
         component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
         enabled: Bool32 = 0,
         timeout: Duration = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_COMPONENT_STATUS_SET_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9040,7 +9039,7 @@ class SpaceComponentStatusFB(Structure):
         self,
         enabled: Bool32 = 0,
         change_pending: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_COMPONENT_STATUS_FB,
     ) -> None:
         super().__init__(
@@ -9083,7 +9082,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
         result: Result = Result(),  # noqa
         space: Space = None,
         uuid: UuidEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPATIAL_ANCHOR_CREATE_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -9129,7 +9128,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
         uuid: UuidEXT = 0,
         component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
         enabled: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SET_STATUS_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -9196,7 +9195,7 @@ SwapchainStateFoveationFlagsFBCInt = Flags64
 class FoveationProfileCreateInfoFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATION_PROFILE_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9229,7 +9228,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
     def __init__(
         self,
         flags: SwapchainCreateFoveationFlagsFB = SwapchainCreateFoveationFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_FB,
     ) -> None:
         super().__init__(
@@ -9265,7 +9264,7 @@ class SwapchainStateFoveationFB(Structure):
         self,
         flags: SwapchainStateFoveationFlagsFB = SwapchainStateFoveationFlagsFB(),  # noqa
         profile: FoveationProfileFB = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_FOVEATION_FB,
     ) -> None:
         super().__init__(
@@ -9309,7 +9308,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
         level: FoveationLevelFB = FoveationLevelFB(),  # noqa
         vertical_offset: float = 0,
         dynamic: FoveationDynamicFB = FoveationDynamicFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9353,7 +9352,7 @@ class SystemKeyboardTrackingPropertiesFB(Structure):
     def __init__(
         self,
         supports_keyboard_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_KEYBOARD_TRACKING_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -9419,7 +9418,7 @@ class KeyboardSpaceCreateInfoFB(Structure):
     def __init__(
         self,
         tracked_keyboard_id: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.KEYBOARD_SPACE_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9454,7 +9453,7 @@ class KeyboardTrackingQueryFB(Structure):
     def __init__(
         self,
         flags: KeyboardTrackingQueryFlagsFB = KeyboardTrackingQueryFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.KEYBOARD_TRACKING_QUERY_FB,
     ) -> None:
         super().__init__(
@@ -9509,7 +9508,7 @@ class TriangleMeshCreateInfoFB(Structure):
         vertex_buffer: POINTER(Vector3f) = None,
         triangle_count: int = 0,
         index_buffer: POINTER(c_uint32) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRIANGLE_MESH_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9601,7 +9600,7 @@ class SystemPassthroughPropertiesFB(Structure):
     def __init__(
         self,
         supports_passthrough: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PASSTHROUGH_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -9636,7 +9635,7 @@ class SystemPassthroughProperties2FB(Structure):
     def __init__(
         self,
         capabilities: PassthroughCapabilityFlagsFB = PassthroughCapabilityFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PASSTHROUGH_PROPERTIES2_FB,
     ) -> None:
         super().__init__(
@@ -9671,7 +9670,7 @@ class PassthroughCreateInfoFB(Structure):
     def __init__(
         self,
         flags: PassthroughFlagsFB = PassthroughFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9708,7 +9707,7 @@ class PassthroughLayerCreateInfoFB(Structure):
         passthrough: PassthroughFB = None,
         flags: PassthroughFlagsFB = PassthroughFlagsFB(),  # noqa
         purpose: PassthroughLayerPurposeFB = PassthroughLayerPurposeFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_LAYER_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -9749,7 +9748,7 @@ class CompositionLayerPassthroughFB(Structure):
         flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
         space: Space = None,
         layer_handle: PassthroughLayerFB = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_PASSTHROUGH_FB,
     ) -> None:
         super().__init__(
@@ -9792,7 +9791,7 @@ class GeometryInstanceCreateInfoFB(Structure):
         base_space: Space = None,
         pose: Posef = Posef(),
         scale: Vector3f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.GEOMETRY_INSTANCE_CREATE_INFO_FB,
     ) -> None:
         if scale is None:
@@ -9840,7 +9839,7 @@ class GeometryInstanceTransformFB(Structure):
         time: Time = 0,
         pose: Posef = Posef(),
         scale: Vector3f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.GEOMETRY_INSTANCE_TRANSFORM_FB,
     ) -> None:
         if scale is None:
@@ -9884,7 +9883,7 @@ class PassthroughStyleFB(Structure):
         self,
         texture_opacity_factor: float = 0,
         edge_color: Color4f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_STYLE_FB,
     ) -> None:
         if edge_color is None:
@@ -9922,7 +9921,7 @@ class PassthroughStyleFB(Structure):
 class PassthroughColorMapMonoToRgbaFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_MONO_TO_RGBA_FB,
     ) -> None:
         super().__init__(
@@ -9955,7 +9954,7 @@ class PassthroughColorMapMonoToRgbaFB(Structure):
 class PassthroughColorMapMonoToMonoFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_MONO_TO_MONO_FB,
     ) -> None:
         super().__init__(
@@ -9991,7 +9990,7 @@ class PassthroughBrightnessContrastSaturationFB(Structure):
         brightness: float = 0,
         contrast: float = 0,
         saturation: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_BRIGHTNESS_CONTRAST_SATURATION_FB,
     ) -> None:
         super().__init__(
@@ -10030,7 +10029,7 @@ class EventDataPassthroughStateChangedFB(Structure):
     def __init__(
         self,
         flags: PassthroughStateChangedFlagsFB = PassthroughStateChangedFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_PASSTHROUGH_STATE_CHANGED_FB,
     ) -> None:
         super().__init__(
@@ -10094,7 +10093,7 @@ class RenderModelPathInfoFB(Structure):
     def __init__(
         self,
         path: Path = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_PATH_INFO_FB,
     ) -> None:
         super().__init__(
@@ -10133,7 +10132,7 @@ class RenderModelPropertiesFB(Structure):
         model_key: RenderModelKeyFB = 0,
         model_version: int = 0,
         flags: RenderModelFlagsFB = RenderModelFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -10178,7 +10177,7 @@ class RenderModelBufferFB(Structure):
         buffer_capacity_input: int = 0,
         buffer_count_output: int = 0,
         buffer: POINTER(c_uint8) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_BUFFER_FB,
     ) -> None:
         super().__init__(
@@ -10217,7 +10216,7 @@ class RenderModelLoadInfoFB(Structure):
     def __init__(
         self,
         model_key: RenderModelKeyFB = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_LOAD_INFO_FB,
     ) -> None:
         super().__init__(
@@ -10252,7 +10251,7 @@ class SystemRenderModelPropertiesFB(Structure):
     def __init__(
         self,
         supports_render_model_loading: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_RENDER_MODEL_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -10287,7 +10286,7 @@ class RenderModelCapabilitiesRequestFB(Structure):
     def __init__(
         self,
         flags: RenderModelFlagsFB = RenderModelFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_CAPABILITIES_REQUEST_FB,
     ) -> None:
         super().__init__(
@@ -10329,7 +10328,7 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
     def __init__(
         self,
         foveated_rendering_active: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIEW_LOCATE_FOVEATED_RENDERING_VARJO,
     ) -> None:
         super().__init__(
@@ -10364,7 +10363,7 @@ class FoveatedViewConfigurationViewVARJO(Structure):
     def __init__(
         self,
         foveated_rendering_active: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATED_VIEW_CONFIGURATION_VIEW_VARJO,
     ) -> None:
         super().__init__(
@@ -10399,7 +10398,7 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
     def __init__(
         self,
         supports_foveated_rendering: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_FOVEATED_RENDERING_PROPERTIES_VARJO,
     ) -> None:
         super().__init__(
@@ -10435,7 +10434,7 @@ class CompositionLayerDepthTestVARJO(Structure):
         self,
         depth_test_range_near_z: float = 0,
         depth_test_range_far_z: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_DEPTH_TEST_VARJO,
     ) -> None:
         super().__init__(
@@ -10475,7 +10474,7 @@ class SystemMarkerTrackingPropertiesVARJO(Structure):
     def __init__(
         self,
         supports_marker_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_MARKER_TRACKING_PROPERTIES_VARJO,
     ) -> None:
         super().__init__(
@@ -10513,7 +10512,7 @@ class EventDataMarkerTrackingUpdateVARJO(Structure):
         is_active: Bool32 = 0,
         is_predicted: Bool32 = 0,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_MARKER_TRACKING_UPDATE_VARJO,
     ) -> None:
         super().__init__(
@@ -10555,7 +10554,7 @@ class MarkerSpaceCreateInfoVARJO(Structure):
         self,
         marker_id: int = 0,
         pose_in_marker_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_SPACE_CREATE_INFO_VARJO,
     ) -> None:
         super().__init__(
@@ -10608,7 +10607,7 @@ class FrameEndInfoML(Structure):
         self,
         focus_distance: float = 0,
         flags: FrameEndInfoFlagsML = FrameEndInfoFlagsML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FRAME_END_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10649,7 +10648,7 @@ class GlobalDimmerFrameEndInfoML(Structure):
         self,
         dimmer_value: float = 0,
         flags: GlobalDimmerFrameEndInfoFlagsML = GlobalDimmerFrameEndInfoFlagsML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.GLOBAL_DIMMER_FRAME_END_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10697,7 +10696,7 @@ class SystemMarkerUnderstandingPropertiesML(Structure):
     def __init__(
         self,
         supports_marker_understanding: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_MARKER_UNDERSTANDING_PROPERTIES_ML,
     ) -> None:
         super().__init__(
@@ -10733,7 +10732,7 @@ class MarkerDetectorCreateInfoML(Structure):
         self,
         profile: MarkerDetectorProfileML = MarkerDetectorProfileML(),  # noqa
         marker_type: MarkerTypeML = MarkerTypeML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_CREATE_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10770,7 +10769,7 @@ class MarkerDetectorArucoInfoML(Structure):
     def __init__(
         self,
         aruco_dict: MarkerArucoDictML = MarkerArucoDictML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_ARUCO_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10805,7 +10804,7 @@ class MarkerDetectorSizeInfoML(Structure):
     def __init__(
         self,
         marker_length: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_SIZE_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10840,7 +10839,7 @@ class MarkerDetectorAprilTagInfoML(Structure):
     def __init__(
         self,
         april_tag_dict: MarkerAprilTagDictML = MarkerAprilTagDictML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_APRIL_TAG_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10880,7 +10879,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
         corner_refine_method: MarkerDetectorCornerRefineMethodML = MarkerDetectorCornerRefineMethodML(),  # noqa
         use_edge_refinement: Bool32 = 0,
         full_analysis_interval_hint: MarkerDetectorFullAnalysisIntervalML = MarkerDetectorFullAnalysisIntervalML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10924,7 +10923,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
 class MarkerDetectorSnapshotInfoML(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_SNAPSHOT_INFO_ML,
     ) -> None:
         super().__init__(
@@ -10957,7 +10956,7 @@ class MarkerDetectorStateML(Structure):
     def __init__(
         self,
         state: MarkerDetectorStatusML = MarkerDetectorStatusML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_STATE_ML,
     ) -> None:
         super().__init__(
@@ -10994,7 +10993,7 @@ class MarkerSpaceCreateInfoML(Structure):
         marker_detector: MarkerDetectorML = None,
         marker: MarkerML = 0,
         pose_in_marker_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.MARKER_SPACE_CREATE_INFO_ML,
     ) -> None:
         super().__init__(
@@ -11066,7 +11065,7 @@ class LocalizationMapML(Structure):
         name: str = "",
         map_uuid: UuidEXT = 0,
         map_type: LocalizationMapTypeML = LocalizationMapTypeML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.LOCALIZATION_MAP_ML,
     ) -> None:
         super().__init__(
@@ -11109,7 +11108,7 @@ class EventDataLocalizationChangedML(Structure):
         map: LocalizationMapML = None,
         confidence: LocalizationMapConfidenceML = LocalizationMapConfidenceML(),  # noqa
         error_flags: LocalizationMapErrorFlagsML = LocalizationMapErrorFlagsML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_LOCALIZATION_CHANGED_ML,
     ) -> None:
         if map is None:
@@ -11153,7 +11152,7 @@ class EventDataLocalizationChangedML(Structure):
 class LocalizationMapQueryInfoBaseHeaderML(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -11186,7 +11185,7 @@ class MapLocalizationRequestInfoML(Structure):
     def __init__(
         self,
         map_uuid: UuidEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.MAP_LOCALIZATION_REQUEST_INFO_ML,
     ) -> None:
         super().__init__(
@@ -11222,7 +11221,7 @@ class LocalizationMapImportInfoML(Structure):
         self,
         size: int = 0,
         data: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.LOCALIZATION_MAP_IMPORT_INFO_ML,
     ) -> None:
         super().__init__(
@@ -11268,7 +11267,7 @@ class LocalizationEnableEventsInfoML(Structure):
     def __init__(
         self,
         enabled: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.LOCALIZATION_ENABLE_EVENTS_INFO_ML,
     ) -> None:
         super().__init__(
@@ -11324,7 +11323,7 @@ FutureEXT = POINTER(FutureEXT_T)
 class SpatialAnchorsCreateInfoBaseHeaderML(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -11359,7 +11358,7 @@ class SpatialAnchorsCreateInfoFromPoseML(Structure):
         base_space: Space = None,
         pose_in_base_space: Posef = Posef(),
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_CREATE_INFO_FROM_POSE_ML,
     ) -> None:
         super().__init__(
@@ -11400,7 +11399,7 @@ class CreateSpatialAnchorsCompletionML(Structure):
         future_result: Result = Result(),  # noqa
         space_count: Optional[int] = None,
         spaces: ArrayFieldParamType[Space] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_ANCHORS_COMPLETION_ML,
     ) -> None:
         space_count, spaces = array_field_helper(
@@ -11455,7 +11454,7 @@ class SpatialAnchorStateML(Structure):
     def __init__(
         self,
         confidence: SpatialAnchorConfidenceML = SpatialAnchorConfidenceML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_STATE_ML,
     ) -> None:
         super().__init__(
@@ -11504,7 +11503,7 @@ class SpatialAnchorsStorageML(POINTER(SpatialAnchorsStorageML_T), HandleMixin):
 class SpatialAnchorsCreateStorageInfoML(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML,
     ) -> None:
         super().__init__(
@@ -11536,7 +11535,7 @@ class SpatialAnchorsCreateStorageInfoML(Structure):
 class SpatialAnchorsQueryInfoBaseHeaderML(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -11572,7 +11571,7 @@ class SpatialAnchorsQueryInfoRadiusML(Structure):
         center: Vector3f = None,
         time: Time = 0,
         radius: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_QUERY_INFO_RADIUS_ML,
     ) -> None:
         if center is None:
@@ -11618,7 +11617,7 @@ class SpatialAnchorsQueryCompletionML(Structure):
         uuid_capacity_input: int = 0,
         uuid_count_output: int = 0,
         uuids: POINTER(UuidEXT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_QUERY_COMPLETION_ML,
     ) -> None:
         super().__init__(
@@ -11661,7 +11660,7 @@ class SpatialAnchorsCreateInfoFromUuidsML(Structure):
         storage: SpatialAnchorsStorageML = None,
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[Uuid] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_CREATE_INFO_FROM_UUIDS_ML,
     ) -> None:
         uuid_count, uuids = array_field_helper(
@@ -11718,7 +11717,7 @@ class SpatialAnchorsPublishInfoML(Structure):
         anchor_count: Optional[int] = None,
         anchors: ArrayFieldParamType[Space] = None,
         expiration: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_PUBLISH_INFO_ML,
     ) -> None:
         anchor_count, anchors = array_field_helper(
@@ -11775,7 +11774,7 @@ class SpatialAnchorsPublishCompletionML(Structure):
         future_result: Result = Result(),  # noqa
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[UuidEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_PUBLISH_COMPLETION_ML,
     ) -> None:
         uuid_count, uuids = array_field_helper(
@@ -11831,7 +11830,7 @@ class SpatialAnchorsDeleteInfoML(Structure):
         self,
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[Uuid] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_DELETE_INFO_ML,
     ) -> None:
         uuid_count, uuids = array_field_helper(
@@ -11884,7 +11883,7 @@ class SpatialAnchorsDeleteCompletionML(Structure):
     def __init__(
         self,
         future_result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_DELETE_COMPLETION_ML,
     ) -> None:
         super().__init__(
@@ -11921,7 +11920,7 @@ class SpatialAnchorsUpdateExpirationInfoML(Structure):
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[Uuid] = None,
         expiration: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_UPDATE_EXPIRATION_INFO_ML,
     ) -> None:
         uuid_count, uuids = array_field_helper(
@@ -11976,7 +11975,7 @@ class SpatialAnchorsUpdateExpirationCompletionML(Structure):
     def __init__(
         self,
         future_result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_UPDATE_EXPIRATION_COMPLETION_ML,
     ) -> None:
         super().__init__(
@@ -12035,7 +12034,7 @@ class SpatialAnchorsPublishCompletionDetailsML(Structure):
         self,
         result_count: Optional[int] = None,
         results: ArrayFieldParamType[SpatialAnchorCompletionResultML] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_PUBLISH_COMPLETION_DETAILS_ML,
     ) -> None:
         result_count, results = array_field_helper(
@@ -12089,7 +12088,7 @@ class SpatialAnchorsDeleteCompletionDetailsML(Structure):
         self,
         result_count: Optional[int] = None,
         results: ArrayFieldParamType[SpatialAnchorCompletionResultML] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_DELETE_COMPLETION_DETAILS_ML,
     ) -> None:
         result_count, results = array_field_helper(
@@ -12143,7 +12142,7 @@ class SpatialAnchorsUpdateExpirationCompletionDetailsML(Structure):
         self,
         result_count: Optional[int] = None,
         results: ArrayFieldParamType[SpatialAnchorCompletionResultML] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_UPDATE_EXPIRATION_COMPLETION_DETAILS_ML,
     ) -> None:
         result_count, results = array_field_helper(
@@ -12246,7 +12245,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
         self,
         spatial_anchor_persistence_name: SpatialAnchorPersistenceNameMSFT = None,
         spatial_anchor: SpatialAnchorMSFT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_PERSISTENCE_INFO_MSFT,
     ) -> None:
         if spatial_anchor_persistence_name is None:
@@ -12286,7 +12285,7 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
         self,
         spatial_anchor_store: SpatialAnchorStoreConnectionMSFT = None,
         spatial_anchor_persistence_name: SpatialAnchorPersistenceNameMSFT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_FROM_PERSISTED_ANCHOR_CREATE_INFO_MSFT,
     ) -> None:
         if spatial_anchor_persistence_name is None:
@@ -12374,7 +12373,7 @@ class SceneMarkersMSFT(Structure):
         self,
         scene_marker_capacity_input: int = 0,
         scene_markers: POINTER(SceneMarkerMSFT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MARKERS_MSFT,
     ) -> None:
         super().__init__(
@@ -12412,7 +12411,7 @@ class SceneMarkerTypeFilterMSFT(Structure):
         self,
         marker_type_count: Optional[int] = None,
         marker_types: ArrayFieldParamType[SceneMarkerTypeMSFT.ctype()] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MARKER_TYPE_FILTER_MSFT,
     ) -> None:
         marker_type_count, marker_types = array_field_helper(
@@ -12489,7 +12488,7 @@ class SceneMarkerQRCodesMSFT(Structure):
         self,
         qr_code_capacity_input: int = 0,
         qr_codes: POINTER(SceneMarkerQRCodeMSFT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_MARKER_QR_CODES_MSFT,
     ) -> None:
         super().__init__(
@@ -12530,7 +12529,7 @@ PFN_xrGetSceneMarkerDecodedStringMSFT = CFUNCTYPE(Result.ctype(), SceneMSFT, POI
 class SpaceQueryInfoBaseHeaderFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -12562,7 +12561,7 @@ class SpaceQueryInfoBaseHeaderFB(Structure):
 class SpaceFilterInfoBaseHeaderFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -12599,7 +12598,7 @@ class SpaceQueryInfoFB(Structure):
         timeout: Duration = 0,
         filter: POINTER(SpaceFilterInfoBaseHeaderFB) = None,
         exclude_filter: POINTER(SpaceFilterInfoBaseHeaderFB) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_QUERY_INFO_FB,
     ) -> None:
         super().__init__(
@@ -12642,7 +12641,7 @@ class SpaceStorageLocationFilterInfoFB(Structure):
     def __init__(
         self,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_STORAGE_LOCATION_FILTER_INFO_FB,
     ) -> None:
         super().__init__(
@@ -12678,7 +12677,7 @@ class SpaceUuidFilterInfoFB(Structure):
         self,
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[UuidEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_UUID_FILTER_INFO_FB,
     ) -> None:
         uuid_count, uuids = array_field_helper(
@@ -12731,7 +12730,7 @@ class SpaceComponentFilterInfoFB(Structure):
     def __init__(
         self,
         component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_COMPONENT_FILTER_INFO_FB,
     ) -> None:
         super().__init__(
@@ -12791,7 +12790,7 @@ class SpaceQueryResultsFB(Structure):
         result_capacity_input: int = 0,
         result_count_output: int = 0,
         results: POINTER(SpaceQueryResultFB) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_QUERY_RESULTS_FB,
     ) -> None:
         super().__init__(
@@ -12830,7 +12829,7 @@ class EventDataSpaceQueryResultsAvailableFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_QUERY_RESULTS_AVAILABLE_FB,
     ) -> None:
         super().__init__(
@@ -12866,7 +12865,7 @@ class EventDataSpaceQueryCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_QUERY_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -12910,7 +12909,7 @@ class SpaceSaveInfoFB(Structure):
         space: Space = None,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
         persistence_mode: SpacePersistenceModeFB = SpacePersistenceModeFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_SAVE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -12950,7 +12949,7 @@ class SpaceEraseInfoFB(Structure):
         self,
         space: Space = None,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_ERASE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -12991,7 +12990,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
         space: Space = None,
         uuid: UuidEXT = 0,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SAVE_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -13038,7 +13037,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
         space: Space = None,
         uuid: UuidEXT = 0,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_ERASE_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -13097,7 +13096,7 @@ class SpaceShareInfoFB(Structure):
         spaces: ArrayFieldParamType[Space] = None,
         user_count: Optional[int] = None,
         users: ArrayFieldParamType[SpaceUserFB] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_SHARE_INFO_FB,
     ) -> None:
         space_count, spaces = array_field_helper(
@@ -13171,7 +13170,7 @@ class EventDataSpaceShareCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SHARE_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -13220,7 +13219,7 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
         max_depth: float = 0,
         near_z: float = 0,
         far_z: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_SPACE_WARP_INFO_FB,
     ) -> None:
         if motion_vector_sub_image is None:
@@ -13274,7 +13273,7 @@ class SystemSpaceWarpPropertiesFB(Structure):
         self,
         recommended_motion_vector_image_rect_width: int = 0,
         recommended_motion_vector_image_rect_height: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPACE_WARP_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -13313,7 +13312,7 @@ class HapticAmplitudeEnvelopeVibrationFB(Structure):
         duration: Duration = 0,
         amplitude_count: Optional[int] = None,
         amplitudes: ArrayFieldParamType[c_float] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAPTIC_AMPLITUDE_ENVELOPE_VIBRATION_FB,
     ) -> None:
         amplitude_count, amplitudes = array_field_helper(
@@ -13448,7 +13447,7 @@ class SemanticLabelsFB(Structure):
         buffer_capacity_input: int = 0,
         buffer_count_output: int = 0,
         buffer: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.SEMANTIC_LABELS_FB,
     ) -> None:
         super().__init__(
@@ -13500,7 +13499,7 @@ class RoomLayoutFB(Structure):
         wall_uuid_capacity_input: int = 0,
         wall_uuid_count_output: int = 0,
         wall_uuids: POINTER(UuidEXT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ROOM_LAYOUT_FB,
     ) -> None:
         super().__init__(
@@ -13545,7 +13544,7 @@ class Boundary2DFB(Structure):
         vertex_capacity_input: int = 0,
         vertex_count_output: int = 0,
         vertices: POINTER(Vector2f) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BOUNDARY_2D_FB,
     ) -> None:
         super().__init__(
@@ -13585,7 +13584,7 @@ class SemanticLabelsSupportInfoFB(Structure):
         self,
         flags: SemanticLabelsSupportFlagsFB = SemanticLabelsSupportFlagsFB(),  # noqa
         recognized_labels: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.SEMANTIC_LABELS_SUPPORT_INFO_FB,
     ) -> None:
         super().__init__(
@@ -13644,7 +13643,7 @@ class DigitalLensControlALMALENCE(Structure):
     def __init__(
         self,
         flags: DigitalLensControlFlagsALMALENCE = DigitalLensControlFlagsALMALENCE(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.DIGITAL_LENS_CONTROL_ALMALENCE,
     ) -> None:
         super().__init__(
@@ -13683,7 +13682,7 @@ class EventDataSceneCaptureCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SCENE_CAPTURE_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -13721,7 +13720,7 @@ class SceneCaptureRequestInfoFB(Structure):
         self,
         request_byte_count: int = 0,
         request: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_CAPTURE_REQUEST_INFO_FB,
     ) -> None:
         super().__init__(
@@ -13772,7 +13771,7 @@ class SpaceContainerFB(Structure):
         uuid_capacity_input: int = 0,
         uuid_count_output: int = 0,
         uuids: POINTER(UuidEXT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_CONTAINER_FB,
     ) -> None:
         super().__init__(
@@ -13818,7 +13817,7 @@ class FoveationEyeTrackedProfileCreateInfoMETA(Structure):
     def __init__(
         self,
         flags: FoveationEyeTrackedProfileCreateFlagsMETA = FoveationEyeTrackedProfileCreateFlagsMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATION_EYE_TRACKED_PROFILE_CREATE_INFO_META,
     ) -> None:
         super().__init__(
@@ -13853,7 +13852,7 @@ class FoveationEyeTrackedStateMETA(Structure):
     def __init__(
         self,
         flags: FoveationEyeTrackedStateFlagsMETA = FoveationEyeTrackedStateFlagsMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATION_EYE_TRACKED_STATE_META,
     ) -> None:
         super().__init__(
@@ -13889,7 +13888,7 @@ class SystemFoveationEyeTrackedPropertiesMETA(Structure):
     def __init__(
         self,
         supports_foveation_eye_tracked: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_FOVEATION_EYE_TRACKED_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -13935,7 +13934,7 @@ class SystemFaceTrackingPropertiesFB(Structure):
     def __init__(
         self,
         supports_face_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_FACE_TRACKING_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -13970,7 +13969,7 @@ class FaceTrackerCreateInfoFB(Structure):
     def __init__(
         self,
         face_expression_set: FaceExpressionSetFB = FaceExpressionSetFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -14005,7 +14004,7 @@ class FaceExpressionInfoFB(Structure):
     def __init__(
         self,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACE_EXPRESSION_INFO_FB,
     ) -> None:
         super().__init__(
@@ -14068,7 +14067,7 @@ class FaceExpressionWeightsFB(Structure):
         confidences: ArrayFieldParamType[c_float] = None,
         status: FaceExpressionStatusFB = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACE_EXPRESSION_WEIGHTS_FB,
     ) -> None:
         weight_count, weights = array_field_helper(
@@ -14187,7 +14186,7 @@ class EyeGazeFB(Structure):
 class EyeTrackerCreateInfoFB(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EYE_TRACKER_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -14221,7 +14220,7 @@ class EyeGazesInfoFB(Structure):
         self,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EYE_GAZES_INFO_FB,
     ) -> None:
         super().__init__(
@@ -14258,7 +14257,7 @@ class SystemEyeTrackingPropertiesFB(Structure):
     def __init__(
         self,
         supports_eye_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_EYE_TRACKING_PROPERTIES_FB,
     ) -> None:
         super().__init__(
@@ -14293,7 +14292,7 @@ class EyeGazesFB(Structure):
     def __init__(
         self,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EYE_GAZES_FB,
     ) -> None:
         super().__init__(
@@ -14337,7 +14336,7 @@ class PassthroughKeyboardHandsIntensityFB(Structure):
         self,
         left_hand_intensity: float = 0,
         right_hand_intensity: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_KEYBOARD_HANDS_INTENSITY_FB,
     ) -> None:
         super().__init__(
@@ -14379,7 +14378,7 @@ class CompositionLayerSettingsFB(Structure):
     def __init__(
         self,
         layer_flags: CompositionLayerSettingsFlagsFB = CompositionLayerSettingsFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_SETTINGS_FB,
     ) -> None:
         super().__init__(
@@ -14418,7 +14417,7 @@ class HapticPcmVibrationFB(Structure):
         sample_rate: float = 0,
         append: Bool32 = 0,
         samples_consumed: POINTER(c_uint32) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAPTIC_PCM_VIBRATION_FB,
     ) -> None:
         super().__init__(
@@ -14461,7 +14460,7 @@ class DevicePcmSampleRateStateFB(Structure):
     def __init__(
         self,
         sample_rate: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.DEVICE_PCM_SAMPLE_RATE_STATE_FB,
     ) -> None:
         super().__init__(
@@ -14512,7 +14511,7 @@ class FrameSynthesisInfoEXT(Structure):
         max_depth: float = 0,
         near_z: float = 0,
         far_z: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FRAME_SYNTHESIS_INFO_EXT,
     ) -> None:
         if motion_vector_sub_image is None:
@@ -14574,7 +14573,7 @@ class FrameSynthesisConfigViewEXT(Structure):
         self,
         recommended_motion_vector_image_rect_width: int = 0,
         recommended_motion_vector_image_rect_height: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FRAME_SYNTHESIS_CONFIG_VIEW_EXT,
     ) -> None:
         super().__init__(
@@ -14612,7 +14611,7 @@ class CompositionLayerDepthTestFB(Structure):
         self,
         depth_mask: Bool32 = 0,
         compare_op: CompareOpFB = CompareOpFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_DEPTH_TEST_FB,
     ) -> None:
         super().__init__(
@@ -14649,7 +14648,7 @@ class LocalDimmingFrameEndInfoMETA(Structure):
     def __init__(
         self,
         local_dimming_mode: LocalDimmingModeMETA = LocalDimmingModeMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.LOCAL_DIMMING_FRAME_END_INFO_META,
     ) -> None:
         super().__init__(
@@ -14687,7 +14686,7 @@ class PassthroughPreferencesMETA(Structure):
     def __init__(
         self,
         flags: PassthroughPreferenceFlagsMETA = PassthroughPreferenceFlagsMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_PREFERENCES_META,
     ) -> None:
         super().__init__(
@@ -14735,7 +14734,7 @@ class SystemVirtualKeyboardPropertiesMETA(Structure):
     def __init__(
         self,
         supports_virtual_keyboard: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_VIRTUAL_KEYBOARD_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -14769,7 +14768,7 @@ class SystemVirtualKeyboardPropertiesMETA(Structure):
 class VirtualKeyboardCreateInfoMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_CREATE_INFO_META,
     ) -> None:
         super().__init__(
@@ -14804,7 +14803,7 @@ class VirtualKeyboardSpaceCreateInfoMETA(Structure):
         location_type: VirtualKeyboardLocationTypeMETA = VirtualKeyboardLocationTypeMETA(),  # noqa
         space: Space = None,
         pose_in_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_SPACE_CREATE_INFO_META,
     ) -> None:
         super().__init__(
@@ -14846,7 +14845,7 @@ class VirtualKeyboardLocationInfoMETA(Structure):
         space: Space = None,
         pose_in_space: Posef = Posef(),
         scale: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_LOCATION_INFO_META,
     ) -> None:
         super().__init__(
@@ -14887,7 +14886,7 @@ class VirtualKeyboardModelVisibilitySetInfoMETA(Structure):
     def __init__(
         self,
         visible: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_MODEL_VISIBILITY_SET_INFO_META,
     ) -> None:
         super().__init__(
@@ -14923,7 +14922,7 @@ class VirtualKeyboardAnimationStateMETA(Structure):
         self,
         animation_index: int = 0,
         fraction: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_ANIMATION_STATE_META,
     ) -> None:
         super().__init__(
@@ -14962,7 +14961,7 @@ class VirtualKeyboardModelAnimationStatesMETA(Structure):
         state_capacity_input: int = 0,
         state_count_output: int = 0,
         states: POINTER(VirtualKeyboardAnimationStateMETA) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_MODEL_ANIMATION_STATES_META,
     ) -> None:
         super().__init__(
@@ -15005,7 +15004,7 @@ class VirtualKeyboardTextureDataMETA(Structure):
         buffer_capacity_input: int = 0,
         buffer_count_output: int = 0,
         buffer: POINTER(c_uint8) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_TEXTURE_DATA_META,
     ) -> None:
         super().__init__(
@@ -15051,7 +15050,7 @@ class VirtualKeyboardInputInfoMETA(Structure):
         input_space: Space = None,
         input_pose_in_space: Posef = Posef(),
         input_state: VirtualKeyboardInputStateFlagsMETA = VirtualKeyboardInputStateFlagsMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_INPUT_INFO_META,
     ) -> None:
         super().__init__(
@@ -15092,7 +15091,7 @@ class VirtualKeyboardTextContextChangeInfoMETA(Structure):
     def __init__(
         self,
         text_context: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_TEXT_CONTEXT_CHANGE_INFO_META,
     ) -> None:
         super().__init__(
@@ -15137,7 +15136,7 @@ class EventDataVirtualKeyboardCommitTextMETA(Structure):
         self,
         keyboard: VirtualKeyboardMETA = None,
         text: str = "",
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_COMMIT_TEXT_META,
     ) -> None:
         super().__init__(
@@ -15174,7 +15173,7 @@ class EventDataVirtualKeyboardBackspaceMETA(Structure):
     def __init__(
         self,
         keyboard: VirtualKeyboardMETA = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_BACKSPACE_META,
     ) -> None:
         super().__init__(
@@ -15209,7 +15208,7 @@ class EventDataVirtualKeyboardEnterMETA(Structure):
     def __init__(
         self,
         keyboard: VirtualKeyboardMETA = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_ENTER_META,
     ) -> None:
         super().__init__(
@@ -15244,7 +15243,7 @@ class EventDataVirtualKeyboardShownMETA(Structure):
     def __init__(
         self,
         keyboard: VirtualKeyboardMETA = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_SHOWN_META,
     ) -> None:
         super().__init__(
@@ -15279,7 +15278,7 @@ class EventDataVirtualKeyboardHiddenMETA(Structure):
     def __init__(
         self,
         keyboard: VirtualKeyboardMETA = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_VIRTUAL_KEYBOARD_HIDDEN_META,
     ) -> None:
         super().__init__(
@@ -15406,7 +15405,7 @@ class ExternalCameraOCULUS(Structure):
         name: str = "",
         intrinsics: ExternalCameraIntrinsicsOCULUS = None,
         extrinsics: ExternalCameraExtrinsicsOCULUS = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EXTERNAL_CAMERA_OCULUS,
     ) -> None:
         if intrinsics is None:
@@ -15454,7 +15453,7 @@ class PerformanceMetricsStateMETA(Structure):
     def __init__(
         self,
         enabled: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PERFORMANCE_METRICS_STATE_META,
     ) -> None:
         super().__init__(
@@ -15492,7 +15491,7 @@ class PerformanceMetricsCounterMETA(Structure):
         counter_unit: PerformanceMetricsCounterUnitMETA = PerformanceMetricsCounterUnitMETA(),  # noqa
         uint_value: int = 0,
         float_value: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PERFORMANCE_METRICS_COUNTER_META,
     ) -> None:
         super().__init__(
@@ -15544,7 +15543,7 @@ class SpaceListSaveInfoFB(Structure):
         space_count: Optional[int] = None,
         spaces: ArrayFieldParamType[Space] = None,
         location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_LIST_SAVE_INFO_FB,
     ) -> None:
         space_count, spaces = array_field_helper(
@@ -15600,7 +15599,7 @@ class EventDataSpaceListSaveCompleteFB(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_LIST_SAVE_COMPLETE_FB,
     ) -> None:
         super().__init__(
@@ -15642,7 +15641,7 @@ class SpaceUserCreateInfoFB(Structure):
     def __init__(
         self,
         user_id: SpaceUserIdFB = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_USER_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -15684,7 +15683,7 @@ class SystemHeadsetIdPropertiesMETA(Structure):
     def __init__(
         self,
         id: UuidEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_HEADSET_ID_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -15719,7 +15718,7 @@ class SystemSpaceDiscoveryPropertiesMETA(Structure):
     def __init__(
         self,
         supports_space_discovery: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPACE_DISCOVERY_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -15753,7 +15752,7 @@ class SystemSpaceDiscoveryPropertiesMETA(Structure):
 class SpaceFilterBaseHeaderMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -15787,7 +15786,7 @@ class SpaceDiscoveryInfoMETA(Structure):
         self,
         filter_count: Optional[int] = None,
         filters: BaseArrayFieldParamType = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_DISCOVERY_INFO_META,
     ) -> None:
         filter_count, filters = base_array_field_helper(
@@ -15841,7 +15840,7 @@ class SpaceFilterUuidMETA(Structure):
         self,
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[Uuid] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_FILTER_UUID_META,
     ) -> None:
         uuid_count, uuids = array_field_helper(
@@ -15894,7 +15893,7 @@ class SpaceFilterComponentMETA(Structure):
     def __init__(
         self,
         component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_FILTER_COMPONENT_META,
     ) -> None:
         super().__init__(
@@ -15954,7 +15953,7 @@ class SpaceDiscoveryResultsMETA(Structure):
         result_capacity_input: int = 0,
         result_count_output: int = 0,
         results: POINTER(SpaceDiscoveryResultMETA) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_DISCOVERY_RESULTS_META,
     ) -> None:
         super().__init__(
@@ -15993,7 +15992,7 @@ class EventDataSpaceDiscoveryResultsAvailableMETA(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_DISCOVERY_RESULTS_AVAILABLE_META,
     ) -> None:
         super().__init__(
@@ -16029,7 +16028,7 @@ class EventDataSpaceDiscoveryCompleteMETA(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_DISCOVERY_COMPLETE_META,
     ) -> None:
         super().__init__(
@@ -16072,7 +16071,7 @@ class RecommendedLayerResolutionMETA(Structure):
         self,
         recommended_image_dimensions: Extent2Di = None,
         is_valid: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RECOMMENDED_LAYER_RESOLUTION_META,
     ) -> None:
         if recommended_image_dimensions is None:
@@ -16112,7 +16111,7 @@ class RecommendedLayerResolutionGetInfoMETA(Structure):
         self,
         layer: POINTER(CompositionLayerBaseHeader) = None,
         predicted_display_time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RECOMMENDED_LAYER_RESOLUTION_GET_INFO_META,
     ) -> None:
         super().__init__(
@@ -16152,7 +16151,7 @@ class SystemSpacePersistencePropertiesMETA(Structure):
     def __init__(
         self,
         supports_space_persistence: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPACE_PERSISTENCE_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -16188,7 +16187,7 @@ class SpacesSaveInfoMETA(Structure):
         self,
         space_count: Optional[int] = None,
         spaces: ArrayFieldParamType[Space] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACES_SAVE_INFO_META,
     ) -> None:
         space_count, spaces = array_field_helper(
@@ -16242,7 +16241,7 @@ class EventDataSpacesSaveResultMETA(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACES_SAVE_RESULT_META,
     ) -> None:
         super().__init__(
@@ -16282,7 +16281,7 @@ class SpacesEraseInfoMETA(Structure):
         spaces: ArrayFieldParamType[Space] = None,
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[UuidEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACES_ERASE_INFO_META,
     ) -> None:
         space_count, spaces = array_field_helper(
@@ -16356,7 +16355,7 @@ class EventDataSpacesEraseResultMETA(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACES_ERASE_RESULT_META,
     ) -> None:
         super().__init__(
@@ -16431,7 +16430,7 @@ class PassthroughColorLutCreateInfoMETA(Structure):
         channels: PassthroughColorLutChannelsMETA = PassthroughColorLutChannelsMETA(),  # noqa
         resolution: int = 0,
         data: PassthroughColorLutDataMETA = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_COLOR_LUT_CREATE_INFO_META,
     ) -> None:
         if data is None:
@@ -16472,7 +16471,7 @@ class PassthroughColorLutUpdateInfoMETA(Structure):
     def __init__(
         self,
         data: PassthroughColorLutDataMETA = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_COLOR_LUT_UPDATE_INFO_META,
     ) -> None:
         if data is None:
@@ -16510,7 +16509,7 @@ class PassthroughColorMapLutMETA(Structure):
         self,
         color_lut: PassthroughColorLutMETA = None,
         weight: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_LUT_META,
     ) -> None:
         super().__init__(
@@ -16549,7 +16548,7 @@ class PassthroughColorMapInterpolatedLutMETA(Structure):
         source_color_lut: PassthroughColorLutMETA = None,
         target_color_lut: PassthroughColorLutMETA = None,
         weight: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_COLOR_MAP_INTERPOLATED_LUT_META,
     ) -> None:
         super().__init__(
@@ -16588,7 +16587,7 @@ class SystemPassthroughColorLutPropertiesMETA(Structure):
     def __init__(
         self,
         max_color_lut_resolution: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PASSTHROUGH_COLOR_LUT_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -16629,7 +16628,7 @@ PFN_xrUpdatePassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughColor
 class SpaceTriangleMeshGetInfoMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_TRIANGLE_MESH_GET_INFO_META,
     ) -> None:
         super().__init__(
@@ -16667,7 +16666,7 @@ class SpaceTriangleMeshMETA(Structure):
         index_capacity_input: int = 0,
         index_count_output: int = 0,
         indices: POINTER(c_uint32) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_TRIANGLE_MESH_META,
     ) -> None:
         super().__init__(
@@ -16715,7 +16714,7 @@ class SystemPropertiesBodyTrackingFullBodyMETA(Structure):
     def __init__(
         self,
         supports_full_body_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PROPERTIES_BODY_TRACKING_FULL_BODY_META,
     ) -> None:
         super().__init__(
@@ -16750,7 +16749,7 @@ class EventDataPassthroughLayerResumedMETA(Structure):
     def __init__(
         self,
         layer: PassthroughLayerFB = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_PASSTHROUGH_LAYER_RESUMED_META,
     ) -> None:
         super().__init__(
@@ -16785,7 +16784,7 @@ class BodyTrackingCalibrationStatusMETA(Structure):
     def __init__(
         self,
         status: BodyTrackingCalibrationStateMETA = BodyTrackingCalibrationStateMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_TRACKING_CALIBRATION_STATUS_META,
     ) -> None:
         super().__init__(
@@ -16820,7 +16819,7 @@ class BodyTrackingCalibrationInfoMETA(Structure):
     def __init__(
         self,
         body_height: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_TRACKING_CALIBRATION_INFO_META,
     ) -> None:
         super().__init__(
@@ -16855,7 +16854,7 @@ class SystemPropertiesBodyTrackingCalibrationMETA(Structure):
     def __init__(
         self,
         supports_height_override: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PROPERTIES_BODY_TRACKING_CALIBRATION_META,
     ) -> None:
         super().__init__(
@@ -16904,7 +16903,7 @@ class SystemFaceTrackingProperties2FB(Structure):
         self,
         supports_visual_face_tracking: Bool32 = 0,
         supports_audio_face_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_FACE_TRACKING_PROPERTIES2_FB,
     ) -> None:
         super().__init__(
@@ -16943,7 +16942,7 @@ class FaceTrackerCreateInfo2FB(Structure):
         face_expression_set: FaceExpressionSet2FB = FaceExpressionSet2FB(),  # noqa
         requested_data_source_count: Optional[int] = None,
         requested_data_sources: ArrayFieldParamType[FaceTrackingDataSource2FB.ctype()] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO2_FB,
     ) -> None:
         requested_data_source_count, requested_data_sources = array_field_helper(
@@ -16998,7 +16997,7 @@ class FaceExpressionInfo2FB(Structure):
     def __init__(
         self,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACE_EXPRESSION_INFO2_FB,
     ) -> None:
         super().__init__(
@@ -17040,7 +17039,7 @@ class FaceExpressionWeights2FB(Structure):
         is_eye_following_blendshapes_valid: Bool32 = 0,
         data_source: FaceTrackingDataSource2FB = FaceTrackingDataSource2FB(),  # noqa
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACE_EXPRESSION_WEIGHTS2_FB,
     ) -> None:
         weight_count, weights = array_field_helper(
@@ -17128,7 +17127,7 @@ class SystemSpatialEntitySharingPropertiesMETA(Structure):
     def __init__(
         self,
         supports_spatial_entity_sharing: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_ENTITY_SHARING_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -17162,7 +17161,7 @@ class SystemSpatialEntitySharingPropertiesMETA(Structure):
 class ShareSpacesRecipientBaseHeaderMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -17197,7 +17196,7 @@ class ShareSpacesInfoMETA(Structure):
         space_count: Optional[int] = None,
         spaces: ArrayFieldParamType[Space] = None,
         recipient_info: POINTER(ShareSpacesRecipientBaseHeaderMETA) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SHARE_SPACES_INFO_META,
     ) -> None:
         space_count, spaces = array_field_helper(
@@ -17253,7 +17252,7 @@ class EventDataShareSpacesCompleteMETA(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SHARE_SPACES_COMPLETE_META,
     ) -> None:
         super().__init__(
@@ -17313,7 +17312,7 @@ class EnvironmentDepthProviderCreateInfoMETA(Structure):
     def __init__(
         self,
         create_flags: EnvironmentDepthProviderCreateFlagsMETA = EnvironmentDepthProviderCreateFlagsMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_PROVIDER_CREATE_INFO_META,
     ) -> None:
         super().__init__(
@@ -17348,7 +17347,7 @@ class EnvironmentDepthSwapchainCreateInfoMETA(Structure):
     def __init__(
         self,
         create_flags: EnvironmentDepthSwapchainCreateFlagsMETA = EnvironmentDepthSwapchainCreateFlagsMETA(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_SWAPCHAIN_CREATE_INFO_META,
     ) -> None:
         super().__init__(
@@ -17384,7 +17383,7 @@ class EnvironmentDepthSwapchainStateMETA(Structure):
         self,
         width: int = 0,
         height: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_SWAPCHAIN_STATE_META,
     ) -> None:
         super().__init__(
@@ -17422,7 +17421,7 @@ class EnvironmentDepthImageAcquireInfoMETA(Structure):
         self,
         space: Space = None,
         display_time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_IMAGE_ACQUIRE_INFO_META,
     ) -> None:
         super().__init__(
@@ -17460,7 +17459,7 @@ class EnvironmentDepthImageViewMETA(Structure):
         self,
         fov: Fovf = None,
         pose: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_IMAGE_VIEW_META,
     ) -> None:
         if fov is None:
@@ -17501,7 +17500,7 @@ class EnvironmentDepthImageMETA(Structure):
         swapchain_index: int = 0,
         near_z: float = 0,
         far_z: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_IMAGE_META,
     ) -> None:
         super().__init__(
@@ -17541,7 +17540,7 @@ class EnvironmentDepthHandRemovalSetInfoMETA(Structure):
     def __init__(
         self,
         enabled: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META,
     ) -> None:
         super().__init__(
@@ -17577,7 +17576,7 @@ class SystemEnvironmentDepthPropertiesMETA(Structure):
         self,
         supports_environment_depth: Bool32 = 0,
         supports_hand_removal: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -17655,7 +17654,7 @@ class RenderModelCreateInfoEXT(Structure):
         render_model_id: RenderModelIdEXT = 0,
         gltf_extension_count: Optional[int] = None,
         gltf_extensions: StringArrayFieldParamType = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_CREATE_INFO_EXT,
     ) -> None:
         gltf_extension_count, gltf_extensions = string_array_field_helper(
@@ -17709,7 +17708,7 @@ class RenderModelCreateInfoEXT(Structure):
 class RenderModelPropertiesGetInfoEXT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_GET_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -17743,7 +17742,7 @@ class RenderModelPropertiesEXT(Structure):
         self,
         cache_id: UuidEXT = 0,
         animatable_node_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_EXT,
     ) -> None:
         super().__init__(
@@ -17780,7 +17779,7 @@ class RenderModelSpaceCreateInfoEXT(Structure):
     def __init__(
         self,
         render_model: RenderModelEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_SPACE_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -17815,7 +17814,7 @@ class RenderModelStateGetInfoEXT(Structure):
     def __init__(
         self,
         display_time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_STATE_GET_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -17874,7 +17873,7 @@ class RenderModelStateEXT(Structure):
         self,
         node_state_count: Optional[int] = None,
         node_states: ArrayFieldParamType[RenderModelNodeStateEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_STATE_EXT,
     ) -> None:
         node_state_count, node_states = array_field_helper(
@@ -17927,7 +17926,7 @@ class RenderModelAssetCreateInfoEXT(Structure):
     def __init__(
         self,
         cache_id: UuidEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_ASSET_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -17961,7 +17960,7 @@ class RenderModelAssetCreateInfoEXT(Structure):
 class RenderModelAssetDataGetInfoEXT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_ASSET_DATA_GET_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -17996,7 +17995,7 @@ class RenderModelAssetDataEXT(Structure):
         buffer_capacity_input: int = 0,
         buffer_count_output: int = 0,
         buffer: POINTER(c_uint8) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_ASSET_DATA_EXT,
     ) -> None:
         super().__init__(
@@ -18034,7 +18033,7 @@ class RenderModelAssetDataEXT(Structure):
 class RenderModelAssetPropertiesGetInfoEXT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_ASSET_PROPERTIES_GET_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -18088,7 +18087,7 @@ class RenderModelAssetPropertiesEXT(Structure):
         self,
         node_property_count: int = 0,
         node_properties: POINTER(RenderModelAssetNodePropertiesEXT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RENDER_MODEL_ASSET_PROPERTIES_EXT,
     ) -> None:
         super().__init__(
@@ -18143,7 +18142,7 @@ PFN_xrGetRenderModelStateEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT, POINTER
 class InteractionRenderModelIdsEnumerateInfoEXT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INTERACTION_RENDER_MODEL_IDS_ENUMERATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -18175,7 +18174,7 @@ class InteractionRenderModelIdsEnumerateInfoEXT(Structure):
 class InteractionRenderModelSubactionPathInfoEXT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INTERACTION_RENDER_MODEL_SUBACTION_PATH_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -18209,7 +18208,7 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(Structure):
         self,
         top_level_user_path_count: Optional[int] = None,
         top_level_user_paths: ArrayFieldParamType[c_uint64] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INTERACTION_RENDER_MODEL_TOP_LEVEL_USER_PATH_GET_INFO_EXT,
     ) -> None:
         top_level_user_path_count, top_level_user_paths = array_field_helper(
@@ -18261,7 +18260,7 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(Structure):
 class EventDataInteractionRenderModelsChangedEXT(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_INTERACTION_RENDER_MODELS_CHANGED_EXT,
     ) -> None:
         super().__init__(
@@ -18311,7 +18310,7 @@ class PassthroughCreateInfoHTC(Structure):
     def __init__(
         self,
         form: PassthroughFormHTC = PassthroughFormHTC(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_CREATE_INFO_HTC,
     ) -> None:
         super().__init__(
@@ -18346,7 +18345,7 @@ class PassthroughColorHTC(Structure):
     def __init__(
         self,
         alpha: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_COLOR_HTC,
     ) -> None:
         super().__init__(
@@ -18388,7 +18387,7 @@ class PassthroughMeshTransformInfoHTC(Structure):
         time: Time = 0,
         pose: Posef = Posef(),
         scale: Vector3f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_MESH_TRANSFORM_INFO_HTC,
     ) -> None:
         if scale is None:
@@ -18442,7 +18441,7 @@ class CompositionLayerPassthroughHTC(Structure):
         space: Space = None,
         passthrough: PassthroughHTC = None,
         color: PassthroughColorHTC = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_PASSTHROUGH_HTC,
     ) -> None:
         if color is None:
@@ -18494,7 +18493,7 @@ class FoveationApplyInfoHTC(Structure):
         mode: FoveationModeHTC = FoveationModeHTC(),  # noqa
         sub_image_count: Optional[int] = None,
         sub_images: ArrayFieldParamType[SwapchainSubImage] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATION_APPLY_INFO_HTC,
     ) -> None:
         sub_image_count, sub_images = array_field_helper(
@@ -18577,7 +18576,7 @@ class FoveationDynamicModeInfoHTC(Structure):
     def __init__(
         self,
         dynamic_flags: FoveationDynamicFlagsHTC = FoveationDynamicFlagsHTC(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATION_DYNAMIC_MODE_INFO_HTC,
     ) -> None:
         super().__init__(
@@ -18613,7 +18612,7 @@ class FoveationCustomModeInfoHTC(Structure):
         self,
         config_count: Optional[int] = None,
         configs: ArrayFieldParamType[FoveationConfigurationHTC] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FOVEATION_CUSTOM_MODE_INFO_HTC,
     ) -> None:
         config_count, configs = array_field_helper(
@@ -18669,7 +18668,7 @@ class SystemAnchorPropertiesHTC(Structure):
     def __init__(
         self,
         supports_anchor: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_ANCHOR_PROPERTIES_HTC,
     ) -> None:
         super().__init__(
@@ -18726,7 +18725,7 @@ class SpatialAnchorCreateInfoHTC(Structure):
         space: Space = None,
         pose_in_space: Posef = Posef(),
         name: SpatialAnchorNameHTC = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_HTC,
     ) -> None:
         if name is None:
@@ -18780,7 +18779,7 @@ class SystemBodyTrackingPropertiesHTC(Structure):
     def __init__(
         self,
         supports_body_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_BODY_TRACKING_PROPERTIES_HTC,
     ) -> None:
         super().__init__(
@@ -18815,7 +18814,7 @@ class BodyTrackerCreateInfoHTC(Structure):
     def __init__(
         self,
         body_joint_set: BodyJointSetHTC = BodyJointSetHTC(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_TRACKER_CREATE_INFO_HTC,
     ) -> None:
         super().__init__(
@@ -18851,7 +18850,7 @@ class BodyJointsLocateInfoHTC(Structure):
         self,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_JOINTS_LOCATE_INFO_HTC,
     ) -> None:
         super().__init__(
@@ -18915,7 +18914,7 @@ class BodyJointLocationsHTC(Structure):
         joint_location_count: Optional[int] = None,
         joint_locations: ArrayFieldParamType[BodyJointLocationHTC] = None,
         skeleton_generation_id: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_JOINT_LOCATIONS_HTC,
     ) -> None:
         joint_location_count, joint_locations = array_field_helper(
@@ -18995,7 +18994,7 @@ class BodySkeletonHTC(Structure):
         self,
         joint_count: Optional[int] = None,
         joints: ArrayFieldParamType[BodySkeletonJointHTC] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_SKELETON_HTC,
     ) -> None:
         joint_count, joints = array_field_helper(
@@ -19081,7 +19080,7 @@ class ActiveActionSetPrioritiesEXT(Structure):
         self,
         action_set_priority_count: int = 0,
         action_set_priorities: POINTER(ActiveActionSetPriorityEXT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ACTIVE_ACTION_SET_PRIORITIES_EXT,
     ) -> None:
         super().__init__(
@@ -19118,7 +19117,7 @@ class SystemForceFeedbackCurlPropertiesMNDX(Structure):
     def __init__(
         self,
         supports_force_feedback_curl: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX,
     ) -> None:
         super().__init__(
@@ -19177,7 +19176,7 @@ class ForceFeedbackCurlApplyLocationsMNDX(Structure):
         self,
         location_count: Optional[int] = None,
         locations: ArrayFieldParamType[ForceFeedbackCurlApplyLocationMNDX] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX,
     ) -> None:
         location_count, locations = array_field_helper(
@@ -19241,7 +19240,7 @@ class SystemBodyTrackingPropertiesBD(Structure):
     def __init__(
         self,
         supports_body_tracking: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_BODY_TRACKING_PROPERTIES_BD,
     ) -> None:
         super().__init__(
@@ -19276,7 +19275,7 @@ class BodyTrackerCreateInfoBD(Structure):
     def __init__(
         self,
         joint_set: BodyJointSetBD = BodyJointSetBD(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_TRACKER_CREATE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -19312,7 +19311,7 @@ class BodyJointsLocateInfoBD(Structure):
         self,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_JOINTS_LOCATE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -19374,7 +19373,7 @@ class BodyJointLocationsBD(Structure):
         all_joint_poses_tracked: Bool32 = 0,
         joint_location_count: Optional[int] = None,
         joint_locations: ArrayFieldParamType[BodyJointLocationBD] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.BODY_JOINT_LOCATIONS_BD,
     ) -> None:
         joint_location_count, joint_locations = array_field_helper(
@@ -19462,7 +19461,7 @@ class SystemSpatialSensingPropertiesBD(Structure):
     def __init__(
         self,
         supports_spatial_sensing: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_SENSING_PROPERTIES_BD,
     ) -> None:
         super().__init__(
@@ -19498,7 +19497,7 @@ class SpatialEntityComponentGetInfoBD(Structure):
         self,
         entity_id: SpatialEntityIdBD = 0,
         component_type: SpatialEntityComponentTypeBD = SpatialEntityComponentTypeBD(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
     ) -> None:
         super().__init__(
@@ -19534,7 +19533,7 @@ class SpatialEntityComponentGetInfoBD(Structure):
 class SpatialEntityComponentDataBaseHeaderBD(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -19567,7 +19566,7 @@ class SpatialEntityLocationGetInfoBD(Structure):
     def __init__(
         self,
         base_space: Space = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_LOCATION_GET_INFO_BD,
     ) -> None:
         super().__init__(
@@ -19602,7 +19601,7 @@ class SpatialEntityComponentDataLocationBD(Structure):
     def __init__(
         self,
         location: SpaceLocation = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_LOCATION_BD,
     ) -> None:
         if location is None:
@@ -19641,7 +19640,7 @@ class SpatialEntityComponentDataSemanticBD(Structure):
         label_capacity_input: int = 0,
         label_count_output: int = 0,
         labels: POINTER(SemanticLabelBD.ctype()) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_SEMANTIC_BD,
     ) -> None:
         super().__init__(
@@ -19680,7 +19679,7 @@ class SpatialEntityComponentDataBoundingBox2DBD(Structure):
     def __init__(
         self,
         bounding_box_2d: Rect2Df = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_2D_BD,
     ) -> None:
         if bounding_box_2d is None:
@@ -19719,7 +19718,7 @@ class SpatialEntityComponentDataPolygonBD(Structure):
         vertex_capacity_input: int = 0,
         vertex_count_output: int = 0,
         vertices: POINTER(Vector2f) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_POLYGON_BD,
     ) -> None:
         super().__init__(
@@ -19758,7 +19757,7 @@ class SpatialEntityComponentDataBoundingBox3DBD(Structure):
     def __init__(
         self,
         bounding_box_3d: Boxf = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_3D_BD,
     ) -> None:
         if bounding_box_3d is None:
@@ -19800,7 +19799,7 @@ class SpatialEntityComponentDataTriangleMeshBD(Structure):
         index_capacity_input: int = 0,
         index_count_output: int = 0,
         indices: POINTER(c_uint16) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_TRIANGLE_MESH_BD,
     ) -> None:
         super().__init__(
@@ -19845,7 +19844,7 @@ class SenseDataProviderCreateInfoBD(Structure):
     def __init__(
         self,
         provider_type: SenseDataProviderTypeBD = SenseDataProviderTypeBD(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -19879,7 +19878,7 @@ class SenseDataProviderCreateInfoBD(Structure):
 class SenseDataProviderStartInfoBD(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_PROVIDER_START_INFO_BD,
     ) -> None:
         super().__init__(
@@ -19913,7 +19912,7 @@ class EventDataSenseDataProviderStateChangedBD(Structure):
         self,
         provider: SenseDataProviderBD = None,
         new_state: SenseDataProviderStateBD = SenseDataProviderStateBD(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SENSE_DATA_PROVIDER_STATE_CHANGED_BD,
     ) -> None:
         super().__init__(
@@ -19950,7 +19949,7 @@ class EventDataSenseDataUpdatedBD(Structure):
     def __init__(
         self,
         provider: SenseDataProviderBD = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SENSE_DATA_UPDATED_BD,
     ) -> None:
         super().__init__(
@@ -19984,7 +19983,7 @@ class EventDataSenseDataUpdatedBD(Structure):
 class SenseDataQueryInfoBD(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_QUERY_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20018,7 +20017,7 @@ class SenseDataQueryCompletionBD(Structure):
         self,
         future_result: Result = Result(),  # noqa
         snapshot: SenseDataSnapshotBD = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_QUERY_COMPLETION_BD,
     ) -> None:
         super().__init__(
@@ -20054,7 +20053,7 @@ class SenseDataQueryCompletionBD(Structure):
 class QueriedSenseDataGetInfoBD(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.QUERIED_SENSE_DATA_GET_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20089,7 +20088,7 @@ class SpatialEntityStateBD(Structure):
         entity_id: SpatialEntityIdBD = 0,
         last_update_time: Time = 0,
         uuid: UuidEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_STATE_BD,
     ) -> None:
         super().__init__(
@@ -20130,7 +20129,7 @@ class QueriedSenseDataBD(Structure):
         state_capacity_input: int = 0,
         state_count_output: int = 0,
         states: POINTER(SpatialEntityStateBD) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.QUERIED_SENSE_DATA_BD,
     ) -> None:
         super().__init__(
@@ -20170,7 +20169,7 @@ class SenseDataFilterUuidBD(Structure):
         self,
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[Uuid] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_FILTER_UUID_BD,
     ) -> None:
         uuid_count, uuids = array_field_helper(
@@ -20224,7 +20223,7 @@ class SenseDataFilterSemanticBD(Structure):
         self,
         label_count: Optional[int] = None,
         labels: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_FILTER_SEMANTIC_BD,
     ) -> None:
         label_count, labels = array_field_helper(
@@ -20278,7 +20277,7 @@ class SpatialEntityAnchorCreateInfoBD(Structure):
         self,
         snapshot: SenseDataSnapshotBD = None,
         entity_id: SpatialEntityIdBD = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_ANCHOR_CREATE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20316,7 +20315,7 @@ class AnchorSpaceCreateInfoBD(Structure):
         self,
         anchor: AnchorBD = None,
         pose_in_anchor_space: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.ANCHOR_SPACE_CREATE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20353,7 +20352,7 @@ class FutureCompletionEXT(Structure):
     def __init__(
         self,
         future_result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FUTURE_COMPLETION_EXT,
     ) -> None:
         super().__init__(
@@ -20423,7 +20422,7 @@ class SystemSpatialAnchorPropertiesBD(Structure):
     def __init__(
         self,
         supports_spatial_anchor: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_ANCHOR_PROPERTIES_BD,
     ) -> None:
         super().__init__(
@@ -20460,7 +20459,7 @@ class SpatialAnchorCreateInfoBD(Structure):
         space: Space = None,
         pose: Posef = Posef(),
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20501,7 +20500,7 @@ class SpatialAnchorCreateCompletionBD(Structure):
         future_result: Result = Result(),  # noqa
         uuid: UuidEXT = 0,
         anchor: AnchorBD = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_COMPLETION_BD,
     ) -> None:
         super().__init__(
@@ -20541,7 +20540,7 @@ class SpatialAnchorPersistInfoBD(Structure):
         self,
         location: PersistenceLocationBD = PersistenceLocationBD(),  # noqa
         anchor: AnchorBD = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_PERSIST_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20579,7 +20578,7 @@ class SpatialAnchorUnpersistInfoBD(Structure):
         self,
         location: PersistenceLocationBD = PersistenceLocationBD(),  # noqa
         anchor: AnchorBD = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_UNPERSIST_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20629,7 +20628,7 @@ class SystemSpatialAnchorSharingPropertiesBD(Structure):
     def __init__(
         self,
         supports_spatial_anchor_sharing: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_ANCHOR_SHARING_PROPERTIES_BD,
     ) -> None:
         super().__init__(
@@ -20664,7 +20663,7 @@ class SpatialAnchorShareInfoBD(Structure):
     def __init__(
         self,
         anchor: AnchorBD = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_SHARE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20699,7 +20698,7 @@ class SharedSpatialAnchorDownloadInfoBD(Structure):
     def __init__(
         self,
         uuid: UuidEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SHARED_SPATIAL_ANCHOR_DOWNLOAD_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20743,7 +20742,7 @@ class SystemSpatialScenePropertiesBD(Structure):
     def __init__(
         self,
         supports_spatial_scene: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_SCENE_PROPERTIES_BD,
     ) -> None:
         super().__init__(
@@ -20777,7 +20776,7 @@ class SystemSpatialScenePropertiesBD(Structure):
 class SceneCaptureInfoBD(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SCENE_CAPTURE_INFO_BD,
     ) -> None:
         super().__init__(
@@ -20817,7 +20816,7 @@ class SystemSpatialMeshPropertiesBD(Structure):
     def __init__(
         self,
         supports_spatial_mesh: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_MESH_PROPERTIES_BD,
     ) -> None:
         super().__init__(
@@ -20853,7 +20852,7 @@ class SenseDataProviderCreateInfoSpatialMeshBD(Structure):
         self,
         config_flags: SpatialMeshConfigFlagsBD = SpatialMeshConfigFlagsBD(),  # noqa
         lod: SpatialMeshLodBD = SpatialMeshLodBD(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_SPATIAL_MESH_BD,
     ) -> None:
         super().__init__(
@@ -20891,7 +20890,7 @@ class FuturePollResultProgressBD(Structure):
         self,
         is_supported: Bool32 = 0,
         progress_percentage: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FUTURE_POLL_RESULT_PROGRESS_BD,
     ) -> None:
         super().__init__(
@@ -20928,7 +20927,7 @@ class SystemSpatialPlanePropertiesBD(Structure):
     def __init__(
         self,
         supports_spatial_plane: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_PLANE_PROPERTIES_BD,
     ) -> None:
         super().__init__(
@@ -20963,7 +20962,7 @@ class SpatialEntityComponentDataPlaneOrientationBD(Structure):
     def __init__(
         self,
         orientation: PlaneOrientationBD = PlaneOrientationBD(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_PLANE_ORIENTATION_BD,
     ) -> None:
         super().__init__(
@@ -20999,7 +20998,7 @@ class SenseDataFilterPlaneOrientationBD(Structure):
         self,
         orientation_count: Optional[int] = None,
         orientations: ArrayFieldParamType[PlaneOrientationBD.ctype()] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SENSE_DATA_FILTER_PLANE_ORIENTATION_BD,
     ) -> None:
         orientation_count, orientations = array_field_helper(
@@ -21053,7 +21052,7 @@ class HandTrackingDataSourceInfoEXT(Structure):
         self,
         requested_data_source_count: Optional[int] = None,
         requested_data_sources: ArrayFieldParamType[HandTrackingDataSourceEXT.ctype()] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_TRACKING_DATA_SOURCE_INFO_EXT,
     ) -> None:
         requested_data_source_count, requested_data_sources = array_field_helper(
@@ -21107,7 +21106,7 @@ class HandTrackingDataSourceStateEXT(Structure):
         self,
         is_active: Bool32 = 0,
         data_source: HandTrackingDataSourceEXT = HandTrackingDataSourceEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.HAND_TRACKING_DATA_SOURCE_STATE_EXT,
     ) -> None:
         super().__init__(
@@ -21156,7 +21155,7 @@ class SystemPlaneDetectionPropertiesEXT(Structure):
     def __init__(
         self,
         supported_features: PlaneDetectionCapabilityFlagsEXT = PlaneDetectionCapabilityFlagsEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PLANE_DETECTION_PROPERTIES_EXT,
     ) -> None:
         super().__init__(
@@ -21191,7 +21190,7 @@ class PlaneDetectorCreateInfoEXT(Structure):
     def __init__(
         self,
         flags: PlaneDetectorFlagsEXT = PlaneDetectorFlagsEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -21238,7 +21237,7 @@ class PlaneDetectorBeginInfoEXT(Structure):
         min_area: float = 0,
         bounding_box_pose: Posef = Posef(),
         bounding_box_extent: Extent3DfEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_BEGIN_INFO_EXT,
     ) -> None:
         orientation_count, orientations = array_field_helper(
@@ -21324,7 +21323,7 @@ class PlaneDetectorGetInfoEXT(Structure):
         self,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_GET_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -21367,7 +21366,7 @@ class PlaneDetectorLocationEXT(Structure):
         orientation: PlaneDetectorOrientationEXT = PlaneDetectorOrientationEXT(),  # noqa
         semantic_type: PlaneDetectorSemanticTypeEXT = PlaneDetectorSemanticTypeEXT(),  # noqa
         polygon_buffer_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_LOCATION_EXT,
     ) -> None:
         if extents is None:
@@ -21418,7 +21417,7 @@ class PlaneDetectorLocationsEXT(Structure):
         plane_location_capacity_input: int = 0,
         plane_location_count_output: int = 0,
         plane_locations: POINTER(PlaneDetectorLocationEXT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_LOCATIONS_EXT,
     ) -> None:
         super().__init__(
@@ -21459,7 +21458,7 @@ class PlaneDetectorPolygonBufferEXT(Structure):
         vertex_capacity_input: int = 0,
         vertex_count_output: int = 0,
         vertices: POINTER(Vector2f) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_POLYGON_BUFFER_EXT,
     ) -> None:
         super().__init__(
@@ -21521,7 +21520,7 @@ class TrackableTrackerCreateInfoANDROID(Structure):
     def __init__(
         self,
         trackable_type: TrackableTypeANDROID = TrackableTypeANDROID(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -21558,7 +21557,7 @@ class TrackableGetInfoANDROID(Structure):
         trackable: TrackableANDROID = 0,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRACKABLE_GET_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -21606,7 +21605,7 @@ class TrackablePlaneANDROID(Structure):
         vertex_capacity_input: int = 0,
         vertex_count_output: POINTER(c_uint32) = None,
         vertices: POINTER(Vector2f) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRACKABLE_PLANE_ANDROID,
     ) -> None:
         if extents is None:
@@ -21664,7 +21663,7 @@ class AnchorSpaceCreateInfoANDROID(Structure):
         time: Time = 0,
         pose: Posef = Posef(),
         trackable: TrackableANDROID = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ANCHOR_SPACE_CREATE_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -21706,7 +21705,7 @@ class SystemTrackablesPropertiesANDROID(Structure):
         self,
         supports_anchor: Bool32 = 0,
         max_anchors: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_TRACKABLES_PROPERTIES_ANDROID,
     ) -> None:
         super().__init__(
@@ -21765,7 +21764,7 @@ class DeviceAnchorPersistenceANDROID(POINTER(DeviceAnchorPersistenceANDROID_T), 
 class DeviceAnchorPersistenceCreateInfoANDROID(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.DEVICE_ANCHOR_PERSISTENCE_CREATE_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -21798,7 +21797,7 @@ class PersistedAnchorSpaceCreateInfoANDROID(Structure):
     def __init__(
         self,
         anchor_id: UuidEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PERSISTED_ANCHOR_SPACE_CREATE_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -21833,7 +21832,7 @@ class PersistedAnchorSpaceInfoANDROID(Structure):
     def __init__(
         self,
         anchor: Space = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PERSISTED_ANCHOR_SPACE_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -21868,7 +21867,7 @@ class SystemDeviceAnchorPersistencePropertiesANDROID(Structure):
     def __init__(
         self,
         supports_anchor_persistence: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_DEVICE_ANCHOR_PERSISTENCE_PROPERTIES_ANDROID,
     ) -> None:
         super().__init__(
@@ -21920,7 +21919,7 @@ class SystemPassthroughCameraStatePropertiesANDROID(Structure):
     def __init__(
         self,
         supports_passthrough_camera_state: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_PASSTHROUGH_CAMERA_STATE_PROPERTIES_ANDROID,
     ) -> None:
         super().__init__(
@@ -21954,7 +21953,7 @@ class SystemPassthroughCameraStatePropertiesANDROID(Structure):
 class PassthroughCameraStateGetInfoANDROID(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PASSTHROUGH_CAMERA_STATE_GET_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -21996,7 +21995,7 @@ class RaycastInfoANDROID(Structure):
         trajectory: Vector3f = None,
         space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RAYCAST_INFO_ANDROID,
     ) -> None:
         tracker_count, trackers = array_field_helper(
@@ -22091,7 +22090,7 @@ class RaycastHitResultsANDROID(Structure):
         results_capacity_input: int = 0,
         results_count_output: int = 0,
         results: POINTER(RaycastHitResultANDROID) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.RAYCAST_HIT_RESULTS_ANDROID,
     ) -> None:
         super().__init__(
@@ -22139,7 +22138,7 @@ class TrackableObjectANDROID(Structure):
         extents: Extent3DfEXT = 0,
         object_label: ObjectLabelANDROID = ObjectLabelANDROID(),  # noqa
         last_updated_time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRACKABLE_OBJECT_ANDROID,
     ) -> None:
         super().__init__(
@@ -22183,7 +22182,7 @@ class TrackableObjectConfigurationANDROID(Structure):
         self,
         label_count: Optional[int] = None,
         active_labels: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRACKABLE_OBJECT_CONFIGURATION_ANDROID,
     ) -> None:
         label_count, active_labels = array_field_helper(
@@ -22239,7 +22238,7 @@ class FutureCancelInfoEXT(Structure):
     def __init__(
         self,
         future: FutureEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FUTURE_CANCEL_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -22274,7 +22273,7 @@ class FuturePollInfoEXT(Structure):
     def __init__(
         self,
         future: FutureEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FUTURE_POLL_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -22309,7 +22308,7 @@ class FutureCompletionBaseHeaderEXT(Structure):
     def __init__(
         self,
         future_result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         super().__init__(
@@ -22344,7 +22343,7 @@ class FuturePollResultEXT(Structure):
     def __init__(
         self,
         state: FutureStateEXT = FutureStateEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.FUTURE_POLL_RESULT_EXT,
     ) -> None:
         super().__init__(
@@ -22385,7 +22384,7 @@ class EventDataUserPresenceChangedEXT(Structure):
         self,
         session: Session = None,
         is_user_present: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_USER_PRESENCE_CHANGED_EXT,
     ) -> None:
         super().__init__(
@@ -22422,7 +22421,7 @@ class SystemUserPresencePropertiesEXT(Structure):
     def __init__(
         self,
         supports_user_presence: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_USER_PRESENCE_PROPERTIES_EXT,
     ) -> None:
         super().__init__(
@@ -22458,7 +22457,7 @@ class EventDataHeadsetFitChangedML(Structure):
         self,
         status: HeadsetFitStatusML = HeadsetFitStatusML(),  # noqa
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_HEADSET_FIT_CHANGED_ML,
     ) -> None:
         super().__init__(
@@ -22495,7 +22494,7 @@ class EventDataEyeCalibrationChangedML(Structure):
     def __init__(
         self,
         status: EyeCalibrationStatusML = EyeCalibrationStatusML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_EYE_CALIBRATION_CHANGED_ML,
     ) -> None:
         super().__init__(
@@ -22530,7 +22529,7 @@ class UserCalibrationEnableEventsInfoML(Structure):
     def __init__(
         self,
         enabled: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.USER_CALIBRATION_ENABLE_EVENTS_INFO_ML,
     ) -> None:
         super().__init__(
@@ -22568,7 +22567,7 @@ class SystemNotificationsSetInfoML(Structure):
     def __init__(
         self,
         suppress_notifications: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_NOTIFICATIONS_SET_INFO_ML,
     ) -> None:
         super().__init__(
@@ -22615,7 +22614,7 @@ WorldMeshDetectorFlagsMLCInt = Flags64
 class WorldMeshDetectorCreateInfoML(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_DETECTOR_CREATE_INFO_ML,
     ) -> None:
         super().__init__(
@@ -22652,7 +22651,7 @@ class WorldMeshBlockStateML(Structure):
         mesh_bounding_box_extents: Extent3DfEXT = 0,
         last_update_time: Time = 0,
         status: WorldMeshBlockStatusML = WorldMeshBlockStatusML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_BLOCK_STATE_ML,
     ) -> None:
         super().__init__(
@@ -22698,7 +22697,7 @@ class WorldMeshStateRequestInfoML(Structure):
         time: Time = 0,
         bounding_box_center: Posef = Posef(),
         bounding_box_extents: Extent3DfEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_STATE_REQUEST_INFO_ML,
     ) -> None:
         super().__init__(
@@ -22743,7 +22742,7 @@ class WorldMeshStateRequestCompletionML(Structure):
         mesh_block_state_capacity_input: int = 0,
         mesh_block_state_count_output: int = 0,
         mesh_block_states: POINTER(WorldMeshBlockStateML) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_STATE_REQUEST_COMPLETION_ML,
     ) -> None:
         super().__init__(
@@ -22786,7 +22785,7 @@ class WorldMeshBufferRecommendedSizeInfoML(Structure):
     def __init__(
         self,
         max_block_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_BUFFER_RECOMMENDED_SIZE_INFO_ML,
     ) -> None:
         super().__init__(
@@ -22821,7 +22820,7 @@ class WorldMeshBufferSizeML(Structure):
     def __init__(
         self,
         size: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_BUFFER_SIZE_ML,
     ) -> None:
         super().__init__(
@@ -22857,7 +22856,7 @@ class WorldMeshBufferML(Structure):
         self,
         buffer_size: int = 0,
         buffer: c_void_p = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_BUFFER_ML,
     ) -> None:
         super().__init__(
@@ -22895,7 +22894,7 @@ class WorldMeshBlockRequestML(Structure):
         self,
         uuid: UuidEXT = 0,
         lod: WorldMeshDetectorLodML = WorldMeshDetectorLodML(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_BLOCK_REQUEST_ML,
     ) -> None:
         super().__init__(
@@ -22936,7 +22935,7 @@ class WorldMeshGetInfoML(Structure):
         disconnected_component_area: float = 0,
         block_count: Optional[int] = None,
         blocks: ArrayFieldParamType[WorldMeshBlockRequestML] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_GET_INFO_ML,
     ) -> None:
         block_count, blocks = array_field_helper(
@@ -23006,7 +23005,7 @@ class WorldMeshBlockML(Structure):
         normal_buffer: POINTER(Vector3f) = None,
         confidence_count: int = 0,
         confidence_buffer: POINTER(c_float) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_BLOCK_ML,
     ) -> None:
         super().__init__(
@@ -23064,7 +23063,7 @@ class WorldMeshRequestCompletionInfoML(Structure):
         self,
         mesh_space: Space = None,
         mesh_space_locate_time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_REQUEST_COMPLETION_INFO_ML,
     ) -> None:
         super().__init__(
@@ -23103,7 +23102,7 @@ class WorldMeshRequestCompletionML(Structure):
         future_result: Result = Result(),  # noqa
         block_count: Optional[int] = None,
         blocks: ArrayFieldParamType[WorldMeshBlockML] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.WORLD_MESH_REQUEST_COMPLETION_ML,
     ) -> None:
         block_count, blocks = array_field_helper(
@@ -23187,7 +23186,7 @@ class SystemFacialExpressionPropertiesML(Structure):
     def __init__(
         self,
         supports_facial_expression: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_FACIAL_EXPRESSION_PROPERTIES_ML,
     ) -> None:
         super().__init__(
@@ -23223,7 +23222,7 @@ class FacialExpressionClientCreateInfoML(Structure):
         self,
         requested_count: Optional[int] = None,
         requested_facial_blend_shapes: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACIAL_EXPRESSION_CLIENT_CREATE_INFO_ML,
     ) -> None:
         requested_count, requested_facial_blend_shapes = array_field_helper(
@@ -23275,7 +23274,7 @@ class FacialExpressionClientCreateInfoML(Structure):
 class FacialExpressionBlendShapeGetInfoML(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACIAL_EXPRESSION_BLEND_SHAPE_GET_INFO_ML,
     ) -> None:
         super().__init__(
@@ -23311,7 +23310,7 @@ class FacialExpressionBlendShapePropertiesML(Structure):
         weight: float = 0,
         flags: FacialExpressionBlendShapePropertiesFlagsML = FacialExpressionBlendShapePropertiesFlagsML(),  # noqa
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_ML,
     ) -> None:
         super().__init__(
@@ -23359,7 +23358,7 @@ class SystemSimultaneousHandsAndControllersPropertiesMETA(Structure):
     def __init__(
         self,
         supports_simultaneous_hands_and_controllers: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SIMULTANEOUS_HANDS_AND_CONTROLLERS_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -23393,7 +23392,7 @@ class SystemSimultaneousHandsAndControllersPropertiesMETA(Structure):
 class SimultaneousHandsAndControllersTrackingResumeInfoMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SIMULTANEOUS_HANDS_AND_CONTROLLERS_TRACKING_RESUME_INFO_META,
     ) -> None:
         super().__init__(
@@ -23425,7 +23424,7 @@ class SimultaneousHandsAndControllersTrackingResumeInfoMETA(Structure):
 class SimultaneousHandsAndControllersTrackingPauseInfoMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SIMULTANEOUS_HANDS_AND_CONTROLLERS_TRACKING_PAUSE_INFO_META,
     ) -> None:
         super().__init__(
@@ -23462,7 +23461,7 @@ PFN_xrPauseSimultaneousHandsAndControllersTrackingMETA = CFUNCTYPE(Result.ctype(
 class ColocationDiscoveryStartInfoMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COLOCATION_DISCOVERY_START_INFO_META,
     ) -> None:
         super().__init__(
@@ -23494,7 +23493,7 @@ class ColocationDiscoveryStartInfoMETA(Structure):
 class ColocationDiscoveryStopInfoMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COLOCATION_DISCOVERY_STOP_INFO_META,
     ) -> None:
         super().__init__(
@@ -23528,7 +23527,7 @@ class ColocationAdvertisementStartInfoMETA(Structure):
         self,
         buffer_size: int = 0,
         buffer: POINTER(c_uint8) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COLOCATION_ADVERTISEMENT_START_INFO_META,
     ) -> None:
         super().__init__(
@@ -23564,7 +23563,7 @@ class ColocationAdvertisementStartInfoMETA(Structure):
 class ColocationAdvertisementStopInfoMETA(Structure):
     def __init__(
         self,
-        next = None,
+        next=None,
         type: StructureType = StructureType.COLOCATION_ADVERTISEMENT_STOP_INFO_META,
     ) -> None:
         super().__init__(
@@ -23599,7 +23598,7 @@ class EventDataStartColocationAdvertisementCompleteMETA(Structure):
         advertisement_request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
         advertisement_uuid: Uuid = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_START_COLOCATION_ADVERTISEMENT_COMPLETE_META,
     ) -> None:
         if advertisement_uuid is None:
@@ -23641,7 +23640,7 @@ class EventDataStopColocationAdvertisementCompleteMETA(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_STOP_COLOCATION_ADVERTISEMENT_COMPLETE_META,
     ) -> None:
         super().__init__(
@@ -23679,7 +23678,7 @@ class EventDataColocationAdvertisementCompleteMETA(Structure):
         self,
         advertisement_request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_COLOCATION_ADVERTISEMENT_COMPLETE_META,
     ) -> None:
         super().__init__(
@@ -23717,7 +23716,7 @@ class EventDataStartColocationDiscoveryCompleteMETA(Structure):
         self,
         discovery_request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_START_COLOCATION_DISCOVERY_COMPLETE_META,
     ) -> None:
         super().__init__(
@@ -23756,7 +23755,7 @@ class EventDataColocationDiscoveryResultMETA(Structure):
         discovery_request_id: AsyncRequestIdFB = 0,
         advertisement_uuid: Uuid = None,
         buffer_size: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_COLOCATION_DISCOVERY_RESULT_META,
     ) -> None:
         if advertisement_uuid is None:
@@ -23799,7 +23798,7 @@ class EventDataColocationDiscoveryCompleteMETA(Structure):
         self,
         discovery_request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_COLOCATION_DISCOVERY_COMPLETE_META,
     ) -> None:
         super().__init__(
@@ -23837,7 +23836,7 @@ class EventDataStopColocationDiscoveryCompleteMETA(Structure):
         self,
         request_id: AsyncRequestIdFB = 0,
         result: Result = Result(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_STOP_COLOCATION_DISCOVERY_COMPLETE_META,
     ) -> None:
         super().__init__(
@@ -23874,7 +23873,7 @@ class SystemColocationDiscoveryPropertiesMETA(Structure):
     def __init__(
         self,
         supports_colocation_discovery: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_COLOCATION_DISCOVERY_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -23918,7 +23917,7 @@ class SystemSpatialEntityGroupSharingPropertiesMETA(Structure):
     def __init__(
         self,
         supports_spatial_entity_group_sharing: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_SPATIAL_ENTITY_GROUP_SHARING_PROPERTIES_META,
     ) -> None:
         super().__init__(
@@ -23954,7 +23953,7 @@ class ShareSpacesRecipientGroupsMETA(Structure):
         self,
         group_count: Optional[int] = None,
         groups: ArrayFieldParamType[Uuid] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SHARE_SPACES_RECIPIENT_GROUPS_META,
     ) -> None:
         group_count, groups = array_field_helper(
@@ -24007,7 +24006,7 @@ class SpaceGroupUuidFilterInfoMETA(Structure):
     def __init__(
         self,
         group_uuid: Uuid = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPACE_GROUP_UUID_FILTER_INFO_META,
     ) -> None:
         if group_uuid is None:
@@ -24046,7 +24045,7 @@ class SystemMarkerTrackingPropertiesANDROID(Structure):
         supports_marker_tracking: Bool32 = 0,
         supports_marker_size_estimation: Bool32 = 0,
         max_marker_count: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_MARKER_TRACKING_PROPERTIES_ANDROID,
     ) -> None:
         super().__init__(
@@ -24136,7 +24135,7 @@ class TrackableMarkerConfigurationANDROID(Structure):
         tracking_mode: TrackableMarkerTrackingModeANDROID = TrackableMarkerTrackingModeANDROID(),  # noqa
         database_count: Optional[int] = None,
         databases: ArrayFieldParamType[TrackableMarkerDatabaseANDROID] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRACKABLE_MARKER_CONFIGURATION_ANDROID,
     ) -> None:
         database_count, databases = array_field_helper(
@@ -24196,7 +24195,7 @@ class TrackableMarkerANDROID(Structure):
         marker_id: int = 0,
         center_pose: Posef = Posef(),
         extents: Extent2Df = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.TRACKABLE_MARKER_ANDROID,
     ) -> None:
         if extents is None:
@@ -24276,7 +24275,7 @@ class SpatialCapabilityComponentTypesEXT(Structure):
         component_type_capacity_input: int = 0,
         component_type_count_output: int = 0,
         component_types: POINTER(SpatialComponentTypeEXT.ctype()) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT,
     ) -> None:
         super().__init__(
@@ -24317,7 +24316,7 @@ class SpatialCapabilityConfigurationBaseHeaderEXT(Structure):
         capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
         enabled_component_count, enabled_components = array_field_helper(
@@ -24373,7 +24372,7 @@ class SpatialContextCreateInfoEXT(Structure):
         self,
         capability_config_count: Optional[int] = None,
         capability_configs: BaseArrayFieldParamType = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CONTEXT_CREATE_INFO_EXT,
     ) -> None:
         capability_config_count, capability_configs = base_array_field_helper(
@@ -24427,7 +24426,7 @@ class CreateSpatialContextCompletionEXT(Structure):
         self,
         future_result: Result = Result(),  # noqa
         spatial_context: SpatialContextEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
     ) -> None:
         super().__init__(
@@ -24465,7 +24464,7 @@ class SpatialDiscoverySnapshotCreateInfoEXT(Structure):
         self,
         component_type_count: Optional[int] = None,
         component_types: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
     ) -> None:
         component_type_count, component_types = array_field_helper(
@@ -24520,7 +24519,7 @@ class CreateSpatialDiscoverySnapshotCompletionInfoEXT(Structure):
         base_space: Space = None,
         time: Time = 0,
         future: FutureEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -24560,7 +24559,7 @@ class CreateSpatialDiscoverySnapshotCompletionEXT(Structure):
         self,
         future_result: Result = Result(),  # noqa
         snapshot: SpatialSnapshotEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
     ) -> None:
         super().__init__(
@@ -24598,7 +24597,7 @@ class SpatialComponentDataQueryConditionEXT(Structure):
         self,
         component_type_count: Optional[int] = None,
         component_types: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
     ) -> None:
         component_type_count, component_types = array_field_helper(
@@ -24656,7 +24655,7 @@ class SpatialComponentDataQueryResultEXT(Structure):
         entity_state_capacity_input: int = 0,
         entity_state_count_output: int = 0,
         entity_states: POINTER(SpatialEntityTrackingStateEXT.ctype()) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
     ) -> None:
         super().__init__(
@@ -24724,7 +24723,7 @@ class SpatialBufferGetInfoEXT(Structure):
     def __init__(
         self,
         buffer_id: SpatialBufferIdEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_BUFFER_GET_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -24785,7 +24784,7 @@ class SpatialComponentBounded2DListEXT(Structure):
         self,
         bound_count: Optional[int] = None,
         bounds: ArrayFieldParamType[SpatialBounded2DDataEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT,
     ) -> None:
         bound_count, bounds = array_field_helper(
@@ -24839,7 +24838,7 @@ class SpatialComponentBounded3DListEXT(Structure):
         self,
         bound_count: Optional[int] = None,
         bounds: ArrayFieldParamType[Boxf] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT,
     ) -> None:
         bound_count, bounds = array_field_helper(
@@ -24893,7 +24892,7 @@ class SpatialComponentParentListEXT(Structure):
         self,
         parent_count: Optional[int] = None,
         parents: ArrayFieldParamType[SpatialEntityIdEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_PARENT_LIST_EXT,
     ) -> None:
         parent_count, parents = array_field_helper(
@@ -24977,7 +24976,7 @@ class SpatialComponentMesh3DListEXT(Structure):
         self,
         mesh_count: Optional[int] = None,
         meshes: ArrayFieldParamType[SpatialMeshDataEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_MESH_3D_LIST_EXT,
     ) -> None:
         mesh_count, meshes = array_field_helper(
@@ -25030,7 +25029,7 @@ class SpatialEntityFromIdCreateInfoEXT(Structure):
     def __init__(
         self,
         entity_id: SpatialEntityIdEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_FROM_ID_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -25070,7 +25069,7 @@ class SpatialUpdateSnapshotCreateInfoEXT(Structure):
         component_types: ArrayFieldParamType[c_int] = None,
         base_space: Space = None,
         time: Time = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_UPDATE_SNAPSHOT_CREATE_INFO_EXT,
     ) -> None:
         component_type_count, component_types = array_field_helper(
@@ -25131,7 +25130,7 @@ class EventDataSpatialDiscoveryRecommendedEXT(Structure):
     def __init__(
         self,
         spatial_context: SpatialContextEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT,
     ) -> None:
         super().__init__(
@@ -25166,7 +25165,7 @@ class SpatialFilterTrackingStateEXT(Structure):
     def __init__(
         self,
         tracking_state: SpatialEntityTrackingStateEXT = SpatialEntityTrackingStateEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_FILTER_TRACKING_STATE_EXT,
     ) -> None:
         super().__init__(
@@ -25244,7 +25243,7 @@ class SpatialCapabilityConfigurationPlaneTrackingEXT(Structure):
         capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_PLANE_TRACKING_EXT,
     ) -> None:
         enabled_component_count, enabled_components = array_field_helper(
@@ -25300,7 +25299,7 @@ class SpatialComponentPlaneAlignmentListEXT(Structure):
         self,
         plane_alignment_count: Optional[int] = None,
         plane_alignments: ArrayFieldParamType[SpatialPlaneAlignmentEXT.ctype()] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_PLANE_ALIGNMENT_LIST_EXT,
     ) -> None:
         plane_alignment_count, plane_alignments = array_field_helper(
@@ -25354,7 +25353,7 @@ class SpatialComponentMesh2DListEXT(Structure):
         self,
         mesh_count: Optional[int] = None,
         meshes: ArrayFieldParamType[SpatialMeshDataEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_MESH_2D_LIST_EXT,
     ) -> None:
         mesh_count, meshes = array_field_helper(
@@ -25433,7 +25432,7 @@ class SpatialComponentPolygon2DListEXT(Structure):
         self,
         polygon_count: Optional[int] = None,
         polygons: ArrayFieldParamType[SpatialPolygon2DDataEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_POLYGON_2D_LIST_EXT,
     ) -> None:
         polygon_count, polygons = array_field_helper(
@@ -25487,7 +25486,7 @@ class SpatialComponentPlaneSemanticLabelListEXT(Structure):
         self,
         semantic_label_count: Optional[int] = None,
         semantic_labels: ArrayFieldParamType[SpatialPlaneSemanticLabelEXT.ctype()] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_PLANE_SEMANTIC_LABEL_LIST_EXT,
     ) -> None:
         semantic_label_count, semantic_labels = array_field_helper(
@@ -25542,7 +25541,7 @@ class SpatialCapabilityConfigurationQrCodeEXT(Structure):
         capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_QR_CODE_EXT,
     ) -> None:
         enabled_component_count, enabled_components = array_field_helper(
@@ -25599,7 +25598,7 @@ class SpatialCapabilityConfigurationMicroQrCodeEXT(Structure):
         capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_MICRO_QR_CODE_EXT,
     ) -> None:
         enabled_component_count, enabled_components = array_field_helper(
@@ -25657,7 +25656,7 @@ class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
         ar_uco_dict: SpatialMarkerArucoDictEXT = SpatialMarkerArucoDictEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_ARUCO_MARKER_EXT,
     ) -> None:
         enabled_component_count, enabled_components = array_field_helper(
@@ -25717,7 +25716,7 @@ class SpatialCapabilityConfigurationAprilTagEXT(Structure):
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
         april_dict: SpatialMarkerAprilTagDictEXT = SpatialMarkerAprilTagDictEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_APRIL_TAG_EXT,
     ) -> None:
         enabled_component_count, enabled_components = array_field_helper(
@@ -25774,7 +25773,7 @@ class SpatialMarkerSizeEXT(Structure):
     def __init__(
         self,
         marker_side_length: float = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_MARKER_SIZE_EXT,
     ) -> None:
         super().__init__(
@@ -25809,7 +25808,7 @@ class SpatialMarkerStaticOptimizationEXT(Structure):
     def __init__(
         self,
         optimize_for_static_marker: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_MARKER_STATIC_OPTIMIZATION_EXT,
     ) -> None:
         super().__init__(
@@ -25873,7 +25872,7 @@ class SpatialComponentMarkerListEXT(Structure):
         self,
         marker_count: Optional[int] = None,
         markers: ArrayFieldParamType[SpatialMarkerDataEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_MARKER_LIST_EXT,
     ) -> None:
         marker_count, markers = array_field_helper(
@@ -25928,7 +25927,7 @@ class SpatialCapabilityConfigurationAnchorEXT(Structure):
         capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT,
     ) -> None:
         enabled_component_count, enabled_components = array_field_helper(
@@ -25984,7 +25983,7 @@ class SpatialComponentAnchorListEXT(Structure):
         self,
         location_count: Optional[int] = None,
         locations: ArrayFieldParamType[Posef] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_ANCHOR_LIST_EXT,
     ) -> None:
         location_count, locations = array_field_helper(
@@ -26039,7 +26038,7 @@ class SpatialAnchorCreateInfoEXT(Structure):
         base_space: Space = None,
         time: Time = 0,
         pose: Posef = Posef(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -26089,7 +26088,7 @@ class SpatialPersistenceContextCreateInfoEXT(Structure):
     def __init__(
         self,
         scope: SpatialPersistenceScopeEXT = SpatialPersistenceScopeEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_PERSISTENCE_CONTEXT_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -26126,7 +26125,7 @@ class CreateSpatialPersistenceContextCompletionEXT(Structure):
         future_result: Result = Result(),  # noqa
         create_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),  # noqa
         persistence_context: SpatialPersistenceContextEXT = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT,
     ) -> None:
         super().__init__(
@@ -26166,7 +26165,7 @@ class SpatialContextPersistenceConfigEXT(Structure):
         self,
         persistence_context_count: Optional[int] = None,
         persistence_contexts: ArrayFieldParamType[SpatialPersistenceContextEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_CONTEXT_PERSISTENCE_CONFIG_EXT,
     ) -> None:
         persistence_context_count, persistence_contexts = array_field_helper(
@@ -26220,7 +26219,7 @@ class SpatialDiscoveryPersistenceUuidFilterEXT(Structure):
         self,
         persisted_uuid_count: Optional[int] = None,
         persisted_uuids: ArrayFieldParamType[Uuid] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_DISCOVERY_PERSISTENCE_UUID_FILTER_EXT,
     ) -> None:
         persisted_uuid_count, persisted_uuids = array_field_helper(
@@ -26299,7 +26298,7 @@ class SpatialComponentPersistenceListEXT(Structure):
         self,
         persist_data_count: int = 0,
         persist_data: POINTER(SpatialPersistenceDataEXT) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT,
     ) -> None:
         super().__init__(
@@ -26346,7 +26345,7 @@ class SpatialEntityPersistInfoEXT(Structure):
         self,
         spatial_context: SpatialContextEXT = None,
         spatial_entity_id: SpatialEntityIdEXT = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_PERSIST_INFO_EXT,
     ) -> None:
         super().__init__(
@@ -26385,7 +26384,7 @@ class PersistSpatialEntityCompletionEXT(Structure):
         future_result: Result = Result(),  # noqa
         persist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),  # noqa
         persist_uuid: Uuid = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.PERSIST_SPATIAL_ENTITY_COMPLETION_EXT,
     ) -> None:
         if persist_uuid is None:
@@ -26426,7 +26425,7 @@ class SpatialEntityUnpersistInfoEXT(Structure):
     def __init__(
         self,
         persist_uuid: Uuid = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_UNPERSIST_INFO_EXT,
     ) -> None:
         if persist_uuid is None:
@@ -26464,7 +26463,7 @@ class UnpersistSpatialEntityCompletionEXT(Structure):
         self,
         future_result: Result = Result(),  # noqa
         unpersist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.UNPERSIST_SPATIAL_ENTITY_COMPLETION_EXT,
     ) -> None:
         super().__init__(
@@ -26552,7 +26551,7 @@ class LoaderInitInfoPropertiesEXT(Structure):
         self,
         property_value_count: Optional[int] = None,
         property_values: ArrayFieldParamType[LoaderInitPropertyValueEXT] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.LOADER_INIT_INFO_PROPERTIES_EXT,
     ) -> None:
         property_value_count, property_values = array_field_helper(

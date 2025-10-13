@@ -7,7 +7,7 @@ sequences, single elements, or ctypes pointers, with optional encoding flavors.
 """
 
 import enum
-from ctypes import Array, c_char_p, c_void_p, cast, POINTER, pointer
+from ctypes import Array, c_char_p, c_void_p, cast, POINTER, pointer, Structure
 from typing import TypeVar, Union, Sequence, Tuple, Optional
 
 
@@ -105,7 +105,7 @@ def string_array_field_helper(
     return array_field_helper(c_char_p, count, array, flavor=ArrayFlavor.STRING)
 
 
-def next_field_helper(value) -> c_void_p:
+def next_field_helper(value) -> Optional[c_void_p]:
     """Helper for OpenXR struct 'next' field parameters"""
     if value is None:
         return None

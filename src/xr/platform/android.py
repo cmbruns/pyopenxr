@@ -15,7 +15,7 @@ except (AttributeError, ImportError):
     EGLDisplay = c_void_p
     EGLSurface = c_void_p
 
-from ..array_field import array_field_helper, ArrayFieldParamType
+from ..array_field import array_field_helper, ArrayFieldParamType, next_field_helper
 from ..enums import EnumBase, FlagBase, Result, StructureType
 from ..typedefs import *
 from ..version import Version
@@ -162,7 +162,7 @@ class InstanceCreateInfoAndroidKHR(Structure):
         self,
         application_vm: c_void_p = None,
         application_activity: c_void_p = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.INSTANCE_CREATE_INFO_ANDROID_KHR,
     ) -> None:
         super().__init__(
@@ -200,7 +200,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         self,
         view_format_count: Optional[int] = None,
         view_formats: ArrayFieldParamType[c_int] = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_SWAPCHAIN_FORMAT_LIST_CREATE_INFO_KHR,
     ) -> None:
         view_format_count, view_formats = array_field_helper(
@@ -252,10 +252,10 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
 class GraphicsBindingOpenGLESAndroidKHR(Structure):
     def __init__(
         self,
-        display: EGLDisplay = None,
-        config: EGLConfig = None,
-        context: EGLContext = None,
-        next = None,
+        display: EGLDisplay = 0,
+        config: EGLConfig = 0,
+        context: EGLContext = 0,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR,
     ) -> None:
         super().__init__(
@@ -294,7 +294,7 @@ class SwapchainImageOpenGLESKHR(Structure):
     def __init__(
         self,
         image: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_OPENGL_ES_KHR,
     ) -> None:
         super().__init__(
@@ -330,7 +330,7 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
         self,
         min_api_version_supported: Version = Version(),
         max_api_version_supported: Version = Version(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_OPENGL_ES_KHR,
     ) -> None:
         super().__init__(
@@ -419,7 +419,7 @@ class GraphicsBindingVulkanKHR(Structure):
         device: VkDevice = None,
         queue_family_index: int = 0,
         queue_index: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_VULKAN_KHR,
     ) -> None:
         super().__init__(
@@ -462,7 +462,7 @@ class SwapchainImageVulkanKHR(Structure):
     def __init__(
         self,
         image: VkImage = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_VULKAN_KHR,
     ) -> None:
         super().__init__(
@@ -498,7 +498,7 @@ class GraphicsRequirementsVulkanKHR(Structure):
         self,
         min_api_version_supported: Version = Version(),
         max_api_version_supported: Version = Version(),
-        next = None,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_REQUIREMENTS_VULKAN_KHR,
     ) -> None:
         super().__init__(
@@ -730,7 +730,7 @@ class LoaderInitInfoAndroidKHR(Structure):
         self,
         application_vm: c_void_p = None,
         application_context: c_void_p = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.LOADER_INIT_INFO_ANDROID_KHR,
     ) -> None:
         super().__init__(
@@ -787,7 +787,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
         pfn_get_instance_proc_addr: PFN_vkGetInstanceProcAddr = 0,
         vulkan_create_info: POINTER(VkInstanceCreateInfo) = None,
         vulkan_allocator: POINTER(VkAllocationCallbacks) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_INSTANCE_CREATE_INFO_KHR,
     ) -> None:
         super().__init__(
@@ -835,7 +835,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
         vulkan_physical_device: VkPhysicalDevice = None,
         vulkan_create_info: POINTER(VkDeviceCreateInfo) = None,
         vulkan_allocator: POINTER(VkAllocationCallbacks) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_DEVICE_CREATE_INFO_KHR,
     ) -> None:
         super().__init__(
@@ -884,7 +884,7 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
         self,
         system_id: SystemId = 0,
         vulkan_instance: VkInstance = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR,
     ) -> None:
         super().__init__(
@@ -1004,10 +1004,10 @@ class GraphicsBindingEGLMNDX(Structure):
     def __init__(
         self,
         get_proc_address: PFN_xrEglGetProcAddressMNDX = cast(None, PFN_xrEglGetProcAddressMNDX),
-        display: EGLDisplay = None,
-        config: EGLConfig = None,
-        context: EGLContext = None,
-        next = None,
+        display: EGLDisplay = 0,
+        config: EGLConfig = 0,
+        context: EGLContext = 0,
+        next=None,
         type: StructureType = StructureType.GRAPHICS_BINDING_EGL_MNDX,
     ) -> None:
         super().__init__(
@@ -1062,7 +1062,7 @@ class AndroidSurfaceSwapchainCreateInfoFB(Structure):
     def __init__(
         self,
         create_flags: AndroidSurfaceSwapchainFlagsFB = AndroidSurfaceSwapchainFlagsFB(),  # noqa
-        next = None,
+        next=None,
         type: StructureType = StructureType.ANDROID_SURFACE_SWAPCHAIN_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
@@ -1099,7 +1099,7 @@ class SwapchainImageFoveationVulkanFB(Structure):
         image: VkImage = None,
         width: int = 0,
         height: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_IMAGE_FOVEATION_VULKAN_FB,
     ) -> None:
         super().__init__(
@@ -1139,7 +1139,7 @@ class SwapchainStateAndroidSurfaceDimensionsFB(Structure):
         self,
         width: int = 0,
         height: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_ANDROID_SURFACE_DIMENSIONS_FB,
     ) -> None:
         super().__init__(
@@ -1185,7 +1185,7 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
         swizzle_alpha: int = 0,
         max_anisotropy: float = 0,
         border_color: Color4f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_SAMPLER_OPENGL_ES_FB,
     ) -> None:
         if border_color is None:
@@ -1250,7 +1250,7 @@ class SwapchainStateSamplerVulkanFB(Structure):
         swizzle_alpha: c_int = 0,
         max_anisotropy: float = 0,
         border_color: Color4f = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_SAMPLER_VULKAN_FB,
     ) -> None:
         if border_color is None:
@@ -1308,7 +1308,7 @@ class VulkanSwapchainCreateInfoMETA(Structure):
         self,
         additional_create_flags: int = 0,
         additional_usage_flags: int = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.VULKAN_SWAPCHAIN_CREATE_INFO_META,
     ) -> None:
         super().__init__(
@@ -1345,7 +1345,7 @@ class AnchorSharingInfoANDROID(Structure):
     def __init__(
         self,
         anchor: Space = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ANCHOR_SHARING_INFO_ANDROID,
     ) -> None:
         super().__init__(
@@ -1380,7 +1380,7 @@ class AnchorSharingTokenANDROID(Structure):
     def __init__(
         self,
         token: POINTER(AIBinder) = None,
-        next = None,
+        next=None,
         type: StructureType = StructureType.ANCHOR_SHARING_TOKEN_ANDROID,
     ) -> None:
         super().__init__(
@@ -1415,7 +1415,7 @@ class SystemAnchorSharingExportPropertiesANDROID(Structure):
     def __init__(
         self,
         supports_anchor_sharing_export: Bool32 = 0,
-        next = None,
+        next=None,
         type: StructureType = StructureType.SYSTEM_ANCHOR_SHARING_EXPORT_PROPERTIES_ANDROID,
     ) -> None:
         super().__init__(
