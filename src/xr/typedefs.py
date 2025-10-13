@@ -4719,6 +4719,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     @user_data.setter
     def user_data(self, value: Any):
         self._cached_user_data = value
+        # noinspection PyAttributeOutsideInit
         self._user_data = cast(py_object(value), c_void_p) if value else None
 
     def __repr__(self) -> str:
@@ -4736,7 +4737,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         # noinspection PyAttributeOutsideInit
         self._next = next_field_helper(value)
 
-	@property
+    @property
     def user_callback(self) -> PFN_xrDebugUtilsMessengerCallbackEXT:
         return self._user_callback
 
@@ -4745,6 +4746,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
             self,
             user_callback: DebugCallbackType,
     ) -> None:
+        # noinspection PyAttributeOutsideInit
         self._user_callback = wrap_debug_callback(user_callback, self._cached_user_data)
 
     _fields_ = [
@@ -4753,7 +4755,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         ("message_severities", DebugUtilsMessageSeverityFlagsEXTCInt),
         ("message_types", DebugUtilsMessageTypeFlagsEXTCInt),
         ("_user_callback", PFN_xrDebugUtilsMessengerCallbackEXT),
-        ("user_data", c_void_p),
+        ("_user_data", c_void_p),
     ]
 
 
