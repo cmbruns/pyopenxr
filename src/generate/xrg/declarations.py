@@ -478,6 +478,7 @@ class StructFieldItem(CodeItem):
         ARRAY_COUNT = 2,
         ARRAY_POINTER = 3,
         VERSION = 4,
+        NEXT = 5,
 
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -486,6 +487,8 @@ class StructFieldItem(CodeItem):
         self._py_name = snake_from_camel(self._capi_name)
         self.type = parse_type(cursor.type)
         self.kind = StructFieldItem.Kind.NORMAL
+        if self._capi_name == "next" and self.type.name(Api.CTYPES) == "c_void_p":
+            self.kind = StructFieldItem.Kind.NEXT
         self.default_value = None
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -504,6 +507,7 @@ class StructFieldItem(CodeItem):
         if self.kind in [
             StructFieldItem.Kind.ARRAY_POINTER,
             StructFieldItem.Kind.VERSION,
+            StructFieldItem.Kind.NEXT,
         ]:
             return f"_{n}"  # Prepend with underscore
         elif self.type.name(Api.CTYPES) == "c_char_p":
@@ -1364,10 +1368,25 @@ class ArrayFieldCoder(FieldCoder):
 
 
 class NextFieldCoder(FieldCoder):
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"_next=next_field_helper(next)"
+
     def param_code(self) -> Generator[str, None, None]:
         # Avoid self reference in BaseInStructure
-        yield f"{self.name}: c_void_p = None"
+        yield f"{self.name} = None"
 
+    def property_code(self) -> Generator[str, None, None]:
+        if self.inner_name != self.name:
+            # getter
+            yield "@property"
+            yield f"def next(self) -> c_void_p:"
+            yield f"    return self._next"
+            # setter
+            yield ""
+            yield f"@next.setter"
+            yield f"def next(self, value) -> None:"
+            yield f"    # noinspection PyAttributeOutsideInit"
+            yield f"    self._next = next_field_helper(value)"
 
 class VoidPointerFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
