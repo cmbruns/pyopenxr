@@ -8,13 +8,13 @@ import ctypes
 from typing import Optional
 
 try:
-    from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface, EGLenum
+    from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface
 except (AttributeError, ImportError):
     EGLConfig = c_void_p
     EGLContext = c_void_p
     EGLDisplay = c_void_p
     EGLSurface = c_void_p
-    EGLenum = int
+EGLenum = ctypes.c_uint
 
 from ..array_field import array_field_helper, ArrayFieldParamType, next_field_helper
 from ..enums import EnumBase, FlagBase, Result, StructureType
