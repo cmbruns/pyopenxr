@@ -1450,6 +1450,12 @@ class PersistedDataNotReadyANDROIDError(ErrorResult):
         return Result.ERROR_PERSISTED_DATA_NOT_READY_ANDROID
 
 
+class ServiceNotReadyANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SERVICE_NOT_READY_ANDROID
+
+
 class FuturePendingEXTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1732,6 +1738,7 @@ _exception_map = {
     Result.ERROR_ANCHOR_ALREADY_PERSISTED_ANDROID: AnchorAlreadyPersistedANDROIDError,
     Result.ERROR_ANCHOR_NOT_TRACKING_ANDROID: AnchorNotTrackingANDROIDError,
     Result.ERROR_PERSISTED_DATA_NOT_READY_ANDROID: PersistedDataNotReadyANDROIDError,
+    Result.ERROR_SERVICE_NOT_READY_ANDROID: ServiceNotReadyANDROIDError,
     Result.ERROR_FUTURE_PENDING_EXT: FuturePendingEXTError,
     Result.ERROR_FUTURE_INVALID_EXT: FutureInvalidEXTError,
     Result.ERROR_SYSTEM_NOTIFICATION_PERMISSION_DENIED_ML: SystemNotificationPermissionDeniedMLError,
@@ -1882,6 +1889,7 @@ __all__ = [
     "SceneMarkerDataNotStringMSFT",
     "SceneMeshBufferIdInvalidMSFTError",
     "SecondaryViewConfigurationTypeNotEnabledMSFTError",
+    "ServiceNotReadyANDROIDError",
     "SessionLossPending",
     "SessionLostError",
     "SessionNotFocused",

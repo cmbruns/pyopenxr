@@ -5554,6 +5554,123 @@ def locate_body_joints_bd(
     return locations
 
 
+def enumerate_facial_simulation_modes_bd(
+    session: Session,
+) -> Sequence[FacialSimulationModeBD]:
+    mode_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEnumerateFacialSimulationModesBD"),
+        PFN_xrEnumerateFacialSimulationModesBD,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        0,
+        byref(mode_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    modes = (FacialSimulationModeBD.ctype() * mode_capacity_input.value)(*([FacialSimulationModeBD.ctype()()] * mode_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        session,
+        mode_capacity_input,
+        byref(mode_capacity_input),
+        modes,
+    ))
+    if result.is_exception():
+        raise result
+    return modes  # noqa
+
+
+def create_face_tracker_bd(
+    session: Session,
+    create_info: FaceTrackerCreateInfoBD = None,
+) -> FaceTrackerBD:
+    if create_info is None:
+        create_info = FaceTrackerCreateInfoBD()
+    tracker = FaceTrackerBD()
+    tracker.instance = session.instance
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateFaceTrackerBD"),
+        PFN_xrCreateFaceTrackerBD,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(tracker),
+    ))
+    if result.is_exception():
+        raise result
+    return tracker
+
+
+def destroy_face_tracker_bd(
+    tracker: FaceTrackerBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrDestroyFaceTrackerBD"),
+        PFN_xrDestroyFaceTrackerBD,
+    )
+    result = check_result(fxn(
+        tracker,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_facial_simulation_data_bd(
+    tracker: FaceTrackerBD,
+    info: FacialSimulationDataGetInfoBD,
+) -> FacialSimulationDataBD:
+    facial_data = FacialSimulationDataBD()
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrGetFacialSimulationDataBD"),
+        PFN_xrGetFacialSimulationDataBD,
+    )
+    result = check_result(fxn(
+        tracker,
+        info,
+        byref(facial_data),
+    ))
+    if result.is_exception():
+        raise result
+    return facial_data
+
+
+def set_facial_simulation_mode_bd(
+    tracker: FaceTrackerBD,
+    mode: FacialSimulationModeBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrSetFacialSimulationModeBD"),
+        PFN_xrSetFacialSimulationModeBD,
+    )
+    result = check_result(fxn(
+        tracker,
+        mode.value,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_facial_simulation_mode_bd(
+    tracker: FaceTrackerBD,
+) -> FacialSimulationModeBD:
+    mode = FacialSimulationModeBD.ctype()()
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrGetFacialSimulationModeBD"),
+        PFN_xrGetFacialSimulationModeBD,
+    )
+    result = check_result(fxn(
+        tracker,
+        byref(mode),
+    ))
+    if result.is_exception():
+        raise result
+    return mode
+
+
 def enumerate_spatial_entity_component_types_bd(
     snapshot: SenseDataSnapshotBD,
     entity_id: SpatialEntityIdBD,
@@ -6554,6 +6671,78 @@ def unpersist_anchor_android(
     ))
     if result.is_exception():
         raise result
+
+
+def create_face_tracker_android(
+    session: Session,
+    create_info: FaceTrackerCreateInfoANDROID = None,
+) -> FaceTrackerANDROID:
+    if create_info is None:
+        create_info = FaceTrackerCreateInfoANDROID()
+    face_tracker = FaceTrackerANDROID()
+    face_tracker.instance = session.instance
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateFaceTrackerANDROID"),
+        PFN_xrCreateFaceTrackerANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(face_tracker),
+    ))
+    if result.is_exception():
+        raise result
+    return face_tracker
+
+
+def destroy_face_tracker_android(
+    face_tracker: FaceTrackerANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(face_tracker.instance, "xrDestroyFaceTrackerANDROID"),
+        PFN_xrDestroyFaceTrackerANDROID,
+    )
+    result = check_result(fxn(
+        face_tracker,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_face_state_android(
+    face_tracker: FaceTrackerANDROID,
+    get_info: FaceStateGetInfoANDROID,
+) -> FaceStateANDROID:
+    face_state_output = FaceStateANDROID()
+    fxn = cast(
+        get_instance_proc_addr(face_tracker.instance, "xrGetFaceStateANDROID"),
+        PFN_xrGetFaceStateANDROID,
+    )
+    result = check_result(fxn(
+        face_tracker,
+        get_info,
+        byref(face_state_output),
+    ))
+    if result.is_exception():
+        raise result
+    return face_state_output
+
+
+def get_face_calibration_state_android(
+    face_tracker: FaceTrackerANDROID,
+) -> Bool32:
+    face_is_calibrated_output = Bool32()
+    fxn = cast(
+        get_instance_proc_addr(face_tracker.instance, "xrGetFaceCalibrationStateANDROID"),
+        PFN_xrGetFaceCalibrationStateANDROID,
+    )
+    result = check_result(fxn(
+        face_tracker,
+        byref(face_is_calibrated_output),
+    ))
+    if result.is_exception():
+        raise result
+    return face_is_calibrated_output
 
 
 def get_passthrough_camera_state_android(
@@ -7783,6 +7972,8 @@ __all__ = [
     "create_exported_localization_map_ml",
     "create_eye_tracker_fb",
     "create_face_tracker2_fb",
+    "create_face_tracker_android",
+    "create_face_tracker_bd",
     "create_face_tracker_fb",
     "create_facial_expression_client_ml",
     "create_facial_tracker_htc",
@@ -7854,6 +8045,8 @@ __all__ = [
     "destroy_exported_localization_map_ml",
     "destroy_eye_tracker_fb",
     "destroy_face_tracker2_fb",
+    "destroy_face_tracker_android",
+    "destroy_face_tracker_bd",
     "destroy_face_tracker_fb",
     "destroy_facial_expression_client_ml",
     "destroy_facial_tracker_htc",
@@ -7903,6 +8096,7 @@ __all__ = [
     "enumerate_environment_blend_modes",
     "enumerate_environment_depth_swapchain_images_meta",
     "enumerate_external_cameras_oculus",
+    "enumerate_facial_simulation_modes_bd",
     "enumerate_instance_extension_properties",
     "enumerate_interaction_render_model_ids_ext",
     "enumerate_performance_metrics_counter_paths_meta",
@@ -7950,10 +8144,14 @@ __all__ = [
     "get_environment_depth_swapchain_state_meta",
     "get_exported_localization_map_data_ml",
     "get_eye_gazes_fb",
+    "get_face_calibration_state_android",
     "get_face_expression_weights2_fb",
     "get_face_expression_weights_fb",
+    "get_face_state_android",
     "get_facial_expression_blend_shape_properties_ml",
     "get_facial_expressions_htc",
+    "get_facial_simulation_data_bd",
+    "get_facial_simulation_mode_bd",
     "get_foveation_eye_tracked_state_meta",
     "get_hand_mesh_fb",
     "get_input_source_localized_name",
@@ -8090,6 +8288,7 @@ __all__ = [
     "set_digital_lens_control_almalence",
     "set_environment_depth_estimation_varjo",
     "set_environment_depth_hand_removal_meta",
+    "set_facial_simulation_mode_bd",
     "set_input_device_active_ext",
     "set_input_device_location_ext",
     "set_input_device_state_bool_ext",

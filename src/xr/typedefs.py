@@ -19432,6 +19432,249 @@ PFN_xrDestroyBodyTrackerBD = CFUNCTYPE(Result.ctype(), BodyTrackerBD)
 
 PFN_xrLocateBodyJointsBD = CFUNCTYPE(Result.ctype(), BodyTrackerBD, POINTER(BodyJointsLocateInfoBD), POINTER(BodyJointLocationsBD))
 
+
+class FaceTrackerBD_T(Structure):
+    pass
+
+
+class FaceTrackerBD(POINTER(FaceTrackerBD_T), HandleMixin):
+    _type_ = FaceTrackerBD_T  # ctypes idiosyncrasy
+
+
+class SystemFacialSimulationPropertiesBD(Structure):
+    def __init__(
+        self,
+        supports_face_tracking: Bool32 = 0,
+        next=None,
+        type: StructureType = StructureType.SYSTEM_FACIAL_SIMULATION_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_face_tracking=supports_face_tracking,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemFacialSimulationPropertiesBD(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemFacialSimulationPropertiesBD(supports_face_tracking={self.supports_face_tracking}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("supports_face_tracking", Bool32),
+    ]
+
+
+class FaceTrackerCreateInfoBD(Structure):
+    def __init__(
+        self,
+        mode: FacialSimulationModeBD = FacialSimulationModeBD(),  # noqa
+        next=None,
+        type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            mode=FacialSimulationModeBD(mode).value,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoBD(mode={repr(self.mode)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoBD(mode={self.mode}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("mode", FacialSimulationModeBD.ctype()),
+    ]
+
+
+class FacialSimulationDataGetInfoBD(Structure):
+    def __init__(
+        self,
+        time: Time = 0,
+        next=None,
+        type: StructureType = StructureType.FACIAL_SIMULATION_DATA_GET_INFO_BD,
+    ) -> None:
+        super().__init__(
+            time=time,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FacialSimulationDataGetInfoBD(time={repr(self.time)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FacialSimulationDataGetInfoBD(time={self.time}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("time", Time),
+    ]
+
+
+class FacialSimulationDataBD(Structure):
+    def __init__(
+        self,
+        face_expression_weight_count: Optional[int] = None,
+        face_expression_weights: ArrayFieldParamType[c_float] = None,
+        is_upper_face_data_valid: Bool32 = 0,
+        is_lower_face_data_valid: Bool32 = 0,
+        time: Time = 0,
+        next=None,
+        type: StructureType = StructureType.FACIAL_SIMULATION_DATA_BD,
+    ) -> None:
+        face_expression_weight_count, face_expression_weights = array_field_helper(
+            c_float, face_expression_weight_count, face_expression_weights)
+        super().__init__(
+            face_expression_weight_count=face_expression_weight_count,
+            _face_expression_weights=face_expression_weights,
+            is_upper_face_data_valid=is_upper_face_data_valid,
+            is_lower_face_data_valid=is_lower_face_data_valid,
+            time=time,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FacialSimulationDataBD(face_expression_weight_count={repr(self.face_expression_weight_count)}, face_expression_weights={repr(self._face_expression_weights)}, is_upper_face_data_valid={repr(self.is_upper_face_data_valid)}, is_lower_face_data_valid={repr(self.is_lower_face_data_valid)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FacialSimulationDataBD(face_expression_weight_count={self.face_expression_weight_count}, face_expression_weights={self._face_expression_weights}, is_upper_face_data_valid={self.is_upper_face_data_valid}, is_lower_face_data_valid={self.is_lower_face_data_valid}, time={self.time}, next={self._next}, type={self.type})"
+
+    @property
+    def face_expression_weights(self):
+        if self.face_expression_weight_count == 0:
+            return (c_float * 0)()
+        else:
+            return (c_float * self.face_expression_weight_count).from_address(
+                ctypes.addressof(self._face_expression_weights.contents))
+
+    @face_expression_weights.setter
+    def face_expression_weights(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.face_expression_weight_count, self._face_expression_weights = array_field_helper(
+            c_float, None, value)
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("face_expression_weight_count", c_uint32),
+        ("_face_expression_weights", POINTER(c_float)),
+        ("is_upper_face_data_valid", Bool32),
+        ("is_lower_face_data_valid", Bool32),
+        ("time", Time),
+    ]
+
+
+class LipExpressionDataBD(Structure):
+    def __init__(
+        self,
+        lipsync_expression_weight_count: Optional[int] = None,
+        lipsync_expression_weights: ArrayFieldParamType[c_float] = None,
+        next=None,
+        type: StructureType = StructureType.LIP_EXPRESSION_DATA_BD,
+    ) -> None:
+        lipsync_expression_weight_count, lipsync_expression_weights = array_field_helper(
+            c_float, lipsync_expression_weight_count, lipsync_expression_weights)
+        super().__init__(
+            lipsync_expression_weight_count=lipsync_expression_weight_count,
+            _lipsync_expression_weights=lipsync_expression_weights,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LipExpressionDataBD(lipsync_expression_weight_count={repr(self.lipsync_expression_weight_count)}, lipsync_expression_weights={repr(self._lipsync_expression_weights)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LipExpressionDataBD(lipsync_expression_weight_count={self.lipsync_expression_weight_count}, lipsync_expression_weights={self._lipsync_expression_weights}, next={self._next}, type={self.type})"
+
+    @property
+    def lipsync_expression_weights(self):
+        if self.lipsync_expression_weight_count == 0:
+            return (c_float * 0)()
+        else:
+            return (c_float * self.lipsync_expression_weight_count).from_address(
+                ctypes.addressof(self._lipsync_expression_weights.contents))
+
+    @lipsync_expression_weights.setter
+    def lipsync_expression_weights(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.lipsync_expression_weight_count, self._lipsync_expression_weights = array_field_helper(
+            c_float, None, value)
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("lipsync_expression_weight_count", c_uint32),
+        ("_lipsync_expression_weights", POINTER(c_float)),
+    ]
+
+
+PFN_xrEnumerateFacialSimulationModesBD = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(FacialSimulationModeBD.ctype()))
+
+PFN_xrCreateFaceTrackerBD = CFUNCTYPE(Result.ctype(), Session, POINTER(FaceTrackerCreateInfoBD), POINTER(FaceTrackerBD))
+
+PFN_xrDestroyFaceTrackerBD = CFUNCTYPE(Result.ctype(), FaceTrackerBD)
+
+PFN_xrGetFacialSimulationDataBD = CFUNCTYPE(Result.ctype(), FaceTrackerBD, POINTER(FacialSimulationDataGetInfoBD), POINTER(FacialSimulationDataBD))
+
+PFN_xrSetFacialSimulationModeBD = CFUNCTYPE(Result.ctype(), FaceTrackerBD, FacialSimulationModeBD.ctype())
+
+PFN_xrGetFacialSimulationModeBD = CFUNCTYPE(Result.ctype(), FaceTrackerBD, POINTER(FacialSimulationModeBD.ctype()))
+
 SpatialEntityIdBD = c_uint64
 
 
@@ -21915,6 +22158,184 @@ PFN_xrCreatePersistedAnchorSpaceANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchor
 PFN_xrEnumeratePersistedAnchorsANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID, c_uint32, POINTER(c_uint32), POINTER(UuidEXT))
 
 PFN_xrUnpersistAnchorANDROID = CFUNCTYPE(Result.ctype(), DeviceAnchorPersistenceANDROID, POINTER(Uuid))
+
+
+class FaceTrackerANDROID_T(Structure):
+    pass
+
+
+class FaceTrackerANDROID(POINTER(FaceTrackerANDROID_T), HandleMixin):
+    _type_ = FaceTrackerANDROID_T  # ctypes idiosyncrasy
+
+
+class FaceTrackerCreateInfoANDROID(Structure):
+    def __init__(
+        self,
+        next=None,
+        type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoANDROID(next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoANDROID(next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+    ]
+
+
+class FaceStateGetInfoANDROID(Structure):
+    def __init__(
+        self,
+        time: Time = 0,
+        next=None,
+        type: StructureType = StructureType.FACE_STATE_GET_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            time=time,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceStateGetInfoANDROID(time={repr(self.time)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceStateGetInfoANDROID(time={self.time}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("time", Time),
+    ]
+
+
+class FaceStateANDROID(Structure):
+    def __init__(
+        self,
+        parameters_capacity_input: int = 0,
+        parameters_count_output: int = 0,
+        parameters: POINTER(c_float) = None,
+        face_tracking_state: FaceTrackingStateANDROID = FaceTrackingStateANDROID(),  # noqa
+        sample_time: Time = 0,
+        is_valid: Bool32 = 0,
+        region_confidences_capacity_input: int = 0,
+        region_confidences_count_output: int = 0,
+        region_confidences: POINTER(c_float) = None,
+        next=None,
+        type: StructureType = StructureType.FACE_STATE_ANDROID,
+    ) -> None:
+        super().__init__(
+            parameters_capacity_input=parameters_capacity_input,
+            parameters_count_output=parameters_count_output,
+            parameters=parameters,
+            face_tracking_state=FaceTrackingStateANDROID(face_tracking_state).value,
+            sample_time=sample_time,
+            is_valid=is_valid,
+            region_confidences_capacity_input=region_confidences_capacity_input,
+            region_confidences_count_output=region_confidences_count_output,
+            region_confidences=region_confidences,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceStateANDROID(parameters_capacity_input={repr(self.parameters_capacity_input)}, parameters_count_output={repr(self.parameters_count_output)}, parameters={repr(self.parameters)}, face_tracking_state={repr(self.face_tracking_state)}, sample_time={repr(self.sample_time)}, is_valid={repr(self.is_valid)}, region_confidences_capacity_input={repr(self.region_confidences_capacity_input)}, region_confidences_count_output={repr(self.region_confidences_count_output)}, region_confidences={repr(self.region_confidences)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceStateANDROID(parameters_capacity_input={self.parameters_capacity_input}, parameters_count_output={self.parameters_count_output}, parameters={self.parameters}, face_tracking_state={self.face_tracking_state}, sample_time={self.sample_time}, is_valid={self.is_valid}, region_confidences_capacity_input={self.region_confidences_capacity_input}, region_confidences_count_output={self.region_confidences_count_output}, region_confidences={self.region_confidences}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("parameters_capacity_input", c_uint32),
+        ("parameters_count_output", c_uint32),
+        ("parameters", POINTER(c_float)),
+        ("face_tracking_state", FaceTrackingStateANDROID.ctype()),
+        ("sample_time", Time),
+        ("is_valid", Bool32),
+        ("region_confidences_capacity_input", c_uint32),
+        ("region_confidences_count_output", c_uint32),
+        ("region_confidences", POINTER(c_float)),
+    ]
+
+
+class SystemFaceTrackingPropertiesANDROID(Structure):
+    def __init__(
+        self,
+        supports_face_tracking: Bool32 = 0,
+        next=None,
+        type: StructureType = StructureType.SYSTEM_FACE_TRACKING_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_face_tracking=supports_face_tracking,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemFaceTrackingPropertiesANDROID(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemFaceTrackingPropertiesANDROID(supports_face_tracking={self.supports_face_tracking}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("supports_face_tracking", Bool32),
+    ]
+
+
+PFN_xrCreateFaceTrackerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(FaceTrackerCreateInfoANDROID), POINTER(FaceTrackerANDROID))
+
+PFN_xrDestroyFaceTrackerANDROID = CFUNCTYPE(Result.ctype(), FaceTrackerANDROID)
+
+PFN_xrGetFaceStateANDROID = CFUNCTYPE(Result.ctype(), FaceTrackerANDROID, POINTER(FaceStateGetInfoANDROID), POINTER(FaceStateANDROID))
+
+PFN_xrGetFaceCalibrationStateANDROID = CFUNCTYPE(Result.ctype(), FaceTrackerANDROID, POINTER(Bool32))
 
 
 class SystemPassthroughCameraStatePropertiesANDROID(Structure):
@@ -26808,9 +27229,17 @@ __all__ = [
     "FaceExpressionStatusFB",
     "FaceExpressionWeights2FB",
     "FaceExpressionWeightsFB",
+    "FaceStateANDROID",
+    "FaceStateGetInfoANDROID",
     "FaceTracker2FB",
     "FaceTracker2FB_T",
+    "FaceTrackerANDROID",
+    "FaceTrackerANDROID_T",
+    "FaceTrackerBD",
+    "FaceTrackerBD_T",
     "FaceTrackerCreateInfo2FB",
+    "FaceTrackerCreateInfoANDROID",
+    "FaceTrackerCreateInfoBD",
     "FaceTrackerCreateInfoFB",
     "FaceTrackerFB",
     "FaceTrackerFB_T",
@@ -26821,6 +27250,8 @@ __all__ = [
     "FacialExpressionClientML",
     "FacialExpressionClientML_T",
     "FacialExpressionsHTC",
+    "FacialSimulationDataBD",
+    "FacialSimulationDataGetInfoBD",
     "FacialTrackerCreateInfoHTC",
     "FacialTrackerHTC",
     "FacialTrackerHTC_T",
@@ -26915,6 +27346,7 @@ __all__ = [
     "KeyboardTrackingFlagsFBCInt",
     "KeyboardTrackingQueryFB",
     "KeyboardTrackingQueryFlagsFBCInt",
+    "LipExpressionDataBD",
     "LoaderInitInfoBaseHeaderKHR",
     "LoaderInitInfoPropertiesEXT",
     "LoaderInitPropertyValueEXT",
@@ -26974,6 +27406,8 @@ __all__ = [
     "PFN_xrCreateExportedLocalizationMapML",
     "PFN_xrCreateEyeTrackerFB",
     "PFN_xrCreateFaceTracker2FB",
+    "PFN_xrCreateFaceTrackerANDROID",
+    "PFN_xrCreateFaceTrackerBD",
     "PFN_xrCreateFaceTrackerFB",
     "PFN_xrCreateFacialExpressionClientML",
     "PFN_xrCreateFacialTrackerHTC",
@@ -27046,6 +27480,8 @@ __all__ = [
     "PFN_xrDestroyExportedLocalizationMapML",
     "PFN_xrDestroyEyeTrackerFB",
     "PFN_xrDestroyFaceTracker2FB",
+    "PFN_xrDestroyFaceTrackerANDROID",
+    "PFN_xrDestroyFaceTrackerBD",
     "PFN_xrDestroyFaceTrackerFB",
     "PFN_xrDestroyFacialExpressionClientML",
     "PFN_xrDestroyFacialTrackerHTC",
@@ -27095,6 +27531,7 @@ __all__ = [
     "PFN_xrEnumerateEnvironmentBlendModes",
     "PFN_xrEnumerateEnvironmentDepthSwapchainImagesMETA",
     "PFN_xrEnumerateExternalCamerasOCULUS",
+    "PFN_xrEnumerateFacialSimulationModesBD",
     "PFN_xrEnumerateInstanceExtensionProperties",
     "PFN_xrEnumerateInteractionRenderModelIdsEXT",
     "PFN_xrEnumeratePerformanceMetricsCounterPathsMETA",
@@ -27142,10 +27579,14 @@ __all__ = [
     "PFN_xrGetEnvironmentDepthSwapchainStateMETA",
     "PFN_xrGetExportedLocalizationMapDataML",
     "PFN_xrGetEyeGazesFB",
+    "PFN_xrGetFaceCalibrationStateANDROID",
     "PFN_xrGetFaceExpressionWeights2FB",
     "PFN_xrGetFaceExpressionWeightsFB",
+    "PFN_xrGetFaceStateANDROID",
     "PFN_xrGetFacialExpressionBlendShapePropertiesML",
     "PFN_xrGetFacialExpressionsHTC",
+    "PFN_xrGetFacialSimulationDataBD",
+    "PFN_xrGetFacialSimulationModeBD",
     "PFN_xrGetFoveationEyeTrackedStateMETA",
     "PFN_xrGetHandMeshFB",
     "PFN_xrGetInputSourceLocalizedName",
@@ -27283,6 +27724,7 @@ __all__ = [
     "PFN_xrSetDigitalLensControlALMALENCE",
     "PFN_xrSetEnvironmentDepthEstimationVARJO",
     "PFN_xrSetEnvironmentDepthHandRemovalMETA",
+    "PFN_xrSetFacialSimulationModeBD",
     "PFN_xrSetInputDeviceActiveEXT",
     "PFN_xrSetInputDeviceLocationEXT",
     "PFN_xrSetInputDeviceStateBoolEXT",
@@ -27682,8 +28124,10 @@ __all__ = [
     "SystemEyeGazeInteractionPropertiesEXT",
     "SystemEyeTrackingPropertiesFB",
     "SystemFaceTrackingProperties2FB",
+    "SystemFaceTrackingPropertiesANDROID",
     "SystemFaceTrackingPropertiesFB",
     "SystemFacialExpressionPropertiesML",
+    "SystemFacialSimulationPropertiesBD",
     "SystemFacialTrackingPropertiesHTC",
     "SystemForceFeedbackCurlPropertiesMNDX",
     "SystemFoveatedRenderingPropertiesVARJO",

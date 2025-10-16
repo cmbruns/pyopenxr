@@ -103,7 +103,7 @@ FB_composition_layer_alpha_blend = 1
 FB_composition_layer_alpha_blend_SPEC_VERSION = 3
 FB_COMPOSITION_LAYER_ALPHA_BLEND_EXTENSION_NAME = "XR_FB_composition_layer_alpha_blend"
 MND_headless = 1
-MND_headless_SPEC_VERSION = 2
+MND_headless_SPEC_VERSION = 3
 MND_HEADLESS_EXTENSION_NAME = "XR_MND_headless"
 OCULUS_android_session_state_enable = 1
 OCULUS_android_session_state_enable_SPEC_VERSION = 1
@@ -480,6 +480,11 @@ BODY_JOINT_COUNT_BD = 24
 BODY_JOINT_WITHOUT_ARM_COUNT_BD = 16
 BD_body_tracking_SPEC_VERSION = 1
 BD_BODY_TRACKING_EXTENSION_NAME = "XR_BD_body_tracking"
+BD_facial_simulation = 1
+FACE_EXPRESSION_COUNT_BD = 52
+LIP_EXPRESSION_COUNT_BD = 20
+BD_facial_simulation_SPEC_VERSION = 1
+BD_FACIAL_SIMULATION_EXTENSION_NAME = "XR_BD_facial_simulation"
 BD_spatial_sensing = 1
 BD_spatial_sensing_SPEC_VERSION = 1
 BD_SPATIAL_SENSING_EXTENSION_NAME = "XR_BD_spatial_sensing"
@@ -501,6 +506,9 @@ BD_FUTURE_PROGRESS_EXTENSION_NAME = "XR_BD_future_progress"
 BD_spatial_plane = 1
 BD_spatial_plane_SPEC_VERSION = 1
 BD_SPATIAL_PLANE_EXTENSION_NAME = "XR_BD_spatial_plane"
+BD_ultra_controller_interaction = 1
+BD_ultra_controller_interaction_SPEC_VERSION = 1
+BD_ULTRA_CONTROLLER_INTERACTION_EXTENSION_NAME = "XR_BD_ultra_controller_interaction"
 EXT_local_floor = 1
 EXT_local_floor_SPEC_VERSION = 1
 EXT_LOCAL_FLOOR_EXTENSION_NAME = "XR_EXT_local_floor"
@@ -520,6 +528,11 @@ ANDROID_TRACKABLES_EXTENSION_NAME = "XR_ANDROID_trackables"
 ANDROID_device_anchor_persistence = 1
 ANDROID_device_anchor_persistence_SPEC_VERSION = 1
 ANDROID_DEVICE_ANCHOR_PERSISTENCE_EXTENSION_NAME = "XR_ANDROID_device_anchor_persistence"
+ANDROID_face_tracking = 1
+ANDROID_face_tracking_SPEC_VERSION = 1
+ANDROID_FACE_TRACKING_EXTENSION_NAME = "XR_ANDROID_face_tracking"
+FACE_PARAMETER_COUNT_ANDROID = 68
+FACE_REGION_CONFIDENCE_COUNT_ANDROID = 3
 ANDROID_passthrough_camera_state = 1
 ANDROID_passthrough_camera_state_SPEC_VERSION = 1
 ANDROID_PASSTHROUGH_CAMERA_STATE_EXTENSION_NAME = "XR_ANDROID_passthrough_camera_state"
@@ -527,7 +540,7 @@ ANDROID_raycast = 1
 ANDROID_raycast_SPEC_VERSION = 1
 ANDROID_RAYCAST_EXTENSION_NAME = "XR_ANDROID_raycast"
 ANDROID_trackables_object = 1
-ANDROID_trackables_object_SPEC_VERSION = 1
+ANDROID_trackables_object_SPEC_VERSION = 2
 ANDROID_TRACKABLES_OBJECT_EXTENSION_NAME = "XR_ANDROID_trackables_object"
 EXT_future = 1
 EXT_future_SPEC_VERSION = 1
@@ -725,6 +738,7 @@ __all__ = [
     "ALMALENCE_digital_lens_control",
     "ALMALENCE_digital_lens_control_SPEC_VERSION",
     "ANDROID_DEVICE_ANCHOR_PERSISTENCE_EXTENSION_NAME",
+    "ANDROID_FACE_TRACKING_EXTENSION_NAME",
     "ANDROID_PASSTHROUGH_CAMERA_STATE_EXTENSION_NAME",
     "ANDROID_RAYCAST_EXTENSION_NAME",
     "ANDROID_TRACKABLES_EXTENSION_NAME",
@@ -732,6 +746,8 @@ __all__ = [
     "ANDROID_TRACKABLES_OBJECT_EXTENSION_NAME",
     "ANDROID_device_anchor_persistence",
     "ANDROID_device_anchor_persistence_SPEC_VERSION",
+    "ANDROID_face_tracking",
+    "ANDROID_face_tracking_SPEC_VERSION",
     "ANDROID_passthrough_camera_state",
     "ANDROID_passthrough_camera_state_SPEC_VERSION",
     "ANDROID_raycast",
@@ -744,6 +760,7 @@ __all__ = [
     "ANDROID_trackables_object_SPEC_VERSION",
     "BD_BODY_TRACKING_EXTENSION_NAME",
     "BD_CONTROLLER_INTERACTION_EXTENSION_NAME",
+    "BD_FACIAL_SIMULATION_EXTENSION_NAME",
     "BD_FUTURE_PROGRESS_EXTENSION_NAME",
     "BD_SPATIAL_ANCHOR_EXTENSION_NAME",
     "BD_SPATIAL_ANCHOR_SHARING_EXTENSION_NAME",
@@ -751,10 +768,13 @@ __all__ = [
     "BD_SPATIAL_PLANE_EXTENSION_NAME",
     "BD_SPATIAL_SCENE_EXTENSION_NAME",
     "BD_SPATIAL_SENSING_EXTENSION_NAME",
+    "BD_ULTRA_CONTROLLER_INTERACTION_EXTENSION_NAME",
     "BD_body_tracking",
     "BD_body_tracking_SPEC_VERSION",
     "BD_controller_interaction",
     "BD_controller_interaction_SPEC_VERSION",
+    "BD_facial_simulation",
+    "BD_facial_simulation_SPEC_VERSION",
     "BD_future_progress",
     "BD_future_progress_SPEC_VERSION",
     "BD_spatial_anchor",
@@ -769,6 +789,8 @@ __all__ = [
     "BD_spatial_scene_SPEC_VERSION",
     "BD_spatial_sensing",
     "BD_spatial_sensing_SPEC_VERSION",
+    "BD_ultra_controller_interaction",
+    "BD_ultra_controller_interaction_SPEC_VERSION",
     "BODY_JOINT_COUNT_BD",
     "BODY_JOINT_COUNT_HTC",
     "BODY_JOINT_WITHOUT_ARM_COUNT_BD",
@@ -903,6 +925,9 @@ __all__ = [
     "EXT_view_configuration_depth_range_SPEC_VERSION",
     "EXT_win32_appcontainer_compatible",
     "EXT_win32_appcontainer_compatible_SPEC_VERSION",
+    "FACE_EXPRESSION_COUNT_BD",
+    "FACE_PARAMETER_COUNT_ANDROID",
+    "FACE_REGION_CONFIDENCE_COUNT_ANDROID",
     "FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_TRACKED_BIT_ML",
     "FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_VALID_BIT_ML",
     "FACIAL_EXPRESSION_EYE_COUNT_HTC",
@@ -1128,6 +1153,7 @@ __all__ = [
     "KHR_swapchain_usage_input_attachment_bit_SPEC_VERSION",
     "KHR_visibility_mask",
     "KHR_visibility_mask_SPEC_VERSION",
+    "LIP_EXPRESSION_COUNT_BD",
     "LOCALIZATION_MAP_ERROR_EXCESSIVE_MOTION_BIT_ML",
     "LOCALIZATION_MAP_ERROR_HEADPOSE_BIT_ML",
     "LOCALIZATION_MAP_ERROR_LOW_FEATURE_COUNT_BIT_ML",
