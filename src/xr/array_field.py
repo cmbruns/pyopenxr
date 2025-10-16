@@ -6,8 +6,9 @@ defined as (count, pointer) pairs. Supports automatic conversion from Python
 sequences, single elements, or ctypes pointers, with optional encoding flavors.
 """
 
-import enum
+import ctypes
 from ctypes import Array, c_char_p, c_void_p, cast, POINTER, pointer, Structure
+import enum
 from typing import TypeVar, Union, Sequence, Tuple, Optional
 
 
@@ -105,17 +106,25 @@ def string_array_field_helper(
     return array_field_helper(c_char_p, count, array, flavor=ArrayFlavor.STRING)
 
 
-def next_field_helper(value) -> Optional[c_void_p]:
+class _TestStruct(Structure):
+    _fields_ = [("next", c_void_p),]
+
+
+def next_field_helper(value) -> c_void_p:
     """Helper for OpenXR struct 'next' field parameters"""
-    if value is None:
-        return None
-    elif isinstance(value, c_void_p):
-        return value
-    elif isinstance(value, Structure):
-        return cast(pointer(value), c_void_p)
-    elif hasattr(value, "contents"):  # likely POINTER(...)
-        return cast(value, c_void_p)
-    raise TypeError(f"Unsupported type for next: {type(value)}")
+    # 1) Does ctypes accept this value without complaint?
+    try:
+        t = _TestStruct(next=value)
+        result = t.next
+    except TypeError:
+        # Maybe it's a ctypes type, but needs conversion to pointer
+        t = _TestStruct(next=cast(pointer(value), c_void_p))
+        result = t.next
+    except ctypes.ArgumentError:
+        # Maybe it's a pointer, but needs casting
+        t = _TestStruct(next=cast(value, c_void_p))
+        result = t.next
+    return result
 
 
 __all__ = [
