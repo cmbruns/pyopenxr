@@ -13,26 +13,31 @@ from contextlib import ExitStack
 from ctypes import byref, cast, POINTER
 import sys
 
-if sys.platform == "win32":
+if sys.platform in ["win32", "linux"]:
     from OpenGL import GL
+    import glfw
+    if sys.platform == "win32":
+        from OpenGL import WGL
+    else:
+        from OpenGL import GLX
 else:
+    import android
     from OpenGL import GLES3 as GL
+    from OpenGL import EGL
 
 import xr
 
 
 def main():
     extensions = set()
-    if sys.platform == "win32":
+    if sys.platform in ["win32", "linux"]:
         extensions.add(xr.KHR_OPENGL_ENABLE_EXTENSION_NAME)
     else:
+        assert sys.platform == "android"
         extensions.add(xr.KHR_OPENGL_ES_ENABLE_EXTENSION_NAME)
     # Initialize OpenXR loader (android only)
     instance_create_extension = None
     if sys.platform == "android":
-        import android
-
-        print("Initializing loader...")
         xr.initialize_loader_khr(xr.LoaderInitInfoAndroidKHR(
             application_vm=android.get_vm(),
             application_context=android.get_activity(),
@@ -40,12 +45,10 @@ def main():
         extensions.add(xr.KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME)
         extensions.add(xr.FB_PASSTHROUGH_EXTENSION_NAME)
         extensions.add(xr.FB_TRIANGLE_MESH_EXTENSION_NAME)
-        print("Creating instance create extension...")
         instance_create_extension = xr.InstanceCreateInfoAndroidKHR(
             application_vm=android.get_vm(),
             application_activity=android.get_activity(),
         )
-
     with ExitStack() as exit_stack:  # noqa
         # Create OpenXR instance
         instance = exit_stack.enter_context(xr.create_instance(
@@ -56,9 +59,8 @@ def main():
         system_id = xr.get_system(instance, xr.SystemGetInfo(
             form_factor=xr.FormFactor.HEAD_MOUNTED_DISPLAY))
         # Create OpenGL context
-        if sys.platform == "win32":
+        if sys.platform in ["win32", "linux"]:
             import glfw
-            from OpenGL import WGL
             if not glfw.init():
                 raise RuntimeError("Failed to initialize GLFW")
             # hidden, single‐buffered context
@@ -76,12 +78,19 @@ def main():
             graphics_requirements = xr.get_opengl_graphics_requirements_khr(
                 instance=instance,
                 system_id=system_id)
-            graphics_binding = xr.GraphicsBindingOpenGLWin32KHR(
-                h_dc=WGL.wglGetCurrentDC(),
-                h_glrc=WGL.wglGetCurrentContext(),
-            )
+            if sys.platform == "win32":
+                graphics_binding = xr.GraphicsBindingOpenGLWin32KHR(
+                    h_dc=WGL.wglGetCurrentDC(),
+                    h_glrc=WGL.wglGetCurrentContext(),
+                )
+            else:
+                graphics_binding = xr.GraphicsBindingOpenGLXlibKHR(
+                    x_display=GLX.glXGetCurrentDisplay(),
+                    glx_context=GLX.glXGetCurrentContext(),
+                    glx_drawable=GLX.glXGetCurrentDrawable(),
+                )
         else:
-            from OpenGL import EGL
+            assert sys.platform == "android"
             display = EGL.eglGetDisplay(EGL.EGL_DEFAULT_DISPLAY)
             assert display != EGL.EGL_NO_DISPLAY
             major, minor = EGL.EGLint(), EGL.EGLint()
@@ -130,7 +139,6 @@ def main():
                 next=graphics_binding,
             ),
         ))
-        print("got to session")
         # blend mode
         blend_mode = None
         blend_modes = list(xr.enumerate_environment_blend_modes(
@@ -141,7 +149,7 @@ def main():
                 break
         if blend_mode is None:
             blend_mode = blend_modes[0]
-        print(xr.EnvironmentBlendMode(blend_mode).name)  # TODO box/unbox enum fields
+        print(f"blend mode = {xr.EnvironmentBlendMode(blend_mode).name}")  # TODO box/unbox enum fields
         # reference space
         space = exit_stack.enter_context(xr.create_reference_space(
             session,
@@ -200,6 +208,7 @@ def main():
             swapchain_image_ptr_buffers.append(swapchain_image_ptr_buffer)
         # framebuffer
         swapchain_framebuffer = GL.glGenFramebuffers(1)
+        GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, swapchain_framebuffer)
         color_to_depth_map = dict()
         # action sets
         xr.attach_session_action_sets(session, attach_info=xr.SessionActionSetsAttachInfo(
@@ -229,6 +238,7 @@ def main():
                 xr.begin_frame(session)
                 layers = []
                 if frame_state.should_render:
+                    assert GL.glGetError() == GL.GL_NO_ERROR
                     layer = xr.CompositionLayerProjection(space=space)
                     view_state, views = xr.locate_views(session, xr.ViewLocateInfo(
                         view_configuration_type=view_configuration_type,
@@ -238,8 +248,10 @@ def main():
                     projection_layer_views = tuple(xr.CompositionLayerProjectionView() for _ in range(len(views)))
                     vsf = view_state.view_state_flags
                     poses_are_valid = (vsf & xr.VIEW_STATE_POSITION_VALID_BIT) and (vsf & xr.VIEW_STATE_ORIENTATION_VALID_BIT)
+                    assert GL.glGetError() == GL.GL_NO_ERROR
                     if poses_are_valid:
                         for view_index, view in enumerate(views):
+                            assert GL.glGetError() == GL.GL_NO_ERROR
                             swapchain = swapchains[view_index]
                             swapchain_image_index = xr.acquire_swapchain_image(
                                 swapchain=swapchain,
@@ -278,7 +290,11 @@ def main():
                                 GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
                                 GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
                                 GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
-                                GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT24, width, height, 0,
+                                if sys.platform == "android":  # or OpenGLES really
+                                    depth_component = GL.GL_DEPTH_COMPONENT24
+                                else:
+                                    depth_component = GL.GL_DEPTH_COMPONENT32
+                                GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, depth_component, width, height, 0,
                                                 GL.GL_DEPTH_COMPONENT, GL.GL_UNSIGNED_INT, None)
                                 color_to_depth_map[color_texture] = depth_texture
                             GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D,
@@ -297,11 +313,13 @@ def main():
                                 release_info=xr.SwapchainImageReleaseInfo())
                         layer.views = projection_layer_views
                         layers.append(byref(layer))
+                assert GL.glGetError() == GL.GL_NO_ERROR  # Prepare to avoid Linux SteamVR bug
                 xr.end_frame(session, xr.FrameEndInfo(
                     display_time=frame_state.predicted_display_time,
                     environment_blend_mode=blend_mode,
                     layers=layers,
                 ))
+                GL.glGetError()  # Clear GL error state to avoid Linux SteamVR bug
             else:
                 # throttle loop since xr.wait_frame() won't be called
                 time.sleep(0.250)
