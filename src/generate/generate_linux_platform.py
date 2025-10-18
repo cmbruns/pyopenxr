@@ -7,6 +7,7 @@ import xrg
 
 def main():
     compiler_args = [
+        "-DXR_USE_PLATFORM_ANDROID",
         "-DXR_USE_PLATFORM_EGL",
         "-DXR_USE_PLATFORM_WAYLAND",
         "-DXR_USE_PLATFORM_XCB",
@@ -56,7 +57,7 @@ def main():
         EGLenum = ctypes.c_uint
 
         from ..array_field import array_field_helper, ArrayFieldParamType, next_field_helper
-        from ..enums import FlagBase, Result, StructureType
+        from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
         from ..version import Version
         from ..exception import check_result

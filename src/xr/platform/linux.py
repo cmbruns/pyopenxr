@@ -24,7 +24,7 @@ except (AttributeError, ImportError):
 EGLenum = ctypes.c_uint
 
 from ..array_field import array_field_helper, ArrayFieldParamType, next_field_helper
-from ..enums import FlagBase, Result, StructureType
+from ..enums import EnumBase, FlagBase, Result, StructureType
 from ..typedefs import *
 from ..version import Version
 from ..exception import check_result
@@ -72,6 +72,15 @@ class VkDeviceCreateInfo(Structure):
     pass
 
 
+KHR_android_thread_settings = 1
+KHR_android_thread_settings_SPEC_VERSION = 6
+KHR_ANDROID_THREAD_SETTINGS_EXTENSION_NAME = "XR_KHR_android_thread_settings"
+KHR_android_surface_swapchain = 1
+KHR_android_surface_swapchain_SPEC_VERSION = 4
+KHR_ANDROID_SURFACE_SWAPCHAIN_EXTENSION_NAME = "XR_KHR_android_surface_swapchain"
+KHR_android_create_instance = 1
+KHR_android_create_instance_SPEC_VERSION = 3
+KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME = "XR_KHR_android_create_instance"
 KHR_vulkan_swapchain_format_list = 1
 KHR_vulkan_swapchain_format_list_SPEC_VERSION = 5
 KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME = "XR_KHR_vulkan_swapchain_format_list"
@@ -87,15 +96,24 @@ KHR_VULKAN_ENABLE_EXTENSION_NAME = "XR_KHR_vulkan_enable"
 KHR_convert_timespec_time = 1
 KHR_convert_timespec_time_SPEC_VERSION = 1
 KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME = "XR_KHR_convert_timespec_time"
+KHR_loader_init_android = 1
+KHR_loader_init_android_SPEC_VERSION = 1
+KHR_LOADER_INIT_ANDROID_EXTENSION_NAME = "XR_KHR_loader_init_android"
 KHR_vulkan_enable2 = 1
 KHR_vulkan_enable2_SPEC_VERSION = 3
 KHR_VULKAN_ENABLE2_EXTENSION_NAME = "XR_KHR_vulkan_enable2"
 MNDX_egl_enable = 1
 MNDX_egl_enable_SPEC_VERSION = 2
 MNDX_EGL_ENABLE_EXTENSION_NAME = "XR_MNDX_egl_enable"
+FB_android_surface_swapchain_create = 1
+FB_android_surface_swapchain_create_SPEC_VERSION = 1
+FB_ANDROID_SURFACE_SWAPCHAIN_CREATE_EXTENSION_NAME = "XR_FB_android_surface_swapchain_create"
 FB_foveation_vulkan = 1
 FB_foveation_vulkan_SPEC_VERSION = 1
 FB_FOVEATION_VULKAN_EXTENSION_NAME = "XR_FB_foveation_vulkan"
+FB_swapchain_update_state_android_surface = 1
+FB_swapchain_update_state_android_surface_SPEC_VERSION = 1
+FB_SWAPCHAIN_UPDATE_STATE_ANDROID_SURFACE_EXTENSION_NAME = "XR_FB_swapchain_update_state_android_surface"
 FB_swapchain_update_state_opengl_es = 1
 FB_swapchain_update_state_opengl_es_SPEC_VERSION = 1
 FB_SWAPCHAIN_UPDATE_STATE_OPENGL_ES_EXTENSION_NAME = "XR_FB_swapchain_update_state_opengl_es"
@@ -105,6 +123,99 @@ FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME = "XR_FB_swapchain_update_state_
 META_vulkan_swapchain_create_info = 1
 META_vulkan_swapchain_create_info_SPEC_VERSION = 1
 META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME = "XR_META_vulkan_swapchain_create_info"
+ANDROID_anchor_sharing_export = 1
+ANDROID_anchor_sharing_export_SPEC_VERSION = 1
+ANDROID_ANCHOR_SHARING_EXPORT_EXTENSION_NAME = "XR_ANDROID_anchor_sharing_export"
+
+
+class AndroidThreadTypeKHR(EnumBase):
+    APPLICATION_MAIN = 1
+    APPLICATION_WORKER = 2
+    RENDERER_MAIN = 3
+    RENDERER_WORKER = 4
+
+
+PFN_xrSetAndroidApplicationThreadKHR = CFUNCTYPE(Result.ctype(), Session, AndroidThreadTypeKHR.ctype(), c_uint32)
+
+
+def set_android_application_thread_khr(
+    session: Session,
+    thread_type: AndroidThreadTypeKHR,
+    thread_id: int,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrSetAndroidApplicationThreadKHR"),
+        PFN_xrSetAndroidApplicationThreadKHR,
+    )
+    result = check_result(fxn(
+        session,
+        thread_type,
+        thread_id,
+    ))
+    if result.is_exception():
+        raise result
+
+
+PFN_xrCreateSwapchainAndroidSurfaceKHR = CFUNCTYPE(Result.ctype(), Session, POINTER(SwapchainCreateInfo), POINTER(Swapchain), POINTER(c_int))
+
+
+def create_swapchain_android_surface_khr(
+    session: Session,
+    info: POINTER(SwapchainCreateInfo),
+) -> (Swapchain, int):
+    swapchain = Swapchain()
+    surface = c_int()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSwapchainAndroidSurfaceKHR"),
+        PFN_xrCreateSwapchainAndroidSurfaceKHR,
+    )
+    result = check_result(fxn(
+        session,
+        info,
+        byref(swapchain),
+        byref(surface),
+    ))
+    if result.is_exception():
+        raise result
+    return swapchain, surface
+
+
+class InstanceCreateInfoAndroidKHR(Structure):
+    def __init__(
+        self,
+        application_vm: c_void_p = None,
+        application_activity: c_void_p = None,
+        next=None,
+        type: StructureType = StructureType.INSTANCE_CREATE_INFO_ANDROID_KHR,
+    ) -> None:
+        super().__init__(
+            application_vm=application_vm,
+            application_activity=application_activity,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.InstanceCreateInfoAndroidKHR(application_vm={repr(self.application_vm)}, application_activity={repr(self.application_activity)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.InstanceCreateInfoAndroidKHR(application_vm={self.application_vm}, application_activity={self.application_activity}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("application_vm", c_void_p),
+        ("application_activity", c_void_p),
+    ]
 
 
 class VulkanSwapchainFormatListCreateInfoKHR(Structure):
@@ -414,6 +525,47 @@ def get_opengl_graphics_requirements_khr(
     return graphics_requirements
 
 
+class GraphicsBindingOpenGLESAndroidKHR(Structure):
+    def __init__(
+        self,
+        display: EGLDisplay = 0,
+        config: EGLConfig = 0,
+        context: EGLContext = 0,
+        next=None,
+        type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR,
+    ) -> None:
+        super().__init__(
+            display=display,
+            config=config,
+            context=context,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GraphicsBindingOpenGLESAndroidKHR(display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GraphicsBindingOpenGLESAndroidKHR(display={self.display}, config={self.config}, context={self.context}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("display", EGLDisplay),
+        ("config", EGLConfig),
+        ("context", EGLContext),
+    ]
+
+
 class SwapchainImageOpenGLESKHR(Structure):
     def __init__(
         self,
@@ -703,7 +855,7 @@ def get_vulkan_instance_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    buffer = create_string_buffer(buffer_capacity_input.value)
+    buffer = create_string_buffer(buffer_capacity_input)
     result = check_result(fxn(
         instance,
         system_id,
@@ -713,7 +865,7 @@ def get_vulkan_instance_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    return buffer.value.decode()
+    return buffer.decode()
 
 
 PFN_xrGetVulkanDeviceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
@@ -738,7 +890,7 @@ def get_vulkan_device_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    buffer = create_string_buffer(buffer_capacity_input.value)
+    buffer = create_string_buffer(buffer_capacity_input)
     result = check_result(fxn(
         instance,
         system_id,
@@ -748,7 +900,7 @@ def get_vulkan_device_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    return buffer.value.decode()
+    return buffer.decode()
 
 
 PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, VkInstance, POINTER(VkPhysicalDevice))
@@ -841,6 +993,44 @@ def convert_time_to_timespec_time_khr(
     return timespec_time
 
 
+class LoaderInitInfoAndroidKHR(Structure):
+    def __init__(
+        self,
+        application_vm: c_void_p = None,
+        application_context: c_void_p = None,
+        next=None,
+        type: StructureType = StructureType.LOADER_INIT_INFO_ANDROID_KHR,
+    ) -> None:
+        super().__init__(
+            application_vm=application_vm,
+            application_context=application_context,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LoaderInitInfoAndroidKHR(application_vm={repr(self.application_vm)}, application_context={repr(self.application_context)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LoaderInitInfoAndroidKHR(application_vm={self.application_vm}, application_context={self.application_context}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("application_vm", c_void_p),
+        ("application_context", c_void_p),
+    ]
+
+
 VulkanInstanceCreateFlagsKHRCInt = Flags64
 
 
@@ -870,7 +1060,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=VulkanInstanceCreateFlagsKHR(create_flags).value,
+            create_flags=VulkanInstanceCreateFlagsKHR(create_flags),
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
@@ -918,7 +1108,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=VulkanDeviceCreateFlagsKHR(create_flags).value,
+            create_flags=VulkanDeviceCreateFlagsKHR(create_flags),
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_physical_device=vulkan_physical_device,
             vulkan_create_info=vulkan_create_info,
@@ -1122,6 +1312,55 @@ class GraphicsBindingEGLMNDX(Structure):
     ]
 
 
+AndroidSurfaceSwapchainFlagsFBCInt = Flags64
+
+
+class AndroidSurfaceSwapchainFlagsFB(FlagBase):
+    NONE = 0x00000000
+    SYNCHRONOUS_BIT = 0x00000001
+    USE_TIMESTAMPS_BIT = 0x00000002
+    ALL = SYNCHRONOUS_BIT | USE_TIMESTAMPS_BIT
+
+
+ANDROID_SURFACE_SWAPCHAIN_SYNCHRONOUS_BIT_FB = 0x00000001
+ANDROID_SURFACE_SWAPCHAIN_USE_TIMESTAMPS_BIT_FB = 0x00000002
+
+
+class AndroidSurfaceSwapchainCreateInfoFB(Structure):
+    def __init__(
+        self,
+        create_flags: AndroidSurfaceSwapchainFlagsFB = AndroidSurfaceSwapchainFlagsFB(),  # noqa
+        next=None,
+        type: StructureType = StructureType.ANDROID_SURFACE_SWAPCHAIN_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            create_flags=AndroidSurfaceSwapchainFlagsFB(create_flags),
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AndroidSurfaceSwapchainCreateInfoFB(create_flags={repr(self.create_flags)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AndroidSurfaceSwapchainCreateInfoFB(create_flags={self.create_flags}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("create_flags", AndroidSurfaceSwapchainFlagsFBCInt),
+    ]
+
+
 class SwapchainImageFoveationVulkanFB(Structure):
     def __init__(
         self,
@@ -1158,6 +1397,44 @@ class SwapchainImageFoveationVulkanFB(Structure):
         ("type", StructureType.ctype()),
         ("_next", c_void_p),
         ("image", VkImage),
+        ("width", c_uint32),
+        ("height", c_uint32),
+    ]
+
+
+class SwapchainStateAndroidSurfaceDimensionsFB(Structure):
+    def __init__(
+        self,
+        width: int = 0,
+        height: int = 0,
+        next=None,
+        type: StructureType = StructureType.SWAPCHAIN_STATE_ANDROID_SURFACE_DIMENSIONS_FB,
+    ) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SwapchainStateAndroidSurfaceDimensionsFB(width={repr(self.width)}, height={repr(self.height)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SwapchainStateAndroidSurfaceDimensionsFB(width={self.width}, height={self.height}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
         ("width", c_uint32),
         ("height", c_uint32),
     ]
@@ -1332,17 +1609,181 @@ class VulkanSwapchainCreateInfoMETA(Structure):
     ]
 
 
+class AnchorSharingInfoANDROID(Structure):
+    def __init__(
+        self,
+        anchor: Space = None,
+        next=None,
+        type: StructureType = StructureType.ANCHOR_SHARING_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            anchor=anchor,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AnchorSharingInfoANDROID(anchor={repr(self.anchor)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AnchorSharingInfoANDROID(anchor={self.anchor}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("anchor", Space),
+    ]
+
+
+class AnchorSharingTokenANDROID(Structure):
+    def __init__(
+        self,
+        token: POINTER(AIBinder) = None,
+        next=None,
+        type: StructureType = StructureType.ANCHOR_SHARING_TOKEN_ANDROID,
+    ) -> None:
+        super().__init__(
+            token=token,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AnchorSharingTokenANDROID(token={repr(self.token)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AnchorSharingTokenANDROID(token={self.token}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("token", POINTER(AIBinder)),
+    ]
+
+
+class SystemAnchorSharingExportPropertiesANDROID(Structure):
+    def __init__(
+        self,
+        supports_anchor_sharing_export: Bool32 = 0,
+        next=None,
+        type: StructureType = StructureType.SYSTEM_ANCHOR_SHARING_EXPORT_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_anchor_sharing_export=supports_anchor_sharing_export,
+            _next=next_field_helper(next),
+            type=type,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemAnchorSharingExportPropertiesANDROID(supports_anchor_sharing_export={repr(self.supports_anchor_sharing_export)}, next={repr(self._next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemAnchorSharingExportPropertiesANDROID(supports_anchor_sharing_export={self.supports_anchor_sharing_export}, next={self._next}, type={self.type})"
+
+    @property
+    def next(self) -> c_void_p:
+        return self._next
+    
+    @next.setter
+    def next(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._next = next_field_helper(value)
+
+    _fields_ = [
+        ("type", StructureType.ctype()),
+        ("_next", c_void_p),
+        ("supports_anchor_sharing_export", Bool32),
+    ]
+
+
+PFN_xrShareAnchorANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(AnchorSharingInfoANDROID), POINTER(AnchorSharingTokenANDROID))
+
+
+def share_anchor_android(
+    session: Session,
+    sharing_info: POINTER(AnchorSharingInfoANDROID),
+) -> AnchorSharingTokenANDROID:
+    anchor_token = AnchorSharingTokenANDROID()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrShareAnchorANDROID"),
+        PFN_xrShareAnchorANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        sharing_info,
+        byref(anchor_token),
+    ))
+    if result.is_exception():
+        raise result
+    return anchor_token
+
+
+PFN_xrUnshareAnchorANDROID = CFUNCTYPE(Result.ctype(), Session, Space)
+
+
+def unshare_anchor_android(
+    session: Session,
+    anchor: Space,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrUnshareAnchorANDROID"),
+        PFN_xrUnshareAnchorANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        anchor,
+    ))
+    if result.is_exception():
+        raise result
+
+
 __all__ = [
+    "ANDROID_ANCHOR_SHARING_EXPORT_EXTENSION_NAME",
+    "ANDROID_SURFACE_SWAPCHAIN_SYNCHRONOUS_BIT_FB",
+    "ANDROID_SURFACE_SWAPCHAIN_USE_TIMESTAMPS_BIT_FB",
+    "ANDROID_anchor_sharing_export",
+    "ANDROID_anchor_sharing_export_SPEC_VERSION",
+    "AnchorSharingInfoANDROID",
+    "AnchorSharingTokenANDROID",
+    "AndroidSurfaceSwapchainCreateInfoFB",
+    "AndroidSurfaceSwapchainFlagsFB",
+    "AndroidSurfaceSwapchainFlagsFBCInt",
+    "AndroidThreadTypeKHR",
+    "FB_ANDROID_SURFACE_SWAPCHAIN_CREATE_EXTENSION_NAME",
     "FB_FOVEATION_VULKAN_EXTENSION_NAME",
+    "FB_SWAPCHAIN_UPDATE_STATE_ANDROID_SURFACE_EXTENSION_NAME",
     "FB_SWAPCHAIN_UPDATE_STATE_OPENGL_ES_EXTENSION_NAME",
     "FB_SWAPCHAIN_UPDATE_STATE_VULKAN_EXTENSION_NAME",
+    "FB_android_surface_swapchain_create",
+    "FB_android_surface_swapchain_create_SPEC_VERSION",
     "FB_foveation_vulkan",
     "FB_foveation_vulkan_SPEC_VERSION",
+    "FB_swapchain_update_state_android_surface",
+    "FB_swapchain_update_state_android_surface_SPEC_VERSION",
     "FB_swapchain_update_state_opengl_es",
     "FB_swapchain_update_state_opengl_es_SPEC_VERSION",
     "FB_swapchain_update_state_vulkan",
     "FB_swapchain_update_state_vulkan_SPEC_VERSION",
     "GraphicsBindingEGLMNDX",
+    "GraphicsBindingOpenGLESAndroidKHR",
     "GraphicsBindingOpenGLWaylandKHR",
     "GraphicsBindingOpenGLXcbKHR",
     "GraphicsBindingOpenGLXlibKHR",
@@ -1352,14 +1793,27 @@ __all__ = [
     "GraphicsRequirementsOpenGLKHR",
     "GraphicsRequirementsVulkan2KHR",
     "GraphicsRequirementsVulkanKHR",
+    "InstanceCreateInfoAndroidKHR",
+    "KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME",
+    "KHR_ANDROID_SURFACE_SWAPCHAIN_EXTENSION_NAME",
+    "KHR_ANDROID_THREAD_SETTINGS_EXTENSION_NAME",
     "KHR_CONVERT_TIMESPEC_TIME_EXTENSION_NAME",
+    "KHR_LOADER_INIT_ANDROID_EXTENSION_NAME",
     "KHR_OPENGL_ENABLE_EXTENSION_NAME",
     "KHR_OPENGL_ES_ENABLE_EXTENSION_NAME",
     "KHR_VULKAN_ENABLE2_EXTENSION_NAME",
     "KHR_VULKAN_ENABLE_EXTENSION_NAME",
     "KHR_VULKAN_SWAPCHAIN_FORMAT_LIST_EXTENSION_NAME",
+    "KHR_android_create_instance",
+    "KHR_android_create_instance_SPEC_VERSION",
+    "KHR_android_surface_swapchain",
+    "KHR_android_surface_swapchain_SPEC_VERSION",
+    "KHR_android_thread_settings",
+    "KHR_android_thread_settings_SPEC_VERSION",
     "KHR_convert_timespec_time",
     "KHR_convert_timespec_time_SPEC_VERSION",
+    "KHR_loader_init_android",
+    "KHR_loader_init_android_SPEC_VERSION",
     "KHR_opengl_enable",
     "KHR_opengl_enable_SPEC_VERSION",
     "KHR_opengl_es_enable",
@@ -1370,6 +1824,7 @@ __all__ = [
     "KHR_vulkan_enable_SPEC_VERSION",
     "KHR_vulkan_swapchain_format_list",
     "KHR_vulkan_swapchain_format_list_SPEC_VERSION",
+    "LoaderInitInfoAndroidKHR",
     "META_VULKAN_SWAPCHAIN_CREATE_INFO_EXTENSION_NAME",
     "META_vulkan_swapchain_create_info",
     "META_vulkan_swapchain_create_info_SPEC_VERSION",
@@ -1378,6 +1833,7 @@ __all__ = [
     "MNDX_egl_enable_SPEC_VERSION",
     "PFN_xrConvertTimeToTimespecTimeKHR",
     "PFN_xrConvertTimespecTimeToTimeKHR",
+    "PFN_xrCreateSwapchainAndroidSurfaceKHR",
     "PFN_xrCreateVulkanDeviceKHR",
     "PFN_xrCreateVulkanInstanceKHR",
     "PFN_xrEglGetProcAddressMNDX",
@@ -1389,13 +1845,18 @@ __all__ = [
     "PFN_xrGetVulkanGraphicsRequirements2KHR",
     "PFN_xrGetVulkanGraphicsRequirementsKHR",
     "PFN_xrGetVulkanInstanceExtensionsKHR",
+    "PFN_xrSetAndroidApplicationThreadKHR",
+    "PFN_xrShareAnchorANDROID",
+    "PFN_xrUnshareAnchorANDROID",
     "SwapchainImageFoveationVulkanFB",
     "SwapchainImageOpenGLESKHR",
     "SwapchainImageOpenGLKHR",
     "SwapchainImageVulkan2KHR",
     "SwapchainImageVulkanKHR",
+    "SwapchainStateAndroidSurfaceDimensionsFB",
     "SwapchainStateSamplerOpenGLESFB",
     "SwapchainStateSamplerVulkanFB",
+    "SystemAnchorSharingExportPropertiesANDROID",
     "VulkanDeviceCreateFlagsKHR",
     "VulkanDeviceCreateFlagsKHRCInt",
     "VulkanDeviceCreateInfoKHR",
@@ -1407,6 +1868,7 @@ __all__ = [
     "VulkanSwapchainFormatListCreateInfoKHR",
     "convert_time_to_timespec_time_khr",
     "convert_timespec_time_to_time_khr",
+    "create_swapchain_android_surface_khr",
     "create_vulkan_device_khr",
     "create_vulkan_instance_khr",
     "get_opengl_es_graphics_requirements_khr",
@@ -1416,5 +1878,8 @@ __all__ = [
     "get_vulkan_graphics_device_khr",
     "get_vulkan_graphics_requirements_khr",
     "get_vulkan_instance_extensions_khr",
+    "set_android_application_thread_khr",
+    "share_anchor_android",
     "timespec",
+    "unshare_anchor_android",
 ]
