@@ -149,7 +149,7 @@ def set_android_application_thread_khr(
     )
     result = check_result(fxn(
         session,
-        thread_type,
+        thread_type.value,
         thread_id,
     ))
     if result.is_exception():
@@ -161,7 +161,7 @@ PFN_xrCreateSwapchainAndroidSurfaceKHR = CFUNCTYPE(Result.ctype(), Session, POIN
 
 def create_swapchain_android_surface_khr(
     session: Session,
-    info: POINTER(SwapchainCreateInfo),
+    info: SwapchainCreateInfo,
 ) -> (Swapchain, int):
     swapchain = Swapchain()
     surface = c_int()
@@ -177,7 +177,7 @@ def create_swapchain_android_surface_khr(
     ))
     if result.is_exception():
         raise result
-    return swapchain, surface
+    return swapchain, surface.value
 
 
 class InstanceCreateInfoAndroidKHR(Structure):
@@ -855,7 +855,7 @@ def get_vulkan_instance_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    buffer = create_string_buffer(buffer_capacity_input)
+    buffer = create_string_buffer(buffer_capacity_input.value)
     result = check_result(fxn(
         instance,
         system_id,
@@ -865,7 +865,7 @@ def get_vulkan_instance_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    return buffer.decode()
+    return buffer.value.decode()
 
 
 PFN_xrGetVulkanDeviceExtensionsKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), c_char_p)
@@ -890,7 +890,7 @@ def get_vulkan_device_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    buffer = create_string_buffer(buffer_capacity_input)
+    buffer = create_string_buffer(buffer_capacity_input.value)
     result = check_result(fxn(
         instance,
         system_id,
@@ -900,7 +900,7 @@ def get_vulkan_device_extensions_khr(
     ))
     if result.is_exception():
         raise result
-    return buffer.decode()
+    return buffer.value.decode()
 
 
 PFN_xrGetVulkanGraphicsDeviceKHR = CFUNCTYPE(Result.ctype(), Instance, SystemId, VkInstance, POINTER(VkPhysicalDevice))
@@ -1060,7 +1060,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=VulkanInstanceCreateFlagsKHR(create_flags),
+            create_flags=VulkanInstanceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
@@ -1108,7 +1108,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=VulkanDeviceCreateFlagsKHR(create_flags),
+            create_flags=VulkanDeviceCreateFlagsKHR(create_flags).value,
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_physical_device=vulkan_physical_device,
             vulkan_create_info=vulkan_create_info,
@@ -1334,7 +1334,7 @@ class AndroidSurfaceSwapchainCreateInfoFB(Structure):
         type: StructureType = StructureType.ANDROID_SURFACE_SWAPCHAIN_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
-            create_flags=AndroidSurfaceSwapchainFlagsFB(create_flags),
+            create_flags=AndroidSurfaceSwapchainFlagsFB(create_flags).value,
             _next=next_field_helper(next),
             type=type,
         )
@@ -1719,7 +1719,7 @@ PFN_xrShareAnchorANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(AnchorShar
 
 def share_anchor_android(
     session: Session,
-    sharing_info: POINTER(AnchorSharingInfoANDROID),
+    sharing_info: AnchorSharingInfoANDROID,
 ) -> AnchorSharingTokenANDROID:
     anchor_token = AnchorSharingTokenANDROID()
     fxn = cast(
