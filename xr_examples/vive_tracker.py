@@ -15,8 +15,6 @@ import time
 import xr
 from xr.utils.gl import ContextObject
 from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
-import xr.ext.HTCX.vive_tracker_interaction as vive_tracker_interaction
-import xr.ext.KHR.opengl_enable as opengl_enable
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -29,22 +27,13 @@ with ContextObject(
     instance_create_info=xr.InstanceCreateInfo(
         enabled_extension_names=[
             # A graphics extension is mandatory (without a headless extension)
-            opengl_enable.EXTENSION_NAME,
-            vive_tracker_interaction.EXTENSION_NAME,
+            xr.KHR_OPENGL_ENABLE_EXTENSION_NAME,
+            xr.HTCX_VIVE_TRACKER_INTERACTION_EXTENSION_NAME,
         ],
     ),
 ) as context:
     instance = context.instance
     session = context.session
-
-    # Save the function pointer
-    enumerateViveTrackerPathsHTCX = cast(
-        xr.get_instance_proc_addr(
-            instance,
-            "xrEnumerateViveTrackerPathsHTCX",
-        ),
-        xr.PFN_xrEnumerateViveTrackerPathsHTCX
-    )
 
     # Create the action with subaction path
     # Role strings from
@@ -109,16 +98,8 @@ with ContextObject(
         except xr.exception.PathUnsupportedError:
             log.info(f"Skipping vive tracker role {role_strings[role_index]}")
 
-    n_paths = ctypes.c_uint32(0)
-    result = enumerateViveTrackerPathsHTCX(instance, 0, byref(n_paths), None)
-    if xr.check_result(result).is_exception():
-        raise result
-    vive_tracker_paths = (xr.ViveTrackerPathsHTCX * n_paths.value)(*([xr.ViveTrackerPathsHTCX()] * n_paths.value))
-    # print(xr.Result(result), n_paths.value)
-    result = enumerateViveTrackerPathsHTCX(instance, n_paths, byref(n_paths), vive_tracker_paths)
-    if xr.check_result(result).is_exception():
-        raise result
-    print(xr.Result(result), n_paths.value)
+    vive_tracker_paths = xr.enumerate_vive_tracker_paths_htcx(instance)
+    print(len(vive_tracker_paths))
     # print(*vive_tracker_paths)
 
     # Loop over the render frames
@@ -139,15 +120,7 @@ with ContextObject(
                 ),
             )
 
-            n_paths = ctypes.c_uint32(0)
-            result = enumerateViveTrackerPathsHTCX(instance, 0, byref(n_paths), None)
-            if xr.check_result(result).is_exception():
-                raise result
-            vive_tracker_paths = (xr.ViveTrackerPathsHTCX * n_paths.value)(*([xr.ViveTrackerPathsHTCX()] * n_paths.value))
-            # print(xr.Result(result), n_paths.value)
-            result = enumerateViveTrackerPathsHTCX(instance, n_paths, byref(n_paths), vive_tracker_paths)
-            if xr.check_result(result).is_exception():
-                raise result
+            vive_tracker_paths = xr.enumerate_vive_tracker_paths_htcx(instance)
             # print(xr.Result(result), n_paths.value)
             # print(*vive_tracker_paths)
 
