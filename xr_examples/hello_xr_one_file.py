@@ -19,6 +19,8 @@ import time
 
 import numpy
 from OpenGL import GL
+if sys.platform == "android":
+    from OpenGL import GLES3
 import xr
 from xr.utils import Matrix4x4f, GraphicsAPI
 
@@ -36,6 +38,20 @@ xr_logger.setLevel(logging.DEBUG)
 
 def main():
     logger.info("Starting function main...")
+    extension_names = set()
+    instance_create_next = None
+    if sys.platform == "android":
+        import android
+        xr.initialize_loader_khr(xr.LoaderInitInfoAndroidKHR(
+            application_vm=android.get_vm(),
+            application_context=android.get_activity(),
+        ))
+        extension_names.add(xr.KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME)
+        instance_create_next = xr.InstanceCreateInfoAndroidKHR(
+            application_vm=android.get_vm(),
+            application_activity=android.get_activity(),
+            next=instance_create_next,
+        )
     # Log extensions and layers
     extension_properties = xr.enumerate_instance_extension_properties()
     logger.debug(f"Available Extensions ({len(extension_properties)})")
@@ -57,7 +73,6 @@ def main():
             logger.debug(
                 f"      Name={extension.extension_name.decode()} SpecVersion={extension.extension_version}")
 
-    extension_names = set()
     if sys.platform in ["win32", "linux"]:
         extension_names.add(xr.KHR_OPENGL_ENABLE_EXTENSION_NAME)
     else:
@@ -65,7 +80,6 @@ def main():
         extension_names.add(xr.KHR_OPENGL_ES_ENABLE_EXTENSION_NAME)
     # Initialize OpenXR loader (android only)
 
-    instance_create_next = None
     # Prepare to allow debug messages during create_instance and destroy_instance
     # by chaining messenger_create_info into "next"
     if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in extension_properties:
@@ -78,18 +92,6 @@ def main():
         )
         instance_create_next = messenger_create_info
 
-    if sys.platform == "android":
-        import android
-        xr.initialize_loader_khr(xr.LoaderInitInfoAndroidKHR(
-            application_vm=android.get_vm(),
-            application_context=android.get_activity(),
-        ))
-        extension_names.add(xr.KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME)
-        instance_create_next = xr.InstanceCreateInfoAndroidKHR(
-            application_vm=android.get_vm(),
-            application_activity=android.get_activity(),
-            next=instance_create_next,
-        )
     with ExitStack() as exit_stack:  # noqa
         # Create OpenXR instance
         instance = exit_stack.enter_context(xr.create_instance(
@@ -871,7 +873,10 @@ def main():
                             GL.glEnable(GL.GL_CULL_FACE)
                             GL.glEnable(GL.GL_DEPTH_TEST)
                             GL.glClearColor(*background_clear_color)
-                            GL.glClearDepth(1.0)
+                            if sys.platform == "android":
+                                GLES3.glClearDepthf(1.0)
+                            else:
+                                GL.glClearDepth(1.0)
                             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
                             GL.glUseProgram(shader_program)
                             pose = layer_view.pose
