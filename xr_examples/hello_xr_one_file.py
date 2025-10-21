@@ -289,6 +289,31 @@ def main():
                 context=context,
                 config=config,
             )
+            vertex_shader_glsl = inspect.cleandoc("""
+                #version 320 es
+            
+                in vec3 VertexPos;
+                in vec3 VertexColor;
+            
+                out vec3 PSVertexColor;
+            
+                uniform mat4 ModelViewProjection;
+            
+                void main() {
+                   gl_Position = ModelViewProjection * vec4(VertexPos, 1.0);
+                   PSVertexColor = VertexColor;
+                }
+            """)
+            fragment_shader_glsl = inspect.cleandoc("""
+                #version 320 es
+
+                in lowp vec3 PSVertexColor;
+                out lowp vec4 FragColor;
+            
+                void main() {
+                   FragColor = vec4(PSVertexColor, 1);
+                }
+            """)
         print(f"Graphics requirements  min: {graphics_requirements.min_api_version_supported}, "
               f"max: {graphics_requirements.max_api_version_supported}")
         # OpenGL debug logging
@@ -673,7 +698,8 @@ def main():
             swapchain_image_ptr_buffers.append(swapchain_image_ptr_buffer)
         # begin frame/render loop
         session_state_event_handler = SessionStateEventHandler(session, view_configuration_type)
-        for _ in range(1000):
+        # for _ in range(1000):
+        while True:
             # TODO: poll android events
             # Poll session state events
             while True:
@@ -864,7 +890,7 @@ def main():
                                 model = Matrix4x4f.create_translation_rotation_scale(pose.position,
                                                                                      pose.orientation, scale)
                                 mvp = vp @ model
-                                GL.glUniformMatrix4fv(model_view_projection_uniform_location, 1, False,
+                                GL.glUniformMatrix4fv(model_view_projection_uniform_location, 1, True,
                                                       mvp.as_numpy())
                                 # Draw the cube.
                                 GL.glDrawElements(GL.GL_TRIANGLES, len(c_cubeIndices), GL.GL_UNSIGNED_SHORT, None)
