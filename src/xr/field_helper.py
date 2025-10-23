@@ -1,5 +1,5 @@
 """
-file array_field.py
+file field_helper.py
 
 Helper functions for OpenXR-style ctypes Structures containing array fields
 defined as (count, pointer) pairs. Supports automatic conversion from Python
@@ -125,6 +125,13 @@ def next_field_helper(value) -> c_void_p:
         t = _TestStruct(next=cast(value, c_void_p))
         result = t.next
     return result
+
+
+def enum_field_helper(value) -> int:
+    try:
+        return value.value
+    except AttributeError:
+        return int(value)
 
 
 __all__ = [

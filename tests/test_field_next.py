@@ -1,6 +1,6 @@
 from ctypes import c_void_p, cast, pointer, Structure
 
-from xr.array_field import next_field_helper
+from xr.field_helper import next_field_helper
 
 
 class SomeStruct(Structure):

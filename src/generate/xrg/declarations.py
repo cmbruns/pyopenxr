@@ -110,9 +110,15 @@ class EnumItem(CodeItem):
         self._capi_name = cursor.spelling
         self._py_name = py_type_name(self._capi_name)
         self.values = []
+        self.default = None
         for v in cursor.get_children():
             assert v.kind == CursorKind.ENUM_CONSTANT_DECL
-            self.values.append(EnumValueItem(cursor=v, parent=self))
+            evi = EnumValueItem(cursor=v, parent=self)
+            self.values.append(evi)
+            if self.default is None:
+                self.default = evi  # Maybe use first value
+            if evi.value == 0:
+                self.default = evi  # Definitely use zero value, if available
 
     @staticmethod
     def blank_lines_before():
@@ -477,8 +483,9 @@ class StructFieldItem(CodeItem):
         NORMAL = 1,
         ARRAY_COUNT = 2,
         ARRAY_POINTER = 3,
-        VERSION = 4,
+        ENUM = 4,
         NEXT = 5,
+        VERSION = 6,
 
     def __init__(self, cursor: Cursor) -> None:
         super().__init__(cursor)
@@ -489,6 +496,8 @@ class StructFieldItem(CodeItem):
         self.kind = StructFieldItem.Kind.NORMAL
         if self._capi_name == "next" and self.type.name(Api.CTYPES) == "c_void_p":
             self.kind = StructFieldItem.Kind.NEXT
+        if isinstance(self.type, TypedefType) and isinstance(self.type.underlying_type, EnumType):
+            self.kind = StuctFieldItem.Kind.ENUM
         self.default_value = None
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -506,8 +515,9 @@ class StructFieldItem(CodeItem):
         n = self.name(api)
         if self.kind in [
             StructFieldItem.Kind.ARRAY_POINTER,
-            StructFieldItem.Kind.VERSION,
+            StructFieldItem.Kind.ENUM,
             StructFieldItem.Kind.NEXT,
+            StructFieldItem.Kind.VERSION,
         ]:
             return f"_{n}"  # Prepend with underscore
         elif self.type.name(Api.CTYPES) == "c_char_p":
@@ -1316,15 +1326,28 @@ class ArrayPointerFieldCoder(FieldCoder):
 class EnumFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        default = f"{enum_name}()"
+        default = f"{enum_name}.{self.field.type.default.name(Api.PYTHON)}"
         if self.field.default_value is not None:
             default = self.field.default_value
         yield f"{self.name}: {enum_name} = {default}"
 
     def call_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        yield f"{self.field.name()}={enum_name}({self.name}).value"
+        yield f"{self.inner_name}={enum_name}({self.inner_name}).value"
 
+    def property_code(self) -> Generator[str, None, None]:
+        if self.inner_name != self.name:
+            enum_name = self.field.type.name(Api.PYTHON)
+            # getter
+            yield "@property"
+            yield f"def {self.name}(self) -> {enum_name}:"
+            yield f"    return {enum_name}(self.{self.inner_name})"
+            # setter
+            yield ""
+            yield f"@{self.name}.setter"
+            yield f"def {self.name}(self, value: {enum_name}) -> None:"
+            yield f"    # noinspection PyAttributeOutsideInit"
+            yield f"    self.{self.inner_name} = {self.name}.value"
 
 class FunctionPointerFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
@@ -1369,24 +1392,24 @@ class ArrayFieldCoder(FieldCoder):
 
 class NextFieldCoder(FieldCoder):
     def call_code(self) -> Generator[str, None, None]:
-        yield f"_next=next_field_helper(next)"
+        yield f"{self.inner_name}=next_field_helper({self.name})"
 
     def param_code(self) -> Generator[str, None, None]:
         # Avoid self reference in BaseInStructure
-        yield f"next=None"
+        yield f"{self.name}=None"
 
     def property_code(self) -> Generator[str, None, None]:
         if self.inner_name != self.name:
             # getter
             yield "@property"
-            yield f"def next(self) -> c_void_p:"
-            yield f"    return self._next"
+            yield f"def {self.name}(self) -> c_void_p:"
+            yield f"    return self.{self.inner_name}"
             # setter
             yield ""
             yield f"@next.setter"
-            yield f"def next(self, value) -> None:"
+            yield f"def {self.name}(self, value) -> None:"
             yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self._next = next_field_helper(value)"
+            yield f"    self.{self.inner_name} = next_field_helper(value)"
 
 
 class VoidPointerFieldCoder(FieldCoder):

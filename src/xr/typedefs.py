@@ -13,7 +13,7 @@ from typing import Any, Callable, Generator, Optional
 
 import numpy
 
-from .array_field import *
+from .field_helper import *
 from .enums import *
 from .version import *
 from .handle import HandleMixin
