@@ -1118,7 +1118,7 @@ class SpaceLocation(Structure):
 class ViewConfigurationProperties(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
         fov_mutable: Bool32 = 0,
         next=None,
         type: StructureType = StructureType.VIEW_CONFIGURATION_PROPERTIES,
@@ -1468,7 +1468,7 @@ class SwapchainImageReleaseInfo(Structure):
 class SessionBeginInfo(Structure):
     def __init__(
         self,
-        primary_view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        primary_view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
         next=None,
         type: StructureType = StructureType.SESSION_BEGIN_INFO,
     ) -> None:
@@ -1778,7 +1778,7 @@ class FrameEndInfo(Structure):
 class ViewLocateInfo(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
         display_time: Time = 0,
         space: Space = None,
         next=None,
@@ -4683,7 +4683,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     def __init__(
         self,
         session: Session = None,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
         view_index: int = 0,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR,
@@ -7109,7 +7109,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
 class SecondaryViewConfigurationStateMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
         active: Bool32 = 0,
         next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_MSFT,
@@ -7228,7 +7228,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
 class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
         environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode.OPAQUE,
         layer_count: Optional[int] = None,
         layers: BaseArrayFieldParamType = None,
@@ -7362,7 +7362,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
 class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
         next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_MSFT,
     ) -> None:
