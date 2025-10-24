@@ -110,15 +110,10 @@ class EnumItem(CodeItem):
         self._capi_name = cursor.spelling
         self._py_name = py_type_name(self._capi_name)
         self.values = []
-        self.default = None
         for v in cursor.get_children():
             assert v.kind == CursorKind.ENUM_CONSTANT_DECL
             evi = EnumValueItem(cursor=v, parent=self)
             self.values.append(evi)
-            if self.default is None:
-                self.default = evi  # Maybe use first value
-            if evi.value == 0:
-                self.default = evi  # Definitely use zero value, if available
 
     @staticmethod
     def blank_lines_before():
@@ -497,7 +492,7 @@ class StructFieldItem(CodeItem):
         if self._capi_name == "next" and self.type.name(Api.CTYPES) == "c_void_p":
             self.kind = StructFieldItem.Kind.NEXT
         if isinstance(self.type, TypedefType) and isinstance(self.type.underlying_type, EnumType):
-            self.kind = StuctFieldItem.Kind.ENUM
+            self.kind = StructFieldItem.Kind.ENUM
         self.default_value = None
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -1326,14 +1321,14 @@ class ArrayPointerFieldCoder(FieldCoder):
 class EnumFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        default = f"{enum_name}.{self.field.type.default.name(Api.PYTHON)}"
+        default = f"{enum_name}()"
         if self.field.default_value is not None:
             default = self.field.default_value
         yield f"{self.name}: {enum_name} = {default}"
 
     def call_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        yield f"{self.inner_name}={enum_name}({self.inner_name}).value"
+        yield f"{self.inner_name}=enum_field_helper({self.name})"
 
     def property_code(self) -> Generator[str, None, None]:
         if self.inner_name != self.name:
@@ -1347,7 +1342,8 @@ class EnumFieldCoder(FieldCoder):
             yield f"@{self.name}.setter"
             yield f"def {self.name}(self, value: {enum_name}) -> None:"
             yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self.{self.inner_name} = {self.name}.value"
+            yield f"    self.{self.inner_name} = enum_field_helper({self.name})"
+
 
 class FunctionPointerFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
@@ -1475,7 +1471,7 @@ class StructureFieldCoder(FieldCoder):
         yield f"    {self.name} = {self.field.type.name(Api.PYTHON)}()"
 
 
-class StructureTypeFieldCoder(FieldCoder):
+class StructureTypeFieldCoder(EnumFieldCoder):
     def __init__(self, field, struct):
         super().__init__(field)
         self.struct = struct

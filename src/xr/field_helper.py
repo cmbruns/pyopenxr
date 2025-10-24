@@ -139,6 +139,7 @@ __all__ = [
     "ArrayFieldParamType",
     "base_array_field_helper",
     "BaseArrayFieldParamType",
+    "enum_field_helper",
     "next_field_helper",
     "string_array_field_helper",
     "StringArrayFieldParamType",
