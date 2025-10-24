@@ -386,7 +386,11 @@ class FunctionItem(CodeItem):
                 f"""
                 {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
                 """)
-            docstring = create_docstring(self.name(Api.C))
+            update_docstrings = False
+            if update_docstrings:
+                docstring = create_docstring(self.name(Api.C))
+            else:
+                docstring = None
             if docstring is not None:
                 result += f'\n{self.name(Api.C)}.__doc__ = """\n'
                 result += "\n".join(textwrap.wrap(
@@ -1321,13 +1325,12 @@ class ArrayPointerFieldCoder(FieldCoder):
 class EnumFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         enum_name = self.field.type.name(Api.PYTHON)
-        default = f"{enum_name}()"
+        default = enum_default_value(enum_name)
         if self.field.default_value is not None:
             default = self.field.default_value
         yield f"{self.name}: {enum_name} = {default}"
 
     def call_code(self) -> Generator[str, None, None]:
-        enum_name = self.field.type.name(Api.PYTHON)
         yield f"{self.inner_name}=enum_field_helper({self.name})"
 
     def property_code(self) -> Generator[str, None, None]:
@@ -1668,6 +1671,68 @@ def camel_from_snake(snake: str) -> str:
 def structure_type_enum_name(struct: StructItem):
     type_enum_name = snake_from_camel(struct.name()).upper()
     return type_enum_name
+
+
+_enum_defaults = {}
+enum_prefix_exceptions = {
+    "XR_RESULT_": "XR_",
+    "XR_STRUCTURE_TYPE_": "XR_TYPE_",
+    "XR_PERF_SETTINGS_NOTIFICATION_LEVEL_": "XR_PERF_SETTINGS_NOTIF_LEVEL_",
+    "XR_LOADER_INTERFACE_STRUCTS_": "XR_LOADER_INTERFACE_STRUCT_",
+}
+
+
+def enum_default_value(enum_name: str) -> str:
+    # e.g. "InstanceCreateFlags"
+    global _enum_defaults
+    if len(_enum_defaults) == 0:
+        # Build index
+        # A) regular non-Flags enums
+        for e in xr_registry.findall("enums"):
+            c_name = e.attrib["name"]
+            c_name = c_name.replace("FlagBits", "Flags")
+            if not c_name.startswith("Xr"):
+                continue
+            pre_tag = c_name
+            vendor_tag = ""
+            for tag in vendor_tags:
+                if pre_tag.endswith(tag):
+                    vendor_tag = tag
+                    pre_tag = pre_tag.removesuffix(tag)
+                    break
+            enum_py_name = c_name.removeprefix("Xr")
+            # Special cases
+            if pre_tag.endswith("Flags"):
+                _enum_defaults[enum_py_name] = f"{enum_py_name}.NONE"
+                continue
+            if enum_py_name == "ViewConfigurationType":
+                _enum_defaults[enum_py_name] = f"{enum_py_name}.PRIMARY_STEREO"
+                continue
+            item_prefix = snake_from_camel(pre_tag).upper() + "_"
+            item_prefix = enum_prefix_exceptions.get(item_prefix, item_prefix)
+            item_prefix = item_prefix.removesuffix("FLAGS_")
+            default_value = None
+            for item in e.findall("enum"):
+                try:
+                    value = int(item.attrib["value"])
+                except KeyError:
+                    value = 2 ** int(item.attrib["bitpos"])
+                item_c_name = item.attrib["name"]
+                assert item_c_name.startswith(item_prefix)
+                item_py_name = item_c_name.removeprefix(item_prefix)
+                item_py_name = item_py_name.removesuffix(f"_{vendor_tag}")
+                if item_py_name[0] in "0123456789":
+                    item_py_name = f"N{item_py_name}"
+                if default_value is None:
+                    default_value = f"{enum_py_name}.{item_py_name}"
+                if int(value) == 0:
+                    default_value = f"{enum_py_name}.{item_py_name}"
+                    break
+            if default_value is None:
+                default_value = f"{enum_py_name}()"
+            assert default_value is not None
+            _enum_defaults[enum_py_name] = default_value
+    return _enum_defaults[enum_name]
 
 
 __all__ = [

@@ -1774,7 +1774,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR(),  # noqa
+        create_flags: VulkanInstanceCreateFlagsKHR = VulkanInstanceCreateFlagsKHR.NONE,
         pfn_get_instance_proc_addr: PFN_vkGetInstanceProcAddr = 0,
         vulkan_create_info: POINTER(VkInstanceCreateInfo) = None,
         vulkan_allocator: POINTER(VkAllocationCallbacks) = None,
@@ -1830,7 +1830,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     def __init__(
         self,
         system_id: SystemId = 0,
-        create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR(),  # noqa
+        create_flags: VulkanDeviceCreateFlagsKHR = VulkanDeviceCreateFlagsKHR.NONE,
         pfn_get_instance_proc_addr: PFN_vkGetInstanceProcAddr = 0,
         vulkan_physical_device: VkPhysicalDevice = None,
         vulkan_create_info: POINTER(VkDeviceCreateInfo) = None,
@@ -2180,7 +2180,7 @@ ANDROID_SURFACE_SWAPCHAIN_USE_TIMESTAMPS_BIT_FB = 0x00000002
 class AndroidSurfaceSwapchainCreateInfoFB(Structure):
     def __init__(
         self,
-        create_flags: AndroidSurfaceSwapchainFlagsFB = AndroidSurfaceSwapchainFlagsFB(),  # noqa
+        create_flags: AndroidSurfaceSwapchainFlagsFB = AndroidSurfaceSwapchainFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.ANDROID_SURFACE_SWAPCHAIN_CREATE_INFO_FB,
     ) -> None:

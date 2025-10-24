@@ -336,7 +336,7 @@ class InstanceCreateInfo(Structure):
     """
     def __init__(
         self,
-        create_flags: InstanceCreateFlags = InstanceCreateFlags(),  # noqa
+        create_flags: InstanceCreateFlags = InstanceCreateFlags.NONE,
         application_info: ApplicationInfo = ApplicationInfo(),
         enabled_api_layer_count: Optional[int] = None,
         enabled_api_layer_names: StringArrayFieldParamType = None,
@@ -531,7 +531,7 @@ class EventDataBuffer(Structure):
 class SystemGetInfo(Structure):
     def __init__(
         self,
-        form_factor: FormFactor = FormFactor(),  # noqa
+        form_factor: FormFactor = FormFactor.HEAD_MOUNTED_DISPLAY,
         next=None,
         type: StructureType = StructureType.SYSTEM_GET_INFO,
     ) -> None:
@@ -693,7 +693,7 @@ class SystemProperties(Structure):
 class SessionCreateInfo(Structure):
     def __init__(
         self,
-        create_flags: SessionCreateFlags = SessionCreateFlags(),  # noqa
+        create_flags: SessionCreateFlags = SessionCreateFlags.NONE,
         system_id: SystemId = 0,
         next=None,
         type: StructureType = StructureType.SESSION_CREATE_INFO,
@@ -788,7 +788,7 @@ class Vector3f(Structure):
 class SpaceVelocity(Structure):
     def __init__(
         self,
-        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags(),  # noqa
+        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags.NONE,
         linear_velocity: Vector3f = None,
         angular_velocity: Vector3f = None,
         next=None,
@@ -1071,7 +1071,7 @@ class ActionSpaceCreateInfo(Structure):
 class SpaceLocation(Structure):
     def __init__(
         self,
-        location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
         next=None,
         type: StructureType = StructureType.SPACE_LOCATION,
@@ -1118,7 +1118,7 @@ class SpaceLocation(Structure):
 class ViewConfigurationProperties(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
         fov_mutable: Bool32 = 0,
         next=None,
         type: StructureType = StructureType.VIEW_CONFIGURATION_PROPERTIES,
@@ -1233,8 +1233,8 @@ class ViewConfigurationView(Structure):
 class SwapchainCreateInfo(Structure):
     def __init__(
         self,
-        create_flags: SwapchainCreateFlags = SwapchainCreateFlags(),  # noqa
-        usage_flags: SwapchainUsageFlags = SwapchainUsageFlags(),  # noqa
+        create_flags: SwapchainCreateFlags = SwapchainCreateFlags.NONE,
+        usage_flags: SwapchainUsageFlags = SwapchainUsageFlags.NONE,
         format: int = 0,
         sample_count: int = 0,
         width: int = 0,
@@ -1468,7 +1468,7 @@ class SwapchainImageReleaseInfo(Structure):
 class SessionBeginInfo(Structure):
     def __init__(
         self,
-        primary_view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
+        primary_view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
         next=None,
         type: StructureType = StructureType.SESSION_BEGIN_INFO,
     ) -> None:
@@ -1653,7 +1653,7 @@ class FrameBeginInfo(Structure):
 class CompositionLayerBaseHeader(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
         next=None,
         type: StructureType = StructureType.UNKNOWN,
@@ -1701,7 +1701,7 @@ class FrameEndInfo(Structure):
     def __init__(
         self,
         display_time: Time = 0,
-        environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),  # noqa
+        environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode.OPAQUE,
         layer_count: Optional[int] = None,
         layers: BaseArrayFieldParamType = None,
         next=None,
@@ -1778,7 +1778,7 @@ class FrameEndInfo(Structure):
 class ViewLocateInfo(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
         display_time: Time = 0,
         space: Space = None,
         next=None,
@@ -1837,7 +1837,7 @@ class ViewLocateInfo(Structure):
 class ViewState(Structure):
     def __init__(
         self,
-        view_state_flags: ViewStateFlags = ViewStateFlags(),  # noqa
+        view_state_flags: ViewStateFlags = ViewStateFlags.NONE,
         next=None,
         type: StructureType = StructureType.VIEW_STATE,
     ) -> None:
@@ -2033,7 +2033,7 @@ class ActionCreateInfo(Structure):
     def __init__(
         self,
         action_name: str = "",
-        action_type: ActionType = ActionType(),  # noqa
+        action_type: ActionType = ActionType.BOOLEAN_INPUT,
         count_subaction_paths: Optional[int] = None,
         subaction_paths: ArrayFieldParamType[c_uint64] = None,
         localized_action_name: str = "",
@@ -2736,7 +2736,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
     def __init__(
         self,
         source_path: Path = 0,
-        which_components: InputSourceLocalizedNameFlags = InputSourceLocalizedNameFlags(),  # noqa
+        which_components: InputSourceLocalizedNameFlags = InputSourceLocalizedNameFlags.NONE,
         next=None,
         type: StructureType = StructureType.INPUT_SOURCE_LOCALIZED_NAME_GET_INFO,
     ) -> None:
@@ -3137,7 +3137,7 @@ class CompositionLayerProjectionView(Structure):
 class CompositionLayerProjection(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
         view_count: Optional[int] = None,
         views: ArrayFieldParamType[CompositionLayerProjectionView] = None,
@@ -3206,9 +3206,9 @@ class CompositionLayerProjection(Structure):
 class CompositionLayerQuad(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
-        eye_visibility: EyeVisibility = EyeVisibility(),  # noqa
+        eye_visibility: EyeVisibility = EyeVisibility.BOTH,
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
         size: Extent2Df = None,
@@ -3408,7 +3408,7 @@ class EventDataSessionStateChanged(Structure):
     def __init__(
         self,
         session: Session = None,
-        state: SessionState = SessionState(),  # noqa
+        state: SessionState = SessionState.UNKNOWN,
         time: Time = 0,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SESSION_STATE_CHANGED,
@@ -3467,7 +3467,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     def __init__(
         self,
         session: Session = None,
-        reference_space_type: ReferenceSpaceType = ReferenceSpaceType(),  # noqa
+        reference_space_type: ReferenceSpaceType = ReferenceSpaceType.VIEW,
         change_time: Time = 0,
         pose_valid: Bool32 = 0,
         pose_in_previous_space: Posef = Posef(),
@@ -4173,7 +4173,7 @@ class SpacesLocateInfo(Structure):
 class SpaceLocationData(Structure):
     def __init__(
         self,
-        location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
@@ -4259,7 +4259,7 @@ class SpaceLocations(Structure):
 class SpaceVelocityData(Structure):
     def __init__(
         self,
-        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags(),  # noqa
+        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags.NONE,
         linear_velocity: Vector3f = None,
         angular_velocity: Vector3f = None,
     ) -> None:
@@ -4339,9 +4339,9 @@ PFN_xrLocateSpaces = CFUNCTYPE(Result.ctype(), Session, POINTER(SpacesLocateInfo
 class CompositionLayerCubeKHR(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
-        eye_visibility: EyeVisibility = EyeVisibility(),  # noqa
+        eye_visibility: EyeVisibility = EyeVisibility.BOTH,
         swapchain: Swapchain = None,
         image_array_index: int = 0,
         orientation: Quaternionf = None,
@@ -4467,9 +4467,9 @@ class CompositionLayerDepthInfoKHR(Structure):
 class CompositionLayerCylinderKHR(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
-        eye_visibility: EyeVisibility = EyeVisibility(),  # noqa
+        eye_visibility: EyeVisibility = EyeVisibility.BOTH,
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
         radius: float = 0,
@@ -4543,9 +4543,9 @@ class CompositionLayerCylinderKHR(Structure):
 class CompositionLayerEquirectKHR(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
-        eye_visibility: EyeVisibility = EyeVisibility(),  # noqa
+        eye_visibility: EyeVisibility = EyeVisibility.BOTH,
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
         radius: float = 0,
@@ -4683,7 +4683,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     def __init__(
         self,
         session: Session = None,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
         view_index: int = 0,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_VISIBILITY_MASK_CHANGED_KHR,
@@ -4839,9 +4839,9 @@ PFN_xrInitializeLoaderKHR = CFUNCTYPE(Result.ctype(), POINTER(LoaderInitInfoBase
 class CompositionLayerEquirect2KHR(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
-        eye_visibility: EyeVisibility = EyeVisibility(),  # noqa
+        eye_visibility: EyeVisibility = EyeVisibility.BOTH,
         sub_image: SwapchainSubImage = None,
         pose: Posef = Posef(),
         radius: float = 0,
@@ -5047,10 +5047,10 @@ FrustumfKHR = Frustumf
 class EventDataPerfSettingsEXT(Structure):
     def __init__(
         self,
-        domain: PerfSettingsDomainEXT = PerfSettingsDomainEXT(),  # noqa
-        sub_domain: PerfSettingsSubDomainEXT = PerfSettingsSubDomainEXT(),  # noqa
-        from_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT(),  # noqa
-        to_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT(),  # noqa
+        domain: PerfSettingsDomainEXT = PerfSettingsDomainEXT.CPU,
+        sub_domain: PerfSettingsSubDomainEXT = PerfSettingsSubDomainEXT.COMPOSITING,
+        from_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT.NORMAL,
+        to_level: PerfSettingsNotificationLevelEXT = PerfSettingsNotificationLevelEXT.NORMAL,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_PERF_SETTINGS_EXT,
     ) -> None:
@@ -5191,7 +5191,7 @@ DebugUtilsMessageTypeFlagsEXTCInt = Flags64
 class DebugUtilsObjectNameInfoEXT(Structure):
     def __init__(
         self,
-        object_type: ObjectType = ObjectType(),  # noqa
+        object_type: ObjectType = ObjectType.UNKNOWN,
         object_handle: int = 0,
         object_name: str = "",
         next=None,
@@ -5524,16 +5524,10 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     """
     def __init__(
         self,
-        message_severities: DebugUtilsMessageSeverityFlagsEXT = (
-            DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT
-            | DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT
-            | DebugUtilsMessageSeverityFlagsEXT.INFO_BIT
-            | DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT),
-        message_types: DebugUtilsMessageTypeFlagsEXT = (
-            DebugUtilsMessageTypeFlagsEXT.CONFORMANCE_BIT
-            | DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
-            | DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
-            | DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT),
+        message_severities: DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT.ALL,
+
+        message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT.ALL,
+
         user_callback: DebugCallbackType = default_debug_callback,
         user_data: Any = None,
         next=None,
@@ -5541,8 +5535,8 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     ) -> None:
         self._cached_user_data = user_data  # in case it does not fit in a c_void_p
         super().__init__(
-            message_severities=DebugUtilsMessageSeverityFlagsEXT(message_severities).value,
-            message_types=DebugUtilsMessageTypeFlagsEXT(message_types).value,
+            message_severities=enum_field_helper(message_severities),
+            message_types=enum_field_helper(message_types),
             _user_callback=wrap_debug_callback(user_callback, user_data),
             _user_data=cast(py_object(user_data), c_void_p) if user_data else None,
             _next=next_field_helper(next),
@@ -5716,7 +5710,7 @@ OverlayMainSessionFlagsEXTXCInt = Flags64
 class SessionCreateInfoOverlayEXTX(Structure):
     def __init__(
         self,
-        create_flags: OverlaySessionCreateFlagsEXTX = OverlaySessionCreateFlagsEXTX(),  # noqa
+        create_flags: OverlaySessionCreateFlagsEXTX = OverlaySessionCreateFlagsEXTX.NONE,
         session_layers_placement: int = 0,
         next=None,
         type: StructureType = StructureType.SESSION_CREATE_INFO_OVERLAY_EXTX,
@@ -5764,7 +5758,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
     def __init__(
         self,
         visible: Bool32 = 0,
-        flags: OverlayMainSessionFlagsEXTX = OverlayMainSessionFlagsEXTX(),  # noqa
+        flags: OverlayMainSessionFlagsEXTX = OverlayMainSessionFlagsEXTX.NONE,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX,
     ) -> None:
@@ -5924,7 +5918,7 @@ CompositionLayerImageLayoutFlagsFBCInt = Flags64
 class CompositionLayerImageLayoutFB(Structure):
     def __init__(
         self,
-        flags: CompositionLayerImageLayoutFlagsFB = CompositionLayerImageLayoutFlagsFB(),  # noqa
+        flags: CompositionLayerImageLayoutFlagsFB = CompositionLayerImageLayoutFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_FB,
     ) -> None:
@@ -5968,10 +5962,10 @@ class CompositionLayerImageLayoutFB(Structure):
 class CompositionLayerAlphaBlendFB(Structure):
     def __init__(
         self,
-        src_factor_color: BlendFactorFB = BlendFactorFB(),  # noqa
-        dst_factor_color: BlendFactorFB = BlendFactorFB(),  # noqa
-        src_factor_alpha: BlendFactorFB = BlendFactorFB(),  # noqa
-        dst_factor_alpha: BlendFactorFB = BlendFactorFB(),  # noqa
+        src_factor_color: BlendFactorFB = BlendFactorFB.ZERO,
+        dst_factor_color: BlendFactorFB = BlendFactorFB.ZERO,
+        src_factor_alpha: BlendFactorFB = BlendFactorFB.ZERO,
+        dst_factor_alpha: BlendFactorFB = BlendFactorFB.ZERO,
         next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_ALPHA_BLEND_FB,
     ) -> None:
@@ -6129,7 +6123,7 @@ class SpatialGraphNodeBindingMSFT(POINTER(SpatialGraphNodeBindingMSFT_T), Handle
 class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     def __init__(
         self,
-        node_type: SpatialGraphNodeTypeMSFT = SpatialGraphNodeTypeMSFT(),  # noqa
+        node_type: SpatialGraphNodeTypeMSFT = SpatialGraphNodeTypeMSFT.STATIC,
         pose: Posef = Posef(),
         next=None,
         type: StructureType = StructureType.SPATIAL_GRAPH_NODE_SPACE_CREATE_INFO_MSFT,
@@ -6383,8 +6377,8 @@ class SystemHandTrackingPropertiesEXT(Structure):
 class HandTrackerCreateInfoEXT(Structure):
     def __init__(
         self,
-        hand: HandEXT = HandEXT(),  # noqa
-        hand_joint_set: HandJointSetEXT = HandJointSetEXT(),  # noqa
+        hand: HandEXT = HandEXT.LEFT,
+        hand_joint_set: HandJointSetEXT = HandJointSetEXT.DEFAULT,
         next=None,
         type: StructureType = StructureType.HAND_TRACKER_CREATE_INFO_EXT,
     ) -> None:
@@ -6495,7 +6489,7 @@ class HandJointsLocateInfoEXT(Structure):
 class HandJointLocationEXT(Structure):
     def __init__(
         self,
-        location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
         radius: float = 0,
     ) -> None:
@@ -6521,7 +6515,7 @@ class HandJointLocationEXT(Structure):
 class HandJointVelocityEXT(Structure):
     def __init__(
         self,
-        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags(),  # noqa
+        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags.NONE,
         linear_velocity: Vector3f = None,
         angular_velocity: Vector3f = None,
     ) -> None:
@@ -6737,7 +6731,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
 class HandMeshSpaceCreateInfoMSFT(Structure):
     def __init__(
         self,
-        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(),  # noqa
+        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT.TRACKED,
         pose_in_hand_mesh_space: Posef = Posef(),
         next=None,
         type: StructureType = StructureType.HAND_MESH_SPACE_CREATE_INFO_MSFT,
@@ -6794,7 +6788,7 @@ class HandMeshUpdateInfoMSFT(Structure):
     def __init__(
         self,
         time: Time = 0,
-        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(),  # noqa
+        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT.TRACKED,
         next=None,
         type: StructureType = StructureType.HAND_MESH_UPDATE_INFO_MSFT,
     ) -> None:
@@ -6994,7 +6988,7 @@ class HandMeshMSFT(Structure):
 class HandPoseTypeInfoMSFT(Structure):
     def __init__(
         self,
-        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT(),  # noqa
+        hand_pose_type: HandPoseTypeMSFT = HandPoseTypeMSFT.TRACKED,
         next=None,
         type: StructureType = StructureType.HAND_POSE_TYPE_INFO_MSFT,
     ) -> None:
@@ -7115,7 +7109,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
 class SecondaryViewConfigurationStateMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
         active: Bool32 = 0,
         next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_STATE_MSFT,
@@ -7234,8 +7228,8 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
 class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
-        environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode(),  # noqa
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
+        environment_blend_mode: EnvironmentBlendMode = EnvironmentBlendMode.OPAQUE,
         layer_count: Optional[int] = None,
         layers: BaseArrayFieldParamType = None,
         next=None,
@@ -7368,7 +7362,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
 class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     def __init__(
         self,
-        view_configuration_type: ViewConfigurationType = ViewConfigurationType(),  # noqa
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_MONO,
         next=None,
         type: StructureType = StructureType.SECONDARY_VIEW_CONFIGURATION_SWAPCHAIN_CREATE_INFO_MSFT,
     ) -> None:
@@ -7719,7 +7713,7 @@ class ViewConfigurationViewFovEPIC(Structure):
 class CompositionLayerReprojectionInfoMSFT(Structure):
     def __init__(
         self,
-        reprojection_mode: ReprojectionModeMSFT = ReprojectionModeMSFT(),  # noqa
+        reprojection_mode: ReprojectionModeMSFT = ReprojectionModeMSFT.DEPTH,
         next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_REPROJECTION_INFO_MSFT,
     ) -> None:
@@ -7879,7 +7873,7 @@ CompositionLayerSecureContentFlagsFBCInt = Flags64
 class CompositionLayerSecureContentFB(Structure):
     def __init__(
         self,
-        flags: CompositionLayerSecureContentFlagsFB = CompositionLayerSecureContentFlagsFB(),  # noqa
+        flags: CompositionLayerSecureContentFlagsFB = CompositionLayerSecureContentFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_SECURE_CONTENT_FB,
     ) -> None:
@@ -7931,7 +7925,7 @@ class BodyTrackerFB(POINTER(BodyTrackerFB_T), HandleMixin):
 class BodyJointLocationFB(Structure):
     def __init__(
         self,
-        location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
@@ -7998,7 +7992,7 @@ class SystemBodyTrackingPropertiesFB(Structure):
 class BodyTrackerCreateInfoFB(Structure):
     def __init__(
         self,
-        body_joint_set: BodyJointSetFB = BodyJointSetFB(),  # noqa
+        body_joint_set: BodyJointSetFB = BodyJointSetFB.DEFAULT,
         next=None,
         type: StructureType = StructureType.BODY_TRACKER_CREATE_INFO_FB,
     ) -> None:
@@ -8398,7 +8392,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
 class HandJointsMotionRangeInfoEXT(Structure):
     def __init__(
         self,
-        hand_joints_motion_range: HandJointsMotionRangeEXT = HandJointsMotionRangeEXT(),  # noqa
+        hand_joints_motion_range: HandJointsMotionRangeEXT = HandJointsMotionRangeEXT.UNOBSTRUCTED,
         next=None,
         type: StructureType = StructureType.HAND_JOINTS_MOTION_RANGE_INFO_EXT,
     ) -> None:
@@ -8736,7 +8730,7 @@ class NewSceneComputeInfoMSFT(Structure):
         self,
         requested_feature_count: Optional[int] = None,
         requested_features: ArrayFieldParamType[c_int] = None,
-        consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT(),  # noqa
+        consistency: SceneComputeConsistencyMSFT = SceneComputeConsistencyMSFT.SNAPSHOT_COMPLETE,
         bounds: SceneBoundsMSFT = None,
         next=None,
         type: StructureType = StructureType.NEW_SCENE_COMPUTE_INFO_MSFT,
@@ -8814,7 +8808,7 @@ class NewSceneComputeInfoMSFT(Structure):
 class VisualMeshComputeLodInfoMSFT(Structure):
     def __init__(
         self,
-        lod: MeshComputeLodMSFT = MeshComputeLodMSFT(),  # noqa
+        lod: MeshComputeLodMSFT = MeshComputeLodMSFT.COARSE,
         next=None,
         type: StructureType = StructureType.VISUAL_MESH_COMPUTE_LOD_INFO_MSFT,
     ) -> None:
@@ -8867,7 +8861,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
 class SceneComponentMSFT(Structure):
     def __init__(
         self,
-        component_type: SceneComponentTypeMSFT = SceneComponentTypeMSFT(),  # noqa
+        component_type: SceneComponentTypeMSFT = SceneComponentTypeMSFT.INVALID,
         id: UuidMSFT = None,
         parent_id: UuidMSFT = None,
         update_time: Time = 0,
@@ -8959,7 +8953,7 @@ class SceneComponentsMSFT(Structure):
 class SceneComponentsGetInfoMSFT(Structure):
     def __init__(
         self,
-        component_type: SceneComponentTypeMSFT = SceneComponentTypeMSFT(),  # noqa
+        component_type: SceneComponentTypeMSFT = SceneComponentTypeMSFT.INVALID,
         next=None,
         type: StructureType = StructureType.SCENE_COMPONENTS_GET_INFO_MSFT,
     ) -> None:
@@ -9012,7 +9006,7 @@ class SceneComponentsGetInfoMSFT(Structure):
 class SceneComponentLocationMSFT(Structure):
     def __init__(
         self,
-        flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
@@ -9167,7 +9161,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
 class SceneObjectMSFT(Structure):
     def __init__(
         self,
-        object_type: SceneObjectTypeMSFT = SceneObjectTypeMSFT(),  # noqa
+        object_type: SceneObjectTypeMSFT = SceneObjectTypeMSFT.UNCATEGORIZED,
     ) -> None:
         super().__init__(
             _object_type=enum_field_helper(object_type),
@@ -9368,7 +9362,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
 class ScenePlaneMSFT(Structure):
     def __init__(
         self,
-        alignment: ScenePlaneAlignmentTypeMSFT = ScenePlaneAlignmentTypeMSFT(),  # noqa
+        alignment: ScenePlaneAlignmentTypeMSFT = ScenePlaneAlignmentTypeMSFT.NON_ORTHOGONAL,
         size: Extent2Df = None,
         mesh_buffer_id: int = 0,
         supports_indices_uint16: Bool32 = 0,
@@ -10285,7 +10279,7 @@ class FacialExpressionsHTC(Structure):
 class FacialTrackerCreateInfoHTC(Structure):
     def __init__(
         self,
-        facial_tracking_type: FacialTrackingTypeHTC = FacialTrackingTypeHTC(),  # noqa
+        facial_tracking_type: FacialTrackingTypeHTC = FacialTrackingTypeHTC.EYE_DEFAULT,
         next=None,
         type: StructureType = StructureType.FACIAL_TRACKER_CREATE_INFO_HTC,
     ) -> None:
@@ -10345,7 +10339,7 @@ PFN_xrGetFacialExpressionsHTC = CFUNCTYPE(Result.ctype(), FacialTrackerHTC, POIN
 class SystemColorSpacePropertiesFB(Structure):
     def __init__(
         self,
-        color_space: ColorSpaceFB = ColorSpaceFB(),  # noqa
+        color_space: ColorSpaceFB = ColorSpaceFB.UNMANAGED,
         next=None,
         type: StructureType = StructureType.SYSTEM_COLOR_SPACE_PROPERTIES_FB,
     ) -> None:
@@ -10576,7 +10570,7 @@ HandTrackingAimFlagsFBCInt = Flags64
 class HandTrackingAimStateFB(Structure):
     def __init__(
         self,
-        status: HandTrackingAimFlagsFB = HandTrackingAimFlagsFB(),  # noqa
+        status: HandTrackingAimFlagsFB = HandTrackingAimFlagsFB.NONE,
         aim_pose: Posef = Posef(),
         pinch_strength_index: float = 0,
         pinch_strength_middle: float = 0,
@@ -10636,7 +10630,7 @@ class HandCapsuleFB(Structure):
     def __init__(
         self,
         radius: float = 0,
-        joint: HandJointEXT = HandJointEXT(),  # noqa
+        joint: HandJointEXT = HandJointEXT.PALM,
     ) -> None:
         super().__init__(
             radius=radius,
@@ -10807,7 +10801,7 @@ class SpatialAnchorCreateInfoFB(Structure):
 class SpaceComponentStatusSetInfoFB(Structure):
     def __init__(
         self,
-        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB.LOCATABLE,
         enabled: Bool32 = 0,
         timeout: Duration = 0,
         next=None,
@@ -10917,7 +10911,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         space: Space = None,
         uuid: UuidEXT = 0,
         next=None,
@@ -10979,10 +10973,10 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         space: Space = None,
         uuid: UuidEXT = 0,
-        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB.LOCATABLE,
         enabled: Bool32 = 0,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SET_STATUS_COMPLETE_FB,
@@ -11119,7 +11113,7 @@ class FoveationProfileCreateInfoFB(Structure):
 class SwapchainCreateInfoFoveationFB(Structure):
     def __init__(
         self,
-        flags: SwapchainCreateFoveationFlagsFB = SwapchainCreateFoveationFlagsFB(),  # noqa
+        flags: SwapchainCreateFoveationFlagsFB = SwapchainCreateFoveationFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_FB,
     ) -> None:
@@ -11163,7 +11157,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
 class SwapchainStateFoveationFB(Structure):
     def __init__(
         self,
-        flags: SwapchainStateFoveationFlagsFB = SwapchainStateFoveationFlagsFB(),  # noqa
+        flags: SwapchainStateFoveationFlagsFB = SwapchainStateFoveationFlagsFB.NONE,
         profile: FoveationProfileFB = None,
         next=None,
         type: StructureType = StructureType.SWAPCHAIN_STATE_FOVEATION_FB,
@@ -11215,9 +11209,9 @@ PFN_xrDestroyFoveationProfileFB = CFUNCTYPE(Result.ctype(), FoveationProfileFB)
 class FoveationLevelProfileCreateInfoFB(Structure):
     def __init__(
         self,
-        level: FoveationLevelFB = FoveationLevelFB(),  # noqa
+        level: FoveationLevelFB = FoveationLevelFB.NONE,
         vertical_offset: float = 0,
-        dynamic: FoveationDynamicFB = FoveationDynamicFB(),  # noqa
+        dynamic: FoveationDynamicFB = FoveationDynamicFB.DISABLED,
         next=None,
         type: StructureType = StructureType.FOVEATION_LEVEL_PROFILE_CREATE_INFO_FB,
     ) -> None:
@@ -11334,7 +11328,7 @@ class KeyboardTrackingDescriptionFB(Structure):
         self,
         tracked_keyboard_id: int = 0,
         size: Vector3f = None,
-        flags: KeyboardTrackingFlagsFB = KeyboardTrackingFlagsFB(),  # noqa
+        flags: KeyboardTrackingFlagsFB = KeyboardTrackingFlagsFB.NONE,
         name: str = "",
     ) -> None:
         if size is None:
@@ -11407,7 +11401,7 @@ class KeyboardSpaceCreateInfoFB(Structure):
 class KeyboardTrackingQueryFB(Structure):
     def __init__(
         self,
-        flags: KeyboardTrackingQueryFlagsFB = KeyboardTrackingQueryFlagsFB(),  # noqa
+        flags: KeyboardTrackingQueryFlagsFB = KeyboardTrackingQueryFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.KEYBOARD_TRACKING_QUERY_FB,
     ) -> None:
@@ -11466,8 +11460,8 @@ TriangleMeshFlagsFBCInt = Flags64
 class TriangleMeshCreateInfoFB(Structure):
     def __init__(
         self,
-        flags: TriangleMeshFlagsFB = TriangleMeshFlagsFB(),  # noqa
-        winding_order: WindingOrderFB = WindingOrderFB(),  # noqa
+        flags: TriangleMeshFlagsFB = TriangleMeshFlagsFB.NONE,
+        winding_order: WindingOrderFB = WindingOrderFB.UNKNOWN,
         vertex_count: int = 0,
         vertex_buffer: POINTER(Vector3f) = None,
         triangle_count: int = 0,
@@ -11625,7 +11619,7 @@ class SystemPassthroughPropertiesFB(Structure):
 class SystemPassthroughProperties2FB(Structure):
     def __init__(
         self,
-        capabilities: PassthroughCapabilityFlagsFB = PassthroughCapabilityFlagsFB(),  # noqa
+        capabilities: PassthroughCapabilityFlagsFB = PassthroughCapabilityFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.SYSTEM_PASSTHROUGH_PROPERTIES2_FB,
     ) -> None:
@@ -11669,7 +11663,7 @@ class SystemPassthroughProperties2FB(Structure):
 class PassthroughCreateInfoFB(Structure):
     def __init__(
         self,
-        flags: PassthroughFlagsFB = PassthroughFlagsFB(),  # noqa
+        flags: PassthroughFlagsFB = PassthroughFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.PASSTHROUGH_CREATE_INFO_FB,
     ) -> None:
@@ -11714,8 +11708,8 @@ class PassthroughLayerCreateInfoFB(Structure):
     def __init__(
         self,
         passthrough: PassthroughFB = None,
-        flags: PassthroughFlagsFB = PassthroughFlagsFB(),  # noqa
-        purpose: PassthroughLayerPurposeFB = PassthroughLayerPurposeFB(),  # noqa
+        flags: PassthroughFlagsFB = PassthroughFlagsFB.NONE,
+        purpose: PassthroughLayerPurposeFB = PassthroughLayerPurposeFB.RECONSTRUCTION,
         next=None,
         type: StructureType = StructureType.PASSTHROUGH_LAYER_CREATE_INFO_FB,
     ) -> None:
@@ -11772,7 +11766,7 @@ class PassthroughLayerCreateInfoFB(Structure):
 class CompositionLayerPassthroughFB(Structure):
     def __init__(
         self,
-        flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
         layer_handle: PassthroughLayerFB = None,
         next=None,
@@ -12118,7 +12112,7 @@ class PassthroughBrightnessContrastSaturationFB(Structure):
 class EventDataPassthroughStateChangedFB(Structure):
     def __init__(
         self,
-        flags: PassthroughStateChangedFlagsFB = PassthroughStateChangedFlagsFB(),  # noqa
+        flags: PassthroughStateChangedFlagsFB = PassthroughStateChangedFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_PASSTHROUGH_STATE_CHANGED_FB,
     ) -> None:
@@ -12239,7 +12233,7 @@ class RenderModelPropertiesFB(Structure):
         model_name: str = "",
         model_key: RenderModelKeyFB = 0,
         model_version: int = 0,
-        flags: RenderModelFlagsFB = RenderModelFlagsFB(),  # noqa
+        flags: RenderModelFlagsFB = RenderModelFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_FB,
     ) -> None:
@@ -12429,7 +12423,7 @@ class SystemRenderModelPropertiesFB(Structure):
 class RenderModelCapabilitiesRequestFB(Structure):
     def __init__(
         self,
-        flags: RenderModelFlagsFB = RenderModelFlagsFB(),  # noqa
+        flags: RenderModelFlagsFB = RenderModelFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.RENDER_MODEL_CAPABILITIES_REQUEST_FB,
     ) -> None:
@@ -12822,7 +12816,7 @@ class FrameEndInfoML(Structure):
     def __init__(
         self,
         focus_distance: float = 0,
-        flags: FrameEndInfoFlagsML = FrameEndInfoFlagsML(),  # noqa
+        flags: FrameEndInfoFlagsML = FrameEndInfoFlagsML.NONE,
         next=None,
         type: StructureType = StructureType.FRAME_END_INFO_ML,
     ) -> None:
@@ -12872,7 +12866,7 @@ class GlobalDimmerFrameEndInfoML(Structure):
     def __init__(
         self,
         dimmer_value: float = 0,
-        flags: GlobalDimmerFrameEndInfoFlagsML = GlobalDimmerFrameEndInfoFlagsML(),  # noqa
+        flags: GlobalDimmerFrameEndInfoFlagsML = GlobalDimmerFrameEndInfoFlagsML.NONE,
         next=None,
         type: StructureType = StructureType.GLOBAL_DIMMER_FRAME_END_INFO_ML,
     ) -> None:
@@ -12973,8 +12967,8 @@ class SystemMarkerUnderstandingPropertiesML(Structure):
 class MarkerDetectorCreateInfoML(Structure):
     def __init__(
         self,
-        profile: MarkerDetectorProfileML = MarkerDetectorProfileML(),  # noqa
-        marker_type: MarkerTypeML = MarkerTypeML(),  # noqa
+        profile: MarkerDetectorProfileML = MarkerDetectorProfileML.DEFAULT,
+        marker_type: MarkerTypeML = MarkerTypeML.ARUCO,
         next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_CREATE_INFO_ML,
     ) -> None:
@@ -13038,7 +13032,7 @@ class MarkerDetectorCreateInfoML(Structure):
 class MarkerDetectorArucoInfoML(Structure):
     def __init__(
         self,
-        aruco_dict: MarkerArucoDictML = MarkerArucoDictML(),  # noqa
+        aruco_dict: MarkerArucoDictML = MarkerArucoDictML.N4X4_50,
         next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_ARUCO_INFO_ML,
     ) -> None:
@@ -13135,7 +13129,7 @@ class MarkerDetectorSizeInfoML(Structure):
 class MarkerDetectorAprilTagInfoML(Structure):
     def __init__(
         self,
-        april_tag_dict: MarkerAprilTagDictML = MarkerAprilTagDictML(),  # noqa
+        april_tag_dict: MarkerAprilTagDictML = MarkerAprilTagDictML.N16H5,
         next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_APRIL_TAG_INFO_ML,
     ) -> None:
@@ -13188,12 +13182,12 @@ class MarkerDetectorAprilTagInfoML(Structure):
 class MarkerDetectorCustomProfileInfoML(Structure):
     def __init__(
         self,
-        fps_hint: MarkerDetectorFpsML = MarkerDetectorFpsML(),  # noqa
-        resolution_hint: MarkerDetectorResolutionML = MarkerDetectorResolutionML(),  # noqa
-        camera_hint: MarkerDetectorCameraML = MarkerDetectorCameraML(),  # noqa
-        corner_refine_method: MarkerDetectorCornerRefineMethodML = MarkerDetectorCornerRefineMethodML(),  # noqa
+        fps_hint: MarkerDetectorFpsML = MarkerDetectorFpsML.LOW,
+        resolution_hint: MarkerDetectorResolutionML = MarkerDetectorResolutionML.LOW,
+        camera_hint: MarkerDetectorCameraML = MarkerDetectorCameraML.RGB_CAMERA,
+        corner_refine_method: MarkerDetectorCornerRefineMethodML = MarkerDetectorCornerRefineMethodML.NONE,
         use_edge_refinement: Bool32 = 0,
-        full_analysis_interval_hint: MarkerDetectorFullAnalysisIntervalML = MarkerDetectorFullAnalysisIntervalML(),  # noqa
+        full_analysis_interval_hint: MarkerDetectorFullAnalysisIntervalML = MarkerDetectorFullAnalysisIntervalML.MAX,
         next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML,
     ) -> None:
@@ -13333,7 +13327,7 @@ class MarkerDetectorSnapshotInfoML(Structure):
 class MarkerDetectorStateML(Structure):
     def __init__(
         self,
-        state: MarkerDetectorStatusML = MarkerDetectorStatusML(),  # noqa
+        state: MarkerDetectorStatusML = MarkerDetectorStatusML.PENDING,
         next=None,
         type: StructureType = StructureType.MARKER_DETECTOR_STATE_ML,
     ) -> None:
@@ -13469,7 +13463,7 @@ class LocalizationMapML(Structure):
         self,
         name: str = "",
         map_uuid: UuidEXT = 0,
-        map_type: LocalizationMapTypeML = LocalizationMapTypeML(),  # noqa
+        map_type: LocalizationMapTypeML = LocalizationMapTypeML.ON_DEVICE,
         next=None,
         type: StructureType = StructureType.LOCALIZATION_MAP_ML,
     ) -> None:
@@ -13527,10 +13521,10 @@ class EventDataLocalizationChangedML(Structure):
     def __init__(
         self,
         session: Session = None,
-        state: LocalizationMapStateML = LocalizationMapStateML(),  # noqa
+        state: LocalizationMapStateML = LocalizationMapStateML.NOT_LOCALIZED,
         map: LocalizationMapML = None,
-        confidence: LocalizationMapConfidenceML = LocalizationMapConfidenceML(),  # noqa
-        error_flags: LocalizationMapErrorFlagsML = LocalizationMapErrorFlagsML(),  # noqa
+        confidence: LocalizationMapConfidenceML = LocalizationMapConfidenceML.POOR,
+        error_flags: LocalizationMapErrorFlagsML = LocalizationMapErrorFlagsML.NONE,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_LOCALIZATION_CHANGED_ML,
     ) -> None:
@@ -13900,7 +13894,7 @@ class SpatialAnchorsCreateInfoFromPoseML(Structure):
 class CreateSpatialAnchorsCompletionML(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         space_count: Optional[int] = None,
         spaces: ArrayFieldParamType[Space] = None,
         next=None,
@@ -13975,7 +13969,7 @@ class CreateSpatialAnchorsCompletionML(Structure):
 class SpatialAnchorStateML(Structure):
     def __init__(
         self,
-        confidence: SpatialAnchorConfidenceML = SpatialAnchorConfidenceML(),  # noqa
+        confidence: SpatialAnchorConfidenceML = SpatialAnchorConfidenceML.LOW,
         next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_STATE_ML,
     ) -> None:
@@ -14180,7 +14174,7 @@ class SpatialAnchorsQueryInfoRadiusML(Structure):
 class SpatialAnchorsQueryCompletionML(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         uuid_capacity_input: int = 0,
         uuid_count_output: int = 0,
         uuids: POINTER(UuidEXT) = None,
@@ -14374,7 +14368,7 @@ class SpatialAnchorsPublishInfoML(Structure):
 class SpatialAnchorsPublishCompletionML(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         uuid_count: Optional[int] = None,
         uuids: ArrayFieldParamType[UuidEXT] = None,
         next=None,
@@ -14512,7 +14506,7 @@ class SpatialAnchorsDeleteInfoML(Structure):
 class SpatialAnchorsDeleteCompletionML(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_DELETE_COMPLETION_ML,
     ) -> None:
@@ -14631,7 +14625,7 @@ class SpatialAnchorsUpdateExpirationInfoML(Structure):
 class SpatialAnchorsUpdateExpirationCompletionML(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.SPATIAL_ANCHORS_UPDATE_EXPIRATION_COMPLETION_ML,
     ) -> None:
@@ -14685,7 +14679,7 @@ class SpatialAnchorCompletionResultML(Structure):
     def __init__(
         self,
         uuid: UuidEXT = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
     ) -> None:
         super().__init__(
             uuid=uuid,
@@ -15067,7 +15061,7 @@ PFN_xrClearSpatialAnchorStoreMSFT = CFUNCTYPE(Result.ctype(), SpatialAnchorStore
 class SceneMarkerMSFT(Structure):
     def __init__(
         self,
-        marker_type: SceneMarkerTypeMSFT = SceneMarkerTypeMSFT(),  # noqa
+        marker_type: SceneMarkerTypeMSFT = SceneMarkerTypeMSFT.QR_CODE,
         last_seen_time: Time = 0,
         center: Offset2Df = None,
         size: Extent2Df = None,
@@ -15219,7 +15213,7 @@ class SceneMarkerTypeFilterMSFT(Structure):
 class SceneMarkerQRCodeMSFT(Structure):
     def __init__(
         self,
-        symbol_type: SceneMarkerQRCodeSymbolTypeMSFT = SceneMarkerQRCodeSymbolTypeMSFT(),  # noqa
+        symbol_type: SceneMarkerQRCodeSymbolTypeMSFT = SceneMarkerQRCodeSymbolTypeMSFT.QR_CODE,
         version: int = 0,
     ) -> None:
         super().__init__(
@@ -15385,7 +15379,7 @@ class SpaceFilterInfoBaseHeaderFB(Structure):
 class SpaceQueryInfoFB(Structure):
     def __init__(
         self,
-        query_action: SpaceQueryActionFB = SpaceQueryActionFB(),  # noqa
+        query_action: SpaceQueryActionFB = SpaceQueryActionFB.LOAD,
         max_result_count: int = 0,
         timeout: Duration = 0,
         filter: POINTER(SpaceFilterInfoBaseHeaderFB) = None,
@@ -15450,7 +15444,7 @@ class SpaceQueryInfoFB(Structure):
 class SpaceStorageLocationFilterInfoFB(Structure):
     def __init__(
         self,
-        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB.INVALID,
         next=None,
         type: StructureType = StructureType.SPACE_STORAGE_LOCATION_FILTER_INFO_FB,
     ) -> None:
@@ -15566,7 +15560,7 @@ class SpaceUuidFilterInfoFB(Structure):
 class SpaceComponentFilterInfoFB(Structure):
     def __init__(
         self,
-        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB.LOCATABLE,
         next=None,
         type: StructureType = StructureType.SPACE_COMPONENT_FILTER_INFO_FB,
     ) -> None:
@@ -15737,7 +15731,7 @@ class EventDataSpaceQueryCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_QUERY_COMPLETE_FB,
     ) -> None:
@@ -15798,8 +15792,8 @@ class SpaceSaveInfoFB(Structure):
     def __init__(
         self,
         space: Space = None,
-        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
-        persistence_mode: SpacePersistenceModeFB = SpacePersistenceModeFB(),  # noqa
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB.INVALID,
+        persistence_mode: SpacePersistenceModeFB = SpacePersistenceModeFB.INVALID,
         next=None,
         type: StructureType = StructureType.SPACE_SAVE_INFO_FB,
     ) -> None:
@@ -15866,7 +15860,7 @@ class SpaceEraseInfoFB(Structure):
     def __init__(
         self,
         space: Space = None,
-        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB.INVALID,
         next=None,
         type: StructureType = StructureType.SPACE_ERASE_INFO_FB,
     ) -> None:
@@ -15922,10 +15916,10 @@ class EventDataSpaceSaveCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         space: Space = None,
         uuid: UuidEXT = 0,
-        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB.INVALID,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SAVE_COMPLETE_FB,
     ) -> None:
@@ -15996,10 +15990,10 @@ class EventDataSpaceEraseCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         space: Space = None,
         uuid: UuidEXT = 0,
-        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB.INVALID,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_ERASE_COMPLETE_FB,
     ) -> None:
@@ -16168,7 +16162,7 @@ class EventDataSpaceShareCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_SHARE_COMPLETE_FB,
     ) -> None:
@@ -16228,7 +16222,7 @@ CompositionLayerSpaceWarpInfoFlagsFBCInt = Flags64
 class CompositionLayerSpaceWarpInfoFB(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerSpaceWarpInfoFlagsFB = CompositionLayerSpaceWarpInfoFlagsFB(),  # noqa
+        layer_flags: CompositionLayerSpaceWarpInfoFlagsFB = CompositionLayerSpaceWarpInfoFlagsFB.NONE,
         motion_vector_sub_image: SwapchainSubImage = None,
         app_space_delta_pose: Posef = Posef(),
         depth_sub_image: SwapchainSubImage = None,
@@ -16653,7 +16647,7 @@ class Boundary2DFB(Structure):
 class SemanticLabelsSupportInfoFB(Structure):
     def __init__(
         self,
-        flags: SemanticLabelsSupportFlagsFB = SemanticLabelsSupportFlagsFB(),  # noqa
+        flags: SemanticLabelsSupportFlagsFB = SemanticLabelsSupportFlagsFB.NONE,
         recognized_labels: str = "",
         next=None,
         type: StructureType = StructureType.SEMANTIC_LABELS_SUPPORT_INFO_FB,
@@ -16722,7 +16716,7 @@ DigitalLensControlFlagsALMALENCECInt = Flags64
 class DigitalLensControlALMALENCE(Structure):
     def __init__(
         self,
-        flags: DigitalLensControlFlagsALMALENCE = DigitalLensControlFlagsALMALENCE(),  # noqa
+        flags: DigitalLensControlFlagsALMALENCE = DigitalLensControlFlagsALMALENCE.NONE,
         next=None,
         type: StructureType = StructureType.DIGITAL_LENS_CONTROL_ALMALENCE,
     ) -> None:
@@ -16770,7 +16764,7 @@ class EventDataSceneCaptureCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SCENE_CAPTURE_COMPLETE_FB,
     ) -> None:
@@ -16941,7 +16935,7 @@ FoveationEyeTrackedStateFlagsMETACInt = Flags64
 class FoveationEyeTrackedProfileCreateInfoMETA(Structure):
     def __init__(
         self,
-        flags: FoveationEyeTrackedProfileCreateFlagsMETA = FoveationEyeTrackedProfileCreateFlagsMETA(),  # noqa
+        flags: FoveationEyeTrackedProfileCreateFlagsMETA = FoveationEyeTrackedProfileCreateFlagsMETA.NONE,
         next=None,
         type: StructureType = StructureType.FOVEATION_EYE_TRACKED_PROFILE_CREATE_INFO_META,
     ) -> None:
@@ -16985,7 +16979,7 @@ class FoveationEyeTrackedProfileCreateInfoMETA(Structure):
 class FoveationEyeTrackedStateMETA(Structure):
     def __init__(
         self,
-        flags: FoveationEyeTrackedStateFlagsMETA = FoveationEyeTrackedStateFlagsMETA(),  # noqa
+        flags: FoveationEyeTrackedStateFlagsMETA = FoveationEyeTrackedStateFlagsMETA.NONE,
         next=None,
         type: StructureType = StructureType.FOVEATION_EYE_TRACKED_STATE_META,
     ) -> None:
@@ -17129,7 +17123,7 @@ class SystemFaceTrackingPropertiesFB(Structure):
 class FaceTrackerCreateInfoFB(Structure):
     def __init__(
         self,
-        face_expression_set: FaceExpressionSetFB = FaceExpressionSetFB(),  # noqa
+        face_expression_set: FaceExpressionSetFB = FaceExpressionSetFB.DEFAULT,
         next=None,
         type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO_FB,
     ) -> None:
@@ -17619,7 +17613,7 @@ CompositionLayerSettingsFlagsFBCInt = Flags64
 class CompositionLayerSettingsFB(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerSettingsFlagsFB = CompositionLayerSettingsFlagsFB(),  # noqa
+        layer_flags: CompositionLayerSettingsFlagsFB = CompositionLayerSettingsFlagsFB.NONE,
         next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_SETTINGS_FB,
     ) -> None:
@@ -17770,7 +17764,7 @@ FrameSynthesisInfoFlagsEXTCInt = Flags64
 class FrameSynthesisInfoEXT(Structure):
     def __init__(
         self,
-        layer_flags: FrameSynthesisInfoFlagsEXT = FrameSynthesisInfoFlagsEXT(),  # noqa
+        layer_flags: FrameSynthesisInfoFlagsEXT = FrameSynthesisInfoFlagsEXT.NONE,
         motion_vector_sub_image: SwapchainSubImage = None,
         motion_vector_scale: Vector4f = None,
         motion_vector_offset: Vector4f = None,
@@ -17897,7 +17891,7 @@ class CompositionLayerDepthTestFB(Structure):
     def __init__(
         self,
         depth_mask: Bool32 = 0,
-        compare_op: CompareOpFB = CompareOpFB(),  # noqa
+        compare_op: CompareOpFB = CompareOpFB.NEVER,
         next=None,
         type: StructureType = StructureType.COMPOSITION_LAYER_DEPTH_TEST_FB,
     ) -> None:
@@ -17952,7 +17946,7 @@ class CompositionLayerDepthTestFB(Structure):
 class LocalDimmingFrameEndInfoMETA(Structure):
     def __init__(
         self,
-        local_dimming_mode: LocalDimmingModeMETA = LocalDimmingModeMETA(),  # noqa
+        local_dimming_mode: LocalDimmingModeMETA = LocalDimmingModeMETA.OFF,
         next=None,
         type: StructureType = StructureType.LOCAL_DIMMING_FRAME_END_INFO_META,
     ) -> None:
@@ -18008,7 +18002,7 @@ PassthroughPreferenceFlagsMETACInt = Flags64
 class PassthroughPreferencesMETA(Structure):
     def __init__(
         self,
-        flags: PassthroughPreferenceFlagsMETA = PassthroughPreferenceFlagsMETA(),  # noqa
+        flags: PassthroughPreferenceFlagsMETA = PassthroughPreferenceFlagsMETA.NONE,
         next=None,
         type: StructureType = StructureType.PASSTHROUGH_PREFERENCES_META,
     ) -> None:
@@ -18150,7 +18144,7 @@ class VirtualKeyboardCreateInfoMETA(Structure):
 class VirtualKeyboardSpaceCreateInfoMETA(Structure):
     def __init__(
         self,
-        location_type: VirtualKeyboardLocationTypeMETA = VirtualKeyboardLocationTypeMETA(),  # noqa
+        location_type: VirtualKeyboardLocationTypeMETA = VirtualKeyboardLocationTypeMETA.CUSTOM,
         space: Space = None,
         pose_in_space: Posef = Posef(),
         next=None,
@@ -18209,7 +18203,7 @@ class VirtualKeyboardSpaceCreateInfoMETA(Structure):
 class VirtualKeyboardLocationInfoMETA(Structure):
     def __init__(
         self,
-        location_type: VirtualKeyboardLocationTypeMETA = VirtualKeyboardLocationTypeMETA(),  # noqa
+        location_type: VirtualKeyboardLocationTypeMETA = VirtualKeyboardLocationTypeMETA.CUSTOM,
         space: Space = None,
         pose_in_space: Posef = Posef(),
         scale: float = 0,
@@ -18468,10 +18462,10 @@ class VirtualKeyboardTextureDataMETA(Structure):
 class VirtualKeyboardInputInfoMETA(Structure):
     def __init__(
         self,
-        input_source: VirtualKeyboardInputSourceMETA = VirtualKeyboardInputSourceMETA(),  # noqa
+        input_source: VirtualKeyboardInputSourceMETA = VirtualKeyboardInputSourceMETA.CONTROLLER_RAY_LEFT,
         input_space: Space = None,
         input_pose_in_space: Posef = Posef(),
-        input_state: VirtualKeyboardInputStateFlagsMETA = VirtualKeyboardInputStateFlagsMETA(),  # noqa
+        input_state: VirtualKeyboardInputStateFlagsMETA = VirtualKeyboardInputStateFlagsMETA.NONE,
         next=None,
         type: StructureType = StructureType.VIRTUAL_KEYBOARD_INPUT_INFO_META,
     ) -> None:
@@ -18868,8 +18862,8 @@ class ExternalCameraExtrinsicsOCULUS(Structure):
     def __init__(
         self,
         last_change_time: Time = 0,
-        camera_status_flags: ExternalCameraStatusFlagsOCULUS = ExternalCameraStatusFlagsOCULUS(),  # noqa
-        attached_to_device: ExternalCameraAttachedToDeviceOCULUS = ExternalCameraAttachedToDeviceOCULUS(),  # noqa
+        camera_status_flags: ExternalCameraStatusFlagsOCULUS = ExternalCameraStatusFlagsOCULUS.NONE,
+        attached_to_device: ExternalCameraAttachedToDeviceOCULUS = ExternalCameraAttachedToDeviceOCULUS.NONE,
         relative_pose: Posef = Posef(),
     ) -> None:
         super().__init__(
@@ -19008,8 +19002,8 @@ class PerformanceMetricsStateMETA(Structure):
 class PerformanceMetricsCounterMETA(Structure):
     def __init__(
         self,
-        counter_flags: PerformanceMetricsCounterFlagsMETA = PerformanceMetricsCounterFlagsMETA(),  # noqa
-        counter_unit: PerformanceMetricsCounterUnitMETA = PerformanceMetricsCounterUnitMETA(),  # noqa
+        counter_flags: PerformanceMetricsCounterFlagsMETA = PerformanceMetricsCounterFlagsMETA.NONE,
+        counter_unit: PerformanceMetricsCounterUnitMETA = PerformanceMetricsCounterUnitMETA.GENERIC,
         uint_value: int = 0,
         float_value: float = 0,
         next=None,
@@ -19081,7 +19075,7 @@ class SpaceListSaveInfoFB(Structure):
         self,
         space_count: Optional[int] = None,
         spaces: ArrayFieldParamType[Space] = None,
-        location: SpaceStorageLocationFB = SpaceStorageLocationFB(),  # noqa
+        location: SpaceStorageLocationFB = SpaceStorageLocationFB.INVALID,
         next=None,
         type: StructureType = StructureType.SPACE_LIST_SAVE_INFO_FB,
     ) -> None:
@@ -19155,7 +19149,7 @@ class EventDataSpaceListSaveCompleteFB(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_LIST_SAVE_COMPLETE_FB,
     ) -> None:
@@ -19521,7 +19515,7 @@ class SpaceFilterUuidMETA(Structure):
 class SpaceFilterComponentMETA(Structure):
     def __init__(
         self,
-        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB(),  # noqa
+        component_type: SpaceComponentTypeFB = SpaceComponentTypeFB.LOCATABLE,
         next=None,
         type: StructureType = StructureType.SPACE_FILTER_COMPONENT_META,
     ) -> None:
@@ -19692,7 +19686,7 @@ class EventDataSpaceDiscoveryCompleteMETA(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACE_DISCOVERY_COMPLETE_META,
     ) -> None:
@@ -19959,7 +19953,7 @@ class EventDataSpacesSaveResultMETA(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACES_SAVE_RESULT_META,
     ) -> None:
@@ -20100,7 +20094,7 @@ class EventDataSpacesEraseResultMETA(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SPACES_ERASE_RESULT_META,
     ) -> None:
@@ -20191,7 +20185,7 @@ class PassthroughColorLutDataMETA(Structure):
 class PassthroughColorLutCreateInfoMETA(Structure):
     def __init__(
         self,
-        channels: PassthroughColorLutChannelsMETA = PassthroughColorLutChannelsMETA(),  # noqa
+        channels: PassthroughColorLutChannelsMETA = PassthroughColorLutChannelsMETA.RGB,
         resolution: int = 0,
         data: PassthroughColorLutDataMETA = None,
         next=None,
@@ -20637,7 +20631,7 @@ class EventDataPassthroughLayerResumedMETA(Structure):
 class BodyTrackingCalibrationStatusMETA(Structure):
     def __init__(
         self,
-        status: BodyTrackingCalibrationStateMETA = BodyTrackingCalibrationStateMETA(),  # noqa
+        status: BodyTrackingCalibrationStateMETA = BodyTrackingCalibrationStateMETA.VALID,
         next=None,
         type: StructureType = StructureType.BODY_TRACKING_CALIBRATION_STATUS_META,
     ) -> None:
@@ -20838,7 +20832,7 @@ class SystemFaceTrackingProperties2FB(Structure):
 class FaceTrackerCreateInfo2FB(Structure):
     def __init__(
         self,
-        face_expression_set: FaceExpressionSet2FB = FaceExpressionSet2FB(),  # noqa
+        face_expression_set: FaceExpressionSet2FB = FaceExpressionSet2FB.DEFAULT,
         requested_data_source_count: Optional[int] = None,
         requested_data_sources: ArrayFieldParamType[FaceTrackingDataSource2FB.ctype()] = None,
         next=None,
@@ -20963,7 +20957,7 @@ class FaceExpressionWeights2FB(Structure):
         confidences: ArrayFieldParamType[c_float] = None,
         is_valid: Bool32 = 0,
         is_eye_following_blendshapes_valid: Bool32 = 0,
-        data_source: FaceTrackingDataSource2FB = FaceTrackingDataSource2FB(),  # noqa
+        data_source: FaceTrackingDataSource2FB = FaceTrackingDataSource2FB.VISUAL,
         time: Time = 0,
         next=None,
         type: StructureType = StructureType.FACE_EXPRESSION_WEIGHTS2_FB,
@@ -21222,7 +21216,7 @@ class EventDataShareSpacesCompleteMETA(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SHARE_SPACES_COMPLETE_META,
     ) -> None:
@@ -21300,7 +21294,7 @@ EnvironmentDepthSwapchainCreateFlagsMETACInt = Flags64
 class EnvironmentDepthProviderCreateInfoMETA(Structure):
     def __init__(
         self,
-        create_flags: EnvironmentDepthProviderCreateFlagsMETA = EnvironmentDepthProviderCreateFlagsMETA(),  # noqa
+        create_flags: EnvironmentDepthProviderCreateFlagsMETA = EnvironmentDepthProviderCreateFlagsMETA.NONE,
         next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_PROVIDER_CREATE_INFO_META,
     ) -> None:
@@ -21344,7 +21338,7 @@ class EnvironmentDepthProviderCreateInfoMETA(Structure):
 class EnvironmentDepthSwapchainCreateInfoMETA(Structure):
     def __init__(
         self,
-        create_flags: EnvironmentDepthSwapchainCreateFlagsMETA = EnvironmentDepthSwapchainCreateFlagsMETA(),  # noqa
+        create_flags: EnvironmentDepthSwapchainCreateFlagsMETA = EnvironmentDepthSwapchainCreateFlagsMETA.NONE,
         next=None,
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_SWAPCHAIN_CREATE_INFO_META,
     ) -> None:
@@ -22505,7 +22499,7 @@ class PassthroughHTC(POINTER(PassthroughHTC_T), HandleMixin):
 class PassthroughCreateInfoHTC(Structure):
     def __init__(
         self,
-        form: PassthroughFormHTC = PassthroughFormHTC(),  # noqa
+        form: PassthroughFormHTC = PassthroughFormHTC.PLANAR,
         next=None,
         type: StructureType = StructureType.PASSTHROUGH_CREATE_INFO_HTC,
     ) -> None:
@@ -22669,7 +22663,7 @@ class PassthroughMeshTransformInfoHTC(Structure):
 class CompositionLayerPassthroughHTC(Structure):
     def __init__(
         self,
-        layer_flags: CompositionLayerFlags = CompositionLayerFlags(),  # noqa
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
         space: Space = None,
         passthrough: PassthroughHTC = None,
         color: PassthroughColorHTC = None,
@@ -22731,7 +22725,7 @@ FoveationDynamicFlagsHTCCInt = Flags64
 class FoveationApplyInfoHTC(Structure):
     def __init__(
         self,
-        mode: FoveationModeHTC = FoveationModeHTC(),  # noqa
+        mode: FoveationModeHTC = FoveationModeHTC.DISABLE,
         sub_image_count: Optional[int] = None,
         sub_images: ArrayFieldParamType[SwapchainSubImage] = None,
         next=None,
@@ -22806,7 +22800,7 @@ class FoveationApplyInfoHTC(Structure):
 class FoveationConfigurationHTC(Structure):
     def __init__(
         self,
-        level: FoveationLevelHTC = FoveationLevelHTC(),  # noqa
+        level: FoveationLevelHTC = FoveationLevelHTC.NONE,
         clear_fov_degree: float = 0,
         focal_center_offset: Vector2f = None,
     ) -> None:
@@ -22843,7 +22837,7 @@ class FoveationConfigurationHTC(Structure):
 class FoveationDynamicModeInfoHTC(Structure):
     def __init__(
         self,
-        dynamic_flags: FoveationDynamicFlagsHTC = FoveationDynamicFlagsHTC(),  # noqa
+        dynamic_flags: FoveationDynamicFlagsHTC = FoveationDynamicFlagsHTC.NONE,
         next=None,
         type: StructureType = StructureType.FOVEATION_DYNAMIC_MODE_INFO_HTC,
     ) -> None:
@@ -23126,7 +23120,7 @@ class SystemBodyTrackingPropertiesHTC(Structure):
 class BodyTrackerCreateInfoHTC(Structure):
     def __init__(
         self,
-        body_joint_set: BodyJointSetHTC = BodyJointSetHTC(),  # noqa
+        body_joint_set: BodyJointSetHTC = BodyJointSetHTC.FULL,
         next=None,
         type: StructureType = StructureType.BODY_TRACKER_CREATE_INFO_HTC,
     ) -> None:
@@ -23226,7 +23220,7 @@ class BodyJointsLocateInfoHTC(Structure):
 class BodyJointLocationHTC(Structure):
     def __init__(
         self,
-        location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
@@ -23249,8 +23243,8 @@ class BodyJointLocationHTC(Structure):
 class BodyJointLocationsHTC(Structure):
     def __init__(
         self,
-        combined_location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
-        confidence_level: BodyJointConfidenceHTC = BodyJointConfidenceHTC(),  # noqa
+        combined_location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
+        confidence_level: BodyJointConfidenceHTC = BodyJointConfidenceHTC.NONE,
         joint_location_count: Optional[int] = None,
         joint_locations: ArrayFieldParamType[BodyJointLocationHTC] = None,
         skeleton_generation_id: int = 0,
@@ -23536,7 +23530,7 @@ class SystemForceFeedbackCurlPropertiesMNDX(Structure):
 class ForceFeedbackCurlApplyLocationMNDX(Structure):
     def __init__(
         self,
-        location: ForceFeedbackCurlLocationMNDX = ForceFeedbackCurlLocationMNDX(),  # noqa
+        location: ForceFeedbackCurlLocationMNDX = ForceFeedbackCurlLocationMNDX.THUMB_CURL,
         value: float = 0,
     ) -> None:
         super().__init__(
@@ -23686,7 +23680,7 @@ class SystemBodyTrackingPropertiesBD(Structure):
 class BodyTrackerCreateInfoBD(Structure):
     def __init__(
         self,
-        joint_set: BodyJointSetBD = BodyJointSetBD(),  # noqa
+        joint_set: BodyJointSetBD = BodyJointSetBD.BODY_WITHOUT_ARM,
         next=None,
         type: StructureType = StructureType.BODY_TRACKER_CREATE_INFO_BD,
     ) -> None:
@@ -23786,7 +23780,7 @@ class BodyJointsLocateInfoBD(Structure):
 class BodyJointLocationBD(Structure):
     def __init__(
         self,
-        location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
@@ -23934,7 +23928,7 @@ class SystemFacialSimulationPropertiesBD(Structure):
 class FaceTrackerCreateInfoBD(Structure):
     def __init__(
         self,
-        mode: FacialSimulationModeBD = FacialSimulationModeBD(),  # noqa
+        mode: FacialSimulationModeBD = FacialSimulationModeBD.DEFAULT,
         next=None,
         type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO_BD,
     ) -> None:
@@ -24250,7 +24244,7 @@ class SpatialEntityComponentGetInfoBD(Structure):
     def __init__(
         self,
         entity_id: SpatialEntityIdBD = 0,
-        component_type: SpatialEntityComponentTypeBD = SpatialEntityComponentTypeBD(),  # noqa
+        component_type: SpatialEntityComponentTypeBD = SpatialEntityComponentTypeBD.LOCATION,
         next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
     ) -> None:
@@ -24782,7 +24776,7 @@ class EventDataSenseDataProviderStateChangedBD(Structure):
     def __init__(
         self,
         provider: SenseDataProviderBD = None,
-        new_state: SenseDataProviderStateBD = SenseDataProviderStateBD(),  # noqa
+        new_state: SenseDataProviderStateBD = SenseDataProviderStateBD.INITIALIZED,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_SENSE_DATA_PROVIDER_STATE_CHANGED_BD,
     ) -> None:
@@ -24922,7 +24916,7 @@ class SenseDataQueryInfoBD(Structure):
 class SenseDataQueryCompletionBD(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         snapshot: SenseDataSnapshotBD = None,
         next=None,
         type: StructureType = StructureType.SENSE_DATA_QUERY_COMPLETION_BD,
@@ -25339,7 +25333,7 @@ class AnchorSpaceCreateInfoBD(Structure):
 class FutureCompletionEXT(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.FUTURE_COMPLETION_EXT,
     ) -> None:
@@ -25521,7 +25515,7 @@ class SpatialAnchorCreateInfoBD(Structure):
 class SpatialAnchorCreateCompletionBD(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         uuid: UuidEXT = 0,
         anchor: AnchorBD = None,
         next=None,
@@ -25580,7 +25574,7 @@ class SpatialAnchorCreateCompletionBD(Structure):
 class SpatialAnchorPersistInfoBD(Structure):
     def __init__(
         self,
-        location: PersistenceLocationBD = PersistenceLocationBD(),  # noqa
+        location: PersistenceLocationBD = PersistenceLocationBD.LOCAL,
         anchor: AnchorBD = None,
         next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_PERSIST_INFO_BD,
@@ -25636,7 +25630,7 @@ class SpatialAnchorPersistInfoBD(Structure):
 class SpatialAnchorUnpersistInfoBD(Structure):
     def __init__(
         self,
-        location: PersistenceLocationBD = PersistenceLocationBD(),  # noqa
+        location: PersistenceLocationBD = PersistenceLocationBD.LOCAL,
         anchor: AnchorBD = None,
         next=None,
         type: StructureType = StructureType.SPATIAL_ANCHOR_UNPERSIST_INFO_BD,
@@ -25982,8 +25976,8 @@ class SystemSpatialMeshPropertiesBD(Structure):
 class SenseDataProviderCreateInfoSpatialMeshBD(Structure):
     def __init__(
         self,
-        config_flags: SpatialMeshConfigFlagsBD = SpatialMeshConfigFlagsBD(),  # noqa
-        lod: SpatialMeshLodBD = SpatialMeshLodBD(),  # noqa
+        config_flags: SpatialMeshConfigFlagsBD = SpatialMeshConfigFlagsBD.NONE,
+        lod: SpatialMeshLodBD = SpatialMeshLodBD.COARSE,
         next=None,
         type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_SPATIAL_MESH_BD,
     ) -> None:
@@ -26129,7 +26123,7 @@ class SystemSpatialPlanePropertiesBD(Structure):
 class SpatialEntityComponentDataPlaneOrientationBD(Structure):
     def __init__(
         self,
-        orientation: PlaneOrientationBD = PlaneOrientationBD(),  # noqa
+        orientation: PlaneOrientationBD = PlaneOrientationBD.HORIZONTAL_UPWARD,
         next=None,
         type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_PLANE_ORIENTATION_BD,
     ) -> None:
@@ -26309,7 +26303,7 @@ class HandTrackingDataSourceStateEXT(Structure):
     def __init__(
         self,
         is_active: Bool32 = 0,
-        data_source: HandTrackingDataSourceEXT = HandTrackingDataSourceEXT(),  # noqa
+        data_source: HandTrackingDataSourceEXT = HandTrackingDataSourceEXT.UNOBSTRUCTED,
         next=None,
         type: StructureType = StructureType.HAND_TRACKING_DATA_SOURCE_STATE_EXT,
     ) -> None:
@@ -26376,7 +26370,7 @@ PlaneDetectorFlagsEXTCInt = Flags64
 class SystemPlaneDetectionPropertiesEXT(Structure):
     def __init__(
         self,
-        supported_features: PlaneDetectionCapabilityFlagsEXT = PlaneDetectionCapabilityFlagsEXT(),  # noqa
+        supported_features: PlaneDetectionCapabilityFlagsEXT = PlaneDetectionCapabilityFlagsEXT.NONE,
         next=None,
         type: StructureType = StructureType.SYSTEM_PLANE_DETECTION_PROPERTIES_EXT,
     ) -> None:
@@ -26420,7 +26414,7 @@ class SystemPlaneDetectionPropertiesEXT(Structure):
 class PlaneDetectorCreateInfoEXT(Structure):
     def __init__(
         self,
-        flags: PlaneDetectorFlagsEXT = PlaneDetectorFlagsEXT(),  # noqa
+        flags: PlaneDetectorFlagsEXT = PlaneDetectorFlagsEXT.NONE,
         next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_CREATE_INFO_EXT,
     ) -> None:
@@ -26618,11 +26612,11 @@ class PlaneDetectorLocationEXT(Structure):
     def __init__(
         self,
         plane_id: int = 0,
-        location_flags: SpaceLocationFlags = SpaceLocationFlags(),  # noqa
+        location_flags: SpaceLocationFlags = SpaceLocationFlags.NONE,
         pose: Posef = Posef(),
         extents: Extent2Df = None,
-        orientation: PlaneDetectorOrientationEXT = PlaneDetectorOrientationEXT(),  # noqa
-        semantic_type: PlaneDetectorSemanticTypeEXT = PlaneDetectorSemanticTypeEXT(),  # noqa
+        orientation: PlaneDetectorOrientationEXT = PlaneDetectorOrientationEXT.HORIZONTAL_UPWARD,
+        semantic_type: PlaneDetectorSemanticTypeEXT = PlaneDetectorSemanticTypeEXT.UNDEFINED,
         polygon_buffer_count: int = 0,
         next=None,
         type: StructureType = StructureType.PLANE_DETECTOR_LOCATION_EXT,
@@ -26822,7 +26816,7 @@ class TrackableTrackerANDROID(POINTER(TrackableTrackerANDROID_T), HandleMixin):
 class TrackableTrackerCreateInfoANDROID(Structure):
     def __init__(
         self,
-        trackable_type: TrackableTypeANDROID = TrackableTypeANDROID(),  # noqa
+        trackable_type: TrackableTypeANDROID = TrackableTypeANDROID.NOT_VALID,
         next=None,
         type: StructureType = StructureType.TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
     ) -> None:
@@ -26925,11 +26919,11 @@ class TrackableGetInfoANDROID(Structure):
 class TrackablePlaneANDROID(Structure):
     def __init__(
         self,
-        tracking_state: TrackingStateANDROID = TrackingStateANDROID(),  # noqa
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID.PAUSED,
         center_pose: Posef = Posef(),
         extents: Extent2Df = None,
-        plane_type: PlaneTypeANDROID = PlaneTypeANDROID(),  # noqa
-        plane_label: PlaneLabelANDROID = PlaneLabelANDROID(),  # noqa
+        plane_type: PlaneTypeANDROID = PlaneTypeANDROID.HORIZONTAL_DOWNWARD_FACING,
+        plane_label: PlaneLabelANDROID = PlaneLabelANDROID.UNKNOWN,
         subsumed_by_plane: TrackableANDROID = 0,
         last_updated_time: Time = 0,
         vertex_capacity_input: int = 0,
@@ -27434,7 +27428,7 @@ class FaceStateANDROID(Structure):
         parameters_capacity_input: int = 0,
         parameters_count_output: int = 0,
         parameters: POINTER(c_float) = None,
-        face_tracking_state: FaceTrackingStateANDROID = FaceTrackingStateANDROID(),  # noqa
+        face_tracking_state: FaceTrackingStateANDROID = FaceTrackingStateANDROID.PAUSED,
         sample_time: Time = 0,
         is_valid: Bool32 = 0,
         region_confidences_capacity_input: int = 0,
@@ -27731,7 +27725,7 @@ class RaycastInfoANDROID(Structure):
 class RaycastHitResultANDROID(Structure):
     def __init__(
         self,
-        type: TrackableTypeANDROID = TrackableTypeANDROID(),  # noqa
+        type: TrackableTypeANDROID = TrackableTypeANDROID.NOT_VALID,
         trackable: TrackableANDROID = 0,
         pose: Posef = Posef(),
     ) -> None:
@@ -27821,10 +27815,10 @@ PFN_xrRaycastANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(RaycastInfoAND
 class TrackableObjectANDROID(Structure):
     def __init__(
         self,
-        tracking_state: TrackingStateANDROID = TrackingStateANDROID(),  # noqa
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID.PAUSED,
         center_pose: Posef = Posef(),
         extents: Extent3DfEXT = 0,
-        object_label: ObjectLabelANDROID = ObjectLabelANDROID(),  # noqa
+        object_label: ObjectLabelANDROID = ObjectLabelANDROID.UNKNOWN,
         last_updated_time: Time = 0,
         next=None,
         type: StructureType = StructureType.TRACKABLE_OBJECT_ANDROID,
@@ -28049,7 +28043,7 @@ class FuturePollInfoEXT(Structure):
 class FutureCompletionBaseHeaderEXT(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.UNKNOWN,
     ) -> None:
@@ -28102,7 +28096,7 @@ class FutureCompletionBaseHeaderEXT(Structure):
 class FuturePollResultEXT(Structure):
     def __init__(
         self,
-        state: FutureStateEXT = FutureStateEXT(),  # noqa
+        state: FutureStateEXT = FutureStateEXT.PENDING,
         next=None,
         type: StructureType = StructureType.FUTURE_POLL_RESULT_EXT,
     ) -> None:
@@ -28251,7 +28245,7 @@ class SystemUserPresencePropertiesEXT(Structure):
 class EventDataHeadsetFitChangedML(Structure):
     def __init__(
         self,
-        status: HeadsetFitStatusML = HeadsetFitStatusML(),  # noqa
+        status: HeadsetFitStatusML = HeadsetFitStatusML.UNKNOWN,
         time: Time = 0,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_HEADSET_FIT_CHANGED_ML,
@@ -28307,7 +28301,7 @@ class EventDataHeadsetFitChangedML(Structure):
 class EventDataEyeCalibrationChangedML(Structure):
     def __init__(
         self,
-        status: EyeCalibrationStatusML = EyeCalibrationStatusML(),  # noqa
+        status: EyeCalibrationStatusML = EyeCalibrationStatusML.UNKNOWN,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_EYE_CALIBRATION_CHANGED_ML,
     ) -> None:
@@ -28509,7 +28503,7 @@ class WorldMeshBlockStateML(Structure):
         mesh_bounding_box_center: Posef = Posef(),
         mesh_bounding_box_extents: Extent3DfEXT = 0,
         last_update_time: Time = 0,
-        status: WorldMeshBlockStatusML = WorldMeshBlockStatusML(),  # noqa
+        status: WorldMeshBlockStatusML = WorldMeshBlockStatusML.NEW,
         next=None,
         type: StructureType = StructureType.WORLD_MESH_BLOCK_STATE_ML,
     ) -> None:
@@ -28623,7 +28617,7 @@ class WorldMeshStateRequestInfoML(Structure):
 class WorldMeshStateRequestCompletionML(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         timestamp: Time = 0,
         mesh_block_state_capacity_input: int = 0,
         mesh_block_state_count_output: int = 0,
@@ -28824,7 +28818,7 @@ class WorldMeshBlockRequestML(Structure):
     def __init__(
         self,
         uuid: UuidEXT = 0,
-        lod: WorldMeshDetectorLodML = WorldMeshDetectorLodML(),  # noqa
+        lod: WorldMeshDetectorLodML = WorldMeshDetectorLodML.MINIMUM,
         next=None,
         type: StructureType = StructureType.WORLD_MESH_BLOCK_REQUEST_ML,
     ) -> None:
@@ -28879,7 +28873,7 @@ class WorldMeshBlockRequestML(Structure):
 class WorldMeshGetInfoML(Structure):
     def __init__(
         self,
-        flags: WorldMeshDetectorFlagsML = WorldMeshDetectorFlagsML(),  # noqa
+        flags: WorldMeshDetectorFlagsML = WorldMeshDetectorFlagsML.NONE,
         fill_hole_length: float = 0,
         disconnected_component_area: float = 0,
         block_count: Optional[int] = None,
@@ -28952,9 +28946,9 @@ class WorldMeshBlockML(Structure):
     def __init__(
         self,
         uuid: UuidEXT = 0,
-        block_result: WorldMeshBlockResultML = WorldMeshBlockResultML(),  # noqa
-        lod: WorldMeshDetectorLodML = WorldMeshDetectorLodML(),  # noqa
-        flags: WorldMeshDetectorFlagsML = WorldMeshDetectorFlagsML(),  # noqa
+        block_result: WorldMeshBlockResultML = WorldMeshBlockResultML.SUCCESS,
+        lod: WorldMeshDetectorLodML = WorldMeshDetectorLodML.MINIMUM,
+        flags: WorldMeshDetectorFlagsML = WorldMeshDetectorFlagsML.NONE,
         index_count: int = 0,
         index_buffer: POINTER(c_uint16) = None,
         vertex_count: int = 0,
@@ -29093,7 +29087,7 @@ class WorldMeshRequestCompletionInfoML(Structure):
 class WorldMeshRequestCompletionML(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         block_count: Optional[int] = None,
         blocks: ArrayFieldParamType[WorldMeshBlockML] = None,
         next=None,
@@ -29345,9 +29339,9 @@ class FacialExpressionBlendShapeGetInfoML(Structure):
 class FacialExpressionBlendShapePropertiesML(Structure):
     def __init__(
         self,
-        requested_facial_blend_shape: FacialBlendShapeML = FacialBlendShapeML(),  # noqa
+        requested_facial_blend_shape: FacialBlendShapeML = FacialBlendShapeML.BROW_LOWERER_L,
         weight: float = 0,
-        flags: FacialExpressionBlendShapePropertiesFlagsML = FacialExpressionBlendShapePropertiesFlagsML(),  # noqa
+        flags: FacialExpressionBlendShapePropertiesFlagsML = FacialExpressionBlendShapePropertiesFlagsML.NONE,
         time: Time = 0,
         next=None,
         type: StructureType = StructureType.FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_ML,
@@ -29716,7 +29710,7 @@ class EventDataStartColocationAdvertisementCompleteMETA(Structure):
     def __init__(
         self,
         advertisement_request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         advertisement_uuid: Uuid = None,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_START_COLOCATION_ADVERTISEMENT_COMPLETE_META,
@@ -29777,7 +29771,7 @@ class EventDataStopColocationAdvertisementCompleteMETA(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_STOP_COLOCATION_ADVERTISEMENT_COMPLETE_META,
     ) -> None:
@@ -29833,7 +29827,7 @@ class EventDataColocationAdvertisementCompleteMETA(Structure):
     def __init__(
         self,
         advertisement_request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_COLOCATION_ADVERTISEMENT_COMPLETE_META,
     ) -> None:
@@ -29889,7 +29883,7 @@ class EventDataStartColocationDiscoveryCompleteMETA(Structure):
     def __init__(
         self,
         discovery_request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_START_COLOCATION_DISCOVERY_COMPLETE_META,
     ) -> None:
@@ -29998,7 +29992,7 @@ class EventDataColocationDiscoveryCompleteMETA(Structure):
     def __init__(
         self,
         discovery_request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_COLOCATION_DISCOVERY_COMPLETE_META,
     ) -> None:
@@ -30054,7 +30048,7 @@ class EventDataStopColocationDiscoveryCompleteMETA(Structure):
     def __init__(
         self,
         request_id: AsyncRequestIdFB = 0,
-        result: Result = Result(),  # noqa
+        result: Result = Result.SUCCESS,
         next=None,
         type: StructureType = StructureType.EVENT_DATA_STOP_COLOCATION_DISCOVERY_COMPLETE_META,
     ) -> None:
@@ -30388,7 +30382,7 @@ class TrackableMarkerDatabaseEntryANDROID(Structure):
 class TrackableMarkerDatabaseANDROID(Structure):
     def __init__(
         self,
-        dictionary: TrackableMarkerDictionaryANDROID = TrackableMarkerDictionaryANDROID(),  # noqa
+        dictionary: TrackableMarkerDictionaryANDROID = TrackableMarkerDictionaryANDROID.ARUCO_4X4_50,
         entry_count: int = 0,
         entries: POINTER(TrackableMarkerDatabaseEntryANDROID) = None,
     ) -> None:
@@ -30423,7 +30417,7 @@ class TrackableMarkerDatabaseANDROID(Structure):
 class TrackableMarkerConfigurationANDROID(Structure):
     def __init__(
         self,
-        tracking_mode: TrackableMarkerTrackingModeANDROID = TrackableMarkerTrackingModeANDROID(),  # noqa
+        tracking_mode: TrackableMarkerTrackingModeANDROID = TrackableMarkerTrackingModeANDROID.DYNAMIC,
         database_count: Optional[int] = None,
         databases: ArrayFieldParamType[TrackableMarkerDatabaseANDROID] = None,
         next=None,
@@ -30498,9 +30492,9 @@ class TrackableMarkerConfigurationANDROID(Structure):
 class TrackableMarkerANDROID(Structure):
     def __init__(
         self,
-        tracking_state: TrackingStateANDROID = TrackingStateANDROID(),  # noqa
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID.PAUSED,
         last_updated_time: Time = 0,
-        dictionary: TrackableMarkerDictionaryANDROID = TrackableMarkerDictionaryANDROID(),  # noqa
+        dictionary: TrackableMarkerDictionaryANDROID = TrackableMarkerDictionaryANDROID.ARUCO_4X4_50,
         marker_id: int = 0,
         center_pose: Posef = Posef(),
         extents: Extent2Df = None,
@@ -30796,7 +30790,7 @@ class SpatialContextCreateInfoEXT(Structure):
 class CreateSpatialContextCompletionEXT(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         spatial_context: SpatialContextEXT = None,
         next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
@@ -30965,7 +30959,7 @@ class CreateSpatialDiscoverySnapshotCompletionInfoEXT(Structure):
 class CreateSpatialDiscoverySnapshotCompletionEXT(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
+        future_result: Result = Result.SUCCESS,
         snapshot: SpatialSnapshotEXT = None,
         next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
@@ -31144,7 +31138,7 @@ class SpatialBufferEXT(Structure):
     def __init__(
         self,
         buffer_id: SpatialBufferIdEXT = 0,
-        buffer_type: SpatialBufferTypeEXT = SpatialBufferTypeEXT(),  # noqa
+        buffer_type: SpatialBufferTypeEXT = SpatialBufferTypeEXT.UNKNOWN,
     ) -> None:
         super().__init__(
             buffer_id=buffer_id,
@@ -31689,7 +31683,7 @@ class EventDataSpatialDiscoveryRecommendedEXT(Structure):
 class SpatialFilterTrackingStateEXT(Structure):
     def __init__(
         self,
-        tracking_state: SpatialEntityTrackingStateEXT = SpatialEntityTrackingStateEXT(),  # noqa
+        tracking_state: SpatialEntityTrackingStateEXT = SpatialEntityTrackingStateEXT.STOPPED,
         next=None,
         type: StructureType = StructureType.SPATIAL_FILTER_TRACKING_STATE_EXT,
     ) -> None:
@@ -32288,7 +32282,7 @@ class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
         capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
-        ar_uco_dict: SpatialMarkerArucoDictEXT = SpatialMarkerArucoDictEXT(),  # noqa
+        ar_uco_dict: SpatialMarkerArucoDictEXT = SpatialMarkerArucoDictEXT.N4X4_50,
         next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_ARUCO_MARKER_EXT,
     ) -> None:
@@ -32375,7 +32369,7 @@ class SpatialCapabilityConfigurationAprilTagEXT(Structure):
         capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
         enabled_component_count: Optional[int] = None,
         enabled_components: ArrayFieldParamType[c_int] = None,
-        april_dict: SpatialMarkerAprilTagDictEXT = SpatialMarkerAprilTagDictEXT(),  # noqa
+        april_dict: SpatialMarkerAprilTagDictEXT = SpatialMarkerAprilTagDictEXT.N16H5,
         next=None,
         type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_APRIL_TAG_EXT,
     ) -> None:
@@ -32846,7 +32840,7 @@ class SpatialPersistenceContextEXT(POINTER(SpatialPersistenceContextEXT_T), Hand
 class SpatialPersistenceContextCreateInfoEXT(Structure):
     def __init__(
         self,
-        scope: SpatialPersistenceScopeEXT = SpatialPersistenceScopeEXT(),  # noqa
+        scope: SpatialPersistenceScopeEXT = SpatialPersistenceScopeEXT.SYSTEM_MANAGED,
         next=None,
         type: StructureType = StructureType.SPATIAL_PERSISTENCE_CONTEXT_CREATE_INFO_EXT,
     ) -> None:
@@ -32899,8 +32893,8 @@ class SpatialPersistenceContextCreateInfoEXT(Structure):
 class CreateSpatialPersistenceContextCompletionEXT(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
-        create_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),  # noqa
+        future_result: Result = Result.SUCCESS,
+        create_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT.SUCCESS,
         persistence_context: SpatialPersistenceContextEXT = None,
         next=None,
         type: StructureType = StructureType.CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT,
@@ -33094,7 +33088,7 @@ class SpatialPersistenceDataEXT(Structure):
     def __init__(
         self,
         persist_uuid: Uuid = None,
-        persist_state: SpatialPersistenceStateEXT = SpatialPersistenceStateEXT(),  # noqa
+        persist_state: SpatialPersistenceStateEXT = SpatialPersistenceStateEXT.LOADED,
     ) -> None:
         if persist_uuid is None:
             persist_uuid = Uuid()
@@ -33230,8 +33224,8 @@ class SpatialEntityPersistInfoEXT(Structure):
 class PersistSpatialEntityCompletionEXT(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
-        persist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),  # noqa
+        future_result: Result = Result.SUCCESS,
+        persist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT.SUCCESS,
         persist_uuid: Uuid = None,
         next=None,
         type: StructureType = StructureType.PERSIST_SPATIAL_ENTITY_COMPLETION_EXT,
@@ -33346,8 +33340,8 @@ class SpatialEntityUnpersistInfoEXT(Structure):
 class UnpersistSpatialEntityCompletionEXT(Structure):
     def __init__(
         self,
-        future_result: Result = Result(),  # noqa
-        unpersist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT(),  # noqa
+        future_result: Result = Result.SUCCESS,
+        unpersist_result: SpatialPersistenceContextResultEXT = SpatialPersistenceContextResultEXT.SUCCESS,
         next=None,
         type: StructureType = StructureType.UNPERSIST_SPATIAL_ENTITY_COMPLETION_EXT,
     ) -> None:

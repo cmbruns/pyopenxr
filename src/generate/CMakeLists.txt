@@ -324,11 +324,13 @@ endforeach()
 
 function(generate_source GENERATOR OUTPUT OUT_DIR)
     # Two step copy so newlines are used as line ending
+    message(STATUS "  generating file ${CMAKE_BINARY_DIR}/${OUTPUT}")
     execute_process(
         COMMAND ${Python_EXECUTABLE} "${GENERATOR}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         OUTPUT_FILE "${CMAKE_BINARY_DIR}/${OUTPUT}"
     )
+    message(STATUS "  copying file ${STAGING_DIR}/${OUTPUT}")
     configure_file(
         "${CMAKE_BINARY_DIR}/${OUTPUT}"
         "${STAGING_DIR}/${OUT_DIR}/"

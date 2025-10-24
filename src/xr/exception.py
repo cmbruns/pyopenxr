@@ -1090,13 +1090,13 @@ class RenderModelUnavailableFB(QualifiedSuccessResult):
         return Result.RENDER_MODEL_UNAVAILABLE_FB
 
 
-class MarkerNotTrackedVarjoError(ErrorResult):
+class MarkerNotTrackedVARJOError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_MARKER_NOT_TRACKED_VARJO
 
 
-class MarkerIdInvalidVarjoError(ErrorResult):
+class MarkerIdInvalidVARJOError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_MARKER_ID_INVALID_VARJO
@@ -1678,8 +1678,8 @@ _exception_map = {
     Result.ERROR_UNKNOWN_PASSTHROUGH_FB: UnknownPassthroughFBError,
     Result.ERROR_RENDER_MODEL_KEY_INVALID_FB: RenderModelKeyInvalidFBError,
     Result.RENDER_MODEL_UNAVAILABLE_FB: RenderModelUnavailableFB,
-    Result.ERROR_MARKER_NOT_TRACKED_VARJO: MarkerNotTrackedVarjoError,
-    Result.ERROR_MARKER_ID_INVALID_VARJO: MarkerIdInvalidVarjoError,
+    Result.ERROR_MARKER_NOT_TRACKED_VARJO: MarkerNotTrackedVARJOError,
+    Result.ERROR_MARKER_ID_INVALID_VARJO: MarkerIdInvalidVARJOError,
     Result.ERROR_MARKER_DETECTOR_PERMISSION_DENIED_ML: MarkerDetectorPermissionDeniedMLError,
     Result.ERROR_MARKER_DETECTOR_LOCATE_FAILED_ML: MarkerDetectorLocateFailedMLError,
     Result.ERROR_MARKER_DETECTOR_INVALID_DATA_QUERY_ML: MarkerDetectorInvalidDataQueryMLError,
@@ -1850,9 +1850,9 @@ __all__ = [
     "MarkerDetectorInvalidDataQueryMLError",
     "MarkerDetectorLocateFailedMLError",
     "MarkerDetectorPermissionDeniedMLError",
-    "MarkerIdInvalidVarjoError",
+    "MarkerIdInvalidVARJOError",
     "MarkerInvalidMLError",
-    "MarkerNotTrackedVarjoError",
+    "MarkerNotTrackedVARJOError",
     "MismatchingTrackableTypeANDROIDError",
     "NameDuplicatedError",
     "NameInvalidError",
