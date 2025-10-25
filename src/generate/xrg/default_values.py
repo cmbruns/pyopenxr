@@ -17,6 +17,13 @@ default_values = {
                 "api_version": "Version(1, 0, XR_VERSION_PATCH)",
             }
         },
+        "DebugUtilsMessengerCreateInfoEXT": {
+            "Field": {
+                "message_severities": "DebugUtilsMessageSeverityFlagsEXT.ALL",
+                "message_types": "DebugUtilsMessageTypeFlagsEXT.ALL",
+                "user_callback": "stdout_debug_callback",
+            }
+        },
         "InstanceCreateInfo": {
             "Field": {
                 "application_info": "ApplicationInfo()",

@@ -9,14 +9,15 @@ import ctypes
 
 import os
 import sys
-from typing import Any, Callable, Generator, Optional
+from typing import Any, Generator, Optional
 
 import numpy
 
-from .field_helper import *
+from .callback import *
 from .enums import *
-from .version import *
+from .field_helper import *
 from .handle import HandleMixin
+from .version import *
 
 VersionNumber = c_uint64
 
@@ -186,7 +187,7 @@ class ApiLayerProperties(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -243,7 +244,7 @@ class ExtensionProperties(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -271,7 +272,7 @@ class ApplicationInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self.application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self.engine_version)}, api_version={repr(self._api_version)})"
+        return f"xr.ApplicationInfo(application_name={repr(self.application_name)}, application_version={repr(self.application_version)}, engine_name={repr(self.engine_name)}, engine_version={repr(self.engine_version)}, api_version={repr(self.api_version)})"
 
     def __str__(self) -> str:
         return f"xr.ApplicationInfo(application_name={self.application_name}, application_version={self.application_version}, engine_name={self.engine_name}, engine_version={self.engine_version}, api_version={self._api_version})"
@@ -363,7 +364,7 @@ class InstanceCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceCreateInfo(create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self.enabled_api_layer_count)}, enabled_api_layer_names={repr(self._enabled_api_layer_names)}, enabled_extension_count={repr(self.enabled_extension_count)}, enabled_extension_names={repr(self._enabled_extension_names)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InstanceCreateInfo(create_flags={repr(self.create_flags)}, application_info={repr(self.application_info)}, enabled_api_layer_count={repr(self.enabled_api_layer_count)}, enabled_api_layer_names={repr(self.enabled_api_layer_names)}, enabled_extension_count={repr(self.enabled_extension_count)}, enabled_extension_names={repr(self.enabled_extension_names)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InstanceCreateInfo(create_flags={self.create_flags}, application_info={self.application_info}, enabled_api_layer_count={self.enabled_api_layer_count}, enabled_api_layer_names={self._enabled_api_layer_names}, enabled_extension_count={self.enabled_extension_count}, enabled_extension_names={self._enabled_extension_names}, next={self._next}, type={self._type})"
@@ -412,7 +413,7 @@ class InstanceCreateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -442,7 +443,7 @@ class InstanceProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceProperties(runtime_version={repr(self._runtime_version)}, runtime_name={repr(self.runtime_name)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InstanceProperties(runtime_version={repr(self.runtime_version)}, runtime_name={repr(self.runtime_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InstanceProperties(runtime_version={self._runtime_version}, runtime_name={self.runtime_name}, next={self._next}, type={self._type})"
@@ -476,7 +477,7 @@ class InstanceProperties(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -498,7 +499,7 @@ class EventDataBuffer(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataBuffer(varying={repr(self.varying)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataBuffer(varying={repr(self.varying)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataBuffer(next={self._next}, type={self._type})"
@@ -519,7 +520,7 @@ class EventDataBuffer(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -542,7 +543,7 @@ class SystemGetInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemGetInfo(form_factor={repr(self._form_factor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemGetInfo(form_factor={repr(self.form_factor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemGetInfo(form_factor={self._form_factor}, next={self._next}, type={self._type})"
@@ -554,7 +555,7 @@ class SystemGetInfo(Structure):
     @form_factor.setter
     def form_factor(self, value: FormFactor) -> None:
         # noinspection PyAttributeOutsideInit
-        self._form_factor = enum_field_helper(form_factor)
+        self._form_factor = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -572,7 +573,7 @@ class SystemGetInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -656,7 +657,7 @@ class SystemProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemProperties(system_id={repr(self.system_id)}, vendor_id={repr(self.vendor_id)}, system_name={repr(self.system_name)}, graphics_properties={repr(self.graphics_properties)}, tracking_properties={repr(self.tracking_properties)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemProperties(system_id={repr(self.system_id)}, vendor_id={repr(self.vendor_id)}, system_name={repr(self.system_name)}, graphics_properties={repr(self.graphics_properties)}, tracking_properties={repr(self.tracking_properties)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemProperties(system_id={self.system_id}, vendor_id={self.vendor_id}, system_name={self.system_name}, graphics_properties={self.graphics_properties}, tracking_properties={self.tracking_properties}, next={self._next}, type={self._type})"
@@ -677,7 +678,7 @@ class SystemProperties(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -706,7 +707,7 @@ class SessionCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionCreateInfo(create_flags={repr(self.create_flags)}, system_id={repr(self.system_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SessionCreateInfo(create_flags={repr(self.create_flags)}, system_id={repr(self.system_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SessionCreateInfo(create_flags={self.create_flags}, system_id={self.system_id}, next={self._next}, type={self._type})"
@@ -727,7 +728,7 @@ class SessionCreateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -807,7 +808,7 @@ class SpaceVelocity(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceVelocity(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceVelocity(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceVelocity(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity}, next={self._next}, type={self._type})"
@@ -828,7 +829,7 @@ class SpaceVelocity(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -934,7 +935,7 @@ class ReferenceSpaceCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ReferenceSpaceCreateInfo(reference_space_type={repr(self._reference_space_type)}, pose_in_reference_space={repr(self.pose_in_reference_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ReferenceSpaceCreateInfo(reference_space_type={repr(self.reference_space_type)}, pose_in_reference_space={repr(self.pose_in_reference_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ReferenceSpaceCreateInfo(reference_space_type={self._reference_space_type}, pose_in_reference_space={self.pose_in_reference_space}, next={self._next}, type={self._type})"
@@ -946,7 +947,7 @@ class ReferenceSpaceCreateInfo(Structure):
     @reference_space_type.setter
     def reference_space_type(self, value: ReferenceSpaceType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._reference_space_type = enum_field_helper(reference_space_type)
+        self._reference_space_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -964,7 +965,7 @@ class ReferenceSpaceCreateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1036,7 +1037,7 @@ class ActionSpaceCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionSpaceCreateInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, pose_in_action_space={repr(self.pose_in_action_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionSpaceCreateInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, pose_in_action_space={repr(self.pose_in_action_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionSpaceCreateInfo(action={self.action}, subaction_path={self.subaction_path}, pose_in_action_space={self.pose_in_action_space}, next={self._next}, type={self._type})"
@@ -1057,7 +1058,7 @@ class ActionSpaceCreateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1084,7 +1085,7 @@ class SpaceLocation(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceLocation(location_flags={repr(self.location_flags)}, pose={repr(self.pose)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceLocation(location_flags={repr(self.location_flags)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceLocation(location_flags={self.location_flags}, pose={self.pose}, next={self._next}, type={self._type})"
@@ -1105,7 +1106,7 @@ class SpaceLocation(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1131,7 +1132,7 @@ class ViewConfigurationProperties(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationProperties(view_configuration_type={repr(self._view_configuration_type)}, fov_mutable={repr(self.fov_mutable)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViewConfigurationProperties(view_configuration_type={repr(self.view_configuration_type)}, fov_mutable={repr(self.fov_mutable)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViewConfigurationProperties(view_configuration_type={self._view_configuration_type}, fov_mutable={self.fov_mutable}, next={self._next}, type={self._type})"
@@ -1143,7 +1144,7 @@ class ViewConfigurationProperties(Structure):
     @view_configuration_type.setter
     def view_configuration_type(self, value: ViewConfigurationType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._view_configuration_type = enum_field_helper(view_configuration_type)
+        self._view_configuration_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -1161,7 +1162,7 @@ class ViewConfigurationProperties(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1195,7 +1196,7 @@ class ViewConfigurationView(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationView(recommended_image_rect_width={repr(self.recommended_image_rect_width)}, max_image_rect_width={repr(self.max_image_rect_width)}, recommended_image_rect_height={repr(self.recommended_image_rect_height)}, max_image_rect_height={repr(self.max_image_rect_height)}, recommended_swapchain_sample_count={repr(self.recommended_swapchain_sample_count)}, max_swapchain_sample_count={repr(self.max_swapchain_sample_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViewConfigurationView(recommended_image_rect_width={repr(self.recommended_image_rect_width)}, max_image_rect_width={repr(self.max_image_rect_width)}, recommended_image_rect_height={repr(self.recommended_image_rect_height)}, max_image_rect_height={repr(self.max_image_rect_height)}, recommended_swapchain_sample_count={repr(self.recommended_swapchain_sample_count)}, max_swapchain_sample_count={repr(self.max_swapchain_sample_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViewConfigurationView(recommended_image_rect_width={self.recommended_image_rect_width}, max_image_rect_width={self.max_image_rect_width}, recommended_image_rect_height={self.recommended_image_rect_height}, max_image_rect_height={self.max_image_rect_height}, recommended_swapchain_sample_count={self.recommended_swapchain_sample_count}, max_swapchain_sample_count={self.max_swapchain_sample_count}, next={self._next}, type={self._type})"
@@ -1216,7 +1217,7 @@ class ViewConfigurationView(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1260,7 +1261,7 @@ class SwapchainCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainCreateInfo(create_flags={repr(self.create_flags)}, usage_flags={repr(self.usage_flags)}, format={repr(self.format)}, sample_count={repr(self.sample_count)}, width={repr(self.width)}, height={repr(self.height)}, face_count={repr(self.face_count)}, array_size={repr(self.array_size)}, mip_count={repr(self.mip_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainCreateInfo(create_flags={repr(self.create_flags)}, usage_flags={repr(self.usage_flags)}, format={repr(self.format)}, sample_count={repr(self.sample_count)}, width={repr(self.width)}, height={repr(self.height)}, face_count={repr(self.face_count)}, array_size={repr(self.array_size)}, mip_count={repr(self.mip_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainCreateInfo(create_flags={self.create_flags}, usage_flags={self.usage_flags}, format={self.format}, sample_count={self.sample_count}, width={self.width}, height={self.height}, face_count={self.face_count}, array_size={self.array_size}, mip_count={self.mip_count}, next={self._next}, type={self._type})"
@@ -1281,7 +1282,7 @@ class SwapchainCreateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1310,7 +1311,7 @@ class SwapchainImageBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageBaseHeader(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageBaseHeader(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageBaseHeader(next={self._next}, type={self._type})"
@@ -1351,7 +1352,7 @@ class SwapchainImageAcquireInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageAcquireInfo(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageAcquireInfo(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageAcquireInfo(next={self._next}, type={self._type})"
@@ -1372,7 +1373,7 @@ class SwapchainImageAcquireInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1394,7 +1395,7 @@ class SwapchainImageWaitInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageWaitInfo(timeout={repr(self.timeout)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageWaitInfo(timeout={repr(self.timeout)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageWaitInfo(timeout={self.timeout}, next={self._next}, type={self._type})"
@@ -1415,7 +1416,7 @@ class SwapchainImageWaitInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1436,7 +1437,7 @@ class SwapchainImageReleaseInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageReleaseInfo(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageReleaseInfo(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageReleaseInfo(next={self._next}, type={self._type})"
@@ -1457,7 +1458,7 @@ class SwapchainImageReleaseInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1479,7 +1480,7 @@ class SessionBeginInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionBeginInfo(primary_view_configuration_type={repr(self._primary_view_configuration_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SessionBeginInfo(primary_view_configuration_type={repr(self.primary_view_configuration_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SessionBeginInfo(primary_view_configuration_type={self._primary_view_configuration_type}, next={self._next}, type={self._type})"
@@ -1491,7 +1492,7 @@ class SessionBeginInfo(Structure):
     @primary_view_configuration_type.setter
     def primary_view_configuration_type(self, value: ViewConfigurationType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._primary_view_configuration_type = enum_field_helper(primary_view_configuration_type)
+        self._primary_view_configuration_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -1509,7 +1510,7 @@ class SessionBeginInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1530,7 +1531,7 @@ class FrameWaitInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameWaitInfo(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FrameWaitInfo(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FrameWaitInfo(next={self._next}, type={self._type})"
@@ -1551,7 +1552,7 @@ class FrameWaitInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1577,7 +1578,7 @@ class FrameState(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameState(predicted_display_time={repr(self.predicted_display_time)}, predicted_display_period={repr(self.predicted_display_period)}, should_render={repr(self.should_render)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FrameState(predicted_display_time={repr(self.predicted_display_time)}, predicted_display_period={repr(self.predicted_display_period)}, should_render={repr(self.should_render)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FrameState(predicted_display_time={self.predicted_display_time}, predicted_display_period={self.predicted_display_period}, should_render={self.should_render}, next={self._next}, type={self._type})"
@@ -1598,7 +1599,7 @@ class FrameState(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1621,7 +1622,7 @@ class FrameBeginInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameBeginInfo(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FrameBeginInfo(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FrameBeginInfo(next={self._next}, type={self._type})"
@@ -1642,7 +1643,7 @@ class FrameBeginInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1666,7 +1667,7 @@ class CompositionLayerBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerBaseHeader(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerBaseHeader(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerBaseHeader(layer_flags={self.layer_flags}, space={self.space}, next={self._next}, type={self._type})"
@@ -1719,7 +1720,7 @@ class FrameEndInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameEndInfo(display_time={repr(self.display_time)}, environment_blend_mode={repr(self._environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self._layers)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FrameEndInfo(display_time={repr(self.display_time)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FrameEndInfo(display_time={self.display_time}, environment_blend_mode={self._environment_blend_mode}, layer_count={self.layer_count}, layers={self._layers}, next={self._next}, type={self._type})"
@@ -1731,7 +1732,7 @@ class FrameEndInfo(Structure):
     @environment_blend_mode.setter
     def environment_blend_mode(self, value: EnvironmentBlendMode) -> None:
         # noinspection PyAttributeOutsideInit
-        self._environment_blend_mode = enum_field_helper(environment_blend_mode)
+        self._environment_blend_mode = enum_field_helper(value)
 
     @property
     def layers(self):
@@ -1763,7 +1764,7 @@ class FrameEndInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1793,7 +1794,7 @@ class ViewLocateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewLocateInfo(view_configuration_type={repr(self._view_configuration_type)}, display_time={repr(self.display_time)}, space={repr(self.space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViewLocateInfo(view_configuration_type={repr(self.view_configuration_type)}, display_time={repr(self.display_time)}, space={repr(self.space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViewLocateInfo(view_configuration_type={self._view_configuration_type}, display_time={self.display_time}, space={self.space}, next={self._next}, type={self._type})"
@@ -1805,7 +1806,7 @@ class ViewLocateInfo(Structure):
     @view_configuration_type.setter
     def view_configuration_type(self, value: ViewConfigurationType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._view_configuration_type = enum_field_helper(view_configuration_type)
+        self._view_configuration_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -1823,7 +1824,7 @@ class ViewLocateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1848,7 +1849,7 @@ class ViewState(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewState(view_state_flags={repr(self.view_state_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViewState(view_state_flags={repr(self.view_state_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViewState(view_state_flags={self.view_state_flags}, next={self._next}, type={self._type})"
@@ -1869,7 +1870,7 @@ class ViewState(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1948,7 +1949,7 @@ class View(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.View(pose={repr(self.pose)}, fov={repr(self.fov)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.View(pose={repr(self.pose)}, fov={repr(self.fov)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.View(pose={self.pose}, fov={self.fov}, next={self._next}, type={self._type})"
@@ -1969,7 +1970,7 @@ class View(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1997,7 +1998,7 @@ class ActionSetCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionSetCreateInfo(action_set_name={repr(self.action_set_name)}, localized_action_set_name={repr(self.localized_action_set_name)}, priority={repr(self.priority)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionSetCreateInfo(action_set_name={repr(self.action_set_name)}, localized_action_set_name={repr(self.localized_action_set_name)}, priority={repr(self.priority)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionSetCreateInfo(action_set_name={self.action_set_name}, localized_action_set_name={self.localized_action_set_name}, priority={self.priority}, next={self._next}, type={self._type})"
@@ -2018,7 +2019,7 @@ class ActionSetCreateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2053,7 +2054,7 @@ class ActionCreateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionCreateInfo(action_name={repr(self.action_name)}, action_type={repr(self._action_type)}, count_subaction_paths={repr(self.count_subaction_paths)}, subaction_paths={repr(self._subaction_paths)}, localized_action_name={repr(self.localized_action_name)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionCreateInfo(action_name={repr(self.action_name)}, action_type={repr(self.action_type)}, count_subaction_paths={repr(self.count_subaction_paths)}, subaction_paths={repr(self.subaction_paths)}, localized_action_name={repr(self.localized_action_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionCreateInfo(action_name={self.action_name}, action_type={self._action_type}, count_subaction_paths={self.count_subaction_paths}, subaction_paths={self._subaction_paths}, localized_action_name={self.localized_action_name}, next={self._next}, type={self._type})"
@@ -2065,7 +2066,7 @@ class ActionCreateInfo(Structure):
     @action_type.setter
     def action_type(self, value: ActionType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._action_type = enum_field_helper(action_type)
+        self._action_type = enum_field_helper(value)
 
     @property
     def subaction_paths(self):
@@ -2097,7 +2098,7 @@ class ActionCreateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2153,7 +2154,7 @@ class InteractionProfileSuggestedBinding(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={repr(self.interaction_profile)}, count_suggested_bindings={repr(self.count_suggested_bindings)}, suggested_bindings={repr(self._suggested_bindings)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InteractionProfileSuggestedBinding(interaction_profile={repr(self.interaction_profile)}, count_suggested_bindings={repr(self.count_suggested_bindings)}, suggested_bindings={repr(self.suggested_bindings)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InteractionProfileSuggestedBinding(interaction_profile={self.interaction_profile}, count_suggested_bindings={self.count_suggested_bindings}, suggested_bindings={self._suggested_bindings}, next={self._next}, type={self._type})"
@@ -2188,7 +2189,7 @@ class InteractionProfileSuggestedBinding(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2217,7 +2218,7 @@ class SessionActionSetsAttachInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionActionSetsAttachInfo(count_action_sets={repr(self.count_action_sets)}, action_sets={repr(self._action_sets)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SessionActionSetsAttachInfo(count_action_sets={repr(self.count_action_sets)}, action_sets={repr(self.action_sets)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SessionActionSetsAttachInfo(count_action_sets={self.count_action_sets}, action_sets={self._action_sets}, next={self._next}, type={self._type})"
@@ -2252,7 +2253,7 @@ class SessionActionSetsAttachInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2276,7 +2277,7 @@ class InteractionProfileState(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileState(interaction_profile={repr(self.interaction_profile)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InteractionProfileState(interaction_profile={repr(self.interaction_profile)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InteractionProfileState(interaction_profile={self.interaction_profile}, next={self._next}, type={self._type})"
@@ -2297,7 +2298,7 @@ class InteractionProfileState(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2322,7 +2323,7 @@ class ActionStateGetInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateGetInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionStateGetInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionStateGetInfo(action={self.action}, subaction_path={self.subaction_path}, next={self._next}, type={self._type})"
@@ -2343,7 +2344,7 @@ class ActionStateGetInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2373,7 +2374,7 @@ class ActionStateBoolean(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateBoolean(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionStateBoolean(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionStateBoolean(current_state={self.current_state}, changed_since_last_sync={self.changed_since_last_sync}, last_change_time={self.last_change_time}, is_active={self.is_active}, next={self._next}, type={self._type})"
@@ -2394,7 +2395,7 @@ class ActionStateBoolean(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2426,7 +2427,7 @@ class ActionStateFloat(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateFloat(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionStateFloat(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionStateFloat(current_state={self.current_state:.3f}, changed_since_last_sync={self.changed_since_last_sync}, last_change_time={self.last_change_time}, is_active={self.is_active}, next={self._next}, type={self._type})"
@@ -2447,7 +2448,7 @@ class ActionStateFloat(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2525,7 +2526,7 @@ class ActionStateVector2f(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStateVector2f(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionStateVector2f(current_state={repr(self.current_state)}, changed_since_last_sync={repr(self.changed_since_last_sync)}, last_change_time={repr(self.last_change_time)}, is_active={repr(self.is_active)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionStateVector2f(current_state={self.current_state}, changed_since_last_sync={self.changed_since_last_sync}, last_change_time={self.last_change_time}, is_active={self.is_active}, next={self._next}, type={self._type})"
@@ -2546,7 +2547,7 @@ class ActionStateVector2f(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2572,7 +2573,7 @@ class ActionStatePose(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionStatePose(is_active={repr(self.is_active)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionStatePose(is_active={repr(self.is_active)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionStatePose(is_active={self.is_active}, next={self._next}, type={self._type})"
@@ -2593,7 +2594,7 @@ class ActionStatePose(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2643,7 +2644,7 @@ class ActionsSyncInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActionsSyncInfo(count_active_action_sets={repr(self.count_active_action_sets)}, active_action_sets={repr(self._active_action_sets)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActionsSyncInfo(count_active_action_sets={repr(self.count_active_action_sets)}, active_action_sets={repr(self.active_action_sets)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActionsSyncInfo(count_active_action_sets={self.count_active_action_sets}, active_action_sets={self._active_action_sets}, next={self._next}, type={self._type})"
@@ -2678,7 +2679,7 @@ class ActionsSyncInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2702,7 +2703,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BoundSourcesForActionEnumerateInfo(action={repr(self.action)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BoundSourcesForActionEnumerateInfo(action={repr(self.action)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BoundSourcesForActionEnumerateInfo(action={self.action}, next={self._next}, type={self._type})"
@@ -2723,7 +2724,7 @@ class BoundSourcesForActionEnumerateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2748,7 +2749,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InputSourceLocalizedNameGetInfo(source_path={repr(self.source_path)}, which_components={repr(self.which_components)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InputSourceLocalizedNameGetInfo(source_path={repr(self.source_path)}, which_components={repr(self.which_components)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InputSourceLocalizedNameGetInfo(source_path={self.source_path}, which_components={self.which_components}, next={self._next}, type={self._type})"
@@ -2769,7 +2770,7 @@ class InputSourceLocalizedNameGetInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2795,7 +2796,7 @@ class HapticActionInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticActionInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HapticActionInfo(action={repr(self.action)}, subaction_path={repr(self.subaction_path)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HapticActionInfo(action={self.action}, subaction_path={self.subaction_path}, next={self._next}, type={self._type})"
@@ -2816,7 +2817,7 @@ class HapticActionInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2838,7 +2839,7 @@ class HapticBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticBaseHeader(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HapticBaseHeader(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HapticBaseHeader(next={self._next}, type={self._type})"
@@ -2879,7 +2880,7 @@ class BaseInStructure(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BaseInStructure(next={repr(self.next)}, type={repr(self._type)})"
+        return f"xr.BaseInStructure(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BaseInStructure(next={self.next}, type={self._type})"
@@ -2914,7 +2915,7 @@ class BaseOutStructure(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BaseOutStructure(next={repr(self.next)}, type={repr(self._type)})"
+        return f"xr.BaseOutStructure(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BaseOutStructure(next={self.next}, type={self._type})"
@@ -3102,7 +3103,7 @@ class CompositionLayerProjectionView(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerProjectionView(pose={repr(self.pose)}, fov={repr(self.fov)}, sub_image={repr(self.sub_image)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerProjectionView(pose={repr(self.pose)}, fov={repr(self.fov)}, sub_image={repr(self.sub_image)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerProjectionView(pose={self.pose}, fov={self.fov}, sub_image={self.sub_image}, next={self._next}, type={self._type})"
@@ -3123,7 +3124,7 @@ class CompositionLayerProjectionView(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3156,7 +3157,7 @@ class CompositionLayerProjection(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerProjection(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self.view_count)}, views={repr(self._views)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerProjection(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, view_count={repr(self.view_count)}, views={repr(self.views)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerProjection(layer_flags={self.layer_flags}, space={self.space}, view_count={self.view_count}, views={self._views}, next={self._next}, type={self._type})"
@@ -3191,7 +3192,7 @@ class CompositionLayerProjection(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3231,7 +3232,7 @@ class CompositionLayerQuad(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerQuad(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self._eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, size={repr(self.size)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerQuad(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, size={repr(self.size)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerQuad(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self._eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, size={self.size}, next={self._next}, type={self._type})"
@@ -3243,7 +3244,7 @@ class CompositionLayerQuad(Structure):
     @eye_visibility.setter
     def eye_visibility(self, value: EyeVisibility) -> None:
         # noinspection PyAttributeOutsideInit
-        self._eye_visibility = enum_field_helper(eye_visibility)
+        self._eye_visibility = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -3261,7 +3262,7 @@ class CompositionLayerQuad(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3287,7 +3288,7 @@ class EventDataBaseHeader(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataBaseHeader(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataBaseHeader(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataBaseHeader(next={self._next}, type={self._type})"
@@ -3330,7 +3331,7 @@ class EventDataEventsLost(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataEventsLost(lost_event_count={repr(self.lost_event_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataEventsLost(lost_event_count={repr(self.lost_event_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataEventsLost(lost_event_count={self.lost_event_count}, next={self._next}, type={self._type})"
@@ -3351,7 +3352,7 @@ class EventDataEventsLost(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3374,7 +3375,7 @@ class EventDataInstanceLossPending(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataInstanceLossPending(loss_time={repr(self.loss_time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataInstanceLossPending(loss_time={repr(self.loss_time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataInstanceLossPending(loss_time={self.loss_time}, next={self._next}, type={self._type})"
@@ -3395,7 +3396,7 @@ class EventDataInstanceLossPending(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3422,7 +3423,7 @@ class EventDataSessionStateChanged(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSessionStateChanged(session={repr(self.session)}, state={repr(self._state)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSessionStateChanged(session={repr(self.session)}, state={repr(self.state)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSessionStateChanged(session={self.session}, state={self._state}, time={self.time}, next={self._next}, type={self._type})"
@@ -3434,7 +3435,7 @@ class EventDataSessionStateChanged(Structure):
     @state.setter
     def state(self, value: SessionState) -> None:
         # noinspection PyAttributeOutsideInit
-        self._state = enum_field_helper(state)
+        self._state = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -3452,7 +3453,7 @@ class EventDataSessionStateChanged(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3485,7 +3486,7 @@ class EventDataReferenceSpaceChangePending(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataReferenceSpaceChangePending(session={repr(self.session)}, reference_space_type={repr(self._reference_space_type)}, change_time={repr(self.change_time)}, pose_valid={repr(self.pose_valid)}, pose_in_previous_space={repr(self.pose_in_previous_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataReferenceSpaceChangePending(session={repr(self.session)}, reference_space_type={repr(self.reference_space_type)}, change_time={repr(self.change_time)}, pose_valid={repr(self.pose_valid)}, pose_in_previous_space={repr(self.pose_in_previous_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataReferenceSpaceChangePending(session={self.session}, reference_space_type={self._reference_space_type}, change_time={self.change_time}, pose_valid={self.pose_valid}, pose_in_previous_space={self.pose_in_previous_space}, next={self._next}, type={self._type})"
@@ -3497,7 +3498,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     @reference_space_type.setter
     def reference_space_type(self, value: ReferenceSpaceType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._reference_space_type = enum_field_helper(reference_space_type)
+        self._reference_space_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -3515,7 +3516,7 @@ class EventDataReferenceSpaceChangePending(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3542,7 +3543,7 @@ class EventDataInteractionProfileChanged(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataInteractionProfileChanged(session={repr(self.session)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataInteractionProfileChanged(session={repr(self.session)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataInteractionProfileChanged(session={self.session}, next={self._next}, type={self._type})"
@@ -3563,7 +3564,7 @@ class EventDataInteractionProfileChanged(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -3590,7 +3591,7 @@ class HapticVibration(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticVibration(duration={repr(self.duration)}, frequency={repr(self.frequency)}, amplitude={repr(self.amplitude)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HapticVibration(duration={repr(self.duration)}, frequency={repr(self.frequency)}, amplitude={repr(self.amplitude)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HapticVibration(duration={self.duration}, frequency={self.frequency:.3f}, amplitude={self.amplitude:.3f}, next={self._next}, type={self._type})"
@@ -3611,7 +3612,7 @@ class HapticVibration(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4123,7 +4124,7 @@ class SpacesLocateInfo(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpacesLocateInfo(base_space={repr(self.base_space)}, time={repr(self.time)}, space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpacesLocateInfo(base_space={repr(self.base_space)}, time={repr(self.time)}, space_count={repr(self.space_count)}, spaces={repr(self.spaces)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpacesLocateInfo(base_space={self.base_space}, time={self.time}, space_count={self.space_count}, spaces={self._spaces}, next={self._next}, type={self._type})"
@@ -4158,7 +4159,7 @@ class SpacesLocateInfo(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4211,7 +4212,7 @@ class SpaceLocations(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceLocations(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceLocations(location_count={repr(self.location_count)}, locations={repr(self.locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceLocations(location_count={self.location_count}, locations={self._locations}, next={self._next}, type={self._type})"
@@ -4246,7 +4247,7 @@ class SpaceLocations(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4302,7 +4303,7 @@ class SpaceVelocities(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceVelocities(velocity_count={repr(self.velocity_count)}, velocities={repr(self.velocities)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceVelocities(velocity_count={repr(self.velocity_count)}, velocities={repr(self.velocities)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceVelocities(velocity_count={self.velocity_count}, velocities={self.velocities}, next={self._next}, type={self._type})"
@@ -4323,7 +4324,7 @@ class SpaceVelocities(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4362,7 +4363,7 @@ class CompositionLayerCubeKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerCubeKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self._eye_visibility)}, swapchain={repr(self.swapchain)}, image_array_index={repr(self.image_array_index)}, orientation={repr(self.orientation)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerCubeKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, swapchain={repr(self.swapchain)}, image_array_index={repr(self.image_array_index)}, orientation={repr(self.orientation)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerCubeKHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self._eye_visibility}, swapchain={self.swapchain}, image_array_index={self.image_array_index}, orientation={self.orientation}, next={self._next}, type={self._type})"
@@ -4374,7 +4375,7 @@ class CompositionLayerCubeKHR(Structure):
     @eye_visibility.setter
     def eye_visibility(self, value: EyeVisibility) -> None:
         # noinspection PyAttributeOutsideInit
-        self._eye_visibility = enum_field_helper(eye_visibility)
+        self._eye_visibility = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -4392,7 +4393,7 @@ class CompositionLayerCubeKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4430,7 +4431,7 @@ class CompositionLayerDepthInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerDepthInfoKHR(sub_image={repr(self.sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerDepthInfoKHR(sub_image={repr(self.sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerDepthInfoKHR(sub_image={self.sub_image}, min_depth={self.min_depth:.3f}, max_depth={self.max_depth:.3f}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next={self._next}, type={self._type})"
@@ -4451,7 +4452,7 @@ class CompositionLayerDepthInfoKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4494,7 +4495,7 @@ class CompositionLayerCylinderKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerCylinderKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self._eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_angle={repr(self.central_angle)}, aspect_ratio={repr(self.aspect_ratio)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerCylinderKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_angle={repr(self.central_angle)}, aspect_ratio={repr(self.aspect_ratio)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerCylinderKHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self._eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, radius={self.radius:.3f}, central_angle={self.central_angle:.3f}, aspect_ratio={self.aspect_ratio:.3f}, next={self._next}, type={self._type})"
@@ -4506,7 +4507,7 @@ class CompositionLayerCylinderKHR(Structure):
     @eye_visibility.setter
     def eye_visibility(self, value: EyeVisibility) -> None:
         # noinspection PyAttributeOutsideInit
-        self._eye_visibility = enum_field_helper(eye_visibility)
+        self._eye_visibility = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -4524,7 +4525,7 @@ class CompositionLayerCylinderKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4574,7 +4575,7 @@ class CompositionLayerEquirectKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerEquirectKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self._eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, scale={repr(self.scale)}, bias={repr(self.bias)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerEquirectKHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, scale={repr(self.scale)}, bias={repr(self.bias)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerEquirectKHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self._eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, radius={self.radius:.3f}, scale={self.scale}, bias={self.bias}, next={self._next}, type={self._type})"
@@ -4586,7 +4587,7 @@ class CompositionLayerEquirectKHR(Structure):
     @eye_visibility.setter
     def eye_visibility(self, value: EyeVisibility) -> None:
         # noinspection PyAttributeOutsideInit
-        self._eye_visibility = enum_field_helper(eye_visibility)
+        self._eye_visibility = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -4604,7 +4605,7 @@ class CompositionLayerEquirectKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4644,7 +4645,7 @@ class VisibilityMaskKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VisibilityMaskKHR(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VisibilityMaskKHR(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VisibilityMaskKHR(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self._next}, type={self._type})"
@@ -4665,7 +4666,7 @@ class VisibilityMaskKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4697,7 +4698,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataVisibilityMaskChangedKHR(session={repr(self.session)}, view_configuration_type={repr(self._view_configuration_type)}, view_index={repr(self.view_index)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataVisibilityMaskChangedKHR(session={repr(self.session)}, view_configuration_type={repr(self.view_configuration_type)}, view_index={repr(self.view_index)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataVisibilityMaskChangedKHR(session={self.session}, view_configuration_type={self._view_configuration_type}, view_index={self.view_index}, next={self._next}, type={self._type})"
@@ -4709,7 +4710,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     @view_configuration_type.setter
     def view_configuration_type(self, value: ViewConfigurationType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._view_configuration_type = enum_field_helper(view_configuration_type)
+        self._view_configuration_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -4727,7 +4728,7 @@ class EventDataVisibilityMaskChangedKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4761,7 +4762,7 @@ class CompositionLayerColorScaleBiasKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerColorScaleBiasKHR(color_scale={repr(self.color_scale)}, color_bias={repr(self.color_bias)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerColorScaleBiasKHR(color_scale={repr(self.color_scale)}, color_bias={repr(self.color_bias)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerColorScaleBiasKHR(color_scale={self.color_scale}, color_bias={self.color_bias}, next={self._next}, type={self._type})"
@@ -4782,7 +4783,7 @@ class CompositionLayerColorScaleBiasKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4804,7 +4805,7 @@ class LoaderInitInfoBaseHeaderKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LoaderInitInfoBaseHeaderKHR(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LoaderInitInfoBaseHeaderKHR(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LoaderInitInfoBaseHeaderKHR(next={self._next}, type={self._type})"
@@ -4868,7 +4869,7 @@ class CompositionLayerEquirect2KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerEquirect2KHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self._eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_horizontal_angle={repr(self.central_horizontal_angle)}, upper_vertical_angle={repr(self.upper_vertical_angle)}, lower_vertical_angle={repr(self.lower_vertical_angle)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerEquirect2KHR(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, eye_visibility={repr(self.eye_visibility)}, sub_image={repr(self.sub_image)}, pose={repr(self.pose)}, radius={repr(self.radius)}, central_horizontal_angle={repr(self.central_horizontal_angle)}, upper_vertical_angle={repr(self.upper_vertical_angle)}, lower_vertical_angle={repr(self.lower_vertical_angle)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerEquirect2KHR(layer_flags={self.layer_flags}, space={self.space}, eye_visibility={self._eye_visibility}, sub_image={self.sub_image}, pose={self.pose}, radius={self.radius:.3f}, central_horizontal_angle={self.central_horizontal_angle:.3f}, upper_vertical_angle={self.upper_vertical_angle:.3f}, lower_vertical_angle={self.lower_vertical_angle:.3f}, next={self._next}, type={self._type})"
@@ -4880,7 +4881,7 @@ class CompositionLayerEquirect2KHR(Structure):
     @eye_visibility.setter
     def eye_visibility(self, value: EyeVisibility) -> None:
         # noinspection PyAttributeOutsideInit
-        self._eye_visibility = enum_field_helper(eye_visibility)
+        self._eye_visibility = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -4898,7 +4899,7 @@ class CompositionLayerEquirect2KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -4927,7 +4928,7 @@ class BindingModificationBaseHeaderKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BindingModificationBaseHeaderKHR(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BindingModificationBaseHeaderKHR(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BindingModificationBaseHeaderKHR(next={self._next}, type={self._type})"
@@ -4974,7 +4975,7 @@ class BindingModificationsKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BindingModificationsKHR(binding_modification_count={repr(self.binding_modification_count)}, binding_modifications={repr(self._binding_modifications)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BindingModificationsKHR(binding_modification_count={repr(self.binding_modification_count)}, binding_modifications={repr(self.binding_modifications)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BindingModificationsKHR(binding_modification_count={self.binding_modification_count}, binding_modifications={self._binding_modifications}, next={self._next}, type={self._type})"
@@ -5009,7 +5010,7 @@ class BindingModificationsKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5064,7 +5065,7 @@ class EventDataPerfSettingsEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataPerfSettingsEXT(domain={repr(self._domain)}, sub_domain={repr(self._sub_domain)}, from_level={repr(self._from_level)}, to_level={repr(self._to_level)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataPerfSettingsEXT(domain={repr(self.domain)}, sub_domain={repr(self.sub_domain)}, from_level={repr(self.from_level)}, to_level={repr(self.to_level)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataPerfSettingsEXT(domain={self._domain}, sub_domain={self._sub_domain}, from_level={self._from_level}, to_level={self._to_level}, next={self._next}, type={self._type})"
@@ -5076,7 +5077,7 @@ class EventDataPerfSettingsEXT(Structure):
     @domain.setter
     def domain(self, value: PerfSettingsDomainEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._domain = enum_field_helper(domain)
+        self._domain = enum_field_helper(value)
 
     @property
     def sub_domain(self) -> PerfSettingsSubDomainEXT:
@@ -5085,7 +5086,7 @@ class EventDataPerfSettingsEXT(Structure):
     @sub_domain.setter
     def sub_domain(self, value: PerfSettingsSubDomainEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._sub_domain = enum_field_helper(sub_domain)
+        self._sub_domain = enum_field_helper(value)
 
     @property
     def from_level(self) -> PerfSettingsNotificationLevelEXT:
@@ -5094,7 +5095,7 @@ class EventDataPerfSettingsEXT(Structure):
     @from_level.setter
     def from_level(self, value: PerfSettingsNotificationLevelEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._from_level = enum_field_helper(from_level)
+        self._from_level = enum_field_helper(value)
 
     @property
     def to_level(self) -> PerfSettingsNotificationLevelEXT:
@@ -5103,7 +5104,7 @@ class EventDataPerfSettingsEXT(Structure):
     @to_level.setter
     def to_level(self, value: PerfSettingsNotificationLevelEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._to_level = enum_field_helper(to_level)
+        self._to_level = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -5121,7 +5122,7 @@ class EventDataPerfSettingsEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5206,7 +5207,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={repr(self._object_type)}, object_handle={repr(self.object_handle)}, object_name={repr(self._object_name)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.DebugUtilsObjectNameInfoEXT(object_type={repr(self.object_type)}, object_handle={repr(self.object_handle)}, object_name={repr(self.object_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.DebugUtilsObjectNameInfoEXT(object_type={self._object_type}, object_handle={self.object_handle}, object_name={self._object_name}, next={self._next}, type={self._type})"
@@ -5218,7 +5219,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
     @object_type.setter
     def object_type(self, value: ObjectType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._object_type = enum_field_helper(object_type)
+        self._object_type = enum_field_helper(value)
 
     @property
     def object_name(self) -> str:
@@ -5245,7 +5246,7 @@ class DebugUtilsObjectNameInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5270,7 +5271,7 @@ class DebugUtilsLabelEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsLabelEXT(label_name={repr(self._label_name)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.DebugUtilsLabelEXT(label_name={repr(self.label_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.DebugUtilsLabelEXT(label_name={self._label_name}, next={self._next}, type={self._type})"
@@ -5300,7 +5301,7 @@ class DebugUtilsLabelEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5339,7 +5340,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self._message_id)}, function_name={repr(self._function_name)}, message={repr(self._message)}, object_count={repr(self.object_count)}, objects={repr(self._objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self._session_labels)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={repr(self.message_id)}, function_name={repr(self.function_name)}, message={repr(self.message)}, object_count={repr(self.object_count)}, objects={repr(self.objects)}, session_label_count={repr(self.session_label_count)}, session_labels={repr(self.session_labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.DebugUtilsMessengerCallbackDataEXT(message_id={self._message_id}, function_name={self._function_name}, message={self._message}, object_count={self.object_count}, objects={self._objects}, session_label_count={self.session_label_count}, session_labels={self._session_labels}, next={self._next}, type={self._type})"
@@ -5415,7 +5416,7 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5431,67 +5432,6 @@ class DebugUtilsMessengerCallbackDataEXT(Structure):
 
 
 PFN_xrDebugUtilsMessengerCallbackEXT = CFUNCTYPE(Bool32, DebugUtilsMessageSeverityFlagsEXTCInt, DebugUtilsMessageTypeFlagsEXTCInt, POINTER(DebugUtilsMessengerCallbackDataEXT), c_void_p)
-
-# TODO: inject these three items in the generator:
-
-DebugCallbackType = Callable[[
-    DebugUtilsMessageSeverityFlagsEXT,
-    DebugUtilsMessageTypeFlagsEXT,
-    DebugUtilsMessengerCallbackDataEXT,
-    c_void_p,
-], bool]
-
-
-def default_debug_callback(
-        severity: DebugUtilsMessageSeverityFlagsEXT,
-        type_flags: DebugUtilsMessageTypeFlagsEXT,
-        callback_data: "DebugUtilsMessengerCallbackDataEXT",
-        _user_data: c_void_p,
-) -> bool:
-    """
-    Default diagnostic callback for `XR_EXT_debug_utils`.
-
-    This function is invoked by the OpenXR runtime when a debug message is emitted.
-    It prints the message to standard output, including severity, type, and function name.
-
-    This is a minimal implementation intended primarily as a reference or starting point
-    for client applications. Users are encouraged to implement their own callback to
-    integrate with logging frameworks, telemetry systems, or custom filtering logic.
-
-    :param severity: Bitmask of message severity flags.
-    :type severity: xr.DebugUtilsMessageSeverityFlagsEXT
-    :param type_flags: Bitmask of message type flags.
-    :type type_flags: xr.DebugUtilsMessageTypeFlagsEXT
-    :param callback_data: Pointer to a populated `DebugUtilsMessengerCallbackDataEXT` structure.
-    :type callback_data: ctypes.POINTER(xr.DebugUtilsMessengerCallbackDataEXT)
-    :param _user_data: Optional user data passed during messenger creation. Unused by default.
-    :type _user_data: ctypes.c_void_p
-
-    :seealso: :class:`xr.DebugUtilsMessengerCreateInfoEXT`, :class:`xr.DebugUtilsMessengerEXT`
-    """
-
-    message = callback_data.message
-    func_name = callback_data.function_name
-    print(f"[XR DEBUG] Severity={severity} Type={type_flags} Message={message} Function={func_name}")
-    return False  # important!
-
-
-def wrap_debug_callback(user_callback: DebugCallbackType, user_data: Any):
-    def _shim(
-            severity: int,
-            type_flags: int,
-            callback_data_ptr: POINTER("DebugUtilsMessengerCallbackDataEXT"),
-            _user_data_ptr: c_void_p,
-    ):
-        try:
-            severity_enum = DebugUtilsMessageSeverityFlagsEXT(severity)
-            type_enum = DebugUtilsMessageTypeFlagsEXT(type_flags)
-            callback_data = callback_data_ptr.contents
-            return user_callback(severity_enum, type_enum, callback_data, user_data)
-        except Exception as e:
-            print(f"Exception in debug callback: {e}")
-            return False
-    return PFN_xrDebugUtilsMessengerCallbackEXT(_shim)
 
 
 class DebugUtilsMessengerCreateInfoEXT(Structure):
@@ -5525,15 +5465,12 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     def __init__(
         self,
         message_severities: DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT.ALL,
-
         message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT.ALL,
-
         user_callback: DebugCallbackType = default_debug_callback,
         user_data: Any = None,
         next=None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
-        self._cached_user_data = user_data  # in case it does not fit in a c_void_p
         super().__init__(
             message_severities=enum_field_helper(message_severities),
             message_types=enum_field_helper(message_types),
@@ -5554,7 +5491,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         self._user_data = cast(py_object(value), c_void_p) if value else None
 
     def __repr__(self) -> str:
-        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={repr(self.message_severities)}, message_types={repr(self.message_types)}, user_callback={repr(self.user_callback)}, user_data={repr(self.user_data)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={repr(self.message_severities)}, message_types={repr(self.message_types)}, user_callback={repr(self.user_callback)}, user_data={repr(self.user_data)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={self.message_severities}, message_types={self.message_types}, user_callback={self.user_callback}, user_data={self.user_data}, next={self._next}, type={self._type})"
@@ -5575,7 +5512,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     @property
     def user_callback(self) -> PFN_xrDebugUtilsMessengerCallbackEXT:
@@ -5628,7 +5565,7 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemEyeGazeInteractionPropertiesEXT(supports_eye_gaze_interaction={repr(self.supports_eye_gaze_interaction)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemEyeGazeInteractionPropertiesEXT(supports_eye_gaze_interaction={repr(self.supports_eye_gaze_interaction)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemEyeGazeInteractionPropertiesEXT(supports_eye_gaze_interaction={self.supports_eye_gaze_interaction}, next={self._next}, type={self._type})"
@@ -5649,7 +5586,7 @@ class SystemEyeGazeInteractionPropertiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5672,7 +5609,7 @@ class EyeGazeSampleTimeEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EyeGazeSampleTimeEXT(time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EyeGazeSampleTimeEXT(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EyeGazeSampleTimeEXT(time={self.time}, next={self._next}, type={self._type})"
@@ -5693,7 +5630,7 @@ class EyeGazeSampleTimeEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5723,7 +5660,7 @@ class SessionCreateInfoOverlayEXTX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SessionCreateInfoOverlayEXTX(create_flags={repr(self.create_flags)}, session_layers_placement={repr(self.session_layers_placement)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SessionCreateInfoOverlayEXTX(create_flags={repr(self.create_flags)}, session_layers_placement={repr(self.session_layers_placement)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SessionCreateInfoOverlayEXTX(create_flags={self.create_flags}, session_layers_placement={self.session_layers_placement}, next={self._next}, type={self._type})"
@@ -5744,7 +5681,7 @@ class SessionCreateInfoOverlayEXTX(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5770,7 +5707,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataMainSessionVisibilityChangedEXTX(visible={repr(self.visible)}, flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataMainSessionVisibilityChangedEXTX(visible={repr(self.visible)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataMainSessionVisibilityChangedEXTX(visible={self.visible}, flags={self.flags}, next={self._next}, type={self._type})"
@@ -5791,7 +5728,7 @@ class EventDataMainSessionVisibilityChangedEXTX(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5827,7 +5764,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateInfoMSFT(space={repr(self.space)}, pose={repr(self.pose)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorCreateInfoMSFT(space={repr(self.space)}, pose={repr(self.pose)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorCreateInfoMSFT(space={self.space}, pose={self.pose}, time={self.time}, next={self._next}, type={self._type})"
@@ -5848,7 +5785,7 @@ class SpatialAnchorCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5875,7 +5812,7 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorSpaceCreateInfoMSFT(anchor={repr(self.anchor)}, pose_in_anchor_space={repr(self.pose_in_anchor_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorSpaceCreateInfoMSFT(anchor={repr(self.anchor)}, pose_in_anchor_space={repr(self.pose_in_anchor_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorSpaceCreateInfoMSFT(anchor={self.anchor}, pose_in_anchor_space={self.pose_in_anchor_space}, next={self._next}, type={self._type})"
@@ -5896,7 +5833,7 @@ class SpatialAnchorSpaceCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5929,7 +5866,7 @@ class CompositionLayerImageLayoutFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerImageLayoutFB(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerImageLayoutFB(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerImageLayoutFB(flags={self.flags}, next={self._next}, type={self._type})"
@@ -5950,7 +5887,7 @@ class CompositionLayerImageLayoutFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -5979,7 +5916,7 @@ class CompositionLayerAlphaBlendFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerAlphaBlendFB(src_factor_color={repr(self._src_factor_color)}, dst_factor_color={repr(self._dst_factor_color)}, src_factor_alpha={repr(self._src_factor_alpha)}, dst_factor_alpha={repr(self._dst_factor_alpha)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerAlphaBlendFB(src_factor_color={repr(self.src_factor_color)}, dst_factor_color={repr(self.dst_factor_color)}, src_factor_alpha={repr(self.src_factor_alpha)}, dst_factor_alpha={repr(self.dst_factor_alpha)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerAlphaBlendFB(src_factor_color={self._src_factor_color}, dst_factor_color={self._dst_factor_color}, src_factor_alpha={self._src_factor_alpha}, dst_factor_alpha={self._dst_factor_alpha}, next={self._next}, type={self._type})"
@@ -5991,7 +5928,7 @@ class CompositionLayerAlphaBlendFB(Structure):
     @src_factor_color.setter
     def src_factor_color(self, value: BlendFactorFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._src_factor_color = enum_field_helper(src_factor_color)
+        self._src_factor_color = enum_field_helper(value)
 
     @property
     def dst_factor_color(self) -> BlendFactorFB:
@@ -6000,7 +5937,7 @@ class CompositionLayerAlphaBlendFB(Structure):
     @dst_factor_color.setter
     def dst_factor_color(self, value: BlendFactorFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._dst_factor_color = enum_field_helper(dst_factor_color)
+        self._dst_factor_color = enum_field_helper(value)
 
     @property
     def src_factor_alpha(self) -> BlendFactorFB:
@@ -6009,7 +5946,7 @@ class CompositionLayerAlphaBlendFB(Structure):
     @src_factor_alpha.setter
     def src_factor_alpha(self, value: BlendFactorFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._src_factor_alpha = enum_field_helper(src_factor_alpha)
+        self._src_factor_alpha = enum_field_helper(value)
 
     @property
     def dst_factor_alpha(self) -> BlendFactorFB:
@@ -6018,7 +5955,7 @@ class CompositionLayerAlphaBlendFB(Structure):
     @dst_factor_alpha.setter
     def dst_factor_alpha(self, value: BlendFactorFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._dst_factor_alpha = enum_field_helper(dst_factor_alpha)
+        self._dst_factor_alpha = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -6036,7 +5973,7 @@ class CompositionLayerAlphaBlendFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6068,7 +6005,7 @@ class ViewConfigurationDepthRangeEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationDepthRangeEXT(recommended_near_z={repr(self.recommended_near_z)}, min_near_z={repr(self.min_near_z)}, recommended_far_z={repr(self.recommended_far_z)}, max_far_z={repr(self.max_far_z)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViewConfigurationDepthRangeEXT(recommended_near_z={repr(self.recommended_near_z)}, min_near_z={repr(self.min_near_z)}, recommended_far_z={repr(self.recommended_far_z)}, max_far_z={repr(self.max_far_z)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViewConfigurationDepthRangeEXT(recommended_near_z={self.recommended_near_z:.3f}, min_near_z={self.min_near_z:.3f}, recommended_far_z={self.recommended_far_z:.3f}, max_far_z={self.max_far_z:.3f}, next={self._next}, type={self._type})"
@@ -6089,7 +6026,7 @@ class ViewConfigurationDepthRangeEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6136,7 +6073,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialGraphNodeSpaceCreateInfoMSFT(node_type={repr(self._node_type)}, node_id={repr(self.node_id)}, pose={repr(self.pose)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialGraphNodeSpaceCreateInfoMSFT(node_type={repr(self.node_type)}, node_id={repr(self.node_id)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialGraphNodeSpaceCreateInfoMSFT(node_type={self._node_type}, pose={self.pose}, next={self._next}, type={self._type})"
@@ -6148,7 +6085,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     @node_type.setter
     def node_type(self, value: SpatialGraphNodeTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._node_type = enum_field_helper(node_type)
+        self._node_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -6166,7 +6103,7 @@ class SpatialGraphNodeSpaceCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6195,7 +6132,7 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialGraphStaticNodeBindingCreateInfoMSFT(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialGraphStaticNodeBindingCreateInfoMSFT(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialGraphStaticNodeBindingCreateInfoMSFT(space={self.space}, pose_in_space={self.pose_in_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -6216,7 +6153,7 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6239,7 +6176,7 @@ class SpatialGraphNodeBindingPropertiesGetInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next={self._next}, type={self._type})"
@@ -6260,7 +6197,7 @@ class SpatialGraphNodeBindingPropertiesGetInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6282,7 +6219,7 @@ class SpatialGraphNodeBindingPropertiesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialGraphNodeBindingPropertiesMSFT(node_id={repr(self.node_id)}, pose_in_node_space={repr(self.pose_in_node_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialGraphNodeBindingPropertiesMSFT(node_id={repr(self.node_id)}, pose_in_node_space={repr(self.pose_in_node_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialGraphNodeBindingPropertiesMSFT(pose_in_node_space={self.pose_in_node_space}, next={self._next}, type={self._type})"
@@ -6303,7 +6240,7 @@ class SpatialGraphNodeBindingPropertiesMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6344,7 +6281,7 @@ class SystemHandTrackingPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemHandTrackingPropertiesEXT(supports_hand_tracking={repr(self.supports_hand_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemHandTrackingPropertiesEXT(supports_hand_tracking={repr(self.supports_hand_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemHandTrackingPropertiesEXT(supports_hand_tracking={self.supports_hand_tracking}, next={self._next}, type={self._type})"
@@ -6365,7 +6302,7 @@ class SystemHandTrackingPropertiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6390,7 +6327,7 @@ class HandTrackerCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackerCreateInfoEXT(hand={repr(self._hand)}, hand_joint_set={repr(self._hand_joint_set)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandTrackerCreateInfoEXT(hand={repr(self.hand)}, hand_joint_set={repr(self.hand_joint_set)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandTrackerCreateInfoEXT(hand={self._hand}, hand_joint_set={self._hand_joint_set}, next={self._next}, type={self._type})"
@@ -6402,7 +6339,7 @@ class HandTrackerCreateInfoEXT(Structure):
     @hand.setter
     def hand(self, value: HandEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._hand = enum_field_helper(hand)
+        self._hand = enum_field_helper(value)
 
     @property
     def hand_joint_set(self) -> HandJointSetEXT:
@@ -6411,7 +6348,7 @@ class HandTrackerCreateInfoEXT(Structure):
     @hand_joint_set.setter
     def hand_joint_set(self, value: HandJointSetEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._hand_joint_set = enum_field_helper(hand_joint_set)
+        self._hand_joint_set = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -6429,7 +6366,7 @@ class HandTrackerCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6455,7 +6392,7 @@ class HandJointsLocateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointsLocateInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandJointsLocateInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandJointsLocateInfoEXT(base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -6476,7 +6413,7 @@ class HandJointsLocateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6562,7 +6499,7 @@ class HandJointLocationsEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointLocationsEXT(is_active={repr(self.is_active)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self._joint_locations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandJointLocationsEXT(is_active={repr(self.is_active)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self.joint_locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandJointLocationsEXT(is_active={self.is_active}, joint_count={self.joint_count}, joint_locations={self._joint_locations}, next={self._next}, type={self._type})"
@@ -6597,7 +6534,7 @@ class HandJointLocationsEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6626,7 +6563,7 @@ class HandJointVelocitiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointVelocitiesEXT(joint_count={repr(self.joint_count)}, joint_velocities={repr(self._joint_velocities)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandJointVelocitiesEXT(joint_count={repr(self.joint_count)}, joint_velocities={repr(self.joint_velocities)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandJointVelocitiesEXT(joint_count={self.joint_count}, joint_velocities={self._joint_velocities}, next={self._next}, type={self._type})"
@@ -6661,7 +6598,7 @@ class HandJointVelocitiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6696,7 +6633,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemHandTrackingMeshPropertiesMSFT(supports_hand_tracking_mesh={repr(self.supports_hand_tracking_mesh)}, max_hand_mesh_index_count={repr(self.max_hand_mesh_index_count)}, max_hand_mesh_vertex_count={repr(self.max_hand_mesh_vertex_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemHandTrackingMeshPropertiesMSFT(supports_hand_tracking_mesh={repr(self.supports_hand_tracking_mesh)}, max_hand_mesh_index_count={repr(self.max_hand_mesh_index_count)}, max_hand_mesh_vertex_count={repr(self.max_hand_mesh_vertex_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemHandTrackingMeshPropertiesMSFT(supports_hand_tracking_mesh={self.supports_hand_tracking_mesh}, max_hand_mesh_index_count={self.max_hand_mesh_index_count}, max_hand_mesh_vertex_count={self.max_hand_mesh_vertex_count}, next={self._next}, type={self._type})"
@@ -6717,7 +6654,7 @@ class SystemHandTrackingMeshPropertiesMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6744,7 +6681,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandMeshSpaceCreateInfoMSFT(hand_pose_type={repr(self._hand_pose_type)}, pose_in_hand_mesh_space={repr(self.pose_in_hand_mesh_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandMeshSpaceCreateInfoMSFT(hand_pose_type={repr(self.hand_pose_type)}, pose_in_hand_mesh_space={repr(self.pose_in_hand_mesh_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandMeshSpaceCreateInfoMSFT(hand_pose_type={self._hand_pose_type}, pose_in_hand_mesh_space={self.pose_in_hand_mesh_space}, next={self._next}, type={self._type})"
@@ -6756,7 +6693,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
     @hand_pose_type.setter
     def hand_pose_type(self, value: HandPoseTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._hand_pose_type = enum_field_helper(hand_pose_type)
+        self._hand_pose_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -6774,7 +6711,7 @@ class HandMeshSpaceCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6800,7 +6737,7 @@ class HandMeshUpdateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandMeshUpdateInfoMSFT(time={repr(self.time)}, hand_pose_type={repr(self._hand_pose_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandMeshUpdateInfoMSFT(time={repr(self.time)}, hand_pose_type={repr(self.hand_pose_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandMeshUpdateInfoMSFT(time={self.time}, hand_pose_type={self._hand_pose_type}, next={self._next}, type={self._type})"
@@ -6812,7 +6749,7 @@ class HandMeshUpdateInfoMSFT(Structure):
     @hand_pose_type.setter
     def hand_pose_type(self, value: HandPoseTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._hand_pose_type = enum_field_helper(hand_pose_type)
+        self._hand_pose_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -6830,7 +6767,7 @@ class HandMeshUpdateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6951,7 +6888,7 @@ class HandMeshMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandMeshMSFT(is_active={repr(self.is_active)}, index_buffer_changed={repr(self.index_buffer_changed)}, vertex_buffer_changed={repr(self.vertex_buffer_changed)}, index_buffer={repr(self.index_buffer)}, vertex_buffer={repr(self.vertex_buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandMeshMSFT(is_active={repr(self.is_active)}, index_buffer_changed={repr(self.index_buffer_changed)}, vertex_buffer_changed={repr(self.vertex_buffer_changed)}, index_buffer={repr(self.index_buffer)}, vertex_buffer={repr(self.vertex_buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandMeshMSFT(is_active={self.is_active}, index_buffer_changed={self.index_buffer_changed}, vertex_buffer_changed={self.vertex_buffer_changed}, index_buffer={self.index_buffer}, vertex_buffer={self.vertex_buffer}, next={self._next}, type={self._type})"
@@ -6972,7 +6909,7 @@ class HandMeshMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -6999,7 +6936,7 @@ class HandPoseTypeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandPoseTypeInfoMSFT(hand_pose_type={repr(self._hand_pose_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandPoseTypeInfoMSFT(hand_pose_type={repr(self.hand_pose_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandPoseTypeInfoMSFT(hand_pose_type={self._hand_pose_type}, next={self._next}, type={self._type})"
@@ -7011,7 +6948,7 @@ class HandPoseTypeInfoMSFT(Structure):
     @hand_pose_type.setter
     def hand_pose_type(self, value: HandPoseTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._hand_pose_type = enum_field_helper(hand_pose_type)
+        self._hand_pose_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -7029,7 +6966,7 @@ class HandPoseTypeInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7061,7 +6998,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, enabled_view_configuration_types={repr(self._enabled_view_configuration_types)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, enabled_view_configuration_types={repr(self.enabled_view_configuration_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={self.view_configuration_count}, enabled_view_configuration_types={self._enabled_view_configuration_types}, next={self._next}, type={self._type})"
@@ -7096,7 +7033,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7122,7 +7059,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationStateMSFT(view_configuration_type={repr(self._view_configuration_type)}, active={repr(self.active)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SecondaryViewConfigurationStateMSFT(view_configuration_type={repr(self.view_configuration_type)}, active={repr(self.active)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SecondaryViewConfigurationStateMSFT(view_configuration_type={self._view_configuration_type}, active={self.active}, next={self._next}, type={self._type})"
@@ -7134,7 +7071,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
     @view_configuration_type.setter
     def view_configuration_type(self, value: ViewConfigurationType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._view_configuration_type = enum_field_helper(view_configuration_type)
+        self._view_configuration_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -7152,7 +7089,7 @@ class SecondaryViewConfigurationStateMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7180,7 +7117,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_states={repr(self._view_configuration_states)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_states={repr(self.view_configuration_states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={self.view_configuration_count}, view_configuration_states={self._view_configuration_states}, next={self._next}, type={self._type})"
@@ -7215,7 +7152,7 @@ class SecondaryViewConfigurationFrameStateMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7247,7 +7184,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={repr(self._view_configuration_type)}, environment_blend_mode={repr(self._environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self._layers)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, environment_blend_mode={repr(self.environment_blend_mode)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SecondaryViewConfigurationLayerInfoMSFT(view_configuration_type={self._view_configuration_type}, environment_blend_mode={self._environment_blend_mode}, layer_count={self.layer_count}, layers={self._layers}, next={self._next}, type={self._type})"
@@ -7259,7 +7196,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     @view_configuration_type.setter
     def view_configuration_type(self, value: ViewConfigurationType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._view_configuration_type = enum_field_helper(view_configuration_type)
+        self._view_configuration_type = enum_field_helper(value)
 
     @property
     def environment_blend_mode(self) -> EnvironmentBlendMode:
@@ -7268,7 +7205,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     @environment_blend_mode.setter
     def environment_blend_mode(self, value: EnvironmentBlendMode) -> None:
         # noinspection PyAttributeOutsideInit
-        self._environment_blend_mode = enum_field_helper(environment_blend_mode)
+        self._environment_blend_mode = enum_field_helper(value)
 
     @property
     def layers(self):
@@ -7300,7 +7237,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7328,7 +7265,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationFrameEndInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_layers_info={repr(self.view_configuration_layers_info)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SecondaryViewConfigurationFrameEndInfoMSFT(view_configuration_count={repr(self.view_configuration_count)}, view_configuration_layers_info={repr(self.view_configuration_layers_info)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SecondaryViewConfigurationFrameEndInfoMSFT(view_configuration_count={self.view_configuration_count}, view_configuration_layers_info={self.view_configuration_layers_info}, next={self._next}, type={self._type})"
@@ -7349,7 +7286,7 @@ class SecondaryViewConfigurationFrameEndInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7373,7 +7310,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SecondaryViewConfigurationSwapchainCreateInfoMSFT(view_configuration_type={repr(self._view_configuration_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SecondaryViewConfigurationSwapchainCreateInfoMSFT(view_configuration_type={repr(self.view_configuration_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SecondaryViewConfigurationSwapchainCreateInfoMSFT(view_configuration_type={self._view_configuration_type}, next={self._next}, type={self._type})"
@@ -7385,7 +7322,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     @view_configuration_type.setter
     def view_configuration_type(self, value: ViewConfigurationType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._view_configuration_type = enum_field_helper(view_configuration_type)
+        self._view_configuration_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -7403,7 +7340,7 @@ class SecondaryViewConfigurationSwapchainCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7429,7 +7366,7 @@ class ControllerModelKeyStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelKeyStateMSFT(model_key={repr(self.model_key)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ControllerModelKeyStateMSFT(model_key={repr(self.model_key)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ControllerModelKeyStateMSFT(model_key={self.model_key}, next={self._next}, type={self._type})"
@@ -7450,7 +7387,7 @@ class ControllerModelKeyStateMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7475,7 +7412,7 @@ class ControllerModelNodePropertiesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelNodePropertiesMSFT(parent_node_name={repr(self.parent_node_name)}, node_name={repr(self.node_name)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ControllerModelNodePropertiesMSFT(parent_node_name={repr(self.parent_node_name)}, node_name={repr(self.node_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ControllerModelNodePropertiesMSFT(parent_node_name={self.parent_node_name}, node_name={self.node_name}, next={self._next}, type={self._type})"
@@ -7496,7 +7433,7 @@ class ControllerModelNodePropertiesMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7524,7 +7461,7 @@ class ControllerModelPropertiesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelPropertiesMSFT(node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_properties={repr(self.node_properties)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ControllerModelPropertiesMSFT(node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_properties={repr(self.node_properties)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ControllerModelPropertiesMSFT(node_capacity_input={self.node_capacity_input}, node_count_output={self.node_count_output}, node_properties={self.node_properties}, next={self._next}, type={self._type})"
@@ -7545,7 +7482,7 @@ class ControllerModelPropertiesMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7570,7 +7507,7 @@ class ControllerModelNodeStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelNodeStateMSFT(node_pose={repr(self.node_pose)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ControllerModelNodeStateMSFT(node_pose={repr(self.node_pose)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ControllerModelNodeStateMSFT(node_pose={self.node_pose}, next={self._next}, type={self._type})"
@@ -7591,7 +7528,7 @@ class ControllerModelNodeStateMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7618,7 +7555,7 @@ class ControllerModelStateMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ControllerModelStateMSFT(node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_states={repr(self.node_states)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ControllerModelStateMSFT(node_capacity_input={repr(self.node_capacity_input)}, node_count_output={repr(self.node_count_output)}, node_states={repr(self.node_states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ControllerModelStateMSFT(node_capacity_input={self.node_capacity_input}, node_count_output={self.node_count_output}, node_states={self.node_states}, next={self._next}, type={self._type})"
@@ -7639,7 +7576,7 @@ class ControllerModelStateMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7679,7 +7616,7 @@ class ViewConfigurationViewFovEPIC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewConfigurationViewFovEPIC(recommended_fov={repr(self.recommended_fov)}, max_mutable_fov={repr(self.max_mutable_fov)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViewConfigurationViewFovEPIC(recommended_fov={repr(self.recommended_fov)}, max_mutable_fov={repr(self.max_mutable_fov)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViewConfigurationViewFovEPIC(recommended_fov={self.recommended_fov}, max_mutable_fov={self.max_mutable_fov}, next={self._next}, type={self._type})"
@@ -7700,7 +7637,7 @@ class ViewConfigurationViewFovEPIC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7724,7 +7661,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerReprojectionInfoMSFT(reprojection_mode={repr(self._reprojection_mode)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerReprojectionInfoMSFT(reprojection_mode={repr(self.reprojection_mode)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerReprojectionInfoMSFT(reprojection_mode={self._reprojection_mode}, next={self._next}, type={self._type})"
@@ -7736,7 +7673,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
     @reprojection_mode.setter
     def reprojection_mode(self, value: ReprojectionModeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._reprojection_mode = enum_field_helper(reprojection_mode)
+        self._reprojection_mode = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -7754,7 +7691,7 @@ class CompositionLayerReprojectionInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7787,7 +7724,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerReprojectionPlaneOverrideMSFT(position={repr(self.position)}, normal={repr(self.normal)}, velocity={repr(self.velocity)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerReprojectionPlaneOverrideMSFT(position={repr(self.position)}, normal={repr(self.normal)}, velocity={repr(self.velocity)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerReprojectionPlaneOverrideMSFT(position={self.position}, normal={self.normal}, velocity={self.velocity}, next={self._next}, type={self._type})"
@@ -7808,7 +7745,7 @@ class CompositionLayerReprojectionPlaneOverrideMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7834,7 +7771,7 @@ class SwapchainStateBaseHeaderFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateBaseHeaderFB(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainStateBaseHeaderFB(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainStateBaseHeaderFB(next={self._next}, type={self._type})"
@@ -7884,7 +7821,7 @@ class CompositionLayerSecureContentFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerSecureContentFB(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerSecureContentFB(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerSecureContentFB(flags={self.flags}, next={self._next}, type={self._type})"
@@ -7905,7 +7842,7 @@ class CompositionLayerSecureContentFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -7959,7 +7896,7 @@ class SystemBodyTrackingPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemBodyTrackingPropertiesFB(supports_body_tracking={repr(self.supports_body_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemBodyTrackingPropertiesFB(supports_body_tracking={repr(self.supports_body_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemBodyTrackingPropertiesFB(supports_body_tracking={self.supports_body_tracking}, next={self._next}, type={self._type})"
@@ -7980,7 +7917,7 @@ class SystemBodyTrackingPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8003,7 +7940,7 @@ class BodyTrackerCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyTrackerCreateInfoFB(body_joint_set={repr(self._body_joint_set)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyTrackerCreateInfoFB(body_joint_set={repr(self.body_joint_set)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyTrackerCreateInfoFB(body_joint_set={self._body_joint_set}, next={self._next}, type={self._type})"
@@ -8015,7 +7952,7 @@ class BodyTrackerCreateInfoFB(Structure):
     @body_joint_set.setter
     def body_joint_set(self, value: BodyJointSetFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._body_joint_set = enum_field_helper(body_joint_set)
+        self._body_joint_set = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -8033,7 +7970,7 @@ class BodyTrackerCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8086,7 +8023,7 @@ class BodySkeletonFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodySkeletonFB(joint_count={repr(self.joint_count)}, joints={repr(self._joints)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodySkeletonFB(joint_count={repr(self.joint_count)}, joints={repr(self.joints)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodySkeletonFB(joint_count={self.joint_count}, joints={self._joints}, next={self._next}, type={self._type})"
@@ -8121,7 +8058,7 @@ class BodySkeletonFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8147,7 +8084,7 @@ class BodyJointsLocateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyJointsLocateInfoFB(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyJointsLocateInfoFB(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyJointsLocateInfoFB(base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -8168,7 +8105,7 @@ class BodyJointsLocateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8204,7 +8141,7 @@ class BodyJointLocationsFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyJointLocationsFB(is_active={repr(self.is_active)}, confidence={repr(self.confidence)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self._joint_locations)}, skeleton_changed_count={repr(self.skeleton_changed_count)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyJointLocationsFB(is_active={repr(self.is_active)}, confidence={repr(self.confidence)}, joint_count={repr(self.joint_count)}, joint_locations={repr(self.joint_locations)}, skeleton_changed_count={repr(self.skeleton_changed_count)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyJointLocationsFB(is_active={self.is_active}, confidence={self.confidence:.3f}, joint_count={self.joint_count}, joint_locations={self._joint_locations}, skeleton_changed_count={self.skeleton_changed_count}, time={self.time}, next={self._next}, type={self._type})"
@@ -8239,7 +8176,7 @@ class BodyJointLocationsFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8292,7 +8229,7 @@ class InteractionProfileDpadBindingEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileDpadBindingEXT(binding={repr(self.binding)}, action_set={repr(self.action_set)}, force_threshold={repr(self.force_threshold)}, force_threshold_released={repr(self.force_threshold_released)}, center_region={repr(self.center_region)}, wedge_angle={repr(self.wedge_angle)}, is_sticky={repr(self.is_sticky)}, on_haptic={repr(self.on_haptic)}, off_haptic={repr(self.off_haptic)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InteractionProfileDpadBindingEXT(binding={repr(self.binding)}, action_set={repr(self.action_set)}, force_threshold={repr(self.force_threshold)}, force_threshold_released={repr(self.force_threshold_released)}, center_region={repr(self.center_region)}, wedge_angle={repr(self.wedge_angle)}, is_sticky={repr(self.is_sticky)}, on_haptic={repr(self.on_haptic)}, off_haptic={repr(self.off_haptic)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InteractionProfileDpadBindingEXT(binding={self.binding}, action_set={self.action_set}, force_threshold={self.force_threshold:.3f}, force_threshold_released={self.force_threshold_released:.3f}, center_region={self.center_region:.3f}, wedge_angle={self.wedge_angle:.3f}, is_sticky={self.is_sticky}, on_haptic={self.on_haptic}, off_haptic={self.off_haptic}, next={self._next}, type={self._type})"
@@ -8313,7 +8250,7 @@ class InteractionProfileDpadBindingEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8354,7 +8291,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionProfileAnalogThresholdVALVE(action={repr(self.action)}, binding={repr(self.binding)}, on_threshold={repr(self.on_threshold)}, off_threshold={repr(self.off_threshold)}, on_haptic={repr(self.on_haptic)}, off_haptic={repr(self.off_haptic)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InteractionProfileAnalogThresholdVALVE(action={repr(self.action)}, binding={repr(self.binding)}, on_threshold={repr(self.on_threshold)}, off_threshold={repr(self.off_threshold)}, on_haptic={repr(self.on_haptic)}, off_haptic={repr(self.off_haptic)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InteractionProfileAnalogThresholdVALVE(action={self.action}, binding={self.binding}, on_threshold={self.on_threshold:.3f}, off_threshold={self.off_threshold:.3f}, on_haptic={self.on_haptic}, off_haptic={self.off_haptic}, next={self._next}, type={self._type})"
@@ -8375,7 +8312,7 @@ class InteractionProfileAnalogThresholdVALVE(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8403,7 +8340,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandJointsMotionRangeInfoEXT(hand_joints_motion_range={repr(self._hand_joints_motion_range)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandJointsMotionRangeInfoEXT(hand_joints_motion_range={repr(self.hand_joints_motion_range)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandJointsMotionRangeInfoEXT(hand_joints_motion_range={self._hand_joints_motion_range}, next={self._next}, type={self._type})"
@@ -8415,7 +8352,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
     @hand_joints_motion_range.setter
     def hand_joints_motion_range(self, value: HandJointsMotionRangeEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._hand_joints_motion_range = enum_field_helper(hand_joints_motion_range)
+        self._hand_joints_motion_range = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -8433,7 +8370,7 @@ class HandJointsMotionRangeInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8488,7 +8425,7 @@ class SceneObserverCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObserverCreateInfoMSFT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneObserverCreateInfoMSFT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneObserverCreateInfoMSFT(next={self._next}, type={self._type})"
@@ -8509,7 +8446,7 @@ class SceneObserverCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8529,7 +8466,7 @@ class SceneCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneCreateInfoMSFT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneCreateInfoMSFT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneCreateInfoMSFT(next={self._next}, type={self._type})"
@@ -8550,7 +8487,7 @@ class SceneCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8666,7 +8603,7 @@ class SceneBoundsMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneBoundsMSFT(space={repr(self.space)}, time={repr(self.time)}, sphere_count={repr(self.sphere_count)}, spheres={repr(self._spheres)}, box_count={repr(self.box_count)}, boxes={repr(self._boxes)}, frustum_count={repr(self.frustum_count)}, frustums={repr(self._frustums)})"
+        return f"xr.SceneBoundsMSFT(space={repr(self.space)}, time={repr(self.time)}, sphere_count={repr(self.sphere_count)}, spheres={repr(self.spheres)}, box_count={repr(self.box_count)}, boxes={repr(self.boxes)}, frustum_count={repr(self.frustum_count)}, frustums={repr(self.frustums)})"
 
     def __str__(self) -> str:
         return f"xr.SceneBoundsMSFT(space={self.space}, time={self.time}, sphere_count={self.sphere_count}, spheres={self._spheres}, box_count={self.box_count}, boxes={self._boxes}, frustum_count={self.frustum_count}, frustums={self._frustums})"
@@ -8749,7 +8686,7 @@ class NewSceneComputeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={repr(self.requested_feature_count)}, requested_features={repr(self._requested_features)}, consistency={repr(self._consistency)}, bounds={repr(self.bounds)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={repr(self.requested_feature_count)}, requested_features={repr(self.requested_features)}, consistency={repr(self.consistency)}, bounds={repr(self.bounds)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={self.requested_feature_count}, requested_features={self._requested_features}, consistency={self._consistency}, bounds={self.bounds}, next={self._next}, type={self._type})"
@@ -8775,7 +8712,7 @@ class NewSceneComputeInfoMSFT(Structure):
     @consistency.setter
     def consistency(self, value: SceneComputeConsistencyMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._consistency = enum_field_helper(consistency)
+        self._consistency = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -8793,7 +8730,7 @@ class NewSceneComputeInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8819,7 +8756,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VisualMeshComputeLodInfoMSFT(lod={repr(self._lod)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VisualMeshComputeLodInfoMSFT(lod={repr(self.lod)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VisualMeshComputeLodInfoMSFT(lod={self._lod}, next={self._next}, type={self._type})"
@@ -8831,7 +8768,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
     @lod.setter
     def lod(self, value: MeshComputeLodMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._lod = enum_field_helper(lod)
+        self._lod = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -8849,7 +8786,7 @@ class VisualMeshComputeLodInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8878,7 +8815,7 @@ class SceneComponentMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentMSFT(component_type={repr(self._component_type)}, id={repr(self.id)}, parent_id={repr(self.parent_id)}, update_time={repr(self.update_time)})"
+        return f"xr.SceneComponentMSFT(component_type={repr(self.component_type)}, id={repr(self.id)}, parent_id={repr(self.parent_id)}, update_time={repr(self.update_time)})"
 
     def __str__(self) -> str:
         return f"xr.SceneComponentMSFT(component_type={self._component_type}, id={self.id}, parent_id={self.parent_id}, update_time={self.update_time})"
@@ -8890,7 +8827,7 @@ class SceneComponentMSFT(Structure):
     @component_type.setter
     def component_type(self, value: SceneComponentTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._component_type = enum_field_helper(component_type)
+        self._component_type = enum_field_helper(value)
 
     _fields_ = [
         ("_component_type", SceneComponentTypeMSFT.ctype()),
@@ -8918,7 +8855,7 @@ class SceneComponentsMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsMSFT(component_capacity_input={repr(self.component_capacity_input)}, component_count_output={repr(self.component_count_output)}, components={repr(self.components)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneComponentsMSFT(component_capacity_input={repr(self.component_capacity_input)}, component_count_output={repr(self.component_count_output)}, components={repr(self.components)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneComponentsMSFT(component_capacity_input={self.component_capacity_input}, component_count_output={self.component_count_output}, components={self.components}, next={self._next}, type={self._type})"
@@ -8939,7 +8876,7 @@ class SceneComponentsMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -8964,7 +8901,7 @@ class SceneComponentsGetInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsGetInfoMSFT(component_type={repr(self._component_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneComponentsGetInfoMSFT(component_type={repr(self.component_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneComponentsGetInfoMSFT(component_type={self._component_type}, next={self._next}, type={self._type})"
@@ -8976,7 +8913,7 @@ class SceneComponentsGetInfoMSFT(Structure):
     @component_type.setter
     def component_type(self, value: SceneComponentTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._component_type = enum_field_helper(component_type)
+        self._component_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -8994,7 +8931,7 @@ class SceneComponentsGetInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9044,7 +8981,7 @@ class SceneComponentLocationsMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentLocationsMSFT(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneComponentLocationsMSFT(location_count={repr(self.location_count)}, locations={repr(self.locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneComponentLocationsMSFT(location_count={self.location_count}, locations={self._locations}, next={self._next}, type={self._type})"
@@ -9079,7 +9016,7 @@ class SceneComponentLocationsMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9111,7 +9048,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentsLocateInfoMSFT(base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self.component_id_count)}, component_ids={repr(self._component_ids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneComponentsLocateInfoMSFT(base_space={repr(self.base_space)}, time={repr(self.time)}, component_id_count={repr(self.component_id_count)}, component_ids={repr(self.component_ids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneComponentsLocateInfoMSFT(base_space={self.base_space}, time={self.time}, component_id_count={self.component_id_count}, component_ids={self._component_ids}, next={self._next}, type={self._type})"
@@ -9146,7 +9083,7 @@ class SceneComponentsLocateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9168,7 +9105,7 @@ class SceneObjectMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectMSFT(object_type={repr(self._object_type)})"
+        return f"xr.SceneObjectMSFT(object_type={repr(self.object_type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneObjectMSFT(object_type={self._object_type})"
@@ -9180,7 +9117,7 @@ class SceneObjectMSFT(Structure):
     @object_type.setter
     def object_type(self, value: SceneObjectTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._object_type = enum_field_helper(object_type)
+        self._object_type = enum_field_helper(value)
 
     _fields_ = [
         ("_object_type", SceneObjectTypeMSFT.ctype()),
@@ -9205,7 +9142,7 @@ class SceneObjectsMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectsMSFT(scene_object_count={repr(self.scene_object_count)}, scene_objects={repr(self._scene_objects)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneObjectsMSFT(scene_object_count={repr(self.scene_object_count)}, scene_objects={repr(self.scene_objects)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneObjectsMSFT(scene_object_count={self.scene_object_count}, scene_objects={self._scene_objects}, next={self._next}, type={self._type})"
@@ -9240,7 +9177,7 @@ class SceneObjectsMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9266,7 +9203,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneComponentParentFilterInfoMSFT(parent_id={repr(self.parent_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneComponentParentFilterInfoMSFT(parent_id={repr(self.parent_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneComponentParentFilterInfoMSFT(parent_id={self.parent_id}, next={self._next}, type={self._type})"
@@ -9287,7 +9224,7 @@ class SceneComponentParentFilterInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9314,7 +9251,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={repr(self.object_type_count)}, object_types={repr(self._object_types)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={repr(self.object_type_count)}, object_types={repr(self.object_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={self.object_type_count}, object_types={self._object_types}, next={self._next}, type={self._type})"
@@ -9349,7 +9286,7 @@ class SceneObjectTypesFilterInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9377,7 +9314,7 @@ class ScenePlaneMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlaneMSFT(alignment={repr(self._alignment)}, size={repr(self.size)}, mesh_buffer_id={repr(self.mesh_buffer_id)}, supports_indices_uint16={repr(self.supports_indices_uint16)})"
+        return f"xr.ScenePlaneMSFT(alignment={repr(self.alignment)}, size={repr(self.size)}, mesh_buffer_id={repr(self.mesh_buffer_id)}, supports_indices_uint16={repr(self.supports_indices_uint16)})"
 
     def __str__(self) -> str:
         return f"xr.ScenePlaneMSFT(alignment={self._alignment}, size={self.size}, mesh_buffer_id={self.mesh_buffer_id}, supports_indices_uint16={self.supports_indices_uint16})"
@@ -9389,7 +9326,7 @@ class ScenePlaneMSFT(Structure):
     @alignment.setter
     def alignment(self, value: ScenePlaneAlignmentTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._alignment = enum_field_helper(alignment)
+        self._alignment = enum_field_helper(value)
 
     _fields_ = [
         ("_alignment", ScenePlaneAlignmentTypeMSFT.ctype()),
@@ -9417,7 +9354,7 @@ class ScenePlanesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlanesMSFT(scene_plane_count={repr(self.scene_plane_count)}, scene_planes={repr(self._scene_planes)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ScenePlanesMSFT(scene_plane_count={repr(self.scene_plane_count)}, scene_planes={repr(self.scene_planes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ScenePlanesMSFT(scene_plane_count={self.scene_plane_count}, scene_planes={self._scene_planes}, next={self._next}, type={self._type})"
@@ -9452,7 +9389,7 @@ class ScenePlanesMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9480,7 +9417,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={repr(self.alignment_count)}, alignments={repr(self._alignments)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={repr(self.alignment_count)}, alignments={repr(self.alignments)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={self.alignment_count}, alignments={self._alignments}, next={self._next}, type={self._type})"
@@ -9515,7 +9452,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9566,7 +9503,7 @@ class SceneMeshesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshesMSFT(scene_mesh_count={repr(self.scene_mesh_count)}, scene_meshes={repr(self._scene_meshes)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMeshesMSFT(scene_mesh_count={repr(self.scene_mesh_count)}, scene_meshes={repr(self.scene_meshes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMeshesMSFT(scene_mesh_count={self.scene_mesh_count}, scene_meshes={self._scene_meshes}, next={self._next}, type={self._type})"
@@ -9601,7 +9538,7 @@ class SceneMeshesMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9625,7 +9562,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshBuffersGetInfoMSFT(mesh_buffer_id={repr(self.mesh_buffer_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMeshBuffersGetInfoMSFT(mesh_buffer_id={repr(self.mesh_buffer_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMeshBuffersGetInfoMSFT(mesh_buffer_id={self.mesh_buffer_id}, next={self._next}, type={self._type})"
@@ -9646,7 +9583,7 @@ class SceneMeshBuffersGetInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9667,7 +9604,7 @@ class SceneMeshBuffersMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshBuffersMSFT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMeshBuffersMSFT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMeshBuffersMSFT(next={self._next}, type={self._type})"
@@ -9688,7 +9625,7 @@ class SceneMeshBuffersMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9714,7 +9651,7 @@ class SceneMeshVertexBufferMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshVertexBufferMSFT(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMeshVertexBufferMSFT(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMeshVertexBufferMSFT(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self._next}, type={self._type})"
@@ -9735,7 +9672,7 @@ class SceneMeshVertexBufferMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9764,7 +9701,7 @@ class SceneMeshIndicesUint32MSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshIndicesUint32MSFT(index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMeshIndicesUint32MSFT(index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMeshIndicesUint32MSFT(index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self._next}, type={self._type})"
@@ -9785,7 +9722,7 @@ class SceneMeshIndicesUint32MSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9814,7 +9751,7 @@ class SceneMeshIndicesUint16MSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMeshIndicesUint16MSFT(index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMeshIndicesUint16MSFT(index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMeshIndicesUint16MSFT(index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self._next}, type={self._type})"
@@ -9835,7 +9772,7 @@ class SceneMeshIndicesUint16MSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9883,7 +9820,7 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SerializedSceneFragmentDataGetInfoMSFT(scene_fragment_id={repr(self.scene_fragment_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SerializedSceneFragmentDataGetInfoMSFT(scene_fragment_id={repr(self.scene_fragment_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SerializedSceneFragmentDataGetInfoMSFT(scene_fragment_id={self.scene_fragment_id}, next={self._next}, type={self._type})"
@@ -9904,7 +9841,7 @@ class SerializedSceneFragmentDataGetInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -9954,7 +9891,7 @@ class SceneDeserializeInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneDeserializeInfoMSFT(fragment_count={repr(self.fragment_count)}, fragments={repr(self._fragments)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneDeserializeInfoMSFT(fragment_count={repr(self.fragment_count)}, fragments={repr(self.fragments)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneDeserializeInfoMSFT(fragment_count={self.fragment_count}, fragments={self._fragments}, next={self._next}, type={self._type})"
@@ -9989,7 +9926,7 @@ class SceneDeserializeInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10020,7 +9957,7 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataDisplayRefreshRateChangedFB(from_display_refresh_rate={repr(self.from_display_refresh_rate)}, to_display_refresh_rate={repr(self.to_display_refresh_rate)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataDisplayRefreshRateChangedFB(from_display_refresh_rate={repr(self.from_display_refresh_rate)}, to_display_refresh_rate={repr(self.to_display_refresh_rate)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataDisplayRefreshRateChangedFB(from_display_refresh_rate={self.from_display_refresh_rate:.3f}, to_display_refresh_rate={self.to_display_refresh_rate:.3f}, next={self._next}, type={self._type})"
@@ -10041,7 +9978,7 @@ class EventDataDisplayRefreshRateChangedFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10074,7 +10011,7 @@ class ViveTrackerPathsHTCX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViveTrackerPathsHTCX(persistent_path={repr(self.persistent_path)}, role_path={repr(self.role_path)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViveTrackerPathsHTCX(persistent_path={repr(self.persistent_path)}, role_path={repr(self.role_path)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViveTrackerPathsHTCX(persistent_path={self.persistent_path}, role_path={self.role_path}, next={self._next}, type={self._type})"
@@ -10095,7 +10032,7 @@ class ViveTrackerPathsHTCX(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10119,7 +10056,7 @@ class EventDataViveTrackerConnectedHTCX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataViveTrackerConnectedHTCX(paths={repr(self.paths)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataViveTrackerConnectedHTCX(paths={repr(self.paths)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataViveTrackerConnectedHTCX(paths={self.paths}, next={self._next}, type={self._type})"
@@ -10140,7 +10077,7 @@ class EventDataViveTrackerConnectedHTCX(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10176,7 +10113,7 @@ class SystemFacialTrackingPropertiesHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFacialTrackingPropertiesHTC(support_eye_facial_tracking={repr(self.support_eye_facial_tracking)}, support_lip_facial_tracking={repr(self.support_lip_facial_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFacialTrackingPropertiesHTC(support_eye_facial_tracking={repr(self.support_eye_facial_tracking)}, support_lip_facial_tracking={repr(self.support_lip_facial_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFacialTrackingPropertiesHTC(support_eye_facial_tracking={self.support_eye_facial_tracking}, support_lip_facial_tracking={self.support_lip_facial_tracking}, next={self._next}, type={self._type})"
@@ -10197,7 +10134,7 @@ class SystemFacialTrackingPropertiesHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10229,7 +10166,7 @@ class FacialExpressionsHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialExpressionsHTC(is_active={repr(self.is_active)}, sample_time={repr(self.sample_time)}, expression_count={repr(self.expression_count)}, expression_weightings={repr(self._expression_weightings)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FacialExpressionsHTC(is_active={repr(self.is_active)}, sample_time={repr(self.sample_time)}, expression_count={repr(self.expression_count)}, expression_weightings={repr(self.expression_weightings)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FacialExpressionsHTC(is_active={self.is_active}, sample_time={self.sample_time}, expression_count={self.expression_count}, expression_weightings={self._expression_weightings}, next={self._next}, type={self._type})"
@@ -10264,7 +10201,7 @@ class FacialExpressionsHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10290,7 +10227,7 @@ class FacialTrackerCreateInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialTrackerCreateInfoHTC(facial_tracking_type={repr(self._facial_tracking_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FacialTrackerCreateInfoHTC(facial_tracking_type={repr(self.facial_tracking_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FacialTrackerCreateInfoHTC(facial_tracking_type={self._facial_tracking_type}, next={self._next}, type={self._type})"
@@ -10302,7 +10239,7 @@ class FacialTrackerCreateInfoHTC(Structure):
     @facial_tracking_type.setter
     def facial_tracking_type(self, value: FacialTrackingTypeHTC) -> None:
         # noinspection PyAttributeOutsideInit
-        self._facial_tracking_type = enum_field_helper(facial_tracking_type)
+        self._facial_tracking_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -10320,7 +10257,7 @@ class FacialTrackerCreateInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10350,7 +10287,7 @@ class SystemColorSpacePropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemColorSpacePropertiesFB(color_space={repr(self._color_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemColorSpacePropertiesFB(color_space={repr(self.color_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemColorSpacePropertiesFB(color_space={self._color_space}, next={self._next}, type={self._type})"
@@ -10362,7 +10299,7 @@ class SystemColorSpacePropertiesFB(Structure):
     @color_space.setter
     def color_space(self, value: ColorSpaceFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._color_space = enum_field_helper(color_space)
+        self._color_space = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -10380,7 +10317,7 @@ class SystemColorSpacePropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10465,7 +10402,7 @@ class HandTrackingMeshFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingMeshFB(joint_capacity_input={repr(self.joint_capacity_input)}, joint_count_output={repr(self.joint_count_output)}, joint_bind_poses={repr(self.joint_bind_poses)}, joint_radii={repr(self.joint_radii)}, joint_parents={repr(self.joint_parents)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertex_positions={repr(self.vertex_positions)}, vertex_normals={repr(self.vertex_normals)}, vertex_uvs={repr(self.vertex_uvs)}, vertex_blend_indices={repr(self.vertex_blend_indices)}, vertex_blend_weights={repr(self.vertex_blend_weights)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandTrackingMeshFB(joint_capacity_input={repr(self.joint_capacity_input)}, joint_count_output={repr(self.joint_count_output)}, joint_bind_poses={repr(self.joint_bind_poses)}, joint_radii={repr(self.joint_radii)}, joint_parents={repr(self.joint_parents)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertex_positions={repr(self.vertex_positions)}, vertex_normals={repr(self.vertex_normals)}, vertex_uvs={repr(self.vertex_uvs)}, vertex_blend_indices={repr(self.vertex_blend_indices)}, vertex_blend_weights={repr(self.vertex_blend_weights)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandTrackingMeshFB(joint_capacity_input={self.joint_capacity_input}, joint_count_output={self.joint_count_output}, joint_bind_poses={self.joint_bind_poses}, joint_radii={self.joint_radii}, joint_parents={self.joint_parents}, vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertex_positions={self.vertex_positions}, vertex_normals={self.vertex_normals}, vertex_uvs={self.vertex_uvs}, vertex_blend_indices={self.vertex_blend_indices}, vertex_blend_weights={self.vertex_blend_weights}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self._next}, type={self._type})"
@@ -10486,7 +10423,7 @@ class HandTrackingMeshFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10529,7 +10466,7 @@ class HandTrackingScaleFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingScaleFB(sensor_output={repr(self.sensor_output)}, current_output={repr(self.current_output)}, override_hand_scale={repr(self.override_hand_scale)}, override_value_input={repr(self.override_value_input)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandTrackingScaleFB(sensor_output={repr(self.sensor_output)}, current_output={repr(self.current_output)}, override_hand_scale={repr(self.override_hand_scale)}, override_value_input={repr(self.override_value_input)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandTrackingScaleFB(sensor_output={self.sensor_output:.3f}, current_output={self.current_output:.3f}, override_hand_scale={self.override_hand_scale}, override_value_input={self.override_value_input:.3f}, next={self._next}, type={self._type})"
@@ -10550,7 +10487,7 @@ class HandTrackingScaleFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10591,7 +10528,7 @@ class HandTrackingAimStateFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingAimStateFB(status={repr(self.status)}, aim_pose={repr(self.aim_pose)}, pinch_strength_index={repr(self.pinch_strength_index)}, pinch_strength_middle={repr(self.pinch_strength_middle)}, pinch_strength_ring={repr(self.pinch_strength_ring)}, pinch_strength_little={repr(self.pinch_strength_little)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandTrackingAimStateFB(status={repr(self.status)}, aim_pose={repr(self.aim_pose)}, pinch_strength_index={repr(self.pinch_strength_index)}, pinch_strength_middle={repr(self.pinch_strength_middle)}, pinch_strength_ring={repr(self.pinch_strength_ring)}, pinch_strength_little={repr(self.pinch_strength_little)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandTrackingAimStateFB(status={self.status}, aim_pose={self.aim_pose}, pinch_strength_index={self.pinch_strength_index:.3f}, pinch_strength_middle={self.pinch_strength_middle:.3f}, pinch_strength_ring={self.pinch_strength_ring:.3f}, pinch_strength_little={self.pinch_strength_little:.3f}, next={self._next}, type={self._type})"
@@ -10612,7 +10549,7 @@ class HandTrackingAimStateFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10638,7 +10575,7 @@ class HandCapsuleFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandCapsuleFB(points={repr(self.points)}, radius={repr(self.radius)}, joint={repr(self._joint)})"
+        return f"xr.HandCapsuleFB(points={repr(self.points)}, radius={repr(self.radius)}, joint={repr(self.joint)})"
 
     def __str__(self) -> str:
         return f"xr.HandCapsuleFB(radius={self.radius:.3f}, joint={self._joint})"
@@ -10650,7 +10587,7 @@ class HandCapsuleFB(Structure):
     @joint.setter
     def joint(self, value: HandJointEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._joint = enum_field_helper(joint)
+        self._joint = enum_field_helper(value)
 
     _fields_ = [
         ("points", (Vector3f * 2)),
@@ -10671,7 +10608,7 @@ class HandTrackingCapsulesStateFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingCapsulesStateFB(capsules={repr(self.capsules)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandTrackingCapsulesStateFB(capsules={repr(self.capsules)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandTrackingCapsulesStateFB(next={self._next}, type={self._type})"
@@ -10692,7 +10629,7 @@ class HandTrackingCapsulesStateFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10718,7 +10655,7 @@ class SystemSpatialEntityPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialEntityPropertiesFB(supports_spatial_entity={repr(self.supports_spatial_entity)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialEntityPropertiesFB(supports_spatial_entity={repr(self.supports_spatial_entity)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialEntityPropertiesFB(supports_spatial_entity={self.supports_spatial_entity}, next={self._next}, type={self._type})"
@@ -10739,7 +10676,7 @@ class SystemSpatialEntityPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10766,7 +10703,7 @@ class SpatialAnchorCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateInfoFB(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorCreateInfoFB(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorCreateInfoFB(space={self.space}, pose_in_space={self.pose_in_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -10787,7 +10724,7 @@ class SpatialAnchorCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10816,7 +10753,7 @@ class SpaceComponentStatusSetInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceComponentStatusSetInfoFB(component_type={repr(self._component_type)}, enabled={repr(self.enabled)}, timeout={repr(self.timeout)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceComponentStatusSetInfoFB(component_type={repr(self.component_type)}, enabled={repr(self.enabled)}, timeout={repr(self.timeout)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceComponentStatusSetInfoFB(component_type={self._component_type}, enabled={self.enabled}, timeout={self.timeout}, next={self._next}, type={self._type})"
@@ -10828,7 +10765,7 @@ class SpaceComponentStatusSetInfoFB(Structure):
     @component_type.setter
     def component_type(self, value: SpaceComponentTypeFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._component_type = enum_field_helper(component_type)
+        self._component_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -10846,7 +10783,7 @@ class SpaceComponentStatusSetInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10873,7 +10810,7 @@ class SpaceComponentStatusFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceComponentStatusFB(enabled={repr(self.enabled)}, change_pending={repr(self.change_pending)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceComponentStatusFB(enabled={repr(self.enabled)}, change_pending={repr(self.change_pending)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceComponentStatusFB(enabled={self.enabled}, change_pending={self.change_pending}, next={self._next}, type={self._type})"
@@ -10894,7 +10831,7 @@ class SpaceComponentStatusFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10927,7 +10864,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpatialAnchorCreateCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpatialAnchorCreateCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpatialAnchorCreateCompleteFB(request_id={self.request_id}, result={self._result}, space={self.space}, uuid={self.uuid}, next={self._next}, type={self._type})"
@@ -10939,7 +10876,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -10957,7 +10894,7 @@ class EventDataSpatialAnchorCreateCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -10993,7 +10930,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceSetStatusCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, component_type={repr(self._component_type)}, enabled={repr(self.enabled)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceSetStatusCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, component_type={repr(self.component_type)}, enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceSetStatusCompleteFB(request_id={self.request_id}, result={self._result}, space={self.space}, uuid={self.uuid}, component_type={self._component_type}, enabled={self.enabled}, next={self._next}, type={self._type})"
@@ -11005,7 +10942,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def component_type(self) -> SpaceComponentTypeFB:
@@ -11014,7 +10951,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
     @component_type.setter
     def component_type(self, value: SpaceComponentTypeFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._component_type = enum_field_helper(component_type)
+        self._component_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -11032,7 +10969,7 @@ class EventDataSpaceSetStatusCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11081,7 +11018,7 @@ class FoveationProfileCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationProfileCreateInfoFB(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveationProfileCreateInfoFB(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationProfileCreateInfoFB(next={self._next}, type={self._type})"
@@ -11102,7 +11039,7 @@ class FoveationProfileCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11124,7 +11061,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainCreateInfoFoveationFB(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainCreateInfoFoveationFB(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainCreateInfoFoveationFB(flags={self.flags}, next={self._next}, type={self._type})"
@@ -11145,7 +11082,7 @@ class SwapchainCreateInfoFoveationFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11170,7 +11107,7 @@ class SwapchainStateFoveationFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateFoveationFB(flags={repr(self.flags)}, profile={repr(self.profile)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainStateFoveationFB(flags={repr(self.flags)}, profile={repr(self.profile)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainStateFoveationFB(flags={self.flags}, profile={self.profile}, next={self._next}, type={self._type})"
@@ -11191,7 +11128,7 @@ class SwapchainStateFoveationFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11224,7 +11161,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationLevelProfileCreateInfoFB(level={repr(self._level)}, vertical_offset={repr(self.vertical_offset)}, dynamic={repr(self._dynamic)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveationLevelProfileCreateInfoFB(level={repr(self.level)}, vertical_offset={repr(self.vertical_offset)}, dynamic={repr(self.dynamic)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationLevelProfileCreateInfoFB(level={self._level}, vertical_offset={self.vertical_offset:.3f}, dynamic={self._dynamic}, next={self._next}, type={self._type})"
@@ -11236,7 +11173,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
     @level.setter
     def level(self, value: FoveationLevelFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._level = enum_field_helper(level)
+        self._level = enum_field_helper(value)
 
     @property
     def dynamic(self) -> FoveationDynamicFB:
@@ -11245,7 +11182,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
     @dynamic.setter
     def dynamic(self, value: FoveationDynamicFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._dynamic = enum_field_helper(dynamic)
+        self._dynamic = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -11263,7 +11200,7 @@ class FoveationLevelProfileCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11293,7 +11230,7 @@ class SystemKeyboardTrackingPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemKeyboardTrackingPropertiesFB(supports_keyboard_tracking={repr(self.supports_keyboard_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemKeyboardTrackingPropertiesFB(supports_keyboard_tracking={repr(self.supports_keyboard_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemKeyboardTrackingPropertiesFB(supports_keyboard_tracking={self.supports_keyboard_tracking}, next={self._next}, type={self._type})"
@@ -11314,7 +11251,7 @@ class SystemKeyboardTrackingPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11368,7 +11305,7 @@ class KeyboardSpaceCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.KeyboardSpaceCreateInfoFB(tracked_keyboard_id={repr(self.tracked_keyboard_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.KeyboardSpaceCreateInfoFB(tracked_keyboard_id={repr(self.tracked_keyboard_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.KeyboardSpaceCreateInfoFB(tracked_keyboard_id={self.tracked_keyboard_id}, next={self._next}, type={self._type})"
@@ -11389,7 +11326,7 @@ class KeyboardSpaceCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11412,7 +11349,7 @@ class KeyboardTrackingQueryFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.KeyboardTrackingQueryFB(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.KeyboardTrackingQueryFB(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.KeyboardTrackingQueryFB(flags={self.flags}, next={self._next}, type={self._type})"
@@ -11433,7 +11370,7 @@ class KeyboardTrackingQueryFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11481,7 +11418,7 @@ class TriangleMeshCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TriangleMeshCreateInfoFB(flags={repr(self.flags)}, winding_order={repr(self._winding_order)}, vertex_count={repr(self.vertex_count)}, vertex_buffer={repr(self.vertex_buffer)}, triangle_count={repr(self.triangle_count)}, index_buffer={repr(self.index_buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TriangleMeshCreateInfoFB(flags={repr(self.flags)}, winding_order={repr(self.winding_order)}, vertex_count={repr(self.vertex_count)}, vertex_buffer={repr(self.vertex_buffer)}, triangle_count={repr(self.triangle_count)}, index_buffer={repr(self.index_buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TriangleMeshCreateInfoFB(flags={self.flags}, winding_order={self._winding_order}, vertex_count={self.vertex_count}, vertex_buffer={self.vertex_buffer}, triangle_count={self.triangle_count}, index_buffer={self.index_buffer}, next={self._next}, type={self._type})"
@@ -11493,7 +11430,7 @@ class TriangleMeshCreateInfoFB(Structure):
     @winding_order.setter
     def winding_order(self, value: WindingOrderFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._winding_order = enum_field_helper(winding_order)
+        self._winding_order = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -11511,7 +11448,7 @@ class TriangleMeshCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11586,7 +11523,7 @@ class SystemPassthroughPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemPassthroughPropertiesFB(supports_passthrough={repr(self.supports_passthrough)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemPassthroughPropertiesFB(supports_passthrough={repr(self.supports_passthrough)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemPassthroughPropertiesFB(supports_passthrough={self.supports_passthrough}, next={self._next}, type={self._type})"
@@ -11607,7 +11544,7 @@ class SystemPassthroughPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11630,7 +11567,7 @@ class SystemPassthroughProperties2FB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemPassthroughProperties2FB(capabilities={repr(self.capabilities)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemPassthroughProperties2FB(capabilities={repr(self.capabilities)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemPassthroughProperties2FB(capabilities={self.capabilities}, next={self._next}, type={self._type})"
@@ -11651,7 +11588,7 @@ class SystemPassthroughProperties2FB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11674,7 +11611,7 @@ class PassthroughCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughCreateInfoFB(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughCreateInfoFB(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughCreateInfoFB(flags={self.flags}, next={self._next}, type={self._type})"
@@ -11695,7 +11632,7 @@ class PassthroughCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11722,7 +11659,7 @@ class PassthroughLayerCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughLayerCreateInfoFB(passthrough={repr(self.passthrough)}, flags={repr(self.flags)}, purpose={repr(self._purpose)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughLayerCreateInfoFB(passthrough={repr(self.passthrough)}, flags={repr(self.flags)}, purpose={repr(self.purpose)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughLayerCreateInfoFB(passthrough={self.passthrough}, flags={self.flags}, purpose={self._purpose}, next={self._next}, type={self._type})"
@@ -11734,7 +11671,7 @@ class PassthroughLayerCreateInfoFB(Structure):
     @purpose.setter
     def purpose(self, value: PassthroughLayerPurposeFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._purpose = enum_field_helper(purpose)
+        self._purpose = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -11752,7 +11689,7 @@ class PassthroughLayerCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11781,7 +11718,7 @@ class CompositionLayerPassthroughFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerPassthroughFB(flags={repr(self.flags)}, space={repr(self.space)}, layer_handle={repr(self.layer_handle)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerPassthroughFB(flags={repr(self.flags)}, space={repr(self.space)}, layer_handle={repr(self.layer_handle)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerPassthroughFB(flags={self.flags}, space={self.space}, layer_handle={self.layer_handle}, next={self._next}, type={self._type})"
@@ -11802,7 +11739,7 @@ class CompositionLayerPassthroughFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11837,7 +11774,7 @@ class GeometryInstanceCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GeometryInstanceCreateInfoFB(layer={repr(self.layer)}, mesh={repr(self.mesh)}, base_space={repr(self.base_space)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GeometryInstanceCreateInfoFB(layer={repr(self.layer)}, mesh={repr(self.mesh)}, base_space={repr(self.base_space)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GeometryInstanceCreateInfoFB(layer={self.layer}, mesh={self.mesh}, base_space={self.base_space}, pose={self.pose}, scale={self.scale}, next={self._next}, type={self._type})"
@@ -11858,7 +11795,7 @@ class GeometryInstanceCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11893,7 +11830,7 @@ class GeometryInstanceTransformFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GeometryInstanceTransformFB(base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GeometryInstanceTransformFB(base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GeometryInstanceTransformFB(base_space={self.base_space}, time={self.time}, pose={self.pose}, scale={self.scale}, next={self._next}, type={self._type})"
@@ -11914,7 +11851,7 @@ class GeometryInstanceTransformFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11944,7 +11881,7 @@ class PassthroughStyleFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughStyleFB(texture_opacity_factor={repr(self.texture_opacity_factor)}, edge_color={repr(self.edge_color)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughStyleFB(texture_opacity_factor={repr(self.texture_opacity_factor)}, edge_color={repr(self.edge_color)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughStyleFB(texture_opacity_factor={self.texture_opacity_factor:.3f}, edge_color={self.edge_color}, next={self._next}, type={self._type})"
@@ -11965,7 +11902,7 @@ class PassthroughStyleFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -11987,7 +11924,7 @@ class PassthroughColorMapMonoToRgbaFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughColorMapMonoToRgbaFB(texture_color_map={repr(self.texture_color_map)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughColorMapMonoToRgbaFB(texture_color_map={repr(self.texture_color_map)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughColorMapMonoToRgbaFB(next={self._next}, type={self._type})"
@@ -12008,7 +11945,7 @@ class PassthroughColorMapMonoToRgbaFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12029,7 +11966,7 @@ class PassthroughColorMapMonoToMonoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughColorMapMonoToMonoFB(texture_color_map={repr(self.texture_color_map)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughColorMapMonoToMonoFB(texture_color_map={repr(self.texture_color_map)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughColorMapMonoToMonoFB(next={self._next}, type={self._type})"
@@ -12050,7 +11987,7 @@ class PassthroughColorMapMonoToMonoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12077,7 +12014,7 @@ class PassthroughBrightnessContrastSaturationFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughBrightnessContrastSaturationFB(brightness={repr(self.brightness)}, contrast={repr(self.contrast)}, saturation={repr(self.saturation)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughBrightnessContrastSaturationFB(brightness={repr(self.brightness)}, contrast={repr(self.contrast)}, saturation={repr(self.saturation)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughBrightnessContrastSaturationFB(brightness={self.brightness:.3f}, contrast={self.contrast:.3f}, saturation={self.saturation:.3f}, next={self._next}, type={self._type})"
@@ -12098,7 +12035,7 @@ class PassthroughBrightnessContrastSaturationFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12123,7 +12060,7 @@ class EventDataPassthroughStateChangedFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataPassthroughStateChangedFB(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataPassthroughStateChangedFB(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataPassthroughStateChangedFB(flags={self.flags}, next={self._next}, type={self._type})"
@@ -12144,7 +12081,7 @@ class EventDataPassthroughStateChangedFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12196,7 +12133,7 @@ class RenderModelPathInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelPathInfoFB(path={repr(self.path)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelPathInfoFB(path={repr(self.path)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelPathInfoFB(path={self.path}, next={self._next}, type={self._type})"
@@ -12217,7 +12154,7 @@ class RenderModelPathInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12248,7 +12185,7 @@ class RenderModelPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelPropertiesFB(vendor_id={repr(self.vendor_id)}, model_name={repr(self.model_name)}, model_key={repr(self.model_key)}, model_version={repr(self.model_version)}, flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelPropertiesFB(vendor_id={repr(self.vendor_id)}, model_name={repr(self.model_name)}, model_key={repr(self.model_key)}, model_version={repr(self.model_version)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelPropertiesFB(vendor_id={self.vendor_id}, model_name={self.model_name}, model_key={self.model_key}, model_version={self.model_version}, flags={self.flags}, next={self._next}, type={self._type})"
@@ -12269,7 +12206,7 @@ class RenderModelPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12300,7 +12237,7 @@ class RenderModelBufferFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelBufferFB(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelBufferFB(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelBufferFB(buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next={self._next}, type={self._type})"
@@ -12321,7 +12258,7 @@ class RenderModelBufferFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12346,7 +12283,7 @@ class RenderModelLoadInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelLoadInfoFB(model_key={repr(self.model_key)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelLoadInfoFB(model_key={repr(self.model_key)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelLoadInfoFB(model_key={self.model_key}, next={self._next}, type={self._type})"
@@ -12367,7 +12304,7 @@ class RenderModelLoadInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12390,7 +12327,7 @@ class SystemRenderModelPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemRenderModelPropertiesFB(supports_render_model_loading={repr(self.supports_render_model_loading)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemRenderModelPropertiesFB(supports_render_model_loading={repr(self.supports_render_model_loading)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemRenderModelPropertiesFB(supports_render_model_loading={self.supports_render_model_loading}, next={self._next}, type={self._type})"
@@ -12411,7 +12348,7 @@ class SystemRenderModelPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12434,7 +12371,7 @@ class RenderModelCapabilitiesRequestFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelCapabilitiesRequestFB(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelCapabilitiesRequestFB(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelCapabilitiesRequestFB(flags={self.flags}, next={self._next}, type={self._type})"
@@ -12455,7 +12392,7 @@ class RenderModelCapabilitiesRequestFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12485,7 +12422,7 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ViewLocateFoveatedRenderingVARJO(foveated_rendering_active={repr(self.foveated_rendering_active)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ViewLocateFoveatedRenderingVARJO(foveated_rendering_active={repr(self.foveated_rendering_active)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ViewLocateFoveatedRenderingVARJO(foveated_rendering_active={self.foveated_rendering_active}, next={self._next}, type={self._type})"
@@ -12506,7 +12443,7 @@ class ViewLocateFoveatedRenderingVARJO(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12529,7 +12466,7 @@ class FoveatedViewConfigurationViewVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveatedViewConfigurationViewVARJO(foveated_rendering_active={repr(self.foveated_rendering_active)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveatedViewConfigurationViewVARJO(foveated_rendering_active={repr(self.foveated_rendering_active)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveatedViewConfigurationViewVARJO(foveated_rendering_active={self.foveated_rendering_active}, next={self._next}, type={self._type})"
@@ -12550,7 +12487,7 @@ class FoveatedViewConfigurationViewVARJO(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12573,7 +12510,7 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFoveatedRenderingPropertiesVARJO(supports_foveated_rendering={repr(self.supports_foveated_rendering)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFoveatedRenderingPropertiesVARJO(supports_foveated_rendering={repr(self.supports_foveated_rendering)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFoveatedRenderingPropertiesVARJO(supports_foveated_rendering={self.supports_foveated_rendering}, next={self._next}, type={self._type})"
@@ -12594,7 +12531,7 @@ class SystemFoveatedRenderingPropertiesVARJO(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12619,7 +12556,7 @@ class CompositionLayerDepthTestVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerDepthTestVARJO(depth_test_range_near_z={repr(self.depth_test_range_near_z)}, depth_test_range_far_z={repr(self.depth_test_range_far_z)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerDepthTestVARJO(depth_test_range_near_z={repr(self.depth_test_range_near_z)}, depth_test_range_far_z={repr(self.depth_test_range_far_z)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerDepthTestVARJO(depth_test_range_near_z={self.depth_test_range_near_z:.3f}, depth_test_range_far_z={self.depth_test_range_far_z:.3f}, next={self._next}, type={self._type})"
@@ -12640,7 +12577,7 @@ class CompositionLayerDepthTestVARJO(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12667,7 +12604,7 @@ class SystemMarkerTrackingPropertiesVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemMarkerTrackingPropertiesVARJO(supports_marker_tracking={repr(self.supports_marker_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemMarkerTrackingPropertiesVARJO(supports_marker_tracking={repr(self.supports_marker_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemMarkerTrackingPropertiesVARJO(supports_marker_tracking={self.supports_marker_tracking}, next={self._next}, type={self._type})"
@@ -12688,7 +12625,7 @@ class SystemMarkerTrackingPropertiesVARJO(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12717,7 +12654,7 @@ class EventDataMarkerTrackingUpdateVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataMarkerTrackingUpdateVARJO(marker_id={repr(self.marker_id)}, is_active={repr(self.is_active)}, is_predicted={repr(self.is_predicted)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataMarkerTrackingUpdateVARJO(marker_id={repr(self.marker_id)}, is_active={repr(self.is_active)}, is_predicted={repr(self.is_predicted)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataMarkerTrackingUpdateVARJO(marker_id={self.marker_id}, is_active={self.is_active}, is_predicted={self.is_predicted}, time={self.time}, next={self._next}, type={self._type})"
@@ -12738,7 +12675,7 @@ class EventDataMarkerTrackingUpdateVARJO(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12766,7 +12703,7 @@ class MarkerSpaceCreateInfoVARJO(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerSpaceCreateInfoVARJO(marker_id={repr(self.marker_id)}, pose_in_marker_space={repr(self.pose_in_marker_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerSpaceCreateInfoVARJO(marker_id={repr(self.marker_id)}, pose_in_marker_space={repr(self.pose_in_marker_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerSpaceCreateInfoVARJO(marker_id={self.marker_id}, pose_in_marker_space={self.pose_in_marker_space}, next={self._next}, type={self._type})"
@@ -12787,7 +12724,7 @@ class MarkerSpaceCreateInfoVARJO(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12828,7 +12765,7 @@ class FrameEndInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameEndInfoML(focus_distance={repr(self.focus_distance)}, flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FrameEndInfoML(focus_distance={repr(self.focus_distance)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FrameEndInfoML(focus_distance={self.focus_distance:.3f}, flags={self.flags}, next={self._next}, type={self._type})"
@@ -12849,7 +12786,7 @@ class FrameEndInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12878,7 +12815,7 @@ class GlobalDimmerFrameEndInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GlobalDimmerFrameEndInfoML(dimmer_value={repr(self.dimmer_value)}, flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GlobalDimmerFrameEndInfoML(dimmer_value={repr(self.dimmer_value)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GlobalDimmerFrameEndInfoML(dimmer_value={self.dimmer_value:.3f}, flags={self.flags}, next={self._next}, type={self._type})"
@@ -12899,7 +12836,7 @@ class GlobalDimmerFrameEndInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12934,7 +12871,7 @@ class SystemMarkerUnderstandingPropertiesML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemMarkerUnderstandingPropertiesML(supports_marker_understanding={repr(self.supports_marker_understanding)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemMarkerUnderstandingPropertiesML(supports_marker_understanding={repr(self.supports_marker_understanding)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemMarkerUnderstandingPropertiesML(supports_marker_understanding={self.supports_marker_understanding}, next={self._next}, type={self._type})"
@@ -12955,7 +12892,7 @@ class SystemMarkerUnderstandingPropertiesML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -12980,7 +12917,7 @@ class MarkerDetectorCreateInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerDetectorCreateInfoML(profile={repr(self._profile)}, marker_type={repr(self._marker_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerDetectorCreateInfoML(profile={repr(self.profile)}, marker_type={repr(self.marker_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerDetectorCreateInfoML(profile={self._profile}, marker_type={self._marker_type}, next={self._next}, type={self._type})"
@@ -12992,7 +12929,7 @@ class MarkerDetectorCreateInfoML(Structure):
     @profile.setter
     def profile(self, value: MarkerDetectorProfileML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._profile = enum_field_helper(profile)
+        self._profile = enum_field_helper(value)
 
     @property
     def marker_type(self) -> MarkerTypeML:
@@ -13001,7 +12938,7 @@ class MarkerDetectorCreateInfoML(Structure):
     @marker_type.setter
     def marker_type(self, value: MarkerTypeML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._marker_type = enum_field_helper(marker_type)
+        self._marker_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -13019,7 +12956,7 @@ class MarkerDetectorCreateInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13043,7 +12980,7 @@ class MarkerDetectorArucoInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerDetectorArucoInfoML(aruco_dict={repr(self._aruco_dict)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerDetectorArucoInfoML(aruco_dict={repr(self.aruco_dict)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerDetectorArucoInfoML(aruco_dict={self._aruco_dict}, next={self._next}, type={self._type})"
@@ -13055,7 +12992,7 @@ class MarkerDetectorArucoInfoML(Structure):
     @aruco_dict.setter
     def aruco_dict(self, value: MarkerArucoDictML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._aruco_dict = enum_field_helper(aruco_dict)
+        self._aruco_dict = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -13073,7 +13010,7 @@ class MarkerDetectorArucoInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13096,7 +13033,7 @@ class MarkerDetectorSizeInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerDetectorSizeInfoML(marker_length={repr(self.marker_length)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerDetectorSizeInfoML(marker_length={repr(self.marker_length)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerDetectorSizeInfoML(marker_length={self.marker_length:.3f}, next={self._next}, type={self._type})"
@@ -13117,7 +13054,7 @@ class MarkerDetectorSizeInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13140,7 +13077,7 @@ class MarkerDetectorAprilTagInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerDetectorAprilTagInfoML(april_tag_dict={repr(self._april_tag_dict)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerDetectorAprilTagInfoML(april_tag_dict={repr(self.april_tag_dict)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerDetectorAprilTagInfoML(april_tag_dict={self._april_tag_dict}, next={self._next}, type={self._type})"
@@ -13152,7 +13089,7 @@ class MarkerDetectorAprilTagInfoML(Structure):
     @april_tag_dict.setter
     def april_tag_dict(self, value: MarkerAprilTagDictML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._april_tag_dict = enum_field_helper(april_tag_dict)
+        self._april_tag_dict = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -13170,7 +13107,7 @@ class MarkerDetectorAprilTagInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13203,7 +13140,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerDetectorCustomProfileInfoML(fps_hint={repr(self._fps_hint)}, resolution_hint={repr(self._resolution_hint)}, camera_hint={repr(self._camera_hint)}, corner_refine_method={repr(self._corner_refine_method)}, use_edge_refinement={repr(self.use_edge_refinement)}, full_analysis_interval_hint={repr(self._full_analysis_interval_hint)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerDetectorCustomProfileInfoML(fps_hint={repr(self.fps_hint)}, resolution_hint={repr(self.resolution_hint)}, camera_hint={repr(self.camera_hint)}, corner_refine_method={repr(self.corner_refine_method)}, use_edge_refinement={repr(self.use_edge_refinement)}, full_analysis_interval_hint={repr(self.full_analysis_interval_hint)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerDetectorCustomProfileInfoML(fps_hint={self._fps_hint}, resolution_hint={self._resolution_hint}, camera_hint={self._camera_hint}, corner_refine_method={self._corner_refine_method}, use_edge_refinement={self.use_edge_refinement}, full_analysis_interval_hint={self._full_analysis_interval_hint}, next={self._next}, type={self._type})"
@@ -13215,7 +13152,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
     @fps_hint.setter
     def fps_hint(self, value: MarkerDetectorFpsML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._fps_hint = enum_field_helper(fps_hint)
+        self._fps_hint = enum_field_helper(value)
 
     @property
     def resolution_hint(self) -> MarkerDetectorResolutionML:
@@ -13224,7 +13161,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
     @resolution_hint.setter
     def resolution_hint(self, value: MarkerDetectorResolutionML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._resolution_hint = enum_field_helper(resolution_hint)
+        self._resolution_hint = enum_field_helper(value)
 
     @property
     def camera_hint(self) -> MarkerDetectorCameraML:
@@ -13233,7 +13170,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
     @camera_hint.setter
     def camera_hint(self, value: MarkerDetectorCameraML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._camera_hint = enum_field_helper(camera_hint)
+        self._camera_hint = enum_field_helper(value)
 
     @property
     def corner_refine_method(self) -> MarkerDetectorCornerRefineMethodML:
@@ -13242,7 +13179,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
     @corner_refine_method.setter
     def corner_refine_method(self, value: MarkerDetectorCornerRefineMethodML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._corner_refine_method = enum_field_helper(corner_refine_method)
+        self._corner_refine_method = enum_field_helper(value)
 
     @property
     def full_analysis_interval_hint(self) -> MarkerDetectorFullAnalysisIntervalML:
@@ -13251,7 +13188,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
     @full_analysis_interval_hint.setter
     def full_analysis_interval_hint(self, value: MarkerDetectorFullAnalysisIntervalML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._full_analysis_interval_hint = enum_field_helper(full_analysis_interval_hint)
+        self._full_analysis_interval_hint = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -13269,7 +13206,7 @@ class MarkerDetectorCustomProfileInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13295,7 +13232,7 @@ class MarkerDetectorSnapshotInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerDetectorSnapshotInfoML(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerDetectorSnapshotInfoML(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerDetectorSnapshotInfoML(next={self._next}, type={self._type})"
@@ -13316,7 +13253,7 @@ class MarkerDetectorSnapshotInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13338,7 +13275,7 @@ class MarkerDetectorStateML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerDetectorStateML(state={repr(self._state)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerDetectorStateML(state={repr(self.state)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerDetectorStateML(state={self._state}, next={self._next}, type={self._type})"
@@ -13350,7 +13287,7 @@ class MarkerDetectorStateML(Structure):
     @state.setter
     def state(self, value: MarkerDetectorStatusML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._state = enum_field_helper(state)
+        self._state = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -13368,7 +13305,7 @@ class MarkerDetectorStateML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13395,7 +13332,7 @@ class MarkerSpaceCreateInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MarkerSpaceCreateInfoML(marker_detector={repr(self.marker_detector)}, marker={repr(self.marker)}, pose_in_marker_space={repr(self.pose_in_marker_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MarkerSpaceCreateInfoML(marker_detector={repr(self.marker_detector)}, marker={repr(self.marker)}, pose_in_marker_space={repr(self.pose_in_marker_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MarkerSpaceCreateInfoML(marker_detector={self.marker_detector}, marker={self.marker}, pose_in_marker_space={self.pose_in_marker_space}, next={self._next}, type={self._type})"
@@ -13416,7 +13353,7 @@ class MarkerSpaceCreateInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13476,7 +13413,7 @@ class LocalizationMapML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LocalizationMapML(name={repr(self.name)}, map_uuid={repr(self.map_uuid)}, map_type={repr(self._map_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LocalizationMapML(name={repr(self.name)}, map_uuid={repr(self.map_uuid)}, map_type={repr(self.map_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LocalizationMapML(name={self.name}, map_uuid={self.map_uuid}, map_type={self._map_type}, next={self._next}, type={self._type})"
@@ -13488,7 +13425,7 @@ class LocalizationMapML(Structure):
     @map_type.setter
     def map_type(self, value: LocalizationMapTypeML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._map_type = enum_field_helper(map_type)
+        self._map_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -13506,7 +13443,7 @@ class LocalizationMapML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13541,7 +13478,7 @@ class EventDataLocalizationChangedML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataLocalizationChangedML(session={repr(self.session)}, state={repr(self._state)}, map={repr(self.map)}, confidence={repr(self._confidence)}, error_flags={repr(self.error_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataLocalizationChangedML(session={repr(self.session)}, state={repr(self.state)}, map={repr(self.map)}, confidence={repr(self.confidence)}, error_flags={repr(self.error_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataLocalizationChangedML(session={self.session}, state={self._state}, map={self.map}, confidence={self._confidence}, error_flags={self.error_flags}, next={self._next}, type={self._type})"
@@ -13553,7 +13490,7 @@ class EventDataLocalizationChangedML(Structure):
     @state.setter
     def state(self, value: LocalizationMapStateML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._state = enum_field_helper(state)
+        self._state = enum_field_helper(value)
 
     @property
     def confidence(self) -> LocalizationMapConfidenceML:
@@ -13562,7 +13499,7 @@ class EventDataLocalizationChangedML(Structure):
     @confidence.setter
     def confidence(self, value: LocalizationMapConfidenceML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._confidence = enum_field_helper(confidence)
+        self._confidence = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -13580,7 +13517,7 @@ class EventDataLocalizationChangedML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13605,7 +13542,7 @@ class LocalizationMapQueryInfoBaseHeaderML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LocalizationMapQueryInfoBaseHeaderML(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LocalizationMapQueryInfoBaseHeaderML(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LocalizationMapQueryInfoBaseHeaderML(next={self._next}, type={self._type})"
@@ -13648,7 +13585,7 @@ class MapLocalizationRequestInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.MapLocalizationRequestInfoML(map_uuid={repr(self.map_uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.MapLocalizationRequestInfoML(map_uuid={repr(self.map_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.MapLocalizationRequestInfoML(map_uuid={self.map_uuid}, next={self._next}, type={self._type})"
@@ -13669,7 +13606,7 @@ class MapLocalizationRequestInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13694,7 +13631,7 @@ class LocalizationMapImportInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LocalizationMapImportInfoML(size={repr(self.size)}, data={repr(self._data)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LocalizationMapImportInfoML(size={repr(self.size)}, data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LocalizationMapImportInfoML(size={self.size}, data={self._data}, next={self._next}, type={self._type})"
@@ -13724,7 +13661,7 @@ class LocalizationMapImportInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13748,7 +13685,7 @@ class LocalizationEnableEventsInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LocalizationEnableEventsInfoML(enabled={repr(self.enabled)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LocalizationEnableEventsInfoML(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LocalizationEnableEventsInfoML(enabled={self.enabled}, next={self._next}, type={self._type})"
@@ -13769,7 +13706,7 @@ class LocalizationEnableEventsInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13812,7 +13749,7 @@ class SpatialAnchorsCreateInfoBaseHeaderML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsCreateInfoBaseHeaderML(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsCreateInfoBaseHeaderML(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsCreateInfoBaseHeaderML(next={self._next}, type={self._type})"
@@ -13859,7 +13796,7 @@ class SpatialAnchorsCreateInfoFromPoseML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsCreateInfoFromPoseML(base_space={repr(self.base_space)}, pose_in_base_space={repr(self.pose_in_base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsCreateInfoFromPoseML(base_space={repr(self.base_space)}, pose_in_base_space={repr(self.pose_in_base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsCreateInfoFromPoseML(base_space={self.base_space}, pose_in_base_space={self.pose_in_base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -13880,7 +13817,7 @@ class SpatialAnchorsCreateInfoFromPoseML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13911,7 +13848,7 @@ class CreateSpatialAnchorsCompletionML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CreateSpatialAnchorsCompletionML(future_result={repr(self._future_result)}, space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CreateSpatialAnchorsCompletionML(future_result={repr(self.future_result)}, space_count={repr(self.space_count)}, spaces={repr(self.spaces)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CreateSpatialAnchorsCompletionML(future_result={self._future_result}, space_count={self.space_count}, spaces={self._spaces}, next={self._next}, type={self._type})"
@@ -13923,7 +13860,7 @@ class CreateSpatialAnchorsCompletionML(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def spaces(self):
@@ -13955,7 +13892,7 @@ class CreateSpatialAnchorsCompletionML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -13980,7 +13917,7 @@ class SpatialAnchorStateML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorStateML(confidence={repr(self._confidence)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorStateML(confidence={repr(self.confidence)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorStateML(confidence={self._confidence}, next={self._next}, type={self._type})"
@@ -13992,7 +13929,7 @@ class SpatialAnchorStateML(Structure):
     @confidence.setter
     def confidence(self, value: SpatialAnchorConfidenceML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._confidence = enum_field_helper(confidence)
+        self._confidence = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -14010,7 +13947,7 @@ class SpatialAnchorStateML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14046,7 +13983,7 @@ class SpatialAnchorsCreateStorageInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsCreateStorageInfoML(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsCreateStorageInfoML(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsCreateStorageInfoML(next={self._next}, type={self._type})"
@@ -14067,7 +14004,7 @@ class SpatialAnchorsCreateStorageInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14087,7 +14024,7 @@ class SpatialAnchorsQueryInfoBaseHeaderML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsQueryInfoBaseHeaderML(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsQueryInfoBaseHeaderML(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsQueryInfoBaseHeaderML(next={self._next}, type={self._type})"
@@ -14138,7 +14075,7 @@ class SpatialAnchorsQueryInfoRadiusML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsQueryInfoRadiusML(base_space={repr(self.base_space)}, center={repr(self.center)}, time={repr(self.time)}, radius={repr(self.radius)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsQueryInfoRadiusML(base_space={repr(self.base_space)}, center={repr(self.center)}, time={repr(self.time)}, radius={repr(self.radius)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsQueryInfoRadiusML(base_space={self.base_space}, center={self.center}, time={self.time}, radius={self.radius:.3f}, next={self._next}, type={self._type})"
@@ -14159,7 +14096,7 @@ class SpatialAnchorsQueryInfoRadiusML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14191,7 +14128,7 @@ class SpatialAnchorsQueryCompletionML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsQueryCompletionML(future_result={repr(self._future_result)}, uuid_capacity_input={repr(self.uuid_capacity_input)}, uuid_count_output={repr(self.uuid_count_output)}, uuids={repr(self.uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsQueryCompletionML(future_result={repr(self.future_result)}, uuid_capacity_input={repr(self.uuid_capacity_input)}, uuid_count_output={repr(self.uuid_count_output)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsQueryCompletionML(future_result={self._future_result}, uuid_capacity_input={self.uuid_capacity_input}, uuid_count_output={self.uuid_count_output}, uuids={self.uuids}, next={self._next}, type={self._type})"
@@ -14203,7 +14140,7 @@ class SpatialAnchorsQueryCompletionML(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -14221,7 +14158,7 @@ class SpatialAnchorsQueryCompletionML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14253,7 +14190,7 @@ class SpatialAnchorsCreateInfoFromUuidsML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsCreateInfoFromUuidsML(storage={repr(self.storage)}, uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsCreateInfoFromUuidsML(storage={repr(self.storage)}, uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsCreateInfoFromUuidsML(storage={self.storage}, uuid_count={self.uuid_count}, uuids={self._uuids}, next={self._next}, type={self._type})"
@@ -14288,7 +14225,7 @@ class SpatialAnchorsCreateInfoFromUuidsML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14319,7 +14256,7 @@ class SpatialAnchorsPublishInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsPublishInfoML(anchor_count={repr(self.anchor_count)}, anchors={repr(self._anchors)}, expiration={repr(self.expiration)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsPublishInfoML(anchor_count={repr(self.anchor_count)}, anchors={repr(self.anchors)}, expiration={repr(self.expiration)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsPublishInfoML(anchor_count={self.anchor_count}, anchors={self._anchors}, expiration={self.expiration}, next={self._next}, type={self._type})"
@@ -14354,7 +14291,7 @@ class SpatialAnchorsPublishInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14385,7 +14322,7 @@ class SpatialAnchorsPublishCompletionML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsPublishCompletionML(future_result={repr(self._future_result)}, uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsPublishCompletionML(future_result={repr(self.future_result)}, uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsPublishCompletionML(future_result={self._future_result}, uuid_count={self.uuid_count}, uuids={self._uuids}, next={self._next}, type={self._type})"
@@ -14397,7 +14334,7 @@ class SpatialAnchorsPublishCompletionML(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def uuids(self):
@@ -14429,7 +14366,7 @@ class SpatialAnchorsPublishCompletionML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14458,7 +14395,7 @@ class SpatialAnchorsDeleteInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsDeleteInfoML(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsDeleteInfoML(uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsDeleteInfoML(uuid_count={self.uuid_count}, uuids={self._uuids}, next={self._next}, type={self._type})"
@@ -14493,7 +14430,7 @@ class SpatialAnchorsDeleteInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14517,7 +14454,7 @@ class SpatialAnchorsDeleteCompletionML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsDeleteCompletionML(future_result={repr(self._future_result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsDeleteCompletionML(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsDeleteCompletionML(future_result={self._future_result}, next={self._next}, type={self._type})"
@@ -14529,7 +14466,7 @@ class SpatialAnchorsDeleteCompletionML(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -14547,7 +14484,7 @@ class SpatialAnchorsDeleteCompletionML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14576,7 +14513,7 @@ class SpatialAnchorsUpdateExpirationInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsUpdateExpirationInfoML(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, expiration={repr(self.expiration)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsUpdateExpirationInfoML(uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, expiration={repr(self.expiration)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsUpdateExpirationInfoML(uuid_count={self.uuid_count}, uuids={self._uuids}, expiration={self.expiration}, next={self._next}, type={self._type})"
@@ -14611,7 +14548,7 @@ class SpatialAnchorsUpdateExpirationInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14636,7 +14573,7 @@ class SpatialAnchorsUpdateExpirationCompletionML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsUpdateExpirationCompletionML(future_result={repr(self._future_result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsUpdateExpirationCompletionML(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsUpdateExpirationCompletionML(future_result={self._future_result}, next={self._next}, type={self._type})"
@@ -14648,7 +14585,7 @@ class SpatialAnchorsUpdateExpirationCompletionML(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -14666,7 +14603,7 @@ class SpatialAnchorsUpdateExpirationCompletionML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14687,7 +14624,7 @@ class SpatialAnchorCompletionResultML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCompletionResultML(uuid={repr(self.uuid)}, result={repr(self._result)})"
+        return f"xr.SpatialAnchorCompletionResultML(uuid={repr(self.uuid)}, result={repr(self.result)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorCompletionResultML(uuid={self.uuid}, result={self._result})"
@@ -14699,7 +14636,7 @@ class SpatialAnchorCompletionResultML(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     _fields_ = [
         ("uuid", UuidEXT),
@@ -14725,7 +14662,7 @@ class SpatialAnchorsPublishCompletionDetailsML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsPublishCompletionDetailsML(result_count={repr(self.result_count)}, results={repr(self._results)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsPublishCompletionDetailsML(result_count={repr(self.result_count)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsPublishCompletionDetailsML(result_count={self.result_count}, results={self._results}, next={self._next}, type={self._type})"
@@ -14760,7 +14697,7 @@ class SpatialAnchorsPublishCompletionDetailsML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14788,7 +14725,7 @@ class SpatialAnchorsDeleteCompletionDetailsML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsDeleteCompletionDetailsML(result_count={repr(self.result_count)}, results={repr(self._results)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsDeleteCompletionDetailsML(result_count={repr(self.result_count)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsDeleteCompletionDetailsML(result_count={self.result_count}, results={self._results}, next={self._next}, type={self._type})"
@@ -14823,7 +14760,7 @@ class SpatialAnchorsDeleteCompletionDetailsML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14851,7 +14788,7 @@ class SpatialAnchorsUpdateExpirationCompletionDetailsML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorsUpdateExpirationCompletionDetailsML(result_count={repr(self.result_count)}, results={repr(self._results)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorsUpdateExpirationCompletionDetailsML(result_count={repr(self.result_count)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsUpdateExpirationCompletionDetailsML(result_count={self.result_count}, results={self._results}, next={self._next}, type={self._type})"
@@ -14886,7 +14823,7 @@ class SpatialAnchorsUpdateExpirationCompletionDetailsML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -14963,7 +14900,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorPersistenceInfoMSFT(spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)}, spatial_anchor={repr(self.spatial_anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorPersistenceInfoMSFT(spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)}, spatial_anchor={repr(self.spatial_anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorPersistenceInfoMSFT(spatial_anchor_persistence_name={self.spatial_anchor_persistence_name}, spatial_anchor={self.spatial_anchor}, next={self._next}, type={self._type})"
@@ -14984,7 +14921,7 @@ class SpatialAnchorPersistenceInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15012,7 +14949,7 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorFromPersistedAnchorCreateInfoMSFT(spatial_anchor_store={repr(self.spatial_anchor_store)}, spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorFromPersistedAnchorCreateInfoMSFT(spatial_anchor_store={repr(self.spatial_anchor_store)}, spatial_anchor_persistence_name={repr(self.spatial_anchor_persistence_name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorFromPersistedAnchorCreateInfoMSFT(spatial_anchor_store={self.spatial_anchor_store}, spatial_anchor_persistence_name={self.spatial_anchor_persistence_name}, next={self._next}, type={self._type})"
@@ -15033,7 +14970,7 @@ class SpatialAnchorFromPersistedAnchorCreateInfoMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15078,7 +15015,7 @@ class SceneMarkerMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMarkerMSFT(marker_type={repr(self._marker_type)}, last_seen_time={repr(self.last_seen_time)}, center={repr(self.center)}, size={repr(self.size)})"
+        return f"xr.SceneMarkerMSFT(marker_type={repr(self.marker_type)}, last_seen_time={repr(self.last_seen_time)}, center={repr(self.center)}, size={repr(self.size)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMarkerMSFT(marker_type={self._marker_type}, last_seen_time={self.last_seen_time}, center={self.center}, size={self.size})"
@@ -15090,7 +15027,7 @@ class SceneMarkerMSFT(Structure):
     @marker_type.setter
     def marker_type(self, value: SceneMarkerTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._marker_type = enum_field_helper(marker_type)
+        self._marker_type = enum_field_helper(value)
 
     _fields_ = [
         ("_marker_type", SceneMarkerTypeMSFT.ctype()),
@@ -15116,7 +15053,7 @@ class SceneMarkersMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMarkersMSFT(scene_marker_capacity_input={repr(self.scene_marker_capacity_input)}, scene_markers={repr(self.scene_markers)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMarkersMSFT(scene_marker_capacity_input={repr(self.scene_marker_capacity_input)}, scene_markers={repr(self.scene_markers)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMarkersMSFT(scene_marker_capacity_input={self.scene_marker_capacity_input}, scene_markers={self.scene_markers}, next={self._next}, type={self._type})"
@@ -15137,7 +15074,7 @@ class SceneMarkersMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15165,7 +15102,7 @@ class SceneMarkerTypeFilterMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMarkerTypeFilterMSFT(marker_type_count={repr(self.marker_type_count)}, marker_types={repr(self._marker_types)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMarkerTypeFilterMSFT(marker_type_count={repr(self.marker_type_count)}, marker_types={repr(self.marker_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMarkerTypeFilterMSFT(marker_type_count={self.marker_type_count}, marker_types={self._marker_types}, next={self._next}, type={self._type})"
@@ -15200,7 +15137,7 @@ class SceneMarkerTypeFilterMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15222,7 +15159,7 @@ class SceneMarkerQRCodeMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMarkerQRCodeMSFT(symbol_type={repr(self._symbol_type)}, version={repr(self.version)})"
+        return f"xr.SceneMarkerQRCodeMSFT(symbol_type={repr(self.symbol_type)}, version={repr(self.version)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMarkerQRCodeMSFT(symbol_type={self._symbol_type}, version={self.version})"
@@ -15234,7 +15171,7 @@ class SceneMarkerQRCodeMSFT(Structure):
     @symbol_type.setter
     def symbol_type(self, value: SceneMarkerQRCodeSymbolTypeMSFT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._symbol_type = enum_field_helper(symbol_type)
+        self._symbol_type = enum_field_helper(value)
 
     _fields_ = [
         ("_symbol_type", SceneMarkerQRCodeSymbolTypeMSFT.ctype()),
@@ -15258,7 +15195,7 @@ class SceneMarkerQRCodesMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneMarkerQRCodesMSFT(qr_code_capacity_input={repr(self.qr_code_capacity_input)}, qr_codes={repr(self.qr_codes)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneMarkerQRCodesMSFT(qr_code_capacity_input={repr(self.qr_code_capacity_input)}, qr_codes={repr(self.qr_codes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneMarkerQRCodesMSFT(qr_code_capacity_input={self.qr_code_capacity_input}, qr_codes={self.qr_codes}, next={self._next}, type={self._type})"
@@ -15279,7 +15216,7 @@ class SceneMarkerQRCodesMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15306,7 +15243,7 @@ class SpaceQueryInfoBaseHeaderFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceQueryInfoBaseHeaderFB(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceQueryInfoBaseHeaderFB(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceQueryInfoBaseHeaderFB(next={self._next}, type={self._type})"
@@ -15347,7 +15284,7 @@ class SpaceFilterInfoBaseHeaderFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceFilterInfoBaseHeaderFB(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceFilterInfoBaseHeaderFB(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceFilterInfoBaseHeaderFB(next={self._next}, type={self._type})"
@@ -15398,7 +15335,7 @@ class SpaceQueryInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceQueryInfoFB(query_action={repr(self._query_action)}, max_result_count={repr(self.max_result_count)}, timeout={repr(self.timeout)}, filter={repr(self.filter)}, exclude_filter={repr(self.exclude_filter)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceQueryInfoFB(query_action={repr(self.query_action)}, max_result_count={repr(self.max_result_count)}, timeout={repr(self.timeout)}, filter={repr(self.filter)}, exclude_filter={repr(self.exclude_filter)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceQueryInfoFB(query_action={self._query_action}, max_result_count={self.max_result_count}, timeout={self.timeout}, filter={self.filter}, exclude_filter={self.exclude_filter}, next={self._next}, type={self._type})"
@@ -15410,7 +15347,7 @@ class SpaceQueryInfoFB(Structure):
     @query_action.setter
     def query_action(self, value: SpaceQueryActionFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._query_action = enum_field_helper(query_action)
+        self._query_action = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -15428,7 +15365,7 @@ class SpaceQueryInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15455,7 +15392,7 @@ class SpaceStorageLocationFilterInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceStorageLocationFilterInfoFB(location={repr(self._location)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceStorageLocationFilterInfoFB(location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceStorageLocationFilterInfoFB(location={self._location}, next={self._next}, type={self._type})"
@@ -15467,7 +15404,7 @@ class SpaceStorageLocationFilterInfoFB(Structure):
     @location.setter
     def location(self, value: SpaceStorageLocationFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -15485,7 +15422,7 @@ class SpaceStorageLocationFilterInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15512,7 +15449,7 @@ class SpaceUuidFilterInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceUuidFilterInfoFB(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceUuidFilterInfoFB(uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceUuidFilterInfoFB(uuid_count={self.uuid_count}, uuids={self._uuids}, next={self._next}, type={self._type})"
@@ -15547,7 +15484,7 @@ class SpaceUuidFilterInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15571,7 +15508,7 @@ class SpaceComponentFilterInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceComponentFilterInfoFB(component_type={repr(self._component_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceComponentFilterInfoFB(component_type={repr(self.component_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceComponentFilterInfoFB(component_type={self._component_type}, next={self._next}, type={self._type})"
@@ -15583,7 +15520,7 @@ class SpaceComponentFilterInfoFB(Structure):
     @component_type.setter
     def component_type(self, value: SpaceComponentTypeFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._component_type = enum_field_helper(component_type)
+        self._component_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -15601,7 +15538,7 @@ class SpaceComponentFilterInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15651,7 +15588,7 @@ class SpaceQueryResultsFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceQueryResultsFB(result_capacity_input={repr(self.result_capacity_input)}, result_count_output={repr(self.result_count_output)}, results={repr(self.results)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceQueryResultsFB(result_capacity_input={repr(self.result_capacity_input)}, result_count_output={repr(self.result_count_output)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceQueryResultsFB(result_capacity_input={self.result_capacity_input}, result_count_output={self.result_count_output}, results={self.results}, next={self._next}, type={self._type})"
@@ -15672,7 +15609,7 @@ class SpaceQueryResultsFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15697,7 +15634,7 @@ class EventDataSpaceQueryResultsAvailableFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceQueryResultsAvailableFB(request_id={repr(self.request_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceQueryResultsAvailableFB(request_id={repr(self.request_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceQueryResultsAvailableFB(request_id={self.request_id}, next={self._next}, type={self._type})"
@@ -15718,7 +15655,7 @@ class EventDataSpaceQueryResultsAvailableFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15743,7 +15680,7 @@ class EventDataSpaceQueryCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceQueryCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceQueryCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceQueryCompleteFB(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -15755,7 +15692,7 @@ class EventDataSpaceQueryCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -15773,7 +15710,7 @@ class EventDataSpaceQueryCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15806,7 +15743,7 @@ class SpaceSaveInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceSaveInfoFB(space={repr(self.space)}, location={repr(self._location)}, persistence_mode={repr(self._persistence_mode)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceSaveInfoFB(space={repr(self.space)}, location={repr(self.location)}, persistence_mode={repr(self.persistence_mode)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceSaveInfoFB(space={self.space}, location={self._location}, persistence_mode={self._persistence_mode}, next={self._next}, type={self._type})"
@@ -15818,7 +15755,7 @@ class SpaceSaveInfoFB(Structure):
     @location.setter
     def location(self, value: SpaceStorageLocationFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def persistence_mode(self) -> SpacePersistenceModeFB:
@@ -15827,7 +15764,7 @@ class SpaceSaveInfoFB(Structure):
     @persistence_mode.setter
     def persistence_mode(self, value: SpacePersistenceModeFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._persistence_mode = enum_field_helper(persistence_mode)
+        self._persistence_mode = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -15845,7 +15782,7 @@ class SpaceSaveInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15872,7 +15809,7 @@ class SpaceEraseInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceEraseInfoFB(space={repr(self.space)}, location={repr(self._location)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceEraseInfoFB(space={repr(self.space)}, location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceEraseInfoFB(space={self.space}, location={self._location}, next={self._next}, type={self._type})"
@@ -15884,7 +15821,7 @@ class SpaceEraseInfoFB(Structure):
     @location.setter
     def location(self, value: SpaceStorageLocationFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -15902,7 +15839,7 @@ class SpaceEraseInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -15934,7 +15871,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceSaveCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, location={repr(self._location)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceSaveCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceSaveCompleteFB(request_id={self.request_id}, result={self._result}, space={self.space}, uuid={self.uuid}, location={self._location}, next={self._next}, type={self._type})"
@@ -15946,7 +15883,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def location(self) -> SpaceStorageLocationFB:
@@ -15955,7 +15892,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
     @location.setter
     def location(self, value: SpaceStorageLocationFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -15973,7 +15910,7 @@ class EventDataSpaceSaveCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16008,7 +15945,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceEraseCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, location={repr(self._location)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceEraseCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, space={repr(self.space)}, uuid={repr(self.uuid)}, location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceEraseCompleteFB(request_id={self.request_id}, result={self._result}, space={self.space}, uuid={self.uuid}, location={self._location}, next={self._next}, type={self._type})"
@@ -16020,7 +15957,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def location(self) -> SpaceStorageLocationFB:
@@ -16029,7 +15966,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
     @location.setter
     def location(self, value: SpaceStorageLocationFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -16047,7 +15984,7 @@ class EventDataSpaceEraseCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16097,7 +16034,7 @@ class SpaceShareInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceShareInfoFB(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, user_count={repr(self.user_count)}, users={repr(self._users)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceShareInfoFB(space_count={repr(self.space_count)}, spaces={repr(self.spaces)}, user_count={repr(self.user_count)}, users={repr(self.users)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceShareInfoFB(space_count={self.space_count}, spaces={self._spaces}, user_count={self.user_count}, users={self._users}, next={self._next}, type={self._type})"
@@ -16146,7 +16083,7 @@ class SpaceShareInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16174,7 +16111,7 @@ class EventDataSpaceShareCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceShareCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceShareCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceShareCompleteFB(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -16186,7 +16123,7 @@ class EventDataSpaceShareCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -16204,7 +16141,7 @@ class EventDataSpaceShareCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16251,7 +16188,7 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerSpaceWarpInfoFB(layer_flags={repr(self.layer_flags)}, motion_vector_sub_image={repr(self.motion_vector_sub_image)}, app_space_delta_pose={repr(self.app_space_delta_pose)}, depth_sub_image={repr(self.depth_sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerSpaceWarpInfoFB(layer_flags={repr(self.layer_flags)}, motion_vector_sub_image={repr(self.motion_vector_sub_image)}, app_space_delta_pose={repr(self.app_space_delta_pose)}, depth_sub_image={repr(self.depth_sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerSpaceWarpInfoFB(layer_flags={self.layer_flags}, motion_vector_sub_image={self.motion_vector_sub_image}, app_space_delta_pose={self.app_space_delta_pose}, depth_sub_image={self.depth_sub_image}, min_depth={self.min_depth:.3f}, max_depth={self.max_depth:.3f}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next={self._next}, type={self._type})"
@@ -16272,7 +16209,7 @@ class CompositionLayerSpaceWarpInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16304,7 +16241,7 @@ class SystemSpaceWarpPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpaceWarpPropertiesFB(recommended_motion_vector_image_rect_width={repr(self.recommended_motion_vector_image_rect_width)}, recommended_motion_vector_image_rect_height={repr(self.recommended_motion_vector_image_rect_height)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpaceWarpPropertiesFB(recommended_motion_vector_image_rect_width={repr(self.recommended_motion_vector_image_rect_width)}, recommended_motion_vector_image_rect_height={repr(self.recommended_motion_vector_image_rect_height)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpaceWarpPropertiesFB(recommended_motion_vector_image_rect_width={self.recommended_motion_vector_image_rect_width}, recommended_motion_vector_image_rect_height={self.recommended_motion_vector_image_rect_height}, next={self._next}, type={self._type})"
@@ -16325,7 +16262,7 @@ class SystemSpaceWarpPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16355,7 +16292,7 @@ class HapticAmplitudeEnvelopeVibrationFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticAmplitudeEnvelopeVibrationFB(duration={repr(self.duration)}, amplitude_count={repr(self.amplitude_count)}, amplitudes={repr(self._amplitudes)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HapticAmplitudeEnvelopeVibrationFB(duration={repr(self.duration)}, amplitude_count={repr(self.amplitude_count)}, amplitudes={repr(self.amplitudes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HapticAmplitudeEnvelopeVibrationFB(duration={self.duration}, amplitude_count={self.amplitude_count}, amplitudes={self._amplitudes}, next={self._next}, type={self._type})"
@@ -16390,7 +16327,7 @@ class HapticAmplitudeEnvelopeVibrationFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16497,7 +16434,7 @@ class SemanticLabelsFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SemanticLabelsFB(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self._buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SemanticLabelsFB(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SemanticLabelsFB(buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self._buffer}, next={self._next}, type={self._type})"
@@ -16527,7 +16464,7 @@ class SemanticLabelsFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16560,7 +16497,7 @@ class RoomLayoutFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RoomLayoutFB(floor_uuid={repr(self.floor_uuid)}, ceiling_uuid={repr(self.ceiling_uuid)}, wall_uuid_capacity_input={repr(self.wall_uuid_capacity_input)}, wall_uuid_count_output={repr(self.wall_uuid_count_output)}, wall_uuids={repr(self.wall_uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RoomLayoutFB(floor_uuid={repr(self.floor_uuid)}, ceiling_uuid={repr(self.ceiling_uuid)}, wall_uuid_capacity_input={repr(self.wall_uuid_capacity_input)}, wall_uuid_count_output={repr(self.wall_uuid_count_output)}, wall_uuids={repr(self.wall_uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RoomLayoutFB(floor_uuid={self.floor_uuid}, ceiling_uuid={self.ceiling_uuid}, wall_uuid_capacity_input={self.wall_uuid_capacity_input}, wall_uuid_count_output={self.wall_uuid_count_output}, wall_uuids={self.wall_uuids}, next={self._next}, type={self._type})"
@@ -16581,7 +16518,7 @@ class RoomLayoutFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16612,7 +16549,7 @@ class Boundary2DFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.Boundary2DFB(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.Boundary2DFB(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.Boundary2DFB(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self._next}, type={self._type})"
@@ -16633,7 +16570,7 @@ class Boundary2DFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16660,7 +16597,7 @@ class SemanticLabelsSupportInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SemanticLabelsSupportInfoFB(flags={repr(self.flags)}, recognized_labels={repr(self._recognized_labels)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SemanticLabelsSupportInfoFB(flags={repr(self.flags)}, recognized_labels={repr(self.recognized_labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SemanticLabelsSupportInfoFB(flags={self.flags}, recognized_labels={self._recognized_labels}, next={self._next}, type={self._type})"
@@ -16690,7 +16627,7 @@ class SemanticLabelsSupportInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16727,7 +16664,7 @@ class DigitalLensControlALMALENCE(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DigitalLensControlALMALENCE(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.DigitalLensControlALMALENCE(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.DigitalLensControlALMALENCE(flags={self.flags}, next={self._next}, type={self._type})"
@@ -16748,7 +16685,7 @@ class DigitalLensControlALMALENCE(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16776,7 +16713,7 @@ class EventDataSceneCaptureCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSceneCaptureCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSceneCaptureCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSceneCaptureCompleteFB(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -16788,7 +16725,7 @@ class EventDataSceneCaptureCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -16806,7 +16743,7 @@ class EventDataSceneCaptureCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16832,7 +16769,7 @@ class SceneCaptureRequestInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={repr(self.request_byte_count)}, request={repr(self._request)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneCaptureRequestInfoFB(request_byte_count={repr(self.request_byte_count)}, request={repr(self.request)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneCaptureRequestInfoFB(request_byte_count={self.request_byte_count}, request={self._request}, next={self._next}, type={self._type})"
@@ -16862,7 +16799,7 @@ class SceneCaptureRequestInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16893,7 +16830,7 @@ class SpaceContainerFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceContainerFB(uuid_capacity_input={repr(self.uuid_capacity_input)}, uuid_count_output={repr(self.uuid_count_output)}, uuids={repr(self.uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceContainerFB(uuid_capacity_input={repr(self.uuid_capacity_input)}, uuid_count_output={repr(self.uuid_count_output)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceContainerFB(uuid_capacity_input={self.uuid_capacity_input}, uuid_count_output={self.uuid_count_output}, uuids={self.uuids}, next={self._next}, type={self._type})"
@@ -16914,7 +16851,7 @@ class SpaceContainerFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16946,7 +16883,7 @@ class FoveationEyeTrackedProfileCreateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationEyeTrackedProfileCreateInfoMETA(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveationEyeTrackedProfileCreateInfoMETA(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationEyeTrackedProfileCreateInfoMETA(flags={self.flags}, next={self._next}, type={self._type})"
@@ -16967,7 +16904,7 @@ class FoveationEyeTrackedProfileCreateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -16990,7 +16927,7 @@ class FoveationEyeTrackedStateMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationEyeTrackedStateMETA(foveation_center={repr(self.foveation_center)}, flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveationEyeTrackedStateMETA(foveation_center={repr(self.foveation_center)}, flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationEyeTrackedStateMETA(flags={self.flags}, next={self._next}, type={self._type})"
@@ -17011,7 +16948,7 @@ class FoveationEyeTrackedStateMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17035,7 +16972,7 @@ class SystemFoveationEyeTrackedPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFoveationEyeTrackedPropertiesMETA(supports_foveation_eye_tracked={repr(self.supports_foveation_eye_tracked)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFoveationEyeTrackedPropertiesMETA(supports_foveation_eye_tracked={repr(self.supports_foveation_eye_tracked)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFoveationEyeTrackedPropertiesMETA(supports_foveation_eye_tracked={self.supports_foveation_eye_tracked}, next={self._next}, type={self._type})"
@@ -17056,7 +16993,7 @@ class SystemFoveationEyeTrackedPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17090,7 +17027,7 @@ class SystemFaceTrackingPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFaceTrackingPropertiesFB(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFaceTrackingPropertiesFB(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFaceTrackingPropertiesFB(supports_face_tracking={self.supports_face_tracking}, next={self._next}, type={self._type})"
@@ -17111,7 +17048,7 @@ class SystemFaceTrackingPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17134,7 +17071,7 @@ class FaceTrackerCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceTrackerCreateInfoFB(face_expression_set={repr(self._face_expression_set)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceTrackerCreateInfoFB(face_expression_set={repr(self.face_expression_set)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceTrackerCreateInfoFB(face_expression_set={self._face_expression_set}, next={self._next}, type={self._type})"
@@ -17146,7 +17083,7 @@ class FaceTrackerCreateInfoFB(Structure):
     @face_expression_set.setter
     def face_expression_set(self, value: FaceExpressionSetFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._face_expression_set = enum_field_helper(face_expression_set)
+        self._face_expression_set = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -17164,7 +17101,7 @@ class FaceTrackerCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17187,7 +17124,7 @@ class FaceExpressionInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceExpressionInfoFB(time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceExpressionInfoFB(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceExpressionInfoFB(time={self.time}, next={self._next}, type={self._type})"
@@ -17208,7 +17145,7 @@ class FaceExpressionInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17270,7 +17207,7 @@ class FaceExpressionWeightsFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceExpressionWeightsFB(weight_count={repr(self.weight_count)}, weights={repr(self._weights)}, confidence_count={repr(self.confidence_count)}, confidences={repr(self._confidences)}, status={repr(self.status)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceExpressionWeightsFB(weight_count={repr(self.weight_count)}, weights={repr(self.weights)}, confidence_count={repr(self.confidence_count)}, confidences={repr(self.confidences)}, status={repr(self.status)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceExpressionWeightsFB(weight_count={self.weight_count}, weights={self._weights}, confidence_count={self.confidence_count}, confidences={self._confidences}, status={self.status}, time={self.time}, next={self._next}, type={self._type})"
@@ -17319,7 +17256,7 @@ class FaceExpressionWeightsFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17386,7 +17323,7 @@ class EyeTrackerCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EyeTrackerCreateInfoFB(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EyeTrackerCreateInfoFB(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EyeTrackerCreateInfoFB(next={self._next}, type={self._type})"
@@ -17407,7 +17344,7 @@ class EyeTrackerCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17431,7 +17368,7 @@ class EyeGazesInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EyeGazesInfoFB(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EyeGazesInfoFB(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EyeGazesInfoFB(base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -17452,7 +17389,7 @@ class EyeGazesInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17476,7 +17413,7 @@ class SystemEyeTrackingPropertiesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemEyeTrackingPropertiesFB(supports_eye_tracking={repr(self.supports_eye_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemEyeTrackingPropertiesFB(supports_eye_tracking={repr(self.supports_eye_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemEyeTrackingPropertiesFB(supports_eye_tracking={self.supports_eye_tracking}, next={self._next}, type={self._type})"
@@ -17497,7 +17434,7 @@ class SystemEyeTrackingPropertiesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17520,7 +17457,7 @@ class EyeGazesFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EyeGazesFB(gaze={repr(self.gaze)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EyeGazesFB(gaze={repr(self.gaze)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EyeGazesFB(time={self.time}, next={self._next}, type={self._type})"
@@ -17541,7 +17478,7 @@ class EyeGazesFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17574,7 +17511,7 @@ class PassthroughKeyboardHandsIntensityFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughKeyboardHandsIntensityFB(left_hand_intensity={repr(self.left_hand_intensity)}, right_hand_intensity={repr(self.right_hand_intensity)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughKeyboardHandsIntensityFB(left_hand_intensity={repr(self.left_hand_intensity)}, right_hand_intensity={repr(self.right_hand_intensity)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughKeyboardHandsIntensityFB(left_hand_intensity={self.left_hand_intensity:.3f}, right_hand_intensity={self.right_hand_intensity:.3f}, next={self._next}, type={self._type})"
@@ -17595,7 +17532,7 @@ class PassthroughKeyboardHandsIntensityFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17624,7 +17561,7 @@ class CompositionLayerSettingsFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerSettingsFB(layer_flags={repr(self.layer_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerSettingsFB(layer_flags={repr(self.layer_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerSettingsFB(layer_flags={self.layer_flags}, next={self._next}, type={self._type})"
@@ -17645,7 +17582,7 @@ class CompositionLayerSettingsFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17676,7 +17613,7 @@ class HapticPcmVibrationFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HapticPcmVibrationFB(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, sample_rate={repr(self.sample_rate)}, append={repr(self.append)}, samples_consumed={repr(self.samples_consumed)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HapticPcmVibrationFB(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, sample_rate={repr(self.sample_rate)}, append={repr(self.append)}, samples_consumed={repr(self.samples_consumed)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HapticPcmVibrationFB(buffer_size={self.buffer_size}, buffer={self.buffer}, sample_rate={self.sample_rate:.3f}, append={self.append}, samples_consumed={self.samples_consumed}, next={self._next}, type={self._type})"
@@ -17697,7 +17634,7 @@ class HapticPcmVibrationFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17724,7 +17661,7 @@ class DevicePcmSampleRateStateFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DevicePcmSampleRateStateFB(sample_rate={repr(self.sample_rate)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.DevicePcmSampleRateStateFB(sample_rate={repr(self.sample_rate)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.DevicePcmSampleRateStateFB(sample_rate={self.sample_rate:.3f}, next={self._next}, type={self._type})"
@@ -17745,7 +17682,7 @@ class DevicePcmSampleRateStateFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17801,7 +17738,7 @@ class FrameSynthesisInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameSynthesisInfoEXT(layer_flags={repr(self.layer_flags)}, motion_vector_sub_image={repr(self.motion_vector_sub_image)}, motion_vector_scale={repr(self.motion_vector_scale)}, motion_vector_offset={repr(self.motion_vector_offset)}, app_space_delta_pose={repr(self.app_space_delta_pose)}, depth_sub_image={repr(self.depth_sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FrameSynthesisInfoEXT(layer_flags={repr(self.layer_flags)}, motion_vector_sub_image={repr(self.motion_vector_sub_image)}, motion_vector_scale={repr(self.motion_vector_scale)}, motion_vector_offset={repr(self.motion_vector_offset)}, app_space_delta_pose={repr(self.app_space_delta_pose)}, depth_sub_image={repr(self.depth_sub_image)}, min_depth={repr(self.min_depth)}, max_depth={repr(self.max_depth)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FrameSynthesisInfoEXT(layer_flags={self.layer_flags}, motion_vector_sub_image={self.motion_vector_sub_image}, motion_vector_scale={self.motion_vector_scale}, motion_vector_offset={self.motion_vector_offset}, app_space_delta_pose={self.app_space_delta_pose}, depth_sub_image={self.depth_sub_image}, min_depth={self.min_depth:.3f}, max_depth={self.max_depth:.3f}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next={self._next}, type={self._type})"
@@ -17822,7 +17759,7 @@ class FrameSynthesisInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17856,7 +17793,7 @@ class FrameSynthesisConfigViewEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FrameSynthesisConfigViewEXT(recommended_motion_vector_image_rect_width={repr(self.recommended_motion_vector_image_rect_width)}, recommended_motion_vector_image_rect_height={repr(self.recommended_motion_vector_image_rect_height)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FrameSynthesisConfigViewEXT(recommended_motion_vector_image_rect_width={repr(self.recommended_motion_vector_image_rect_width)}, recommended_motion_vector_image_rect_height={repr(self.recommended_motion_vector_image_rect_height)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FrameSynthesisConfigViewEXT(recommended_motion_vector_image_rect_width={self.recommended_motion_vector_image_rect_width}, recommended_motion_vector_image_rect_height={self.recommended_motion_vector_image_rect_height}, next={self._next}, type={self._type})"
@@ -17877,7 +17814,7 @@ class FrameSynthesisConfigViewEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17903,7 +17840,7 @@ class CompositionLayerDepthTestFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerDepthTestFB(depth_mask={repr(self.depth_mask)}, compare_op={repr(self._compare_op)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerDepthTestFB(depth_mask={repr(self.depth_mask)}, compare_op={repr(self.compare_op)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerDepthTestFB(depth_mask={self.depth_mask}, compare_op={self._compare_op}, next={self._next}, type={self._type})"
@@ -17915,7 +17852,7 @@ class CompositionLayerDepthTestFB(Structure):
     @compare_op.setter
     def compare_op(self, value: CompareOpFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._compare_op = enum_field_helper(compare_op)
+        self._compare_op = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -17933,7 +17870,7 @@ class CompositionLayerDepthTestFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -17957,7 +17894,7 @@ class LocalDimmingFrameEndInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LocalDimmingFrameEndInfoMETA(local_dimming_mode={repr(self._local_dimming_mode)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LocalDimmingFrameEndInfoMETA(local_dimming_mode={repr(self.local_dimming_mode)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LocalDimmingFrameEndInfoMETA(local_dimming_mode={self._local_dimming_mode}, next={self._next}, type={self._type})"
@@ -17969,7 +17906,7 @@ class LocalDimmingFrameEndInfoMETA(Structure):
     @local_dimming_mode.setter
     def local_dimming_mode(self, value: LocalDimmingModeMETA) -> None:
         # noinspection PyAttributeOutsideInit
-        self._local_dimming_mode = enum_field_helper(local_dimming_mode)
+        self._local_dimming_mode = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -17987,7 +17924,7 @@ class LocalDimmingFrameEndInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18013,7 +17950,7 @@ class PassthroughPreferencesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughPreferencesMETA(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughPreferencesMETA(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughPreferencesMETA(flags={self.flags}, next={self._next}, type={self._type})"
@@ -18034,7 +17971,7 @@ class PassthroughPreferencesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18070,7 +18007,7 @@ class SystemVirtualKeyboardPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemVirtualKeyboardPropertiesMETA(supports_virtual_keyboard={repr(self.supports_virtual_keyboard)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemVirtualKeyboardPropertiesMETA(supports_virtual_keyboard={repr(self.supports_virtual_keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemVirtualKeyboardPropertiesMETA(supports_virtual_keyboard={self.supports_virtual_keyboard}, next={self._next}, type={self._type})"
@@ -18091,7 +18028,7 @@ class SystemVirtualKeyboardPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18112,7 +18049,7 @@ class VirtualKeyboardCreateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardCreateInfoMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardCreateInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardCreateInfoMETA(next={self._next}, type={self._type})"
@@ -18133,7 +18070,7 @@ class VirtualKeyboardCreateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18159,7 +18096,7 @@ class VirtualKeyboardSpaceCreateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardSpaceCreateInfoMETA(location_type={repr(self._location_type)}, space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardSpaceCreateInfoMETA(location_type={repr(self.location_type)}, space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardSpaceCreateInfoMETA(location_type={self._location_type}, space={self.space}, pose_in_space={self.pose_in_space}, next={self._next}, type={self._type})"
@@ -18171,7 +18108,7 @@ class VirtualKeyboardSpaceCreateInfoMETA(Structure):
     @location_type.setter
     def location_type(self, value: VirtualKeyboardLocationTypeMETA) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location_type = enum_field_helper(location_type)
+        self._location_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -18189,7 +18126,7 @@ class VirtualKeyboardSpaceCreateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18220,7 +18157,7 @@ class VirtualKeyboardLocationInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardLocationInfoMETA(location_type={repr(self._location_type)}, space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, scale={repr(self.scale)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardLocationInfoMETA(location_type={repr(self.location_type)}, space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, scale={repr(self.scale)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardLocationInfoMETA(location_type={self._location_type}, space={self.space}, pose_in_space={self.pose_in_space}, scale={self.scale:.3f}, next={self._next}, type={self._type})"
@@ -18232,7 +18169,7 @@ class VirtualKeyboardLocationInfoMETA(Structure):
     @location_type.setter
     def location_type(self, value: VirtualKeyboardLocationTypeMETA) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location_type = enum_field_helper(location_type)
+        self._location_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -18250,7 +18187,7 @@ class VirtualKeyboardLocationInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18276,7 +18213,7 @@ class VirtualKeyboardModelVisibilitySetInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardModelVisibilitySetInfoMETA(visible={repr(self.visible)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardModelVisibilitySetInfoMETA(visible={repr(self.visible)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardModelVisibilitySetInfoMETA(visible={self.visible}, next={self._next}, type={self._type})"
@@ -18297,7 +18234,7 @@ class VirtualKeyboardModelVisibilitySetInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18322,7 +18259,7 @@ class VirtualKeyboardAnimationStateMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardAnimationStateMETA(animation_index={repr(self.animation_index)}, fraction={repr(self.fraction)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardAnimationStateMETA(animation_index={repr(self.animation_index)}, fraction={repr(self.fraction)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardAnimationStateMETA(animation_index={self.animation_index}, fraction={self.fraction:.3f}, next={self._next}, type={self._type})"
@@ -18343,7 +18280,7 @@ class VirtualKeyboardAnimationStateMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18371,7 +18308,7 @@ class VirtualKeyboardModelAnimationStatesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardModelAnimationStatesMETA(state_capacity_input={repr(self.state_capacity_input)}, state_count_output={repr(self.state_count_output)}, states={repr(self.states)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardModelAnimationStatesMETA(state_capacity_input={repr(self.state_capacity_input)}, state_count_output={repr(self.state_count_output)}, states={repr(self.states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardModelAnimationStatesMETA(state_capacity_input={self.state_capacity_input}, state_count_output={self.state_count_output}, states={self.states}, next={self._next}, type={self._type})"
@@ -18392,7 +18329,7 @@ class VirtualKeyboardModelAnimationStatesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18425,7 +18362,7 @@ class VirtualKeyboardTextureDataMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardTextureDataMETA(texture_width={repr(self.texture_width)}, texture_height={repr(self.texture_height)}, buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardTextureDataMETA(texture_width={repr(self.texture_width)}, texture_height={repr(self.texture_height)}, buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardTextureDataMETA(texture_width={self.texture_width}, texture_height={self.texture_height}, buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next={self._next}, type={self._type})"
@@ -18446,7 +18383,7 @@ class VirtualKeyboardTextureDataMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18479,7 +18416,7 @@ class VirtualKeyboardInputInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardInputInfoMETA(input_source={repr(self._input_source)}, input_space={repr(self.input_space)}, input_pose_in_space={repr(self.input_pose_in_space)}, input_state={repr(self.input_state)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardInputInfoMETA(input_source={repr(self.input_source)}, input_space={repr(self.input_space)}, input_pose_in_space={repr(self.input_pose_in_space)}, input_state={repr(self.input_state)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardInputInfoMETA(input_source={self._input_source}, input_space={self.input_space}, input_pose_in_space={self.input_pose_in_space}, input_state={self.input_state}, next={self._next}, type={self._type})"
@@ -18491,7 +18428,7 @@ class VirtualKeyboardInputInfoMETA(Structure):
     @input_source.setter
     def input_source(self, value: VirtualKeyboardInputSourceMETA) -> None:
         # noinspection PyAttributeOutsideInit
-        self._input_source = enum_field_helper(input_source)
+        self._input_source = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -18509,7 +18446,7 @@ class VirtualKeyboardInputInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18535,7 +18472,7 @@ class VirtualKeyboardTextContextChangeInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={repr(self._text_context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={repr(self.text_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardTextContextChangeInfoMETA(text_context={self._text_context}, next={self._next}, type={self._type})"
@@ -18565,7 +18502,7 @@ class VirtualKeyboardTextContextChangeInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18590,7 +18527,7 @@ class EventDataVirtualKeyboardCommitTextMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataVirtualKeyboardCommitTextMETA(keyboard={repr(self.keyboard)}, text={repr(self.text)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataVirtualKeyboardCommitTextMETA(keyboard={repr(self.keyboard)}, text={repr(self.text)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataVirtualKeyboardCommitTextMETA(keyboard={self.keyboard}, text={self.text}, next={self._next}, type={self._type})"
@@ -18611,7 +18548,7 @@ class EventDataVirtualKeyboardCommitTextMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18635,7 +18572,7 @@ class EventDataVirtualKeyboardBackspaceMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataVirtualKeyboardBackspaceMETA(keyboard={repr(self.keyboard)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataVirtualKeyboardBackspaceMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataVirtualKeyboardBackspaceMETA(keyboard={self.keyboard}, next={self._next}, type={self._type})"
@@ -18656,7 +18593,7 @@ class EventDataVirtualKeyboardBackspaceMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18679,7 +18616,7 @@ class EventDataVirtualKeyboardEnterMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataVirtualKeyboardEnterMETA(keyboard={repr(self.keyboard)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataVirtualKeyboardEnterMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataVirtualKeyboardEnterMETA(keyboard={self.keyboard}, next={self._next}, type={self._type})"
@@ -18700,7 +18637,7 @@ class EventDataVirtualKeyboardEnterMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18723,7 +18660,7 @@ class EventDataVirtualKeyboardShownMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataVirtualKeyboardShownMETA(keyboard={repr(self.keyboard)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataVirtualKeyboardShownMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataVirtualKeyboardShownMETA(keyboard={self.keyboard}, next={self._next}, type={self._type})"
@@ -18744,7 +18681,7 @@ class EventDataVirtualKeyboardShownMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18767,7 +18704,7 @@ class EventDataVirtualKeyboardHiddenMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataVirtualKeyboardHiddenMETA(keyboard={repr(self.keyboard)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataVirtualKeyboardHiddenMETA(keyboard={repr(self.keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataVirtualKeyboardHiddenMETA(keyboard={self.keyboard}, next={self._next}, type={self._type})"
@@ -18788,7 +18725,7 @@ class EventDataVirtualKeyboardHiddenMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18874,7 +18811,7 @@ class ExternalCameraExtrinsicsOCULUS(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ExternalCameraExtrinsicsOCULUS(last_change_time={repr(self.last_change_time)}, camera_status_flags={repr(self.camera_status_flags)}, attached_to_device={repr(self._attached_to_device)}, relative_pose={repr(self.relative_pose)})"
+        return f"xr.ExternalCameraExtrinsicsOCULUS(last_change_time={repr(self.last_change_time)}, camera_status_flags={repr(self.camera_status_flags)}, attached_to_device={repr(self.attached_to_device)}, relative_pose={repr(self.relative_pose)})"
 
     def __str__(self) -> str:
         return f"xr.ExternalCameraExtrinsicsOCULUS(last_change_time={self.last_change_time}, camera_status_flags={self.camera_status_flags}, attached_to_device={self._attached_to_device}, relative_pose={self.relative_pose})"
@@ -18886,7 +18823,7 @@ class ExternalCameraExtrinsicsOCULUS(Structure):
     @attached_to_device.setter
     def attached_to_device(self, value: ExternalCameraAttachedToDeviceOCULUS) -> None:
         # noinspection PyAttributeOutsideInit
-        self._attached_to_device = enum_field_helper(attached_to_device)
+        self._attached_to_device = enum_field_helper(value)
 
     _fields_ = [
         ("last_change_time", Time),
@@ -18918,7 +18855,7 @@ class ExternalCameraOCULUS(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ExternalCameraOCULUS(name={repr(self.name)}, intrinsics={repr(self.intrinsics)}, extrinsics={repr(self.extrinsics)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ExternalCameraOCULUS(name={repr(self.name)}, intrinsics={repr(self.intrinsics)}, extrinsics={repr(self.extrinsics)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ExternalCameraOCULUS(name={self.name}, intrinsics={self.intrinsics}, extrinsics={self.extrinsics}, next={self._next}, type={self._type})"
@@ -18939,7 +18876,7 @@ class ExternalCameraOCULUS(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -18969,7 +18906,7 @@ class PerformanceMetricsStateMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PerformanceMetricsStateMETA(enabled={repr(self.enabled)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PerformanceMetricsStateMETA(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PerformanceMetricsStateMETA(enabled={self.enabled}, next={self._next}, type={self._type})"
@@ -18990,7 +18927,7 @@ class PerformanceMetricsStateMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19019,7 +18956,7 @@ class PerformanceMetricsCounterMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PerformanceMetricsCounterMETA(counter_flags={repr(self.counter_flags)}, counter_unit={repr(self._counter_unit)}, uint_value={repr(self.uint_value)}, float_value={repr(self.float_value)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PerformanceMetricsCounterMETA(counter_flags={repr(self.counter_flags)}, counter_unit={repr(self.counter_unit)}, uint_value={repr(self.uint_value)}, float_value={repr(self.float_value)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PerformanceMetricsCounterMETA(counter_flags={self.counter_flags}, counter_unit={self._counter_unit}, uint_value={self.uint_value}, float_value={self.float_value:.3f}, next={self._next}, type={self._type})"
@@ -19031,7 +18968,7 @@ class PerformanceMetricsCounterMETA(Structure):
     @counter_unit.setter
     def counter_unit(self, value: PerformanceMetricsCounterUnitMETA) -> None:
         # noinspection PyAttributeOutsideInit
-        self._counter_unit = enum_field_helper(counter_unit)
+        self._counter_unit = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -19049,7 +18986,7 @@ class PerformanceMetricsCounterMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19090,7 +19027,7 @@ class SpaceListSaveInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceListSaveInfoFB(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, location={repr(self._location)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceListSaveInfoFB(space_count={repr(self.space_count)}, spaces={repr(self.spaces)}, location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceListSaveInfoFB(space_count={self.space_count}, spaces={self._spaces}, location={self._location}, next={self._next}, type={self._type})"
@@ -19116,7 +19053,7 @@ class SpaceListSaveInfoFB(Structure):
     @location.setter
     def location(self, value: SpaceStorageLocationFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -19134,7 +19071,7 @@ class SpaceListSaveInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19161,7 +19098,7 @@ class EventDataSpaceListSaveCompleteFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceListSaveCompleteFB(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceListSaveCompleteFB(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceListSaveCompleteFB(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -19173,7 +19110,7 @@ class EventDataSpaceListSaveCompleteFB(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -19191,7 +19128,7 @@ class EventDataSpaceListSaveCompleteFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19220,7 +19157,7 @@ class SpaceUserCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceUserCreateInfoFB(user_id={repr(self.user_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceUserCreateInfoFB(user_id={repr(self.user_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceUserCreateInfoFB(user_id={self.user_id}, next={self._next}, type={self._type})"
@@ -19241,7 +19178,7 @@ class SpaceUserCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19271,7 +19208,7 @@ class SystemHeadsetIdPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemHeadsetIdPropertiesMETA(id={repr(self.id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemHeadsetIdPropertiesMETA(id={repr(self.id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemHeadsetIdPropertiesMETA(id={self.id}, next={self._next}, type={self._type})"
@@ -19292,7 +19229,7 @@ class SystemHeadsetIdPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19315,7 +19252,7 @@ class SystemSpaceDiscoveryPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpaceDiscoveryPropertiesMETA(supports_space_discovery={repr(self.supports_space_discovery)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpaceDiscoveryPropertiesMETA(supports_space_discovery={repr(self.supports_space_discovery)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpaceDiscoveryPropertiesMETA(supports_space_discovery={self.supports_space_discovery}, next={self._next}, type={self._type})"
@@ -19336,7 +19273,7 @@ class SystemSpaceDiscoveryPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19357,7 +19294,7 @@ class SpaceFilterBaseHeaderMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceFilterBaseHeaderMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceFilterBaseHeaderMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceFilterBaseHeaderMETA(next={self._next}, type={self._type})"
@@ -19404,7 +19341,7 @@ class SpaceDiscoveryInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceDiscoveryInfoMETA(filter_count={repr(self.filter_count)}, filters={repr(self._filters)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceDiscoveryInfoMETA(filter_count={repr(self.filter_count)}, filters={repr(self.filters)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceDiscoveryInfoMETA(filter_count={self.filter_count}, filters={self._filters}, next={self._next}, type={self._type})"
@@ -19439,7 +19376,7 @@ class SpaceDiscoveryInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19467,7 +19404,7 @@ class SpaceFilterUuidMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceFilterUuidMETA(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceFilterUuidMETA(uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceFilterUuidMETA(uuid_count={self.uuid_count}, uuids={self._uuids}, next={self._next}, type={self._type})"
@@ -19502,7 +19439,7 @@ class SpaceFilterUuidMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19526,7 +19463,7 @@ class SpaceFilterComponentMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceFilterComponentMETA(component_type={repr(self._component_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceFilterComponentMETA(component_type={repr(self.component_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceFilterComponentMETA(component_type={self._component_type}, next={self._next}, type={self._type})"
@@ -19538,7 +19475,7 @@ class SpaceFilterComponentMETA(Structure):
     @component_type.setter
     def component_type(self, value: SpaceComponentTypeFB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._component_type = enum_field_helper(component_type)
+        self._component_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -19556,7 +19493,7 @@ class SpaceFilterComponentMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19606,7 +19543,7 @@ class SpaceDiscoveryResultsMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceDiscoveryResultsMETA(result_capacity_input={repr(self.result_capacity_input)}, result_count_output={repr(self.result_count_output)}, results={repr(self.results)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceDiscoveryResultsMETA(result_capacity_input={repr(self.result_capacity_input)}, result_count_output={repr(self.result_count_output)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceDiscoveryResultsMETA(result_capacity_input={self.result_capacity_input}, result_count_output={self.result_count_output}, results={self.results}, next={self._next}, type={self._type})"
@@ -19627,7 +19564,7 @@ class SpaceDiscoveryResultsMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19652,7 +19589,7 @@ class EventDataSpaceDiscoveryResultsAvailableMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceDiscoveryResultsAvailableMETA(request_id={repr(self.request_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceDiscoveryResultsAvailableMETA(request_id={repr(self.request_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceDiscoveryResultsAvailableMETA(request_id={self.request_id}, next={self._next}, type={self._type})"
@@ -19673,7 +19610,7 @@ class EventDataSpaceDiscoveryResultsAvailableMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19698,7 +19635,7 @@ class EventDataSpaceDiscoveryCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpaceDiscoveryCompleteMETA(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpaceDiscoveryCompleteMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpaceDiscoveryCompleteMETA(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -19710,7 +19647,7 @@ class EventDataSpaceDiscoveryCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -19728,7 +19665,7 @@ class EventDataSpaceDiscoveryCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19761,7 +19698,7 @@ class RecommendedLayerResolutionMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RecommendedLayerResolutionMETA(recommended_image_dimensions={repr(self.recommended_image_dimensions)}, is_valid={repr(self.is_valid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RecommendedLayerResolutionMETA(recommended_image_dimensions={repr(self.recommended_image_dimensions)}, is_valid={repr(self.is_valid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RecommendedLayerResolutionMETA(recommended_image_dimensions={self.recommended_image_dimensions}, is_valid={self.is_valid}, next={self._next}, type={self._type})"
@@ -19782,7 +19719,7 @@ class RecommendedLayerResolutionMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19808,7 +19745,7 @@ class RecommendedLayerResolutionGetInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RecommendedLayerResolutionGetInfoMETA(layer={repr(self.layer)}, predicted_display_time={repr(self.predicted_display_time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RecommendedLayerResolutionGetInfoMETA(layer={repr(self.layer)}, predicted_display_time={repr(self.predicted_display_time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RecommendedLayerResolutionGetInfoMETA(layer={self.layer}, predicted_display_time={self.predicted_display_time}, next={self._next}, type={self._type})"
@@ -19829,7 +19766,7 @@ class RecommendedLayerResolutionGetInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19856,7 +19793,7 @@ class SystemSpacePersistencePropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpacePersistencePropertiesMETA(supports_space_persistence={repr(self.supports_space_persistence)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpacePersistencePropertiesMETA(supports_space_persistence={repr(self.supports_space_persistence)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpacePersistencePropertiesMETA(supports_space_persistence={self.supports_space_persistence}, next={self._next}, type={self._type})"
@@ -19877,7 +19814,7 @@ class SystemSpacePersistencePropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19904,7 +19841,7 @@ class SpacesSaveInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpacesSaveInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpacesSaveInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self.spaces)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpacesSaveInfoMETA(space_count={self.space_count}, spaces={self._spaces}, next={self._next}, type={self._type})"
@@ -19939,7 +19876,7 @@ class SpacesSaveInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -19965,7 +19902,7 @@ class EventDataSpacesSaveResultMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpacesSaveResultMETA(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpacesSaveResultMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpacesSaveResultMETA(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -19977,7 +19914,7 @@ class EventDataSpacesSaveResultMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -19995,7 +19932,7 @@ class EventDataSpacesSaveResultMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20029,7 +19966,7 @@ class SpacesEraseInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpacesEraseInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpacesEraseInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self.spaces)}, uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpacesEraseInfoMETA(space_count={self.space_count}, spaces={self._spaces}, uuid_count={self.uuid_count}, uuids={self._uuids}, next={self._next}, type={self._type})"
@@ -20078,7 +20015,7 @@ class SpacesEraseInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20106,7 +20043,7 @@ class EventDataSpacesEraseResultMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpacesEraseResultMETA(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpacesEraseResultMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpacesEraseResultMETA(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -20118,7 +20055,7 @@ class EventDataSpacesEraseResultMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -20136,7 +20073,7 @@ class EventDataSpacesEraseResultMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20202,7 +20139,7 @@ class PassthroughColorLutCreateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughColorLutCreateInfoMETA(channels={repr(self._channels)}, resolution={repr(self.resolution)}, data={repr(self.data)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughColorLutCreateInfoMETA(channels={repr(self.channels)}, resolution={repr(self.resolution)}, data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughColorLutCreateInfoMETA(channels={self._channels}, resolution={self.resolution}, data={self.data}, next={self._next}, type={self._type})"
@@ -20214,7 +20151,7 @@ class PassthroughColorLutCreateInfoMETA(Structure):
     @channels.setter
     def channels(self, value: PassthroughColorLutChannelsMETA) -> None:
         # noinspection PyAttributeOutsideInit
-        self._channels = enum_field_helper(channels)
+        self._channels = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -20232,7 +20169,7 @@ class PassthroughColorLutCreateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20259,7 +20196,7 @@ class PassthroughColorLutUpdateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughColorLutUpdateInfoMETA(data={repr(self.data)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughColorLutUpdateInfoMETA(data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughColorLutUpdateInfoMETA(data={self.data}, next={self._next}, type={self._type})"
@@ -20280,7 +20217,7 @@ class PassthroughColorLutUpdateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20305,7 +20242,7 @@ class PassthroughColorMapLutMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughColorMapLutMETA(color_lut={repr(self.color_lut)}, weight={repr(self.weight)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughColorMapLutMETA(color_lut={repr(self.color_lut)}, weight={repr(self.weight)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughColorMapLutMETA(color_lut={self.color_lut}, weight={self.weight:.3f}, next={self._next}, type={self._type})"
@@ -20326,7 +20263,7 @@ class PassthroughColorMapLutMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20354,7 +20291,7 @@ class PassthroughColorMapInterpolatedLutMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughColorMapInterpolatedLutMETA(source_color_lut={repr(self.source_color_lut)}, target_color_lut={repr(self.target_color_lut)}, weight={repr(self.weight)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughColorMapInterpolatedLutMETA(source_color_lut={repr(self.source_color_lut)}, target_color_lut={repr(self.target_color_lut)}, weight={repr(self.weight)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughColorMapInterpolatedLutMETA(source_color_lut={self.source_color_lut}, target_color_lut={self.target_color_lut}, weight={self.weight:.3f}, next={self._next}, type={self._type})"
@@ -20375,7 +20312,7 @@ class PassthroughColorMapInterpolatedLutMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20400,7 +20337,7 @@ class SystemPassthroughColorLutPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemPassthroughColorLutPropertiesMETA(max_color_lut_resolution={repr(self.max_color_lut_resolution)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemPassthroughColorLutPropertiesMETA(max_color_lut_resolution={repr(self.max_color_lut_resolution)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemPassthroughColorLutPropertiesMETA(max_color_lut_resolution={self.max_color_lut_resolution}, next={self._next}, type={self._type})"
@@ -20421,7 +20358,7 @@ class SystemPassthroughColorLutPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20449,7 +20386,7 @@ class SpaceTriangleMeshGetInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceTriangleMeshGetInfoMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceTriangleMeshGetInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceTriangleMeshGetInfoMETA(next={self._next}, type={self._type})"
@@ -20470,7 +20407,7 @@ class SpaceTriangleMeshGetInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20502,7 +20439,7 @@ class SpaceTriangleMeshMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceTriangleMeshMETA(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceTriangleMeshMETA(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceTriangleMeshMETA(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self._next}, type={self._type})"
@@ -20523,7 +20460,7 @@ class SpaceTriangleMeshMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20554,7 +20491,7 @@ class SystemPropertiesBodyTrackingFullBodyMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemPropertiesBodyTrackingFullBodyMETA(supports_full_body_tracking={repr(self.supports_full_body_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemPropertiesBodyTrackingFullBodyMETA(supports_full_body_tracking={repr(self.supports_full_body_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemPropertiesBodyTrackingFullBodyMETA(supports_full_body_tracking={self.supports_full_body_tracking}, next={self._next}, type={self._type})"
@@ -20575,7 +20512,7 @@ class SystemPropertiesBodyTrackingFullBodyMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20598,7 +20535,7 @@ class EventDataPassthroughLayerResumedMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataPassthroughLayerResumedMETA(layer={repr(self.layer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataPassthroughLayerResumedMETA(layer={repr(self.layer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataPassthroughLayerResumedMETA(layer={self.layer}, next={self._next}, type={self._type})"
@@ -20619,7 +20556,7 @@ class EventDataPassthroughLayerResumedMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20642,7 +20579,7 @@ class BodyTrackingCalibrationStatusMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyTrackingCalibrationStatusMETA(status={repr(self._status)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyTrackingCalibrationStatusMETA(status={repr(self.status)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyTrackingCalibrationStatusMETA(status={self._status}, next={self._next}, type={self._type})"
@@ -20654,7 +20591,7 @@ class BodyTrackingCalibrationStatusMETA(Structure):
     @status.setter
     def status(self, value: BodyTrackingCalibrationStateMETA) -> None:
         # noinspection PyAttributeOutsideInit
-        self._status = enum_field_helper(status)
+        self._status = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -20672,7 +20609,7 @@ class BodyTrackingCalibrationStatusMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20695,7 +20632,7 @@ class BodyTrackingCalibrationInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyTrackingCalibrationInfoMETA(body_height={repr(self.body_height)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyTrackingCalibrationInfoMETA(body_height={repr(self.body_height)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyTrackingCalibrationInfoMETA(body_height={self.body_height:.3f}, next={self._next}, type={self._type})"
@@ -20716,7 +20653,7 @@ class BodyTrackingCalibrationInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20739,7 +20676,7 @@ class SystemPropertiesBodyTrackingCalibrationMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemPropertiesBodyTrackingCalibrationMETA(supports_height_override={repr(self.supports_height_override)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemPropertiesBodyTrackingCalibrationMETA(supports_height_override={repr(self.supports_height_override)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemPropertiesBodyTrackingCalibrationMETA(supports_height_override={self.supports_height_override}, next={self._next}, type={self._type})"
@@ -20760,7 +20697,7 @@ class SystemPropertiesBodyTrackingCalibrationMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20798,7 +20735,7 @@ class SystemFaceTrackingProperties2FB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFaceTrackingProperties2FB(supports_visual_face_tracking={repr(self.supports_visual_face_tracking)}, supports_audio_face_tracking={repr(self.supports_audio_face_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFaceTrackingProperties2FB(supports_visual_face_tracking={repr(self.supports_visual_face_tracking)}, supports_audio_face_tracking={repr(self.supports_audio_face_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFaceTrackingProperties2FB(supports_visual_face_tracking={self.supports_visual_face_tracking}, supports_audio_face_tracking={self.supports_audio_face_tracking}, next={self._next}, type={self._type})"
@@ -20819,7 +20756,7 @@ class SystemFaceTrackingProperties2FB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20849,7 +20786,7 @@ class FaceTrackerCreateInfo2FB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceTrackerCreateInfo2FB(face_expression_set={repr(self._face_expression_set)}, requested_data_source_count={repr(self.requested_data_source_count)}, requested_data_sources={repr(self._requested_data_sources)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceTrackerCreateInfo2FB(face_expression_set={repr(self.face_expression_set)}, requested_data_source_count={repr(self.requested_data_source_count)}, requested_data_sources={repr(self.requested_data_sources)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceTrackerCreateInfo2FB(face_expression_set={self._face_expression_set}, requested_data_source_count={self.requested_data_source_count}, requested_data_sources={self._requested_data_sources}, next={self._next}, type={self._type})"
@@ -20861,7 +20798,7 @@ class FaceTrackerCreateInfo2FB(Structure):
     @face_expression_set.setter
     def face_expression_set(self, value: FaceExpressionSet2FB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._face_expression_set = enum_field_helper(face_expression_set)
+        self._face_expression_set = enum_field_helper(value)
 
     @property
     def requested_data_sources(self):
@@ -20893,7 +20830,7 @@ class FaceTrackerCreateInfo2FB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20918,7 +20855,7 @@ class FaceExpressionInfo2FB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceExpressionInfo2FB(time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceExpressionInfo2FB(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceExpressionInfo2FB(time={self.time}, next={self._next}, type={self._type})"
@@ -20939,7 +20876,7 @@ class FaceExpressionInfo2FB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -20980,7 +20917,7 @@ class FaceExpressionWeights2FB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceExpressionWeights2FB(weight_count={repr(self.weight_count)}, weights={repr(self._weights)}, confidence_count={repr(self.confidence_count)}, confidences={repr(self._confidences)}, is_valid={repr(self.is_valid)}, is_eye_following_blendshapes_valid={repr(self.is_eye_following_blendshapes_valid)}, data_source={repr(self._data_source)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceExpressionWeights2FB(weight_count={repr(self.weight_count)}, weights={repr(self.weights)}, confidence_count={repr(self.confidence_count)}, confidences={repr(self.confidences)}, is_valid={repr(self.is_valid)}, is_eye_following_blendshapes_valid={repr(self.is_eye_following_blendshapes_valid)}, data_source={repr(self.data_source)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceExpressionWeights2FB(weight_count={self.weight_count}, weights={self._weights}, confidence_count={self.confidence_count}, confidences={self._confidences}, is_valid={self.is_valid}, is_eye_following_blendshapes_valid={self.is_eye_following_blendshapes_valid}, data_source={self._data_source}, time={self.time}, next={self._next}, type={self._type})"
@@ -21020,7 +20957,7 @@ class FaceExpressionWeights2FB(Structure):
     @data_source.setter
     def data_source(self, value: FaceTrackingDataSource2FB) -> None:
         # noinspection PyAttributeOutsideInit
-        self._data_source = enum_field_helper(data_source)
+        self._data_source = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -21038,7 +20975,7 @@ class FaceExpressionWeights2FB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21075,7 +21012,7 @@ class SystemSpatialEntitySharingPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialEntitySharingPropertiesMETA(supports_spatial_entity_sharing={repr(self.supports_spatial_entity_sharing)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialEntitySharingPropertiesMETA(supports_spatial_entity_sharing={repr(self.supports_spatial_entity_sharing)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialEntitySharingPropertiesMETA(supports_spatial_entity_sharing={self.supports_spatial_entity_sharing}, next={self._next}, type={self._type})"
@@ -21096,7 +21033,7 @@ class SystemSpatialEntitySharingPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21117,7 +21054,7 @@ class ShareSpacesRecipientBaseHeaderMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ShareSpacesRecipientBaseHeaderMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ShareSpacesRecipientBaseHeaderMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ShareSpacesRecipientBaseHeaderMETA(next={self._next}, type={self._type})"
@@ -21166,7 +21103,7 @@ class ShareSpacesInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ShareSpacesInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self._spaces)}, recipient_info={repr(self.recipient_info)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ShareSpacesInfoMETA(space_count={repr(self.space_count)}, spaces={repr(self.spaces)}, recipient_info={repr(self.recipient_info)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ShareSpacesInfoMETA(space_count={self.space_count}, spaces={self._spaces}, recipient_info={self.recipient_info}, next={self._next}, type={self._type})"
@@ -21201,7 +21138,7 @@ class ShareSpacesInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21228,7 +21165,7 @@ class EventDataShareSpacesCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataShareSpacesCompleteMETA(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataShareSpacesCompleteMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataShareSpacesCompleteMETA(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -21240,7 +21177,7 @@ class EventDataShareSpacesCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -21258,7 +21195,7 @@ class EventDataShareSpacesCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21305,7 +21242,7 @@ class EnvironmentDepthProviderCreateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EnvironmentDepthProviderCreateInfoMETA(create_flags={repr(self.create_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EnvironmentDepthProviderCreateInfoMETA(create_flags={repr(self.create_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthProviderCreateInfoMETA(create_flags={self.create_flags}, next={self._next}, type={self._type})"
@@ -21326,7 +21263,7 @@ class EnvironmentDepthProviderCreateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21349,7 +21286,7 @@ class EnvironmentDepthSwapchainCreateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EnvironmentDepthSwapchainCreateInfoMETA(create_flags={repr(self.create_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EnvironmentDepthSwapchainCreateInfoMETA(create_flags={repr(self.create_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthSwapchainCreateInfoMETA(create_flags={self.create_flags}, next={self._next}, type={self._type})"
@@ -21370,7 +21307,7 @@ class EnvironmentDepthSwapchainCreateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21395,7 +21332,7 @@ class EnvironmentDepthSwapchainStateMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EnvironmentDepthSwapchainStateMETA(width={repr(self.width)}, height={repr(self.height)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EnvironmentDepthSwapchainStateMETA(width={repr(self.width)}, height={repr(self.height)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthSwapchainStateMETA(width={self.width}, height={self.height}, next={self._next}, type={self._type})"
@@ -21416,7 +21353,7 @@ class EnvironmentDepthSwapchainStateMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21442,7 +21379,7 @@ class EnvironmentDepthImageAcquireInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EnvironmentDepthImageAcquireInfoMETA(space={repr(self.space)}, display_time={repr(self.display_time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EnvironmentDepthImageAcquireInfoMETA(space={repr(self.space)}, display_time={repr(self.display_time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthImageAcquireInfoMETA(space={self.space}, display_time={self.display_time}, next={self._next}, type={self._type})"
@@ -21463,7 +21400,7 @@ class EnvironmentDepthImageAcquireInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21491,7 +21428,7 @@ class EnvironmentDepthImageViewMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EnvironmentDepthImageViewMETA(fov={repr(self.fov)}, pose={repr(self.pose)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EnvironmentDepthImageViewMETA(fov={repr(self.fov)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthImageViewMETA(fov={self.fov}, pose={self.pose}, next={self._next}, type={self._type})"
@@ -21512,7 +21449,7 @@ class EnvironmentDepthImageViewMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21540,7 +21477,7 @@ class EnvironmentDepthImageMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EnvironmentDepthImageMETA(swapchain_index={repr(self.swapchain_index)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, views={repr(self.views)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EnvironmentDepthImageMETA(swapchain_index={repr(self.swapchain_index)}, near_z={repr(self.near_z)}, far_z={repr(self.far_z)}, views={repr(self.views)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthImageMETA(swapchain_index={self.swapchain_index}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next={self._next}, type={self._type})"
@@ -21561,7 +21498,7 @@ class EnvironmentDepthImageMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21587,7 +21524,7 @@ class EnvironmentDepthHandRemovalSetInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EnvironmentDepthHandRemovalSetInfoMETA(enabled={repr(self.enabled)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EnvironmentDepthHandRemovalSetInfoMETA(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthHandRemovalSetInfoMETA(enabled={self.enabled}, next={self._next}, type={self._type})"
@@ -21608,7 +21545,7 @@ class EnvironmentDepthHandRemovalSetInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21633,7 +21570,7 @@ class SystemEnvironmentDepthPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemEnvironmentDepthPropertiesMETA(supports_environment_depth={repr(self.supports_environment_depth)}, supports_hand_removal={repr(self.supports_hand_removal)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemEnvironmentDepthPropertiesMETA(supports_environment_depth={repr(self.supports_environment_depth)}, supports_hand_removal={repr(self.supports_hand_removal)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemEnvironmentDepthPropertiesMETA(supports_environment_depth={self.supports_environment_depth}, supports_hand_removal={self.supports_hand_removal}, next={self._next}, type={self._type})"
@@ -21654,7 +21591,7 @@ class SystemEnvironmentDepthPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21723,7 +21660,7 @@ class RenderModelCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelCreateInfoEXT(render_model_id={repr(self.render_model_id)}, gltf_extension_count={repr(self.gltf_extension_count)}, gltf_extensions={repr(self._gltf_extensions)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelCreateInfoEXT(render_model_id={repr(self.render_model_id)}, gltf_extension_count={repr(self.gltf_extension_count)}, gltf_extensions={repr(self.gltf_extensions)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelCreateInfoEXT(render_model_id={self.render_model_id}, gltf_extension_count={self.gltf_extension_count}, gltf_extensions={self._gltf_extensions}, next={self._next}, type={self._type})"
@@ -21758,7 +21695,7 @@ class RenderModelCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21781,7 +21718,7 @@ class RenderModelPropertiesGetInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelPropertiesGetInfoEXT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelPropertiesGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelPropertiesGetInfoEXT(next={self._next}, type={self._type})"
@@ -21802,7 +21739,7 @@ class RenderModelPropertiesGetInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21826,7 +21763,7 @@ class RenderModelPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelPropertiesEXT(cache_id={repr(self.cache_id)}, animatable_node_count={repr(self.animatable_node_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelPropertiesEXT(cache_id={repr(self.cache_id)}, animatable_node_count={repr(self.animatable_node_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelPropertiesEXT(cache_id={self.cache_id}, animatable_node_count={self.animatable_node_count}, next={self._next}, type={self._type})"
@@ -21847,7 +21784,7 @@ class RenderModelPropertiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21871,7 +21808,7 @@ class RenderModelSpaceCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelSpaceCreateInfoEXT(render_model={repr(self.render_model)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelSpaceCreateInfoEXT(render_model={repr(self.render_model)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelSpaceCreateInfoEXT(render_model={self.render_model}, next={self._next}, type={self._type})"
@@ -21892,7 +21829,7 @@ class RenderModelSpaceCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21915,7 +21852,7 @@ class RenderModelStateGetInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelStateGetInfoEXT(display_time={repr(self.display_time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelStateGetInfoEXT(display_time={repr(self.display_time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelStateGetInfoEXT(display_time={self.display_time}, next={self._next}, type={self._type})"
@@ -21936,7 +21873,7 @@ class RenderModelStateGetInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -21986,7 +21923,7 @@ class RenderModelStateEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelStateEXT(node_state_count={repr(self.node_state_count)}, node_states={repr(self._node_states)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelStateEXT(node_state_count={repr(self.node_state_count)}, node_states={repr(self.node_states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelStateEXT(node_state_count={self.node_state_count}, node_states={self._node_states}, next={self._next}, type={self._type})"
@@ -22021,7 +21958,7 @@ class RenderModelStateEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22045,7 +21982,7 @@ class RenderModelAssetCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelAssetCreateInfoEXT(cache_id={repr(self.cache_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelAssetCreateInfoEXT(cache_id={repr(self.cache_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelAssetCreateInfoEXT(cache_id={self.cache_id}, next={self._next}, type={self._type})"
@@ -22066,7 +22003,7 @@ class RenderModelAssetCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22087,7 +22024,7 @@ class RenderModelAssetDataGetInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelAssetDataGetInfoEXT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelAssetDataGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelAssetDataGetInfoEXT(next={self._next}, type={self._type})"
@@ -22108,7 +22045,7 @@ class RenderModelAssetDataGetInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22134,7 +22071,7 @@ class RenderModelAssetDataEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelAssetDataEXT(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelAssetDataEXT(buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelAssetDataEXT(buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next={self._next}, type={self._type})"
@@ -22155,7 +22092,7 @@ class RenderModelAssetDataEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22178,7 +22115,7 @@ class RenderModelAssetPropertiesGetInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={self._next}, type={self._type})"
@@ -22199,7 +22136,7 @@ class RenderModelAssetPropertiesGetInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22243,7 +22180,7 @@ class RenderModelAssetPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RenderModelAssetPropertiesEXT(node_property_count={repr(self.node_property_count)}, node_properties={repr(self.node_properties)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RenderModelAssetPropertiesEXT(node_property_count={repr(self.node_property_count)}, node_properties={repr(self.node_properties)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RenderModelAssetPropertiesEXT(node_property_count={self.node_property_count}, node_properties={self.node_properties}, next={self._next}, type={self._type})"
@@ -22264,7 +22201,7 @@ class RenderModelAssetPropertiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22305,7 +22242,7 @@ class InteractionRenderModelIdsEnumerateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={self._next}, type={self._type})"
@@ -22326,7 +22263,7 @@ class InteractionRenderModelIdsEnumerateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22346,7 +22283,7 @@ class InteractionRenderModelSubactionPathInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={self._next}, type={self._type})"
@@ -22367,7 +22304,7 @@ class InteractionRenderModelSubactionPathInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22393,7 +22330,7 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InteractionRenderModelTopLevelUserPathGetInfoEXT(top_level_user_path_count={repr(self.top_level_user_path_count)}, top_level_user_paths={repr(self._top_level_user_paths)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InteractionRenderModelTopLevelUserPathGetInfoEXT(top_level_user_path_count={repr(self.top_level_user_path_count)}, top_level_user_paths={repr(self.top_level_user_paths)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InteractionRenderModelTopLevelUserPathGetInfoEXT(top_level_user_path_count={self.top_level_user_path_count}, top_level_user_paths={self._top_level_user_paths}, next={self._next}, type={self._type})"
@@ -22428,7 +22365,7 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22450,7 +22387,7 @@ class EventDataInteractionRenderModelsChangedEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataInteractionRenderModelsChangedEXT(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataInteractionRenderModelsChangedEXT(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataInteractionRenderModelsChangedEXT(next={self._next}, type={self._type})"
@@ -22471,7 +22408,7 @@ class EventDataInteractionRenderModelsChangedEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22510,7 +22447,7 @@ class PassthroughCreateInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughCreateInfoHTC(form={repr(self._form)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughCreateInfoHTC(form={repr(self.form)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughCreateInfoHTC(form={self._form}, next={self._next}, type={self._type})"
@@ -22522,7 +22459,7 @@ class PassthroughCreateInfoHTC(Structure):
     @form.setter
     def form(self, value: PassthroughFormHTC) -> None:
         # noinspection PyAttributeOutsideInit
-        self._form = enum_field_helper(form)
+        self._form = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -22540,7 +22477,7 @@ class PassthroughCreateInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22563,7 +22500,7 @@ class PassthroughColorHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughColorHTC(alpha={repr(self.alpha)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughColorHTC(alpha={repr(self.alpha)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughColorHTC(alpha={self.alpha:.3f}, next={self._next}, type={self._type})"
@@ -22584,7 +22521,7 @@ class PassthroughColorHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22623,7 +22560,7 @@ class PassthroughMeshTransformInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughMeshTransformInfoHTC(vertex_count={repr(self.vertex_count)}, vertices={repr(self.vertices)}, index_count={repr(self.index_count)}, indices={repr(self.indices)}, base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughMeshTransformInfoHTC(vertex_count={repr(self.vertex_count)}, vertices={repr(self.vertices)}, index_count={repr(self.index_count)}, indices={repr(self.indices)}, base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, scale={repr(self.scale)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughMeshTransformInfoHTC(vertex_count={self.vertex_count}, vertices={self.vertices}, index_count={self.index_count}, indices={self.indices}, base_space={self.base_space}, time={self.time}, pose={self.pose}, scale={self.scale}, next={self._next}, type={self._type})"
@@ -22644,7 +22581,7 @@ class PassthroughMeshTransformInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22682,7 +22619,7 @@ class CompositionLayerPassthroughHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CompositionLayerPassthroughHTC(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, passthrough={repr(self.passthrough)}, color={repr(self.color)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CompositionLayerPassthroughHTC(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, passthrough={repr(self.passthrough)}, color={repr(self.color)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CompositionLayerPassthroughHTC(layer_flags={self.layer_flags}, space={self.space}, passthrough={self.passthrough}, color={self.color}, next={self._next}, type={self._type})"
@@ -22703,7 +22640,7 @@ class CompositionLayerPassthroughHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22742,7 +22679,7 @@ class FoveationApplyInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationApplyInfoHTC(mode={repr(self._mode)}, sub_image_count={repr(self.sub_image_count)}, sub_images={repr(self._sub_images)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveationApplyInfoHTC(mode={repr(self.mode)}, sub_image_count={repr(self.sub_image_count)}, sub_images={repr(self.sub_images)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationApplyInfoHTC(mode={self._mode}, sub_image_count={self.sub_image_count}, sub_images={self._sub_images}, next={self._next}, type={self._type})"
@@ -22754,7 +22691,7 @@ class FoveationApplyInfoHTC(Structure):
     @mode.setter
     def mode(self, value: FoveationModeHTC) -> None:
         # noinspection PyAttributeOutsideInit
-        self._mode = enum_field_helper(mode)
+        self._mode = enum_field_helper(value)
 
     @property
     def sub_images(self):
@@ -22786,7 +22723,7 @@ class FoveationApplyInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22813,7 +22750,7 @@ class FoveationConfigurationHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationConfigurationHTC(level={repr(self._level)}, clear_fov_degree={repr(self.clear_fov_degree)}, focal_center_offset={repr(self.focal_center_offset)})"
+        return f"xr.FoveationConfigurationHTC(level={repr(self.level)}, clear_fov_degree={repr(self.clear_fov_degree)}, focal_center_offset={repr(self.focal_center_offset)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationConfigurationHTC(level={self._level}, clear_fov_degree={self.clear_fov_degree:.3f}, focal_center_offset={self.focal_center_offset})"
@@ -22825,7 +22762,7 @@ class FoveationConfigurationHTC(Structure):
     @level.setter
     def level(self, value: FoveationLevelHTC) -> None:
         # noinspection PyAttributeOutsideInit
-        self._level = enum_field_helper(level)
+        self._level = enum_field_helper(value)
 
     _fields_ = [
         ("_level", FoveationLevelHTC.ctype()),
@@ -22848,7 +22785,7 @@ class FoveationDynamicModeInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationDynamicModeInfoHTC(dynamic_flags={repr(self.dynamic_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveationDynamicModeInfoHTC(dynamic_flags={repr(self.dynamic_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationDynamicModeInfoHTC(dynamic_flags={self.dynamic_flags}, next={self._next}, type={self._type})"
@@ -22869,7 +22806,7 @@ class FoveationDynamicModeInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22896,7 +22833,7 @@ class FoveationCustomModeInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FoveationCustomModeInfoHTC(config_count={repr(self.config_count)}, configs={repr(self._configs)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FoveationCustomModeInfoHTC(config_count={repr(self.config_count)}, configs={repr(self.configs)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FoveationCustomModeInfoHTC(config_count={self.config_count}, configs={self._configs}, next={self._next}, type={self._type})"
@@ -22931,7 +22868,7 @@ class FoveationCustomModeInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -22958,7 +22895,7 @@ class SystemAnchorPropertiesHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemAnchorPropertiesHTC(supports_anchor={repr(self.supports_anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemAnchorPropertiesHTC(supports_anchor={repr(self.supports_anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemAnchorPropertiesHTC(supports_anchor={self.supports_anchor}, next={self._next}, type={self._type})"
@@ -22979,7 +22916,7 @@ class SystemAnchorPropertiesHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23028,7 +22965,7 @@ class SpatialAnchorCreateInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateInfoHTC(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, name={repr(self.name)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorCreateInfoHTC(space={repr(self.space)}, pose_in_space={repr(self.pose_in_space)}, name={repr(self.name)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorCreateInfoHTC(space={self.space}, pose_in_space={self.pose_in_space}, name={self.name}, next={self._next}, type={self._type})"
@@ -23049,7 +22986,7 @@ class SpatialAnchorCreateInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23087,7 +23024,7 @@ class SystemBodyTrackingPropertiesHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemBodyTrackingPropertiesHTC(supports_body_tracking={repr(self.supports_body_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemBodyTrackingPropertiesHTC(supports_body_tracking={repr(self.supports_body_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemBodyTrackingPropertiesHTC(supports_body_tracking={self.supports_body_tracking}, next={self._next}, type={self._type})"
@@ -23108,7 +23045,7 @@ class SystemBodyTrackingPropertiesHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23131,7 +23068,7 @@ class BodyTrackerCreateInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyTrackerCreateInfoHTC(body_joint_set={repr(self._body_joint_set)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyTrackerCreateInfoHTC(body_joint_set={repr(self.body_joint_set)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyTrackerCreateInfoHTC(body_joint_set={self._body_joint_set}, next={self._next}, type={self._type})"
@@ -23143,7 +23080,7 @@ class BodyTrackerCreateInfoHTC(Structure):
     @body_joint_set.setter
     def body_joint_set(self, value: BodyJointSetHTC) -> None:
         # noinspection PyAttributeOutsideInit
-        self._body_joint_set = enum_field_helper(body_joint_set)
+        self._body_joint_set = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -23161,7 +23098,7 @@ class BodyTrackerCreateInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23186,7 +23123,7 @@ class BodyJointsLocateInfoHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyJointsLocateInfoHTC(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyJointsLocateInfoHTC(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyJointsLocateInfoHTC(base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -23207,7 +23144,7 @@ class BodyJointsLocateInfoHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23264,7 +23201,7 @@ class BodyJointLocationsHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyJointLocationsHTC(combined_location_flags={repr(self.combined_location_flags)}, confidence_level={repr(self._confidence_level)}, joint_location_count={repr(self.joint_location_count)}, joint_locations={repr(self._joint_locations)}, skeleton_generation_id={repr(self.skeleton_generation_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyJointLocationsHTC(combined_location_flags={repr(self.combined_location_flags)}, confidence_level={repr(self.confidence_level)}, joint_location_count={repr(self.joint_location_count)}, joint_locations={repr(self.joint_locations)}, skeleton_generation_id={repr(self.skeleton_generation_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyJointLocationsHTC(combined_location_flags={self.combined_location_flags}, confidence_level={self._confidence_level}, joint_location_count={self.joint_location_count}, joint_locations={self._joint_locations}, skeleton_generation_id={self.skeleton_generation_id}, next={self._next}, type={self._type})"
@@ -23276,7 +23213,7 @@ class BodyJointLocationsHTC(Structure):
     @confidence_level.setter
     def confidence_level(self, value: BodyJointConfidenceHTC) -> None:
         # noinspection PyAttributeOutsideInit
-        self._confidence_level = enum_field_helper(confidence_level)
+        self._confidence_level = enum_field_helper(value)
 
     @property
     def joint_locations(self):
@@ -23308,7 +23245,7 @@ class BodyJointLocationsHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23359,7 +23296,7 @@ class BodySkeletonHTC(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodySkeletonHTC(joint_count={repr(self.joint_count)}, joints={repr(self._joints)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodySkeletonHTC(joint_count={repr(self.joint_count)}, joints={repr(self.joints)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodySkeletonHTC(joint_count={self.joint_count}, joints={self._joints}, next={self._next}, type={self._type})"
@@ -23394,7 +23331,7 @@ class BodySkeletonHTC(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23452,7 +23389,7 @@ class ActiveActionSetPrioritiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ActiveActionSetPrioritiesEXT(action_set_priority_count={repr(self.action_set_priority_count)}, action_set_priorities={repr(self.action_set_priorities)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ActiveActionSetPrioritiesEXT(action_set_priority_count={repr(self.action_set_priority_count)}, action_set_priorities={repr(self.action_set_priorities)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ActiveActionSetPrioritiesEXT(action_set_priority_count={self.action_set_priority_count}, action_set_priorities={self.action_set_priorities}, next={self._next}, type={self._type})"
@@ -23473,7 +23410,7 @@ class ActiveActionSetPrioritiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23497,7 +23434,7 @@ class SystemForceFeedbackCurlPropertiesMNDX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemForceFeedbackCurlPropertiesMNDX(supports_force_feedback_curl={repr(self.supports_force_feedback_curl)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemForceFeedbackCurlPropertiesMNDX(supports_force_feedback_curl={repr(self.supports_force_feedback_curl)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemForceFeedbackCurlPropertiesMNDX(supports_force_feedback_curl={self.supports_force_feedback_curl}, next={self._next}, type={self._type})"
@@ -23518,7 +23455,7 @@ class SystemForceFeedbackCurlPropertiesMNDX(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23539,7 +23476,7 @@ class ForceFeedbackCurlApplyLocationMNDX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ForceFeedbackCurlApplyLocationMNDX(location={repr(self._location)}, value={repr(self.value)})"
+        return f"xr.ForceFeedbackCurlApplyLocationMNDX(location={repr(self.location)}, value={repr(self.value)})"
 
     def __str__(self) -> str:
         return f"xr.ForceFeedbackCurlApplyLocationMNDX(location={self._location}, value={self.value:.3f})"
@@ -23551,7 +23488,7 @@ class ForceFeedbackCurlApplyLocationMNDX(Structure):
     @location.setter
     def location(self, value: ForceFeedbackCurlLocationMNDX) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     _fields_ = [
         ("_location", ForceFeedbackCurlLocationMNDX.ctype()),
@@ -23577,7 +23514,7 @@ class ForceFeedbackCurlApplyLocationsMNDX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ForceFeedbackCurlApplyLocationsMNDX(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ForceFeedbackCurlApplyLocationsMNDX(location_count={repr(self.location_count)}, locations={repr(self.locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ForceFeedbackCurlApplyLocationsMNDX(location_count={self.location_count}, locations={self._locations}, next={self._next}, type={self._type})"
@@ -23612,7 +23549,7 @@ class ForceFeedbackCurlApplyLocationsMNDX(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23647,7 +23584,7 @@ class SystemBodyTrackingPropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemBodyTrackingPropertiesBD(supports_body_tracking={repr(self.supports_body_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemBodyTrackingPropertiesBD(supports_body_tracking={repr(self.supports_body_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemBodyTrackingPropertiesBD(supports_body_tracking={self.supports_body_tracking}, next={self._next}, type={self._type})"
@@ -23668,7 +23605,7 @@ class SystemBodyTrackingPropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23691,7 +23628,7 @@ class BodyTrackerCreateInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyTrackerCreateInfoBD(joint_set={repr(self._joint_set)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyTrackerCreateInfoBD(joint_set={repr(self.joint_set)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyTrackerCreateInfoBD(joint_set={self._joint_set}, next={self._next}, type={self._type})"
@@ -23703,7 +23640,7 @@ class BodyTrackerCreateInfoBD(Structure):
     @joint_set.setter
     def joint_set(self, value: BodyJointSetBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._joint_set = enum_field_helper(joint_set)
+        self._joint_set = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -23721,7 +23658,7 @@ class BodyTrackerCreateInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23746,7 +23683,7 @@ class BodyJointsLocateInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyJointsLocateInfoBD(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyJointsLocateInfoBD(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyJointsLocateInfoBD(base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -23767,7 +23704,7 @@ class BodyJointsLocateInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23820,7 +23757,7 @@ class BodyJointLocationsBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.BodyJointLocationsBD(all_joint_poses_tracked={repr(self.all_joint_poses_tracked)}, joint_location_count={repr(self.joint_location_count)}, joint_locations={repr(self._joint_locations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.BodyJointLocationsBD(all_joint_poses_tracked={repr(self.all_joint_poses_tracked)}, joint_location_count={repr(self.joint_location_count)}, joint_locations={repr(self.joint_locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.BodyJointLocationsBD(all_joint_poses_tracked={self.all_joint_poses_tracked}, joint_location_count={self.joint_location_count}, joint_locations={self._joint_locations}, next={self._next}, type={self._type})"
@@ -23855,7 +23792,7 @@ class BodyJointLocationsBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23895,7 +23832,7 @@ class SystemFacialSimulationPropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFacialSimulationPropertiesBD(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFacialSimulationPropertiesBD(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFacialSimulationPropertiesBD(supports_face_tracking={self.supports_face_tracking}, next={self._next}, type={self._type})"
@@ -23916,7 +23853,7 @@ class SystemFacialSimulationPropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23939,7 +23876,7 @@ class FaceTrackerCreateInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceTrackerCreateInfoBD(mode={repr(self._mode)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceTrackerCreateInfoBD(mode={repr(self.mode)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceTrackerCreateInfoBD(mode={self._mode}, next={self._next}, type={self._type})"
@@ -23951,7 +23888,7 @@ class FaceTrackerCreateInfoBD(Structure):
     @mode.setter
     def mode(self, value: FacialSimulationModeBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._mode = enum_field_helper(mode)
+        self._mode = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -23969,7 +23906,7 @@ class FaceTrackerCreateInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -23992,7 +23929,7 @@ class FacialSimulationDataGetInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialSimulationDataGetInfoBD(time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FacialSimulationDataGetInfoBD(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FacialSimulationDataGetInfoBD(time={self.time}, next={self._next}, type={self._type})"
@@ -24013,7 +23950,7 @@ class FacialSimulationDataGetInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24046,7 +23983,7 @@ class FacialSimulationDataBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialSimulationDataBD(face_expression_weight_count={repr(self.face_expression_weight_count)}, face_expression_weights={repr(self._face_expression_weights)}, is_upper_face_data_valid={repr(self.is_upper_face_data_valid)}, is_lower_face_data_valid={repr(self.is_lower_face_data_valid)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FacialSimulationDataBD(face_expression_weight_count={repr(self.face_expression_weight_count)}, face_expression_weights={repr(self.face_expression_weights)}, is_upper_face_data_valid={repr(self.is_upper_face_data_valid)}, is_lower_face_data_valid={repr(self.is_lower_face_data_valid)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FacialSimulationDataBD(face_expression_weight_count={self.face_expression_weight_count}, face_expression_weights={self._face_expression_weights}, is_upper_face_data_valid={self.is_upper_face_data_valid}, is_lower_face_data_valid={self.is_lower_face_data_valid}, time={self.time}, next={self._next}, type={self._type})"
@@ -24081,7 +24018,7 @@ class FacialSimulationDataBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24112,7 +24049,7 @@ class LipExpressionDataBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LipExpressionDataBD(lipsync_expression_weight_count={repr(self.lipsync_expression_weight_count)}, lipsync_expression_weights={repr(self._lipsync_expression_weights)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LipExpressionDataBD(lipsync_expression_weight_count={repr(self.lipsync_expression_weight_count)}, lipsync_expression_weights={repr(self.lipsync_expression_weights)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LipExpressionDataBD(lipsync_expression_weight_count={self.lipsync_expression_weight_count}, lipsync_expression_weights={self._lipsync_expression_weights}, next={self._next}, type={self._type})"
@@ -24147,7 +24084,7 @@ class LipExpressionDataBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24210,7 +24147,7 @@ class SystemSpatialSensingPropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialSensingPropertiesBD(supports_spatial_sensing={repr(self.supports_spatial_sensing)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialSensingPropertiesBD(supports_spatial_sensing={repr(self.supports_spatial_sensing)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialSensingPropertiesBD(supports_spatial_sensing={self.supports_spatial_sensing}, next={self._next}, type={self._type})"
@@ -24231,7 +24168,7 @@ class SystemSpatialSensingPropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24256,7 +24193,7 @@ class SpatialEntityComponentGetInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentGetInfoBD(entity_id={repr(self.entity_id)}, component_type={repr(self._component_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentGetInfoBD(entity_id={repr(self.entity_id)}, component_type={repr(self.component_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentGetInfoBD(entity_id={self.entity_id}, component_type={self._component_type}, next={self._next}, type={self._type})"
@@ -24268,7 +24205,7 @@ class SpatialEntityComponentGetInfoBD(Structure):
     @component_type.setter
     def component_type(self, value: SpatialEntityComponentTypeBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._component_type = enum_field_helper(component_type)
+        self._component_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -24286,7 +24223,7 @@ class SpatialEntityComponentGetInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24308,7 +24245,7 @@ class SpatialEntityComponentDataBaseHeaderBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataBaseHeaderBD(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataBaseHeaderBD(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataBaseHeaderBD(next={self._next}, type={self._type})"
@@ -24351,7 +24288,7 @@ class SpatialEntityLocationGetInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityLocationGetInfoBD(base_space={repr(self.base_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityLocationGetInfoBD(base_space={repr(self.base_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityLocationGetInfoBD(base_space={self.base_space}, next={self._next}, type={self._type})"
@@ -24372,7 +24309,7 @@ class SpatialEntityLocationGetInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24397,7 +24334,7 @@ class SpatialEntityComponentDataLocationBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataLocationBD(location={repr(self.location)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataLocationBD(location={repr(self.location)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataLocationBD(location={self.location}, next={self._next}, type={self._type})"
@@ -24418,7 +24355,7 @@ class SpatialEntityComponentDataLocationBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24445,7 +24382,7 @@ class SpatialEntityComponentDataSemanticBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataSemanticBD(label_capacity_input={repr(self.label_capacity_input)}, label_count_output={repr(self.label_count_output)}, labels={repr(self.labels)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataSemanticBD(label_capacity_input={repr(self.label_capacity_input)}, label_count_output={repr(self.label_count_output)}, labels={repr(self.labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataSemanticBD(label_capacity_input={self.label_capacity_input}, label_count_output={self.label_count_output}, labels={self.labels}, next={self._next}, type={self._type})"
@@ -24466,7 +24403,7 @@ class SpatialEntityComponentDataSemanticBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24493,7 +24430,7 @@ class SpatialEntityComponentDataBoundingBox2DBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataBoundingBox2DBD(bounding_box_2d={repr(self.bounding_box_2d)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataBoundingBox2DBD(bounding_box_2d={repr(self.bounding_box_2d)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataBoundingBox2DBD(bounding_box_2d={self.bounding_box_2d}, next={self._next}, type={self._type})"
@@ -24514,7 +24451,7 @@ class SpatialEntityComponentDataBoundingBox2DBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24541,7 +24478,7 @@ class SpatialEntityComponentDataPolygonBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataPolygonBD(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataPolygonBD(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataPolygonBD(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self._next}, type={self._type})"
@@ -24562,7 +24499,7 @@ class SpatialEntityComponentDataPolygonBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24589,7 +24526,7 @@ class SpatialEntityComponentDataBoundingBox3DBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataBoundingBox3DBD(bounding_box_3d={repr(self.bounding_box_3d)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataBoundingBox3DBD(bounding_box_3d={repr(self.bounding_box_3d)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataBoundingBox3DBD(bounding_box_3d={self.bounding_box_3d}, next={self._next}, type={self._type})"
@@ -24610,7 +24547,7 @@ class SpatialEntityComponentDataBoundingBox3DBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24643,7 +24580,7 @@ class SpatialEntityComponentDataTriangleMeshBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataTriangleMeshBD(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataTriangleMeshBD(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataTriangleMeshBD(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self._next}, type={self._type})"
@@ -24664,7 +24601,7 @@ class SpatialEntityComponentDataTriangleMeshBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24692,7 +24629,7 @@ class SenseDataProviderCreateInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataProviderCreateInfoBD(provider_type={repr(self._provider_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataProviderCreateInfoBD(provider_type={repr(self.provider_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataProviderCreateInfoBD(provider_type={self._provider_type}, next={self._next}, type={self._type})"
@@ -24704,7 +24641,7 @@ class SenseDataProviderCreateInfoBD(Structure):
     @provider_type.setter
     def provider_type(self, value: SenseDataProviderTypeBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._provider_type = enum_field_helper(provider_type)
+        self._provider_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -24722,7 +24659,7 @@ class SenseDataProviderCreateInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24743,7 +24680,7 @@ class SenseDataProviderStartInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataProviderStartInfoBD(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataProviderStartInfoBD(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataProviderStartInfoBD(next={self._next}, type={self._type})"
@@ -24764,7 +24701,7 @@ class SenseDataProviderStartInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24788,7 +24725,7 @@ class EventDataSenseDataProviderStateChangedBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSenseDataProviderStateChangedBD(provider={repr(self.provider)}, new_state={repr(self._new_state)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSenseDataProviderStateChangedBD(provider={repr(self.provider)}, new_state={repr(self.new_state)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSenseDataProviderStateChangedBD(provider={self.provider}, new_state={self._new_state}, next={self._next}, type={self._type})"
@@ -24800,7 +24737,7 @@ class EventDataSenseDataProviderStateChangedBD(Structure):
     @new_state.setter
     def new_state(self, value: SenseDataProviderStateBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._new_state = enum_field_helper(new_state)
+        self._new_state = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -24818,7 +24755,7 @@ class EventDataSenseDataProviderStateChangedBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24842,7 +24779,7 @@ class EventDataSenseDataUpdatedBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSenseDataUpdatedBD(provider={repr(self.provider)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSenseDataUpdatedBD(provider={repr(self.provider)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSenseDataUpdatedBD(provider={self.provider}, next={self._next}, type={self._type})"
@@ -24863,7 +24800,7 @@ class EventDataSenseDataUpdatedBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24884,7 +24821,7 @@ class SenseDataQueryInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataQueryInfoBD(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataQueryInfoBD(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataQueryInfoBD(next={self._next}, type={self._type})"
@@ -24905,7 +24842,7 @@ class SenseDataQueryInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24929,7 +24866,7 @@ class SenseDataQueryCompletionBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataQueryCompletionBD(future_result={repr(self._future_result)}, snapshot={repr(self.snapshot)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataQueryCompletionBD(future_result={repr(self.future_result)}, snapshot={repr(self.snapshot)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataQueryCompletionBD(future_result={self._future_result}, snapshot={self.snapshot}, next={self._next}, type={self._type})"
@@ -24941,7 +24878,7 @@ class SenseDataQueryCompletionBD(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -24959,7 +24896,7 @@ class SenseDataQueryCompletionBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -24981,7 +24918,7 @@ class QueriedSenseDataGetInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.QueriedSenseDataGetInfoBD(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.QueriedSenseDataGetInfoBD(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.QueriedSenseDataGetInfoBD(next={self._next}, type={self._type})"
@@ -25002,7 +24939,7 @@ class QueriedSenseDataGetInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25028,7 +24965,7 @@ class SpatialEntityStateBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityStateBD(entity_id={repr(self.entity_id)}, last_update_time={repr(self.last_update_time)}, uuid={repr(self.uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityStateBD(entity_id={repr(self.entity_id)}, last_update_time={repr(self.last_update_time)}, uuid={repr(self.uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityStateBD(entity_id={self.entity_id}, last_update_time={self.last_update_time}, uuid={self.uuid}, next={self._next}, type={self._type})"
@@ -25049,7 +24986,7 @@ class SpatialEntityStateBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25078,7 +25015,7 @@ class QueriedSenseDataBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.QueriedSenseDataBD(state_capacity_input={repr(self.state_capacity_input)}, state_count_output={repr(self.state_count_output)}, states={repr(self.states)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.QueriedSenseDataBD(state_capacity_input={repr(self.state_capacity_input)}, state_count_output={repr(self.state_count_output)}, states={repr(self.states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.QueriedSenseDataBD(state_capacity_input={self.state_capacity_input}, state_count_output={self.state_count_output}, states={self.states}, next={self._next}, type={self._type})"
@@ -25099,7 +25036,7 @@ class QueriedSenseDataBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25128,7 +25065,7 @@ class SenseDataFilterUuidBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataFilterUuidBD(uuid_count={repr(self.uuid_count)}, uuids={repr(self._uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataFilterUuidBD(uuid_count={repr(self.uuid_count)}, uuids={repr(self.uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataFilterUuidBD(uuid_count={self.uuid_count}, uuids={self._uuids}, next={self._next}, type={self._type})"
@@ -25163,7 +25100,7 @@ class SenseDataFilterUuidBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25191,7 +25128,7 @@ class SenseDataFilterSemanticBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataFilterSemanticBD(label_count={repr(self.label_count)}, labels={repr(self._labels)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataFilterSemanticBD(label_count={repr(self.label_count)}, labels={repr(self.labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataFilterSemanticBD(label_count={self.label_count}, labels={self._labels}, next={self._next}, type={self._type})"
@@ -25226,7 +25163,7 @@ class SenseDataFilterSemanticBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25252,7 +25189,7 @@ class SpatialEntityAnchorCreateInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityAnchorCreateInfoBD(snapshot={repr(self.snapshot)}, entity_id={repr(self.entity_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityAnchorCreateInfoBD(snapshot={repr(self.snapshot)}, entity_id={repr(self.entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityAnchorCreateInfoBD(snapshot={self.snapshot}, entity_id={self.entity_id}, next={self._next}, type={self._type})"
@@ -25273,7 +25210,7 @@ class SpatialEntityAnchorCreateInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25299,7 +25236,7 @@ class AnchorSpaceCreateInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.AnchorSpaceCreateInfoBD(anchor={repr(self.anchor)}, pose_in_anchor_space={repr(self.pose_in_anchor_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.AnchorSpaceCreateInfoBD(anchor={repr(self.anchor)}, pose_in_anchor_space={repr(self.pose_in_anchor_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.AnchorSpaceCreateInfoBD(anchor={self.anchor}, pose_in_anchor_space={self.pose_in_anchor_space}, next={self._next}, type={self._type})"
@@ -25320,7 +25257,7 @@ class AnchorSpaceCreateInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25344,7 +25281,7 @@ class FutureCompletionEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FutureCompletionEXT(future_result={repr(self._future_result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FutureCompletionEXT(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FutureCompletionEXT(future_result={self._future_result}, next={self._next}, type={self._type})"
@@ -25356,7 +25293,7 @@ class FutureCompletionEXT(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -25374,7 +25311,7 @@ class FutureCompletionEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25432,7 +25369,7 @@ class SystemSpatialAnchorPropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialAnchorPropertiesBD(supports_spatial_anchor={repr(self.supports_spatial_anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialAnchorPropertiesBD(supports_spatial_anchor={repr(self.supports_spatial_anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialAnchorPropertiesBD(supports_spatial_anchor={self.supports_spatial_anchor}, next={self._next}, type={self._type})"
@@ -25453,7 +25390,7 @@ class SystemSpatialAnchorPropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25480,7 +25417,7 @@ class SpatialAnchorCreateInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateInfoBD(space={repr(self.space)}, pose={repr(self.pose)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorCreateInfoBD(space={repr(self.space)}, pose={repr(self.pose)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorCreateInfoBD(space={self.space}, pose={self.pose}, time={self.time}, next={self._next}, type={self._type})"
@@ -25501,7 +25438,7 @@ class SpatialAnchorCreateInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25530,7 +25467,7 @@ class SpatialAnchorCreateCompletionBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateCompletionBD(future_result={repr(self._future_result)}, uuid={repr(self.uuid)}, anchor={repr(self.anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorCreateCompletionBD(future_result={repr(self.future_result)}, uuid={repr(self.uuid)}, anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorCreateCompletionBD(future_result={self._future_result}, uuid={self.uuid}, anchor={self.anchor}, next={self._next}, type={self._type})"
@@ -25542,7 +25479,7 @@ class SpatialAnchorCreateCompletionBD(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -25560,7 +25497,7 @@ class SpatialAnchorCreateCompletionBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25587,7 +25524,7 @@ class SpatialAnchorPersistInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorPersistInfoBD(location={repr(self._location)}, anchor={repr(self.anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorPersistInfoBD(location={repr(self.location)}, anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorPersistInfoBD(location={self._location}, anchor={self.anchor}, next={self._next}, type={self._type})"
@@ -25599,7 +25536,7 @@ class SpatialAnchorPersistInfoBD(Structure):
     @location.setter
     def location(self, value: PersistenceLocationBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -25617,7 +25554,7 @@ class SpatialAnchorPersistInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25643,7 +25580,7 @@ class SpatialAnchorUnpersistInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorUnpersistInfoBD(location={repr(self._location)}, anchor={repr(self.anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorUnpersistInfoBD(location={repr(self.location)}, anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorUnpersistInfoBD(location={self._location}, anchor={self.anchor}, next={self._next}, type={self._type})"
@@ -25655,7 +25592,7 @@ class SpatialAnchorUnpersistInfoBD(Structure):
     @location.setter
     def location(self, value: PersistenceLocationBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._location = enum_field_helper(location)
+        self._location = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -25673,7 +25610,7 @@ class SpatialAnchorUnpersistInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25710,7 +25647,7 @@ class SystemSpatialAnchorSharingPropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialAnchorSharingPropertiesBD(supports_spatial_anchor_sharing={repr(self.supports_spatial_anchor_sharing)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialAnchorSharingPropertiesBD(supports_spatial_anchor_sharing={repr(self.supports_spatial_anchor_sharing)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialAnchorSharingPropertiesBD(supports_spatial_anchor_sharing={self.supports_spatial_anchor_sharing}, next={self._next}, type={self._type})"
@@ -25731,7 +25668,7 @@ class SystemSpatialAnchorSharingPropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25754,7 +25691,7 @@ class SpatialAnchorShareInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorShareInfoBD(anchor={repr(self.anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorShareInfoBD(anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorShareInfoBD(anchor={self.anchor}, next={self._next}, type={self._type})"
@@ -25775,7 +25712,7 @@ class SpatialAnchorShareInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25798,7 +25735,7 @@ class SharedSpatialAnchorDownloadInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SharedSpatialAnchorDownloadInfoBD(uuid={repr(self.uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SharedSpatialAnchorDownloadInfoBD(uuid={repr(self.uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SharedSpatialAnchorDownloadInfoBD(uuid={self.uuid}, next={self._next}, type={self._type})"
@@ -25819,7 +25756,7 @@ class SharedSpatialAnchorDownloadInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25851,7 +25788,7 @@ class SystemSpatialScenePropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialScenePropertiesBD(supports_spatial_scene={repr(self.supports_spatial_scene)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialScenePropertiesBD(supports_spatial_scene={repr(self.supports_spatial_scene)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialScenePropertiesBD(supports_spatial_scene={self.supports_spatial_scene}, next={self._next}, type={self._type})"
@@ -25872,7 +25809,7 @@ class SystemSpatialScenePropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25893,7 +25830,7 @@ class SceneCaptureInfoBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SceneCaptureInfoBD(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SceneCaptureInfoBD(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SceneCaptureInfoBD(next={self._next}, type={self._type})"
@@ -25914,7 +25851,7 @@ class SceneCaptureInfoBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25943,7 +25880,7 @@ class SystemSpatialMeshPropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialMeshPropertiesBD(supports_spatial_mesh={repr(self.supports_spatial_mesh)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialMeshPropertiesBD(supports_spatial_mesh={repr(self.supports_spatial_mesh)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialMeshPropertiesBD(supports_spatial_mesh={self.supports_spatial_mesh}, next={self._next}, type={self._type})"
@@ -25964,7 +25901,7 @@ class SystemSpatialMeshPropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -25989,7 +25926,7 @@ class SenseDataProviderCreateInfoSpatialMeshBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataProviderCreateInfoSpatialMeshBD(config_flags={repr(self.config_flags)}, lod={repr(self._lod)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataProviderCreateInfoSpatialMeshBD(config_flags={repr(self.config_flags)}, lod={repr(self.lod)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataProviderCreateInfoSpatialMeshBD(config_flags={self.config_flags}, lod={self._lod}, next={self._next}, type={self._type})"
@@ -26001,7 +25938,7 @@ class SenseDataProviderCreateInfoSpatialMeshBD(Structure):
     @lod.setter
     def lod(self, value: SpatialMeshLodBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._lod = enum_field_helper(lod)
+        self._lod = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -26019,7 +25956,7 @@ class SenseDataProviderCreateInfoSpatialMeshBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26045,7 +25982,7 @@ class FuturePollResultProgressBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FuturePollResultProgressBD(is_supported={repr(self.is_supported)}, progress_percentage={repr(self.progress_percentage)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FuturePollResultProgressBD(is_supported={repr(self.is_supported)}, progress_percentage={repr(self.progress_percentage)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FuturePollResultProgressBD(is_supported={self.is_supported}, progress_percentage={self.progress_percentage}, next={self._next}, type={self._type})"
@@ -26066,7 +26003,7 @@ class FuturePollResultProgressBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26090,7 +26027,7 @@ class SystemSpatialPlanePropertiesBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialPlanePropertiesBD(supports_spatial_plane={repr(self.supports_spatial_plane)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialPlanePropertiesBD(supports_spatial_plane={repr(self.supports_spatial_plane)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialPlanePropertiesBD(supports_spatial_plane={self.supports_spatial_plane}, next={self._next}, type={self._type})"
@@ -26111,7 +26048,7 @@ class SystemSpatialPlanePropertiesBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26134,7 +26071,7 @@ class SpatialEntityComponentDataPlaneOrientationBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityComponentDataPlaneOrientationBD(orientation={repr(self._orientation)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityComponentDataPlaneOrientationBD(orientation={repr(self.orientation)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityComponentDataPlaneOrientationBD(orientation={self._orientation}, next={self._next}, type={self._type})"
@@ -26146,7 +26083,7 @@ class SpatialEntityComponentDataPlaneOrientationBD(Structure):
     @orientation.setter
     def orientation(self, value: PlaneOrientationBD) -> None:
         # noinspection PyAttributeOutsideInit
-        self._orientation = enum_field_helper(orientation)
+        self._orientation = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -26164,7 +26101,7 @@ class SpatialEntityComponentDataPlaneOrientationBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26191,7 +26128,7 @@ class SenseDataFilterPlaneOrientationBD(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SenseDataFilterPlaneOrientationBD(orientation_count={repr(self.orientation_count)}, orientations={repr(self._orientations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SenseDataFilterPlaneOrientationBD(orientation_count={repr(self.orientation_count)}, orientations={repr(self.orientations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SenseDataFilterPlaneOrientationBD(orientation_count={self.orientation_count}, orientations={self._orientations}, next={self._next}, type={self._type})"
@@ -26226,7 +26163,7 @@ class SenseDataFilterPlaneOrientationBD(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26254,7 +26191,7 @@ class HandTrackingDataSourceInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingDataSourceInfoEXT(requested_data_source_count={repr(self.requested_data_source_count)}, requested_data_sources={repr(self._requested_data_sources)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandTrackingDataSourceInfoEXT(requested_data_source_count={repr(self.requested_data_source_count)}, requested_data_sources={repr(self.requested_data_sources)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandTrackingDataSourceInfoEXT(requested_data_source_count={self.requested_data_source_count}, requested_data_sources={self._requested_data_sources}, next={self._next}, type={self._type})"
@@ -26289,7 +26226,7 @@ class HandTrackingDataSourceInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26315,7 +26252,7 @@ class HandTrackingDataSourceStateEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HandTrackingDataSourceStateEXT(is_active={repr(self.is_active)}, data_source={repr(self._data_source)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HandTrackingDataSourceStateEXT(is_active={repr(self.is_active)}, data_source={repr(self.data_source)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HandTrackingDataSourceStateEXT(is_active={self.is_active}, data_source={self._data_source}, next={self._next}, type={self._type})"
@@ -26327,7 +26264,7 @@ class HandTrackingDataSourceStateEXT(Structure):
     @data_source.setter
     def data_source(self, value: HandTrackingDataSourceEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._data_source = enum_field_helper(data_source)
+        self._data_source = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -26345,7 +26282,7 @@ class HandTrackingDataSourceStateEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26381,7 +26318,7 @@ class SystemPlaneDetectionPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemPlaneDetectionPropertiesEXT(supported_features={repr(self.supported_features)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemPlaneDetectionPropertiesEXT(supported_features={repr(self.supported_features)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemPlaneDetectionPropertiesEXT(supported_features={self.supported_features}, next={self._next}, type={self._type})"
@@ -26402,7 +26339,7 @@ class SystemPlaneDetectionPropertiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26425,7 +26362,7 @@ class PlaneDetectorCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PlaneDetectorCreateInfoEXT(flags={repr(self.flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PlaneDetectorCreateInfoEXT(flags={repr(self.flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PlaneDetectorCreateInfoEXT(flags={self.flags}, next={self._next}, type={self._type})"
@@ -26446,7 +26383,7 @@ class PlaneDetectorCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26494,7 +26431,7 @@ class PlaneDetectorBeginInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PlaneDetectorBeginInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, orientation_count={repr(self.orientation_count)}, orientations={repr(self._orientations)}, semantic_type_count={repr(self.semantic_type_count)}, semantic_types={repr(self._semantic_types)}, max_planes={repr(self.max_planes)}, min_area={repr(self.min_area)}, bounding_box_pose={repr(self.bounding_box_pose)}, bounding_box_extent={repr(self.bounding_box_extent)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PlaneDetectorBeginInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, orientation_count={repr(self.orientation_count)}, orientations={repr(self.orientations)}, semantic_type_count={repr(self.semantic_type_count)}, semantic_types={repr(self.semantic_types)}, max_planes={repr(self.max_planes)}, min_area={repr(self.min_area)}, bounding_box_pose={repr(self.bounding_box_pose)}, bounding_box_extent={repr(self.bounding_box_extent)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PlaneDetectorBeginInfoEXT(base_space={self.base_space}, time={self.time}, orientation_count={self.orientation_count}, orientations={self._orientations}, semantic_type_count={self.semantic_type_count}, semantic_types={self._semantic_types}, max_planes={self.max_planes}, min_area={self.min_area:.3f}, bounding_box_pose={self.bounding_box_pose}, bounding_box_extent={self.bounding_box_extent}, next={self._next}, type={self._type})"
@@ -26543,7 +26480,7 @@ class PlaneDetectorBeginInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26577,7 +26514,7 @@ class PlaneDetectorGetInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PlaneDetectorGetInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PlaneDetectorGetInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PlaneDetectorGetInfoEXT(base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -26598,7 +26535,7 @@ class PlaneDetectorGetInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26636,7 +26573,7 @@ class PlaneDetectorLocationEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PlaneDetectorLocationEXT(plane_id={repr(self.plane_id)}, location_flags={repr(self.location_flags)}, pose={repr(self.pose)}, extents={repr(self.extents)}, orientation={repr(self._orientation)}, semantic_type={repr(self._semantic_type)}, polygon_buffer_count={repr(self.polygon_buffer_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PlaneDetectorLocationEXT(plane_id={repr(self.plane_id)}, location_flags={repr(self.location_flags)}, pose={repr(self.pose)}, extents={repr(self.extents)}, orientation={repr(self.orientation)}, semantic_type={repr(self.semantic_type)}, polygon_buffer_count={repr(self.polygon_buffer_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PlaneDetectorLocationEXT(plane_id={self.plane_id}, location_flags={self.location_flags}, pose={self.pose}, extents={self.extents}, orientation={self._orientation}, semantic_type={self._semantic_type}, polygon_buffer_count={self.polygon_buffer_count}, next={self._next}, type={self._type})"
@@ -26648,7 +26585,7 @@ class PlaneDetectorLocationEXT(Structure):
     @orientation.setter
     def orientation(self, value: PlaneDetectorOrientationEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._orientation = enum_field_helper(orientation)
+        self._orientation = enum_field_helper(value)
 
     @property
     def semantic_type(self) -> PlaneDetectorSemanticTypeEXT:
@@ -26657,7 +26594,7 @@ class PlaneDetectorLocationEXT(Structure):
     @semantic_type.setter
     def semantic_type(self, value: PlaneDetectorSemanticTypeEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._semantic_type = enum_field_helper(semantic_type)
+        self._semantic_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -26675,7 +26612,7 @@ class PlaneDetectorLocationEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26708,7 +26645,7 @@ class PlaneDetectorLocationsEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PlaneDetectorLocationsEXT(plane_location_capacity_input={repr(self.plane_location_capacity_input)}, plane_location_count_output={repr(self.plane_location_count_output)}, plane_locations={repr(self.plane_locations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PlaneDetectorLocationsEXT(plane_location_capacity_input={repr(self.plane_location_capacity_input)}, plane_location_count_output={repr(self.plane_location_count_output)}, plane_locations={repr(self.plane_locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PlaneDetectorLocationsEXT(plane_location_capacity_input={self.plane_location_capacity_input}, plane_location_count_output={self.plane_location_count_output}, plane_locations={self.plane_locations}, next={self._next}, type={self._type})"
@@ -26729,7 +26666,7 @@ class PlaneDetectorLocationsEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26758,7 +26695,7 @@ class PlaneDetectorPolygonBufferEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PlaneDetectorPolygonBufferEXT(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PlaneDetectorPolygonBufferEXT(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PlaneDetectorPolygonBufferEXT(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self._next}, type={self._type})"
@@ -26779,7 +26716,7 @@ class PlaneDetectorPolygonBufferEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26827,7 +26764,7 @@ class TrackableTrackerCreateInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackableTrackerCreateInfoANDROID(trackable_type={repr(self._trackable_type)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TrackableTrackerCreateInfoANDROID(trackable_type={repr(self.trackable_type)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TrackableTrackerCreateInfoANDROID(trackable_type={self._trackable_type}, next={self._next}, type={self._type})"
@@ -26839,7 +26776,7 @@ class TrackableTrackerCreateInfoANDROID(Structure):
     @trackable_type.setter
     def trackable_type(self, value: TrackableTypeANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._trackable_type = enum_field_helper(trackable_type)
+        self._trackable_type = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -26857,7 +26794,7 @@ class TrackableTrackerCreateInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26884,7 +26821,7 @@ class TrackableGetInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackableGetInfoANDROID(trackable={repr(self.trackable)}, base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TrackableGetInfoANDROID(trackable={repr(self.trackable)}, base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TrackableGetInfoANDROID(trackable={self.trackable}, base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -26905,7 +26842,7 @@ class TrackableGetInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -26950,7 +26887,7 @@ class TrackablePlaneANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackablePlaneANDROID(tracking_state={repr(self._tracking_state)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, plane_type={repr(self._plane_type)}, plane_label={repr(self._plane_label)}, subsumed_by_plane={repr(self.subsumed_by_plane)}, last_updated_time={repr(self.last_updated_time)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TrackablePlaneANDROID(tracking_state={repr(self.tracking_state)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, plane_type={repr(self.plane_type)}, plane_label={repr(self.plane_label)}, subsumed_by_plane={repr(self.subsumed_by_plane)}, last_updated_time={repr(self.last_updated_time)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TrackablePlaneANDROID(tracking_state={self._tracking_state}, center_pose={self.center_pose}, extents={self.extents}, plane_type={self._plane_type}, plane_label={self._plane_label}, subsumed_by_plane={self.subsumed_by_plane}, last_updated_time={self.last_updated_time}, vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, next={self._next}, type={self._type})"
@@ -26962,7 +26899,7 @@ class TrackablePlaneANDROID(Structure):
     @tracking_state.setter
     def tracking_state(self, value: TrackingStateANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._tracking_state = enum_field_helper(tracking_state)
+        self._tracking_state = enum_field_helper(value)
 
     @property
     def plane_type(self) -> PlaneTypeANDROID:
@@ -26971,7 +26908,7 @@ class TrackablePlaneANDROID(Structure):
     @plane_type.setter
     def plane_type(self, value: PlaneTypeANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._plane_type = enum_field_helper(plane_type)
+        self._plane_type = enum_field_helper(value)
 
     @property
     def plane_label(self) -> PlaneLabelANDROID:
@@ -26980,7 +26917,7 @@ class TrackablePlaneANDROID(Structure):
     @plane_label.setter
     def plane_label(self, value: PlaneLabelANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._plane_label = enum_field_helper(plane_label)
+        self._plane_label = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -26998,7 +26935,7 @@ class TrackablePlaneANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27036,7 +26973,7 @@ class AnchorSpaceCreateInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.AnchorSpaceCreateInfoANDROID(space={repr(self.space)}, time={repr(self.time)}, pose={repr(self.pose)}, trackable={repr(self.trackable)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.AnchorSpaceCreateInfoANDROID(space={repr(self.space)}, time={repr(self.time)}, pose={repr(self.pose)}, trackable={repr(self.trackable)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.AnchorSpaceCreateInfoANDROID(space={self.space}, time={self.time}, pose={self.pose}, trackable={self.trackable}, next={self._next}, type={self._type})"
@@ -27057,7 +26994,7 @@ class AnchorSpaceCreateInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27085,7 +27022,7 @@ class SystemTrackablesPropertiesANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemTrackablesPropertiesANDROID(supports_anchor={repr(self.supports_anchor)}, max_anchors={repr(self.max_anchors)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemTrackablesPropertiesANDROID(supports_anchor={repr(self.supports_anchor)}, max_anchors={repr(self.max_anchors)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemTrackablesPropertiesANDROID(supports_anchor={self.supports_anchor}, max_anchors={self.max_anchors}, next={self._next}, type={self._type})"
@@ -27106,7 +27043,7 @@ class SystemTrackablesPropertiesANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27151,7 +27088,7 @@ class DeviceAnchorPersistenceCreateInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={self._next}, type={self._type})"
@@ -27172,7 +27109,7 @@ class DeviceAnchorPersistenceCreateInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27194,7 +27131,7 @@ class PersistedAnchorSpaceCreateInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PersistedAnchorSpaceCreateInfoANDROID(anchor_id={repr(self.anchor_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PersistedAnchorSpaceCreateInfoANDROID(anchor_id={repr(self.anchor_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PersistedAnchorSpaceCreateInfoANDROID(anchor_id={self.anchor_id}, next={self._next}, type={self._type})"
@@ -27215,7 +27152,7 @@ class PersistedAnchorSpaceCreateInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27238,7 +27175,7 @@ class PersistedAnchorSpaceInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PersistedAnchorSpaceInfoANDROID(anchor={repr(self.anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PersistedAnchorSpaceInfoANDROID(anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PersistedAnchorSpaceInfoANDROID(anchor={self.anchor}, next={self._next}, type={self._type})"
@@ -27259,7 +27196,7 @@ class PersistedAnchorSpaceInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27282,7 +27219,7 @@ class SystemDeviceAnchorPersistencePropertiesANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemDeviceAnchorPersistencePropertiesANDROID(supports_anchor_persistence={repr(self.supports_anchor_persistence)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemDeviceAnchorPersistencePropertiesANDROID(supports_anchor_persistence={repr(self.supports_anchor_persistence)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemDeviceAnchorPersistencePropertiesANDROID(supports_anchor_persistence={self.supports_anchor_persistence}, next={self._next}, type={self._type})"
@@ -27303,7 +27240,7 @@ class SystemDeviceAnchorPersistencePropertiesANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27349,7 +27286,7 @@ class FaceTrackerCreateInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceTrackerCreateInfoANDROID(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceTrackerCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceTrackerCreateInfoANDROID(next={self._next}, type={self._type})"
@@ -27370,7 +27307,7 @@ class FaceTrackerCreateInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27392,7 +27329,7 @@ class FaceStateGetInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceStateGetInfoANDROID(time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceStateGetInfoANDROID(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceStateGetInfoANDROID(time={self.time}, next={self._next}, type={self._type})"
@@ -27413,7 +27350,7 @@ class FaceStateGetInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27452,7 +27389,7 @@ class FaceStateANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FaceStateANDROID(parameters_capacity_input={repr(self.parameters_capacity_input)}, parameters_count_output={repr(self.parameters_count_output)}, parameters={repr(self.parameters)}, face_tracking_state={repr(self._face_tracking_state)}, sample_time={repr(self.sample_time)}, is_valid={repr(self.is_valid)}, region_confidences_capacity_input={repr(self.region_confidences_capacity_input)}, region_confidences_count_output={repr(self.region_confidences_count_output)}, region_confidences={repr(self.region_confidences)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FaceStateANDROID(parameters_capacity_input={repr(self.parameters_capacity_input)}, parameters_count_output={repr(self.parameters_count_output)}, parameters={repr(self.parameters)}, face_tracking_state={repr(self.face_tracking_state)}, sample_time={repr(self.sample_time)}, is_valid={repr(self.is_valid)}, region_confidences_capacity_input={repr(self.region_confidences_capacity_input)}, region_confidences_count_output={repr(self.region_confidences_count_output)}, region_confidences={repr(self.region_confidences)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FaceStateANDROID(parameters_capacity_input={self.parameters_capacity_input}, parameters_count_output={self.parameters_count_output}, parameters={self.parameters}, face_tracking_state={self._face_tracking_state}, sample_time={self.sample_time}, is_valid={self.is_valid}, region_confidences_capacity_input={self.region_confidences_capacity_input}, region_confidences_count_output={self.region_confidences_count_output}, region_confidences={self.region_confidences}, next={self._next}, type={self._type})"
@@ -27464,7 +27401,7 @@ class FaceStateANDROID(Structure):
     @face_tracking_state.setter
     def face_tracking_state(self, value: FaceTrackingStateANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._face_tracking_state = enum_field_helper(face_tracking_state)
+        self._face_tracking_state = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -27482,7 +27419,7 @@ class FaceStateANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27513,7 +27450,7 @@ class SystemFaceTrackingPropertiesANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFaceTrackingPropertiesANDROID(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFaceTrackingPropertiesANDROID(supports_face_tracking={repr(self.supports_face_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFaceTrackingPropertiesANDROID(supports_face_tracking={self.supports_face_tracking}, next={self._next}, type={self._type})"
@@ -27534,7 +27471,7 @@ class SystemFaceTrackingPropertiesANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27566,7 +27503,7 @@ class SystemPassthroughCameraStatePropertiesANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemPassthroughCameraStatePropertiesANDROID(supports_passthrough_camera_state={repr(self.supports_passthrough_camera_state)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemPassthroughCameraStatePropertiesANDROID(supports_passthrough_camera_state={repr(self.supports_passthrough_camera_state)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemPassthroughCameraStatePropertiesANDROID(supports_passthrough_camera_state={self.supports_passthrough_camera_state}, next={self._next}, type={self._type})"
@@ -27587,7 +27524,7 @@ class SystemPassthroughCameraStatePropertiesANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27608,7 +27545,7 @@ class PassthroughCameraStateGetInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PassthroughCameraStateGetInfoANDROID(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PassthroughCameraStateGetInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PassthroughCameraStateGetInfoANDROID(next={self._next}, type={self._type})"
@@ -27629,7 +27566,7 @@ class PassthroughCameraStateGetInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27672,7 +27609,7 @@ class RaycastInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RaycastInfoANDROID(max_results={repr(self.max_results)}, tracker_count={repr(self.tracker_count)}, trackers={repr(self._trackers)}, origin={repr(self.origin)}, trajectory={repr(self.trajectory)}, space={repr(self.space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RaycastInfoANDROID(max_results={repr(self.max_results)}, tracker_count={repr(self.tracker_count)}, trackers={repr(self.trackers)}, origin={repr(self.origin)}, trajectory={repr(self.trajectory)}, space={repr(self.space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RaycastInfoANDROID(max_results={self.max_results}, tracker_count={self.tracker_count}, trackers={self._trackers}, origin={self.origin}, trajectory={self.trajectory}, space={self.space}, time={self.time}, next={self._next}, type={self._type})"
@@ -27707,7 +27644,7 @@ class RaycastInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27736,7 +27673,7 @@ class RaycastHitResultANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RaycastHitResultANDROID(type={repr(self._type)}, trackable={repr(self.trackable)}, pose={repr(self.pose)})"
+        return f"xr.RaycastHitResultANDROID(type={repr(self.type)}, trackable={repr(self.trackable)}, pose={repr(self.pose)})"
 
     def __str__(self) -> str:
         return f"xr.RaycastHitResultANDROID(type={self._type}, trackable={self.trackable}, pose={self.pose})"
@@ -27748,7 +27685,7 @@ class RaycastHitResultANDROID(Structure):
     @type.setter
     def type(self, value: TrackableTypeANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", TrackableTypeANDROID.ctype()),
@@ -27775,7 +27712,7 @@ class RaycastHitResultsANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.RaycastHitResultsANDROID(results_capacity_input={repr(self.results_capacity_input)}, results_count_output={repr(self.results_count_output)}, results={repr(self.results)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.RaycastHitResultsANDROID(results_capacity_input={repr(self.results_capacity_input)}, results_count_output={repr(self.results_count_output)}, results={repr(self.results)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.RaycastHitResultsANDROID(results_capacity_input={self.results_capacity_input}, results_count_output={self.results_count_output}, results={self.results}, next={self._next}, type={self._type})"
@@ -27796,7 +27733,7 @@ class RaycastHitResultsANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27834,7 +27771,7 @@ class TrackableObjectANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackableObjectANDROID(tracking_state={repr(self._tracking_state)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, object_label={repr(self._object_label)}, last_updated_time={repr(self.last_updated_time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TrackableObjectANDROID(tracking_state={repr(self.tracking_state)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, object_label={repr(self.object_label)}, last_updated_time={repr(self.last_updated_time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TrackableObjectANDROID(tracking_state={self._tracking_state}, center_pose={self.center_pose}, extents={self.extents}, object_label={self._object_label}, last_updated_time={self.last_updated_time}, next={self._next}, type={self._type})"
@@ -27846,7 +27783,7 @@ class TrackableObjectANDROID(Structure):
     @tracking_state.setter
     def tracking_state(self, value: TrackingStateANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._tracking_state = enum_field_helper(tracking_state)
+        self._tracking_state = enum_field_helper(value)
 
     @property
     def object_label(self) -> ObjectLabelANDROID:
@@ -27855,7 +27792,7 @@ class TrackableObjectANDROID(Structure):
     @object_label.setter
     def object_label(self, value: ObjectLabelANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._object_label = enum_field_helper(object_label)
+        self._object_label = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -27873,7 +27810,7 @@ class TrackableObjectANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27904,7 +27841,7 @@ class TrackableObjectConfigurationANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackableObjectConfigurationANDROID(label_count={repr(self.label_count)}, active_labels={repr(self._active_labels)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TrackableObjectConfigurationANDROID(label_count={repr(self.label_count)}, active_labels={repr(self.active_labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TrackableObjectConfigurationANDROID(label_count={self.label_count}, active_labels={self._active_labels}, next={self._next}, type={self._type})"
@@ -27939,7 +27876,7 @@ class TrackableObjectConfigurationANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -27966,7 +27903,7 @@ class FutureCancelInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FutureCancelInfoEXT(future={repr(self.future)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FutureCancelInfoEXT(future={repr(self.future)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FutureCancelInfoEXT(future={self.future}, next={self._next}, type={self._type})"
@@ -27987,7 +27924,7 @@ class FutureCancelInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28010,7 +27947,7 @@ class FuturePollInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FuturePollInfoEXT(future={repr(self.future)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FuturePollInfoEXT(future={repr(self.future)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FuturePollInfoEXT(future={self.future}, next={self._next}, type={self._type})"
@@ -28031,7 +27968,7 @@ class FuturePollInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28054,7 +27991,7 @@ class FutureCompletionBaseHeaderEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FutureCompletionBaseHeaderEXT(future_result={repr(self._future_result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FutureCompletionBaseHeaderEXT(future_result={repr(self.future_result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FutureCompletionBaseHeaderEXT(future_result={self._future_result}, next={self._next}, type={self._type})"
@@ -28066,7 +28003,7 @@ class FutureCompletionBaseHeaderEXT(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -28107,7 +28044,7 @@ class FuturePollResultEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FuturePollResultEXT(state={repr(self._state)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FuturePollResultEXT(state={repr(self.state)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FuturePollResultEXT(state={self._state}, next={self._next}, type={self._type})"
@@ -28119,7 +28056,7 @@ class FuturePollResultEXT(Structure):
     @state.setter
     def state(self, value: FutureStateEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._state = enum_field_helper(state)
+        self._state = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -28137,7 +28074,7 @@ class FuturePollResultEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28167,7 +28104,7 @@ class EventDataUserPresenceChangedEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataUserPresenceChangedEXT(session={repr(self.session)}, is_user_present={repr(self.is_user_present)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataUserPresenceChangedEXT(session={repr(self.session)}, is_user_present={repr(self.is_user_present)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataUserPresenceChangedEXT(session={self.session}, is_user_present={self.is_user_present}, next={self._next}, type={self._type})"
@@ -28188,7 +28125,7 @@ class EventDataUserPresenceChangedEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28212,7 +28149,7 @@ class SystemUserPresencePropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemUserPresencePropertiesEXT(supports_user_presence={repr(self.supports_user_presence)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemUserPresencePropertiesEXT(supports_user_presence={repr(self.supports_user_presence)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemUserPresencePropertiesEXT(supports_user_presence={self.supports_user_presence}, next={self._next}, type={self._type})"
@@ -28233,7 +28170,7 @@ class SystemUserPresencePropertiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28258,7 +28195,7 @@ class EventDataHeadsetFitChangedML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataHeadsetFitChangedML(status={repr(self._status)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataHeadsetFitChangedML(status={repr(self.status)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataHeadsetFitChangedML(status={self._status}, time={self.time}, next={self._next}, type={self._type})"
@@ -28270,7 +28207,7 @@ class EventDataHeadsetFitChangedML(Structure):
     @status.setter
     def status(self, value: HeadsetFitStatusML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._status = enum_field_helper(status)
+        self._status = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -28288,7 +28225,7 @@ class EventDataHeadsetFitChangedML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28312,7 +28249,7 @@ class EventDataEyeCalibrationChangedML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataEyeCalibrationChangedML(status={repr(self._status)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataEyeCalibrationChangedML(status={repr(self.status)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataEyeCalibrationChangedML(status={self._status}, next={self._next}, type={self._type})"
@@ -28324,7 +28261,7 @@ class EventDataEyeCalibrationChangedML(Structure):
     @status.setter
     def status(self, value: EyeCalibrationStatusML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._status = enum_field_helper(status)
+        self._status = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -28342,7 +28279,7 @@ class EventDataEyeCalibrationChangedML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28365,7 +28302,7 @@ class UserCalibrationEnableEventsInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.UserCalibrationEnableEventsInfoML(enabled={repr(self.enabled)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.UserCalibrationEnableEventsInfoML(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.UserCalibrationEnableEventsInfoML(enabled={self.enabled}, next={self._next}, type={self._type})"
@@ -28386,7 +28323,7 @@ class UserCalibrationEnableEventsInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28412,7 +28349,7 @@ class SystemNotificationsSetInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemNotificationsSetInfoML(suppress_notifications={repr(self.suppress_notifications)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemNotificationsSetInfoML(suppress_notifications={repr(self.suppress_notifications)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemNotificationsSetInfoML(suppress_notifications={self.suppress_notifications}, next={self._next}, type={self._type})"
@@ -28433,7 +28370,7 @@ class SystemNotificationsSetInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28467,7 +28404,7 @@ class WorldMeshDetectorCreateInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshDetectorCreateInfoML(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshDetectorCreateInfoML(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshDetectorCreateInfoML(next={self._next}, type={self._type})"
@@ -28488,7 +28425,7 @@ class WorldMeshDetectorCreateInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28518,7 +28455,7 @@ class WorldMeshBlockStateML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshBlockStateML(uuid={repr(self.uuid)}, mesh_bounding_box_center={repr(self.mesh_bounding_box_center)}, mesh_bounding_box_extents={repr(self.mesh_bounding_box_extents)}, last_update_time={repr(self.last_update_time)}, status={repr(self._status)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshBlockStateML(uuid={repr(self.uuid)}, mesh_bounding_box_center={repr(self.mesh_bounding_box_center)}, mesh_bounding_box_extents={repr(self.mesh_bounding_box_extents)}, last_update_time={repr(self.last_update_time)}, status={repr(self.status)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshBlockStateML(uuid={self.uuid}, mesh_bounding_box_center={self.mesh_bounding_box_center}, mesh_bounding_box_extents={self.mesh_bounding_box_extents}, last_update_time={self.last_update_time}, status={self._status}, next={self._next}, type={self._type})"
@@ -28530,7 +28467,7 @@ class WorldMeshBlockStateML(Structure):
     @status.setter
     def status(self, value: WorldMeshBlockStatusML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._status = enum_field_helper(status)
+        self._status = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -28548,7 +28485,7 @@ class WorldMeshBlockStateML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28581,7 +28518,7 @@ class WorldMeshStateRequestInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshStateRequestInfoML(base_space={repr(self.base_space)}, time={repr(self.time)}, bounding_box_center={repr(self.bounding_box_center)}, bounding_box_extents={repr(self.bounding_box_extents)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshStateRequestInfoML(base_space={repr(self.base_space)}, time={repr(self.time)}, bounding_box_center={repr(self.bounding_box_center)}, bounding_box_extents={repr(self.bounding_box_extents)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshStateRequestInfoML(base_space={self.base_space}, time={self.time}, bounding_box_center={self.bounding_box_center}, bounding_box_extents={self.bounding_box_extents}, next={self._next}, type={self._type})"
@@ -28602,7 +28539,7 @@ class WorldMeshStateRequestInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28636,7 +28573,7 @@ class WorldMeshStateRequestCompletionML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshStateRequestCompletionML(future_result={repr(self._future_result)}, timestamp={repr(self.timestamp)}, mesh_block_state_capacity_input={repr(self.mesh_block_state_capacity_input)}, mesh_block_state_count_output={repr(self.mesh_block_state_count_output)}, mesh_block_states={repr(self.mesh_block_states)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshStateRequestCompletionML(future_result={repr(self.future_result)}, timestamp={repr(self.timestamp)}, mesh_block_state_capacity_input={repr(self.mesh_block_state_capacity_input)}, mesh_block_state_count_output={repr(self.mesh_block_state_count_output)}, mesh_block_states={repr(self.mesh_block_states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshStateRequestCompletionML(future_result={self._future_result}, timestamp={self.timestamp}, mesh_block_state_capacity_input={self.mesh_block_state_capacity_input}, mesh_block_state_count_output={self.mesh_block_state_count_output}, mesh_block_states={self.mesh_block_states}, next={self._next}, type={self._type})"
@@ -28648,7 +28585,7 @@ class WorldMeshStateRequestCompletionML(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -28666,7 +28603,7 @@ class WorldMeshStateRequestCompletionML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28693,7 +28630,7 @@ class WorldMeshBufferRecommendedSizeInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshBufferRecommendedSizeInfoML(max_block_count={repr(self.max_block_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshBufferRecommendedSizeInfoML(max_block_count={repr(self.max_block_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshBufferRecommendedSizeInfoML(max_block_count={self.max_block_count}, next={self._next}, type={self._type})"
@@ -28714,7 +28651,7 @@ class WorldMeshBufferRecommendedSizeInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28737,7 +28674,7 @@ class WorldMeshBufferSizeML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshBufferSizeML(size={repr(self.size)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshBufferSizeML(size={repr(self.size)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshBufferSizeML(size={self.size}, next={self._next}, type={self._type})"
@@ -28758,7 +28695,7 @@ class WorldMeshBufferSizeML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28783,7 +28720,7 @@ class WorldMeshBufferML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshBufferML(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshBufferML(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshBufferML(buffer_size={self.buffer_size}, buffer={self.buffer}, next={self._next}, type={self._type})"
@@ -28804,7 +28741,7 @@ class WorldMeshBufferML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28830,7 +28767,7 @@ class WorldMeshBlockRequestML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshBlockRequestML(uuid={repr(self.uuid)}, lod={repr(self._lod)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshBlockRequestML(uuid={repr(self.uuid)}, lod={repr(self.lod)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshBlockRequestML(uuid={self.uuid}, lod={self._lod}, next={self._next}, type={self._type})"
@@ -28842,7 +28779,7 @@ class WorldMeshBlockRequestML(Structure):
     @lod.setter
     def lod(self, value: WorldMeshDetectorLodML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._lod = enum_field_helper(lod)
+        self._lod = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -28860,7 +28797,7 @@ class WorldMeshBlockRequestML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28894,7 +28831,7 @@ class WorldMeshGetInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshGetInfoML(flags={repr(self.flags)}, fill_hole_length={repr(self.fill_hole_length)}, disconnected_component_area={repr(self.disconnected_component_area)}, block_count={repr(self.block_count)}, blocks={repr(self._blocks)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshGetInfoML(flags={repr(self.flags)}, fill_hole_length={repr(self.fill_hole_length)}, disconnected_component_area={repr(self.disconnected_component_area)}, block_count={repr(self.block_count)}, blocks={repr(self.blocks)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshGetInfoML(flags={self.flags}, fill_hole_length={self.fill_hole_length:.3f}, disconnected_component_area={self.disconnected_component_area:.3f}, block_count={self.block_count}, blocks={self._blocks}, next={self._next}, type={self._type})"
@@ -28929,7 +28866,7 @@ class WorldMeshGetInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -28978,7 +28915,7 @@ class WorldMeshBlockML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshBlockML(uuid={repr(self.uuid)}, block_result={repr(self._block_result)}, lod={repr(self._lod)}, flags={repr(self.flags)}, index_count={repr(self.index_count)}, index_buffer={repr(self.index_buffer)}, vertex_count={repr(self.vertex_count)}, vertex_buffer={repr(self.vertex_buffer)}, normal_count={repr(self.normal_count)}, normal_buffer={repr(self.normal_buffer)}, confidence_count={repr(self.confidence_count)}, confidence_buffer={repr(self.confidence_buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshBlockML(uuid={repr(self.uuid)}, block_result={repr(self.block_result)}, lod={repr(self.lod)}, flags={repr(self.flags)}, index_count={repr(self.index_count)}, index_buffer={repr(self.index_buffer)}, vertex_count={repr(self.vertex_count)}, vertex_buffer={repr(self.vertex_buffer)}, normal_count={repr(self.normal_count)}, normal_buffer={repr(self.normal_buffer)}, confidence_count={repr(self.confidence_count)}, confidence_buffer={repr(self.confidence_buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshBlockML(uuid={self.uuid}, block_result={self._block_result}, lod={self._lod}, flags={self.flags}, index_count={self.index_count}, index_buffer={self.index_buffer}, vertex_count={self.vertex_count}, vertex_buffer={self.vertex_buffer}, normal_count={self.normal_count}, normal_buffer={self.normal_buffer}, confidence_count={self.confidence_count}, confidence_buffer={self.confidence_buffer}, next={self._next}, type={self._type})"
@@ -28990,7 +28927,7 @@ class WorldMeshBlockML(Structure):
     @block_result.setter
     def block_result(self, value: WorldMeshBlockResultML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._block_result = enum_field_helper(block_result)
+        self._block_result = enum_field_helper(value)
 
     @property
     def lod(self) -> WorldMeshDetectorLodML:
@@ -28999,7 +28936,7 @@ class WorldMeshBlockML(Structure):
     @lod.setter
     def lod(self, value: WorldMeshDetectorLodML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._lod = enum_field_helper(lod)
+        self._lod = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -29017,7 +28954,7 @@ class WorldMeshBlockML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29053,7 +28990,7 @@ class WorldMeshRequestCompletionInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshRequestCompletionInfoML(mesh_space={repr(self.mesh_space)}, mesh_space_locate_time={repr(self.mesh_space_locate_time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshRequestCompletionInfoML(mesh_space={repr(self.mesh_space)}, mesh_space_locate_time={repr(self.mesh_space_locate_time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshRequestCompletionInfoML(mesh_space={self.mesh_space}, mesh_space_locate_time={self.mesh_space_locate_time}, next={self._next}, type={self._type})"
@@ -29074,7 +29011,7 @@ class WorldMeshRequestCompletionInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29104,7 +29041,7 @@ class WorldMeshRequestCompletionML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.WorldMeshRequestCompletionML(future_result={repr(self._future_result)}, block_count={repr(self.block_count)}, blocks={repr(self._blocks)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.WorldMeshRequestCompletionML(future_result={repr(self.future_result)}, block_count={repr(self.block_count)}, blocks={repr(self.blocks)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.WorldMeshRequestCompletionML(future_result={self._future_result}, block_count={self.block_count}, blocks={self._blocks}, next={self._next}, type={self._type})"
@@ -29116,7 +29053,7 @@ class WorldMeshRequestCompletionML(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def blocks(self):
@@ -29148,7 +29085,7 @@ class WorldMeshRequestCompletionML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29202,7 +29139,7 @@ class SystemFacialExpressionPropertiesML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemFacialExpressionPropertiesML(supports_facial_expression={repr(self.supports_facial_expression)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemFacialExpressionPropertiesML(supports_facial_expression={repr(self.supports_facial_expression)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemFacialExpressionPropertiesML(supports_facial_expression={self.supports_facial_expression}, next={self._next}, type={self._type})"
@@ -29223,7 +29160,7 @@ class SystemFacialExpressionPropertiesML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29250,7 +29187,7 @@ class FacialExpressionClientCreateInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialExpressionClientCreateInfoML(requested_count={repr(self.requested_count)}, requested_facial_blend_shapes={repr(self._requested_facial_blend_shapes)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FacialExpressionClientCreateInfoML(requested_count={repr(self.requested_count)}, requested_facial_blend_shapes={repr(self.requested_facial_blend_shapes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FacialExpressionClientCreateInfoML(requested_count={self.requested_count}, requested_facial_blend_shapes={self._requested_facial_blend_shapes}, next={self._next}, type={self._type})"
@@ -29285,7 +29222,7 @@ class FacialExpressionClientCreateInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29307,7 +29244,7 @@ class FacialExpressionBlendShapeGetInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialExpressionBlendShapeGetInfoML(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FacialExpressionBlendShapeGetInfoML(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FacialExpressionBlendShapeGetInfoML(next={self._next}, type={self._type})"
@@ -29328,7 +29265,7 @@ class FacialExpressionBlendShapeGetInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29356,7 +29293,7 @@ class FacialExpressionBlendShapePropertiesML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.FacialExpressionBlendShapePropertiesML(requested_facial_blend_shape={repr(self._requested_facial_blend_shape)}, weight={repr(self.weight)}, flags={repr(self.flags)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.FacialExpressionBlendShapePropertiesML(requested_facial_blend_shape={repr(self.requested_facial_blend_shape)}, weight={repr(self.weight)}, flags={repr(self.flags)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.FacialExpressionBlendShapePropertiesML(requested_facial_blend_shape={self._requested_facial_blend_shape}, weight={self.weight:.3f}, flags={self.flags}, time={self.time}, next={self._next}, type={self._type})"
@@ -29368,7 +29305,7 @@ class FacialExpressionBlendShapePropertiesML(Structure):
     @requested_facial_blend_shape.setter
     def requested_facial_blend_shape(self, value: FacialBlendShapeML) -> None:
         # noinspection PyAttributeOutsideInit
-        self._requested_facial_blend_shape = enum_field_helper(requested_facial_blend_shape)
+        self._requested_facial_blend_shape = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -29386,7 +29323,7 @@ class FacialExpressionBlendShapePropertiesML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29419,7 +29356,7 @@ class SystemSimultaneousHandsAndControllersPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSimultaneousHandsAndControllersPropertiesMETA(supports_simultaneous_hands_and_controllers={repr(self.supports_simultaneous_hands_and_controllers)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSimultaneousHandsAndControllersPropertiesMETA(supports_simultaneous_hands_and_controllers={repr(self.supports_simultaneous_hands_and_controllers)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSimultaneousHandsAndControllersPropertiesMETA(supports_simultaneous_hands_and_controllers={self.supports_simultaneous_hands_and_controllers}, next={self._next}, type={self._type})"
@@ -29440,7 +29377,7 @@ class SystemSimultaneousHandsAndControllersPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29461,7 +29398,7 @@ class SimultaneousHandsAndControllersTrackingResumeInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={self._next}, type={self._type})"
@@ -29482,7 +29419,7 @@ class SimultaneousHandsAndControllersTrackingResumeInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29502,7 +29439,7 @@ class SimultaneousHandsAndControllersTrackingPauseInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={self._next}, type={self._type})"
@@ -29523,7 +29460,7 @@ class SimultaneousHandsAndControllersTrackingPauseInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29548,7 +29485,7 @@ class ColocationDiscoveryStartInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ColocationDiscoveryStartInfoMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ColocationDiscoveryStartInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ColocationDiscoveryStartInfoMETA(next={self._next}, type={self._type})"
@@ -29569,7 +29506,7 @@ class ColocationDiscoveryStartInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29589,7 +29526,7 @@ class ColocationDiscoveryStopInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ColocationDiscoveryStopInfoMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ColocationDiscoveryStopInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ColocationDiscoveryStopInfoMETA(next={self._next}, type={self._type})"
@@ -29610,7 +29547,7 @@ class ColocationDiscoveryStopInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29634,7 +29571,7 @@ class ColocationAdvertisementStartInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ColocationAdvertisementStartInfoMETA(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ColocationAdvertisementStartInfoMETA(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ColocationAdvertisementStartInfoMETA(buffer_size={self.buffer_size}, buffer={self.buffer}, next={self._next}, type={self._type})"
@@ -29655,7 +29592,7 @@ class ColocationAdvertisementStartInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29677,7 +29614,7 @@ class ColocationAdvertisementStopInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ColocationAdvertisementStopInfoMETA(next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ColocationAdvertisementStopInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ColocationAdvertisementStopInfoMETA(next={self._next}, type={self._type})"
@@ -29698,7 +29635,7 @@ class ColocationAdvertisementStopInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29726,7 +29663,7 @@ class EventDataStartColocationAdvertisementCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataStartColocationAdvertisementCompleteMETA(advertisement_request_id={repr(self.advertisement_request_id)}, result={repr(self._result)}, advertisement_uuid={repr(self.advertisement_uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataStartColocationAdvertisementCompleteMETA(advertisement_request_id={repr(self.advertisement_request_id)}, result={repr(self.result)}, advertisement_uuid={repr(self.advertisement_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataStartColocationAdvertisementCompleteMETA(advertisement_request_id={self.advertisement_request_id}, result={self._result}, advertisement_uuid={self.advertisement_uuid}, next={self._next}, type={self._type})"
@@ -29738,7 +29675,7 @@ class EventDataStartColocationAdvertisementCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -29756,7 +29693,7 @@ class EventDataStartColocationAdvertisementCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29783,7 +29720,7 @@ class EventDataStopColocationAdvertisementCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataStopColocationAdvertisementCompleteMETA(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataStopColocationAdvertisementCompleteMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataStopColocationAdvertisementCompleteMETA(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -29795,7 +29732,7 @@ class EventDataStopColocationAdvertisementCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -29813,7 +29750,7 @@ class EventDataStopColocationAdvertisementCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29839,7 +29776,7 @@ class EventDataColocationAdvertisementCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataColocationAdvertisementCompleteMETA(advertisement_request_id={repr(self.advertisement_request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataColocationAdvertisementCompleteMETA(advertisement_request_id={repr(self.advertisement_request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataColocationAdvertisementCompleteMETA(advertisement_request_id={self.advertisement_request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -29851,7 +29788,7 @@ class EventDataColocationAdvertisementCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -29869,7 +29806,7 @@ class EventDataColocationAdvertisementCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29895,7 +29832,7 @@ class EventDataStartColocationDiscoveryCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataStartColocationDiscoveryCompleteMETA(discovery_request_id={repr(self.discovery_request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataStartColocationDiscoveryCompleteMETA(discovery_request_id={repr(self.discovery_request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataStartColocationDiscoveryCompleteMETA(discovery_request_id={self.discovery_request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -29907,7 +29844,7 @@ class EventDataStartColocationDiscoveryCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -29925,7 +29862,7 @@ class EventDataStartColocationDiscoveryCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -29955,7 +29892,7 @@ class EventDataColocationDiscoveryResultMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataColocationDiscoveryResultMETA(discovery_request_id={repr(self.discovery_request_id)}, advertisement_uuid={repr(self.advertisement_uuid)}, buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataColocationDiscoveryResultMETA(discovery_request_id={repr(self.discovery_request_id)}, advertisement_uuid={repr(self.advertisement_uuid)}, buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataColocationDiscoveryResultMETA(discovery_request_id={self.discovery_request_id}, advertisement_uuid={self.advertisement_uuid}, buffer_size={self.buffer_size}, next={self._next}, type={self._type})"
@@ -29976,7 +29913,7 @@ class EventDataColocationDiscoveryResultMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30004,7 +29941,7 @@ class EventDataColocationDiscoveryCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataColocationDiscoveryCompleteMETA(discovery_request_id={repr(self.discovery_request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataColocationDiscoveryCompleteMETA(discovery_request_id={repr(self.discovery_request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataColocationDiscoveryCompleteMETA(discovery_request_id={self.discovery_request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -30016,7 +29953,7 @@ class EventDataColocationDiscoveryCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -30034,7 +29971,7 @@ class EventDataColocationDiscoveryCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30060,7 +29997,7 @@ class EventDataStopColocationDiscoveryCompleteMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataStopColocationDiscoveryCompleteMETA(request_id={repr(self.request_id)}, result={repr(self._result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataStopColocationDiscoveryCompleteMETA(request_id={repr(self.request_id)}, result={repr(self.result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataStopColocationDiscoveryCompleteMETA(request_id={self.request_id}, result={self._result}, next={self._next}, type={self._type})"
@@ -30072,7 +30009,7 @@ class EventDataStopColocationDiscoveryCompleteMETA(Structure):
     @result.setter
     def result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._result = enum_field_helper(result)
+        self._result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -30090,7 +30027,7 @@ class EventDataStopColocationDiscoveryCompleteMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30114,7 +30051,7 @@ class SystemColocationDiscoveryPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemColocationDiscoveryPropertiesMETA(supports_colocation_discovery={repr(self.supports_colocation_discovery)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemColocationDiscoveryPropertiesMETA(supports_colocation_discovery={repr(self.supports_colocation_discovery)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemColocationDiscoveryPropertiesMETA(supports_colocation_discovery={self.supports_colocation_discovery}, next={self._next}, type={self._type})"
@@ -30135,7 +30072,7 @@ class SystemColocationDiscoveryPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30167,7 +30104,7 @@ class SystemSpatialEntityGroupSharingPropertiesMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemSpatialEntityGroupSharingPropertiesMETA(supports_spatial_entity_group_sharing={repr(self.supports_spatial_entity_group_sharing)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemSpatialEntityGroupSharingPropertiesMETA(supports_spatial_entity_group_sharing={repr(self.supports_spatial_entity_group_sharing)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemSpatialEntityGroupSharingPropertiesMETA(supports_spatial_entity_group_sharing={self.supports_spatial_entity_group_sharing}, next={self._next}, type={self._type})"
@@ -30188,7 +30125,7 @@ class SystemSpatialEntityGroupSharingPropertiesMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30215,7 +30152,7 @@ class ShareSpacesRecipientGroupsMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.ShareSpacesRecipientGroupsMETA(group_count={repr(self.group_count)}, groups={repr(self._groups)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.ShareSpacesRecipientGroupsMETA(group_count={repr(self.group_count)}, groups={repr(self.groups)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.ShareSpacesRecipientGroupsMETA(group_count={self.group_count}, groups={self._groups}, next={self._next}, type={self._type})"
@@ -30250,7 +30187,7 @@ class ShareSpacesRecipientGroupsMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30276,7 +30213,7 @@ class SpaceGroupUuidFilterInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpaceGroupUuidFilterInfoMETA(group_uuid={repr(self.group_uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpaceGroupUuidFilterInfoMETA(group_uuid={repr(self.group_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpaceGroupUuidFilterInfoMETA(group_uuid={self.group_uuid}, next={self._next}, type={self._type})"
@@ -30297,7 +30234,7 @@ class SpaceGroupUuidFilterInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30324,7 +30261,7 @@ class SystemMarkerTrackingPropertiesANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemMarkerTrackingPropertiesANDROID(supports_marker_tracking={repr(self.supports_marker_tracking)}, supports_marker_size_estimation={repr(self.supports_marker_size_estimation)}, max_marker_count={repr(self.max_marker_count)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemMarkerTrackingPropertiesANDROID(supports_marker_tracking={repr(self.supports_marker_tracking)}, supports_marker_size_estimation={repr(self.supports_marker_size_estimation)}, max_marker_count={repr(self.max_marker_count)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemMarkerTrackingPropertiesANDROID(supports_marker_tracking={self.supports_marker_tracking}, supports_marker_size_estimation={self.supports_marker_size_estimation}, max_marker_count={self.max_marker_count}, next={self._next}, type={self._type})"
@@ -30345,7 +30282,7 @@ class SystemMarkerTrackingPropertiesANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30393,7 +30330,7 @@ class TrackableMarkerDatabaseANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackableMarkerDatabaseANDROID(dictionary={repr(self._dictionary)}, entry_count={repr(self.entry_count)}, entries={repr(self.entries)})"
+        return f"xr.TrackableMarkerDatabaseANDROID(dictionary={repr(self.dictionary)}, entry_count={repr(self.entry_count)}, entries={repr(self.entries)})"
 
     def __str__(self) -> str:
         return f"xr.TrackableMarkerDatabaseANDROID(dictionary={self._dictionary}, entry_count={self.entry_count}, entries={self.entries})"
@@ -30405,7 +30342,7 @@ class TrackableMarkerDatabaseANDROID(Structure):
     @dictionary.setter
     def dictionary(self, value: TrackableMarkerDictionaryANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._dictionary = enum_field_helper(dictionary)
+        self._dictionary = enum_field_helper(value)
 
     _fields_ = [
         ("_dictionary", TrackableMarkerDictionaryANDROID.ctype()),
@@ -30434,7 +30371,7 @@ class TrackableMarkerConfigurationANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackableMarkerConfigurationANDROID(tracking_mode={repr(self._tracking_mode)}, database_count={repr(self.database_count)}, databases={repr(self._databases)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TrackableMarkerConfigurationANDROID(tracking_mode={repr(self.tracking_mode)}, database_count={repr(self.database_count)}, databases={repr(self.databases)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TrackableMarkerConfigurationANDROID(tracking_mode={self._tracking_mode}, database_count={self.database_count}, databases={self._databases}, next={self._next}, type={self._type})"
@@ -30446,7 +30383,7 @@ class TrackableMarkerConfigurationANDROID(Structure):
     @tracking_mode.setter
     def tracking_mode(self, value: TrackableMarkerTrackingModeANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._tracking_mode = enum_field_helper(tracking_mode)
+        self._tracking_mode = enum_field_helper(value)
 
     @property
     def databases(self):
@@ -30478,7 +30415,7 @@ class TrackableMarkerConfigurationANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30515,7 +30452,7 @@ class TrackableMarkerANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.TrackableMarkerANDROID(tracking_state={repr(self._tracking_state)}, last_updated_time={repr(self.last_updated_time)}, dictionary={repr(self._dictionary)}, marker_id={repr(self.marker_id)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.TrackableMarkerANDROID(tracking_state={repr(self.tracking_state)}, last_updated_time={repr(self.last_updated_time)}, dictionary={repr(self.dictionary)}, marker_id={repr(self.marker_id)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.TrackableMarkerANDROID(tracking_state={self._tracking_state}, last_updated_time={self.last_updated_time}, dictionary={self._dictionary}, marker_id={self.marker_id}, center_pose={self.center_pose}, extents={self.extents}, next={self._next}, type={self._type})"
@@ -30527,7 +30464,7 @@ class TrackableMarkerANDROID(Structure):
     @tracking_state.setter
     def tracking_state(self, value: TrackingStateANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._tracking_state = enum_field_helper(tracking_state)
+        self._tracking_state = enum_field_helper(value)
 
     @property
     def dictionary(self) -> TrackableMarkerDictionaryANDROID:
@@ -30536,7 +30473,7 @@ class TrackableMarkerANDROID(Structure):
     @dictionary.setter
     def dictionary(self, value: TrackableMarkerDictionaryANDROID) -> None:
         # noinspection PyAttributeOutsideInit
-        self._dictionary = enum_field_helper(dictionary)
+        self._dictionary = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -30554,7 +30491,7 @@ class TrackableMarkerANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30617,7 +30554,7 @@ class SpatialCapabilityComponentTypesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityComponentTypesEXT(component_type_capacity_input={repr(self.component_type_capacity_input)}, component_type_count_output={repr(self.component_type_count_output)}, component_types={repr(self.component_types)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityComponentTypesEXT(component_type_capacity_input={repr(self.component_type_capacity_input)}, component_type_count_output={repr(self.component_type_count_output)}, component_types={repr(self.component_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityComponentTypesEXT(component_type_capacity_input={self.component_type_capacity_input}, component_type_count_output={self.component_type_count_output}, component_types={self.component_types}, next={self._next}, type={self._type})"
@@ -30638,7 +30575,7 @@ class SpatialCapabilityComponentTypesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30669,7 +30606,7 @@ class SpatialCapabilityConfigurationBaseHeaderEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityConfigurationBaseHeaderEXT(capability={repr(self._capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityConfigurationBaseHeaderEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityConfigurationBaseHeaderEXT(capability={self._capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self._next}, type={self._type})"
@@ -30681,7 +30618,7 @@ class SpatialCapabilityConfigurationBaseHeaderEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     @property
     def enabled_components(self):
@@ -30742,7 +30679,7 @@ class SpatialContextCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialContextCreateInfoEXT(capability_config_count={repr(self.capability_config_count)}, capability_configs={repr(self._capability_configs)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialContextCreateInfoEXT(capability_config_count={repr(self.capability_config_count)}, capability_configs={repr(self.capability_configs)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialContextCreateInfoEXT(capability_config_count={self.capability_config_count}, capability_configs={self._capability_configs}, next={self._next}, type={self._type})"
@@ -30777,7 +30714,7 @@ class SpatialContextCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30803,7 +30740,7 @@ class CreateSpatialContextCompletionEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CreateSpatialContextCompletionEXT(future_result={repr(self._future_result)}, spatial_context={repr(self.spatial_context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CreateSpatialContextCompletionEXT(future_result={repr(self.future_result)}, spatial_context={repr(self.spatial_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CreateSpatialContextCompletionEXT(future_result={self._future_result}, spatial_context={self.spatial_context}, next={self._next}, type={self._type})"
@@ -30815,7 +30752,7 @@ class CreateSpatialContextCompletionEXT(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -30833,7 +30770,7 @@ class CreateSpatialContextCompletionEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30861,7 +30798,7 @@ class SpatialDiscoverySnapshotCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialDiscoverySnapshotCreateInfoEXT(component_type_count={repr(self.component_type_count)}, component_types={repr(self._component_types)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialDiscoverySnapshotCreateInfoEXT(component_type_count={repr(self.component_type_count)}, component_types={repr(self.component_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialDiscoverySnapshotCreateInfoEXT(component_type_count={self.component_type_count}, component_types={self._component_types}, next={self._next}, type={self._type})"
@@ -30896,7 +30833,7 @@ class SpatialDiscoverySnapshotCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30924,7 +30861,7 @@ class CreateSpatialDiscoverySnapshotCompletionInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CreateSpatialDiscoverySnapshotCompletionInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, future={repr(self.future)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CreateSpatialDiscoverySnapshotCompletionInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, future={repr(self.future)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CreateSpatialDiscoverySnapshotCompletionInfoEXT(base_space={self.base_space}, time={self.time}, future={self.future}, next={self._next}, type={self._type})"
@@ -30945,7 +30882,7 @@ class CreateSpatialDiscoverySnapshotCompletionInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -30972,7 +30909,7 @@ class CreateSpatialDiscoverySnapshotCompletionEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CreateSpatialDiscoverySnapshotCompletionEXT(future_result={repr(self._future_result)}, snapshot={repr(self.snapshot)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CreateSpatialDiscoverySnapshotCompletionEXT(future_result={repr(self.future_result)}, snapshot={repr(self.snapshot)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CreateSpatialDiscoverySnapshotCompletionEXT(future_result={self._future_result}, snapshot={self.snapshot}, next={self._next}, type={self._type})"
@@ -30984,7 +30921,7 @@ class CreateSpatialDiscoverySnapshotCompletionEXT(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -31002,7 +30939,7 @@ class CreateSpatialDiscoverySnapshotCompletionEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31030,7 +30967,7 @@ class SpatialComponentDataQueryConditionEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentDataQueryConditionEXT(component_type_count={repr(self.component_type_count)}, component_types={repr(self._component_types)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentDataQueryConditionEXT(component_type_count={repr(self.component_type_count)}, component_types={repr(self.component_types)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentDataQueryConditionEXT(component_type_count={self.component_type_count}, component_types={self._component_types}, next={self._next}, type={self._type})"
@@ -31065,7 +31002,7 @@ class SpatialComponentDataQueryConditionEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31099,7 +31036,7 @@ class SpatialComponentDataQueryResultEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentDataQueryResultEXT(entity_id_capacity_input={repr(self.entity_id_capacity_input)}, entity_id_count_output={repr(self.entity_id_count_output)}, entity_ids={repr(self.entity_ids)}, entity_state_capacity_input={repr(self.entity_state_capacity_input)}, entity_state_count_output={repr(self.entity_state_count_output)}, entity_states={repr(self.entity_states)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentDataQueryResultEXT(entity_id_capacity_input={repr(self.entity_id_capacity_input)}, entity_id_count_output={repr(self.entity_id_count_output)}, entity_ids={repr(self.entity_ids)}, entity_state_capacity_input={repr(self.entity_state_capacity_input)}, entity_state_count_output={repr(self.entity_state_count_output)}, entity_states={repr(self.entity_states)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentDataQueryResultEXT(entity_id_capacity_input={self.entity_id_capacity_input}, entity_id_count_output={self.entity_id_count_output}, entity_ids={self.entity_ids}, entity_state_capacity_input={self.entity_state_capacity_input}, entity_state_count_output={self.entity_state_count_output}, entity_states={self.entity_states}, next={self._next}, type={self._type})"
@@ -31120,7 +31057,7 @@ class SpatialComponentDataQueryResultEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31146,7 +31083,7 @@ class SpatialBufferEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialBufferEXT(buffer_id={repr(self.buffer_id)}, buffer_type={repr(self._buffer_type)})"
+        return f"xr.SpatialBufferEXT(buffer_id={repr(self.buffer_id)}, buffer_type={repr(self.buffer_type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialBufferEXT(buffer_id={self.buffer_id}, buffer_type={self._buffer_type})"
@@ -31158,7 +31095,7 @@ class SpatialBufferEXT(Structure):
     @buffer_type.setter
     def buffer_type(self, value: SpatialBufferTypeEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._buffer_type = enum_field_helper(buffer_type)
+        self._buffer_type = enum_field_helper(value)
 
     _fields_ = [
         ("buffer_id", SpatialBufferIdEXT),
@@ -31180,7 +31117,7 @@ class SpatialBufferGetInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialBufferGetInfoEXT(buffer_id={repr(self.buffer_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialBufferGetInfoEXT(buffer_id={repr(self.buffer_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialBufferGetInfoEXT(buffer_id={self.buffer_id}, next={self._next}, type={self._type})"
@@ -31201,7 +31138,7 @@ class SpatialBufferGetInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31253,7 +31190,7 @@ class SpatialComponentBounded2DListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentBounded2DListEXT(bound_count={repr(self.bound_count)}, bounds={repr(self._bounds)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentBounded2DListEXT(bound_count={repr(self.bound_count)}, bounds={repr(self.bounds)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentBounded2DListEXT(bound_count={self.bound_count}, bounds={self._bounds}, next={self._next}, type={self._type})"
@@ -31288,7 +31225,7 @@ class SpatialComponentBounded2DListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31316,7 +31253,7 @@ class SpatialComponentBounded3DListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentBounded3DListEXT(bound_count={repr(self.bound_count)}, bounds={repr(self._bounds)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentBounded3DListEXT(bound_count={repr(self.bound_count)}, bounds={repr(self.bounds)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentBounded3DListEXT(bound_count={self.bound_count}, bounds={self._bounds}, next={self._next}, type={self._type})"
@@ -31351,7 +31288,7 @@ class SpatialComponentBounded3DListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31379,7 +31316,7 @@ class SpatialComponentParentListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentParentListEXT(parent_count={repr(self.parent_count)}, parents={repr(self._parents)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentParentListEXT(parent_count={repr(self.parent_count)}, parents={repr(self.parents)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentParentListEXT(parent_count={self.parent_count}, parents={self._parents}, next={self._next}, type={self._type})"
@@ -31414,7 +31351,7 @@ class SpatialComponentParentListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31472,7 +31409,7 @@ class SpatialComponentMesh3DListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentMesh3DListEXT(mesh_count={repr(self.mesh_count)}, meshes={repr(self._meshes)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentMesh3DListEXT(mesh_count={repr(self.mesh_count)}, meshes={repr(self.meshes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentMesh3DListEXT(mesh_count={self.mesh_count}, meshes={self._meshes}, next={self._next}, type={self._type})"
@@ -31507,7 +31444,7 @@ class SpatialComponentMesh3DListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31531,7 +31468,7 @@ class SpatialEntityFromIdCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityFromIdCreateInfoEXT(entity_id={repr(self.entity_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityFromIdCreateInfoEXT(entity_id={repr(self.entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityFromIdCreateInfoEXT(entity_id={self.entity_id}, next={self._next}, type={self._type})"
@@ -31552,7 +31489,7 @@ class SpatialEntityFromIdCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31587,7 +31524,7 @@ class SpatialUpdateSnapshotCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialUpdateSnapshotCreateInfoEXT(entity_count={repr(self.entity_count)}, entities={repr(self.entities)}, component_type_count={repr(self.component_type_count)}, component_types={repr(self._component_types)}, base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialUpdateSnapshotCreateInfoEXT(entity_count={repr(self.entity_count)}, entities={repr(self.entities)}, component_type_count={repr(self.component_type_count)}, component_types={repr(self.component_types)}, base_space={repr(self.base_space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialUpdateSnapshotCreateInfoEXT(entity_count={self.entity_count}, entities={self.entities}, component_type_count={self.component_type_count}, component_types={self._component_types}, base_space={self.base_space}, time={self.time}, next={self._next}, type={self._type})"
@@ -31622,7 +31559,7 @@ class SpatialUpdateSnapshotCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31650,7 +31587,7 @@ class EventDataSpatialDiscoveryRecommendedEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.EventDataSpatialDiscoveryRecommendedEXT(spatial_context={repr(self.spatial_context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.EventDataSpatialDiscoveryRecommendedEXT(spatial_context={repr(self.spatial_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.EventDataSpatialDiscoveryRecommendedEXT(spatial_context={self.spatial_context}, next={self._next}, type={self._type})"
@@ -31671,7 +31608,7 @@ class EventDataSpatialDiscoveryRecommendedEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31694,7 +31631,7 @@ class SpatialFilterTrackingStateEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialFilterTrackingStateEXT(tracking_state={repr(self._tracking_state)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialFilterTrackingStateEXT(tracking_state={repr(self.tracking_state)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialFilterTrackingStateEXT(tracking_state={self._tracking_state}, next={self._next}, type={self._type})"
@@ -31706,7 +31643,7 @@ class SpatialFilterTrackingStateEXT(Structure):
     @tracking_state.setter
     def tracking_state(self, value: SpatialEntityTrackingStateEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._tracking_state = enum_field_helper(tracking_state)
+        self._tracking_state = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -31724,7 +31661,7 @@ class SpatialFilterTrackingStateEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31794,7 +31731,7 @@ class SpatialCapabilityConfigurationPlaneTrackingEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityConfigurationPlaneTrackingEXT(capability={repr(self._capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityConfigurationPlaneTrackingEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityConfigurationPlaneTrackingEXT(capability={self._capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self._next}, type={self._type})"
@@ -31806,7 +31743,7 @@ class SpatialCapabilityConfigurationPlaneTrackingEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     @property
     def enabled_components(self):
@@ -31838,7 +31775,7 @@ class SpatialCapabilityConfigurationPlaneTrackingEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31867,7 +31804,7 @@ class SpatialComponentPlaneAlignmentListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentPlaneAlignmentListEXT(plane_alignment_count={repr(self.plane_alignment_count)}, plane_alignments={repr(self._plane_alignments)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentPlaneAlignmentListEXT(plane_alignment_count={repr(self.plane_alignment_count)}, plane_alignments={repr(self.plane_alignments)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentPlaneAlignmentListEXT(plane_alignment_count={self.plane_alignment_count}, plane_alignments={self._plane_alignments}, next={self._next}, type={self._type})"
@@ -31902,7 +31839,7 @@ class SpatialComponentPlaneAlignmentListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -31930,7 +31867,7 @@ class SpatialComponentMesh2DListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentMesh2DListEXT(mesh_count={repr(self.mesh_count)}, meshes={repr(self._meshes)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentMesh2DListEXT(mesh_count={repr(self.mesh_count)}, meshes={repr(self.meshes)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentMesh2DListEXT(mesh_count={self.mesh_count}, meshes={self._meshes}, next={self._next}, type={self._type})"
@@ -31965,7 +31902,7 @@ class SpatialComponentMesh2DListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32018,7 +31955,7 @@ class SpatialComponentPolygon2DListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentPolygon2DListEXT(polygon_count={repr(self.polygon_count)}, polygons={repr(self._polygons)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentPolygon2DListEXT(polygon_count={repr(self.polygon_count)}, polygons={repr(self.polygons)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentPolygon2DListEXT(polygon_count={self.polygon_count}, polygons={self._polygons}, next={self._next}, type={self._type})"
@@ -32053,7 +31990,7 @@ class SpatialComponentPolygon2DListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32081,7 +32018,7 @@ class SpatialComponentPlaneSemanticLabelListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentPlaneSemanticLabelListEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self._semantic_labels)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentPlaneSemanticLabelListEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentPlaneSemanticLabelListEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self._semantic_labels}, next={self._next}, type={self._type})"
@@ -32116,7 +32053,7 @@ class SpatialComponentPlaneSemanticLabelListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32146,7 +32083,7 @@ class SpatialCapabilityConfigurationQrCodeEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityConfigurationQrCodeEXT(capability={repr(self._capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityConfigurationQrCodeEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityConfigurationQrCodeEXT(capability={self._capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self._next}, type={self._type})"
@@ -32158,7 +32095,7 @@ class SpatialCapabilityConfigurationQrCodeEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     @property
     def enabled_components(self):
@@ -32190,7 +32127,7 @@ class SpatialCapabilityConfigurationQrCodeEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32221,7 +32158,7 @@ class SpatialCapabilityConfigurationMicroQrCodeEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityConfigurationMicroQrCodeEXT(capability={repr(self._capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityConfigurationMicroQrCodeEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityConfigurationMicroQrCodeEXT(capability={self._capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self._next}, type={self._type})"
@@ -32233,7 +32170,7 @@ class SpatialCapabilityConfigurationMicroQrCodeEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     @property
     def enabled_components(self):
@@ -32265,7 +32202,7 @@ class SpatialCapabilityConfigurationMicroQrCodeEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32298,7 +32235,7 @@ class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityConfigurationArucoMarkerEXT(capability={repr(self._capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, ar_uco_dict={repr(self._ar_uco_dict)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityConfigurationArucoMarkerEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, ar_uco_dict={repr(self.ar_uco_dict)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityConfigurationArucoMarkerEXT(capability={self._capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, ar_uco_dict={self._ar_uco_dict}, next={self._next}, type={self._type})"
@@ -32310,7 +32247,7 @@ class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     @property
     def enabled_components(self):
@@ -32333,7 +32270,7 @@ class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
     @ar_uco_dict.setter
     def ar_uco_dict(self, value: SpatialMarkerArucoDictEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._ar_uco_dict = enum_field_helper(ar_uco_dict)
+        self._ar_uco_dict = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -32351,7 +32288,7 @@ class SpatialCapabilityConfigurationArucoMarkerEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32385,7 +32322,7 @@ class SpatialCapabilityConfigurationAprilTagEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityConfigurationAprilTagEXT(capability={repr(self._capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, april_dict={repr(self._april_dict)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityConfigurationAprilTagEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, april_dict={repr(self.april_dict)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityConfigurationAprilTagEXT(capability={self._capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, april_dict={self._april_dict}, next={self._next}, type={self._type})"
@@ -32397,7 +32334,7 @@ class SpatialCapabilityConfigurationAprilTagEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     @property
     def enabled_components(self):
@@ -32420,7 +32357,7 @@ class SpatialCapabilityConfigurationAprilTagEXT(Structure):
     @april_dict.setter
     def april_dict(self, value: SpatialMarkerAprilTagDictEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._april_dict = enum_field_helper(april_dict)
+        self._april_dict = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -32438,7 +32375,7 @@ class SpatialCapabilityConfigurationAprilTagEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32464,7 +32401,7 @@ class SpatialMarkerSizeEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialMarkerSizeEXT(marker_side_length={repr(self.marker_side_length)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialMarkerSizeEXT(marker_side_length={repr(self.marker_side_length)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialMarkerSizeEXT(marker_side_length={self.marker_side_length:.3f}, next={self._next}, type={self._type})"
@@ -32485,7 +32422,7 @@ class SpatialMarkerSizeEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32508,7 +32445,7 @@ class SpatialMarkerStaticOptimizationEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialMarkerStaticOptimizationEXT(optimize_for_static_marker={repr(self.optimize_for_static_marker)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialMarkerStaticOptimizationEXT(optimize_for_static_marker={repr(self.optimize_for_static_marker)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialMarkerStaticOptimizationEXT(optimize_for_static_marker={self.optimize_for_static_marker}, next={self._next}, type={self._type})"
@@ -32529,7 +32466,7 @@ class SpatialMarkerStaticOptimizationEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32554,7 +32491,7 @@ class SpatialMarkerDataEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialMarkerDataEXT(capability={repr(self._capability)}, marker_id={repr(self.marker_id)}, data={repr(self.data)})"
+        return f"xr.SpatialMarkerDataEXT(capability={repr(self.capability)}, marker_id={repr(self.marker_id)}, data={repr(self.data)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialMarkerDataEXT(capability={self._capability}, marker_id={self.marker_id}, data={self.data})"
@@ -32566,7 +32503,7 @@ class SpatialMarkerDataEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     _fields_ = [
         ("_capability", SpatialCapabilityEXT.ctype()),
@@ -32593,7 +32530,7 @@ class SpatialComponentMarkerListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentMarkerListEXT(marker_count={repr(self.marker_count)}, markers={repr(self._markers)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentMarkerListEXT(marker_count={repr(self.marker_count)}, markers={repr(self.markers)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentMarkerListEXT(marker_count={self.marker_count}, markers={self._markers}, next={self._next}, type={self._type})"
@@ -32628,7 +32565,7 @@ class SpatialComponentMarkerListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32658,7 +32595,7 @@ class SpatialCapabilityConfigurationAnchorEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialCapabilityConfigurationAnchorEXT(capability={repr(self._capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self._enabled_components)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialCapabilityConfigurationAnchorEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialCapabilityConfigurationAnchorEXT(capability={self._capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self._enabled_components}, next={self._next}, type={self._type})"
@@ -32670,7 +32607,7 @@ class SpatialCapabilityConfigurationAnchorEXT(Structure):
     @capability.setter
     def capability(self, value: SpatialCapabilityEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._capability = enum_field_helper(capability)
+        self._capability = enum_field_helper(value)
 
     @property
     def enabled_components(self):
@@ -32702,7 +32639,7 @@ class SpatialCapabilityConfigurationAnchorEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32731,7 +32668,7 @@ class SpatialComponentAnchorListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentAnchorListEXT(location_count={repr(self.location_count)}, locations={repr(self._locations)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentAnchorListEXT(location_count={repr(self.location_count)}, locations={repr(self.locations)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentAnchorListEXT(location_count={self.location_count}, locations={self._locations}, next={self._next}, type={self._type})"
@@ -32766,7 +32703,7 @@ class SpatialComponentAnchorListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32794,7 +32731,7 @@ class SpatialAnchorCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialAnchorCreateInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialAnchorCreateInfoEXT(base_space={repr(self.base_space)}, time={repr(self.time)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorCreateInfoEXT(base_space={self.base_space}, time={self.time}, pose={self.pose}, next={self._next}, type={self._type})"
@@ -32815,7 +32752,7 @@ class SpatialAnchorCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32851,7 +32788,7 @@ class SpatialPersistenceContextCreateInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialPersistenceContextCreateInfoEXT(scope={repr(self._scope)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialPersistenceContextCreateInfoEXT(scope={repr(self.scope)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialPersistenceContextCreateInfoEXT(scope={self._scope}, next={self._next}, type={self._type})"
@@ -32863,7 +32800,7 @@ class SpatialPersistenceContextCreateInfoEXT(Structure):
     @scope.setter
     def scope(self, value: SpatialPersistenceScopeEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._scope = enum_field_helper(scope)
+        self._scope = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -32881,7 +32818,7 @@ class SpatialPersistenceContextCreateInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32908,7 +32845,7 @@ class CreateSpatialPersistenceContextCompletionEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CreateSpatialPersistenceContextCompletionEXT(future_result={repr(self._future_result)}, create_result={repr(self._create_result)}, persistence_context={repr(self.persistence_context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CreateSpatialPersistenceContextCompletionEXT(future_result={repr(self.future_result)}, create_result={repr(self.create_result)}, persistence_context={repr(self.persistence_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CreateSpatialPersistenceContextCompletionEXT(future_result={self._future_result}, create_result={self._create_result}, persistence_context={self.persistence_context}, next={self._next}, type={self._type})"
@@ -32920,7 +32857,7 @@ class CreateSpatialPersistenceContextCompletionEXT(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def create_result(self) -> SpatialPersistenceContextResultEXT:
@@ -32929,7 +32866,7 @@ class CreateSpatialPersistenceContextCompletionEXT(Structure):
     @create_result.setter
     def create_result(self, value: SpatialPersistenceContextResultEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._create_result = enum_field_helper(create_result)
+        self._create_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -32947,7 +32884,7 @@ class CreateSpatialPersistenceContextCompletionEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -32976,7 +32913,7 @@ class SpatialContextPersistenceConfigEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialContextPersistenceConfigEXT(persistence_context_count={repr(self.persistence_context_count)}, persistence_contexts={repr(self._persistence_contexts)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialContextPersistenceConfigEXT(persistence_context_count={repr(self.persistence_context_count)}, persistence_contexts={repr(self.persistence_contexts)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialContextPersistenceConfigEXT(persistence_context_count={self.persistence_context_count}, persistence_contexts={self._persistence_contexts}, next={self._next}, type={self._type})"
@@ -33011,7 +32948,7 @@ class SpatialContextPersistenceConfigEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -33039,7 +32976,7 @@ class SpatialDiscoveryPersistenceUuidFilterEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialDiscoveryPersistenceUuidFilterEXT(persisted_uuid_count={repr(self.persisted_uuid_count)}, persisted_uuids={repr(self._persisted_uuids)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialDiscoveryPersistenceUuidFilterEXT(persisted_uuid_count={repr(self.persisted_uuid_count)}, persisted_uuids={repr(self.persisted_uuids)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialDiscoveryPersistenceUuidFilterEXT(persisted_uuid_count={self.persisted_uuid_count}, persisted_uuids={self._persisted_uuids}, next={self._next}, type={self._type})"
@@ -33074,7 +33011,7 @@ class SpatialDiscoveryPersistenceUuidFilterEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -33098,7 +33035,7 @@ class SpatialPersistenceDataEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialPersistenceDataEXT(persist_uuid={repr(self.persist_uuid)}, persist_state={repr(self._persist_state)})"
+        return f"xr.SpatialPersistenceDataEXT(persist_uuid={repr(self.persist_uuid)}, persist_state={repr(self.persist_state)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialPersistenceDataEXT(persist_uuid={self.persist_uuid}, persist_state={self._persist_state})"
@@ -33110,7 +33047,7 @@ class SpatialPersistenceDataEXT(Structure):
     @persist_state.setter
     def persist_state(self, value: SpatialPersistenceStateEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._persist_state = enum_field_helper(persist_state)
+        self._persist_state = enum_field_helper(value)
 
     _fields_ = [
         ("persist_uuid", Uuid),
@@ -33134,7 +33071,7 @@ class SpatialComponentPersistenceListEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialComponentPersistenceListEXT(persist_data_count={repr(self.persist_data_count)}, persist_data={repr(self.persist_data)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialComponentPersistenceListEXT(persist_data_count={repr(self.persist_data_count)}, persist_data={repr(self.persist_data)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialComponentPersistenceListEXT(persist_data_count={self.persist_data_count}, persist_data={self.persist_data}, next={self._next}, type={self._type})"
@@ -33155,7 +33092,7 @@ class SpatialComponentPersistenceListEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -33190,7 +33127,7 @@ class SpatialEntityPersistInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityPersistInfoEXT(spatial_context={repr(self.spatial_context)}, spatial_entity_id={repr(self.spatial_entity_id)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityPersistInfoEXT(spatial_context={repr(self.spatial_context)}, spatial_entity_id={repr(self.spatial_entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityPersistInfoEXT(spatial_context={self.spatial_context}, spatial_entity_id={self.spatial_entity_id}, next={self._next}, type={self._type})"
@@ -33211,7 +33148,7 @@ class SpatialEntityPersistInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -33241,7 +33178,7 @@ class PersistSpatialEntityCompletionEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.PersistSpatialEntityCompletionEXT(future_result={repr(self._future_result)}, persist_result={repr(self._persist_result)}, persist_uuid={repr(self.persist_uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.PersistSpatialEntityCompletionEXT(future_result={repr(self.future_result)}, persist_result={repr(self.persist_result)}, persist_uuid={repr(self.persist_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.PersistSpatialEntityCompletionEXT(future_result={self._future_result}, persist_result={self._persist_result}, persist_uuid={self.persist_uuid}, next={self._next}, type={self._type})"
@@ -33253,7 +33190,7 @@ class PersistSpatialEntityCompletionEXT(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def persist_result(self) -> SpatialPersistenceContextResultEXT:
@@ -33262,7 +33199,7 @@ class PersistSpatialEntityCompletionEXT(Structure):
     @persist_result.setter
     def persist_result(self, value: SpatialPersistenceContextResultEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._persist_result = enum_field_helper(persist_result)
+        self._persist_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -33280,7 +33217,7 @@ class PersistSpatialEntityCompletionEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -33307,7 +33244,7 @@ class SpatialEntityUnpersistInfoEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SpatialEntityUnpersistInfoEXT(persist_uuid={repr(self.persist_uuid)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SpatialEntityUnpersistInfoEXT(persist_uuid={repr(self.persist_uuid)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SpatialEntityUnpersistInfoEXT(persist_uuid={self.persist_uuid}, next={self._next}, type={self._type})"
@@ -33328,7 +33265,7 @@ class SpatialEntityUnpersistInfoEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -33353,7 +33290,7 @@ class UnpersistSpatialEntityCompletionEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.UnpersistSpatialEntityCompletionEXT(future_result={repr(self._future_result)}, unpersist_result={repr(self._unpersist_result)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.UnpersistSpatialEntityCompletionEXT(future_result={repr(self.future_result)}, unpersist_result={repr(self.unpersist_result)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.UnpersistSpatialEntityCompletionEXT(future_result={self._future_result}, unpersist_result={self._unpersist_result}, next={self._next}, type={self._type})"
@@ -33365,7 +33302,7 @@ class UnpersistSpatialEntityCompletionEXT(Structure):
     @future_result.setter
     def future_result(self, value: Result) -> None:
         # noinspection PyAttributeOutsideInit
-        self._future_result = enum_field_helper(future_result)
+        self._future_result = enum_field_helper(value)
 
     @property
     def unpersist_result(self) -> SpatialPersistenceContextResultEXT:
@@ -33374,7 +33311,7 @@ class UnpersistSpatialEntityCompletionEXT(Structure):
     @unpersist_result.setter
     def unpersist_result(self, value: SpatialPersistenceContextResultEXT) -> None:
         # noinspection PyAttributeOutsideInit
-        self._unpersist_result = enum_field_helper(unpersist_result)
+        self._unpersist_result = enum_field_helper(value)
 
     @property
     def next(self) -> c_void_p:
@@ -33392,7 +33329,7 @@ class UnpersistSpatialEntityCompletionEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -33423,7 +33360,7 @@ class LoaderInitPropertyValueEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LoaderInitPropertyValueEXT(name={repr(self._name)}, value={repr(self._value)})"
+        return f"xr.LoaderInitPropertyValueEXT(name={repr(self.name)}, value={repr(self.value)})"
 
     def __str__(self) -> str:
         return f"xr.LoaderInitPropertyValueEXT(name={self._name}, value={self._value})"
@@ -33470,7 +33407,7 @@ class LoaderInitInfoPropertiesEXT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LoaderInitInfoPropertiesEXT(property_value_count={repr(self.property_value_count)}, property_values={repr(self._property_values)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LoaderInitInfoPropertiesEXT(property_value_count={repr(self.property_value_count)}, property_values={repr(self.property_values)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LoaderInitInfoPropertiesEXT(property_value_count={self.property_value_count}, property_values={self._property_values}, next={self._next}, type={self._type})"
@@ -33505,7 +33442,7 @@ class LoaderInitInfoPropertiesEXT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),

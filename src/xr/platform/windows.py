@@ -223,7 +223,7 @@ class InstanceCreateInfoAndroidKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.InstanceCreateInfoAndroidKHR(application_vm={repr(self.application_vm)}, application_activity={repr(self.application_activity)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.InstanceCreateInfoAndroidKHR(application_vm={repr(self.application_vm)}, application_activity={repr(self.application_activity)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.InstanceCreateInfoAndroidKHR(application_vm={self.application_vm}, application_activity={self.application_activity}, next={self._next}, type={self._type})"
@@ -244,7 +244,7 @@ class InstanceCreateInfoAndroidKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -272,7 +272,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self.view_format_count)}, view_formats={repr(self._view_formats)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={repr(self.view_format_count)}, view_formats={repr(self.view_formats)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VulkanSwapchainFormatListCreateInfoKHR(view_format_count={self.view_format_count}, view_formats={self._view_formats}, next={self._next}, type={self._type})"
@@ -307,7 +307,7 @@ class VulkanSwapchainFormatListCreateInfoKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -333,7 +333,7 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLWin32KHR(h_dc={repr(self.h_dc)}, h_glrc={repr(self.h_glrc)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingOpenGLWin32KHR(h_dc={repr(self.h_dc)}, h_glrc={repr(self.h_glrc)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingOpenGLWin32KHR(h_dc={self.h_dc}, h_glrc={self.h_glrc}, next={self._next}, type={self._type})"
@@ -354,7 +354,7 @@ class GraphicsBindingOpenGLWin32KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -386,7 +386,7 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={repr(self.x_display)}, visualid={repr(self.visualid)}, glx_fbconfig={repr(self.glx_fbconfig)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={repr(self.x_display)}, visualid={repr(self.visualid)}, glx_fbconfig={repr(self.glx_fbconfig)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingOpenGLXlibKHR(x_display={self.x_display}, visualid={self.visualid}, glx_fbconfig={self.glx_fbconfig}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next={self._next}, type={self._type})"
@@ -407,7 +407,7 @@ class GraphicsBindingOpenGLXlibKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -444,7 +444,7 @@ class GraphicsBindingOpenGLXcbKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={repr(self.connection)}, screen_number={repr(self.screen_number)}, fbconfigid={repr(self.fbconfigid)}, visualid={repr(self.visualid)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingOpenGLXcbKHR(connection={repr(self.connection)}, screen_number={repr(self.screen_number)}, fbconfigid={repr(self.fbconfigid)}, visualid={repr(self.visualid)}, glx_drawable={repr(self.glx_drawable)}, glx_context={repr(self.glx_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingOpenGLXcbKHR(connection={self.connection}, screen_number={self.screen_number}, fbconfigid={self.fbconfigid}, visualid={self.visualid}, glx_drawable={self.glx_drawable}, glx_context={self.glx_context}, next={self._next}, type={self._type})"
@@ -465,7 +465,7 @@ class GraphicsBindingOpenGLXcbKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -493,7 +493,7 @@ class GraphicsBindingOpenGLWaylandKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={repr(self.display)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingOpenGLWaylandKHR(display={repr(self.display)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingOpenGLWaylandKHR(display={self.display}, next={self._next}, type={self._type})"
@@ -514,7 +514,7 @@ class GraphicsBindingOpenGLWaylandKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -537,7 +537,7 @@ class SwapchainImageOpenGLKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageOpenGLKHR(image={repr(self.image)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageOpenGLKHR(image={repr(self.image)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageOpenGLKHR(image={self.image}, next={self._next}, type={self._type})"
@@ -558,7 +558,7 @@ class SwapchainImageOpenGLKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -583,7 +583,7 @@ class GraphicsRequirementsOpenGLKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsRequirementsOpenGLKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self._next}, type={self._type})"
@@ -630,7 +630,7 @@ class GraphicsRequirementsOpenGLKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -680,7 +680,7 @@ class GraphicsBindingOpenGLESAndroidKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingOpenGLESAndroidKHR(display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingOpenGLESAndroidKHR(display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingOpenGLESAndroidKHR(display={self.display}, config={self.config}, context={self.context}, next={self._next}, type={self._type})"
@@ -701,7 +701,7 @@ class GraphicsBindingOpenGLESAndroidKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -726,7 +726,7 @@ class SwapchainImageOpenGLESKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageOpenGLESKHR(image={repr(self.image)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageOpenGLESKHR(image={repr(self.image)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageOpenGLESKHR(image={self.image}, next={self._next}, type={self._type})"
@@ -747,7 +747,7 @@ class SwapchainImageOpenGLESKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -772,7 +772,7 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsRequirementsOpenGLESKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self._next}, type={self._type})"
@@ -819,7 +819,7 @@ class GraphicsRequirementsOpenGLESKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -873,7 +873,7 @@ class GraphicsBindingVulkanKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingVulkanKHR(instance={repr(self.instance)}, physical_device={repr(self.physical_device)}, device={repr(self.device)}, queue_family_index={repr(self.queue_family_index)}, queue_index={repr(self.queue_index)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingVulkanKHR(instance={repr(self.instance)}, physical_device={repr(self.physical_device)}, device={repr(self.device)}, queue_family_index={repr(self.queue_family_index)}, queue_index={repr(self.queue_index)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingVulkanKHR(instance={self.instance}, physical_device={self.physical_device}, device={self.device}, queue_family_index={self.queue_family_index}, queue_index={self.queue_index}, next={self._next}, type={self._type})"
@@ -894,7 +894,7 @@ class GraphicsBindingVulkanKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -921,7 +921,7 @@ class SwapchainImageVulkanKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageVulkanKHR(image={repr(self.image)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageVulkanKHR(image={repr(self.image)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageVulkanKHR(image={self.image}, next={self._next}, type={self._type})"
@@ -942,7 +942,7 @@ class SwapchainImageVulkanKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -967,7 +967,7 @@ class GraphicsRequirementsVulkanKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={repr(self._min_api_version_supported)}, max_api_version_supported={repr(self._max_api_version_supported)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={repr(self.min_api_version_supported)}, max_api_version_supported={repr(self.max_api_version_supported)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsRequirementsVulkanKHR(min_api_version_supported={self._min_api_version_supported}, max_api_version_supported={self._max_api_version_supported}, next={self._next}, type={self._type})"
@@ -1014,7 +1014,7 @@ class GraphicsRequirementsVulkanKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1154,7 +1154,7 @@ class GraphicsBindingD3D11KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingD3D11KHR(device={repr(self.device)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingD3D11KHR(device={repr(self.device)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingD3D11KHR(device={self.device}, next={self._next}, type={self._type})"
@@ -1175,7 +1175,7 @@ class GraphicsBindingD3D11KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1198,7 +1198,7 @@ class SwapchainImageD3D11KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageD3D11KHR(texture={repr(self.texture)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageD3D11KHR(texture={repr(self.texture)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageD3D11KHR(texture={self.texture}, next={self._next}, type={self._type})"
@@ -1219,7 +1219,7 @@ class SwapchainImageD3D11KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1244,7 +1244,7 @@ class GraphicsRequirementsD3D11KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsD3D11KHR(adapter_luid={repr(self.adapter_luid)}, min_feature_level={repr(self.min_feature_level)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsRequirementsD3D11KHR(adapter_luid={repr(self.adapter_luid)}, min_feature_level={repr(self.min_feature_level)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsRequirementsD3D11KHR(adapter_luid={self.adapter_luid}, min_feature_level={self.min_feature_level}, next={self._next}, type={self._type})"
@@ -1265,7 +1265,7 @@ class GraphicsRequirementsD3D11KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1313,7 +1313,7 @@ class GraphicsBindingD3D12KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingD3D12KHR(device={repr(self.device)}, queue={repr(self.queue)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingD3D12KHR(device={repr(self.device)}, queue={repr(self.queue)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingD3D12KHR(device={self.device}, queue={self.queue}, next={self._next}, type={self._type})"
@@ -1334,7 +1334,7 @@ class GraphicsBindingD3D12KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1358,7 +1358,7 @@ class SwapchainImageD3D12KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageD3D12KHR(texture={repr(self.texture)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageD3D12KHR(texture={repr(self.texture)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageD3D12KHR(texture={self.texture}, next={self._next}, type={self._type})"
@@ -1379,7 +1379,7 @@ class SwapchainImageD3D12KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1404,7 +1404,7 @@ class GraphicsRequirementsD3D12KHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsD3D12KHR(adapter_luid={repr(self.adapter_luid)}, min_feature_level={repr(self.min_feature_level)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsRequirementsD3D12KHR(adapter_luid={repr(self.adapter_luid)}, min_feature_level={repr(self.min_feature_level)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsRequirementsD3D12KHR(adapter_luid={self.adapter_luid}, min_feature_level={self.min_feature_level}, next={self._next}, type={self._type})"
@@ -1425,7 +1425,7 @@ class GraphicsRequirementsD3D12KHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1471,7 +1471,7 @@ class GraphicsBindingMetalKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingMetalKHR(command_queue={repr(self.command_queue)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingMetalKHR(command_queue={repr(self.command_queue)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingMetalKHR(command_queue={self.command_queue}, next={self._next}, type={self._type})"
@@ -1492,7 +1492,7 @@ class GraphicsBindingMetalKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1515,7 +1515,7 @@ class SwapchainImageMetalKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageMetalKHR(texture={repr(self.texture)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageMetalKHR(texture={repr(self.texture)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageMetalKHR(texture={self.texture}, next={self._next}, type={self._type})"
@@ -1536,7 +1536,7 @@ class SwapchainImageMetalKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1559,7 +1559,7 @@ class GraphicsRequirementsMetalKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsRequirementsMetalKHR(metal_device={repr(self.metal_device)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsRequirementsMetalKHR(metal_device={repr(self.metal_device)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsRequirementsMetalKHR(metal_device={self.metal_device}, next={self._next}, type={self._type})"
@@ -1580,7 +1580,7 @@ class GraphicsRequirementsMetalKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1723,7 +1723,7 @@ class LoaderInitInfoAndroidKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.LoaderInitInfoAndroidKHR(application_vm={repr(self.application_vm)}, application_context={repr(self.application_context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.LoaderInitInfoAndroidKHR(application_vm={repr(self.application_vm)}, application_context={repr(self.application_context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.LoaderInitInfoAndroidKHR(application_vm={self.application_vm}, application_context={self.application_context}, next={self._next}, type={self._type})"
@@ -1744,7 +1744,7 @@ class LoaderInitInfoAndroidKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1792,7 +1792,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanInstanceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VulkanInstanceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VulkanInstanceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self._next}, type={self._type})"
@@ -1813,7 +1813,7 @@ class VulkanInstanceCreateInfoKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1850,7 +1850,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanDeviceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_physical_device={repr(self.vulkan_physical_device)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VulkanDeviceCreateInfoKHR(system_id={repr(self.system_id)}, create_flags={repr(self.create_flags)}, pfn_get_instance_proc_addr={repr(self.pfn_get_instance_proc_addr)}, vulkan_physical_device={repr(self.vulkan_physical_device)}, vulkan_create_info={repr(self.vulkan_create_info)}, vulkan_allocator={repr(self.vulkan_allocator)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VulkanDeviceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_physical_device={self.vulkan_physical_device}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self._next}, type={self._type})"
@@ -1871,7 +1871,7 @@ class VulkanDeviceCreateInfoKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -1904,7 +1904,7 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={repr(self.system_id)}, vulkan_instance={repr(self.vulkan_instance)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={repr(self.system_id)}, vulkan_instance={repr(self.vulkan_instance)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VulkanGraphicsDeviceGetInfoKHR(system_id={self.system_id}, vulkan_instance={self.vulkan_instance}, next={self._next}, type={self._type})"
@@ -1925,7 +1925,7 @@ class VulkanGraphicsDeviceGetInfoKHR(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2038,7 +2038,7 @@ class GraphicsBindingEGLMNDX(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={repr(self.get_proc_address)}, display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.GraphicsBindingEGLMNDX(get_proc_address={repr(self.get_proc_address)}, display={repr(self.display)}, config={repr(self.config)}, context={repr(self.context)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.GraphicsBindingEGLMNDX(get_proc_address={self.get_proc_address}, display={self.display}, config={self.config}, context={self.context}, next={self._next}, type={self._type})"
@@ -2059,7 +2059,7 @@ class GraphicsBindingEGLMNDX(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2132,7 +2132,7 @@ class HolographicWindowAttachmentMSFT(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.HolographicWindowAttachmentMSFT(holographic_space={repr(self.holographic_space)}, core_window={repr(self.core_window)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.HolographicWindowAttachmentMSFT(holographic_space={repr(self.holographic_space)}, core_window={repr(self.core_window)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.HolographicWindowAttachmentMSFT(holographic_space={self.holographic_space}, core_window={self.core_window}, next={self._next}, type={self._type})"
@@ -2153,7 +2153,7 @@ class HolographicWindowAttachmentMSFT(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2191,7 +2191,7 @@ class AndroidSurfaceSwapchainCreateInfoFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.AndroidSurfaceSwapchainCreateInfoFB(create_flags={repr(self.create_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.AndroidSurfaceSwapchainCreateInfoFB(create_flags={repr(self.create_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.AndroidSurfaceSwapchainCreateInfoFB(create_flags={self.create_flags}, next={self._next}, type={self._type})"
@@ -2212,7 +2212,7 @@ class AndroidSurfaceSwapchainCreateInfoFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2237,7 +2237,7 @@ class CoordinateSpaceCreateInfoML(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.CoordinateSpaceCreateInfoML(cfuid={repr(self.cfuid)}, pose_in_coordinate_space={repr(self.pose_in_coordinate_space)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.CoordinateSpaceCreateInfoML(cfuid={repr(self.cfuid)}, pose_in_coordinate_space={repr(self.pose_in_coordinate_space)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.CoordinateSpaceCreateInfoML(cfuid={self.cfuid}, pose_in_coordinate_space={self.pose_in_coordinate_space}, next={self._next}, type={self._type})"
@@ -2258,7 +2258,7 @@ class CoordinateSpaceCreateInfoML(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2349,7 +2349,7 @@ class SwapchainImageFoveationVulkanFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainImageFoveationVulkanFB(image={repr(self.image)}, width={repr(self.width)}, height={repr(self.height)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainImageFoveationVulkanFB(image={repr(self.image)}, width={repr(self.width)}, height={repr(self.height)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageFoveationVulkanFB(image={self.image}, width={self.width}, height={self.height}, next={self._next}, type={self._type})"
@@ -2370,7 +2370,7 @@ class SwapchainImageFoveationVulkanFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2397,7 +2397,7 @@ class SwapchainStateAndroidSurfaceDimensionsFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateAndroidSurfaceDimensionsFB(width={repr(self.width)}, height={repr(self.height)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainStateAndroidSurfaceDimensionsFB(width={repr(self.width)}, height={repr(self.height)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainStateAndroidSurfaceDimensionsFB(width={self.width}, height={self.height}, next={self._next}, type={self._type})"
@@ -2418,7 +2418,7 @@ class SwapchainStateAndroidSurfaceDimensionsFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2462,7 +2462,7 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainStateSamplerOpenGLESFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next={self._next}, type={self._type})"
@@ -2483,7 +2483,7 @@ class SwapchainStateSamplerOpenGLESFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2537,7 +2537,7 @@ class SwapchainStateSamplerVulkanFB(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, mipmap_mode={repr(self.mipmap_mode)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SwapchainStateSamplerVulkanFB(min_filter={repr(self.min_filter)}, mag_filter={repr(self.mag_filter)}, mipmap_mode={repr(self.mipmap_mode)}, wrap_mode_s={repr(self.wrap_mode_s)}, wrap_mode_t={repr(self.wrap_mode_t)}, swizzle_red={repr(self.swizzle_red)}, swizzle_green={repr(self.swizzle_green)}, swizzle_blue={repr(self.swizzle_blue)}, swizzle_alpha={repr(self.swizzle_alpha)}, max_anisotropy={repr(self.max_anisotropy)}, border_color={repr(self.border_color)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SwapchainStateSamplerVulkanFB(min_filter={self.min_filter}, mag_filter={self.mag_filter}, mipmap_mode={self.mipmap_mode}, wrap_mode_s={self.wrap_mode_s}, wrap_mode_t={self.wrap_mode_t}, swizzle_red={self.swizzle_red}, swizzle_green={self.swizzle_green}, swizzle_blue={self.swizzle_blue}, swizzle_alpha={self.swizzle_alpha}, max_anisotropy={self.max_anisotropy:.3f}, border_color={self.border_color}, next={self._next}, type={self._type})"
@@ -2558,7 +2558,7 @@ class SwapchainStateSamplerVulkanFB(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2593,7 +2593,7 @@ class VulkanSwapchainCreateInfoMETA(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={repr(self.additional_create_flags)}, additional_usage_flags={repr(self.additional_usage_flags)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={repr(self.additional_create_flags)}, additional_usage_flags={repr(self.additional_usage_flags)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.VulkanSwapchainCreateInfoMETA(additional_create_flags={self.additional_create_flags}, additional_usage_flags={self.additional_usage_flags}, next={self._next}, type={self._type})"
@@ -2614,7 +2614,7 @@ class VulkanSwapchainCreateInfoMETA(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2638,7 +2638,7 @@ class AnchorSharingInfoANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.AnchorSharingInfoANDROID(anchor={repr(self.anchor)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.AnchorSharingInfoANDROID(anchor={repr(self.anchor)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.AnchorSharingInfoANDROID(anchor={self.anchor}, next={self._next}, type={self._type})"
@@ -2659,7 +2659,7 @@ class AnchorSharingInfoANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2682,7 +2682,7 @@ class AnchorSharingTokenANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.AnchorSharingTokenANDROID(token={repr(self.token)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.AnchorSharingTokenANDROID(token={repr(self.token)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.AnchorSharingTokenANDROID(token={self.token}, next={self._next}, type={self._type})"
@@ -2703,7 +2703,7 @@ class AnchorSharingTokenANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),
@@ -2726,7 +2726,7 @@ class SystemAnchorSharingExportPropertiesANDROID(Structure):
         )
 
     def __repr__(self) -> str:
-        return f"xr.SystemAnchorSharingExportPropertiesANDROID(supports_anchor_sharing_export={repr(self.supports_anchor_sharing_export)}, next={repr(self._next)}, type={repr(self._type)})"
+        return f"xr.SystemAnchorSharingExportPropertiesANDROID(supports_anchor_sharing_export={repr(self.supports_anchor_sharing_export)}, next={repr(self.next)}, type={repr(self.type)})"
 
     def __str__(self) -> str:
         return f"xr.SystemAnchorSharingExportPropertiesANDROID(supports_anchor_sharing_export={self.supports_anchor_sharing_export}, next={self._next}, type={self._type})"
@@ -2747,7 +2747,7 @@ class SystemAnchorSharingExportPropertiesANDROID(Structure):
     @type.setter
     def type(self, value: StructureType) -> None:
         # noinspection PyAttributeOutsideInit
-        self._type = enum_field_helper(type)
+        self._type = enum_field_helper(value)
 
     _fields_ = [
         ("_type", StructureType.ctype()),

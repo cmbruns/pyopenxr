@@ -386,7 +386,7 @@ class FunctionItem(CodeItem):
                 f"""
                 {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
                 """)
-            update_docstrings = False
+            update_docstrings = True  # TODO: cache raw function docstrings
             if update_docstrings:
                 docstring = create_docstring(self.name(Api.C))
             else:
@@ -1243,7 +1243,7 @@ class FieldCoder(object):
         yield f"{self.name}={value}"
 
     def repr_code(self) -> Generator[str, None, None]:
-        yield f"{self.name}={{repr(self.{self.inner_name})}}"
+        yield f"{self.name}={{repr(self.{self.name})}}"
 
 
 class ArrayCountFieldCoder(FieldCoder):
@@ -1345,7 +1345,7 @@ class EnumFieldCoder(FieldCoder):
             yield f"@{self.name}.setter"
             yield f"def {self.name}(self, value: {enum_name}) -> None:"
             yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self.{self.inner_name} = enum_field_helper({self.name})"
+            yield f"    self.{self.inner_name} = enum_field_helper(value)"
 
 
 class FunctionPointerFieldCoder(FieldCoder):
@@ -1548,7 +1548,6 @@ class StructureCoder(object):
     def generate_constructor(self) -> str:
         """Creates __init__(...) method for Structure types"""
         # Special cases for default values
-        # TODO: box/unbox enums
         # TODO: use None as default for pointer fields
         # TODO: create another method for str and repr
         i4 = "    "
