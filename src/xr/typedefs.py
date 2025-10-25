@@ -5466,7 +5466,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
         self,
         message_severities: DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagsEXT.ALL,
         message_types: DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagsEXT.ALL,
-        user_callback: DebugCallbackType = default_debug_callback,
+        user_callback: DebugCallbackType = stdout_debug_callback,
         user_data: Any = None,
         next=None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
