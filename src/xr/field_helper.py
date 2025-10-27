@@ -110,7 +110,10 @@ class _TestStruct(Structure):
     _fields_ = [("next", c_void_p),]
 
 
-def next_field_helper(value) -> c_void_p:
+FieldNextType = Union[c_void_p, POINTER, Structure]
+
+
+def next_field_helper(value: FieldNextType) -> c_void_p:
     """Helper for OpenXR struct 'next' field parameters"""
     # 1) Does ctypes accept this value without complaint?
     try:
@@ -140,6 +143,7 @@ __all__ = [
     "base_array_field_helper",
     "BaseArrayFieldParamType",
     "enum_field_helper",
+    "FieldNextType",
     "next_field_helper",
     "string_array_field_helper",
     "StringArrayFieldParamType",

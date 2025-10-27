@@ -24,7 +24,7 @@ class SomeStruct(Structure):
     ]
 
 
-def tst_field_next():
+def test_field_next():
     # Default construct
     s = SomeStruct()
     assert s.type == xr.StructureType.UNKNOWN
@@ -44,4 +44,4 @@ def tst_field_next():
 
 
 if __name__ == "__main__":
-    tst_field_next()
+    test_field_next()

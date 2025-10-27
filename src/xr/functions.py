@@ -4,7 +4,7 @@ from ctypes import (
     POINTER, byref, c_char, c_float, c_int, c_int64, c_uint16, c_uint32,
     c_uint64, c_uint8, cast, create_string_buffer,
 )
-from typing import Sequence, TypeVar, Type
+from typing import Sequence, TypeVar, Type, Union
 
 """
 File xr.functions.py
@@ -1099,7 +1099,7 @@ def get_visibility_mask_khr(
 
 
 def initialize_loader_khr(
-    loader_init_info: LoaderInitInfoBaseHeaderKHR,
+    loader_init_info: LoaderInitInfoBase,
 ) -> None:
     fxn = cast(
         get_instance_proc_addr(NULL_HANDLE, "xrInitializeLoaderKHR"),
@@ -1195,6 +1195,7 @@ def create_debug_utils_messenger_ext(
         create_info = DebugUtilsMessengerCreateInfoEXT()
     messenger = DebugUtilsMessengerEXT()
     messenger.instance = instance
+    messenger._callback = create_info.user_callback
     fxn = cast(
         get_instance_proc_addr(instance.instance, "xrCreateDebugUtilsMessengerEXT"),
         PFN_xrCreateDebugUtilsMessengerEXT,

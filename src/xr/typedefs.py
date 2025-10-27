@@ -3,7 +3,7 @@
 from ctypes import (
     CFUNCTYPE, POINTER, Structure, addressof, byref, c_char, c_char_p, c_float,
     c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8,
-    c_void_p, cast, py_object,
+    c_void_p, cast, pointer, py_object,
 )
 import ctypes
 
@@ -343,7 +343,7 @@ class InstanceCreateInfo(Structure):
         enabled_api_layer_names: StringArrayFieldParamType = None,
         enabled_extension_count: Optional[int] = None,
         enabled_extension_names: StringArrayFieldParamType = None,
-        next=None,
+        next: FieldNextType = None,
         type: StructureType = StructureType.INSTANCE_CREATE_INFO,
     ) -> None:
         if application_info is None:
@@ -4793,7 +4793,11 @@ class CompositionLayerColorScaleBiasKHR(Structure):
     ]
 
 
-class LoaderInitInfoBaseHeaderKHR(Structure):
+class LoaderInitInfoBase(Structure):
+    pass
+
+
+class LoaderInitInfoBaseHeaderKHR(LoaderInitInfoBase):
     def __init__(
         self,
         next=None,
@@ -5475,7 +5479,7 @@ class DebugUtilsMessengerCreateInfoEXT(Structure):
             message_severities=enum_field_helper(message_severities),
             message_types=enum_field_helper(message_types),
             _user_callback=wrap_debug_callback(user_callback, user_data),
-            _user_data=cast(py_object(user_data), c_void_p) if user_data else None,
+            _user_data=cast(pointer(py_object(user_data)), c_void_p) if user_data else None,
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -33389,7 +33393,7 @@ class LoaderInitPropertyValueEXT(Structure):
     ]
 
 
-class LoaderInitInfoPropertiesEXT(Structure):
+class LoaderInitInfoPropertiesEXT(LoaderInitInfoBase):
     def __init__(
         self,
         property_value_count: Optional[int] = None,
@@ -33776,6 +33780,7 @@ __all__ = [
     "KeyboardTrackingQueryFB",
     "KeyboardTrackingQueryFlagsFBCInt",
     "LipExpressionDataBD",
+    "LoaderInitInfoBase",
     "LoaderInitInfoBaseHeaderKHR",
     "LoaderInitInfoPropertiesEXT",
     "LoaderInitPropertyValueEXT",

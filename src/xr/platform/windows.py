@@ -1707,7 +1707,7 @@ def convert_time_to_timespec_time_khr(
     return timespec_time
 
 
-class LoaderInitInfoAndroidKHR(Structure):
+class LoaderInitInfoAndroidKHR(LoaderInitInfoBase):
     def __init__(
         self,
         application_vm: c_void_p = None,
