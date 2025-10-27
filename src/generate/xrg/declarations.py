@@ -4,7 +4,7 @@ import inspect
 from numbers import Number
 import re
 import textwrap
-from typing import Generator, Set, Union
+from typing import Generator, Set, Union, Optional
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
@@ -541,6 +541,7 @@ class StructItem(CodeItem):
         self._capi_name = capi_type_name(self.c_name)
         self._py_name = py_type_name(self._capi_name)
         self.fields = []
+        self.base, self.skip_count = parent_struct(self._py_name)
         for c in cursor.get_children():
             if c.kind == CursorKind.FIELD_DECL:
                 self.fields.append(StructFieldItem(c))
@@ -679,7 +680,7 @@ class StructItem(CodeItem):
     def code(self, api: Api = Api.PYTHON) -> str:
         if api == Api.C:
             raise NotImplementedError
-        result = f"class {self.name(api)}(Structure):"
+        result = f"class {self.name(api)}({self.base}):"
         doc_key = f"xr.{self.name()}"
         if doc_key in class_docstrings:
             docstring = class_docstrings[doc_key]["docstring"]
@@ -687,7 +688,7 @@ class StructItem(CodeItem):
             docstring = f'\n"""\n{inspect.cleandoc(docstring)}\n"""'
             docstring = textwrap.indent(docstring, " " * 4)
             result += docstring
-        if len(self.fields) == 0:
+        if len(self.fields) <= self.skip_count:  # Skip type/next
             # Empty structure
             result += "\n    pass"
             return result
@@ -1237,9 +1238,9 @@ class FieldCoder(object):
 
     def str_code(self) -> Generator[str, None, None]:
         if self.field.type.name(Api.CTYPES) == "c_float":
-            value = f"{{self.{self.inner_name}:.3f}}"
+            value = f"{{self.{self.name}:.3f}}"
         else:
-            value = f"{{self.{self.inner_name}}}"
+            value = f"{{self.{self.name}}}"
         yield f"{self.name}={value}"
 
     def repr_code(self) -> Generator[str, None, None]:
@@ -1398,17 +1399,8 @@ class NextFieldCoder(FieldCoder):
         yield f"{self.name}=None"
 
     def property_code(self) -> Generator[str, None, None]:
-        if self.inner_name != self.name:
-            # getter
-            yield "@property"
-            yield f"def {self.name}(self) -> c_void_p:"
-            yield f"    return self.{self.inner_name}"
-            # setter
-            yield ""
-            yield f"@next.setter"
-            yield f"def {self.name}(self, value) -> None:"
-            yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self.{self.inner_name} = next_field_helper(value)"
+        # properties already set in base classes
+        yield from []
 
 
 class VoidPointerFieldCoder(FieldCoder):
@@ -1483,10 +1475,20 @@ class StructureTypeFieldCoder(EnumFieldCoder):
         type_enum_name = structure_type_enum_name(self.struct)
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = StructureType.{type_enum_name}"
 
+    def property_code(self) -> Generator[str, None, None]:
+        yield from []  # Property already set in base class
 
-class BaseStructureTypeFieldCoder(FieldCoder):
+
+class BaseStructureTypeFieldCoder(EnumFieldCoder):
+    def __init__(self, field, struct):
+        super().__init__(field)
+        self.struct = struct
+
     def param_code(self) -> Generator[str, None, None]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = StructureType.UNKNOWN"
+
+    def property_code(self) -> Generator[str, None, None]:
+        yield from []  # Property already set in base class
 
 
 class StructureCoder(object):
@@ -1500,7 +1502,7 @@ class StructureCoder(object):
                 self.field_coders.append(VoidPointerFieldCoder(field))
             elif field.type.name(Api.PYTHON) == "StructureType":
                 if "Base" in struct.name():
-                    self.field_coders.append(BaseStructureTypeFieldCoder(field))
+                    self.field_coders.append(BaseStructureTypeFieldCoder(field, struct))
                 else:
                     self.field_coders.append(StructureTypeFieldCoder(field, struct))
             elif field.type.name(Api.PYTHON) == "str":
@@ -1575,23 +1577,27 @@ class StructureCoder(object):
 
     def generate_fields(self, api: Api = Api.PYTHON) -> str:
         result = ""
+        skip = self.struct.skip_count
+        if len(self.struct.fields) <= skip:
+            return result  # Skip next/type
         # Recursive structures require two separate stanzas
         if self.struct.is_recursive:
             # Structure containing self-reference must be declared in two stanzas
             result += "\n    pass"
             result += f"\n\n\n{self.struct.name(api)}._fields_ = ["
-            for f in self.struct.fields:
+            for f in self.struct.fields[skip:]:  # Skip type/next
                 result += f.code(api.CTYPES).replace("    ", "", 1)
             result += "\n]"
         else:
-            result += "\n    _fields_ = ["
-            for f in self.struct.fields:
+            result += "\n    _fields_ = ["  # Skip type/next
+            for f in self.struct.fields[skip:]:
                 result += f.code(api.CTYPES)
             result += "\n    ]"
         return result
 
     def generate_properties(self) -> str:
         result = ""
+        skip = self.struct.skip_count
         for fc in self.field_coders:
             prop_strings = []
             for s in fc.property_code():
@@ -1670,6 +1676,27 @@ def camel_from_snake(snake: str) -> str:
 def structure_type_enum_name(struct: StructItem):
     type_enum_name = snake_from_camel(struct.name()).upper()
     return type_enum_name
+
+
+_struct_parents = {}
+
+
+def parent_struct(derived_struct_name: str) -> tuple[str, int]:
+    if len(_struct_parents) == 0:
+        member_counts = {}
+        for struct in xr_registry.findall("types/type"):
+            if "name" in struct.attrib:
+                name = struct.attrib["name"].removeprefix("Xr")
+                if "BaseHeader" in name:
+                    member_count = len(list(struct.findall("member")))
+                    member_counts[name] = member_count
+        for struct in xr_registry.findall("types/type"):
+            if "parentstruct" not in struct.attrib:
+                continue
+            parent = struct.attrib["parentstruct"].removeprefix("Xr")
+            child = struct.attrib["name"].removeprefix("Xr")
+            _struct_parents[child] = (parent, member_counts[parent])
+    return _struct_parents.get(derived_struct_name, ("BaseXrStructure", 2))
 
 
 _enum_defaults = {}

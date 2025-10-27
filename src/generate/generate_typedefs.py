@@ -27,6 +27,7 @@ def main():
         
         import numpy
 
+        from .base_struct import BaseXrStructure
         from .callback import *
         from .enums import *
         from .field_helper import *
