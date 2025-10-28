@@ -52,13 +52,13 @@ def main():
 
     class EnumBase(enum.IntEnum, metaclass=DefaultEnumMeta):
         @staticmethod
-        def ctype():
+        def ctype() -> type:
             return c_int
     
 
     class FlagBase(enum.IntFlag, metaclass=DefaultEnumMeta):
         @staticmethod
-        def ctype():
+        def ctype() -> type:
             return c_uint64
     '''))
     cg.print_items()

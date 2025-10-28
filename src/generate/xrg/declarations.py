@@ -636,7 +636,7 @@ class StructItem(CodeItem):
         # Finish constructor
         result += "        self._numpy = None\n"
         # Iterator
-        result += f"\n    def __iter__(self) -> Generator[{field_pytype}, None, None]:\n"
+        result += f"\n    def __iter__(self) -> Iterator[{field_pytype}]:\n"
         for f in self.fields:
             result += f"        yield self.{f.name()}\n"
         result += "\n"
@@ -1310,7 +1310,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         element_type = self.field.type.pointee.name(Api.CTYPES)  # noqa
         # getter
         yield "@property"
-        yield f"def {self.name}(self):"
+        yield f"def {self.name}(self) -> Array[{element_type}]:"
         yield f"    if self.{count} == 0:"
         yield f"        return ({element_type} * 0)()"
         yield f"    else:"

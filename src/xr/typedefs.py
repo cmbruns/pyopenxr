@@ -1,7 +1,7 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import (
-    CFUNCTYPE, POINTER, Structure, addressof, byref, c_char, c_char_p, c_float,
+    Array, CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_float,
     c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8,
     c_void_p, cast, pointer, py_object,
 )
@@ -9,7 +9,7 @@ import ctypes
 
 import os
 import sys
-from typing import Any, Callable, Generator, Optional
+from typing import Any, Iterator, Optional, Sequence
 
 import numpy
 
@@ -340,7 +340,7 @@ class InstanceCreateInfo(BaseXrStructure):
         self._create_flags = enum_field_helper(value)
 
     @property
-    def enabled_api_layer_names(self):
+    def enabled_api_layer_names(self) -> Array[c_char_p]:
         if self.enabled_api_layer_count == 0:
             return (c_char_p * 0)()
         else:
@@ -354,7 +354,7 @@ class InstanceCreateInfo(BaseXrStructure):
             None, value)
 
     @property
-    def enabled_extension_names(self):
+    def enabled_extension_names(self) -> Array[c_char_p]:
         if self.enabled_extension_count == 0:
             return (c_char_p * 0)()
         else:
@@ -611,7 +611,7 @@ class Vector3f(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.x
         yield self.y
         yield self.z
@@ -704,7 +704,7 @@ class Quaternionf(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.x
         yield self.y
         yield self.z
@@ -815,7 +815,7 @@ class Extent2Df(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.width
         yield self.height
 
@@ -1220,7 +1220,7 @@ class FrameEndInfo(BaseXrStructure):
         self._environment_blend_mode = enum_field_helper(value)
 
     @property
-    def layers(self):
+    def layers(self) -> Array[POINTER(CompositionLayerBaseHeader)]:
         if self.layer_count == 0:
             return (POINTER(CompositionLayerBaseHeader) * 0)()
         else:
@@ -1329,7 +1329,7 @@ class Fovf(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.angle_left
         yield self.angle_right
         yield self.angle_up
@@ -1463,7 +1463,7 @@ class ActionCreateInfo(BaseXrStructure):
         self._action_type = enum_field_helper(value)
 
     @property
-    def subaction_paths(self):
+    def subaction_paths(self) -> Array[c_uint64]:
         if self.count_subaction_paths == 0:
             return (c_uint64 * 0)()
         else:
@@ -1534,7 +1534,7 @@ class InteractionProfileSuggestedBinding(BaseXrStructure):
         return f"xr.InteractionProfileSuggestedBinding(interaction_profile={self.interaction_profile}, count_suggested_bindings={self.count_suggested_bindings}, suggested_bindings={self.suggested_bindings}, next={self.next}, type={self.type})"
 
     @property
-    def suggested_bindings(self):
+    def suggested_bindings(self) -> Array[ActionSuggestedBinding]:
         if self.count_suggested_bindings == 0:
             return (ActionSuggestedBinding * 0)()
         else:
@@ -1578,7 +1578,7 @@ class SessionActionSetsAttachInfo(BaseXrStructure):
         return f"xr.SessionActionSetsAttachInfo(count_action_sets={self.count_action_sets}, action_sets={self.action_sets}, next={self.next}, type={self.type})"
 
     @property
-    def action_sets(self):
+    def action_sets(self) -> Array[ActionSet]:
         if self.count_action_sets == 0:
             return (ActionSet * 0)()
         else:
@@ -1726,7 +1726,7 @@ class Vector2f(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.x
         yield self.y
 
@@ -1864,7 +1864,7 @@ class ActionsSyncInfo(BaseXrStructure):
         return f"xr.ActionsSyncInfo(count_active_action_sets={self.count_active_action_sets}, active_action_sets={self.active_action_sets}, next={self.next}, type={self.type})"
 
     @property
-    def active_action_sets(self):
+    def active_action_sets(self) -> Array[ActiveActionSet]:
         if self.count_active_action_sets == 0:
             return (ActiveActionSet * 0)()
         else:
@@ -1994,7 +1994,7 @@ class Offset2Di(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[int, None, None]:
+    def __iter__(self) -> Iterator[int]:
         yield self.x
         yield self.y
 
@@ -2038,7 +2038,7 @@ class Extent2Di(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[int, None, None]:
+    def __iter__(self) -> Iterator[int]:
         yield self.width
         yield self.height
 
@@ -2187,7 +2187,7 @@ class CompositionLayerProjection(CompositionLayerBaseHeader):
         return f"xr.CompositionLayerProjection(layer_flags={self.layer_flags}, space={self.space}, view_count={self.view_count}, views={self.views}, next={self.next}, type={self.type})"
 
     @property
-    def views(self):
+    def views(self) -> Array[CompositionLayerProjectionView]:
         if self.view_count == 0:
             return (CompositionLayerProjectionView * 0)()
         else:
@@ -2458,7 +2458,7 @@ class Offset2Df(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.x
         yield self.y
 
@@ -2533,7 +2533,7 @@ class Vector4f(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.x
         yield self.y
         yield self.z
@@ -2585,7 +2585,7 @@ class Color4f(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.r
         yield self.g
         yield self.b
@@ -2746,7 +2746,7 @@ class Color3f(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.r
         yield self.g
         yield self.b
@@ -2794,7 +2794,7 @@ class Extent3Df(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.width
         yield self.height
         yield self.depth
@@ -2953,7 +2953,7 @@ class SpacesLocateInfo(BaseXrStructure):
         return f"xr.SpacesLocateInfo(base_space={self.base_space}, time={self.time}, space_count={self.space_count}, spaces={self.spaces}, next={self.next}, type={self.type})"
 
     @property
-    def spaces(self):
+    def spaces(self) -> Array[Space]:
         if self.space_count == 0:
             return (Space * 0)()
         else:
@@ -3030,7 +3030,7 @@ class SpaceLocations(BaseXrStructure):
         return f"xr.SpaceLocations(location_count={self.location_count}, locations={self.locations}, next={self.next}, type={self.type})"
 
     @property
-    def locations(self):
+    def locations(self) -> Array[SpaceLocationData]:
         if self.location_count == 0:
             return (SpaceLocationData * 0)()
         else:
@@ -3520,7 +3520,7 @@ class BindingModificationsKHR(BaseXrStructure):
         return f"xr.BindingModificationsKHR(binding_modification_count={self.binding_modification_count}, binding_modifications={self.binding_modifications}, next={self.next}, type={self.type})"
 
     @property
-    def binding_modifications(self):
+    def binding_modifications(self) -> Array[POINTER(BindingModificationBaseHeaderKHR)]:
         if self.binding_modification_count == 0:
             return (POINTER(BindingModificationBaseHeaderKHR) * 0)()
         else:
@@ -3832,7 +3832,7 @@ class DebugUtilsMessengerCallbackDataEXT(BaseXrStructure):
         self._message = value.encode()
 
     @property
-    def objects(self):
+    def objects(self) -> Array[DebugUtilsObjectNameInfoEXT]:
         if self.object_count == 0:
             return (DebugUtilsObjectNameInfoEXT * 0)()
         else:
@@ -3846,7 +3846,7 @@ class DebugUtilsMessengerCallbackDataEXT(BaseXrStructure):
             DebugUtilsObjectNameInfoEXT, None, value)
 
     @property
-    def session_labels(self):
+    def session_labels(self) -> Array[DebugUtilsLabelEXT]:
         if self.session_label_count == 0:
             return (DebugUtilsLabelEXT * 0)()
         else:
@@ -4647,7 +4647,7 @@ class HandJointLocationsEXT(BaseXrStructure):
         return f"xr.HandJointLocationsEXT(is_active={self.is_active}, joint_count={self.joint_count}, joint_locations={self.joint_locations}, next={self.next}, type={self.type})"
 
     @property
-    def joint_locations(self):
+    def joint_locations(self) -> Array[HandJointLocationEXT]:
         if self.joint_count == 0:
             return (HandJointLocationEXT * 0)()
         else:
@@ -4691,7 +4691,7 @@ class HandJointVelocitiesEXT(BaseXrStructure):
         return f"xr.HandJointVelocitiesEXT(joint_count={self.joint_count}, joint_velocities={self.joint_velocities}, next={self.next}, type={self.type})"
 
     @property
-    def joint_velocities(self):
+    def joint_velocities(self) -> Array[HandJointVelocityEXT]:
         if self.joint_count == 0:
             return (HandJointVelocityEXT * 0)()
         else:
@@ -5006,7 +5006,7 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(BaseXrStructure):
         return f"xr.SecondaryViewConfigurationSessionBeginInfoMSFT(view_configuration_count={self.view_configuration_count}, enabled_view_configuration_types={self.enabled_view_configuration_types}, next={self.next}, type={self.type})"
 
     @property
-    def enabled_view_configuration_types(self):
+    def enabled_view_configuration_types(self) -> Array[c_int]:
         if self.view_configuration_count == 0:
             return (c_int * 0)()
         else:
@@ -5085,7 +5085,7 @@ class SecondaryViewConfigurationFrameStateMSFT(BaseXrStructure):
         return f"xr.SecondaryViewConfigurationFrameStateMSFT(view_configuration_count={self.view_configuration_count}, view_configuration_states={self.view_configuration_states}, next={self.next}, type={self.type})"
 
     @property
-    def view_configuration_states(self):
+    def view_configuration_states(self) -> Array[SecondaryViewConfigurationStateMSFT]:
         if self.view_configuration_count == 0:
             return (SecondaryViewConfigurationStateMSFT * 0)()
         else:
@@ -5150,7 +5150,7 @@ class SecondaryViewConfigurationLayerInfoMSFT(BaseXrStructure):
         self._environment_blend_mode = enum_field_helper(value)
 
     @property
-    def layers(self):
+    def layers(self) -> Array[POINTER(CompositionLayerBaseHeader)]:
         if self.layer_count == 0:
             return (POINTER(CompositionLayerBaseHeader) * 0)()
         else:
@@ -5672,7 +5672,7 @@ class BodySkeletonFB(BaseXrStructure):
         return f"xr.BodySkeletonFB(joint_count={self.joint_count}, joints={self.joints}, next={self.next}, type={self.type})"
 
     @property
-    def joints(self):
+    def joints(self) -> Array[BodySkeletonJointFB]:
         if self.joint_count == 0:
             return (BodySkeletonJointFB * 0)()
         else:
@@ -5750,7 +5750,7 @@ class BodyJointLocationsFB(BaseXrStructure):
         return f"xr.BodyJointLocationsFB(is_active={self.is_active}, confidence={self.confidence:.3f}, joint_count={self.joint_count}, joint_locations={self.joint_locations}, skeleton_changed_count={self.skeleton_changed_count}, time={self.time}, next={self.next}, type={self.type})"
 
     @property
-    def joint_locations(self):
+    def joint_locations(self) -> Array[BodyJointLocationFB]:
         if self.joint_count == 0:
             return (BodyJointLocationFB * 0)()
         else:
@@ -6058,7 +6058,7 @@ class SceneBoundsMSFT(Structure):
         return f"xr.SceneBoundsMSFT(space={self.space}, time={self.time}, sphere_count={self.sphere_count}, spheres={self.spheres}, box_count={self.box_count}, boxes={self.boxes}, frustum_count={self.frustum_count}, frustums={self.frustums})"
 
     @property
-    def spheres(self):
+    def spheres(self) -> Array[SceneSphereBoundMSFT]:
         if self.sphere_count == 0:
             return (SceneSphereBoundMSFT * 0)()
         else:
@@ -6072,7 +6072,7 @@ class SceneBoundsMSFT(Structure):
             SceneSphereBoundMSFT, None, value)
 
     @property
-    def boxes(self):
+    def boxes(self) -> Array[SceneOrientedBoxBoundMSFT]:
         if self.box_count == 0:
             return (SceneOrientedBoxBoundMSFT * 0)()
         else:
@@ -6086,7 +6086,7 @@ class SceneBoundsMSFT(Structure):
             SceneOrientedBoxBoundMSFT, None, value)
 
     @property
-    def frustums(self):
+    def frustums(self) -> Array[SceneFrustumBoundMSFT]:
         if self.frustum_count == 0:
             return (SceneFrustumBoundMSFT * 0)()
         else:
@@ -6141,7 +6141,7 @@ class NewSceneComputeInfoMSFT(BaseXrStructure):
         return f"xr.NewSceneComputeInfoMSFT(requested_feature_count={self.requested_feature_count}, requested_features={self.requested_features}, consistency={self.consistency}, bounds={self.bounds}, next={self.next}, type={self.type})"
 
     @property
-    def requested_features(self):
+    def requested_features(self) -> Array[c_int]:
         if self.requested_feature_count == 0:
             return (c_int * 0)()
         else:
@@ -6365,7 +6365,7 @@ class SceneComponentLocationsMSFT(BaseXrStructure):
         return f"xr.SceneComponentLocationsMSFT(location_count={self.location_count}, locations={self.locations}, next={self.next}, type={self.type})"
 
     @property
-    def locations(self):
+    def locations(self) -> Array[SceneComponentLocationMSFT]:
         if self.location_count == 0:
             return (SceneComponentLocationMSFT * 0)()
         else:
@@ -6412,7 +6412,7 @@ class SceneComponentsLocateInfoMSFT(BaseXrStructure):
         return f"xr.SceneComponentsLocateInfoMSFT(base_space={self.base_space}, time={self.time}, component_id_count={self.component_id_count}, component_ids={self.component_ids}, next={self.next}, type={self.type})"
 
     @property
-    def component_ids(self):
+    def component_ids(self) -> Array[UuidMSFT]:
         if self.component_id_count == 0:
             return (UuidMSFT * 0)()
         else:
@@ -6486,7 +6486,7 @@ class SceneObjectsMSFT(BaseXrStructure):
         return f"xr.SceneObjectsMSFT(scene_object_count={self.scene_object_count}, scene_objects={self.scene_objects}, next={self.next}, type={self.type})"
 
     @property
-    def scene_objects(self):
+    def scene_objects(self) -> Array[SceneObjectMSFT]:
         if self.scene_object_count == 0:
             return (SceneObjectMSFT * 0)()
         else:
@@ -6555,7 +6555,7 @@ class SceneObjectTypesFilterInfoMSFT(BaseXrStructure):
         return f"xr.SceneObjectTypesFilterInfoMSFT(object_type_count={self.object_type_count}, object_types={self.object_types}, next={self.next}, type={self.type})"
 
     @property
-    def object_types(self):
+    def object_types(self) -> Array[c_int]:
         if self.object_type_count == 0:
             return (c_int * 0)()
         else:
@@ -6638,7 +6638,7 @@ class ScenePlanesMSFT(BaseXrStructure):
         return f"xr.ScenePlanesMSFT(scene_plane_count={self.scene_plane_count}, scene_planes={self.scene_planes}, next={self.next}, type={self.type})"
 
     @property
-    def scene_planes(self):
+    def scene_planes(self) -> Array[ScenePlaneMSFT]:
         if self.scene_plane_count == 0:
             return (ScenePlaneMSFT * 0)()
         else:
@@ -6681,7 +6681,7 @@ class ScenePlaneAlignmentFilterInfoMSFT(BaseXrStructure):
         return f"xr.ScenePlaneAlignmentFilterInfoMSFT(alignment_count={self.alignment_count}, alignments={self.alignments}, next={self.next}, type={self.type})"
 
     @property
-    def alignments(self):
+    def alignments(self) -> Array[c_int]:
         if self.alignment_count == 0:
             return (c_int * 0)()
         else:
@@ -6747,7 +6747,7 @@ class SceneMeshesMSFT(BaseXrStructure):
         return f"xr.SceneMeshesMSFT(scene_mesh_count={self.scene_mesh_count}, scene_meshes={self.scene_meshes}, next={self.next}, type={self.type})"
 
     @property
-    def scene_meshes(self):
+    def scene_meshes(self) -> Array[SceneMeshMSFT]:
         if self.scene_mesh_count == 0:
             return (SceneMeshMSFT * 0)()
         else:
@@ -6978,7 +6978,7 @@ class SceneDeserializeInfoMSFT(BaseXrStructure):
         return f"xr.SceneDeserializeInfoMSFT(fragment_count={self.fragment_count}, fragments={self.fragments}, next={self.next}, type={self.type})"
 
     @property
-    def fragments(self):
+    def fragments(self) -> Array[DeserializeSceneFragmentMSFT]:
         if self.fragment_count == 0:
             return (DeserializeSceneFragmentMSFT * 0)()
         else:
@@ -7153,7 +7153,7 @@ class FacialExpressionsHTC(BaseXrStructure):
         return f"xr.FacialExpressionsHTC(is_active={self.is_active}, sample_time={self.sample_time}, expression_count={self.expression_count}, expression_weightings={self.expression_weightings}, next={self.next}, type={self.type})"
 
     @property
-    def expression_weightings(self):
+    def expression_weightings(self) -> Array[c_float]:
         if self.expression_count == 0:
             return (c_float * 0)()
         else:
@@ -9621,7 +9621,7 @@ class CreateSpatialAnchorsCompletionML(FutureCompletionBaseHeaderEXT):
         return f"xr.CreateSpatialAnchorsCompletionML(future_result={self.future_result}, space_count={self.space_count}, spaces={self.spaces}, next={self.next}, type={self.type})"
 
     @property
-    def spaces(self):
+    def spaces(self) -> Array[Space]:
         if self.space_count == 0:
             return (Space * 0)()
         else:
@@ -9789,7 +9789,7 @@ class SpatialAnchorsCreateInfoFromUuidsML(SpatialAnchorsCreateInfoBaseHeaderML):
         return f"xr.SpatialAnchorsCreateInfoFromUuidsML(storage={self.storage}, uuid_count={self.uuid_count}, uuids={self.uuids}, next={self.next}, type={self.type})"
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[Uuid]:
         if self.uuid_count == 0:
             return (Uuid * 0)()
         else:
@@ -9835,7 +9835,7 @@ class SpatialAnchorsPublishInfoML(BaseXrStructure):
         return f"xr.SpatialAnchorsPublishInfoML(anchor_count={self.anchor_count}, anchors={self.anchors}, expiration={self.expiration}, next={self.next}, type={self.type})"
 
     @property
-    def anchors(self):
+    def anchors(self) -> Array[Space]:
         if self.anchor_count == 0:
             return (Space * 0)()
         else:
@@ -9881,7 +9881,7 @@ class SpatialAnchorsPublishCompletionML(FutureCompletionBaseHeaderEXT):
         return f"xr.SpatialAnchorsPublishCompletionML(future_result={self.future_result}, uuid_count={self.uuid_count}, uuids={self.uuids}, next={self.next}, type={self.type})"
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[UuidEXT]:
         if self.uuid_count == 0:
             return (UuidEXT * 0)()
         else:
@@ -9924,7 +9924,7 @@ class SpatialAnchorsDeleteInfoML(BaseXrStructure):
         return f"xr.SpatialAnchorsDeleteInfoML(uuid_count={self.uuid_count}, uuids={self.uuids}, next={self.next}, type={self.type})"
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[Uuid]:
         if self.uuid_count == 0:
             return (Uuid * 0)()
         else:
@@ -9973,7 +9973,7 @@ class SpatialAnchorsUpdateExpirationInfoML(BaseXrStructure):
         return f"xr.SpatialAnchorsUpdateExpirationInfoML(uuid_count={self.uuid_count}, uuids={self.uuids}, expiration={self.expiration}, next={self.next}, type={self.type})"
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[Uuid]:
         if self.uuid_count == 0:
             return (Uuid * 0)()
         else:
@@ -10053,7 +10053,7 @@ class SpatialAnchorsPublishCompletionDetailsML(BaseXrStructure):
         return f"xr.SpatialAnchorsPublishCompletionDetailsML(result_count={self.result_count}, results={self.results}, next={self.next}, type={self.type})"
 
     @property
-    def results(self):
+    def results(self) -> Array[SpatialAnchorCompletionResultML]:
         if self.result_count == 0:
             return (SpatialAnchorCompletionResultML * 0)()
         else:
@@ -10096,7 +10096,7 @@ class SpatialAnchorsDeleteCompletionDetailsML(BaseXrStructure):
         return f"xr.SpatialAnchorsDeleteCompletionDetailsML(result_count={self.result_count}, results={self.results}, next={self.next}, type={self.type})"
 
     @property
-    def results(self):
+    def results(self) -> Array[SpatialAnchorCompletionResultML]:
         if self.result_count == 0:
             return (SpatialAnchorCompletionResultML * 0)()
         else:
@@ -10139,7 +10139,7 @@ class SpatialAnchorsUpdateExpirationCompletionDetailsML(BaseXrStructure):
         return f"xr.SpatialAnchorsUpdateExpirationCompletionDetailsML(result_count={self.result_count}, results={self.results}, next={self.next}, type={self.type})"
 
     @property
-    def results(self):
+    def results(self) -> Array[SpatialAnchorCompletionResultML]:
         if self.result_count == 0:
             return (SpatialAnchorCompletionResultML * 0)()
         else:
@@ -10373,7 +10373,7 @@ class SceneMarkerTypeFilterMSFT(BaseXrStructure):
         return f"xr.SceneMarkerTypeFilterMSFT(marker_type_count={self.marker_type_count}, marker_types={self.marker_types}, next={self.next}, type={self.type})"
 
     @property
-    def marker_types(self):
+    def marker_types(self) -> Array[SceneMarkerTypeMSFT.ctype()]:
         if self.marker_type_count == 0:
             return (SceneMarkerTypeMSFT.ctype() * 0)()
         else:
@@ -10566,7 +10566,7 @@ class SpaceUuidFilterInfoFB(SpaceFilterInfoBaseHeaderFB):
         return f"xr.SpaceUuidFilterInfoFB(uuid_count={self.uuid_count}, uuids={self.uuids}, next={self.next}, type={self.type})"
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[UuidEXT]:
         if self.uuid_count == 0:
             return (UuidEXT * 0)()
         else:
@@ -10971,7 +10971,7 @@ class SpaceShareInfoFB(BaseXrStructure):
         return f"xr.SpaceShareInfoFB(space_count={self.space_count}, spaces={self.spaces}, user_count={self.user_count}, users={self.users}, next={self.next}, type={self.type})"
 
     @property
-    def spaces(self):
+    def spaces(self) -> Array[Space]:
         if self.space_count == 0:
             return (Space * 0)()
         else:
@@ -10985,7 +10985,7 @@ class SpaceShareInfoFB(BaseXrStructure):
             Space, None, value)
 
     @property
-    def users(self):
+    def users(self) -> Array[SpaceUserFB]:
         if self.user_count == 0:
             return (SpaceUserFB * 0)()
         else:
@@ -11158,7 +11158,7 @@ class HapticAmplitudeEnvelopeVibrationFB(HapticBaseHeader):
         return f"xr.HapticAmplitudeEnvelopeVibrationFB(duration={self.duration}, amplitude_count={self.amplitude_count}, amplitudes={self.amplitudes}, next={self.next}, type={self.type})"
 
     @property
-    def amplitudes(self):
+    def amplitudes(self) -> Array[c_float]:
         if self.amplitude_count == 0:
             return (c_float * 0)()
         else:
@@ -11197,7 +11197,7 @@ class Offset3DfFB(Structure):
         )
         self._numpy = None
 
-    def __iter__(self) -> Generator[float, None, None]:
+    def __iter__(self) -> Iterator[float]:
         yield self.x
         yield self.y
         yield self.z
@@ -11809,7 +11809,7 @@ class FaceExpressionWeightsFB(BaseXrStructure):
         return f"xr.FaceExpressionWeightsFB(weight_count={self.weight_count}, weights={self.weights}, confidence_count={self.confidence_count}, confidences={self.confidences}, status={self.status}, time={self.time}, next={self.next}, type={self.type})"
 
     @property
-    def weights(self):
+    def weights(self) -> Array[c_float]:
         if self.weight_count == 0:
             return (c_float * 0)()
         else:
@@ -11823,7 +11823,7 @@ class FaceExpressionWeightsFB(BaseXrStructure):
             c_float, None, value)
 
     @property
-    def confidences(self):
+    def confidences(self) -> Array[c_float]:
         if self.confidence_count == 0:
             return (c_float * 0)()
         else:
@@ -13009,7 +13009,7 @@ class SpaceListSaveInfoFB(BaseXrStructure):
         return f"xr.SpaceListSaveInfoFB(space_count={self.space_count}, spaces={self.spaces}, location={self.location}, next={self.next}, type={self.type})"
 
     @property
-    def spaces(self):
+    def spaces(self) -> Array[Space]:
         if self.space_count == 0:
             return (Space * 0)()
         else:
@@ -13186,7 +13186,7 @@ class SpaceDiscoveryInfoMETA(BaseXrStructure):
         return f"xr.SpaceDiscoveryInfoMETA(filter_count={self.filter_count}, filters={self.filters}, next={self.next}, type={self.type})"
 
     @property
-    def filters(self):
+    def filters(self) -> Array[POINTER(SpaceFilterBaseHeaderMETA)]:
         if self.filter_count == 0:
             return (POINTER(SpaceFilterBaseHeaderMETA) * 0)()
         else:
@@ -13229,7 +13229,7 @@ class SpaceFilterUuidMETA(SpaceFilterBaseHeaderMETA):
         return f"xr.SpaceFilterUuidMETA(uuid_count={self.uuid_count}, uuids={self.uuids}, next={self.next}, type={self.type})"
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[Uuid]:
         if self.uuid_count == 0:
             return (Uuid * 0)()
         else:
@@ -13506,7 +13506,7 @@ class SpacesSaveInfoMETA(BaseXrStructure):
         return f"xr.SpacesSaveInfoMETA(space_count={self.space_count}, spaces={self.spaces}, next={self.next}, type={self.type})"
 
     @property
-    def spaces(self):
+    def spaces(self) -> Array[Space]:
         if self.space_count == 0:
             return (Space * 0)()
         else:
@@ -13591,7 +13591,7 @@ class SpacesEraseInfoMETA(BaseXrStructure):
         return f"xr.SpacesEraseInfoMETA(space_count={self.space_count}, spaces={self.spaces}, uuid_count={self.uuid_count}, uuids={self.uuids}, next={self.next}, type={self.type})"
 
     @property
-    def spaces(self):
+    def spaces(self) -> Array[Space]:
         if self.space_count == 0:
             return (Space * 0)()
         else:
@@ -13605,7 +13605,7 @@ class SpacesEraseInfoMETA(BaseXrStructure):
             Space, None, value)
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[UuidEXT]:
         if self.uuid_count == 0:
             return (UuidEXT * 0)()
         else:
@@ -14103,7 +14103,7 @@ class FaceTrackerCreateInfo2FB(BaseXrStructure):
         self._face_expression_set = enum_field_helper(value)
 
     @property
-    def requested_data_sources(self):
+    def requested_data_sources(self) -> Array[FaceTrackingDataSource2FB.ctype()]:
         if self.requested_data_source_count == 0:
             return (FaceTrackingDataSource2FB.ctype() * 0)()
         else:
@@ -14185,7 +14185,7 @@ class FaceExpressionWeights2FB(BaseXrStructure):
         return f"xr.FaceExpressionWeights2FB(weight_count={self.weight_count}, weights={self.weights}, confidence_count={self.confidence_count}, confidences={self.confidences}, is_valid={self.is_valid}, is_eye_following_blendshapes_valid={self.is_eye_following_blendshapes_valid}, data_source={self.data_source}, time={self.time}, next={self.next}, type={self.type})"
 
     @property
-    def weights(self):
+    def weights(self) -> Array[c_float]:
         if self.weight_count == 0:
             return (c_float * 0)()
         else:
@@ -14199,7 +14199,7 @@ class FaceExpressionWeights2FB(BaseXrStructure):
             c_float, None, value)
 
     @property
-    def confidences(self):
+    def confidences(self) -> Array[c_float]:
         if self.confidence_count == 0:
             return (c_float * 0)()
         else:
@@ -14294,7 +14294,7 @@ class ShareSpacesInfoMETA(BaseXrStructure):
         return f"xr.ShareSpacesInfoMETA(space_count={self.space_count}, spaces={self.spaces}, recipient_info={self.recipient_info}, next={self.next}, type={self.type})"
 
     @property
-    def spaces(self):
+    def spaces(self) -> Array[Space]:
         if self.space_count == 0:
             return (Space * 0)()
         else:
@@ -14669,7 +14669,7 @@ class RenderModelCreateInfoEXT(BaseXrStructure):
         return f"xr.RenderModelCreateInfoEXT(render_model_id={self.render_model_id}, gltf_extension_count={self.gltf_extension_count}, gltf_extensions={self.gltf_extensions}, next={self.next}, type={self.type})"
 
     @property
-    def gltf_extensions(self):
+    def gltf_extensions(self) -> Array[c_char_p]:
         if self.gltf_extension_count == 0:
             return (c_char_p * 0)()
         else:
@@ -14815,7 +14815,7 @@ class RenderModelStateEXT(BaseXrStructure):
         return f"xr.RenderModelStateEXT(node_state_count={self.node_state_count}, node_states={self.node_states}, next={self.next}, type={self.type})"
 
     @property
-    def node_states(self):
+    def node_states(self) -> Array[RenderModelNodeStateEXT]:
         if self.node_state_count == 0:
             return (RenderModelNodeStateEXT * 0)()
         else:
@@ -14994,7 +14994,7 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(BaseXrStructure):
         return f"xr.InteractionRenderModelTopLevelUserPathGetInfoEXT(top_level_user_path_count={self.top_level_user_path_count}, top_level_user_paths={self.top_level_user_paths}, next={self.next}, type={self.type})"
 
     @property
-    def top_level_user_paths(self):
+    def top_level_user_paths(self) -> Array[c_uint64]:
         if self.top_level_user_path_count == 0:
             return (c_uint64 * 0)()
         else:
@@ -15213,7 +15213,7 @@ class FoveationApplyInfoHTC(BaseXrStructure):
         self._mode = enum_field_helper(value)
 
     @property
-    def sub_images(self):
+    def sub_images(self) -> Array[SwapchainSubImage]:
         if self.sub_image_count == 0:
             return (SwapchainSubImage * 0)()
         else:
@@ -15327,7 +15327,7 @@ class FoveationCustomModeInfoHTC(BaseXrStructure):
         return f"xr.FoveationCustomModeInfoHTC(config_count={self.config_count}, configs={self.configs}, next={self.next}, type={self.type})"
 
     @property
-    def configs(self):
+    def configs(self) -> Array[FoveationConfigurationHTC]:
         if self.config_count == 0:
             return (FoveationConfigurationHTC * 0)()
         else:
@@ -15602,7 +15602,7 @@ class BodyJointLocationsHTC(BaseXrStructure):
         self._confidence_level = enum_field_helper(value)
 
     @property
-    def joint_locations(self):
+    def joint_locations(self) -> Array[BodyJointLocationHTC]:
         if self.joint_location_count == 0:
             return (BodyJointLocationHTC * 0)()
         else:
@@ -15668,7 +15668,7 @@ class BodySkeletonHTC(BaseXrStructure):
         return f"xr.BodySkeletonHTC(joint_count={self.joint_count}, joints={self.joints}, next={self.next}, type={self.type})"
 
     @property
-    def joints(self):
+    def joints(self) -> Array[BodySkeletonJointHTC]:
         if self.joint_count == 0:
             return (BodySkeletonJointHTC * 0)()
         else:
@@ -15826,7 +15826,7 @@ class ForceFeedbackCurlApplyLocationsMNDX(BaseXrStructure):
         return f"xr.ForceFeedbackCurlApplyLocationsMNDX(location_count={self.location_count}, locations={self.locations}, next={self.next}, type={self.type})"
 
     @property
-    def locations(self):
+    def locations(self) -> Array[ForceFeedbackCurlApplyLocationMNDX]:
         if self.location_count == 0:
             return (ForceFeedbackCurlApplyLocationMNDX * 0)()
         else:
@@ -15998,7 +15998,7 @@ class BodyJointLocationsBD(BaseXrStructure):
         return f"xr.BodyJointLocationsBD(all_joint_poses_tracked={self.all_joint_poses_tracked}, joint_location_count={self.joint_location_count}, joint_locations={self.joint_locations}, next={self.next}, type={self.type})"
 
     @property
-    def joint_locations(self):
+    def joint_locations(self) -> Array[BodyJointLocationBD]:
         if self.joint_location_count == 0:
             return (BodyJointLocationBD * 0)()
         else:
@@ -16144,7 +16144,7 @@ class FacialSimulationDataBD(BaseXrStructure):
         return f"xr.FacialSimulationDataBD(face_expression_weight_count={self.face_expression_weight_count}, face_expression_weights={self.face_expression_weights}, is_upper_face_data_valid={self.is_upper_face_data_valid}, is_lower_face_data_valid={self.is_lower_face_data_valid}, time={self.time}, next={self.next}, type={self.type})"
 
     @property
-    def face_expression_weights(self):
+    def face_expression_weights(self) -> Array[c_float]:
         if self.face_expression_weight_count == 0:
             return (c_float * 0)()
         else:
@@ -16190,7 +16190,7 @@ class LipExpressionDataBD(BaseXrStructure):
         return f"xr.LipExpressionDataBD(lipsync_expression_weight_count={self.lipsync_expression_weight_count}, lipsync_expression_weights={self.lipsync_expression_weights}, next={self.next}, type={self.type})"
 
     @property
-    def lipsync_expression_weights(self):
+    def lipsync_expression_weights(self) -> Array[c_float]:
         if self.lipsync_expression_weight_count == 0:
             return (c_float * 0)()
         else:
@@ -16728,7 +16728,7 @@ class SenseDataFilterUuidBD(BaseXrStructure):
         return f"xr.SenseDataFilterUuidBD(uuid_count={self.uuid_count}, uuids={self.uuids}, next={self.next}, type={self.type})"
 
     @property
-    def uuids(self):
+    def uuids(self) -> Array[Uuid]:
         if self.uuid_count == 0:
             return (Uuid * 0)()
         else:
@@ -16771,7 +16771,7 @@ class SenseDataFilterSemanticBD(BaseXrStructure):
         return f"xr.SenseDataFilterSemanticBD(label_count={self.label_count}, labels={self.labels}, next={self.next}, type={self.type})"
 
     @property
-    def labels(self):
+    def labels(self) -> Array[c_int]:
         if self.label_count == 0:
             return (c_int * 0)()
         else:
@@ -17344,7 +17344,7 @@ class SenseDataFilterPlaneOrientationBD(BaseXrStructure):
         return f"xr.SenseDataFilterPlaneOrientationBD(orientation_count={self.orientation_count}, orientations={self.orientations}, next={self.next}, type={self.type})"
 
     @property
-    def orientations(self):
+    def orientations(self) -> Array[PlaneOrientationBD.ctype()]:
         if self.orientation_count == 0:
             return (PlaneOrientationBD.ctype() * 0)()
         else:
@@ -17387,7 +17387,7 @@ class HandTrackingDataSourceInfoEXT(BaseXrStructure):
         return f"xr.HandTrackingDataSourceInfoEXT(requested_data_source_count={self.requested_data_source_count}, requested_data_sources={self.requested_data_sources}, next={self.next}, type={self.type})"
 
     @property
-    def requested_data_sources(self):
+    def requested_data_sources(self) -> Array[HandTrackingDataSourceEXT.ctype()]:
         if self.requested_data_source_count == 0:
             return (HandTrackingDataSourceEXT.ctype() * 0)()
         else:
@@ -17565,7 +17565,7 @@ class PlaneDetectorBeginInfoEXT(BaseXrStructure):
         return f"xr.PlaneDetectorBeginInfoEXT(base_space={self.base_space}, time={self.time}, orientation_count={self.orientation_count}, orientations={self.orientations}, semantic_type_count={self.semantic_type_count}, semantic_types={self.semantic_types}, max_planes={self.max_planes}, min_area={self.min_area:.3f}, bounding_box_pose={self.bounding_box_pose}, bounding_box_extent={self.bounding_box_extent}, next={self.next}, type={self.type})"
 
     @property
-    def orientations(self):
+    def orientations(self) -> Array[c_int]:
         if self.orientation_count == 0:
             return (c_int * 0)()
         else:
@@ -17579,7 +17579,7 @@ class PlaneDetectorBeginInfoEXT(BaseXrStructure):
             c_int, None, value)
 
     @property
-    def semantic_types(self):
+    def semantic_types(self) -> Array[c_int]:
         if self.semantic_type_count == 0:
             return (c_int * 0)()
         else:
@@ -18301,7 +18301,7 @@ class RaycastInfoANDROID(BaseXrStructure):
         return f"xr.RaycastInfoANDROID(max_results={self.max_results}, tracker_count={self.tracker_count}, trackers={self.trackers}, origin={self.origin}, trajectory={self.trajectory}, space={self.space}, time={self.time}, next={self.next}, type={self.type})"
 
     @property
-    def trackers(self):
+    def trackers(self) -> Array[TrackableTrackerANDROID]:
         if self.tracker_count == 0:
             return (TrackableTrackerANDROID * 0)()
         else:
@@ -18473,7 +18473,7 @@ class TrackableObjectConfigurationANDROID(BaseXrStructure):
         return f"xr.TrackableObjectConfigurationANDROID(label_count={self.label_count}, active_labels={self.active_labels}, next={self.next}, type={self.type})"
 
     @property
-    def active_labels(self):
+    def active_labels(self) -> Array[c_int]:
         if self.label_count == 0:
             return (c_int * 0)()
         else:
@@ -19032,7 +19032,7 @@ class WorldMeshGetInfoML(BaseXrStructure):
         self._flags = enum_field_helper(value)
 
     @property
-    def blocks(self):
+    def blocks(self) -> Array[WorldMeshBlockRequestML]:
         if self.block_count == 0:
             return (WorldMeshBlockRequestML * 0)()
         else:
@@ -19191,7 +19191,7 @@ class WorldMeshRequestCompletionML(FutureCompletionBaseHeaderEXT):
         return f"xr.WorldMeshRequestCompletionML(future_result={self.future_result}, block_count={self.block_count}, blocks={self.blocks}, next={self.next}, type={self.type})"
 
     @property
-    def blocks(self):
+    def blocks(self) -> Array[WorldMeshBlockML]:
         if self.block_count == 0:
             return (WorldMeshBlockML * 0)()
         else:
@@ -19287,7 +19287,7 @@ class FacialExpressionClientCreateInfoML(BaseXrStructure):
         return f"xr.FacialExpressionClientCreateInfoML(requested_count={self.requested_count}, requested_facial_blend_shapes={self.requested_facial_blend_shapes}, next={self.next}, type={self.type})"
 
     @property
-    def requested_facial_blend_shapes(self):
+    def requested_facial_blend_shapes(self) -> Array[c_int]:
         if self.requested_count == 0:
             return (c_int * 0)()
         else:
@@ -19779,7 +19779,7 @@ class ShareSpacesRecipientGroupsMETA(ShareSpacesRecipientBaseHeaderMETA):
         return f"xr.ShareSpacesRecipientGroupsMETA(group_count={self.group_count}, groups={self.groups}, next={self.next}, type={self.type})"
 
     @property
-    def groups(self):
+    def groups(self) -> Array[Uuid]:
         if self.group_count == 0:
             return (Uuid * 0)()
         else:
@@ -19947,7 +19947,7 @@ class TrackableMarkerConfigurationANDROID(BaseXrStructure):
         self._tracking_mode = enum_field_helper(value)
 
     @property
-    def databases(self):
+    def databases(self) -> Array[TrackableMarkerDatabaseANDROID]:
         if self.database_count == 0:
             return (TrackableMarkerDatabaseANDROID * 0)()
         else:
@@ -20104,7 +20104,7 @@ class SpatialCapabilityConfigurationBaseHeaderEXT(BaseXrStructure):
         self._capability = enum_field_helper(value)
 
     @property
-    def enabled_components(self):
+    def enabled_components(self) -> Array[c_int]:
         if self.enabled_component_count == 0:
             return (c_int * 0)()
         else:
@@ -20148,7 +20148,7 @@ class SpatialContextCreateInfoEXT(BaseXrStructure):
         return f"xr.SpatialContextCreateInfoEXT(capability_config_count={self.capability_config_count}, capability_configs={self.capability_configs}, next={self.next}, type={self.type})"
 
     @property
-    def capability_configs(self):
+    def capability_configs(self) -> Array[POINTER(SpatialCapabilityConfigurationBaseHeaderEXT)]:
         if self.capability_config_count == 0:
             return (POINTER(SpatialCapabilityConfigurationBaseHeaderEXT) * 0)()
         else:
@@ -20217,7 +20217,7 @@ class SpatialDiscoverySnapshotCreateInfoEXT(BaseXrStructure):
         return f"xr.SpatialDiscoverySnapshotCreateInfoEXT(component_type_count={self.component_type_count}, component_types={self.component_types}, next={self.next}, type={self.type})"
 
     @property
-    def component_types(self):
+    def component_types(self) -> Array[c_int]:
         if self.component_type_count == 0:
             return (c_int * 0)()
         else:
@@ -20316,7 +20316,7 @@ class SpatialComponentDataQueryConditionEXT(BaseXrStructure):
         return f"xr.SpatialComponentDataQueryConditionEXT(component_type_count={self.component_type_count}, component_types={self.component_types}, next={self.next}, type={self.type})"
 
     @property
-    def component_types(self):
+    def component_types(self) -> Array[c_int]:
         if self.component_type_count == 0:
             return (c_int * 0)()
         else:
@@ -20479,7 +20479,7 @@ class SpatialComponentBounded2DListEXT(BaseXrStructure):
         return f"xr.SpatialComponentBounded2DListEXT(bound_count={self.bound_count}, bounds={self.bounds}, next={self.next}, type={self.type})"
 
     @property
-    def bounds(self):
+    def bounds(self) -> Array[SpatialBounded2DDataEXT]:
         if self.bound_count == 0:
             return (SpatialBounded2DDataEXT * 0)()
         else:
@@ -20522,7 +20522,7 @@ class SpatialComponentBounded3DListEXT(BaseXrStructure):
         return f"xr.SpatialComponentBounded3DListEXT(bound_count={self.bound_count}, bounds={self.bounds}, next={self.next}, type={self.type})"
 
     @property
-    def bounds(self):
+    def bounds(self) -> Array[Boxf]:
         if self.bound_count == 0:
             return (Boxf * 0)()
         else:
@@ -20565,7 +20565,7 @@ class SpatialComponentParentListEXT(BaseXrStructure):
         return f"xr.SpatialComponentParentListEXT(parent_count={self.parent_count}, parents={self.parents}, next={self.next}, type={self.type})"
 
     @property
-    def parents(self):
+    def parents(self) -> Array[SpatialEntityIdEXT]:
         if self.parent_count == 0:
             return (SpatialEntityIdEXT * 0)()
         else:
@@ -20638,7 +20638,7 @@ class SpatialComponentMesh3DListEXT(BaseXrStructure):
         return f"xr.SpatialComponentMesh3DListEXT(mesh_count={self.mesh_count}, meshes={self.meshes}, next={self.next}, type={self.type})"
 
     @property
-    def meshes(self):
+    def meshes(self) -> Array[SpatialMeshDataEXT]:
         if self.mesh_count == 0:
             return (SpatialMeshDataEXT * 0)()
         else:
@@ -20713,7 +20713,7 @@ class SpatialUpdateSnapshotCreateInfoEXT(BaseXrStructure):
         return f"xr.SpatialUpdateSnapshotCreateInfoEXT(entity_count={self.entity_count}, entities={self.entities}, component_type_count={self.component_type_count}, component_types={self.component_types}, base_space={self.base_space}, time={self.time}, next={self.next}, type={self.type})"
 
     @property
-    def component_types(self):
+    def component_types(self) -> Array[c_int]:
         if self.component_type_count == 0:
             return (c_int * 0)()
         else:
@@ -20862,7 +20862,7 @@ class SpatialComponentPlaneAlignmentListEXT(BaseXrStructure):
         return f"xr.SpatialComponentPlaneAlignmentListEXT(plane_alignment_count={self.plane_alignment_count}, plane_alignments={self.plane_alignments}, next={self.next}, type={self.type})"
 
     @property
-    def plane_alignments(self):
+    def plane_alignments(self) -> Array[SpatialPlaneAlignmentEXT.ctype()]:
         if self.plane_alignment_count == 0:
             return (SpatialPlaneAlignmentEXT.ctype() * 0)()
         else:
@@ -20905,7 +20905,7 @@ class SpatialComponentMesh2DListEXT(BaseXrStructure):
         return f"xr.SpatialComponentMesh2DListEXT(mesh_count={self.mesh_count}, meshes={self.meshes}, next={self.next}, type={self.type})"
 
     @property
-    def meshes(self):
+    def meshes(self) -> Array[SpatialMeshDataEXT]:
         if self.mesh_count == 0:
             return (SpatialMeshDataEXT * 0)()
         else:
@@ -20973,7 +20973,7 @@ class SpatialComponentPolygon2DListEXT(BaseXrStructure):
         return f"xr.SpatialComponentPolygon2DListEXT(polygon_count={self.polygon_count}, polygons={self.polygons}, next={self.next}, type={self.type})"
 
     @property
-    def polygons(self):
+    def polygons(self) -> Array[SpatialPolygon2DDataEXT]:
         if self.polygon_count == 0:
             return (SpatialPolygon2DDataEXT * 0)()
         else:
@@ -21016,7 +21016,7 @@ class SpatialComponentPlaneSemanticLabelListEXT(BaseXrStructure):
         return f"xr.SpatialComponentPlaneSemanticLabelListEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
 
     @property
-    def semantic_labels(self):
+    def semantic_labels(self) -> Array[SpatialPlaneSemanticLabelEXT.ctype()]:
         if self.semantic_label_count == 0:
             return (SpatialPlaneSemanticLabelEXT.ctype() * 0)()
         else:
@@ -21234,7 +21234,7 @@ class SpatialComponentMarkerListEXT(BaseXrStructure):
         return f"xr.SpatialComponentMarkerListEXT(marker_count={self.marker_count}, markers={self.markers}, next={self.next}, type={self.type})"
 
     @property
-    def markers(self):
+    def markers(self) -> Array[SpatialMarkerDataEXT]:
         if self.marker_count == 0:
             return (SpatialMarkerDataEXT * 0)()
         else:
@@ -21281,7 +21281,7 @@ class SpatialComponentAnchorListEXT(BaseXrStructure):
         return f"xr.SpatialComponentAnchorListEXT(location_count={self.location_count}, locations={self.locations}, next={self.next}, type={self.type})"
 
     @property
-    def locations(self):
+    def locations(self) -> Array[Posef]:
         if self.location_count == 0:
             return (Posef * 0)()
         else:
@@ -21436,7 +21436,7 @@ class SpatialContextPersistenceConfigEXT(BaseXrStructure):
         return f"xr.SpatialContextPersistenceConfigEXT(persistence_context_count={self.persistence_context_count}, persistence_contexts={self.persistence_contexts}, next={self.next}, type={self.type})"
 
     @property
-    def persistence_contexts(self):
+    def persistence_contexts(self) -> Array[SpatialPersistenceContextEXT]:
         if self.persistence_context_count == 0:
             return (SpatialPersistenceContextEXT * 0)()
         else:
@@ -21479,7 +21479,7 @@ class SpatialDiscoveryPersistenceUuidFilterEXT(BaseXrStructure):
         return f"xr.SpatialDiscoveryPersistenceUuidFilterEXT(persisted_uuid_count={self.persisted_uuid_count}, persisted_uuids={self.persisted_uuids}, next={self.next}, type={self.type})"
 
     @property
-    def persisted_uuids(self):
+    def persisted_uuids(self) -> Array[Uuid]:
         if self.persisted_uuid_count == 0:
             return (Uuid * 0)()
         else:
@@ -21770,7 +21770,7 @@ class LoaderInitInfoPropertiesEXT(LoaderInitInfoBaseHeaderKHR):
         return f"xr.LoaderInitInfoPropertiesEXT(property_value_count={self.property_value_count}, property_values={self.property_values}, next={self.next}, type={self.type})"
 
     @property
-    def property_values(self):
+    def property_values(self) -> Array[LoaderInitPropertyValueEXT]:
         if self.property_value_count == 0:
             return (LoaderInitPropertyValueEXT * 0)()
         else:

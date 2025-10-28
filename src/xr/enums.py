@@ -37,13 +37,13 @@ class DefaultEnumMeta(enum.EnumMeta):
 
 class EnumBase(enum.IntEnum, metaclass=DefaultEnumMeta):
     @staticmethod
-    def ctype():
+    def ctype() -> type:
         return c_int
 
 
 class FlagBase(enum.IntFlag, metaclass=DefaultEnumMeta):
     @staticmethod
-    def ctype():
+    def ctype() -> type:
         return c_uint64
 
 

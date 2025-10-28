@@ -30,6 +30,7 @@ def main():
         """),
     )
 
+    cg.ctypes_names.add("Array")
     cg.ctypes_names.add("byref")
     cg.ctypes_names.add("c_long")
     cg.ctypes_names.add("c_longlong")
@@ -39,7 +40,7 @@ def main():
     print("")
     print(inspect.cleandoc("""
         import ctypes
-        from typing import Optional
+        from typing import Optional, Sequence
 
         import OpenGL.platform as _plat
         from OpenGL.platform.glx import GLXPlatform

@@ -25,6 +25,7 @@ def main():
             // #include <android/binder_ibinder.h> // AIBinder definition
         """),
     )
+    cg.ctypes_names.add("Array")
     cg.ctypes_names.add("byref")
     cg.ctypes_names.add("cast")
     cg.ctypes_names.add("create_string_buffer")
@@ -32,7 +33,7 @@ def main():
     cg.print_header()
     print(inspect.cleandoc("""
         import ctypes
-        from typing import Optional
+        from typing import Optional, Sequence
 
         try:
             from OpenGL.EGL import EGLConfig, EGLContext, EGLDisplay, EGLSurface

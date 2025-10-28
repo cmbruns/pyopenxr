@@ -34,6 +34,7 @@ def main():
             #include <vulkan/vulkan.h>
         """),
     )
+    cg.ctypes_names.add("Array")
     cg.ctypes_names.add("byref")
     cg.ctypes_names.add("c_ulong")
     cg.ctypes_names.add("c_long")

@@ -14,7 +14,7 @@ def main():
     )
 
     cg.ctypes_names.add("addressof")
-    cg.ctypes_names.add("byref")
+    cg.ctypes_names.add("Array")
     cg.ctypes_names.add("cast")
     cg.ctypes_names.add("pointer")
     cg.ctypes_names.add("py_object")
@@ -24,7 +24,7 @@ def main():
         
         import os
         import sys
-        from typing import Any, Generator, Optional
+        from typing import Any, Iterator, Optional, Sequence
         
         import numpy
 
