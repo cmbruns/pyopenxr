@@ -4,7 +4,7 @@ import inspect
 from numbers import Number
 import re
 import textwrap
-from typing import Generator, Set, Union
+from typing import Generator, Iterator, Set, Union
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
@@ -853,38 +853,38 @@ class NothingParameterCoder(object):
         self.default = default
 
     @staticmethod
-    def declaration_code(api=Api.PYTHON) -> Generator[str, None, None]:
+    def declaration_code(api=Api.PYTHON) -> Iterator[str]:
         yield from []
 
-    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield from []
 
-    def buffer_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def buffer_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield from self.main_call_code()
 
     @staticmethod
-    def mid_body_code(api=Api.PYTHON) -> Generator[str, None, None]:
+    def mid_body_code(api=Api.PYTHON) -> Iterator[str]:
         yield from []
 
     @staticmethod
-    def pre_body_code(api=Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(api=Api.PYTHON) -> Iterator[str]:
         yield from []
 
     @staticmethod
-    def result_type_code(api=Api.PYTHON) -> Generator[str, None, None]:
+    def result_type_code(api=Api.PYTHON) -> Iterator[str]:
         yield from []
 
-    def result_value_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def result_value_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield from []
 
 
 class ParameterCoderBase(NothingParameterCoder):
-    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield f"{self.parameter.name(api)}"
 
 
 class InputParameterCoder(ParameterCoderBase):
-    def declaration_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def declaration_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         if self.default is None:
             yield f"{self.parameter.name(api)}: {self.type_string()}"
         else:
@@ -905,37 +905,37 @@ class CreateInfoParameterCoder(InputParameterCoder):
     def __init__(self, parameter: FunctionParameterItem):
         super().__init__(parameter=parameter, default="None")
 
-    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield f"if {self.parameter.name(api)} is None:"
         yield f"    {self.parameter.name(api)} = {self.type_string()}()"
 
 
 class EnumParameterCoder(InputParameterCoder):
-    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield f"{self.parameter.name(api)}.value"
 
 
 class StringInputParameterCoder(InputParameterCoder):
-    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield f"if {self.parameter.name(api)} is not None:"
         yield f"    {self.parameter.name(api)} = {self.parameter.name(api)}.encode()"
 
 
 class OutputParameterCoder(ParameterCoderBase):
-    def result_type_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def result_type_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         yield f"{rtype.name(api)}"
 
-    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         yield f"{self.parameter.name(api)} = {rtype.name(Api.CTYPES)}()"
 
-    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield f"byref({self.parameter.name(api)})"
 
-    def result_value_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def result_value_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         # noinspection PyUnresolvedReferences
         rtype = self.parameter.type.pointee
         if rtype.name(Api.PYTHON) == "int":
@@ -949,7 +949,7 @@ class CreatedHandleOutputParameterCoder(OutputParameterCoder):
         super().__init__(parameter)
         self.parent_parameter = parent_parameter
 
-    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield from super().pre_body_code(api=api)
         # Set the "instance" attribute of the newly created handle.
         n = self.parameter.name(api)
@@ -993,20 +993,20 @@ class BufferCoder(ParameterCoderBase):
         else:
             self.array_type_name_internal = self.array_type_name
 
-    def declaration_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def declaration_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         if self.use_element_type_arg:
             # TODO: this is hard coded for enumerate_swapchain_images()
             yield f"element_type: Type[SWAPCHAIN_IMAGE_TYPE]"
 
-    def pre_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def pre_body_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield f"{self.cap_in.name(api)} = {self.cap_in.type.name(Api.CTYPES)}(0)"
 
-    def buffer_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def buffer_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield "0"
         yield f"byref({self.cap_in.name(api)})"
         yield "None"
 
-    def mid_body_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def mid_body_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         name = f"{self.array.name()}"
         n = f"{self.cap_in.name(api)}.value"
         e_type = self.array_type_name_internal
@@ -1017,7 +1017,7 @@ class BufferCoder(ParameterCoderBase):
             # initialized_array = (MyStructure * N)(*([MyStructure()] * N))
             yield f"{name} = ({e_type} * {n})(*([{e_type}()] * {n}))  # noqa"
 
-    def main_call_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def main_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield f"{self.cap_in.name(api)}"
         yield f"byref({self.cap_in.name(api)})"
         if self.use_element_type_arg:
@@ -1025,13 +1025,13 @@ class BufferCoder(ParameterCoderBase):
         else:
             yield f"{self.array.name(api)}"
 
-    def result_type_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def result_type_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         if self.array_type_name == "str":
             yield "str"
         else:  # array case
             yield f"Sequence[{self.array_type.name(Api.PYTHON)}]"
 
-    def result_value_code(self, api: Api = Api.PYTHON) -> Generator[str, None, None]:
+    def result_value_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         if self.array_type_name == "str":
             yield f"{self.array.name(api)}.value.decode()"
         else:  # array case
@@ -1223,23 +1223,23 @@ class FieldCoder(object):
         else:
             self.default = default
 
-    def field_code(self) -> Generator[str, None, None]:
+    def field_code(self) -> Iterator[str]:
         """
         Generates field declaration strings for one field inside "_fields_ = [" stanza
         """
         yield self.field.code(Api.CTYPES)
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = {self.default}"
 
     @staticmethod
-    def pre_call_code() -> Generator[str, None, None]:
+    def pre_call_code() -> Iterator[str]:
         yield from []
 
-    def call_code(self) -> Generator[str, None, None]:
+    def call_code(self) -> Iterator[str]:
         yield f"{self.inner_name}={self.name}"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         if self.inner_name != self.name:
             # getter
             yield "@property"
@@ -1252,14 +1252,14 @@ class FieldCoder(object):
             yield f"    # noinspection PyAttributeOutsideInit"
             yield f"    self.{self.inner_name} = value"
 
-    def str_code(self) -> Generator[str, None, None]:
+    def str_code(self) -> Iterator[str]:
         if self.field.type.name(Api.CTYPES) == "c_float":
             value = f"{{self.{self.name}:.3f}}"
         else:
             value = f"{{self.{self.name}}}"
         yield f"{self.name}={value}"
 
-    def repr_code(self) -> Generator[str, None, None]:
+    def repr_code(self) -> Iterator[str]:
         yield f"{self.name}={{repr(self.{self.name})}}"
 
 
@@ -1272,7 +1272,7 @@ class ArrayCountFieldCoder(FieldCoder):
         super().__init__(field=count_field, default="None")
         self.array_field = array_field
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         yield f"{self.name}: Optional[int] = {self.default}"
 
 
@@ -1285,7 +1285,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         super().__init__(field=array_field, default="None")
         self.count_field = count_field
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         pn = self.field.type.pointee.name(Api.CTYPES)  # noqa
         if pn == "c_char_p":
             pt = "StringArrayFieldParamType"
@@ -1296,7 +1296,7 @@ class ArrayPointerFieldCoder(FieldCoder):
         # noinspection PyUnresolvedReferences
         yield f"{self.name}: {pt} = {self.default}"
 
-    def pre_call_code(self) -> Generator[str, None, None]:
+    def pre_call_code(self) -> Iterator[str]:
         # Create a ctypes array if one does not already exist
         array = self.name
         count = self.count_field.name(Api.CTYPES)
@@ -1311,7 +1311,7 @@ class ArrayPointerFieldCoder(FieldCoder):
             yield f"{count}, {array} = array_field_helper("
             yield f"    {element_type}, {count}, {array})"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         count = self.count_field.name(Api.CTYPES)
         element_type = self.field.type.pointee.name(Api.CTYPES)  # noqa
         # getter
@@ -1335,17 +1335,17 @@ class ArrayPointerFieldCoder(FieldCoder):
 
 
 class EnumFieldCoder(FieldCoder):
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         enum_name = self.field.type.name(Api.PYTHON)
         default = enum_default_value(enum_name)
         if self.field.default_value is not None:
             default = self.field.default_value
         yield f"{self.name}: {enum_name} = {default}"
 
-    def call_code(self) -> Generator[str, None, None]:
+    def call_code(self) -> Iterator[str]:
         yield f"{self.inner_name}=enum_field_helper({self.name})"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         if self.inner_name != self.name:
             enum_name = self.field.type.name(Api.PYTHON)
             # getter
@@ -1365,7 +1365,7 @@ class DebugCallbackFieldCoder(FieldCoder):
         super().__init__(field=callback_field)
         self.user_data_field = user_data_field
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         c_type = self.field.type.name(Api.PYTHON)
         default = f"cast(None, {c_type})"
         if self.default is not None:
@@ -1373,27 +1373,49 @@ class DebugCallbackFieldCoder(FieldCoder):
         outer_type = "DebugCallbackType"  # TODO: generalize
         yield f"{self.name}: {outer_type} = {default}"
 
-    def call_code(self) -> Generator[str, None, None]:
+    def pre_call_code(self) -> Iterator[str]:
+        yield "self._cached_user_data = user_data"
+        yield "self._cached_user_callback = user_callback"
+
+    def call_code(self) -> Iterator[str]:
         yield f"{self.inner_name}=wrap_debug_callback({self.name}, {self.user_data_field.name()})"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         if self.inner_name != self.name:
+            # User Data
+            dname = self.user_data_field.name()
+            # getter
+            yield "@property"
+            yield f"def {dname}(self) -> Any:"
+            yield f"    return self._cached_{dname}"
+            # setter
+            yield ""
+            yield f"@{dname}.setter"
+            yield f"def {self.name}(self, value: Any]) -> None:"
+            yield f"    self._cached_{dname} = value"
+            yield f"    # noinspection PyAttributeOutsideInit"
+            yield f"    self._{dname} = cast(pointer(py_object({dname})), c_void_p) if {dname} else None,"
+            yield f"    self.{self.inner_name} = wrap_debug_callback(self._cached_{self.name}, value)"
+            yield ""
+            # User callback
+            cname = self.name
             type_name = self.field.type.name(Api.PYTHON)
             outer_type = "DebugCallbackType"  # TODO: generalize
             # getter
             yield "@property"
-            yield f"def {self.name}(self) -> {type_name}:"
-            yield f"    return self.{self.inner_name}"
+            yield f"def {cname}(self) -> {outer_type}:"
+            yield f"    return self._cached_{cname}"
             # setter
             yield ""
-            yield f"@{self.name}.setter"
-            yield f"def {self.name}(self, value: tuple[{outer_type}, Any]) -> None:"
+            yield f"@{cname}.setter"
+            yield f"def {cname}(self, value: {outer_type}) -> None:"
+            yield f"    self._cached_{cname} = value"
             yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self.{self.inner_name} = wrap_debug_callback(value[0], value[1])"
+            yield f"    self.{self.inner_name} = wrap_debug_callback(value, self._cached_{dname})"
 
 
 class FunctionPointerFieldCoder(FieldCoder):
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         fn_type = self.field.type.name(Api.PYTHON)
         default = "None"
         if self.default is not None:
@@ -1404,12 +1426,12 @@ class FunctionPointerFieldCoder(FieldCoder):
 class NoDefaultFieldCoder(FieldCoder):
     """There is no reasonable default"""
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)}"
 
 
 class PosefFieldCoder(FieldCoder):
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         default = "Posef()"
         if self.field.default_value is not None:
             default = self.field.default_value
@@ -1419,52 +1441,52 @@ class PosefFieldCoder(FieldCoder):
 class ArrayFieldCoder(FieldCoder):
     """We should not pass EventDataBuffer.varying in the constructor"""
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         yield from []
 
     @staticmethod
-    def pre_call_code() -> Generator[str, None, None]:
+    def pre_call_code() -> Iterator[str]:
         yield from []
 
-    def call_code(self) -> Generator[str, None, None]:
+    def call_code(self) -> Iterator[str]:
         yield from []
 
-    def str_code(self) -> Generator[str, None, None]:
+    def str_code(self) -> Iterator[str]:
         yield from []
 
-    def repr_code(self) -> Generator[str, None, None]:
+    def repr_code(self) -> Iterator[str]:
         yield f"{self.field.name()}={{repr(self.{self.name})}}"
 
 
 class NextFieldCoder(FieldCoder):
-    def call_code(self) -> Generator[str, None, None]:
+    def call_code(self) -> Iterator[str]:
         yield f"{self.inner_name}=next_field_helper({self.name})"
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         # Avoid self reference in BaseInStructure
         yield f"{self.name}: FieldNextType = None"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         # properties already set in base classes
         yield from []
 
 
 class VoidPointerFieldCoder(FieldCoder):
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         yield f"{self.name}: {self.field.type.name(Api.CTYPES)} = None"
 
 
 class StringFieldCoder(FieldCoder):
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         default = '""'
         if self.field.default_value is not None:
             default = self.field.default_value
         yield f'{self.name}: str = {default}'
 
-    def call_code(self) -> Generator[str, None, None]:
+    def call_code(self) -> Iterator[str]:
         yield f"{self.inner_name}={self.name}.encode()"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         if self.inner_name != self.name:
             # getter
             yield "@property"
@@ -1479,16 +1501,16 @@ class StringFieldCoder(FieldCoder):
 
 
 class VersionFieldCoder(FieldCoder):
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         default = "Version()"
         if self.field.default_value is not None:
             default = self.field.default_value
         yield f'{self.name}: Version = {default}'
 
-    def call_code(self) -> Generator[str, None, None]:
+    def call_code(self) -> Iterator[str]:
         yield f"{self.field.inner_name()}={self.name}.number()"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         if self.inner_name != self.name:
             # getter
             yield "@property"
@@ -1507,7 +1529,7 @@ class VersionFieldCoder(FieldCoder):
 
 
 class StructureFieldCoder(FieldCoder):
-    def pre_call_code(self) -> Generator[str, None, None]:
+    def pre_call_code(self) -> Iterator[str]:
         yield f"if {self.name} is None:"
         yield f"    {self.name} = {self.field.type.name(Api.PYTHON)}()"
 
@@ -1517,11 +1539,11 @@ class StructureTypeFieldCoder(EnumFieldCoder):
         super().__init__(field)
         self.struct = struct
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         type_enum_name = structure_type_enum_name(self.struct)
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = StructureType.{type_enum_name}"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         yield from []  # Property already set in base class
 
 
@@ -1530,10 +1552,10 @@ class BaseStructureTypeFieldCoder(EnumFieldCoder):
         super().__init__(field)
         self.struct = struct
 
-    def param_code(self) -> Generator[str, None, None]:
+    def param_code(self) -> Iterator[str]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)} = StructureType.UNKNOWN"
 
-    def property_code(self) -> Generator[str, None, None]:
+    def property_code(self) -> Iterator[str]:
         yield from []  # Property already set in base class
 
 
