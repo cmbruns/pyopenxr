@@ -3,7 +3,7 @@
 from ctypes import (
     CFUNCTYPE, POINTER, Structure, addressof, byref, c_char, c_char_p, c_float,
     c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8,
-    c_void_p, cast, py_object,
+    c_void_p, cast, pointer, py_object,
 )
 import ctypes
 

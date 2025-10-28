@@ -16,6 +16,7 @@ def main():
     cg.ctypes_names.add("addressof")
     cg.ctypes_names.add("byref")
     cg.ctypes_names.add("cast")
+    cg.ctypes_names.add("pointer")
     cg.ctypes_names.add("py_object")
     cg.print_header()
     print(inspect.cleandoc("""
