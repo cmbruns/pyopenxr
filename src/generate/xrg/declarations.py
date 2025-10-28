@@ -754,6 +754,12 @@ class TypeDefItem(CodeItem):
         if self._py_name == "Version":
             self._py_name = self._ctypes_name = "VersionNumber"
 
+    def blank_lines_after(self):
+        if self.is_handle:
+            return 2
+        else:
+            return 1
+
     def name(self, api: Api = Api.PYTHON) -> str:
         if api == api.PYTHON:
             return self._py_name

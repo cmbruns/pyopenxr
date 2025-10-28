@@ -24,7 +24,7 @@ def main():
         
         import os
         import sys
-        from typing import Any, Iterator, Optional, Sequence
+        from typing import Any, Iterator, Optional
         
         import numpy
 

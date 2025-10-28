@@ -9,7 +9,7 @@ import ctypes
 
 import os
 import sys
-from typing import Any, Iterator, Optional, Sequence
+from typing import Any, Iterator, Optional
 
 import numpy
 
@@ -104,6 +104,7 @@ class ActionSet_T(Structure):
 
 class ActionSet(POINTER(ActionSet_T), HandleMixin):
     _type_ = ActionSet_T  # ctypes idiosyncrasy
+
 
 InstanceCreateFlagsCInt = Flags64
 
@@ -3682,6 +3683,7 @@ class DebugUtilsMessengerEXT(POINTER(DebugUtilsMessengerEXT_T), HandleMixin):
     :see: https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrDebugUtilsMessengerEXT.html
     """
     _type_ = DebugUtilsMessengerEXT_T  # ctypes idiosyncrasy
+
 
 DebugUtilsMessageSeverityFlagsEXTCInt = Flags64
 
@@ -7731,6 +7733,7 @@ class FoveationProfileFB_T(Structure):
 class FoveationProfileFB(POINTER(FoveationProfileFB_T), HandleMixin):
     _type_ = FoveationProfileFB_T  # ctypes idiosyncrasy
 
+
 SwapchainCreateFoveationFlagsFBCInt = Flags64
 
 SwapchainStateFoveationFlagsFBCInt = Flags64
@@ -8000,6 +8003,7 @@ class TriangleMeshFB_T(Structure):
 class TriangleMeshFB(POINTER(TriangleMeshFB_T), HandleMixin):
     _type_ = TriangleMeshFB_T  # ctypes idiosyncrasy
 
+
 TriangleMeshFlagsFBCInt = Flags64
 
 
@@ -8099,6 +8103,7 @@ class GeometryInstanceFB_T(Structure):
 
 class GeometryInstanceFB(POINTER(GeometryInstanceFB_T), HandleMixin):
     _type_ = GeometryInstanceFB_T  # ctypes idiosyncrasy
+
 
 PassthroughCapabilityFlagsFBCInt = Flags64
 
@@ -9322,6 +9327,7 @@ class ExportedLocalizationMapML_T(Structure):
 
 class ExportedLocalizationMapML(POINTER(ExportedLocalizationMapML_T), HandleMixin):
     _type_ = ExportedLocalizationMapML_T  # ctypes idiosyncrasy
+
 
 LocalizationMapErrorFlagsMLCInt = Flags64
 
@@ -12316,6 +12322,7 @@ class VirtualKeyboardMETA_T(Structure):
 class VirtualKeyboardMETA(POINTER(VirtualKeyboardMETA_T), HandleMixin):
     _type_ = VirtualKeyboardMETA_T  # ctypes idiosyncrasy
 
+
 VirtualKeyboardInputStateFlagsMETACInt = Flags64
 
 
@@ -14367,6 +14374,7 @@ class EnvironmentDepthSwapchainMETA_T(Structure):
 
 class EnvironmentDepthSwapchainMETA(POINTER(EnvironmentDepthSwapchainMETA_T), HandleMixin):
     _type_ = EnvironmentDepthSwapchainMETA_T  # ctypes idiosyncrasy
+
 
 EnvironmentDepthProviderCreateFlagsMETACInt = Flags64
 
@@ -17449,6 +17457,7 @@ class PlaneDetectorEXT_T(Structure):
 class PlaneDetectorEXT(POINTER(PlaneDetectorEXT_T), HandleMixin):
     _type_ = PlaneDetectorEXT_T  # ctypes idiosyncrasy
 
+
 PlaneDetectionCapabilityFlagsEXTCInt = Flags64
 
 PlaneDetectorFlagsEXTCInt = Flags64
@@ -18762,6 +18771,7 @@ class WorldMeshDetectorML_T(Structure):
 class WorldMeshDetectorML(POINTER(WorldMeshDetectorML_T), HandleMixin):
     _type_ = WorldMeshDetectorML_T  # ctypes idiosyncrasy
 
+
 WorldMeshDetectorFlagsMLCInt = Flags64
 
 
@@ -19235,6 +19245,7 @@ class FacialExpressionClientML_T(Structure):
 
 class FacialExpressionClientML(POINTER(FacialExpressionClientML_T), HandleMixin):
     _type_ = FacialExpressionClientML_T  # ctypes idiosyncrasy
+
 
 FacialExpressionBlendShapePropertiesFlagsMLCInt = Flags64
 

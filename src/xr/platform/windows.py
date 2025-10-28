@@ -1,8 +1,9 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import (
-    Array, CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int, c_long,
-    c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, cast, create_string_buffer, wintypes,
+    Array, CFUNCTYPE, POINTER, Structure, byref, c_char_p, c_float, c_int,
+    c_long, c_longlong, c_uint32, c_ulong, c_void_p, c_wchar, cast, create_string_buffer,
+    wintypes,
 )
 import ctypes
 from typing import Optional
