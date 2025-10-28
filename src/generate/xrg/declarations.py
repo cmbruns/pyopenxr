@@ -501,7 +501,7 @@ class StructFieldItem(CodeItem):
         if isinstance(self.type, TypedefType):
             if isinstance(self.type.underlying_type, EnumType):
                 self.kind = StructFieldItem.Kind.ENUM
-            if self.type.underlying_type.name() == "Flags64":
+            elif self.type.underlying_type.name() == "Flags64":
                 self.kind = StructFieldItem.Kind.ENUM
         self.default_value = None
 
@@ -526,6 +526,8 @@ class StructFieldItem(CodeItem):
         ]:
             return f"_{n}"  # Prepend with underscore
         elif self.type.name(Api.CTYPES) == "c_char_p":
+            return f"_{n}"  # Prepend with underscore
+        elif self.type.name(Api.CTYPES) == "PFN_xrDebugUtilsMessengerCallbackEXT":
             return f"_{n}"  # Prepend with underscore
         else:
             return n
@@ -1357,10 +1359,45 @@ class EnumFieldCoder(FieldCoder):
             yield f"    self.{self.inner_name} = enum_field_helper(value)"
 
 
+class DebugCallbackFieldCoder(FieldCoder):
+    def __init__(self, callback_field: StructFieldItem, user_data_field: StructFieldItem):
+        super().__init__(field=callback_field)
+        self.user_data_field = user_data_field
+
+    def param_code(self) -> Generator[str, None, None]:
+        c_type = self.field.type.name(Api.PYTHON)
+        default = f"cast(None, {c_type})"
+        if self.default is not None:
+            default = self.default
+        outer_type = "DebugCallbackType"  # TODO: generalize
+        yield f"{self.name}: {outer_type} = {default}"
+
+    def call_code(self) -> Generator[str, None, None]:
+        yield f"{self.inner_name}=wrap_debug_callback({self.name}, {self.user_data_field.name()})"
+
+    def property_code(self) -> Generator[str, None, None]:
+        if self.inner_name != self.name:
+            type_name = self.field.type.name(Api.PYTHON)
+            outer_type = "DebugCallbackType"  # TODO: generalize
+            # getter
+            yield "@property"
+            yield f"def {self.name}(self) -> {type_name}:"
+            yield f"    return self.{self.inner_name}"
+            # setter
+            yield ""
+            yield f"@{self.name}.setter"
+            yield f"def {self.name}(self, value: tuple[{outer_type}, Any]) -> None:"
+            yield f"    # noinspection PyAttributeOutsideInit"
+            yield f"    self.{self.inner_name} = wrap_debug_callback(value[0], value[1])"
+
+
 class FunctionPointerFieldCoder(FieldCoder):
     def param_code(self) -> Generator[str, None, None]:
         fn_type = self.field.type.name(Api.PYTHON)
-        yield f"{self.name}: {fn_type} = cast(None, {fn_type})"
+        default = "None"
+        if self.default is not None:
+            default = self.default
+        yield f"{self.name}: {fn_type} = {default}"
 
 
 class NoDefaultFieldCoder(FieldCoder):
@@ -1404,7 +1441,7 @@ class NextFieldCoder(FieldCoder):
 
     def param_code(self) -> Generator[str, None, None]:
         # Avoid self reference in BaseInStructure
-        yield f"{self.name}=None"
+        yield f"{self.name}: FieldNextType = None"
 
     def property_code(self) -> Generator[str, None, None]:
         # properties already set in base classes
@@ -1533,6 +1570,8 @@ class StructureCoder(object):
                 self.field_coders.append(ArrayCountFieldCoder(field, self.struct.fields[ix + 1]))
             elif field.kind == StructFieldItem.Kind.ARRAY_POINTER:
                 self.field_coders.append(ArrayPointerFieldCoder(self.struct.fields[ix - 1], field))
+            elif field.type.name() == "PFN_xrDebugUtilsMessengerCallbackEXT":
+                self.field_coders.append(DebugCallbackFieldCoder(field, self.struct.fields[ix + 1]))
             elif field.type.name().startswith("PFN_xr"):
                 self.field_coders.append(FunctionPointerFieldCoder(field))
             elif field.type.name().startswith("POINTER("):

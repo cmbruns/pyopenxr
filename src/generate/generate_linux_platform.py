@@ -56,12 +56,7 @@ def main():
             EGLSurface = c_void_p
         EGLenum = ctypes.c_uint
 
-        from ..field_helper import (
-            array_field_helper, 
-            ArrayFieldParamType, 
-            enum_field_helper,
-            next_field_helper,
-        )
+        from ..field_helper import *
         from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
         from ..version import Version
