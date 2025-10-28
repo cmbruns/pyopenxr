@@ -58,6 +58,21 @@ module_docstrings = {
             https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_KHR_opengl_enable
         """),
     },
+    "xr.ext.KHR.opengl_es_enable": {
+        "docstring": inspect.cleandoc("""
+            Python bindings for the `XR_KHR_opengl_es_enable` instance extension.
+
+            This module provides Python wrappers for OpenXR functions defined in the
+            `XR_KHR_opengl_es_enable` specification. These wrappers expose runtime diagnostics,
+            object naming, and other extension-specific features.
+
+            To enable this extension, include `"XR_KHR_opengl_es_enable"` in your
+            `enabled_extension_names` when calling :func:`xr.create_instance`.
+
+            See the Khronos registry for full specification:
+            https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_KHR_opengl_es_enable
+        """),
+    },
     "xr.ext.MND.headless": {
         "docstring": inspect.cleandoc("""
             Python bindings for the `XR_MND_headless` instance extension.

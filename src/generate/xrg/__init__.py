@@ -187,7 +187,18 @@ def generate_code_items(
                 continue
             if cursor.spelling.startswith("xr"):
                 known_functions.add(cursor.spelling)  # TODO: test this code path
-    # This next pass emits everything
+    # This pass sets aside XrFutureCompletionBaseHeaderEXT for early declaration
+    fcb_item = None
+    for cursor in generate_cursors(
+            header=header,
+            compiler_args=compiler_args,
+            header_preamble=header_preamble,
+    ):
+        if cursor.spelling == "XrFutureCompletionBaseHeaderEXT":
+            handler = _CursorHandlers[cursor.kind]
+            fcb_item = handler(cursor)
+            break
+    # This next pass emits everything else
     has_functions = kinds is None or len(kinds) == 0 or CursorKind.FUNCTION_DECL in kinds
     has_typedefs = kinds is None or len(kinds) == 0 or CursorKind.TYPEDEF_DECL in kinds
     for cursor in generate_cursors(
@@ -210,6 +221,10 @@ def generate_code_items(
 
         try:
             item = handler(cursor)
+            if item.name() == "CreateSpatialAnchorsCompletionML":
+                yield fcb_item  # Wrap hard coded prerequisite early
+            if item.name() == "FutureCompletionBaseHeaderEXT":
+                continue  # Skip later instantiation
             if cursor.kind == CursorKind.TYPEDEF_DECL and not has_typedefs:
                 pass  # We only let this typedef through for the extension function
             else:

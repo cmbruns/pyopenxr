@@ -185,6 +185,7 @@ def enumerate_docstrings():
 
 
 def enumerate_modules():
+    yield xr.raw_functions
     yield xr
     # All the extension modules, two levels below xr.ext
     xr_ext = importlib.import_module("xr.ext")
@@ -277,9 +278,10 @@ def store_function_docstrings():
     updated_function_docstrings = copy.deepcopy(function_docstrings)
     for doc, path in enumerate_docstrings():
         func = path[-1]
-        if not inspect.isfunction(func):
-            continue
         n = func.__name__
+        is_func_ptr = hasattr(func, "argtypes") and hasattr(func, "restype")
+        if not inspect.isfunction(func) and not is_func_ptr:
+            continue
         if n.startswith("_"):
             continue
         qualified_name = ".".join([x.__name__ for x in path])

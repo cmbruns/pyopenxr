@@ -244,6 +244,287 @@ function_docstrings = {
         """),
         "spec_url": "https://registry.khronos.org/OpenXR/specs/1.1/man/html/xrGetInstanceProcAddr.html",
     },
+    "xr.raw_functions.xrAcquireSwapchainImage": {
+        "docstring": inspect.cleandoc("""
+            Acquire a swapchain image.
+        """),
+    },
+    "xr.raw_functions.xrApplyHapticFeedback": {
+        "docstring": inspect.cleandoc("""
+            Apply haptic feedback.
+        """),
+    },
+    "xr.raw_functions.xrAttachSessionActionSets": {
+        "docstring": inspect.cleandoc("""
+            Attaches action sets to a given session.
+        """),
+    },
+    "xr.raw_functions.xrBeginFrame": {
+        "docstring": inspect.cleandoc("""
+            Marks a frame.
+        """),
+    },
+    "xr.raw_functions.xrBeginSession": {
+        "docstring": inspect.cleandoc("""
+            Begins an XrSession.
+        """),
+    },
+    "xr.raw_functions.xrCreateAction": {
+        "docstring": inspect.cleandoc("""
+            Creates an XrAction.
+        """),
+    },
+    "xr.raw_functions.xrCreateActionSet": {
+        "docstring": inspect.cleandoc("""
+            Creates an XrActionSet.
+        """),
+    },
+    "xr.raw_functions.xrCreateActionSpace": {
+        "docstring": inspect.cleandoc("""
+            Creates a space based on a pose action.
+        """),
+    },
+    "xr.raw_functions.xrCreateInstance": {
+        "docstring": inspect.cleandoc("""
+            Creates an OpenXR Instance.
+        """),
+    },
+    "xr.raw_functions.xrCreateReferenceSpace": {
+        "docstring": inspect.cleandoc("""
+            Creates a reference space.
+        """),
+    },
+    "xr.raw_functions.xrCreateSession": {
+        "docstring": inspect.cleandoc("""
+            Creates an XrSession.
+        """),
+    },
+    "xr.raw_functions.xrCreateSwapchain": {
+        "docstring": inspect.cleandoc("""
+            Creates an XrSwapchain.
+        """),
+    },
+    "xr.raw_functions.xrDestroyAction": {
+        "docstring": inspect.cleandoc("""
+            Destroys an XrAction.
+        """),
+    },
+    "xr.raw_functions.xrDestroyActionSet": {
+        "docstring": inspect.cleandoc("""
+            Destroys an XrActionSet.
+        """),
+    },
+    "xr.raw_functions.xrDestroyInstance": {
+        "docstring": inspect.cleandoc("""
+            Destroy an instance of OpenXR.
+        """),
+    },
+    "xr.raw_functions.xrDestroySession": {
+        "docstring": inspect.cleandoc("""
+            Destroys an XrSession.
+        """),
+    },
+    "xr.raw_functions.xrDestroySpace": {
+        "docstring": inspect.cleandoc("""
+            Destroys an XrSpace.
+        """),
+    },
+    "xr.raw_functions.xrDestroySwapchain": {
+        "docstring": inspect.cleandoc("""
+            Destroys an XrSwapchain.
+        """),
+    },
+    "xr.raw_functions.xrEndFrame": {
+        "docstring": inspect.cleandoc("""
+            Marks a frame.
+        """),
+    },
+    "xr.raw_functions.xrEndSession": {
+        "docstring": inspect.cleandoc("""
+            Ends an XrSession.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateApiLayerProperties": {
+        "docstring": inspect.cleandoc("""
+            Returns up to requested number of global layer properties.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateBoundSourcesForAction": {
+        "docstring": inspect.cleandoc("""
+            Queries the bound input sources for an action.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateEnvironmentBlendModes": {
+        "docstring": inspect.cleandoc("""
+            Lists environment blend modes.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateInstanceExtensionProperties": {
+        "docstring": inspect.cleandoc("""
+            Returns properties of available instance extensions.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateReferenceSpaces": {
+        "docstring": inspect.cleandoc("""
+            Enumerate available reference spaces.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateSwapchainFormats": {
+        "docstring": inspect.cleandoc("""
+            Enumerates swapchain formats.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateSwapchainImages": {
+        "docstring": inspect.cleandoc("""
+            Gets images from an XrSwapchain.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateViewConfigurationViews": {
+        "docstring": inspect.cleandoc("""
+            Gets view configuration views.
+        """),
+    },
+    "xr.raw_functions.xrEnumerateViewConfigurations": {
+        "docstring": inspect.cleandoc("""
+            Enumerates supported view configurations.
+        """),
+    },
+    "xr.raw_functions.xrGetActionStateBoolean": {
+        "docstring": inspect.cleandoc("""
+            Gets boolean action state.
+        """),
+    },
+    "xr.raw_functions.xrGetActionStateFloat": {
+        "docstring": inspect.cleandoc("""
+            Gets a floating point action state.
+        """),
+    },
+    "xr.raw_functions.xrGetActionStatePose": {
+        "docstring": inspect.cleandoc("""
+            Gets metadata from a pose action.
+        """),
+    },
+    "xr.raw_functions.xrGetActionStateVector2f": {
+        "docstring": inspect.cleandoc("""
+            Gets 2D float vector action state.
+        """),
+    },
+    "xr.raw_functions.xrGetCurrentInteractionProfile": {
+        "docstring": inspect.cleandoc("""
+            Gets the current interaction profile for a top level user paths.
+        """),
+    },
+    "xr.raw_functions.xrGetInputSourceLocalizedName": {
+        "docstring": inspect.cleandoc("""
+            Gets a localized source name.
+        """),
+    },
+    "xr.raw_functions.xrGetInstanceProcAddr": {
+        "docstring": inspect.cleandoc("""
+            Gets a function pointer for an OpenXR function.
+        """),
+    },
+    "xr.raw_functions.xrGetInstanceProperties": {
+        "docstring": inspect.cleandoc("""
+            Gets information about the instance.
+        """),
+    },
+    "xr.raw_functions.xrGetReferenceSpaceBoundsRect": {
+        "docstring": inspect.cleandoc("""
+            Gets the bounds rectangle of a reference space.
+        """),
+    },
+    "xr.raw_functions.xrGetSystem": {
+        "docstring": inspect.cleandoc("""
+            Gets a system identifier.
+        """),
+    },
+    "xr.raw_functions.xrGetSystemProperties": {
+        "docstring": inspect.cleandoc("""
+            Gets the properties of a particular system.
+        """),
+    },
+    "xr.raw_functions.xrGetViewConfigurationProperties": {
+        "docstring": inspect.cleandoc("""
+            Gets information for a view configuration.
+        """),
+    },
+    "xr.raw_functions.xrLocateSpace": {
+        "docstring": inspect.cleandoc("""
+            Locates a space with reference to another space.
+        """),
+    },
+    "xr.raw_functions.xrLocateSpaces": {
+        "docstring": inspect.cleandoc("""
+            Locate an array of spaces.
+        """),
+    },
+    "xr.raw_functions.xrLocateViews": {
+        "docstring": inspect.cleandoc("""
+            Gets view and projection info.
+        """),
+    },
+    "xr.raw_functions.xrPathToString": {
+        "docstring": inspect.cleandoc("""
+            Converts a semantic path to a string.
+        """),
+    },
+    "xr.raw_functions.xrPollEvent": {
+        "docstring": inspect.cleandoc("""
+            Polls for events.
+        """),
+    },
+    "xr.raw_functions.xrReleaseSwapchainImage": {
+        "docstring": inspect.cleandoc("""
+            Release a swapchain image.
+        """),
+    },
+    "xr.raw_functions.xrRequestExitSession": {
+        "docstring": inspect.cleandoc("""
+            Request to exit a running session.
+        """),
+    },
+    "xr.raw_functions.xrResultToString": {
+        "docstring": inspect.cleandoc("""
+            Converts an XrResult to a UTF-8 string.
+        """),
+    },
+    "xr.raw_functions.xrStopHapticFeedback": {
+        "docstring": inspect.cleandoc("""
+            Stop haptic feedback.
+        """),
+    },
+    "xr.raw_functions.xrStringToPath": {
+        "docstring": inspect.cleandoc("""
+            Converts a string to a semantic path.
+        """),
+    },
+    "xr.raw_functions.xrStructureTypeToString": {
+        "docstring": inspect.cleandoc("""
+            Converts an XrStructureType to a UTF-8 string.
+        """),
+    },
+    "xr.raw_functions.xrSuggestInteractionProfileBindings": {
+        "docstring": inspect.cleandoc("""
+            Sets the application-suggested bindings for the interaction
+            profile.
+        """),
+    },
+    "xr.raw_functions.xrSyncActions": {
+        "docstring": inspect.cleandoc("""
+            Updates the current state of input actions.
+        """),
+    },
+    "xr.raw_functions.xrWaitFrame": {
+        "docstring": inspect.cleandoc("""
+            Frame timing function.
+        """),
+    },
+    "xr.raw_functions.xrWaitSwapchainImage": {
+        "docstring": inspect.cleandoc("""
+            Wait for a swapchain image to be available.
+        """),
+    },
 }
 
 __all__ = [

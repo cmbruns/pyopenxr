@@ -386,11 +386,14 @@ class FunctionItem(CodeItem):
                 f"""
                 {self.name(Api.C)} = openxr_loader_library.{self.name(Api.C)}
                 """)
-            update_docstrings = True  # TODO: cache raw function docstrings
+            update_docstrings = False  # TODO: cache raw function docstrings
             if update_docstrings:
                 docstring = create_docstring(self.name(Api.C))
             else:
                 docstring = None
+            xr_fn_name = f"xr.raw_functions.{self.name(Api.C)}"
+            if xr_fn_name in function_docstrings:
+                docstring = function_docstrings[xr_fn_name]["docstring"]
             if docstring is not None:
                 result += f'\n{self.name(Api.C)}.__doc__ = """\n'
                 result += "\n".join(textwrap.wrap(
@@ -693,7 +696,9 @@ class StructItem(CodeItem):
             result += "\n    pass"
             return result
         structure_coder = StructureCoder(self)
-        result += structure_coder.generate_constructor()
+        # Base classes must not have __init__ methods
+        if "BaseHeader" not in self.name():
+            result += structure_coder.generate_constructor()
         result += self._sequence_code()
         result += "\n"
         # Hard code this for now, generalize later if needed
@@ -1597,8 +1602,13 @@ class StructureCoder(object):
 
     def generate_properties(self) -> str:
         result = ""
+        # skip next/type at the end, and any other base members at the beginning
         skip = self.struct.skip_count
-        for fc in self.field_coders:
+        i_min = max(0, skip - 2)
+        i_max = len(self.field_coders)
+        if skip >= 2:
+            i_max = -2
+        for fc in self.field_coders[i_min: i_max]:
             prop_strings = []
             for s in fc.property_code():
                 prop_strings.append(s)
@@ -1683,20 +1693,35 @@ _struct_parents = {}
 
 def parent_struct(derived_struct_name: str) -> tuple[str, int]:
     if len(_struct_parents) == 0:
-        member_counts = {}
+        # Initialize the index on the first call
+        all_structs = {}
+        child_structs = []
         for struct in xr_registry.findall("types/type"):
-            if "name" in struct.attrib:
-                name = struct.attrib["name"].removeprefix("Xr")
-                if "BaseHeader" in name:
-                    member_count = len(list(struct.findall("member")))
-                    member_counts[name] = member_count
-        for struct in xr_registry.findall("types/type"):
-            if "parentstruct" not in struct.attrib:
+            # 1) Is it a structure?
+            if "category" not in struct.attrib:
                 continue
+            if "name" not in struct.attrib:
+                continue
+            if struct.attrib["category"] != "struct":
+                continue
+            # 2) Does it have next and type members?
+            name = struct.attrib["name"].removeprefix("Xr")
+            all_structs[name] = struct
+            members = [n.text for n in struct.findall("member/name")]
+            if len(members) >= 2 and members[0] == "type" and members[1] == "next":
+                if "parentstruct" in struct.attrib:
+                    # We will finish this one later in the second pass
+                    child_structs.append(struct)
+                else:
+                    _struct_parents[name] = ("BaseXrStructure", 2)
+            else:
+                _struct_parents[name] = ("Structure", 0)
+        for struct in child_structs:
             parent = struct.attrib["parentstruct"].removeprefix("Xr")
             child = struct.attrib["name"].removeprefix("Xr")
-            _struct_parents[child] = (parent, member_counts[parent])
-    return _struct_parents.get(derived_struct_name, ("BaseXrStructure", 2))
+            skip = len(list(all_structs[parent].findall("member")))
+            _struct_parents[child] = (parent, skip)
+    return _struct_parents.get(derived_struct_name, ("Structure", 0))
 
 
 _enum_defaults = {}

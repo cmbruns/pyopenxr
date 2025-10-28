@@ -63,6 +63,7 @@ def main():
             enum_field_helper,
             next_field_helper,
         )
+        from ..base_struct import BaseXrStructure
         from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
         from ..version import Version
