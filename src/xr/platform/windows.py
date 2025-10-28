@@ -1531,6 +1531,7 @@ def create_spatial_anchor_from_perception_anchor_msft(
     perception_anchor = c_int()
     anchor = SpatialAnchorMSFT()
     anchor.instance = session.instance
+    anchor._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorFromPerceptionAnchorMSFT"),
         PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT,
@@ -1679,6 +1680,7 @@ def create_space_from_coordinate_frame_uidml(
         create_info = CoordinateSpaceCreateInfoML()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpaceFromCoordinateFrameUIDML"),
         PFN_xrCreateSpaceFromCoordinateFrameUIDML,

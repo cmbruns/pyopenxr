@@ -152,6 +152,7 @@ def create_instance(
         create_info = InstanceCreateInfo()
     instance = Instance()
     instance.instance = instance
+    instance._create_info = create_info
     fxn = raw_functions.xrCreateInstance
     result = check_result(fxn(
         create_info,
@@ -303,6 +304,7 @@ def create_session(
         create_info = SessionCreateInfo()
     session = Session()
     session.instance = instance
+    session._create_info = create_info
     fxn = raw_functions.xrCreateSession
     result = check_result(fxn(
         instance,
@@ -359,6 +361,7 @@ def create_reference_space(
         create_info = ReferenceSpaceCreateInfo()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = raw_functions.xrCreateReferenceSpace
     result = check_result(fxn(
         session,
@@ -394,6 +397,7 @@ def create_action_space(
         create_info = ActionSpaceCreateInfo()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = raw_functions.xrCreateActionSpace
     result = check_result(fxn(
         session,
@@ -547,6 +551,7 @@ def create_swapchain(
         create_info = SwapchainCreateInfo()
     swapchain = Swapchain()
     swapchain.instance = session.instance
+    swapchain._create_info = create_info
     fxn = raw_functions.xrCreateSwapchain
     result = check_result(fxn(
         session,
@@ -802,6 +807,7 @@ def create_action_set(
         create_info = ActionSetCreateInfo()
     action_set = ActionSet()
     action_set.instance = instance
+    action_set._create_info = create_info
     fxn = raw_functions.xrCreateActionSet
     result = check_result(fxn(
         instance,
@@ -832,6 +838,7 @@ def create_action(
         create_info = ActionCreateInfo()
     action = Action()
     action.instance = action_set.instance
+    action._create_info = create_info
     fxn = raw_functions.xrCreateAction
     result = check_result(fxn(
         action_set,
@@ -1298,6 +1305,7 @@ def create_spatial_anchor_msft(
         create_info = SpatialAnchorCreateInfoMSFT()
     anchor = SpatialAnchorMSFT()
     anchor.instance = session.instance
+    anchor._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorMSFT"),
         PFN_xrCreateSpatialAnchorMSFT,
@@ -1320,6 +1328,7 @@ def create_spatial_anchor_space_msft(
         create_info = SpatialAnchorSpaceCreateInfoMSFT()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorSpaceMSFT"),
         PFN_xrCreateSpatialAnchorSpaceMSFT,
@@ -1458,6 +1467,7 @@ def create_spatial_graph_node_space_msft(
         create_info = SpatialGraphNodeSpaceCreateInfoMSFT()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialGraphNodeSpaceMSFT"),
         PFN_xrCreateSpatialGraphNodeSpaceMSFT,
@@ -1534,6 +1544,7 @@ def create_hand_tracker_ext(
         create_info = HandTrackerCreateInfoEXT()
     hand_tracker = HandTrackerEXT()
     hand_tracker.instance = session.instance
+    hand_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateHandTrackerEXT"),
         PFN_xrCreateHandTrackerEXT,
@@ -1589,6 +1600,7 @@ def create_hand_mesh_space_msft(
         create_info = HandMeshSpaceCreateInfoMSFT()
     space = Space()
     space.instance = hand_tracker.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(hand_tracker.instance, "xrCreateHandMeshSpaceMSFT"),
         PFN_xrCreateHandMeshSpaceMSFT,
@@ -1787,6 +1799,7 @@ def create_body_tracker_fb(
         create_info = BodyTrackerCreateInfoFB()
     body_tracker = BodyTrackerFB()
     body_tracker.instance = session.instance
+    body_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateBodyTrackerFB"),
         PFN_xrCreateBodyTrackerFB,
@@ -1891,6 +1904,7 @@ def create_scene_observer_msft(
         create_info = SceneObserverCreateInfoMSFT()
     scene_observer = SceneObserverMSFT()
     scene_observer.instance = session.instance
+    scene_observer._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSceneObserverMSFT"),
         PFN_xrCreateSceneObserverMSFT,
@@ -1927,6 +1941,7 @@ def create_scene_msft(
         create_info = SceneCreateInfoMSFT()
     scene = SceneMSFT()
     scene.instance = scene_observer.instance
+    scene._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(scene_observer.instance, "xrCreateSceneMSFT"),
         PFN_xrCreateSceneMSFT,
@@ -2183,6 +2198,7 @@ def create_facial_tracker_htc(
         create_info = FacialTrackerCreateInfoHTC()
     facial_tracker = FacialTrackerHTC()
     facial_tracker.instance = session.instance
+    facial_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateFacialTrackerHTC"),
         PFN_xrCreateFacialTrackerHTC,
@@ -2401,6 +2417,7 @@ def create_foveation_profile_fb(
         create_info = FoveationProfileCreateInfoFB()
     profile = FoveationProfileFB()
     profile.instance = session.instance
+    profile._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateFoveationProfileFB"),
         PFN_xrCreateFoveationProfileFB,
@@ -2456,6 +2473,7 @@ def create_keyboard_space_fb(
         create_info = KeyboardSpaceCreateInfoFB()
     keyboard_space = Space()
     keyboard_space.instance = session.instance
+    keyboard_space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateKeyboardSpaceFB"),
         PFN_xrCreateKeyboardSpaceFB,
@@ -2478,6 +2496,7 @@ def create_triangle_mesh_fb(
         create_info = TriangleMeshCreateInfoFB()
     out_triangle_mesh = TriangleMeshFB()
     out_triangle_mesh.instance = session.instance
+    out_triangle_mesh._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateTriangleMeshFB"),
         PFN_xrCreateTriangleMeshFB,
@@ -2611,6 +2630,7 @@ def create_passthrough_fb(
         create_info = PassthroughCreateInfoFB()
     out_passthrough = PassthroughFB()
     out_passthrough.instance = session.instance
+    out_passthrough._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreatePassthroughFB"),
         PFN_xrCreatePassthroughFB,
@@ -2675,6 +2695,7 @@ def create_passthrough_layer_fb(
         create_info = PassthroughLayerCreateInfoFB()
     out_layer = PassthroughLayerFB()
     out_layer.instance = session.instance
+    out_layer._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreatePassthroughLayerFB"),
         PFN_xrCreatePassthroughLayerFB,
@@ -2755,6 +2776,7 @@ def create_geometry_instance_fb(
         create_info = GeometryInstanceCreateInfoFB()
     out_geometry_instance = GeometryInstanceFB()
     out_geometry_instance.instance = session.instance
+    out_geometry_instance._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateGeometryInstanceFB"),
         PFN_xrCreateGeometryInstanceFB,
@@ -2961,6 +2983,7 @@ def create_marker_space_varjo(
         create_info = MarkerSpaceCreateInfoVARJO()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateMarkerSpaceVARJO"),
         PFN_xrCreateMarkerSpaceVARJO,
@@ -2999,6 +3022,7 @@ def create_marker_detector_ml(
         create_info = MarkerDetectorCreateInfoML()
     marker_detector = MarkerDetectorML()
     marker_detector.instance = session.instance
+    marker_detector._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateMarkerDetectorML"),
         PFN_xrCreateMarkerDetectorML,
@@ -3187,6 +3211,7 @@ def create_marker_space_ml(
         create_info = MarkerSpaceCreateInfoML()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateMarkerSpaceML"),
         PFN_xrCreateMarkerSpaceML,
@@ -3290,6 +3315,7 @@ def create_exported_localization_map_ml(
 ) -> ExportedLocalizationMapML:
     map = ExportedLocalizationMapML()
     map.instance = session.instance
+    map._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateExportedLocalizationMapML"),
         PFN_xrCreateExportedLocalizationMapML,
@@ -3355,6 +3381,7 @@ def create_spatial_anchors_async_ml(
         create_info = SpatialAnchorsCreateInfoBaseHeaderML()
     future = FutureEXT()
     future.instance = session.instance
+    future._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorsAsyncML"),
         PFN_xrCreateSpatialAnchorsAsyncML,
@@ -3413,6 +3440,7 @@ def create_spatial_anchors_storage_ml(
         create_info = SpatialAnchorsCreateStorageInfoML()
     storage = SpatialAnchorsStorageML()
     storage.instance = session.instance
+    storage._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorsStorageML"),
         PFN_xrCreateSpatialAnchorsStorageML,
@@ -3598,6 +3626,7 @@ def create_spatial_anchor_store_connection_msft(
 ) -> SpatialAnchorStoreConnectionMSFT:
     spatial_anchor_store = SpatialAnchorStoreConnectionMSFT()
     spatial_anchor_store.instance = session.instance
+    spatial_anchor_store._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorStoreConnectionMSFT"),
         PFN_xrCreateSpatialAnchorStoreConnectionMSFT,
@@ -3676,6 +3705,7 @@ def create_spatial_anchor_from_persisted_name_msft(
 ) -> SpatialAnchorMSFT:
     spatial_anchor = SpatialAnchorMSFT()
     spatial_anchor.instance = session.instance
+    spatial_anchor._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorFromPersistedNameMSFT"),
         PFN_xrCreateSpatialAnchorFromPersistedNameMSFT,
@@ -4053,6 +4083,7 @@ def create_face_tracker_fb(
         create_info = FaceTrackerCreateInfoFB()
     face_tracker = FaceTrackerFB()
     face_tracker.instance = session.instance
+    face_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateFaceTrackerFB"),
         PFN_xrCreateFaceTrackerFB,
@@ -4108,6 +4139,7 @@ def create_eye_tracker_fb(
         create_info = EyeTrackerCreateInfoFB()
     eye_tracker = EyeTrackerFB()
     eye_tracker.instance = session.instance
+    eye_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateEyeTrackerFB"),
         PFN_xrCreateEyeTrackerFB,
@@ -4215,6 +4247,7 @@ def create_virtual_keyboard_meta(
         create_info = VirtualKeyboardCreateInfoMETA()
     keyboard = VirtualKeyboardMETA()
     keyboard.instance = session.instance
+    keyboard._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateVirtualKeyboardMETA"),
         PFN_xrCreateVirtualKeyboardMETA,
@@ -4550,6 +4583,7 @@ def create_space_user_fb(
 ) -> SpaceUserFB:
     user = SpaceUserFB()
     user.instance = session.instance
+    user._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpaceUserFB"),
         PFN_xrCreateSpaceUserFB,
@@ -4698,6 +4732,7 @@ def create_passthrough_color_lut_meta(
         create_info = PassthroughColorLutCreateInfoMETA()
     color_lut = PassthroughColorLutMETA()
     color_lut.instance = passthrough.instance
+    color_lut._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(passthrough.instance, "xrCreatePassthroughColorLutMETA"),
         PFN_xrCreatePassthroughColorLutMETA,
@@ -4799,6 +4834,7 @@ def create_face_tracker2_fb(
         create_info = FaceTrackerCreateInfo2FB()
     face_tracker = FaceTracker2FB()
     face_tracker.instance = session.instance
+    face_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateFaceTracker2FB"),
         PFN_xrCreateFaceTracker2FB,
@@ -4873,6 +4909,7 @@ def create_environment_depth_provider_meta(
         create_info = EnvironmentDepthProviderCreateInfoMETA()
     environment_depth_provider = EnvironmentDepthProviderMETA()
     environment_depth_provider.instance = session.instance
+    environment_depth_provider._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateEnvironmentDepthProviderMETA"),
         PFN_xrCreateEnvironmentDepthProviderMETA,
@@ -4937,6 +4974,7 @@ def create_environment_depth_swapchain_meta(
         create_info = EnvironmentDepthSwapchainCreateInfoMETA()
     swapchain = EnvironmentDepthSwapchainMETA()
     swapchain.instance = environment_depth_provider.instance
+    swapchain._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(environment_depth_provider.instance, "xrCreateEnvironmentDepthSwapchainMETA"),
         PFN_xrCreateEnvironmentDepthSwapchainMETA,
@@ -5054,6 +5092,7 @@ def create_render_model_ext(
         create_info = RenderModelCreateInfoEXT()
     render_model = RenderModelEXT()
     render_model.instance = session.instance
+    render_model._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateRenderModelEXT"),
         PFN_xrCreateRenderModelEXT,
@@ -5109,6 +5148,7 @@ def create_render_model_space_ext(
         create_info = RenderModelSpaceCreateInfoEXT()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateRenderModelSpaceEXT"),
         PFN_xrCreateRenderModelSpaceEXT,
@@ -5131,6 +5171,7 @@ def create_render_model_asset_ext(
         create_info = RenderModelAssetCreateInfoEXT()
     asset = RenderModelAssetEXT()
     asset.instance = session.instance
+    asset._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateRenderModelAssetEXT"),
         PFN_xrCreateRenderModelAssetEXT,
@@ -5325,6 +5366,7 @@ def create_passthrough_htc(
         create_info = PassthroughCreateInfoHTC()
     passthrough = PassthroughHTC()
     passthrough.instance = session.instance
+    passthrough._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreatePassthroughHTC"),
         PFN_xrCreatePassthroughHTC,
@@ -5377,6 +5419,7 @@ def create_spatial_anchor_htc(
         create_info = SpatialAnchorCreateInfoHTC()
     anchor = Space()
     anchor.instance = session.instance
+    anchor._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorHTC"),
         PFN_xrCreateSpatialAnchorHTC,
@@ -5416,6 +5459,7 @@ def create_body_tracker_htc(
         create_info = BodyTrackerCreateInfoHTC()
     body_tracker = BodyTrackerHTC()
     body_tracker.instance = session.instance
+    body_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateBodyTrackerHTC"),
         PFN_xrCreateBodyTrackerHTC,
@@ -5508,6 +5552,7 @@ def create_body_tracker_bd(
         create_info = BodyTrackerCreateInfoBD()
     body_tracker = BodyTrackerBD()
     body_tracker.instance = session.instance
+    body_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateBodyTrackerBD"),
         PFN_xrCreateBodyTrackerBD,
@@ -5592,6 +5637,7 @@ def create_face_tracker_bd(
         create_info = FaceTrackerCreateInfoBD()
     tracker = FaceTrackerBD()
     tracker.instance = session.instance
+    tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateFaceTrackerBD"),
         PFN_xrCreateFaceTrackerBD,
@@ -5750,6 +5796,7 @@ def create_sense_data_provider_bd(
         create_info = SenseDataProviderCreateInfoBD()
     provider = SenseDataProviderBD()
     provider.instance = session.instance
+    provider._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSenseDataProviderBD"),
         PFN_xrCreateSenseDataProviderBD,
@@ -5926,6 +5973,7 @@ def create_spatial_entity_anchor_bd(
         create_info = SpatialEntityAnchorCreateInfoBD()
     anchor = AnchorBD()
     anchor.instance = provider.instance
+    anchor._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(provider.instance, "xrCreateSpatialEntityAnchorBD"),
         PFN_xrCreateSpatialEntityAnchorBD,
@@ -5979,6 +6027,7 @@ def create_anchor_space_bd(
         create_info = AnchorSpaceCreateInfoBD()
     space = Space()
     space.instance = session.instance
+    space._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateAnchorSpaceBD"),
         PFN_xrCreateAnchorSpaceBD,
@@ -5999,6 +6048,7 @@ def create_spatial_anchor_async_bd(
 ) -> FutureEXT:
     future = FutureEXT()
     future.instance = provider.instance
+    future._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(provider.instance, "xrCreateSpatialAnchorAsyncBD"),
         PFN_xrCreateSpatialAnchorAsyncBD,
@@ -6230,6 +6280,7 @@ def create_plane_detector_ext(
         create_info = PlaneDetectorCreateInfoEXT()
     plane_detector = PlaneDetectorEXT()
     plane_detector.instance = session.instance
+    plane_detector._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreatePlaneDetectorEXT"),
         PFN_xrCreatePlaneDetectorEXT,
@@ -6403,6 +6454,7 @@ def create_trackable_tracker_android(
         create_info = TrackableTrackerCreateInfoANDROID()
     trackable_tracker = TrackableTrackerANDROID()
     trackable_tracker.instance = session.instance
+    trackable_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateTrackableTrackerANDROID"),
         PFN_xrCreateTrackableTrackerANDROID,
@@ -6487,6 +6539,7 @@ def create_anchor_space_android(
         create_info = AnchorSpaceCreateInfoANDROID()
     anchor_output = Space()
     anchor_output.instance = session.instance
+    anchor_output._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateAnchorSpaceANDROID"),
         PFN_xrCreateAnchorSpaceANDROID,
@@ -6541,6 +6594,7 @@ def create_device_anchor_persistence_android(
         create_info = DeviceAnchorPersistenceCreateInfoANDROID()
     out_handle = DeviceAnchorPersistenceANDROID()
     out_handle.instance = session.instance
+    out_handle._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateDeviceAnchorPersistenceANDROID"),
         PFN_xrCreateDeviceAnchorPersistenceANDROID,
@@ -6615,6 +6669,7 @@ def create_persisted_anchor_space_android(
         create_info = PersistedAnchorSpaceCreateInfoANDROID()
     anchor_output = Space()
     anchor_output.instance = handle.instance
+    anchor_output._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(handle.instance, "xrCreatePersistedAnchorSpaceANDROID"),
         PFN_xrCreatePersistedAnchorSpaceANDROID,
@@ -6682,6 +6737,7 @@ def create_face_tracker_android(
         create_info = FaceTrackerCreateInfoANDROID()
     face_tracker = FaceTrackerANDROID()
     face_tracker.instance = session.instance
+    face_tracker._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateFaceTrackerANDROID"),
         PFN_xrCreateFaceTrackerANDROID,
@@ -6910,6 +6966,7 @@ def create_world_mesh_detector_ml(
         create_info = WorldMeshDetectorCreateInfoML()
     detector = WorldMeshDetectorML()
     detector.instance = session.instance
+    detector._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateWorldMeshDetectorML"),
         PFN_xrCreateWorldMeshDetectorML,
@@ -7080,6 +7137,7 @@ def create_facial_expression_client_ml(
         create_info = FacialExpressionClientCreateInfoML()
     facial_expression_client = FacialExpressionClientML()
     facial_expression_client.instance = session.instance
+    facial_expression_client._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateFacialExpressionClientML"),
         PFN_xrCreateFacialExpressionClientML,
@@ -7352,6 +7410,7 @@ def create_spatial_context_async_ext(
         create_info = SpatialContextCreateInfoEXT()
     future = FutureEXT()
     future.instance = session.instance
+    future._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialContextAsyncEXT"),
         PFN_xrCreateSpatialContextAsyncEXT,
@@ -7407,6 +7466,7 @@ def create_spatial_discovery_snapshot_async_ext(
         create_info = SpatialDiscoverySnapshotCreateInfoEXT()
     future = FutureEXT()
     future.instance = spatial_context.instance
+    future._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(spatial_context.instance, "xrCreateSpatialDiscoverySnapshotAsyncEXT"),
         PFN_xrCreateSpatialDiscoverySnapshotAsyncEXT,
@@ -7481,6 +7541,7 @@ def create_spatial_entity_from_id_ext(
         create_info = SpatialEntityFromIdCreateInfoEXT()
     spatial_entity = SpatialEntityEXT()
     spatial_entity.instance = spatial_context.instance
+    spatial_entity._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(spatial_context.instance, "xrCreateSpatialEntityFromIdEXT"),
         PFN_xrCreateSpatialEntityFromIdEXT,
@@ -7517,6 +7578,7 @@ def create_spatial_update_snapshot_ext(
         create_info = SpatialUpdateSnapshotCreateInfoEXT()
     snapshot = SpatialSnapshotEXT()
     snapshot.instance = spatial_context.instance
+    snapshot._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(spatial_context.instance, "xrCreateSpatialUpdateSnapshotEXT"),
         PFN_xrCreateSpatialUpdateSnapshotEXT,
@@ -7818,6 +7880,7 @@ def create_spatial_persistence_context_async_ext(
         create_info = SpatialPersistenceContextCreateInfoEXT()
     future = FutureEXT()
     future.instance = session.instance
+    future._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialPersistenceContextAsyncEXT"),
         PFN_xrCreateSpatialPersistenceContextAsyncEXT,

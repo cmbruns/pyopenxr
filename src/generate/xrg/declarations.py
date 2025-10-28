@@ -529,6 +529,8 @@ class StructFieldItem(CodeItem):
             return f"_{n}"  # Prepend with underscore
         elif self.type.name(Api.CTYPES) == "PFN_xrDebugUtilsMessengerCallbackEXT":
             return f"_{n}"  # Prepend with underscore
+        elif self.type.name(Api.CTYPES) == "c_void_p" and self.name() == "user_data":
+            return f"_{n}"
         else:
             return n
 
@@ -960,6 +962,8 @@ class CreatedHandleOutputParameterCoder(OutputParameterCoder):
             yield f"{n}.instance = {self.parent_parameter.name(api)}"
         else:
             yield f"{n}.instance = {self.parent_parameter.name(api)}.instance"
+        # Cache create_info to avoid premature garbage collection of stuff like callback closures.
+        yield f"{n}._create_info = create_info"
 
 
 class BufferCoder(ParameterCoderBase):
