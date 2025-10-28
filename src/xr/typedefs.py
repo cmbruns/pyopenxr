@@ -342,12 +342,8 @@ class InstanceCreateInfo(BaseXrStructure):
 
     @property
     def enabled_api_layer_names(self) -> Array[c_char_p]:
-        if self.enabled_api_layer_count == 0:
-            return (c_char_p * 0)()
-        else:
-            return (c_char_p * self.enabled_api_layer_count).from_address(
-                ctypes.addressof(self._enabled_api_layer_names.contents))
-
+        return expose_ctypes_array(c_char_p, self.enabled_api_layer_count, self._enabled_api_layer_names)
+    
     @enabled_api_layer_names.setter
     def enabled_api_layer_names(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -356,12 +352,8 @@ class InstanceCreateInfo(BaseXrStructure):
 
     @property
     def enabled_extension_names(self) -> Array[c_char_p]:
-        if self.enabled_extension_count == 0:
-            return (c_char_p * 0)()
-        else:
-            return (c_char_p * self.enabled_extension_count).from_address(
-                ctypes.addressof(self._enabled_extension_names.contents))
-
+        return expose_ctypes_array(c_char_p, self.enabled_extension_count, self._enabled_extension_names)
+    
     @enabled_extension_names.setter
     def enabled_extension_names(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -1222,12 +1214,8 @@ class FrameEndInfo(BaseXrStructure):
 
     @property
     def layers(self) -> Array[POINTER(CompositionLayerBaseHeader)]:
-        if self.layer_count == 0:
-            return (POINTER(CompositionLayerBaseHeader) * 0)()
-        else:
-            return (POINTER(CompositionLayerBaseHeader) * self.layer_count).from_address(
-                ctypes.addressof(self._layers.contents))
-
+        return expose_ctypes_array(POINTER(CompositionLayerBaseHeader), self.layer_count, self._layers)
+    
     @layers.setter
     def layers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -1465,12 +1453,8 @@ class ActionCreateInfo(BaseXrStructure):
 
     @property
     def subaction_paths(self) -> Array[c_uint64]:
-        if self.count_subaction_paths == 0:
-            return (c_uint64 * 0)()
-        else:
-            return (c_uint64 * self.count_subaction_paths).from_address(
-                ctypes.addressof(self._subaction_paths.contents))
-
+        return expose_ctypes_array(c_uint64, self.count_subaction_paths, self._subaction_paths)
+    
     @subaction_paths.setter
     def subaction_paths(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -1536,12 +1520,8 @@ class InteractionProfileSuggestedBinding(BaseXrStructure):
 
     @property
     def suggested_bindings(self) -> Array[ActionSuggestedBinding]:
-        if self.count_suggested_bindings == 0:
-            return (ActionSuggestedBinding * 0)()
-        else:
-            return (ActionSuggestedBinding * self.count_suggested_bindings).from_address(
-                ctypes.addressof(self._suggested_bindings.contents))
-
+        return expose_ctypes_array(ActionSuggestedBinding, self.count_suggested_bindings, self._suggested_bindings)
+    
     @suggested_bindings.setter
     def suggested_bindings(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -1580,12 +1560,8 @@ class SessionActionSetsAttachInfo(BaseXrStructure):
 
     @property
     def action_sets(self) -> Array[ActionSet]:
-        if self.count_action_sets == 0:
-            return (ActionSet * 0)()
-        else:
-            return (ActionSet * self.count_action_sets).from_address(
-                ctypes.addressof(self._action_sets.contents))
-
+        return expose_ctypes_array(ActionSet, self.count_action_sets, self._action_sets)
+    
     @action_sets.setter
     def action_sets(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -1866,12 +1842,8 @@ class ActionsSyncInfo(BaseXrStructure):
 
     @property
     def active_action_sets(self) -> Array[ActiveActionSet]:
-        if self.count_active_action_sets == 0:
-            return (ActiveActionSet * 0)()
-        else:
-            return (ActiveActionSet * self.count_active_action_sets).from_address(
-                ctypes.addressof(self._active_action_sets.contents))
-
+        return expose_ctypes_array(ActiveActionSet, self.count_active_action_sets, self._active_action_sets)
+    
     @active_action_sets.setter
     def active_action_sets(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -2189,12 +2161,8 @@ class CompositionLayerProjection(CompositionLayerBaseHeader):
 
     @property
     def views(self) -> Array[CompositionLayerProjectionView]:
-        if self.view_count == 0:
-            return (CompositionLayerProjectionView * 0)()
-        else:
-            return (CompositionLayerProjectionView * self.view_count).from_address(
-                ctypes.addressof(self._views.contents))
-
+        return expose_ctypes_array(CompositionLayerProjectionView, self.view_count, self._views)
+    
     @views.setter
     def views(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -2955,12 +2923,8 @@ class SpacesLocateInfo(BaseXrStructure):
 
     @property
     def spaces(self) -> Array[Space]:
-        if self.space_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.space_count).from_address(
-                ctypes.addressof(self._spaces.contents))
-
+        return expose_ctypes_array(Space, self.space_count, self._spaces)
+    
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -3032,12 +2996,8 @@ class SpaceLocations(BaseXrStructure):
 
     @property
     def locations(self) -> Array[SpaceLocationData]:
-        if self.location_count == 0:
-            return (SpaceLocationData * 0)()
-        else:
-            return (SpaceLocationData * self.location_count).from_address(
-                ctypes.addressof(self._locations.contents))
-
+        return expose_ctypes_array(SpaceLocationData, self.location_count, self._locations)
+    
     @locations.setter
     def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -3522,12 +3482,8 @@ class BindingModificationsKHR(BaseXrStructure):
 
     @property
     def binding_modifications(self) -> Array[POINTER(BindingModificationBaseHeaderKHR)]:
-        if self.binding_modification_count == 0:
-            return (POINTER(BindingModificationBaseHeaderKHR) * 0)()
-        else:
-            return (POINTER(BindingModificationBaseHeaderKHR) * self.binding_modification_count).from_address(
-                ctypes.addressof(self._binding_modifications.contents))
-
+        return expose_ctypes_array(POINTER(BindingModificationBaseHeaderKHR), self.binding_modification_count, self._binding_modifications)
+    
     @binding_modifications.setter
     def binding_modifications(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -3835,12 +3791,8 @@ class DebugUtilsMessengerCallbackDataEXT(BaseXrStructure):
 
     @property
     def objects(self) -> Array[DebugUtilsObjectNameInfoEXT]:
-        if self.object_count == 0:
-            return (DebugUtilsObjectNameInfoEXT * 0)()
-        else:
-            return (DebugUtilsObjectNameInfoEXT * self.object_count).from_address(
-                ctypes.addressof(self._objects.contents))
-
+        return expose_ctypes_array(DebugUtilsObjectNameInfoEXT, self.object_count, self._objects)
+    
     @objects.setter
     def objects(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -3849,12 +3801,8 @@ class DebugUtilsMessengerCallbackDataEXT(BaseXrStructure):
 
     @property
     def session_labels(self) -> Array[DebugUtilsLabelEXT]:
-        if self.session_label_count == 0:
-            return (DebugUtilsLabelEXT * 0)()
-        else:
-            return (DebugUtilsLabelEXT * self.session_label_count).from_address(
-                ctypes.addressof(self._session_labels.contents))
-
+        return expose_ctypes_array(DebugUtilsLabelEXT, self.session_label_count, self._session_labels)
+    
     @session_labels.setter
     def session_labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -4650,12 +4598,8 @@ class HandJointLocationsEXT(BaseXrStructure):
 
     @property
     def joint_locations(self) -> Array[HandJointLocationEXT]:
-        if self.joint_count == 0:
-            return (HandJointLocationEXT * 0)()
-        else:
-            return (HandJointLocationEXT * self.joint_count).from_address(
-                ctypes.addressof(self._joint_locations.contents))
-
+        return expose_ctypes_array(HandJointLocationEXT, self.joint_count, self._joint_locations)
+    
     @joint_locations.setter
     def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -4694,12 +4638,8 @@ class HandJointVelocitiesEXT(BaseXrStructure):
 
     @property
     def joint_velocities(self) -> Array[HandJointVelocityEXT]:
-        if self.joint_count == 0:
-            return (HandJointVelocityEXT * 0)()
-        else:
-            return (HandJointVelocityEXT * self.joint_count).from_address(
-                ctypes.addressof(self._joint_velocities.contents))
-
+        return expose_ctypes_array(HandJointVelocityEXT, self.joint_count, self._joint_velocities)
+    
     @joint_velocities.setter
     def joint_velocities(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -5009,12 +4949,8 @@ class SecondaryViewConfigurationSessionBeginInfoMSFT(BaseXrStructure):
 
     @property
     def enabled_view_configuration_types(self) -> Array[c_int]:
-        if self.view_configuration_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.view_configuration_count).from_address(
-                ctypes.addressof(self._enabled_view_configuration_types.contents))
-
+        return expose_ctypes_array(c_int, self.view_configuration_count, self._enabled_view_configuration_types)
+    
     @enabled_view_configuration_types.setter
     def enabled_view_configuration_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -5088,12 +5024,8 @@ class SecondaryViewConfigurationFrameStateMSFT(BaseXrStructure):
 
     @property
     def view_configuration_states(self) -> Array[SecondaryViewConfigurationStateMSFT]:
-        if self.view_configuration_count == 0:
-            return (SecondaryViewConfigurationStateMSFT * 0)()
-        else:
-            return (SecondaryViewConfigurationStateMSFT * self.view_configuration_count).from_address(
-                ctypes.addressof(self._view_configuration_states.contents))
-
+        return expose_ctypes_array(SecondaryViewConfigurationStateMSFT, self.view_configuration_count, self._view_configuration_states)
+    
     @view_configuration_states.setter
     def view_configuration_states(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -5153,12 +5085,8 @@ class SecondaryViewConfigurationLayerInfoMSFT(BaseXrStructure):
 
     @property
     def layers(self) -> Array[POINTER(CompositionLayerBaseHeader)]:
-        if self.layer_count == 0:
-            return (POINTER(CompositionLayerBaseHeader) * 0)()
-        else:
-            return (POINTER(CompositionLayerBaseHeader) * self.layer_count).from_address(
-                ctypes.addressof(self._layers.contents))
-
+        return expose_ctypes_array(POINTER(CompositionLayerBaseHeader), self.layer_count, self._layers)
+    
     @layers.setter
     def layers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -5675,12 +5603,8 @@ class BodySkeletonFB(BaseXrStructure):
 
     @property
     def joints(self) -> Array[BodySkeletonJointFB]:
-        if self.joint_count == 0:
-            return (BodySkeletonJointFB * 0)()
-        else:
-            return (BodySkeletonJointFB * self.joint_count).from_address(
-                ctypes.addressof(self._joints.contents))
-
+        return expose_ctypes_array(BodySkeletonJointFB, self.joint_count, self._joints)
+    
     @joints.setter
     def joints(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -5753,12 +5677,8 @@ class BodyJointLocationsFB(BaseXrStructure):
 
     @property
     def joint_locations(self) -> Array[BodyJointLocationFB]:
-        if self.joint_count == 0:
-            return (BodyJointLocationFB * 0)()
-        else:
-            return (BodyJointLocationFB * self.joint_count).from_address(
-                ctypes.addressof(self._joint_locations.contents))
-
+        return expose_ctypes_array(BodyJointLocationFB, self.joint_count, self._joint_locations)
+    
     @joint_locations.setter
     def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6061,12 +5981,8 @@ class SceneBoundsMSFT(Structure):
 
     @property
     def spheres(self) -> Array[SceneSphereBoundMSFT]:
-        if self.sphere_count == 0:
-            return (SceneSphereBoundMSFT * 0)()
-        else:
-            return (SceneSphereBoundMSFT * self.sphere_count).from_address(
-                ctypes.addressof(self._spheres.contents))
-
+        return expose_ctypes_array(SceneSphereBoundMSFT, self.sphere_count, self._spheres)
+    
     @spheres.setter
     def spheres(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6075,12 +5991,8 @@ class SceneBoundsMSFT(Structure):
 
     @property
     def boxes(self) -> Array[SceneOrientedBoxBoundMSFT]:
-        if self.box_count == 0:
-            return (SceneOrientedBoxBoundMSFT * 0)()
-        else:
-            return (SceneOrientedBoxBoundMSFT * self.box_count).from_address(
-                ctypes.addressof(self._boxes.contents))
-
+        return expose_ctypes_array(SceneOrientedBoxBoundMSFT, self.box_count, self._boxes)
+    
     @boxes.setter
     def boxes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6089,12 +6001,8 @@ class SceneBoundsMSFT(Structure):
 
     @property
     def frustums(self) -> Array[SceneFrustumBoundMSFT]:
-        if self.frustum_count == 0:
-            return (SceneFrustumBoundMSFT * 0)()
-        else:
-            return (SceneFrustumBoundMSFT * self.frustum_count).from_address(
-                ctypes.addressof(self._frustums.contents))
-
+        return expose_ctypes_array(SceneFrustumBoundMSFT, self.frustum_count, self._frustums)
+    
     @frustums.setter
     def frustums(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6144,12 +6052,8 @@ class NewSceneComputeInfoMSFT(BaseXrStructure):
 
     @property
     def requested_features(self) -> Array[c_int]:
-        if self.requested_feature_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.requested_feature_count).from_address(
-                ctypes.addressof(self._requested_features.contents))
-
+        return expose_ctypes_array(c_int, self.requested_feature_count, self._requested_features)
+    
     @requested_features.setter
     def requested_features(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6368,12 +6272,8 @@ class SceneComponentLocationsMSFT(BaseXrStructure):
 
     @property
     def locations(self) -> Array[SceneComponentLocationMSFT]:
-        if self.location_count == 0:
-            return (SceneComponentLocationMSFT * 0)()
-        else:
-            return (SceneComponentLocationMSFT * self.location_count).from_address(
-                ctypes.addressof(self._locations.contents))
-
+        return expose_ctypes_array(SceneComponentLocationMSFT, self.location_count, self._locations)
+    
     @locations.setter
     def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6415,12 +6315,8 @@ class SceneComponentsLocateInfoMSFT(BaseXrStructure):
 
     @property
     def component_ids(self) -> Array[UuidMSFT]:
-        if self.component_id_count == 0:
-            return (UuidMSFT * 0)()
-        else:
-            return (UuidMSFT * self.component_id_count).from_address(
-                ctypes.addressof(self._component_ids.contents))
-
+        return expose_ctypes_array(UuidMSFT, self.component_id_count, self._component_ids)
+    
     @component_ids.setter
     def component_ids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6489,12 +6385,8 @@ class SceneObjectsMSFT(BaseXrStructure):
 
     @property
     def scene_objects(self) -> Array[SceneObjectMSFT]:
-        if self.scene_object_count == 0:
-            return (SceneObjectMSFT * 0)()
-        else:
-            return (SceneObjectMSFT * self.scene_object_count).from_address(
-                ctypes.addressof(self._scene_objects.contents))
-
+        return expose_ctypes_array(SceneObjectMSFT, self.scene_object_count, self._scene_objects)
+    
     @scene_objects.setter
     def scene_objects(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6558,12 +6450,8 @@ class SceneObjectTypesFilterInfoMSFT(BaseXrStructure):
 
     @property
     def object_types(self) -> Array[c_int]:
-        if self.object_type_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.object_type_count).from_address(
-                ctypes.addressof(self._object_types.contents))
-
+        return expose_ctypes_array(c_int, self.object_type_count, self._object_types)
+    
     @object_types.setter
     def object_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6641,12 +6529,8 @@ class ScenePlanesMSFT(BaseXrStructure):
 
     @property
     def scene_planes(self) -> Array[ScenePlaneMSFT]:
-        if self.scene_plane_count == 0:
-            return (ScenePlaneMSFT * 0)()
-        else:
-            return (ScenePlaneMSFT * self.scene_plane_count).from_address(
-                ctypes.addressof(self._scene_planes.contents))
-
+        return expose_ctypes_array(ScenePlaneMSFT, self.scene_plane_count, self._scene_planes)
+    
     @scene_planes.setter
     def scene_planes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6684,12 +6568,8 @@ class ScenePlaneAlignmentFilterInfoMSFT(BaseXrStructure):
 
     @property
     def alignments(self) -> Array[c_int]:
-        if self.alignment_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.alignment_count).from_address(
-                ctypes.addressof(self._alignments.contents))
-
+        return expose_ctypes_array(c_int, self.alignment_count, self._alignments)
+    
     @alignments.setter
     def alignments(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6750,12 +6630,8 @@ class SceneMeshesMSFT(BaseXrStructure):
 
     @property
     def scene_meshes(self) -> Array[SceneMeshMSFT]:
-        if self.scene_mesh_count == 0:
-            return (SceneMeshMSFT * 0)()
-        else:
-            return (SceneMeshMSFT * self.scene_mesh_count).from_address(
-                ctypes.addressof(self._scene_meshes.contents))
-
+        return expose_ctypes_array(SceneMeshMSFT, self.scene_mesh_count, self._scene_meshes)
+    
     @scene_meshes.setter
     def scene_meshes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -6981,12 +6857,8 @@ class SceneDeserializeInfoMSFT(BaseXrStructure):
 
     @property
     def fragments(self) -> Array[DeserializeSceneFragmentMSFT]:
-        if self.fragment_count == 0:
-            return (DeserializeSceneFragmentMSFT * 0)()
-        else:
-            return (DeserializeSceneFragmentMSFT * self.fragment_count).from_address(
-                ctypes.addressof(self._fragments.contents))
-
+        return expose_ctypes_array(DeserializeSceneFragmentMSFT, self.fragment_count, self._fragments)
+    
     @fragments.setter
     def fragments(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -7156,12 +7028,8 @@ class FacialExpressionsHTC(BaseXrStructure):
 
     @property
     def expression_weightings(self) -> Array[c_float]:
-        if self.expression_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.expression_count).from_address(
-                ctypes.addressof(self._expression_weightings.contents))
-
+        return expose_ctypes_array(c_float, self.expression_count, self._expression_weightings)
+    
     @expression_weightings.setter
     def expression_weightings(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -9628,12 +9496,8 @@ class CreateSpatialAnchorsCompletionML(FutureCompletionBaseHeaderEXT):
 
     @property
     def spaces(self) -> Array[Space]:
-        if self.space_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.space_count).from_address(
-                ctypes.addressof(self._spaces.contents))
-
+        return expose_ctypes_array(Space, self.space_count, self._spaces)
+    
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -9796,12 +9660,8 @@ class SpatialAnchorsCreateInfoFromUuidsML(SpatialAnchorsCreateInfoBaseHeaderML):
 
     @property
     def uuids(self) -> Array[Uuid]:
-        if self.uuid_count == 0:
-            return (Uuid * 0)()
-        else:
-            return (Uuid * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(Uuid, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -9842,12 +9702,8 @@ class SpatialAnchorsPublishInfoML(BaseXrStructure):
 
     @property
     def anchors(self) -> Array[Space]:
-        if self.anchor_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.anchor_count).from_address(
-                ctypes.addressof(self._anchors.contents))
-
+        return expose_ctypes_array(Space, self.anchor_count, self._anchors)
+    
     @anchors.setter
     def anchors(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -9888,12 +9744,8 @@ class SpatialAnchorsPublishCompletionML(FutureCompletionBaseHeaderEXT):
 
     @property
     def uuids(self) -> Array[UuidEXT]:
-        if self.uuid_count == 0:
-            return (UuidEXT * 0)()
-        else:
-            return (UuidEXT * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(UuidEXT, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -9931,12 +9783,8 @@ class SpatialAnchorsDeleteInfoML(BaseXrStructure):
 
     @property
     def uuids(self) -> Array[Uuid]:
-        if self.uuid_count == 0:
-            return (Uuid * 0)()
-        else:
-            return (Uuid * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(Uuid, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -9980,12 +9828,8 @@ class SpatialAnchorsUpdateExpirationInfoML(BaseXrStructure):
 
     @property
     def uuids(self) -> Array[Uuid]:
-        if self.uuid_count == 0:
-            return (Uuid * 0)()
-        else:
-            return (Uuid * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(Uuid, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -10060,12 +9904,8 @@ class SpatialAnchorsPublishCompletionDetailsML(BaseXrStructure):
 
     @property
     def results(self) -> Array[SpatialAnchorCompletionResultML]:
-        if self.result_count == 0:
-            return (SpatialAnchorCompletionResultML * 0)()
-        else:
-            return (SpatialAnchorCompletionResultML * self.result_count).from_address(
-                ctypes.addressof(self._results.contents))
-
+        return expose_ctypes_array(SpatialAnchorCompletionResultML, self.result_count, self._results)
+    
     @results.setter
     def results(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -10103,12 +9943,8 @@ class SpatialAnchorsDeleteCompletionDetailsML(BaseXrStructure):
 
     @property
     def results(self) -> Array[SpatialAnchorCompletionResultML]:
-        if self.result_count == 0:
-            return (SpatialAnchorCompletionResultML * 0)()
-        else:
-            return (SpatialAnchorCompletionResultML * self.result_count).from_address(
-                ctypes.addressof(self._results.contents))
-
+        return expose_ctypes_array(SpatialAnchorCompletionResultML, self.result_count, self._results)
+    
     @results.setter
     def results(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -10146,12 +9982,8 @@ class SpatialAnchorsUpdateExpirationCompletionDetailsML(BaseXrStructure):
 
     @property
     def results(self) -> Array[SpatialAnchorCompletionResultML]:
-        if self.result_count == 0:
-            return (SpatialAnchorCompletionResultML * 0)()
-        else:
-            return (SpatialAnchorCompletionResultML * self.result_count).from_address(
-                ctypes.addressof(self._results.contents))
-
+        return expose_ctypes_array(SpatialAnchorCompletionResultML, self.result_count, self._results)
+    
     @results.setter
     def results(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -10380,12 +10212,8 @@ class SceneMarkerTypeFilterMSFT(BaseXrStructure):
 
     @property
     def marker_types(self) -> Array[SceneMarkerTypeMSFT.ctype()]:
-        if self.marker_type_count == 0:
-            return (SceneMarkerTypeMSFT.ctype() * 0)()
-        else:
-            return (SceneMarkerTypeMSFT.ctype() * self.marker_type_count).from_address(
-                ctypes.addressof(self._marker_types.contents))
-
+        return expose_ctypes_array(SceneMarkerTypeMSFT.ctype(), self.marker_type_count, self._marker_types)
+    
     @marker_types.setter
     def marker_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -10573,12 +10401,8 @@ class SpaceUuidFilterInfoFB(SpaceFilterInfoBaseHeaderFB):
 
     @property
     def uuids(self) -> Array[UuidEXT]:
-        if self.uuid_count == 0:
-            return (UuidEXT * 0)()
-        else:
-            return (UuidEXT * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(UuidEXT, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -10978,12 +10802,8 @@ class SpaceShareInfoFB(BaseXrStructure):
 
     @property
     def spaces(self) -> Array[Space]:
-        if self.space_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.space_count).from_address(
-                ctypes.addressof(self._spaces.contents))
-
+        return expose_ctypes_array(Space, self.space_count, self._spaces)
+    
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -10992,12 +10812,8 @@ class SpaceShareInfoFB(BaseXrStructure):
 
     @property
     def users(self) -> Array[SpaceUserFB]:
-        if self.user_count == 0:
-            return (SpaceUserFB * 0)()
-        else:
-            return (SpaceUserFB * self.user_count).from_address(
-                ctypes.addressof(self._users.contents))
-
+        return expose_ctypes_array(SpaceUserFB, self.user_count, self._users)
+    
     @users.setter
     def users(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -11165,12 +10981,8 @@ class HapticAmplitudeEnvelopeVibrationFB(HapticBaseHeader):
 
     @property
     def amplitudes(self) -> Array[c_float]:
-        if self.amplitude_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.amplitude_count).from_address(
-                ctypes.addressof(self._amplitudes.contents))
-
+        return expose_ctypes_array(c_float, self.amplitude_count, self._amplitudes)
+    
     @amplitudes.setter
     def amplitudes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -11816,12 +11628,8 @@ class FaceExpressionWeightsFB(BaseXrStructure):
 
     @property
     def weights(self) -> Array[c_float]:
-        if self.weight_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.weight_count).from_address(
-                ctypes.addressof(self._weights.contents))
-
+        return expose_ctypes_array(c_float, self.weight_count, self._weights)
+    
     @weights.setter
     def weights(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -11830,12 +11638,8 @@ class FaceExpressionWeightsFB(BaseXrStructure):
 
     @property
     def confidences(self) -> Array[c_float]:
-        if self.confidence_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.confidence_count).from_address(
-                ctypes.addressof(self._confidences.contents))
-
+        return expose_ctypes_array(c_float, self.confidence_count, self._confidences)
+    
     @confidences.setter
     def confidences(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -13017,12 +12821,8 @@ class SpaceListSaveInfoFB(BaseXrStructure):
 
     @property
     def spaces(self) -> Array[Space]:
-        if self.space_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.space_count).from_address(
-                ctypes.addressof(self._spaces.contents))
-
+        return expose_ctypes_array(Space, self.space_count, self._spaces)
+    
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -13194,12 +12994,8 @@ class SpaceDiscoveryInfoMETA(BaseXrStructure):
 
     @property
     def filters(self) -> Array[POINTER(SpaceFilterBaseHeaderMETA)]:
-        if self.filter_count == 0:
-            return (POINTER(SpaceFilterBaseHeaderMETA) * 0)()
-        else:
-            return (POINTER(SpaceFilterBaseHeaderMETA) * self.filter_count).from_address(
-                ctypes.addressof(self._filters.contents))
-
+        return expose_ctypes_array(POINTER(SpaceFilterBaseHeaderMETA), self.filter_count, self._filters)
+    
     @filters.setter
     def filters(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -13237,12 +13033,8 @@ class SpaceFilterUuidMETA(SpaceFilterBaseHeaderMETA):
 
     @property
     def uuids(self) -> Array[Uuid]:
-        if self.uuid_count == 0:
-            return (Uuid * 0)()
-        else:
-            return (Uuid * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(Uuid, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -13514,12 +13306,8 @@ class SpacesSaveInfoMETA(BaseXrStructure):
 
     @property
     def spaces(self) -> Array[Space]:
-        if self.space_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.space_count).from_address(
-                ctypes.addressof(self._spaces.contents))
-
+        return expose_ctypes_array(Space, self.space_count, self._spaces)
+    
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -13599,12 +13387,8 @@ class SpacesEraseInfoMETA(BaseXrStructure):
 
     @property
     def spaces(self) -> Array[Space]:
-        if self.space_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.space_count).from_address(
-                ctypes.addressof(self._spaces.contents))
-
+        return expose_ctypes_array(Space, self.space_count, self._spaces)
+    
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -13613,12 +13397,8 @@ class SpacesEraseInfoMETA(BaseXrStructure):
 
     @property
     def uuids(self) -> Array[UuidEXT]:
-        if self.uuid_count == 0:
-            return (UuidEXT * 0)()
-        else:
-            return (UuidEXT * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(UuidEXT, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -14111,12 +13891,8 @@ class FaceTrackerCreateInfo2FB(BaseXrStructure):
 
     @property
     def requested_data_sources(self) -> Array[FaceTrackingDataSource2FB.ctype()]:
-        if self.requested_data_source_count == 0:
-            return (FaceTrackingDataSource2FB.ctype() * 0)()
-        else:
-            return (FaceTrackingDataSource2FB.ctype() * self.requested_data_source_count).from_address(
-                ctypes.addressof(self._requested_data_sources.contents))
-
+        return expose_ctypes_array(FaceTrackingDataSource2FB.ctype(), self.requested_data_source_count, self._requested_data_sources)
+    
     @requested_data_sources.setter
     def requested_data_sources(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -14193,12 +13969,8 @@ class FaceExpressionWeights2FB(BaseXrStructure):
 
     @property
     def weights(self) -> Array[c_float]:
-        if self.weight_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.weight_count).from_address(
-                ctypes.addressof(self._weights.contents))
-
+        return expose_ctypes_array(c_float, self.weight_count, self._weights)
+    
     @weights.setter
     def weights(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -14207,12 +13979,8 @@ class FaceExpressionWeights2FB(BaseXrStructure):
 
     @property
     def confidences(self) -> Array[c_float]:
-        if self.confidence_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.confidence_count).from_address(
-                ctypes.addressof(self._confidences.contents))
-
+        return expose_ctypes_array(c_float, self.confidence_count, self._confidences)
+    
     @confidences.setter
     def confidences(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -14302,12 +14070,8 @@ class ShareSpacesInfoMETA(BaseXrStructure):
 
     @property
     def spaces(self) -> Array[Space]:
-        if self.space_count == 0:
-            return (Space * 0)()
-        else:
-            return (Space * self.space_count).from_address(
-                ctypes.addressof(self._spaces.contents))
-
+        return expose_ctypes_array(Space, self.space_count, self._spaces)
+    
     @spaces.setter
     def spaces(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -14678,12 +14442,8 @@ class RenderModelCreateInfoEXT(BaseXrStructure):
 
     @property
     def gltf_extensions(self) -> Array[c_char_p]:
-        if self.gltf_extension_count == 0:
-            return (c_char_p * 0)()
-        else:
-            return (c_char_p * self.gltf_extension_count).from_address(
-                ctypes.addressof(self._gltf_extensions.contents))
-
+        return expose_ctypes_array(c_char_p, self.gltf_extension_count, self._gltf_extensions)
+    
     @gltf_extensions.setter
     def gltf_extensions(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -14824,12 +14584,8 @@ class RenderModelStateEXT(BaseXrStructure):
 
     @property
     def node_states(self) -> Array[RenderModelNodeStateEXT]:
-        if self.node_state_count == 0:
-            return (RenderModelNodeStateEXT * 0)()
-        else:
-            return (RenderModelNodeStateEXT * self.node_state_count).from_address(
-                ctypes.addressof(self._node_states.contents))
-
+        return expose_ctypes_array(RenderModelNodeStateEXT, self.node_state_count, self._node_states)
+    
     @node_states.setter
     def node_states(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -15003,12 +14759,8 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(BaseXrStructure):
 
     @property
     def top_level_user_paths(self) -> Array[c_uint64]:
-        if self.top_level_user_path_count == 0:
-            return (c_uint64 * 0)()
-        else:
-            return (c_uint64 * self.top_level_user_path_count).from_address(
-                ctypes.addressof(self._top_level_user_paths.contents))
-
+        return expose_ctypes_array(c_uint64, self.top_level_user_path_count, self._top_level_user_paths)
+    
     @top_level_user_paths.setter
     def top_level_user_paths(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -15222,12 +14974,8 @@ class FoveationApplyInfoHTC(BaseXrStructure):
 
     @property
     def sub_images(self) -> Array[SwapchainSubImage]:
-        if self.sub_image_count == 0:
-            return (SwapchainSubImage * 0)()
-        else:
-            return (SwapchainSubImage * self.sub_image_count).from_address(
-                ctypes.addressof(self._sub_images.contents))
-
+        return expose_ctypes_array(SwapchainSubImage, self.sub_image_count, self._sub_images)
+    
     @sub_images.setter
     def sub_images(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -15336,12 +15084,8 @@ class FoveationCustomModeInfoHTC(BaseXrStructure):
 
     @property
     def configs(self) -> Array[FoveationConfigurationHTC]:
-        if self.config_count == 0:
-            return (FoveationConfigurationHTC * 0)()
-        else:
-            return (FoveationConfigurationHTC * self.config_count).from_address(
-                ctypes.addressof(self._configs.contents))
-
+        return expose_ctypes_array(FoveationConfigurationHTC, self.config_count, self._configs)
+    
     @configs.setter
     def configs(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -15611,12 +15355,8 @@ class BodyJointLocationsHTC(BaseXrStructure):
 
     @property
     def joint_locations(self) -> Array[BodyJointLocationHTC]:
-        if self.joint_location_count == 0:
-            return (BodyJointLocationHTC * 0)()
-        else:
-            return (BodyJointLocationHTC * self.joint_location_count).from_address(
-                ctypes.addressof(self._joint_locations.contents))
-
+        return expose_ctypes_array(BodyJointLocationHTC, self.joint_location_count, self._joint_locations)
+    
     @joint_locations.setter
     def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -15677,12 +15417,8 @@ class BodySkeletonHTC(BaseXrStructure):
 
     @property
     def joints(self) -> Array[BodySkeletonJointHTC]:
-        if self.joint_count == 0:
-            return (BodySkeletonJointHTC * 0)()
-        else:
-            return (BodySkeletonJointHTC * self.joint_count).from_address(
-                ctypes.addressof(self._joints.contents))
-
+        return expose_ctypes_array(BodySkeletonJointHTC, self.joint_count, self._joints)
+    
     @joints.setter
     def joints(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -15835,12 +15571,8 @@ class ForceFeedbackCurlApplyLocationsMNDX(BaseXrStructure):
 
     @property
     def locations(self) -> Array[ForceFeedbackCurlApplyLocationMNDX]:
-        if self.location_count == 0:
-            return (ForceFeedbackCurlApplyLocationMNDX * 0)()
-        else:
-            return (ForceFeedbackCurlApplyLocationMNDX * self.location_count).from_address(
-                ctypes.addressof(self._locations.contents))
-
+        return expose_ctypes_array(ForceFeedbackCurlApplyLocationMNDX, self.location_count, self._locations)
+    
     @locations.setter
     def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -16007,12 +15739,8 @@ class BodyJointLocationsBD(BaseXrStructure):
 
     @property
     def joint_locations(self) -> Array[BodyJointLocationBD]:
-        if self.joint_location_count == 0:
-            return (BodyJointLocationBD * 0)()
-        else:
-            return (BodyJointLocationBD * self.joint_location_count).from_address(
-                ctypes.addressof(self._joint_locations.contents))
-
+        return expose_ctypes_array(BodyJointLocationBD, self.joint_location_count, self._joint_locations)
+    
     @joint_locations.setter
     def joint_locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -16153,12 +15881,8 @@ class FacialSimulationDataBD(BaseXrStructure):
 
     @property
     def face_expression_weights(self) -> Array[c_float]:
-        if self.face_expression_weight_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.face_expression_weight_count).from_address(
-                ctypes.addressof(self._face_expression_weights.contents))
-
+        return expose_ctypes_array(c_float, self.face_expression_weight_count, self._face_expression_weights)
+    
     @face_expression_weights.setter
     def face_expression_weights(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -16199,12 +15923,8 @@ class LipExpressionDataBD(BaseXrStructure):
 
     @property
     def lipsync_expression_weights(self) -> Array[c_float]:
-        if self.lipsync_expression_weight_count == 0:
-            return (c_float * 0)()
-        else:
-            return (c_float * self.lipsync_expression_weight_count).from_address(
-                ctypes.addressof(self._lipsync_expression_weights.contents))
-
+        return expose_ctypes_array(c_float, self.lipsync_expression_weight_count, self._lipsync_expression_weights)
+    
     @lipsync_expression_weights.setter
     def lipsync_expression_weights(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -16737,12 +16457,8 @@ class SenseDataFilterUuidBD(BaseXrStructure):
 
     @property
     def uuids(self) -> Array[Uuid]:
-        if self.uuid_count == 0:
-            return (Uuid * 0)()
-        else:
-            return (Uuid * self.uuid_count).from_address(
-                ctypes.addressof(self._uuids.contents))
-
+        return expose_ctypes_array(Uuid, self.uuid_count, self._uuids)
+    
     @uuids.setter
     def uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -16780,12 +16496,8 @@ class SenseDataFilterSemanticBD(BaseXrStructure):
 
     @property
     def labels(self) -> Array[c_int]:
-        if self.label_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.label_count).from_address(
-                ctypes.addressof(self._labels.contents))
-
+        return expose_ctypes_array(c_int, self.label_count, self._labels)
+    
     @labels.setter
     def labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -17353,12 +17065,8 @@ class SenseDataFilterPlaneOrientationBD(BaseXrStructure):
 
     @property
     def orientations(self) -> Array[PlaneOrientationBD.ctype()]:
-        if self.orientation_count == 0:
-            return (PlaneOrientationBD.ctype() * 0)()
-        else:
-            return (PlaneOrientationBD.ctype() * self.orientation_count).from_address(
-                ctypes.addressof(self._orientations.contents))
-
+        return expose_ctypes_array(PlaneOrientationBD.ctype(), self.orientation_count, self._orientations)
+    
     @orientations.setter
     def orientations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -17396,12 +17104,8 @@ class HandTrackingDataSourceInfoEXT(BaseXrStructure):
 
     @property
     def requested_data_sources(self) -> Array[HandTrackingDataSourceEXT.ctype()]:
-        if self.requested_data_source_count == 0:
-            return (HandTrackingDataSourceEXT.ctype() * 0)()
-        else:
-            return (HandTrackingDataSourceEXT.ctype() * self.requested_data_source_count).from_address(
-                ctypes.addressof(self._requested_data_sources.contents))
-
+        return expose_ctypes_array(HandTrackingDataSourceEXT.ctype(), self.requested_data_source_count, self._requested_data_sources)
+    
     @requested_data_sources.setter
     def requested_data_sources(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -17575,12 +17279,8 @@ class PlaneDetectorBeginInfoEXT(BaseXrStructure):
 
     @property
     def orientations(self) -> Array[c_int]:
-        if self.orientation_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.orientation_count).from_address(
-                ctypes.addressof(self._orientations.contents))
-
+        return expose_ctypes_array(c_int, self.orientation_count, self._orientations)
+    
     @orientations.setter
     def orientations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -17589,12 +17289,8 @@ class PlaneDetectorBeginInfoEXT(BaseXrStructure):
 
     @property
     def semantic_types(self) -> Array[c_int]:
-        if self.semantic_type_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.semantic_type_count).from_address(
-                ctypes.addressof(self._semantic_types.contents))
-
+        return expose_ctypes_array(c_int, self.semantic_type_count, self._semantic_types)
+    
     @semantic_types.setter
     def semantic_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -18311,12 +18007,8 @@ class RaycastInfoANDROID(BaseXrStructure):
 
     @property
     def trackers(self) -> Array[TrackableTrackerANDROID]:
-        if self.tracker_count == 0:
-            return (TrackableTrackerANDROID * 0)()
-        else:
-            return (TrackableTrackerANDROID * self.tracker_count).from_address(
-                ctypes.addressof(self._trackers.contents))
-
+        return expose_ctypes_array(TrackableTrackerANDROID, self.tracker_count, self._trackers)
+    
     @trackers.setter
     def trackers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -18483,12 +18175,8 @@ class TrackableObjectConfigurationANDROID(BaseXrStructure):
 
     @property
     def active_labels(self) -> Array[c_int]:
-        if self.label_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.label_count).from_address(
-                ctypes.addressof(self._active_labels.contents))
-
+        return expose_ctypes_array(c_int, self.label_count, self._active_labels)
+    
     @active_labels.setter
     def active_labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -19043,12 +18731,8 @@ class WorldMeshGetInfoML(BaseXrStructure):
 
     @property
     def blocks(self) -> Array[WorldMeshBlockRequestML]:
-        if self.block_count == 0:
-            return (WorldMeshBlockRequestML * 0)()
-        else:
-            return (WorldMeshBlockRequestML * self.block_count).from_address(
-                ctypes.addressof(self._blocks.contents))
-
+        return expose_ctypes_array(WorldMeshBlockRequestML, self.block_count, self._blocks)
+    
     @blocks.setter
     def blocks(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -19202,12 +18886,8 @@ class WorldMeshRequestCompletionML(FutureCompletionBaseHeaderEXT):
 
     @property
     def blocks(self) -> Array[WorldMeshBlockML]:
-        if self.block_count == 0:
-            return (WorldMeshBlockML * 0)()
-        else:
-            return (WorldMeshBlockML * self.block_count).from_address(
-                ctypes.addressof(self._blocks.contents))
-
+        return expose_ctypes_array(WorldMeshBlockML, self.block_count, self._blocks)
+    
     @blocks.setter
     def blocks(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -19299,12 +18979,8 @@ class FacialExpressionClientCreateInfoML(BaseXrStructure):
 
     @property
     def requested_facial_blend_shapes(self) -> Array[c_int]:
-        if self.requested_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.requested_count).from_address(
-                ctypes.addressof(self._requested_facial_blend_shapes.contents))
-
+        return expose_ctypes_array(c_int, self.requested_count, self._requested_facial_blend_shapes)
+    
     @requested_facial_blend_shapes.setter
     def requested_facial_blend_shapes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -19791,12 +19467,8 @@ class ShareSpacesRecipientGroupsMETA(ShareSpacesRecipientBaseHeaderMETA):
 
     @property
     def groups(self) -> Array[Uuid]:
-        if self.group_count == 0:
-            return (Uuid * 0)()
-        else:
-            return (Uuid * self.group_count).from_address(
-                ctypes.addressof(self._groups.contents))
-
+        return expose_ctypes_array(Uuid, self.group_count, self._groups)
+    
     @groups.setter
     def groups(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -19959,12 +19631,8 @@ class TrackableMarkerConfigurationANDROID(BaseXrStructure):
 
     @property
     def databases(self) -> Array[TrackableMarkerDatabaseANDROID]:
-        if self.database_count == 0:
-            return (TrackableMarkerDatabaseANDROID * 0)()
-        else:
-            return (TrackableMarkerDatabaseANDROID * self.database_count).from_address(
-                ctypes.addressof(self._databases.contents))
-
+        return expose_ctypes_array(TrackableMarkerDatabaseANDROID, self.database_count, self._databases)
+    
     @databases.setter
     def databases(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20116,12 +19784,8 @@ class SpatialCapabilityConfigurationBaseHeaderEXT(BaseXrStructure):
 
     @property
     def enabled_components(self) -> Array[c_int]:
-        if self.enabled_component_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.enabled_component_count).from_address(
-                ctypes.addressof(self._enabled_components.contents))
-
+        return expose_ctypes_array(c_int, self.enabled_component_count, self._enabled_components)
+    
     @enabled_components.setter
     def enabled_components(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20160,12 +19824,8 @@ class SpatialContextCreateInfoEXT(BaseXrStructure):
 
     @property
     def capability_configs(self) -> Array[POINTER(SpatialCapabilityConfigurationBaseHeaderEXT)]:
-        if self.capability_config_count == 0:
-            return (POINTER(SpatialCapabilityConfigurationBaseHeaderEXT) * 0)()
-        else:
-            return (POINTER(SpatialCapabilityConfigurationBaseHeaderEXT) * self.capability_config_count).from_address(
-                ctypes.addressof(self._capability_configs.contents))
-
+        return expose_ctypes_array(POINTER(SpatialCapabilityConfigurationBaseHeaderEXT), self.capability_config_count, self._capability_configs)
+    
     @capability_configs.setter
     def capability_configs(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20229,12 +19889,8 @@ class SpatialDiscoverySnapshotCreateInfoEXT(BaseXrStructure):
 
     @property
     def component_types(self) -> Array[c_int]:
-        if self.component_type_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.component_type_count).from_address(
-                ctypes.addressof(self._component_types.contents))
-
+        return expose_ctypes_array(c_int, self.component_type_count, self._component_types)
+    
     @component_types.setter
     def component_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20328,12 +19984,8 @@ class SpatialComponentDataQueryConditionEXT(BaseXrStructure):
 
     @property
     def component_types(self) -> Array[c_int]:
-        if self.component_type_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.component_type_count).from_address(
-                ctypes.addressof(self._component_types.contents))
-
+        return expose_ctypes_array(c_int, self.component_type_count, self._component_types)
+    
     @component_types.setter
     def component_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20491,12 +20143,8 @@ class SpatialComponentBounded2DListEXT(BaseXrStructure):
 
     @property
     def bounds(self) -> Array[SpatialBounded2DDataEXT]:
-        if self.bound_count == 0:
-            return (SpatialBounded2DDataEXT * 0)()
-        else:
-            return (SpatialBounded2DDataEXT * self.bound_count).from_address(
-                ctypes.addressof(self._bounds.contents))
-
+        return expose_ctypes_array(SpatialBounded2DDataEXT, self.bound_count, self._bounds)
+    
     @bounds.setter
     def bounds(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20534,12 +20182,8 @@ class SpatialComponentBounded3DListEXT(BaseXrStructure):
 
     @property
     def bounds(self) -> Array[Boxf]:
-        if self.bound_count == 0:
-            return (Boxf * 0)()
-        else:
-            return (Boxf * self.bound_count).from_address(
-                ctypes.addressof(self._bounds.contents))
-
+        return expose_ctypes_array(Boxf, self.bound_count, self._bounds)
+    
     @bounds.setter
     def bounds(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20577,12 +20221,8 @@ class SpatialComponentParentListEXT(BaseXrStructure):
 
     @property
     def parents(self) -> Array[SpatialEntityIdEXT]:
-        if self.parent_count == 0:
-            return (SpatialEntityIdEXT * 0)()
-        else:
-            return (SpatialEntityIdEXT * self.parent_count).from_address(
-                ctypes.addressof(self._parents.contents))
-
+        return expose_ctypes_array(SpatialEntityIdEXT, self.parent_count, self._parents)
+    
     @parents.setter
     def parents(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20650,12 +20290,8 @@ class SpatialComponentMesh3DListEXT(BaseXrStructure):
 
     @property
     def meshes(self) -> Array[SpatialMeshDataEXT]:
-        if self.mesh_count == 0:
-            return (SpatialMeshDataEXT * 0)()
-        else:
-            return (SpatialMeshDataEXT * self.mesh_count).from_address(
-                ctypes.addressof(self._meshes.contents))
-
+        return expose_ctypes_array(SpatialMeshDataEXT, self.mesh_count, self._meshes)
+    
     @meshes.setter
     def meshes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20725,12 +20361,8 @@ class SpatialUpdateSnapshotCreateInfoEXT(BaseXrStructure):
 
     @property
     def component_types(self) -> Array[c_int]:
-        if self.component_type_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.component_type_count).from_address(
-                ctypes.addressof(self._component_types.contents))
-
+        return expose_ctypes_array(c_int, self.component_type_count, self._component_types)
+    
     @component_types.setter
     def component_types(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20874,12 +20506,8 @@ class SpatialComponentPlaneAlignmentListEXT(BaseXrStructure):
 
     @property
     def plane_alignments(self) -> Array[SpatialPlaneAlignmentEXT.ctype()]:
-        if self.plane_alignment_count == 0:
-            return (SpatialPlaneAlignmentEXT.ctype() * 0)()
-        else:
-            return (SpatialPlaneAlignmentEXT.ctype() * self.plane_alignment_count).from_address(
-                ctypes.addressof(self._plane_alignments.contents))
-
+        return expose_ctypes_array(SpatialPlaneAlignmentEXT.ctype(), self.plane_alignment_count, self._plane_alignments)
+    
     @plane_alignments.setter
     def plane_alignments(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20917,12 +20545,8 @@ class SpatialComponentMesh2DListEXT(BaseXrStructure):
 
     @property
     def meshes(self) -> Array[SpatialMeshDataEXT]:
-        if self.mesh_count == 0:
-            return (SpatialMeshDataEXT * 0)()
-        else:
-            return (SpatialMeshDataEXT * self.mesh_count).from_address(
-                ctypes.addressof(self._meshes.contents))
-
+        return expose_ctypes_array(SpatialMeshDataEXT, self.mesh_count, self._meshes)
+    
     @meshes.setter
     def meshes(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -20985,12 +20609,8 @@ class SpatialComponentPolygon2DListEXT(BaseXrStructure):
 
     @property
     def polygons(self) -> Array[SpatialPolygon2DDataEXT]:
-        if self.polygon_count == 0:
-            return (SpatialPolygon2DDataEXT * 0)()
-        else:
-            return (SpatialPolygon2DDataEXT * self.polygon_count).from_address(
-                ctypes.addressof(self._polygons.contents))
-
+        return expose_ctypes_array(SpatialPolygon2DDataEXT, self.polygon_count, self._polygons)
+    
     @polygons.setter
     def polygons(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -21028,12 +20648,8 @@ class SpatialComponentPlaneSemanticLabelListEXT(BaseXrStructure):
 
     @property
     def semantic_labels(self) -> Array[SpatialPlaneSemanticLabelEXT.ctype()]:
-        if self.semantic_label_count == 0:
-            return (SpatialPlaneSemanticLabelEXT.ctype() * 0)()
-        else:
-            return (SpatialPlaneSemanticLabelEXT.ctype() * self.semantic_label_count).from_address(
-                ctypes.addressof(self._semantic_labels.contents))
-
+        return expose_ctypes_array(SpatialPlaneSemanticLabelEXT.ctype(), self.semantic_label_count, self._semantic_labels)
+    
     @semantic_labels.setter
     def semantic_labels(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -21246,12 +20862,8 @@ class SpatialComponentMarkerListEXT(BaseXrStructure):
 
     @property
     def markers(self) -> Array[SpatialMarkerDataEXT]:
-        if self.marker_count == 0:
-            return (SpatialMarkerDataEXT * 0)()
-        else:
-            return (SpatialMarkerDataEXT * self.marker_count).from_address(
-                ctypes.addressof(self._markers.contents))
-
+        return expose_ctypes_array(SpatialMarkerDataEXT, self.marker_count, self._markers)
+    
     @markers.setter
     def markers(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -21293,12 +20905,8 @@ class SpatialComponentAnchorListEXT(BaseXrStructure):
 
     @property
     def locations(self) -> Array[Posef]:
-        if self.location_count == 0:
-            return (Posef * 0)()
-        else:
-            return (Posef * self.location_count).from_address(
-                ctypes.addressof(self._locations.contents))
-
+        return expose_ctypes_array(Posef, self.location_count, self._locations)
+    
     @locations.setter
     def locations(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -21448,12 +21056,8 @@ class SpatialContextPersistenceConfigEXT(BaseXrStructure):
 
     @property
     def persistence_contexts(self) -> Array[SpatialPersistenceContextEXT]:
-        if self.persistence_context_count == 0:
-            return (SpatialPersistenceContextEXT * 0)()
-        else:
-            return (SpatialPersistenceContextEXT * self.persistence_context_count).from_address(
-                ctypes.addressof(self._persistence_contexts.contents))
-
+        return expose_ctypes_array(SpatialPersistenceContextEXT, self.persistence_context_count, self._persistence_contexts)
+    
     @persistence_contexts.setter
     def persistence_contexts(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -21491,12 +21095,8 @@ class SpatialDiscoveryPersistenceUuidFilterEXT(BaseXrStructure):
 
     @property
     def persisted_uuids(self) -> Array[Uuid]:
-        if self.persisted_uuid_count == 0:
-            return (Uuid * 0)()
-        else:
-            return (Uuid * self.persisted_uuid_count).from_address(
-                ctypes.addressof(self._persisted_uuids.contents))
-
+        return expose_ctypes_array(Uuid, self.persisted_uuid_count, self._persisted_uuids)
+    
     @persisted_uuids.setter
     def persisted_uuids(self, value) -> None:
         # noinspection PyAttributeOutsideInit
@@ -21782,12 +21382,8 @@ class LoaderInitInfoPropertiesEXT(LoaderInitInfoBaseHeaderKHR):
 
     @property
     def property_values(self) -> Array[LoaderInitPropertyValueEXT]:
-        if self.property_value_count == 0:
-            return (LoaderInitPropertyValueEXT * 0)()
-        else:
-            return (LoaderInitPropertyValueEXT * self.property_value_count).from_address(
-                ctypes.addressof(self._property_values.contents))
-
+        return expose_ctypes_array(LoaderInitPropertyValueEXT, self.property_value_count, self._property_values)
+    
     @property_values.setter
     def property_values(self, value) -> None:
         # noinspection PyAttributeOutsideInit

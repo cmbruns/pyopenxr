@@ -256,12 +256,8 @@ class VulkanSwapchainFormatListCreateInfoKHR(BaseXrStructure):
 
     @property
     def view_formats(self) -> Array[c_int]:
-        if self.view_format_count == 0:
-            return (c_int * 0)()
-        else:
-            return (c_int * self.view_format_count).from_address(
-                ctypes.addressof(self._view_formats.contents))
-
+        return expose_ctypes_array(c_int, self.view_format_count, self._view_formats)
+    
     @view_formats.setter
     def view_formats(self, value) -> None:
         # noinspection PyAttributeOutsideInit

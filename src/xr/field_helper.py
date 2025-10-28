@@ -6,8 +6,21 @@ defined as (count, pointer) pairs. Supports automatic conversion from Python
 sequences, single elements, or ctypes pointers, with optional encoding flavors.
 """
 
+__all__ = [
+    "array_field_helper",
+    "ArrayFieldParamType",
+    "base_array_field_helper",
+    "BaseArrayFieldParamType",
+    "enum_field_helper",
+    "expose_ctypes_array",
+    "FieldNextType",
+    "next_field_helper",
+    "string_array_field_helper",
+    "StringArrayFieldParamType",
+]
+
 import ctypes
-from ctypes import Array, c_char_p, c_void_p, cast, POINTER, pointer, Structure
+from ctypes import addressof, Array, c_char_p, c_void_p, cast, POINTER, pointer, Structure
 import enum
 from typing import TypeVar, Union, Sequence, Tuple, Optional
 
@@ -17,22 +30,22 @@ ArrayFieldParamType = Union[
     None,
     POINTER,
     E,
-    Array,
+    Array[E],
     Sequence[E],
 ]
 
 BaseArrayFieldParamType = Union[
     None,
     POINTER,
-    Array,
-    Sequence,
+    Array[E],
+    Sequence[E],
 ]
 
 StringArrayFieldParamType = Union[
     None,
-    POINTER(c_char_p),
+    POINTER,
     c_char_p,
-    Array,
+    Array[c_char_p],
     Sequence[str],
 ]
 
@@ -43,10 +56,18 @@ class ArrayFlavor(enum.Enum):
     BASE_HEADER = 3
 
 
+def expose_ctypes_array(element_type: type[E], count: int, data: POINTER) -> Array[E]:
+    if count == 0 or data is None:
+        return (element_type * count)()
+    else:
+        return (element_type * count).from_address(
+                addressof(data.contents))
+
+
 def array_field_helper(
-        element_type: type,
+        element_type: type[E],
         count: Optional[int] = None,
-        array: ArrayFieldParamType["element_type"] = None,
+        array: ArrayFieldParamType[E] = None,
         flavor: ArrayFlavor = ArrayFlavor.ARRAY
 ) -> Tuple[int, POINTER]:
     """
@@ -90,9 +111,9 @@ def array_field_helper(
 
 
 def base_array_field_helper(
-        element_type: type,
+        element_type: type[E],
         count: Optional[int] = None,
-        array: BaseArrayFieldParamType = None,
+        array: BaseArrayFieldParamType[E] = None,
 ) -> Tuple[int, POINTER]:
     """Helper function for pythonic interface to sequence fields"""
     return array_field_helper(element_type, count, array, flavor=ArrayFlavor.BASE_HEADER)
@@ -135,16 +156,3 @@ def enum_field_helper(value) -> int:
         return value.value
     except AttributeError:
         return int(value)
-
-
-__all__ = [
-    "array_field_helper",
-    "ArrayFieldParamType",
-    "base_array_field_helper",
-    "BaseArrayFieldParamType",
-    "enum_field_helper",
-    "FieldNextType",
-    "next_field_helper",
-    "string_array_field_helper",
-    "StringArrayFieldParamType",
-]

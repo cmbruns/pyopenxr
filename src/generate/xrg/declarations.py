@@ -4,7 +4,7 @@ import inspect
 from numbers import Number
 import re
 import textwrap
-from typing import Generator, Set, Union, Optional
+from typing import Generator, Set, Union
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
@@ -299,8 +299,8 @@ class FlagsItem(CodeItem):
             for name, value in self.values:
                 result += f"\n    {name} = {value}"
             if len(self.values) > 0:
-                all = " | ".join([entry[0] for entry in self.values])
-                result += f"\n    ALL = {all}"
+                all_code = " | ".join([entry[0] for entry in self.values])
+                result += f"\n    ALL = {all_code}"
             else:
                 result += f"\n    ALL = NONE"
             return result
@@ -1317,14 +1317,9 @@ class ArrayPointerFieldCoder(FieldCoder):
         # getter
         yield "@property"
         yield f"def {self.name}(self) -> Array[{element_type}]:"
-        yield f"    if self.{count} == 0:"
-        yield f"        return ({element_type} * 0)()"
-        yield f"    else:"
-        yield f"        return ({element_type} * self.{count}).from_address("
-        yield f"            ctypes.addressof(self.{self.inner_name}.contents))\n"
+        yield f"    return expose_ctypes_array({element_type}, self.{count}, self.{self.inner_name})"
+        yield ""
         # setter
-        # yield ""
-        # yield "# noinspection PyAttributeOutsideInit"
         yield f"@{self.name}.setter"
         yield f"def {self.name}(self, value) -> None:"
         yield f"    # noinspection PyAttributeOutsideInit"
