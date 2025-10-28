@@ -498,8 +498,11 @@ class StructFieldItem(CodeItem):
         self.kind = StructFieldItem.Kind.NORMAL
         if self._capi_name == "next" and self.type.name(Api.CTYPES) == "c_void_p":
             self.kind = StructFieldItem.Kind.NEXT
-        if isinstance(self.type, TypedefType) and isinstance(self.type.underlying_type, EnumType):
-            self.kind = StructFieldItem.Kind.ENUM
+        if isinstance(self.type, TypedefType):
+            if isinstance(self.type.underlying_type, EnumType):
+                self.kind = StructFieldItem.Kind.ENUM
+            if self.type.underlying_type.name() == "Flags64":
+                self.kind = StructFieldItem.Kind.ENUM
         self.default_value = None
 
     def name(self, api: Api = Api.PYTHON) -> str:

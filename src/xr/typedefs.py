@@ -314,7 +314,7 @@ class InstanceCreateInfo(BaseXrStructure):
         enabled_extension_count, enabled_extension_names = string_array_field_helper(
             enabled_extension_count, enabled_extension_names)
         super().__init__(
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             application_info=application_info,
             enabled_api_layer_count=enabled_api_layer_count,
             _enabled_api_layer_names=enabled_api_layer_names,
@@ -329,6 +329,15 @@ class InstanceCreateInfo(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.InstanceCreateInfo(create_flags={self.create_flags}, application_info={self.application_info}, enabled_api_layer_count={self.enabled_api_layer_count}, enabled_api_layer_names={self.enabled_api_layer_names}, enabled_extension_count={self.enabled_extension_count}, enabled_extension_names={self.enabled_extension_names}, next={self.next}, type={self.type})"
+
+    @property
+    def create_flags(self) -> InstanceCreateFlags:
+        return InstanceCreateFlags(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: InstanceCreateFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
 
     @property
     def enabled_api_layer_names(self):
@@ -359,7 +368,7 @@ class InstanceCreateInfo(BaseXrStructure):
             None, value)
 
     _fields_ = [
-        ("create_flags", InstanceCreateFlagsCInt),
+        ("_create_flags", InstanceCreateFlagsCInt),
         ("application_info", ApplicationInfo),
         ("enabled_api_layer_count", c_uint32),
         ("_enabled_api_layer_names", POINTER(c_char_p)),
@@ -561,7 +570,7 @@ class SessionCreateInfo(BaseXrStructure):
         type: StructureType = StructureType.SESSION_CREATE_INFO,
     ) -> None:
         super().__init__(
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             system_id=system_id,
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -573,8 +582,17 @@ class SessionCreateInfo(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SessionCreateInfo(create_flags={self.create_flags}, system_id={self.system_id}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> SessionCreateFlags:
+        return SessionCreateFlags(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: SessionCreateFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("create_flags", SessionCreateFlagsCInt),
+        ("_create_flags", SessionCreateFlagsCInt),
         ("system_id", SystemId),
     ]
 
@@ -641,7 +659,7 @@ class SpaceVelocity(BaseXrStructure):
         if angular_velocity is None:
             angular_velocity = Vector3f()
         super().__init__(
-            velocity_flags=enum_field_helper(velocity_flags),
+            _velocity_flags=enum_field_helper(velocity_flags),
             linear_velocity=linear_velocity,
             angular_velocity=angular_velocity,
             _next=next_field_helper(next),
@@ -654,8 +672,17 @@ class SpaceVelocity(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SpaceVelocity(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity}, next={self.next}, type={self.type})"
 
+    @property
+    def velocity_flags(self) -> SpaceVelocityFlags:
+        return SpaceVelocityFlags(self._velocity_flags)
+    
+    @velocity_flags.setter
+    def velocity_flags(self, value: SpaceVelocityFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._velocity_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("velocity_flags", SpaceVelocityFlagsCInt),
+        ("_velocity_flags", SpaceVelocityFlagsCInt),
         ("linear_velocity", Vector3f),
         ("angular_velocity", Vector3f),
     ]
@@ -859,7 +886,7 @@ class SpaceLocation(BaseXrStructure):
         type: StructureType = StructureType.SPACE_LOCATION,
     ) -> None:
         super().__init__(
-            location_flags=enum_field_helper(location_flags),
+            _location_flags=enum_field_helper(location_flags),
             pose=pose,
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -871,8 +898,17 @@ class SpaceLocation(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SpaceLocation(location_flags={self.location_flags}, pose={self.pose}, next={self.next}, type={self.type})"
 
+    @property
+    def location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._location_flags)
+    
+    @location_flags.setter
+    def location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._location_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("location_flags", SpaceLocationFlagsCInt),
+        ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -968,8 +1004,8 @@ class SwapchainCreateInfo(BaseXrStructure):
         type: StructureType = StructureType.SWAPCHAIN_CREATE_INFO,
     ) -> None:
         super().__init__(
-            create_flags=enum_field_helper(create_flags),
-            usage_flags=enum_field_helper(usage_flags),
+            _create_flags=enum_field_helper(create_flags),
+            _usage_flags=enum_field_helper(usage_flags),
             format=format,
             sample_count=sample_count,
             width=width,
@@ -987,9 +1023,27 @@ class SwapchainCreateInfo(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SwapchainCreateInfo(create_flags={self.create_flags}, usage_flags={self.usage_flags}, format={self.format}, sample_count={self.sample_count}, width={self.width}, height={self.height}, face_count={self.face_count}, array_size={self.array_size}, mip_count={self.mip_count}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> SwapchainCreateFlags:
+        return SwapchainCreateFlags(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: SwapchainCreateFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
+    @property
+    def usage_flags(self) -> SwapchainUsageFlags:
+        return SwapchainUsageFlags(self._usage_flags)
+    
+    @usage_flags.setter
+    def usage_flags(self, value: SwapchainUsageFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._usage_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("create_flags", SwapchainCreateFlagsCInt),
-        ("usage_flags", SwapchainUsageFlagsCInt),
+        ("_create_flags", SwapchainCreateFlagsCInt),
+        ("_usage_flags", SwapchainUsageFlagsCInt),
         ("format", c_int64),
         ("sample_count", c_uint32),
         ("width", c_uint32),
@@ -1114,8 +1168,17 @@ class CompositionLayerBaseHeader(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.CompositionLayerBaseHeader(layer_flags={self.layer_flags}, space={self.space}, next={self.next}, type={self.type})"
 
+    @property
+    def layer_flags(self) -> CompositionLayerFlags:
+        return CompositionLayerFlags(self._layer_flags)
+    
+    @layer_flags.setter
+    def layer_flags(self, value: CompositionLayerFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._layer_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("layer_flags", CompositionLayerFlagsCInt),
+        ("_layer_flags", CompositionLayerFlagsCInt),
         ("space", Space),
     ]
 
@@ -1225,7 +1288,7 @@ class ViewState(BaseXrStructure):
         type: StructureType = StructureType.VIEW_STATE,
     ) -> None:
         super().__init__(
-            view_state_flags=enum_field_helper(view_state_flags),
+            _view_state_flags=enum_field_helper(view_state_flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -1236,8 +1299,17 @@ class ViewState(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.ViewState(view_state_flags={self.view_state_flags}, next={self.next}, type={self.type})"
 
+    @property
+    def view_state_flags(self) -> ViewStateFlags:
+        return ViewStateFlags(self._view_state_flags)
+    
+    @view_state_flags.setter
+    def view_state_flags(self, value: ViewStateFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._view_state_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("view_state_flags", ViewStateFlagsCInt),
+        ("_view_state_flags", ViewStateFlagsCInt),
     ]
 
 
@@ -1845,7 +1917,7 @@ class InputSourceLocalizedNameGetInfo(BaseXrStructure):
     ) -> None:
         super().__init__(
             source_path=source_path,
-            which_components=enum_field_helper(which_components),
+            _which_components=enum_field_helper(which_components),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -1856,9 +1928,18 @@ class InputSourceLocalizedNameGetInfo(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.InputSourceLocalizedNameGetInfo(source_path={self.source_path}, which_components={self.which_components}, next={self.next}, type={self.type})"
 
+    @property
+    def which_components(self) -> InputSourceLocalizedNameFlags:
+        return InputSourceLocalizedNameFlags(self._which_components)
+    
+    @which_components.setter
+    def which_components(self, value: InputSourceLocalizedNameFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._which_components = enum_field_helper(value)
+
     _fields_ = [
         ("source_path", Path),
-        ("which_components", InputSourceLocalizedNameFlagsCInt),
+        ("_which_components", InputSourceLocalizedNameFlagsCInt),
     ]
 
 
@@ -2091,7 +2172,7 @@ class CompositionLayerProjection(CompositionLayerBaseHeader):
         view_count, views = array_field_helper(
             CompositionLayerProjectionView, view_count, views)
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             space=space,
             view_count=view_count,
             _views=views,
@@ -2142,7 +2223,7 @@ class CompositionLayerQuad(CompositionLayerBaseHeader):
         if size is None:
             size = Extent2Df()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             space=space,
             _eye_visibility=enum_field_helper(eye_visibility),
             sub_image=sub_image,
@@ -2900,7 +2981,7 @@ class SpaceLocationData(Structure):
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
-            location_flags=enum_field_helper(location_flags),
+            _location_flags=enum_field_helper(location_flags),
             pose=pose,
         )
 
@@ -2910,8 +2991,17 @@ class SpaceLocationData(Structure):
     def __str__(self) -> str:
         return f"xr.SpaceLocationData(location_flags={self.location_flags}, pose={self.pose})"
 
+    @property
+    def location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._location_flags)
+    
+    @location_flags.setter
+    def location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._location_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("location_flags", SpaceLocationFlagsCInt),
+        ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -2971,7 +3061,7 @@ class SpaceVelocityData(Structure):
         if angular_velocity is None:
             angular_velocity = Vector3f()
         super().__init__(
-            velocity_flags=enum_field_helper(velocity_flags),
+            _velocity_flags=enum_field_helper(velocity_flags),
             linear_velocity=linear_velocity,
             angular_velocity=angular_velocity,
         )
@@ -2982,8 +3072,17 @@ class SpaceVelocityData(Structure):
     def __str__(self) -> str:
         return f"xr.SpaceVelocityData(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity})"
 
+    @property
+    def velocity_flags(self) -> SpaceVelocityFlags:
+        return SpaceVelocityFlags(self._velocity_flags)
+    
+    @velocity_flags.setter
+    def velocity_flags(self, value: SpaceVelocityFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._velocity_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("velocity_flags", SpaceVelocityFlagsCInt),
+        ("_velocity_flags", SpaceVelocityFlagsCInt),
         ("linear_velocity", Vector3f),
         ("angular_velocity", Vector3f),
     ]
@@ -3034,7 +3133,7 @@ class CompositionLayerCubeKHR(CompositionLayerBaseHeader):
         if orientation is None:
             orientation = Quaternionf()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             space=space,
             _eye_visibility=enum_field_helper(eye_visibility),
             swapchain=swapchain,
@@ -3122,7 +3221,7 @@ class CompositionLayerCylinderKHR(CompositionLayerBaseHeader):
         if sub_image is None:
             sub_image = SwapchainSubImage()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             space=space,
             _eye_visibility=enum_field_helper(eye_visibility),
             sub_image=sub_image,
@@ -3180,7 +3279,7 @@ class CompositionLayerEquirectKHR(CompositionLayerBaseHeader):
         if bias is None:
             bias = Vector2f()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             space=space,
             _eye_visibility=enum_field_helper(eye_visibility),
             sub_image=sub_image,
@@ -3354,7 +3453,7 @@ class CompositionLayerEquirect2KHR(CompositionLayerBaseHeader):
         if sub_image is None:
             sub_image = SwapchainSubImage()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             space=space,
             _eye_visibility=enum_field_helper(eye_visibility),
             sub_image=sub_image,
@@ -3812,8 +3911,8 @@ class DebugUtilsMessengerCreateInfoEXT(BaseXrStructure):
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
-            message_severities=enum_field_helper(message_severities),
-            message_types=enum_field_helper(message_types),
+            _message_severities=enum_field_helper(message_severities),
+            _message_types=enum_field_helper(message_types),
             _user_callback=wrap_debug_callback(user_callback, user_data),
             _user_data=cast(pointer(py_object(user_data)), c_void_p) if user_data else None,
             _next=next_field_helper(next),
@@ -3837,6 +3936,24 @@ class DebugUtilsMessengerCreateInfoEXT(BaseXrStructure):
         return f"xr.DebugUtilsMessengerCreateInfoEXT(message_severities={self.message_severities}, message_types={self.message_types}, user_callback={self.user_callback}, user_data={self.user_data}, next={self.next}, type={self.type})"
 
     @property
+    def message_severities(self) -> DebugUtilsMessageSeverityFlagsEXT:
+        return DebugUtilsMessageSeverityFlagsEXT(self._message_severities)
+    
+    @message_severities.setter
+    def message_severities(self, value: DebugUtilsMessageSeverityFlagsEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._message_severities = enum_field_helper(value)
+
+    @property
+    def message_types(self) -> DebugUtilsMessageTypeFlagsEXT:
+        return DebugUtilsMessageTypeFlagsEXT(self._message_types)
+    
+    @message_types.setter
+    def message_types(self, value: DebugUtilsMessageTypeFlagsEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._message_types = enum_field_helper(value)
+
+    @property
     def user_callback(self) -> PFN_xrDebugUtilsMessengerCallbackEXT:
         return self._user_callback
 
@@ -3849,8 +3966,8 @@ class DebugUtilsMessengerCreateInfoEXT(BaseXrStructure):
         self._user_callback = wrap_debug_callback(user_callback, self._cached_user_data)
 
     _fields_ = [
-        ("message_severities", DebugUtilsMessageSeverityFlagsEXTCInt),
-        ("message_types", DebugUtilsMessageTypeFlagsEXTCInt),
+        ("_message_severities", DebugUtilsMessageSeverityFlagsEXTCInt),
+        ("_message_types", DebugUtilsMessageTypeFlagsEXTCInt),
         ("_user_callback", PFN_xrDebugUtilsMessengerCallbackEXT),
         ("_user_data", c_void_p),
     ]
@@ -3933,7 +4050,7 @@ class SessionCreateInfoOverlayEXTX(BaseXrStructure):
         type: StructureType = StructureType.SESSION_CREATE_INFO_OVERLAY_EXTX,
     ) -> None:
         super().__init__(
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             session_layers_placement=session_layers_placement,
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -3945,8 +4062,17 @@ class SessionCreateInfoOverlayEXTX(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SessionCreateInfoOverlayEXTX(create_flags={self.create_flags}, session_layers_placement={self.session_layers_placement}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> OverlaySessionCreateFlagsEXTX:
+        return OverlaySessionCreateFlagsEXTX(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: OverlaySessionCreateFlagsEXTX) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("create_flags", OverlaySessionCreateFlagsEXTXCInt),
+        ("_create_flags", OverlaySessionCreateFlagsEXTXCInt),
         ("session_layers_placement", c_uint32),
     ]
 
@@ -3961,7 +4087,7 @@ class EventDataMainSessionVisibilityChangedEXTX(EventDataBaseHeader):
     ) -> None:
         super().__init__(
             visible=visible,
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -3972,9 +4098,18 @@ class EventDataMainSessionVisibilityChangedEXTX(EventDataBaseHeader):
     def __str__(self) -> str:
         return f"xr.EventDataMainSessionVisibilityChangedEXTX(visible={self.visible}, flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> OverlayMainSessionFlagsEXTX:
+        return OverlayMainSessionFlagsEXTX(self._flags)
+    
+    @flags.setter
+    def flags(self, value: OverlayMainSessionFlagsEXTX) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("visible", Bool32),
-        ("flags", OverlayMainSessionFlagsEXTXCInt),
+        ("_flags", OverlayMainSessionFlagsEXTXCInt),
     ]
 
 
@@ -4060,7 +4195,7 @@ class CompositionLayerImageLayoutFB(BaseXrStructure):
         type: StructureType = StructureType.COMPOSITION_LAYER_IMAGE_LAYOUT_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -4071,8 +4206,17 @@ class CompositionLayerImageLayoutFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.CompositionLayerImageLayoutFB(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> CompositionLayerImageLayoutFlagsFB:
+        return CompositionLayerImageLayoutFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: CompositionLayerImageLayoutFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", CompositionLayerImageLayoutFlagsFBCInt),
+        ("_flags", CompositionLayerImageLayoutFlagsFBCInt),
     ]
 
 
@@ -4414,7 +4558,7 @@ class HandJointLocationEXT(Structure):
         radius: float = 0,
     ) -> None:
         super().__init__(
-            location_flags=enum_field_helper(location_flags),
+            _location_flags=enum_field_helper(location_flags),
             pose=pose,
             radius=radius,
         )
@@ -4425,8 +4569,17 @@ class HandJointLocationEXT(Structure):
     def __str__(self) -> str:
         return f"xr.HandJointLocationEXT(location_flags={self.location_flags}, pose={self.pose}, radius={self.radius:.3f})"
 
+    @property
+    def location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._location_flags)
+    
+    @location_flags.setter
+    def location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._location_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("location_flags", SpaceLocationFlagsCInt),
+        ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
         ("radius", c_float),
     ]
@@ -4444,7 +4597,7 @@ class HandJointVelocityEXT(Structure):
         if angular_velocity is None:
             angular_velocity = Vector3f()
         super().__init__(
-            velocity_flags=enum_field_helper(velocity_flags),
+            _velocity_flags=enum_field_helper(velocity_flags),
             linear_velocity=linear_velocity,
             angular_velocity=angular_velocity,
         )
@@ -4455,8 +4608,17 @@ class HandJointVelocityEXT(Structure):
     def __str__(self) -> str:
         return f"xr.HandJointVelocityEXT(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity})"
 
+    @property
+    def velocity_flags(self) -> SpaceVelocityFlags:
+        return SpaceVelocityFlags(self._velocity_flags)
+    
+    @velocity_flags.setter
+    def velocity_flags(self, value: SpaceVelocityFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._velocity_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("velocity_flags", SpaceVelocityFlagsCInt),
+        ("_velocity_flags", SpaceVelocityFlagsCInt),
         ("linear_velocity", Vector3f),
         ("angular_velocity", Vector3f),
     ]
@@ -5341,7 +5503,7 @@ class CompositionLayerSecureContentFB(BaseXrStructure):
         type: StructureType = StructureType.COMPOSITION_LAYER_SECURE_CONTENT_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -5352,8 +5514,17 @@ class CompositionLayerSecureContentFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.CompositionLayerSecureContentFB(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> CompositionLayerSecureContentFlagsFB:
+        return CompositionLayerSecureContentFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: CompositionLayerSecureContentFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", CompositionLayerSecureContentFlagsFBCInt),
+        ("_flags", CompositionLayerSecureContentFlagsFBCInt),
     ]
 
 
@@ -5372,7 +5543,7 @@ class BodyJointLocationFB(Structure):
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
-            location_flags=enum_field_helper(location_flags),
+            _location_flags=enum_field_helper(location_flags),
             pose=pose,
         )
 
@@ -5382,8 +5553,17 @@ class BodyJointLocationFB(Structure):
     def __str__(self) -> str:
         return f"xr.BodyJointLocationFB(location_flags={self.location_flags}, pose={self.pose})"
 
+    @property
+    def location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._location_flags)
+    
+    @location_flags.setter
+    def location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._location_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("location_flags", SpaceLocationFlagsCInt),
+        ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -6139,7 +6319,7 @@ class SceneComponentLocationMSFT(Structure):
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             pose=pose,
         )
 
@@ -6149,8 +6329,17 @@ class SceneComponentLocationMSFT(Structure):
     def __str__(self) -> str:
         return f"xr.SceneComponentLocationMSFT(flags={self.flags}, pose={self.pose})"
 
+    @property
+    def flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._flags)
+    
+    @flags.setter
+    def flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", SpaceLocationFlagsCInt),
+        ("_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -7212,7 +7401,7 @@ class HandTrackingAimStateFB(BaseXrStructure):
         type: StructureType = StructureType.HAND_TRACKING_AIM_STATE_FB,
     ) -> None:
         super().__init__(
-            status=enum_field_helper(status),
+            _status=enum_field_helper(status),
             aim_pose=aim_pose,
             pinch_strength_index=pinch_strength_index,
             pinch_strength_middle=pinch_strength_middle,
@@ -7228,8 +7417,17 @@ class HandTrackingAimStateFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.HandTrackingAimStateFB(status={self.status}, aim_pose={self.aim_pose}, pinch_strength_index={self.pinch_strength_index:.3f}, pinch_strength_middle={self.pinch_strength_middle:.3f}, pinch_strength_ring={self.pinch_strength_ring:.3f}, pinch_strength_little={self.pinch_strength_little:.3f}, next={self.next}, type={self.type})"
 
+    @property
+    def status(self) -> HandTrackingAimFlagsFB:
+        return HandTrackingAimFlagsFB(self._status)
+    
+    @status.setter
+    def status(self, value: HandTrackingAimFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._status = enum_field_helper(value)
+
     _fields_ = [
-        ("status", HandTrackingAimFlagsFBCInt),
+        ("_status", HandTrackingAimFlagsFBCInt),
         ("aim_pose", Posef),
         ("pinch_strength_index", c_float),
         ("pinch_strength_middle", c_float),
@@ -7553,7 +7751,7 @@ class SwapchainCreateInfoFoveationFB(BaseXrStructure):
         type: StructureType = StructureType.SWAPCHAIN_CREATE_INFO_FOVEATION_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -7564,8 +7762,17 @@ class SwapchainCreateInfoFoveationFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SwapchainCreateInfoFoveationFB(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> SwapchainCreateFoveationFlagsFB:
+        return SwapchainCreateFoveationFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: SwapchainCreateFoveationFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", SwapchainCreateFoveationFlagsFBCInt),
+        ("_flags", SwapchainCreateFoveationFlagsFBCInt),
     ]
 
 
@@ -7578,7 +7785,7 @@ class SwapchainStateFoveationFB(SwapchainStateBaseHeaderFB):
         type: StructureType = StructureType.SWAPCHAIN_STATE_FOVEATION_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             profile=profile,
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -7590,8 +7797,17 @@ class SwapchainStateFoveationFB(SwapchainStateBaseHeaderFB):
     def __str__(self) -> str:
         return f"xr.SwapchainStateFoveationFB(flags={self.flags}, profile={self.profile}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> SwapchainStateFoveationFlagsFB:
+        return SwapchainStateFoveationFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: SwapchainStateFoveationFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", SwapchainStateFoveationFlagsFBCInt),
+        ("_flags", SwapchainStateFoveationFlagsFBCInt),
         ("profile", FoveationProfileFB),
     ]
 
@@ -7691,7 +7907,7 @@ class KeyboardTrackingDescriptionFB(Structure):
         super().__init__(
             tracked_keyboard_id=tracked_keyboard_id,
             size=size,
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             name=name.encode(),
         )
 
@@ -7701,10 +7917,19 @@ class KeyboardTrackingDescriptionFB(Structure):
     def __str__(self) -> str:
         return f"xr.KeyboardTrackingDescriptionFB(tracked_keyboard_id={self.tracked_keyboard_id}, size={self.size}, flags={self.flags}, name={self.name})"
 
+    @property
+    def flags(self) -> KeyboardTrackingFlagsFB:
+        return KeyboardTrackingFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: KeyboardTrackingFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("tracked_keyboard_id", c_uint64),
         ("size", Vector3f),
-        ("flags", KeyboardTrackingFlagsFBCInt),
+        ("_flags", KeyboardTrackingFlagsFBCInt),
         ("name", (c_char * 128)),
     ]
 
@@ -7741,7 +7966,7 @@ class KeyboardTrackingQueryFB(BaseXrStructure):
         type: StructureType = StructureType.KEYBOARD_TRACKING_QUERY_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -7752,8 +7977,17 @@ class KeyboardTrackingQueryFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.KeyboardTrackingQueryFB(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> KeyboardTrackingQueryFlagsFB:
+        return KeyboardTrackingQueryFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: KeyboardTrackingQueryFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", KeyboardTrackingQueryFlagsFBCInt),
+        ("_flags", KeyboardTrackingQueryFlagsFBCInt),
     ]
 
 
@@ -7785,7 +8019,7 @@ class TriangleMeshCreateInfoFB(BaseXrStructure):
         type: StructureType = StructureType.TRIANGLE_MESH_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _winding_order=enum_field_helper(winding_order),
             vertex_count=vertex_count,
             vertex_buffer=vertex_buffer,
@@ -7802,6 +8036,15 @@ class TriangleMeshCreateInfoFB(BaseXrStructure):
         return f"xr.TriangleMeshCreateInfoFB(flags={self.flags}, winding_order={self.winding_order}, vertex_count={self.vertex_count}, vertex_buffer={self.vertex_buffer}, triangle_count={self.triangle_count}, index_buffer={self.index_buffer}, next={self.next}, type={self.type})"
 
     @property
+    def flags(self) -> TriangleMeshFlagsFB:
+        return TriangleMeshFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: TriangleMeshFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
+    @property
     def winding_order(self) -> WindingOrderFB:
         return WindingOrderFB(self._winding_order)
     
@@ -7811,7 +8054,7 @@ class TriangleMeshCreateInfoFB(BaseXrStructure):
         self._winding_order = enum_field_helper(value)
 
     _fields_ = [
-        ("flags", TriangleMeshFlagsFBCInt),
+        ("_flags", TriangleMeshFlagsFBCInt),
         ("_winding_order", WindingOrderFB.ctype()),
         ("vertex_count", c_uint32),
         ("vertex_buffer", POINTER(Vector3f)),
@@ -7899,7 +8142,7 @@ class SystemPassthroughProperties2FB(BaseXrStructure):
         type: StructureType = StructureType.SYSTEM_PASSTHROUGH_PROPERTIES2_FB,
     ) -> None:
         super().__init__(
-            capabilities=enum_field_helper(capabilities),
+            _capabilities=enum_field_helper(capabilities),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -7910,8 +8153,17 @@ class SystemPassthroughProperties2FB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SystemPassthroughProperties2FB(capabilities={self.capabilities}, next={self.next}, type={self.type})"
 
+    @property
+    def capabilities(self) -> PassthroughCapabilityFlagsFB:
+        return PassthroughCapabilityFlagsFB(self._capabilities)
+    
+    @capabilities.setter
+    def capabilities(self, value: PassthroughCapabilityFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._capabilities = enum_field_helper(value)
+
     _fields_ = [
-        ("capabilities", PassthroughCapabilityFlagsFBCInt),
+        ("_capabilities", PassthroughCapabilityFlagsFBCInt),
     ]
 
 
@@ -7923,7 +8175,7 @@ class PassthroughCreateInfoFB(BaseXrStructure):
         type: StructureType = StructureType.PASSTHROUGH_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -7934,8 +8186,17 @@ class PassthroughCreateInfoFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.PassthroughCreateInfoFB(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> PassthroughFlagsFB:
+        return PassthroughFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: PassthroughFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", PassthroughFlagsFBCInt),
+        ("_flags", PassthroughFlagsFBCInt),
     ]
 
 
@@ -7950,7 +8211,7 @@ class PassthroughLayerCreateInfoFB(BaseXrStructure):
     ) -> None:
         super().__init__(
             passthrough=passthrough,
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _purpose=enum_field_helper(purpose),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -7963,6 +8224,15 @@ class PassthroughLayerCreateInfoFB(BaseXrStructure):
         return f"xr.PassthroughLayerCreateInfoFB(passthrough={self.passthrough}, flags={self.flags}, purpose={self.purpose}, next={self.next}, type={self.type})"
 
     @property
+    def flags(self) -> PassthroughFlagsFB:
+        return PassthroughFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: PassthroughFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
+    @property
     def purpose(self) -> PassthroughLayerPurposeFB:
         return PassthroughLayerPurposeFB(self._purpose)
     
@@ -7973,7 +8243,7 @@ class PassthroughLayerCreateInfoFB(BaseXrStructure):
 
     _fields_ = [
         ("passthrough", PassthroughFB),
-        ("flags", PassthroughFlagsFBCInt),
+        ("_flags", PassthroughFlagsFBCInt),
         ("_purpose", PassthroughLayerPurposeFB.ctype()),
     ]
 
@@ -7988,7 +8258,7 @@ class CompositionLayerPassthroughFB(CompositionLayerBaseHeader):
         type: StructureType = StructureType.COMPOSITION_LAYER_PASSTHROUGH_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             space=space,
             layer_handle=layer_handle,
             _next=next_field_helper(next),
@@ -8190,7 +8460,7 @@ class EventDataPassthroughStateChangedFB(EventDataBaseHeader):
         type: StructureType = StructureType.EVENT_DATA_PASSTHROUGH_STATE_CHANGED_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -8201,8 +8471,17 @@ class EventDataPassthroughStateChangedFB(EventDataBaseHeader):
     def __str__(self) -> str:
         return f"xr.EventDataPassthroughStateChangedFB(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> PassthroughStateChangedFlagsFB:
+        return PassthroughStateChangedFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: PassthroughStateChangedFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", PassthroughStateChangedFlagsFBCInt),
+        ("_flags", PassthroughStateChangedFlagsFBCInt),
     ]
 
 
@@ -8275,7 +8554,7 @@ class RenderModelPropertiesFB(BaseXrStructure):
             model_name=model_name.encode(),
             model_key=model_key,
             model_version=model_version,
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -8286,12 +8565,21 @@ class RenderModelPropertiesFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.RenderModelPropertiesFB(vendor_id={self.vendor_id}, model_name={self.model_name}, model_key={self.model_key}, model_version={self.model_version}, flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> RenderModelFlagsFB:
+        return RenderModelFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: RenderModelFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("vendor_id", c_uint32),
         ("model_name", (c_char * 64)),
         ("model_key", RenderModelKeyFB),
         ("model_version", c_uint32),
-        ("flags", RenderModelFlagsFBCInt),
+        ("_flags", RenderModelFlagsFBCInt),
     ]
 
 
@@ -8381,7 +8669,7 @@ class RenderModelCapabilitiesRequestFB(BaseXrStructure):
         type: StructureType = StructureType.RENDER_MODEL_CAPABILITIES_REQUEST_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -8392,8 +8680,17 @@ class RenderModelCapabilitiesRequestFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.RenderModelCapabilitiesRequestFB(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> RenderModelFlagsFB:
+        return RenderModelFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: RenderModelFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", RenderModelFlagsFBCInt),
+        ("_flags", RenderModelFlagsFBCInt),
     ]
 
 
@@ -8615,7 +8912,7 @@ class FrameEndInfoML(BaseXrStructure):
     ) -> None:
         super().__init__(
             focus_distance=focus_distance,
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -8626,9 +8923,18 @@ class FrameEndInfoML(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.FrameEndInfoML(focus_distance={self.focus_distance:.3f}, flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> FrameEndInfoFlagsML:
+        return FrameEndInfoFlagsML(self._flags)
+    
+    @flags.setter
+    def flags(self, value: FrameEndInfoFlagsML) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("focus_distance", c_float),
-        ("flags", FrameEndInfoFlagsMLCInt),
+        ("_flags", FrameEndInfoFlagsMLCInt),
     ]
 
 
@@ -8645,7 +8951,7 @@ class GlobalDimmerFrameEndInfoML(BaseXrStructure):
     ) -> None:
         super().__init__(
             dimmer_value=dimmer_value,
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -8656,9 +8962,18 @@ class GlobalDimmerFrameEndInfoML(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.GlobalDimmerFrameEndInfoML(dimmer_value={self.dimmer_value:.3f}, flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> GlobalDimmerFrameEndInfoFlagsML:
+        return GlobalDimmerFrameEndInfoFlagsML(self._flags)
+    
+    @flags.setter
+    def flags(self, value: GlobalDimmerFrameEndInfoFlagsML) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("dimmer_value", c_float),
-        ("flags", GlobalDimmerFrameEndInfoFlagsMLCInt),
+        ("_flags", GlobalDimmerFrameEndInfoFlagsMLCInt),
     ]
 
 
@@ -9071,7 +9386,7 @@ class EventDataLocalizationChangedML(EventDataBaseHeader):
             _state=enum_field_helper(state),
             map=map,
             _confidence=enum_field_helper(confidence),
-            error_flags=enum_field_helper(error_flags),
+            _error_flags=enum_field_helper(error_flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -9100,12 +9415,21 @@ class EventDataLocalizationChangedML(EventDataBaseHeader):
         # noinspection PyAttributeOutsideInit
         self._confidence = enum_field_helper(value)
 
+    @property
+    def error_flags(self) -> LocalizationMapErrorFlagsML:
+        return LocalizationMapErrorFlagsML(self._error_flags)
+    
+    @error_flags.setter
+    def error_flags(self, value: LocalizationMapErrorFlagsML) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._error_flags = enum_field_helper(value)
+
     _fields_ = [
         ("session", Session),
         ("_state", LocalizationMapStateML.ctype()),
         ("map", LocalizationMapML),
         ("_confidence", LocalizationMapConfidenceML.ctype()),
-        ("error_flags", LocalizationMapErrorFlagsMLCInt),
+        ("_error_flags", LocalizationMapErrorFlagsMLCInt),
     ]
 
 
@@ -10745,7 +11069,7 @@ class CompositionLayerSpaceWarpInfoFB(BaseXrStructure):
         if depth_sub_image is None:
             depth_sub_image = SwapchainSubImage()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             motion_vector_sub_image=motion_vector_sub_image,
             app_space_delta_pose=app_space_delta_pose,
             depth_sub_image=depth_sub_image,
@@ -10763,8 +11087,17 @@ class CompositionLayerSpaceWarpInfoFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.CompositionLayerSpaceWarpInfoFB(layer_flags={self.layer_flags}, motion_vector_sub_image={self.motion_vector_sub_image}, app_space_delta_pose={self.app_space_delta_pose}, depth_sub_image={self.depth_sub_image}, min_depth={self.min_depth:.3f}, max_depth={self.max_depth:.3f}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next={self.next}, type={self.type})"
 
+    @property
+    def layer_flags(self) -> CompositionLayerSpaceWarpInfoFlagsFB:
+        return CompositionLayerSpaceWarpInfoFlagsFB(self._layer_flags)
+    
+    @layer_flags.setter
+    def layer_flags(self, value: CompositionLayerSpaceWarpInfoFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._layer_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("layer_flags", CompositionLayerSpaceWarpInfoFlagsFBCInt),
+        ("_layer_flags", CompositionLayerSpaceWarpInfoFlagsFBCInt),
         ("motion_vector_sub_image", SwapchainSubImage),
         ("app_space_delta_pose", Posef),
         ("depth_sub_image", SwapchainSubImage),
@@ -11040,7 +11373,7 @@ class SemanticLabelsSupportInfoFB(BaseXrStructure):
         type: StructureType = StructureType.SEMANTIC_LABELS_SUPPORT_INFO_FB,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _recognized_labels=recognized_labels.encode(),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -11053,6 +11386,15 @@ class SemanticLabelsSupportInfoFB(BaseXrStructure):
         return f"xr.SemanticLabelsSupportInfoFB(flags={self.flags}, recognized_labels={self.recognized_labels}, next={self.next}, type={self.type})"
 
     @property
+    def flags(self) -> SemanticLabelsSupportFlagsFB:
+        return SemanticLabelsSupportFlagsFB(self._flags)
+    
+    @flags.setter
+    def flags(self, value: SemanticLabelsSupportFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
+    @property
     def recognized_labels(self) -> str:
         return self._recognized_labels.decode()
     
@@ -11062,7 +11404,7 @@ class SemanticLabelsSupportInfoFB(BaseXrStructure):
         self._recognized_labels = value.encode()
 
     _fields_ = [
-        ("flags", SemanticLabelsSupportFlagsFBCInt),
+        ("_flags", SemanticLabelsSupportFlagsFBCInt),
         ("_recognized_labels", c_char_p),
     ]
 
@@ -11088,7 +11430,7 @@ class DigitalLensControlALMALENCE(BaseXrStructure):
         type: StructureType = StructureType.DIGITAL_LENS_CONTROL_ALMALENCE,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -11099,8 +11441,17 @@ class DigitalLensControlALMALENCE(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.DigitalLensControlALMALENCE(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> DigitalLensControlFlagsALMALENCE:
+        return DigitalLensControlFlagsALMALENCE(self._flags)
+    
+    @flags.setter
+    def flags(self, value: DigitalLensControlFlagsALMALENCE) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", DigitalLensControlFlagsALMALENCECInt),
+        ("_flags", DigitalLensControlFlagsALMALENCECInt),
     ]
 
 
@@ -11227,7 +11578,7 @@ class FoveationEyeTrackedProfileCreateInfoMETA(BaseXrStructure):
         type: StructureType = StructureType.FOVEATION_EYE_TRACKED_PROFILE_CREATE_INFO_META,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -11238,8 +11589,17 @@ class FoveationEyeTrackedProfileCreateInfoMETA(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.FoveationEyeTrackedProfileCreateInfoMETA(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> FoveationEyeTrackedProfileCreateFlagsMETA:
+        return FoveationEyeTrackedProfileCreateFlagsMETA(self._flags)
+    
+    @flags.setter
+    def flags(self, value: FoveationEyeTrackedProfileCreateFlagsMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", FoveationEyeTrackedProfileCreateFlagsMETACInt),
+        ("_flags", FoveationEyeTrackedProfileCreateFlagsMETACInt),
     ]
 
 
@@ -11251,7 +11611,7 @@ class FoveationEyeTrackedStateMETA(BaseXrStructure):
         type: StructureType = StructureType.FOVEATION_EYE_TRACKED_STATE_META,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -11262,9 +11622,18 @@ class FoveationEyeTrackedStateMETA(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.FoveationEyeTrackedStateMETA(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> FoveationEyeTrackedStateFlagsMETA:
+        return FoveationEyeTrackedStateFlagsMETA(self._flags)
+    
+    @flags.setter
+    def flags(self, value: FoveationEyeTrackedStateFlagsMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("foveation_center", (Vector2f * 2)),
-        ("flags", FoveationEyeTrackedStateFlagsMETACInt),
+        ("_flags", FoveationEyeTrackedStateFlagsMETACInt),
     ]
 
 
@@ -11648,7 +12017,7 @@ class CompositionLayerSettingsFB(BaseXrStructure):
         type: StructureType = StructureType.COMPOSITION_LAYER_SETTINGS_FB,
     ) -> None:
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -11659,8 +12028,17 @@ class CompositionLayerSettingsFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.CompositionLayerSettingsFB(layer_flags={self.layer_flags}, next={self.next}, type={self.type})"
 
+    @property
+    def layer_flags(self) -> CompositionLayerSettingsFlagsFB:
+        return CompositionLayerSettingsFlagsFB(self._layer_flags)
+    
+    @layer_flags.setter
+    def layer_flags(self, value: CompositionLayerSettingsFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._layer_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("layer_flags", CompositionLayerSettingsFlagsFBCInt),
+        ("_layer_flags", CompositionLayerSettingsFlagsFBCInt),
     ]
 
 
@@ -11756,7 +12134,7 @@ class FrameSynthesisInfoEXT(BaseXrStructure):
         if depth_sub_image is None:
             depth_sub_image = SwapchainSubImage()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             motion_vector_sub_image=motion_vector_sub_image,
             motion_vector_scale=motion_vector_scale,
             motion_vector_offset=motion_vector_offset,
@@ -11776,8 +12154,17 @@ class FrameSynthesisInfoEXT(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.FrameSynthesisInfoEXT(layer_flags={self.layer_flags}, motion_vector_sub_image={self.motion_vector_sub_image}, motion_vector_scale={self.motion_vector_scale}, motion_vector_offset={self.motion_vector_offset}, app_space_delta_pose={self.app_space_delta_pose}, depth_sub_image={self.depth_sub_image}, min_depth={self.min_depth:.3f}, max_depth={self.max_depth:.3f}, near_z={self.near_z:.3f}, far_z={self.far_z:.3f}, next={self.next}, type={self.type})"
 
+    @property
+    def layer_flags(self) -> FrameSynthesisInfoFlagsEXT:
+        return FrameSynthesisInfoFlagsEXT(self._layer_flags)
+    
+    @layer_flags.setter
+    def layer_flags(self, value: FrameSynthesisInfoFlagsEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._layer_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("layer_flags", FrameSynthesisInfoFlagsEXTCInt),
+        ("_layer_flags", FrameSynthesisInfoFlagsEXTCInt),
         ("motion_vector_sub_image", SwapchainSubImage),
         ("motion_vector_scale", Vector4f),
         ("motion_vector_offset", Vector4f),
@@ -11897,7 +12284,7 @@ class PassthroughPreferencesMETA(BaseXrStructure):
         type: StructureType = StructureType.PASSTHROUGH_PREFERENCES_META,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -11908,8 +12295,17 @@ class PassthroughPreferencesMETA(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.PassthroughPreferencesMETA(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> PassthroughPreferenceFlagsMETA:
+        return PassthroughPreferenceFlagsMETA(self._flags)
+    
+    @flags.setter
+    def flags(self, value: PassthroughPreferenceFlagsMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", PassthroughPreferenceFlagsMETACInt),
+        ("_flags", PassthroughPreferenceFlagsMETACInt),
     ]
 
 
@@ -12166,7 +12562,7 @@ class VirtualKeyboardInputInfoMETA(BaseXrStructure):
             _input_source=enum_field_helper(input_source),
             input_space=input_space,
             input_pose_in_space=input_pose_in_space,
-            input_state=enum_field_helper(input_state),
+            _input_state=enum_field_helper(input_state),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -12186,11 +12582,20 @@ class VirtualKeyboardInputInfoMETA(BaseXrStructure):
         # noinspection PyAttributeOutsideInit
         self._input_source = enum_field_helper(value)
 
+    @property
+    def input_state(self) -> VirtualKeyboardInputStateFlagsMETA:
+        return VirtualKeyboardInputStateFlagsMETA(self._input_state)
+    
+    @input_state.setter
+    def input_state(self, value: VirtualKeyboardInputStateFlagsMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._input_state = enum_field_helper(value)
+
     _fields_ = [
         ("_input_source", VirtualKeyboardInputSourceMETA.ctype()),
         ("input_space", Space),
         ("input_pose_in_space", Posef),
-        ("input_state", VirtualKeyboardInputStateFlagsMETACInt),
+        ("_input_state", VirtualKeyboardInputStateFlagsMETACInt),
     ]
 
 
@@ -12421,7 +12826,7 @@ class ExternalCameraExtrinsicsOCULUS(Structure):
     ) -> None:
         super().__init__(
             last_change_time=last_change_time,
-            camera_status_flags=enum_field_helper(camera_status_flags),
+            _camera_status_flags=enum_field_helper(camera_status_flags),
             _attached_to_device=enum_field_helper(attached_to_device),
             relative_pose=relative_pose,
         )
@@ -12431,6 +12836,15 @@ class ExternalCameraExtrinsicsOCULUS(Structure):
 
     def __str__(self) -> str:
         return f"xr.ExternalCameraExtrinsicsOCULUS(last_change_time={self.last_change_time}, camera_status_flags={self.camera_status_flags}, attached_to_device={self.attached_to_device}, relative_pose={self.relative_pose})"
+
+    @property
+    def camera_status_flags(self) -> ExternalCameraStatusFlagsOCULUS:
+        return ExternalCameraStatusFlagsOCULUS(self._camera_status_flags)
+    
+    @camera_status_flags.setter
+    def camera_status_flags(self, value: ExternalCameraStatusFlagsOCULUS) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._camera_status_flags = enum_field_helper(value)
 
     @property
     def attached_to_device(self) -> ExternalCameraAttachedToDeviceOCULUS:
@@ -12443,7 +12857,7 @@ class ExternalCameraExtrinsicsOCULUS(Structure):
 
     _fields_ = [
         ("last_change_time", Time),
-        ("camera_status_flags", ExternalCameraStatusFlagsOCULUSCInt),
+        ("_camera_status_flags", ExternalCameraStatusFlagsOCULUSCInt),
         ("_attached_to_device", ExternalCameraAttachedToDeviceOCULUS.ctype()),
         ("relative_pose", Posef),
     ]
@@ -12523,7 +12937,7 @@ class PerformanceMetricsCounterMETA(BaseXrStructure):
         type: StructureType = StructureType.PERFORMANCE_METRICS_COUNTER_META,
     ) -> None:
         super().__init__(
-            counter_flags=enum_field_helper(counter_flags),
+            _counter_flags=enum_field_helper(counter_flags),
             _counter_unit=enum_field_helper(counter_unit),
             uint_value=uint_value,
             float_value=float_value,
@@ -12538,6 +12952,15 @@ class PerformanceMetricsCounterMETA(BaseXrStructure):
         return f"xr.PerformanceMetricsCounterMETA(counter_flags={self.counter_flags}, counter_unit={self.counter_unit}, uint_value={self.uint_value}, float_value={self.float_value:.3f}, next={self.next}, type={self.type})"
 
     @property
+    def counter_flags(self) -> PerformanceMetricsCounterFlagsMETA:
+        return PerformanceMetricsCounterFlagsMETA(self._counter_flags)
+    
+    @counter_flags.setter
+    def counter_flags(self, value: PerformanceMetricsCounterFlagsMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._counter_flags = enum_field_helper(value)
+
+    @property
     def counter_unit(self) -> PerformanceMetricsCounterUnitMETA:
         return PerformanceMetricsCounterUnitMETA(self._counter_unit)
     
@@ -12547,7 +12970,7 @@ class PerformanceMetricsCounterMETA(BaseXrStructure):
         self._counter_unit = enum_field_helper(value)
 
     _fields_ = [
-        ("counter_flags", PerformanceMetricsCounterFlagsMETACInt),
+        ("_counter_flags", PerformanceMetricsCounterFlagsMETACInt),
         ("_counter_unit", PerformanceMetricsCounterUnitMETA.ctype()),
         ("uint_value", c_uint32),
         ("float_value", c_float),
@@ -13961,7 +14384,7 @@ class EnvironmentDepthProviderCreateInfoMETA(BaseXrStructure):
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_PROVIDER_CREATE_INFO_META,
     ) -> None:
         super().__init__(
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -13972,8 +14395,17 @@ class EnvironmentDepthProviderCreateInfoMETA(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthProviderCreateInfoMETA(create_flags={self.create_flags}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> EnvironmentDepthProviderCreateFlagsMETA:
+        return EnvironmentDepthProviderCreateFlagsMETA(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: EnvironmentDepthProviderCreateFlagsMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("create_flags", EnvironmentDepthProviderCreateFlagsMETACInt),
+        ("_create_flags", EnvironmentDepthProviderCreateFlagsMETACInt),
     ]
 
 
@@ -13985,7 +14417,7 @@ class EnvironmentDepthSwapchainCreateInfoMETA(BaseXrStructure):
         type: StructureType = StructureType.ENVIRONMENT_DEPTH_SWAPCHAIN_CREATE_INFO_META,
     ) -> None:
         super().__init__(
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -13996,8 +14428,17 @@ class EnvironmentDepthSwapchainCreateInfoMETA(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.EnvironmentDepthSwapchainCreateInfoMETA(create_flags={self.create_flags}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> EnvironmentDepthSwapchainCreateFlagsMETA:
+        return EnvironmentDepthSwapchainCreateFlagsMETA(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: EnvironmentDepthSwapchainCreateFlagsMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("create_flags", EnvironmentDepthSwapchainCreateFlagsMETACInt),
+        ("_create_flags", EnvironmentDepthSwapchainCreateFlagsMETACInt),
     ]
 
 
@@ -14713,7 +15154,7 @@ class CompositionLayerPassthroughHTC(CompositionLayerBaseHeader):
         if color is None:
             color = PassthroughColorHTC()
         super().__init__(
-            layer_flags=enum_field_helper(layer_flags),
+            _layer_flags=enum_field_helper(layer_flags),
             space=space,
             passthrough=passthrough,
             color=color,
@@ -14840,7 +15281,7 @@ class FoveationDynamicModeInfoHTC(BaseXrStructure):
         type: StructureType = StructureType.FOVEATION_DYNAMIC_MODE_INFO_HTC,
     ) -> None:
         super().__init__(
-            dynamic_flags=enum_field_helper(dynamic_flags),
+            _dynamic_flags=enum_field_helper(dynamic_flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -14851,8 +15292,17 @@ class FoveationDynamicModeInfoHTC(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.FoveationDynamicModeInfoHTC(dynamic_flags={self.dynamic_flags}, next={self.next}, type={self.type})"
 
+    @property
+    def dynamic_flags(self) -> FoveationDynamicFlagsHTC:
+        return FoveationDynamicFlagsHTC(self._dynamic_flags)
+    
+    @dynamic_flags.setter
+    def dynamic_flags(self, value: FoveationDynamicFlagsHTC) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._dynamic_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("dynamic_flags", FoveationDynamicFlagsHTCCInt),
+        ("_dynamic_flags", FoveationDynamicFlagsHTCCInt),
     ]
 
 
@@ -15082,7 +15532,7 @@ class BodyJointLocationHTC(Structure):
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
-            location_flags=enum_field_helper(location_flags),
+            _location_flags=enum_field_helper(location_flags),
             pose=pose,
         )
 
@@ -15092,8 +15542,17 @@ class BodyJointLocationHTC(Structure):
     def __str__(self) -> str:
         return f"xr.BodyJointLocationHTC(location_flags={self.location_flags}, pose={self.pose})"
 
+    @property
+    def location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._location_flags)
+    
+    @location_flags.setter
+    def location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._location_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("location_flags", SpaceLocationFlagsCInt),
+        ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -15112,7 +15571,7 @@ class BodyJointLocationsHTC(BaseXrStructure):
         joint_location_count, joint_locations = array_field_helper(
             BodyJointLocationHTC, joint_location_count, joint_locations)
         super().__init__(
-            combined_location_flags=enum_field_helper(combined_location_flags),
+            _combined_location_flags=enum_field_helper(combined_location_flags),
             _confidence_level=enum_field_helper(confidence_level),
             joint_location_count=joint_location_count,
             _joint_locations=joint_locations,
@@ -15126,6 +15585,15 @@ class BodyJointLocationsHTC(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.BodyJointLocationsHTC(combined_location_flags={self.combined_location_flags}, confidence_level={self.confidence_level}, joint_location_count={self.joint_location_count}, joint_locations={self.joint_locations}, skeleton_generation_id={self.skeleton_generation_id}, next={self.next}, type={self.type})"
+
+    @property
+    def combined_location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._combined_location_flags)
+    
+    @combined_location_flags.setter
+    def combined_location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._combined_location_flags = enum_field_helper(value)
 
     @property
     def confidence_level(self) -> BodyJointConfidenceHTC:
@@ -15151,7 +15619,7 @@ class BodyJointLocationsHTC(BaseXrStructure):
             BodyJointLocationHTC, None, value)
 
     _fields_ = [
-        ("combined_location_flags", SpaceLocationFlagsCInt),
+        ("_combined_location_flags", SpaceLocationFlagsCInt),
         ("_confidence_level", BodyJointConfidenceHTC.ctype()),
         ("joint_location_count", c_uint32),
         ("_joint_locations", POINTER(BodyJointLocationHTC)),
@@ -15482,7 +15950,7 @@ class BodyJointLocationBD(Structure):
         pose: Posef = Posef(),
     ) -> None:
         super().__init__(
-            location_flags=enum_field_helper(location_flags),
+            _location_flags=enum_field_helper(location_flags),
             pose=pose,
         )
 
@@ -15492,8 +15960,17 @@ class BodyJointLocationBD(Structure):
     def __str__(self) -> str:
         return f"xr.BodyJointLocationBD(location_flags={self.location_flags}, pose={self.pose})"
 
+    @property
+    def location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._location_flags)
+    
+    @location_flags.setter
+    def location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._location_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("location_flags", SpaceLocationFlagsCInt),
+        ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
     ]
 
@@ -16726,7 +17203,7 @@ class SenseDataProviderCreateInfoSpatialMeshBD(BaseXrStructure):
         type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_SPATIAL_MESH_BD,
     ) -> None:
         super().__init__(
-            config_flags=enum_field_helper(config_flags),
+            _config_flags=enum_field_helper(config_flags),
             _lod=enum_field_helper(lod),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -16739,6 +17216,15 @@ class SenseDataProviderCreateInfoSpatialMeshBD(BaseXrStructure):
         return f"xr.SenseDataProviderCreateInfoSpatialMeshBD(config_flags={self.config_flags}, lod={self.lod}, next={self.next}, type={self.type})"
 
     @property
+    def config_flags(self) -> SpatialMeshConfigFlagsBD:
+        return SpatialMeshConfigFlagsBD(self._config_flags)
+    
+    @config_flags.setter
+    def config_flags(self, value: SpatialMeshConfigFlagsBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._config_flags = enum_field_helper(value)
+
+    @property
     def lod(self) -> SpatialMeshLodBD:
         return SpatialMeshLodBD(self._lod)
     
@@ -16748,7 +17234,7 @@ class SenseDataProviderCreateInfoSpatialMeshBD(BaseXrStructure):
         self._lod = enum_field_helper(value)
 
     _fields_ = [
-        ("config_flags", SpatialMeshConfigFlagsBDCInt),
+        ("_config_flags", SpatialMeshConfigFlagsBDCInt),
         ("_lod", SpatialMeshLodBD.ctype()),
     ]
 
@@ -16979,7 +17465,7 @@ class SystemPlaneDetectionPropertiesEXT(BaseXrStructure):
         type: StructureType = StructureType.SYSTEM_PLANE_DETECTION_PROPERTIES_EXT,
     ) -> None:
         super().__init__(
-            supported_features=enum_field_helper(supported_features),
+            _supported_features=enum_field_helper(supported_features),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -16990,8 +17476,17 @@ class SystemPlaneDetectionPropertiesEXT(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.SystemPlaneDetectionPropertiesEXT(supported_features={self.supported_features}, next={self.next}, type={self.type})"
 
+    @property
+    def supported_features(self) -> PlaneDetectionCapabilityFlagsEXT:
+        return PlaneDetectionCapabilityFlagsEXT(self._supported_features)
+    
+    @supported_features.setter
+    def supported_features(self, value: PlaneDetectionCapabilityFlagsEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._supported_features = enum_field_helper(value)
+
     _fields_ = [
-        ("supported_features", PlaneDetectionCapabilityFlagsEXTCInt),
+        ("_supported_features", PlaneDetectionCapabilityFlagsEXTCInt),
     ]
 
 
@@ -17003,7 +17498,7 @@ class PlaneDetectorCreateInfoEXT(BaseXrStructure):
         type: StructureType = StructureType.PLANE_DETECTOR_CREATE_INFO_EXT,
     ) -> None:
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -17014,8 +17509,17 @@ class PlaneDetectorCreateInfoEXT(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.PlaneDetectorCreateInfoEXT(flags={self.flags}, next={self.next}, type={self.type})"
 
+    @property
+    def flags(self) -> PlaneDetectorFlagsEXT:
+        return PlaneDetectorFlagsEXT(self._flags)
+    
+    @flags.setter
+    def flags(self, value: PlaneDetectorFlagsEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
-        ("flags", PlaneDetectorFlagsEXTCInt),
+        ("_flags", PlaneDetectorFlagsEXTCInt),
     ]
 
 
@@ -17149,7 +17653,7 @@ class PlaneDetectorLocationEXT(BaseXrStructure):
             extents = Extent2Df()
         super().__init__(
             plane_id=plane_id,
-            location_flags=enum_field_helper(location_flags),
+            _location_flags=enum_field_helper(location_flags),
             pose=pose,
             extents=extents,
             _orientation=enum_field_helper(orientation),
@@ -17164,6 +17668,15 @@ class PlaneDetectorLocationEXT(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.PlaneDetectorLocationEXT(plane_id={self.plane_id}, location_flags={self.location_flags}, pose={self.pose}, extents={self.extents}, orientation={self.orientation}, semantic_type={self.semantic_type}, polygon_buffer_count={self.polygon_buffer_count}, next={self.next}, type={self.type})"
+
+    @property
+    def location_flags(self) -> SpaceLocationFlags:
+        return SpaceLocationFlags(self._location_flags)
+    
+    @location_flags.setter
+    def location_flags(self, value: SpaceLocationFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._location_flags = enum_field_helper(value)
 
     @property
     def orientation(self) -> PlaneDetectorOrientationEXT:
@@ -17185,7 +17698,7 @@ class PlaneDetectorLocationEXT(BaseXrStructure):
 
     _fields_ = [
         ("plane_id", c_uint64),
-        ("location_flags", SpaceLocationFlagsCInt),
+        ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
         ("extents", Extent2Df),
         ("_orientation", PlaneDetectorOrientationEXT.ctype()),
@@ -18497,7 +19010,7 @@ class WorldMeshGetInfoML(BaseXrStructure):
         block_count, blocks = array_field_helper(
             WorldMeshBlockRequestML, block_count, blocks)
         super().__init__(
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             fill_hole_length=fill_hole_length,
             disconnected_component_area=disconnected_component_area,
             block_count=block_count,
@@ -18511,6 +19024,15 @@ class WorldMeshGetInfoML(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.WorldMeshGetInfoML(flags={self.flags}, fill_hole_length={self.fill_hole_length:.3f}, disconnected_component_area={self.disconnected_component_area:.3f}, block_count={self.block_count}, blocks={self.blocks}, next={self.next}, type={self.type})"
+
+    @property
+    def flags(self) -> WorldMeshDetectorFlagsML:
+        return WorldMeshDetectorFlagsML(self._flags)
+    
+    @flags.setter
+    def flags(self, value: WorldMeshDetectorFlagsML) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
 
     @property
     def blocks(self):
@@ -18527,7 +19049,7 @@ class WorldMeshGetInfoML(BaseXrStructure):
             WorldMeshBlockRequestML, None, value)
 
     _fields_ = [
-        ("flags", WorldMeshDetectorFlagsMLCInt),
+        ("_flags", WorldMeshDetectorFlagsMLCInt),
         ("fill_hole_length", c_float),
         ("disconnected_component_area", c_float),
         ("block_count", c_uint32),
@@ -18557,7 +19079,7 @@ class WorldMeshBlockML(BaseXrStructure):
             uuid=uuid,
             _block_result=enum_field_helper(block_result),
             _lod=enum_field_helper(lod),
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             index_count=index_count,
             index_buffer=index_buffer,
             vertex_count=vertex_count,
@@ -18594,11 +19116,20 @@ class WorldMeshBlockML(BaseXrStructure):
         # noinspection PyAttributeOutsideInit
         self._lod = enum_field_helper(value)
 
+    @property
+    def flags(self) -> WorldMeshDetectorFlagsML:
+        return WorldMeshDetectorFlagsML(self._flags)
+    
+    @flags.setter
+    def flags(self, value: WorldMeshDetectorFlagsML) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("uuid", UuidEXT),
         ("_block_result", WorldMeshBlockResultML.ctype()),
         ("_lod", WorldMeshDetectorLodML.ctype()),
-        ("flags", WorldMeshDetectorFlagsMLCInt),
+        ("_flags", WorldMeshDetectorFlagsMLCInt),
         ("index_count", c_uint32),
         ("index_buffer", POINTER(c_uint16)),
         ("vertex_count", c_uint32),
@@ -18795,7 +19326,7 @@ class FacialExpressionBlendShapePropertiesML(BaseXrStructure):
         super().__init__(
             _requested_facial_blend_shape=enum_field_helper(requested_facial_blend_shape),
             weight=weight,
-            flags=enum_field_helper(flags),
+            _flags=enum_field_helper(flags),
             time=time,
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
@@ -18816,10 +19347,19 @@ class FacialExpressionBlendShapePropertiesML(BaseXrStructure):
         # noinspection PyAttributeOutsideInit
         self._requested_facial_blend_shape = enum_field_helper(value)
 
+    @property
+    def flags(self) -> FacialExpressionBlendShapePropertiesFlagsML:
+        return FacialExpressionBlendShapePropertiesFlagsML(self._flags)
+    
+    @flags.setter
+    def flags(self, value: FacialExpressionBlendShapePropertiesFlagsML) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._flags = enum_field_helper(value)
+
     _fields_ = [
         ("_requested_facial_blend_shape", FacialBlendShapeML.ctype()),
         ("weight", c_float),
-        ("flags", FacialExpressionBlendShapePropertiesFlagsMLCInt),
+        ("_flags", FacialExpressionBlendShapePropertiesFlagsMLCInt),
         ("time", Time),
     ]
 

@@ -1304,7 +1304,7 @@ class VulkanInstanceCreateInfoKHR(BaseXrStructure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_create_info=vulkan_create_info,
             vulkan_allocator=vulkan_allocator,
@@ -1318,9 +1318,18 @@ class VulkanInstanceCreateInfoKHR(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.VulkanInstanceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> VulkanInstanceCreateFlagsKHR:
+        return VulkanInstanceCreateFlagsKHR(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: VulkanInstanceCreateFlagsKHR) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
     _fields_ = [
         ("system_id", SystemId),
-        ("create_flags", VulkanInstanceCreateFlagsKHRCInt),
+        ("_create_flags", VulkanInstanceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", PFN_vkGetInstanceProcAddr),
         ("vulkan_create_info", POINTER(VkInstanceCreateInfo)),
         ("vulkan_allocator", POINTER(VkAllocationCallbacks)),
@@ -1341,7 +1350,7 @@ class VulkanDeviceCreateInfoKHR(BaseXrStructure):
     ) -> None:
         super().__init__(
             system_id=system_id,
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             pfn_get_instance_proc_addr=pfn_get_instance_proc_addr,
             vulkan_physical_device=vulkan_physical_device,
             vulkan_create_info=vulkan_create_info,
@@ -1356,9 +1365,18 @@ class VulkanDeviceCreateInfoKHR(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.VulkanDeviceCreateInfoKHR(system_id={self.system_id}, create_flags={self.create_flags}, pfn_get_instance_proc_addr={self.pfn_get_instance_proc_addr}, vulkan_physical_device={self.vulkan_physical_device}, vulkan_create_info={self.vulkan_create_info}, vulkan_allocator={self.vulkan_allocator}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> VulkanDeviceCreateFlagsKHR:
+        return VulkanDeviceCreateFlagsKHR(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: VulkanDeviceCreateFlagsKHR) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
     _fields_ = [
         ("system_id", SystemId),
-        ("create_flags", VulkanDeviceCreateFlagsKHRCInt),
+        ("_create_flags", VulkanDeviceCreateFlagsKHRCInt),
         ("pfn_get_instance_proc_addr", PFN_vkGetInstanceProcAddr),
         ("vulkan_physical_device", VkPhysicalDevice),
         ("vulkan_create_info", POINTER(VkDeviceCreateInfo)),
@@ -1606,7 +1624,7 @@ class AndroidSurfaceSwapchainCreateInfoFB(BaseXrStructure):
         type: StructureType = StructureType.ANDROID_SURFACE_SWAPCHAIN_CREATE_INFO_FB,
     ) -> None:
         super().__init__(
-            create_flags=enum_field_helper(create_flags),
+            _create_flags=enum_field_helper(create_flags),
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
@@ -1617,8 +1635,17 @@ class AndroidSurfaceSwapchainCreateInfoFB(BaseXrStructure):
     def __str__(self) -> str:
         return f"xr.AndroidSurfaceSwapchainCreateInfoFB(create_flags={self.create_flags}, next={self.next}, type={self.type})"
 
+    @property
+    def create_flags(self) -> AndroidSurfaceSwapchainFlagsFB:
+        return AndroidSurfaceSwapchainFlagsFB(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: AndroidSurfaceSwapchainFlagsFB) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
     _fields_ = [
-        ("create_flags", AndroidSurfaceSwapchainFlagsFBCInt),
+        ("_create_flags", AndroidSurfaceSwapchainFlagsFBCInt),
     ]
 
 
