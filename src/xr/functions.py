@@ -1195,7 +1195,7 @@ def create_debug_utils_messenger_ext(
         create_info = DebugUtilsMessengerCreateInfoEXT()
     messenger = DebugUtilsMessengerEXT()
     messenger.instance = instance
-    messenger._callback = create_info.user_callback
+    messenger._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(instance.instance, "xrCreateDebugUtilsMessengerEXT"),
         PFN_xrCreateDebugUtilsMessengerEXT,
