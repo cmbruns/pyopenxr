@@ -226,10 +226,12 @@ def main():
                 out vec3 PSVertexColor;
 
                 uniform mat4 ModelViewProjection;
+                uniform bool isSRGB = false;
 
                 void main() {
                    gl_Position = ModelViewProjection * vec4(VertexPos, 1.0);
                    PSVertexColor = VertexColor;
+                   if (isSRGB) PSVertexColor = sqrt(PSVertexColor);
                 }
             """)
             fragment_shader_glsl = inspect.cleandoc("""
@@ -300,10 +302,12 @@ def main():
                 out vec3 PSVertexColor;
             
                 uniform mat4 ModelViewProjection;
+                uniform bool isSRGB = false;
             
                 void main() {
                    gl_Position = ModelViewProjection * vec4(VertexPos, 1.0);
                    PSVertexColor = VertexColor;
+                   if (isSRGB) PSVertexColor = sqrt(PSVertexColor);
                 }
             """)
             fragment_shader_glsl = inspect.cleandoc("""
@@ -336,6 +340,7 @@ def main():
             compileShader(fragment_shader_glsl, GL.GL_FRAGMENT_SHADER),
         )
         model_view_projection_uniform_location = GL.glGetUniformLocation(shader_program, "ModelViewProjection")
+        is_rgb_location = GL.glGetUniformLocation(shader_program, "isSRGB")
         vertex_attrib_coords = GL.glGetAttribLocation(shader_program, "VertexPos")
         vertex_attrib_color = GL.glGetAttribLocation(shader_program, "VertexColor")
         # Vertices
@@ -649,10 +654,22 @@ def main():
             raise RuntimeError("Unsupported view configuration type")
         color_swapchain_format = None
         swapchain_formats = xr.enumerate_swapchain_formats(session)
-        for sf in [GL.GL_RGBA8, GL.GL_RGBA8_SNORM, GL.GL_SRGB8_ALPHA8]:
+        is_srgb = False
+        for sf in [
+            GL.GL_RGB10_A2,
+            GL.GL_RGBA16F,
+            GL.GL_RGBA16,
+            GL.GL_RGBA8,
+            GL.GL_RGBA8_SNORM,
+            GL.GL_SRGB8_ALPHA8,
+            GL.GL_SRGB8,
+        ]:
             if sf in swapchain_formats:
                 color_swapchain_format = sf
+                if "SRGB" in str(sf):
+                    is_srgb = True
                 break
+        print(is_srgb)
         assert color_swapchain_format is not None
         # Print swapchain formats and the selected one.
         formats_string = ""
@@ -664,7 +681,7 @@ def main():
                 formats_string += f"{str(color_swapchain_format)}({sc_format})"
                 formats_string += "]"
             else:
-                formats_string += str(sc_format)
+                formats_string += f"{GL_ENUMS[sc_format]}({sc_format})"
         logger.debug(f"Swapchain Formats: {formats_string}")
         # create a swapchain for each view
         swapchains = []
@@ -872,7 +889,11 @@ def main():
                             GL.glCullFace(GL.GL_BACK)
                             GL.glEnable(GL.GL_CULL_FACE)
                             GL.glEnable(GL.GL_DEPTH_TEST)
-                            GL.glClearColor(*background_clear_color)
+                            # SRGB swapchain format correction
+                            bg_col = background_clear_color
+                            if (is_srgb):
+                                bg_col = [c ** 0.5 for c in background_clear_color]
+                            GL.glClearColor(*bg_col)
                             if sys.platform == "android":
                                 GLES3.glClearDepthf(1.0)
                             else:
@@ -897,6 +918,7 @@ def main():
                                 mvp = vp @ model
                                 GL.glUniformMatrix4fv(model_view_projection_uniform_location, 1, True,
                                                       mvp.as_numpy())
+                                GL.glUniform1i(is_rgb_location, True)
                                 # Draw the cube.
                                 GL.glDrawElements(GL.GL_TRIANGLES, len(c_cubeIndices), GL.GL_UNSIGNED_SHORT, None)
 
