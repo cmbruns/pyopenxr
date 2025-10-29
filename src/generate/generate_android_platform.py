@@ -44,6 +44,7 @@ def main():
             EGLSurface = c_void_p
         EGLenum = ctypes.c_uint
 
+        from ..base_struct import BaseXrStructure
         from ..field_helper import *
         from ..enums import EnumBase, FlagBase, Result, StructureType
         from ..typedefs import *
