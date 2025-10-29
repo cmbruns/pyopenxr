@@ -35,6 +35,13 @@ logger.setLevel(logging.DEBUG)
 xr_logger = logging.getLogger("xr")
 xr_logger.setLevel(logging.DEBUG)
 
+GL_ENUMS = {}
+GL_NAMES = {}
+for e in dir(GL):
+    if e.startswith('GL_'):
+        GL_ENUMS[getattr(GL, e)] = e
+        GL_NAMES[e] = getattr(GL, e)
+
 
 def main():
     logger.info("Starting function main...")
@@ -302,7 +309,7 @@ def main():
                 out vec3 PSVertexColor;
             
                 uniform mat4 ModelViewProjection;
-                uniform bool isSRGB = false;
+                uniform bool isSRGB;
             
                 void main() {
                    gl_Position = ModelViewProjection * vec4(VertexPos, 1.0);
@@ -681,7 +688,10 @@ def main():
                 formats_string += f"{str(color_swapchain_format)}({sc_format})"
                 formats_string += "]"
             else:
-                formats_string += f"{GL_ENUMS[sc_format]}({sc_format})"
+                try:
+                    formats_string += f"{GL_ENUMS[sc_format]}({sc_format})"
+                except KeyError:
+                    formats_string += f"{sc_format}"
         logger.debug(f"Swapchain Formats: {formats_string}")
         # create a swapchain for each view
         swapchains = []
@@ -1030,14 +1040,6 @@ def xr_debug_callback(
     d = callback_data
     xr_logger.log(level, f"OpenXR: {d.function_name}: {d.message}")
     return False
-
-
-GL_ENUMS = {}
-GL_NAMES = {}
-for e in dir(GL):
-    if e.startswith('GL_'):
-        GL_ENUMS[getattr(GL, e)] = e
-        GL_NAMES[e] = getattr(GL, e)
 
 
 def opengl_debug_message_callback(source, msg_type, msg_id, severity, length, raw, _user):
