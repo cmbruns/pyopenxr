@@ -152,7 +152,6 @@ def create_instance(
         create_info = InstanceCreateInfo()
     instance = Instance()
     instance.instance = instance
-    instance._create_info = create_info
     fxn = raw_functions.xrCreateInstance
     result = check_result(fxn(
         create_info,
@@ -3315,7 +3314,6 @@ def create_exported_localization_map_ml(
 ) -> ExportedLocalizationMapML:
     map = ExportedLocalizationMapML()
     map.instance = session.instance
-    map._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateExportedLocalizationMapML"),
         PFN_xrCreateExportedLocalizationMapML,
@@ -3626,7 +3624,6 @@ def create_spatial_anchor_store_connection_msft(
 ) -> SpatialAnchorStoreConnectionMSFT:
     spatial_anchor_store = SpatialAnchorStoreConnectionMSFT()
     spatial_anchor_store.instance = session.instance
-    spatial_anchor_store._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorStoreConnectionMSFT"),
         PFN_xrCreateSpatialAnchorStoreConnectionMSFT,
@@ -3705,7 +3702,6 @@ def create_spatial_anchor_from_persisted_name_msft(
 ) -> SpatialAnchorMSFT:
     spatial_anchor = SpatialAnchorMSFT()
     spatial_anchor.instance = session.instance
-    spatial_anchor._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorFromPersistedNameMSFT"),
         PFN_xrCreateSpatialAnchorFromPersistedNameMSFT,
@@ -4583,7 +4579,6 @@ def create_space_user_fb(
 ) -> SpaceUserFB:
     user = SpaceUserFB()
     user.instance = session.instance
-    user._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpaceUserFB"),
         PFN_xrCreateSpaceUserFB,
@@ -6048,7 +6043,6 @@ def create_spatial_anchor_async_bd(
 ) -> FutureEXT:
     future = FutureEXT()
     future.instance = provider.instance
-    future._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(provider.instance, "xrCreateSpatialAnchorAsyncBD"),
         PFN_xrCreateSpatialAnchorAsyncBD,

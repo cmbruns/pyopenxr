@@ -3860,8 +3860,8 @@ class DebugUtilsMessengerCreateInfoEXT(BaseXrStructure):
         next: FieldNextType = None,
         type: StructureType = StructureType.DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
     ) -> None:
-        self._cached_user_data = user_data
         self._cached_user_callback = user_callback
+        self._cached_user_data = user_data
         super().__init__(
             _message_severities=enum_field_helper(message_severities),
             _message_types=enum_field_helper(message_types),
@@ -3896,6 +3896,16 @@ class DebugUtilsMessengerCreateInfoEXT(BaseXrStructure):
         self._message_types = enum_field_helper(value)
 
     @property
+    def user_callback(self) -> DebugCallbackType:
+        return self._cached_user_callback
+    
+    @user_callback.setter
+    def user_callback(self, value: DebugCallbackType) -> None:
+        self._cached_user_callback = value
+        # noinspection PyAttributeOutsideInit
+        self._user_callback = wrap_debug_callback(value, self._cached_user_data)
+
+    @property
     def user_data(self) -> Any:
         return self._cached_user_data
     
@@ -3905,16 +3915,6 @@ class DebugUtilsMessengerCreateInfoEXT(BaseXrStructure):
         # noinspection PyAttributeOutsideInit
         self._user_data = cast(pointer(py_object(value)), c_void_p) if value else None,
         self._user_callback = wrap_debug_callback(self._cached_user_callback, value)
-    
-    @property
-    def user_callback(self) -> DebugCallbackType:
-        return self._cached_user_callback
-    
-    @user_callback.setter
-    def user_callback(self, value: DebugCallbackType) -> None:
-        self._cached_user_callback = value
-        # noinspection PyAttributeOutsideInit
-        self._user_callback = wrap_debug_callback(value, self._cached_user_data)
 
     _fields_ = [
         ("_message_severities", DebugUtilsMessageSeverityFlagsEXTCInt),

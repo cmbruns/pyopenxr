@@ -1531,7 +1531,6 @@ def create_spatial_anchor_from_perception_anchor_msft(
     perception_anchor = c_int()
     anchor = SpatialAnchorMSFT()
     anchor.instance = session.instance
-    anchor._create_info = create_info
     fxn = cast(
         get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorFromPerceptionAnchorMSFT"),
         PFN_xrCreateSpatialAnchorFromPerceptionAnchorMSFT,

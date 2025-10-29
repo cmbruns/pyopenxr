@@ -4,7 +4,7 @@ import inspect
 from numbers import Number
 import re
 import textwrap
-from typing import Generator, Iterator, Set, Union
+from typing import Iterator, Set, Union
 
 from clang.cindex import Cursor, CursorKind, TokenKind, TypeKind
 
@@ -947,9 +947,15 @@ class OutputParameterCoder(ParameterCoderBase):
 
 
 class CreatedHandleOutputParameterCoder(OutputParameterCoder):
-    def __init__(self, parameter: FunctionParameterItem, parent_parameter: FunctionParameterItem = None):
+    def __init__(
+            self,
+            parameter: FunctionParameterItem,
+            parent_parameter: FunctionParameterItem = None,
+            create_info_parameter: FunctionParameterItem = None,
+    ):
         super().__init__(parameter)
         self.parent_parameter = parent_parameter
+        self.create_info_parameter = create_info_parameter
 
     def pre_body_code(self, api: Api = Api.PYTHON) -> Iterator[str]:
         yield from super().pre_body_code(api=api)
@@ -963,7 +969,8 @@ class CreatedHandleOutputParameterCoder(OutputParameterCoder):
         else:
             yield f"{n}.instance = {self.parent_parameter.name(api)}.instance"
         # Cache create_info to avoid premature garbage collection of stuff like callback closures.
-        yield f"{n}._create_info = create_info"
+        if self.create_info_parameter is not None:
+            yield f"{n}._create_info = create_info"
 
 
 class BufferCoder(ParameterCoderBase):
@@ -1089,7 +1096,12 @@ class FunctionCoder(object):
                     pp = self.function.parameters[0]
                     if pp.type.is_handle:
                         parent = pp
-                    pc[1] = CreatedHandleOutputParameterCoder(p, parent)
+                    create_info = None
+                    if len(self.function.parameters) >= 2:
+                        p1 = self.function.parameters[1]
+                        if p1.name() == "create_info":
+                            create_info = p1
+                    pc[1] = CreatedHandleOutputParameterCoder(p, parent, create_info)
                 else:
                     pc[1] = OutputParameterCoder(p)
                 continue
@@ -1364,6 +1376,37 @@ class EnumFieldCoder(FieldCoder):
             yield f"    self.{self.inner_name} = enum_field_helper(value)"
 
 
+class DebugCallbackUserDataFieldCoder(FieldCoder):
+    def __init__(self, user_data_field: StructFieldItem, callback_field: StructFieldItem):
+        super().__init__(field=user_data_field)
+        self.callback_field = callback_field
+
+    def param_code(self) -> Iterator[str]:
+        yield f"{self.name}: Any = None"
+
+    def pre_call_code(self) -> Iterator[str]:
+        yield f"self._cached_{self.name} = {self.name}"
+
+    def call_code(self) -> Iterator[str]:
+        yield f"{self.inner_name}=cast(pointer(py_object({self.name})), c_void_p) if {self.name} else None"
+
+    def property_code(self) -> Iterator[str]:
+        if self.inner_name != self.name:
+            cn = self.callback_field
+            # getter
+            yield "@property"
+            yield f"def {self.name}(self) -> Any:"
+            yield f"    return self._cached_{self.name}"
+            # setter
+            yield ""
+            yield f"@{self.name}.setter"
+            yield f"def {self.name}(self, value: Any) -> None:"
+            yield f"    self._cached_{self.name} = value"
+            yield f"    # noinspection PyAttributeOutsideInit"
+            yield f"    self._{self.name} = cast(pointer(py_object(value)), c_void_p) if value else None,"
+            yield f"    self.{cn.inner_name()} = wrap_debug_callback(self._cached_{cn.name()}, value)"
+
+
 class DebugCallbackFieldCoder(FieldCoder):
     def __init__(self, callback_field: StructFieldItem, user_data_field: StructFieldItem):
         super().__init__(field=callback_field)
@@ -1378,32 +1421,16 @@ class DebugCallbackFieldCoder(FieldCoder):
         yield f"{self.name}: {outer_type} = {default}"
 
     def pre_call_code(self) -> Iterator[str]:
-        yield "self._cached_user_data = user_data"
-        yield "self._cached_user_callback = user_callback"
+        yield f"self._cached_{self.name} = {self.name}"
 
     def call_code(self) -> Iterator[str]:
         yield f"{self.inner_name}=wrap_debug_callback({self.name}, {self.user_data_field.name()})"
 
     def property_code(self) -> Iterator[str]:
         if self.inner_name != self.name:
-            # User Data
             dname = self.user_data_field.name()
-            # getter
-            yield "@property"
-            yield f"def {dname}(self) -> Any:"
-            yield f"    return self._cached_{dname}"
-            # setter
-            yield ""
-            yield f"@{dname}.setter"
-            yield f"def {dname}(self, value: Any) -> None:"
-            yield f"    self._cached_{dname} = value"
-            yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self._{dname} = cast(pointer(py_object(value)), c_void_p) if value else None,"
-            yield f"    self.{self.inner_name} = wrap_debug_callback(self._cached_{self.name}, value)"
-            yield ""
             # User callback
             cname = self.name
-            type_name = self.field.type.name(Api.PYTHON)
             outer_type = "DebugCallbackType"  # TODO: generalize
             # getter
             yield "@property"
@@ -1570,6 +1597,10 @@ class StructureCoder(object):
         for ix, field in enumerate(self.struct.fields):
             if field.name() == "next":
                 self.field_coders.append(NextFieldCoder(field))
+            elif field.type.name() == "PFN_xrDebugUtilsMessengerCallbackEXT":
+                self.field_coders.append(DebugCallbackFieldCoder(field, self.struct.fields[ix + 1]))
+            elif field.type.name(Api.CTYPES) == "c_void_p" and field.name() == "user_data":
+                self.field_coders.append(DebugCallbackUserDataFieldCoder(field, self.struct.fields[ix - 1]))
             elif field.type.name(Api.CTYPES) == "c_void_p":
                 self.field_coders.append(VoidPointerFieldCoder(field))
             elif field.type.name(Api.PYTHON) == "StructureType":
@@ -1597,8 +1628,6 @@ class StructureCoder(object):
                 self.field_coders.append(ArrayCountFieldCoder(field, self.struct.fields[ix + 1]))
             elif field.kind == StructFieldItem.Kind.ARRAY_POINTER:
                 self.field_coders.append(ArrayPointerFieldCoder(self.struct.fields[ix - 1], field))
-            elif field.type.name() == "PFN_xrDebugUtilsMessengerCallbackEXT":
-                self.field_coders.append(DebugCallbackFieldCoder(field, self.struct.fields[ix + 1]))
             elif field.type.name().startswith("PFN_xr"):
                 self.field_coders.append(FunctionPointerFieldCoder(field))
             elif field.type.name().startswith("POINTER("):
