@@ -20,11 +20,11 @@ def expose_packaged_api_layers():
     Make pre-packaged layers available to the openxr loader
     """
     if platform.system() == "Windows":
-        local_path = os.path.abspath(resource_filename("xr.api_layer", "windows"))
-    elif platform.system() == "Linux":
-        local_path = os.path.abspath(resource_filename("xr.api_layer", "linux"))
-    elif platform.system() == "Android":
-        local_path = os.path.abspath(resource_filename("xr.api_layer", "android"))
+        local_path = os.path.abspath(resource_filename("xr.api_layer", "win32"))
+    elif platform.machine() == "x86_64":
+        local_path = os.path.abspath(resource_filename("xr.api_layer", "x86_64"))
+    elif platform.system() == "aarch64":
+        local_path = os.path.abspath(resource_filename("xr.api_layer", "aarch64"))
     else:
         raise NotImplementedError
     add_folder_to_api_layer_path(local_path)
@@ -33,13 +33,13 @@ def expose_packaged_api_layers():
 def py_layer_library_path() -> str:
     """Path to a shared library file used for dynamic API layer dispatch."""
     if platform.system() == "Windows":
-        package = "xr.api_layer.windows"
+        package = "xr.api_layer.win32"
         name = "XrApiLayer_python.dll"
-    elif platform.system() == "Linux":
-        package = "xr.api_layer.linux"
+    elif platform.machine() == "x86_64":
+        package = "xr.api_layer.x86_64"
         name = "libXrApiLayer_python.so"
-    elif platform.system() == "Android":
-        package = "xr.api_layer.android"
+    elif platform.machine() == "aarch64":
+        package = "xr.api_layer.aarch64"
         name = "libXrApiLayer_python.so"
     else:
         raise NotImplementedError
