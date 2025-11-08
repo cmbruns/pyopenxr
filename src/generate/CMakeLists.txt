@@ -7,20 +7,12 @@ set(PYOPENXR_VERSION_PATCH_INCREMENTAL 1
 set(PYOPENXR_VERSION_SUFFIX "a"
     CACHE STRING "PyOpenXR version suffix (empty string for official releases, 'a' for pre-releases)")
 
-# Keep extraneous variables out of the cmake interface
-mark_as_advanced(
-    CMAKE_BACKWARDS_COMPATIBILITY
-    CMAKE_CONFIGURATION_TYPES
-    CMAKE_INSTALL_PREFIX
-    EXECUTABLE_OUTPUT_PATH
-    LIBRARY_OUTPUT_PATH
-)
-
 # TODO: Maybe auto update OpenXR-SDK-Source repo
 find_path(OPENXR_SDK_SOURCE_REPO_PATH
     NAMES src/tests/hello_xr
     HINTS
         "${CMAKE_SOURCE_DIR}/../OpenXR-SDK-Source"
+    CMAKE_FIND_ROOT_PATH_BOTH
     DOC "The file location of the OpenXR-SDK-Source local git repo"
 )
 if (OPENXR_SDK_SOURCE_REPO_PATH)
@@ -88,22 +80,6 @@ if (OPENXR_SDK_SOURCE_REPO_PATH)
     endif()
 endif()
 
-# Workaround for trouble parsing $ENV{ProgramFiles(x86)}
-set(PF86 "ProgramFiles(x86)")
-
-# TODO: add more hints for Mac and Linux
-find_path(OPENXR_INCLUDE_DIR
-    NAMES openxr/openxr.h
-    HINTS
-        "$ENV{${PF86}}/OPENXR"
-        "$ENV{ProgramW6432}/OPENXR"
-        "$ENV{ProgramFiles}/OPENXR"
-    PATH_SUFFIXES include
-    DOC "The file location of the OpenXR C header files"
-)
-
-include_directories(${OPENXR_INCLUDE_DIR})
-
 set(OPENXR_INCLUDE_FILE "${OPENXR_INCLUDE_DIR}/openxr/openxr.h")
 if (EXISTS "${OPENXR_INCLUDE_FILE}")
     file(COPY "${OPENXR_INCLUDE_DIR}/openxr/" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/xrg/headers")
@@ -117,6 +93,7 @@ find_file(OPENXR_REGISTRY_FILE
         "$ENV{USERPROFILE}/Documents/git"
         "$ENV{HOME}/git"
     PATH_SUFFIXES OpenXR-SDK-Source/specification/registry
+    CMAKE_FIND_ROOT_PATH_BOTH
     DOC "The file location of the OpenXR registry file (xr.xml)"
 )
 if (OPENXR_REGISTRY_FILE)
@@ -140,6 +117,7 @@ find_file(LIBCLANG_SHARED_LIBRARY
         "/usr/lib/llvm-10/lib"
         "/usr/lib/llvm-12/lib"
     PATH_SUFFIXES bin
+    NO_CMAKE_FIND_ROOT_PATH
     DOC "The 64-bit(?) libclang shared library file (https://releases.llvm.org/download.html)"
 )
 if (EXISTS "${LIBCLANG_SHARED_LIBRARY}")
@@ -181,6 +159,7 @@ find_path(OPENXR_REGISTRY_PATH
     HINTS
         "$ENV{USERPROFILE}/Documents/git/OpenXR-Registry"
         "$ENV{HOME}/git/OpenXR-Registry"
+    CMAKE_FIND_ROOT_PATH_BOTH
     DOC "The file location of the OpenXR-Registry source code"
 )
 
@@ -260,8 +239,9 @@ find_file(OPENXR_LOADER_SHARED_LIBRARY
 )
 if (OPENXR_LOADER_SHARED_LIBRARY)
     file(MAKE_DIRECTORY "${STAGING_DIR}/library")
-    configure_file("${OPENXR_LOADER_SHARED_LIBRARY}" "${STAGING_DIR}/library" COPYONLY)
-    message(STATUS "Copied openxr_loader shared library to ${STAGING_DIR}/library/")
+    file(MAKE_DIRECTORY "${STAGING_DIR}/library/${XR_ARCH}")
+    configure_file("${OPENXR_LOADER_SHARED_LIBRARY}" "${STAGING_DIR}/library/${XR_ARCH}" COPYONLY)
+    message(STATUS "Copied openxr_loader shared library to ${STAGING_DIR}/library/${XR_ARCH}")
 endif()
 
 ############################
@@ -293,11 +273,7 @@ find_file(OPENXR_VALIDATION_LAYER_LIB
 foreach (LAYER_FILE ${OPENXR_VALIDATION_LAYER_JSON} ${OPENXR_VALIDATION_LAYER_LIB})
     if (LAYER_FILE)
         file(MAKE_DIRECTORY "${STAGING_DIR}/api_layer")
-        if (WIN32)
-            set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/windows")
-        else()
-            set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/linux")
-        endif()
+        set(API_LAYER_OUTPUT_FOLDER "${STAGING_DIR}/api_layer/${XR_ARCH}")
         get_filename_component(LAYERS_INPUT ${LAYER_FILE} DIRECTORY)
         file(GLOB API_LAYER_JSONS  RELATIVE "${LAYERS_INPUT}" "${LAYERS_INPUT}/XrApiLayer*.json")
         if (WIN32)
@@ -367,5 +343,3 @@ if (PYOPENXR_OVERWRITE_CURRENT_SOURCE_FILES)
    message(WARNING "Warning: Overwriting contents of source xr package.")
    file(COPY "${CMAKE_BINARY_DIR}/xr/" DESTINATION "${CMAKE_SOURCE_DIR}/src/xr/")
 endif()
-
-add_subdirectory(py_api_layer)
