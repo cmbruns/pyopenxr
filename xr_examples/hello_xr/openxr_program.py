@@ -130,9 +130,7 @@ class OpenXRProgram(object):
             xr.destroy_session(self.session)
             self.session = None
         if self.instance is not None:
-            # Workaround for bug https://github.com/ValveSoftware/SteamVR-for-Linux/issues/422
-            if platform.system() != "Linux":
-                self.instance.destroy()
+            xr.destroy_instance(self.instance)
             self.instance = None
 
     def create_instance(self) -> None:
@@ -176,14 +174,14 @@ class OpenXRProgram(object):
         extensions.extend(self.platform_plugin.instance_extensions)
         extensions.extend(self.graphics_plugin.instance_extensions)
 
-        self.instance = xr.utils.gl.glfw_util.InstanceObject(
-            enabled_extensions=extensions,
-            application_name="hello_xr.py",
-            application_version=xr.Version(0, 0, 1),
-            # Current version is 1.1.x, but hello_xr only requires 1.0.x
-            api_version=xr.XR_API_VERSION_1_0,
+        self.instance = xr.create_instance(xr.InstanceCreateInfo(
+            application_info=xr.ApplicationInfo(
+                application_name="hello_xr.py",
+                api_version=xr.XR_API_VERSION_1_0,
+            ),
+            enabled_extension_names=extensions,
             next=next_structure,
-        )
+        ))
 
     def create_swapchains(self) -> None:
         """
@@ -194,7 +192,7 @@ class OpenXRProgram(object):
         assert len(self.swapchains) == 0
         assert len(self.config_views) == 0
         # Read graphics properties for preferred swapchain length and logging.
-        system_properties = xr.get_system_properties(self.instance.handle, self.system.id)
+        system_properties = xr.get_system_properties(self.instance, self.system)
         # Log system properties
         logger.info("System Properties: "
                     f"Name={system_properties.system_name.decode()} "
@@ -213,8 +211,8 @@ class OpenXRProgram(object):
             raise RuntimeError("Unsupported view configuration type")
         # Query and cache view configuration views.
         self.config_views = xr.enumerate_view_configuration_views(
-            instance=self.instance.handle,
-            system_id=self.system.id,
+            instance=self.instance,
+            system_id=self.system,
             view_configuration_type=self.options.parsed["view_config_type"],
         )
         # Create and cache view buffer for xrLocateViews later.
@@ -339,13 +337,13 @@ class OpenXRProgram(object):
             localized_action_set_name="Gameplay",
             priority=0,
         )
-        self.input.action_set = xr.create_action_set(self.instance.handle, action_set_info)
+        self.input.action_set = xr.create_action_set(self.instance, action_set_info)
         # Get the XrPath for the left and right hands - we will use them as subaction paths.
         self.input.hand_subaction_path[Side.LEFT] = xr.string_to_path(
-            self.instance.handle,
+            self.instance,
             "/user/hand/left")
         self.input.hand_subaction_path[Side.RIGHT] = xr.string_to_path(
-            self.instance.handle,
+            self.instance,
             "/user/hand/right")
         # Create actions
         # Create an input action for grabbing objects with the left and right hands.
@@ -395,32 +393,32 @@ class OpenXRProgram(object):
             ),
         )
         select_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/select/click"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/select/click")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/select/click"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/select/click")]
         _squeeze_value_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/squeeze/value"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/squeeze/value")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/value"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/value")]
         _squeeze_force_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/squeeze/force"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/squeeze/force")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/force"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/force")]
         _squeeze_click_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/squeeze/click"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/squeeze/click")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/click"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/click")]
         pose_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/grip/pose"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/grip/pose")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/grip/pose"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/grip/pose")]
         haptic_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/output/haptic"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/output/haptic")]
+            xr.string_to_path(self.instance, "/user/hand/left/output/haptic"),
+            xr.string_to_path(self.instance, "/user/hand/right/output/haptic")]
         menu_click_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/menu/click"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/menu/click")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/menu/click"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/menu/click")]
         _b_click_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/b/click"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/b/click")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/b/click"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/b/click")]
         trigger_value_path = [
-            xr.string_to_path(self.instance.handle, "/user/hand/left/input/trigger/value"),
-            xr.string_to_path(self.instance.handle, "/user/hand/right/input/trigger/value")]
+            xr.string_to_path(self.instance, "/user/hand/left/input/trigger/value"),
+            xr.string_to_path(self.instance, "/user/hand/right/input/trigger/value")]
         # Suggest bindings for KHR Simple.
         khr_bindings = [
             # Fall back to a click input for the grab action.
@@ -434,10 +432,10 @@ class OpenXRProgram(object):
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
         ]
         xr.suggest_interaction_profile_bindings(
-            instance=self.instance.handle,
+            instance=self.instance,
             suggested_bindings=xr.InteractionProfileSuggestedBinding(
                 interaction_profile=xr.string_to_path(
-                    self.instance.handle,
+                    self.instance,
                     "/interaction_profiles/khr/simple_controller",
                 ),
                 count_suggested_bindings=len(khr_bindings),
@@ -456,10 +454,10 @@ class OpenXRProgram(object):
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
         ]
         xr.suggest_interaction_profile_bindings(
-            instance=self.instance.handle,
+            instance=self.instance,
             suggested_bindings=xr.InteractionProfileSuggestedBinding(
                 interaction_profile=xr.string_to_path(
-                    self.instance.handle,
+                    self.instance,
                     "/interaction_profiles/htc/vive_controller",
                 ),
                 count_suggested_bindings=len(vive_bindings),
@@ -494,7 +492,7 @@ class OpenXRProgram(object):
     def initialize_session(self) -> None:
         """Create a Session and other basic session-level initialization."""
         assert self.instance is not None
-        assert self.instance.handle != xr.NULL_HANDLE
+        assert self.instance != xr.NULL_HANDLE
         assert self.session is None
         logger.debug(f"Creating session...")
         graphics_binding_pointer = cast(
@@ -502,10 +500,10 @@ class OpenXRProgram(object):
             c_void_p)
         create_info = xr.SessionCreateInfo(
             next=graphics_binding_pointer,
-            system_id=self.system.id,
+            system_id=self.system,
         )
         self.session = xr.create_session(
-            instance=self.instance.handle,
+            instance=self.instance,
             create_info=create_info,
         )
         self.log_reference_spaces()
@@ -524,16 +522,18 @@ class OpenXRProgram(object):
         assert self.instance is not None
         assert self.system is None
         form_factor = Options.get_xr_form_factor(self.options.form_factor)
-        self.system = xr.utils.gl.glfw_util.SystemObject(instance=self.instance, form_factor=form_factor)
-        logger.debug(f"Using system {hex(self.system.id.value)} for form factor {str(form_factor)}")
-        assert self.instance.handle is not None
-        assert self.system.id is not None
+        self.system = xr.get_system(self.instance, xr.SystemGetInfo(
+            form_factor=form_factor,
+        ))
+        logger.debug(f"Using system {hex(self.system.value)} for form factor {str(form_factor)}")
+        assert self.instance is not None
+        assert self.system is not None
 
     def initialize_device(self):
         self.log_view_configurations()
         # The graphics API can initialize the graphics device now that the systemId and instance
         # handle are available.
-        self.graphics_plugin.initialize_device(self.instance.handle, self.system.id)
+        self.graphics_plugin.initialize_device(self.instance, self.system)
 
     def log_action_source_name(self, action: xr.Action, action_name: str):
         paths = xr.enumerate_bound_sources_for_action(
@@ -562,9 +562,9 @@ class OpenXRProgram(object):
         logger.info(f"{action_name} is bound to {source_name if len(source_name) > 0 else 'nothing'}")
 
     def log_environment_blend_mode(self, view_config_type):
-        assert self.instance.handle is not None
-        assert self.system.id is not None
-        blend_modes = xr.enumerate_environment_blend_modes(self.instance.handle, self.system.id, view_config_type)
+        assert self.instance is not None
+        assert self.system is not None
+        blend_modes = xr.enumerate_environment_blend_modes(self.instance, self.system, view_config_type)
         logger.info(f"Available Environment Blend Mode count : ({len(blend_modes)})")
         blend_mode_found = False
         for mode_value in blend_modes:
@@ -577,8 +577,8 @@ class OpenXRProgram(object):
 
     def log_instance_info(self):
         assert self.instance is not None
-        assert self.instance.handle is not None
-        instance_properties = self.instance.get_properties()
+        assert self.instance is not None
+        instance_properties = xr.get_instance_properties(self.instance)
         logger.info(
             f"Instance RuntimeName={instance_properties.runtime_name.decode()} "
             f"RuntimeVersion={xr.Version(instance_properties.runtime_version)}")
@@ -605,9 +605,9 @@ class OpenXRProgram(object):
             logger.debug(f"  Name: {str(xr.ReferenceSpaceType(space))}")
 
     def log_view_configurations(self):
-        assert self.instance.handle is not None
-        assert self.system.id is not None
-        view_config_types = xr.enumerate_view_configurations(self.instance.handle, self.system.id)
+        assert self.instance is not None
+        assert self.system is not None
+        view_config_types = xr.enumerate_view_configurations(self.instance, self.system)
         logger.info(f"Available View Configuration Types: ({len(view_config_types)})")
         for view_config_type_value in view_config_types:
             view_config_type = xr.ViewConfigurationType(view_config_type_value)
@@ -615,12 +615,12 @@ class OpenXRProgram(object):
                 f"  View Configuration Type: {str(view_config_type)} "
                 f"{'(Selected)' if view_config_type == self.options.parsed['view_config_type'] else ''}")
             view_config_properties = xr.get_view_configuration_properties(
-                instance=self.instance.handle,
-                system_id=self.system.id,
+                instance=self.instance,
+                system_id=self.system,
                 view_configuration_type=view_config_type,
             )
             logger.debug(f"  View configuration FovMutable={bool(view_config_properties.fov_mutable)}")
-            configuration_views = xr.enumerate_view_configuration_views(self.instance.handle, self.system.id,
+            configuration_views = xr.enumerate_view_configuration_views(self.instance, self.system,
                                                                         view_config_type)
             if configuration_views is None or len(configuration_views) < 1:
                 logger.error(f"Empty view configuration type")
@@ -732,7 +732,7 @@ class OpenXRProgram(object):
 
     @property
     def preferred_blend_mode(self):
-        blend_modes = xr.enumerate_environment_blend_modes(self.instance.handle, self.system.id, self.options.parsed["view_config_type"])
+        blend_modes = xr.enumerate_environment_blend_modes(self.instance, self.system, self.options.parsed["view_config_type"])
         for blend_mode in blend_modes:
             if blend_mode in self.acceptable_blend_modes:
                 return blend_mode
@@ -864,7 +864,7 @@ class OpenXRProgram(object):
         #  XR_TYPE_EVENT_DATA_BUFFER
         base_header = self.event_data_buffer
         base_header.type = xr.StructureType.EVENT_DATA_BUFFER
-        result = xr.raw_functions.xrPollEvent(self.instance.handle, byref(self.event_data_buffer))
+        result = xr.raw_functions.xrPollEvent(self.instance, byref(self.event_data_buffer))
         if result == xr.Result.SUCCESS:
             if base_header.type == xr.StructureType.EVENT_DATA_EVENTS_LOST:
                 events_lost = cast(base_header, POINTER(xr.EventDataEventsLost))
