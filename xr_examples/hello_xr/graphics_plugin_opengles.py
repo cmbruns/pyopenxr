@@ -1,4 +1,4 @@
-from ctypes import byref, c_void_p, cast, sizeof, string_at, POINTER, Structure
+from ctypes import c_void_p, cast, sizeof, string_at, POINTER, Structure
 import inspect
 import logging
 import platform
@@ -75,6 +75,11 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         # Map color buffer to associated depth buffer. This map is populated on demand.
         self.color_to_depth_map: Dict[int, int] = {}
         self.debug_message_proc = None  # To keep the callback alive
+        # EGL things
+        self.config = None
+        self.context = None
+        self.display = None
+        self.surface = None
 
     def __enter__(self):
         return self

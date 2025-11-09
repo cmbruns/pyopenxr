@@ -1,7 +1,7 @@
 from ctypes import Structure
 from typing import Optional
 
-import android
+import android  # I'm inventing this module in a separate project
 
 import xr
 from .platform_plugin import IPlatformPlugin
