@@ -17,6 +17,7 @@ __all__ = [
     "next_field_helper",
     "string_array_field_helper",
     "StringArrayFieldParamType",
+    "void_p_field_helper",
 ]
 
 import ctypes
@@ -148,6 +149,15 @@ def next_field_helper(value: FieldNextType) -> c_void_p:
         # Maybe it's a pointer, but needs casting
         t = _TestStruct(next=cast(value, c_void_p))
         result = t.next
+    return result
+
+
+FieldVoidPointerType = Union[None, c_void_p, POINTER, Structure]
+
+
+def void_p_field_helper(value: FieldVoidPointerType) -> c_void_p:
+    # 1) Does ctypes accept this value without complaint?
+    result = c_void_p(value)
     return result
 
 

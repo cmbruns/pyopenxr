@@ -1403,7 +1403,7 @@ class DebugCallbackUserDataFieldCoder(FieldCoder):
             yield f"def {self.name}(self, value: Any) -> None:"
             yield f"    self._cached_{self.name} = value"
             yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self._{self.name} = cast(pointer(py_object(value)), c_void_p) if value else None,"
+            yield f"    self._{self.name} = cast(pointer(py_object(value)), c_void_p) if value else None"
             yield f"    self.{cn.inner_name()} = wrap_debug_callback(self._cached_{cn.name()}, value)"
 
 
