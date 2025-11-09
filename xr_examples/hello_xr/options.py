@@ -1,9 +1,13 @@
+import sys
 import xr
 
 
 class Options(object):
     def __init__(self):
-        self.graphics_plugin = "OpenGL"
+        if sys.platform == "android":
+            self.graphics_plugin = "OpenGLES"
+        else:
+            self.graphics_plugin = "OpenGL"
         self.form_factor = "Hmd"
         self.view_configuration = "Stereo"
         self.environment_blend_mode = "Opaque"

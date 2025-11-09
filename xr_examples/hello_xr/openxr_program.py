@@ -107,9 +107,15 @@ class OpenXRProgram(object):
         if self.input.action_set is not None:
             for hand in Side:
                 if self.input.hand_space[hand] is not None:
-                    xr.destroy_space(self.input.hand_space[hand])
+                    try:
+                        xr.destroy_space(self.input.hand_space[hand])
+                    except xr.HandleInvalidError:
+                        pass
                     self.input.hand_space[hand] = None
-            xr.destroy_action_set(self.input.action_set)
+            try:
+                xr.destroy_action_set(self.input.action_set)
+            except xr.HandleInvalidError:
+                pass
             self.input.action_set = None
         for swapchain in self.swapchains:
             xr.destroy_swapchain(swapchain.handle)
