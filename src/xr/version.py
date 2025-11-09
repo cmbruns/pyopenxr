@@ -56,6 +56,9 @@ class Version(object):
         """Packed xr.VersionNumber"""
         return self.__index__()
 
+    def __repr__(self):
+        return f"xr.Version({self.major}, {self.minor}, {self.patch})"
+
     def __str__(self):
         return f"{self.major}.{self.minor}.{self.patch}"
 

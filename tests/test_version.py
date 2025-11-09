@@ -33,6 +33,8 @@ class TestFlags(unittest.TestCase):
         self.assertEqual(2, v.minor)
         self.assertEqual(1, v.patch)
         self.assertEqual(self.version_123, xr.Version(1, 2, 3).number())
+        self.assertEqual("xr.Version(3, 2, 1)", repr(v))
+        self.assertEqual("3.2.1", str(v))
 
 
 if __name__ == '__main__':
