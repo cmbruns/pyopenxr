@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.13"]
+        python-version: ["3.9", "3.10", "3.13", "3.14"]
         os: [ubuntu-latest, ubuntu-22.04, windows-latest]
     steps:
     - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |       
         # on ubuntu with PyOpenGL 3.1.7 headless automated build/test fails at "from OpenGL import GL"
-        python -m pip install PyOpenGL==3.1.6
+        # python -m pip install PyOpenGL==3.1.6
     - name: Install dependencies 2
       run: |
         python -m pip install -e .
