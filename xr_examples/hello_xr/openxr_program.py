@@ -17,10 +17,10 @@ import enum
 import logging
 import math
 import platform
+import sys
 from typing import List, Optional
 
 import xr.raw_functions
-import xr.utils.gl.glfw_util
 
 from .graphics_plugin import Cube, IGraphicsPlugin
 from .platform_plugin import IPlatformPlugin
@@ -76,7 +76,7 @@ class OpenXRProgram(object):
         self.session = None
         self.app_space = None
         self.form_factor = xr.FormFactor.HEAD_MOUNTED_DISPLAY
-        self.system = None  # Higher level System class, not just ID
+        self.system_id = None  # Higher level System class, not just ID
 
         self.config_views = []
         self.swapchains = []
@@ -135,6 +135,12 @@ class OpenXRProgram(object):
 
     def create_instance(self) -> None:
         """Create an Instance and other basic instance-level initialization."""
+        if sys.platform == "android":
+            import android
+            xr.initialize_loader_khr(xr.LoaderInitInfoAndroidKHR(
+                application_vm=android.get_vm(),
+                application_context=android.get_activity(),
+            ))
         self.log_layers_and_extensions()
         self.create_instance_internal()
         self.log_instance_info()
@@ -192,7 +198,7 @@ class OpenXRProgram(object):
         assert len(self.swapchains) == 0
         assert len(self.config_views) == 0
         # Read graphics properties for preferred swapchain length and logging.
-        system_properties = xr.get_system_properties(self.instance, self.system)
+        system_properties = xr.get_system_properties(self.instance, self.system_id)
         # Log system properties
         logger.info("System Properties: "
                     f"Name={system_properties.system_name.decode()} "
@@ -212,7 +218,7 @@ class OpenXRProgram(object):
         # Query and cache view configuration views.
         self.config_views = xr.enumerate_view_configuration_views(
             instance=self.instance,
-            system_id=self.system,
+            system_id=self.system_id,
             view_configuration_type=self.options.parsed["view_config_type"],
         )
         # Create and cache view buffer for xrLocateViews later.
@@ -500,7 +506,7 @@ class OpenXRProgram(object):
             c_void_p)
         create_info = xr.SessionCreateInfo(
             next=graphics_binding_pointer,
-            system_id=self.system,
+            system_id=self.system_id,
         )
         self.session = xr.create_session(
             instance=self.instance,
@@ -520,20 +526,20 @@ class OpenXRProgram(object):
         system.
         """
         assert self.instance is not None
-        assert self.system is None
+        assert self.system_id is None
         form_factor = Options.get_xr_form_factor(self.options.form_factor)
-        self.system = xr.get_system(self.instance, xr.SystemGetInfo(
+        self.system_id = xr.get_system(self.instance, xr.SystemGetInfo(
             form_factor=form_factor,
         ))
-        logger.debug(f"Using system {hex(self.system.value)} for form factor {str(form_factor)}")
+        logger.debug(f"Using system {hex(self.system_id.value)} for form factor {str(form_factor)}")
         assert self.instance is not None
-        assert self.system is not None
+        assert self.system_id is not None
 
     def initialize_device(self):
         self.log_view_configurations()
         # The graphics API can initialize the graphics device now that the systemId and instance
         # handle are available.
-        self.graphics_plugin.initialize_device(self.instance, self.system)
+        self.graphics_plugin.initialize_device(self.instance, self.system_id)
 
     def log_action_source_name(self, action: xr.Action, action_name: str):
         paths = xr.enumerate_bound_sources_for_action(
@@ -563,8 +569,8 @@ class OpenXRProgram(object):
 
     def log_environment_blend_mode(self, view_config_type):
         assert self.instance is not None
-        assert self.system is not None
-        blend_modes = xr.enumerate_environment_blend_modes(self.instance, self.system, view_config_type)
+        assert self.system_id is not None
+        blend_modes = xr.enumerate_environment_blend_modes(self.instance, self.system_id, view_config_type)
         logger.info(f"Available Environment Blend Mode count : ({len(blend_modes)})")
         blend_mode_found = False
         for mode_value in blend_modes:
@@ -606,8 +612,8 @@ class OpenXRProgram(object):
 
     def log_view_configurations(self):
         assert self.instance is not None
-        assert self.system is not None
-        view_config_types = xr.enumerate_view_configurations(self.instance, self.system)
+        assert self.system_id is not None
+        view_config_types = xr.enumerate_view_configurations(self.instance, self.system_id)
         logger.info(f"Available View Configuration Types: ({len(view_config_types)})")
         for view_config_type_value in view_config_types:
             view_config_type = xr.ViewConfigurationType(view_config_type_value)
@@ -616,11 +622,11 @@ class OpenXRProgram(object):
                 f"{'(Selected)' if view_config_type == self.options.parsed['view_config_type'] else ''}")
             view_config_properties = xr.get_view_configuration_properties(
                 instance=self.instance,
-                system_id=self.system,
+                system_id=self.system_id,
                 view_configuration_type=view_config_type,
             )
             logger.debug(f"  View configuration FovMutable={bool(view_config_properties.fov_mutable)}")
-            configuration_views = xr.enumerate_view_configuration_views(self.instance, self.system,
+            configuration_views = xr.enumerate_view_configuration_views(self.instance, self.system_id,
                                                                         view_config_type)
             if configuration_views is None or len(configuration_views) < 1:
                 logger.error(f"Empty view configuration type")
@@ -732,7 +738,7 @@ class OpenXRProgram(object):
 
     @property
     def preferred_blend_mode(self):
-        blend_modes = xr.enumerate_environment_blend_modes(self.instance, self.system, self.options.parsed["view_config_type"])
+        blend_modes = xr.enumerate_environment_blend_modes(self.instance, self.system_id, self.options.parsed["view_config_type"])
         for blend_mode in blend_modes:
             if blend_mode in self.acceptable_blend_modes:
                 return blend_mode
@@ -883,6 +889,7 @@ class OpenXRProgram(object):
         def __init__(self):
             super().__init__()
             self.hand_scale[:] = [1, 1]
+            self.hand_space[:] = [None, None]
 
         _fields_ = [
             ("action_set", xr.ActionSet),

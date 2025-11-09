@@ -14,7 +14,6 @@ import xr
 from xr_examples.hello_xr.graphics_plugin import IGraphicsPlugin
 from xr_examples.hello_xr.platform_plugin import IPlatformPlugin
 from xr_examples.hello_xr.openxr_program import OpenXRProgram
-from xr_examples.hello_xr.graphics_plugin_opengl import OpenGLGraphicsPlugin
 from xr_examples.hello_xr.platform_plugin_win32 import Win32PlatformPlugin
 from xr_examples.hello_xr.platform_plugin_xlib import XlibPlatformPlugin
 from .options import Options
@@ -25,10 +24,13 @@ logger = logging.getLogger("hello_xr.main")
 
 def create_graphics_plugin(options: [argparse.Namespace, Options]) -> IGraphicsPlugin:
     """Create a graphics plugin for the graphics API specified in the options."""
-    graphics_plugin_map = {
-        "OpenGL": OpenGLGraphicsPlugin,
-    }
-    if options.graphics_plugin not in graphics_plugin_map:
+    if options.graphics_plugin == "OpenGL":
+        from .graphics_plugin_opengl import OpenGLGraphicsPlugin
+        return OpenGLGraphicsPlugin(options)
+    elif options.graphics_plugin == "OpenGLES":
+        from .graphics_plugin_opengles import OpenGLESGraphicsPlugin
+        return OpenGLESGraphicsPlugin(options)
+    else:
         raise NotImplementedError
     return graphics_plugin_map[options.graphics_plugin](options)
 
@@ -38,8 +40,11 @@ def create_platform_plugin(_options: [argparse.Namespace, Options]) -> IPlatform
         return Win32PlatformPlugin()
     elif platform.system() == "Linux":
         return XlibPlatformPlugin()
-    raise NotImplementedError
-
+    elif sys.platform == "android":
+        from .platform_plugin_android import AndroidPlatformPlugin
+        return AndroidPlatformPlugin()
+    else:
+        raise NotImplementedError
 
 def poll_keyboard():
     logger.info("Press any key to shutdown...")
