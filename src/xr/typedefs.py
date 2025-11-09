@@ -3913,7 +3913,7 @@ class DebugUtilsMessengerCreateInfoEXT(BaseXrStructure):
     def user_data(self, value: Any) -> None:
         self._cached_user_data = value
         # noinspection PyAttributeOutsideInit
-        self._user_data = cast(pointer(py_object(value)), c_void_p) if value else None,
+        self._user_data = cast(pointer(py_object(value)), c_void_p) if value else None
         self._user_callback = wrap_debug_callback(self._cached_user_callback, value)
 
     _fields_ = [
