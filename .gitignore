@@ -4,6 +4,7 @@ __pycache__/
 build_cmake/
 build_cmake2/
 build_android/
+build_android2/
 /build
 /dist
 /src/pyopenxr.egg-info
