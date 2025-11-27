@@ -1,4 +1,4 @@
-from _ctypes import pointer
+from ctypes import pointer
 from ctypes import cast, c_void_p
 
 from OpenGL import EGL
