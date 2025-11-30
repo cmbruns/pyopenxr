@@ -32,6 +32,10 @@ jobs:
           libgles2 \
           libgles2-mesa-dev \
           libgl1-mesa-dev \
+          libgl1-mesa-dri \
+          libgbm-dev \
+          libdrm-dev \
+          libosmesa6-dev \
           libx11-dev \
           libxext-dev \
           libxfixes-dev
