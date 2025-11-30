@@ -1,11 +1,4 @@
-import sys
-
-if sys.version_info >= (3, 14):
-    from ctypes import pointer
-else:
-    from _ctypes import pointer
-    
-from ctypes import cast, c_void_p
+from ctypes import cast, c_void_p, pointer
 
 from OpenGL import EGL
 import xr
