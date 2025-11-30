@@ -23,7 +23,7 @@ def expose_packaged_api_layers():
         local_path = os.path.abspath(resource_filename("xr.api_layer", "win32"))
     elif platform.machine() == "x86_64":
         local_path = os.path.abspath(resource_filename("xr.api_layer", "x86_64"))
-    elif platform.system() == "aarch64":
+    elif platform.machine() == "aarch64":
         local_path = os.path.abspath(resource_filename("xr.api_layer", "aarch64"))
     else:
         raise NotImplementedError
