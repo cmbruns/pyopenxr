@@ -1448,7 +1448,7 @@ class DebugCallbackFieldCoder(FieldCoder):
 class FunctionPointerFieldCoder(FieldCoder):
     def param_code(self) -> Iterator[str]:
         fn_type = self.field.type.name(Api.PYTHON)
-        default = "None"
+        default = f"fn_type()"
         if self.default is not None:
             default = self.default
         yield f"{self.name}: {fn_type} = {default}"
