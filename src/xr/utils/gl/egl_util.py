@@ -9,9 +9,9 @@ from .. import GraphicsContextProvider
 
 class EGLOffscreenContextProvider(GraphicsContextProvider):
     def __init__(self):
-        EGL_PLATFORM_SURFACELESS_MESA = 0x31DD
-        self.display = EGL.eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL.EGL_DEFAULT_DISPLAY, None)
-        # self.display = EGL.eglGetDisplay(EGL.EGL_DEFAULT_DISPLAY)
+        # EGL_PLATFORM_SURFACELESS_MESA = 0x31DD
+        # self.display = EGL.eglGetPlatformDisplayEXT(EGL_PLATFORM_SURFACELESS_MESA, EGL.EGL_DEFAULT_DISPLAY, None)
+        self.display = EGL.eglGetDisplay(EGL.EGL_DEFAULT_DISPLAY)
         if self.display == EGL.EGL_NO_DISPLAY:
             raise RuntimeError("Failed to get EGL display")
         if not EGL.eglInitialize(self.display, None, None):
