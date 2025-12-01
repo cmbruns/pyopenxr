@@ -1279,6 +1279,26 @@ class FieldCoder(object):
         yield f"{self.name}={{repr(self.{self.name})}}"
 
 
+class ArrayFieldCoder(FieldCoder):
+    """We should not pass EventDataBuffer.varying in the constructor"""
+
+    def param_code(self) -> Iterator[str]:
+        yield from []
+
+    @staticmethod
+    def pre_call_code() -> Iterator[str]:
+        yield from []
+
+    def call_code(self) -> Iterator[str]:
+        yield from []
+
+    def str_code(self) -> Iterator[str]:
+        yield from []
+
+    def repr_code(self) -> Iterator[str]:
+        yield f"{self.field.name()}={{repr(self.{self.name})}}"
+
+
 class ArrayCountFieldCoder(FieldCoder):
     """
     Collapse count/pointer field pairs into a single sequence constructor parameter.
@@ -1350,32 +1370,6 @@ class ArrayPointerFieldCoder(FieldCoder):
             yield f"        {element_type}, None, value)"
 
 
-class EnumFieldCoder(FieldCoder):
-    def param_code(self) -> Iterator[str]:
-        enum_name = self.field.type.name(Api.PYTHON)
-        default = enum_default_value(enum_name)
-        if self.field.default_value is not None:
-            default = self.field.default_value
-        yield f"{self.name}: {enum_name} = {default}"
-
-    def call_code(self) -> Iterator[str]:
-        yield f"{self.inner_name}=enum_field_helper({self.name})"
-
-    def property_code(self) -> Iterator[str]:
-        if self.inner_name != self.name:
-            enum_name = self.field.type.name(Api.PYTHON)
-            # getter
-            yield "@property"
-            yield f"def {self.name}(self) -> {enum_name}:"
-            yield f"    return {enum_name}(self.{self.inner_name})"
-            # setter
-            yield ""
-            yield f"@{self.name}.setter"
-            yield f"def {self.name}(self, value: {enum_name}) -> None:"
-            yield f"    # noinspection PyAttributeOutsideInit"
-            yield f"    self.{self.inner_name} = enum_field_helper(value)"
-
-
 class DebugCallbackUserDataFieldCoder(FieldCoder):
     def __init__(self, user_data_field: StructFieldItem, callback_field: StructFieldItem):
         super().__init__(field=user_data_field)
@@ -1445,11 +1439,46 @@ class DebugCallbackFieldCoder(FieldCoder):
             yield f"    self.{self.inner_name} = wrap_debug_callback(value, self._cached_{dname})"
 
 
+class DefaultConstructibleFieldCoder(FieldCoder):
+    def param_code(self) -> Iterator[str]:
+        type_name = self.field.type.name(Api.PYTHON)
+        default = f"{type_name}()"
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f'{self.name}: {type_name} = {default}'
+
+
+class EnumFieldCoder(FieldCoder):
+    def param_code(self) -> Iterator[str]:
+        enum_name = self.field.type.name(Api.PYTHON)
+        default = enum_default_value(enum_name)
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f"{self.name}: {enum_name} = {default}"
+
+    def call_code(self) -> Iterator[str]:
+        yield f"{self.inner_name}=enum_field_helper({self.name})"
+
+    def property_code(self) -> Iterator[str]:
+        if self.inner_name != self.name:
+            enum_name = self.field.type.name(Api.PYTHON)
+            # getter
+            yield "@property"
+            yield f"def {self.name}(self) -> {enum_name}:"
+            yield f"    return {enum_name}(self.{self.inner_name})"
+            # setter
+            yield ""
+            yield f"@{self.name}.setter"
+            yield f"def {self.name}(self, value: {enum_name}) -> None:"
+            yield f"    # noinspection PyAttributeOutsideInit"
+            yield f"    self.{self.inner_name} = enum_field_helper(value)"
+
+
 class FunctionPointerFieldCoder(FieldCoder):
     def param_code(self) -> Iterator[str]:
         fn_type = self.field.type.name(Api.PYTHON)
-        default = f"fn_type()"
-        if self.default is not None:
+        default = f"{fn_type}()"
+        if self.default not in [None, 0]:
             default = self.default
         yield f"{self.name}: {fn_type} = {default}"
 
@@ -1459,34 +1488,6 @@ class NoDefaultFieldCoder(FieldCoder):
 
     def param_code(self) -> Iterator[str]:
         yield f"{self.name}: {self.field.type.name(Api.PYTHON)}"
-
-
-class PosefFieldCoder(FieldCoder):
-    def param_code(self) -> Iterator[str]:
-        default = "Posef()"
-        if self.field.default_value is not None:
-            default = self.field.default_value
-        yield f'{self.name}: Posef = {default}'
-
-
-class ArrayFieldCoder(FieldCoder):
-    """We should not pass EventDataBuffer.varying in the constructor"""
-
-    def param_code(self) -> Iterator[str]:
-        yield from []
-
-    @staticmethod
-    def pre_call_code() -> Iterator[str]:
-        yield from []
-
-    def call_code(self) -> Iterator[str]:
-        yield from []
-
-    def str_code(self) -> Iterator[str]:
-        yield from []
-
-    def repr_code(self) -> Iterator[str]:
-        yield f"{self.field.name()}={{repr(self.{self.name})}}"
 
 
 class NextFieldCoder(FieldCoder):
@@ -1500,6 +1501,14 @@ class NextFieldCoder(FieldCoder):
     def property_code(self) -> Iterator[str]:
         # properties already set in base classes
         yield from []
+
+
+class PosefFieldCoder(FieldCoder):
+    def param_code(self) -> Iterator[str]:
+        default = "Posef()"
+        if self.field.default_value is not None:
+            default = self.field.default_value
+        yield f'{self.name}: Posef = {default}'
 
 
 class VoidPointerFieldCoder(FieldCoder):
@@ -1614,6 +1623,8 @@ class StructureCoder(object):
                 self.field_coders.append(StringFieldCoder(field))
             elif field.type.name(Api.PYTHON) == "Posef":
                 self.field_coders.append(PosefFieldCoder(field))
+            elif field.type.name(Api.PYTHON) in ["EGLConfig", "EGLContext", "EGLDisplay"]:
+                self.field_coders.append(DefaultConstructibleFieldCoder(field))
             elif field.type.name(Api.CTYPES) == "VersionNumber":
                 self.field_coders.append(VersionFieldCoder(field))
             elif struct.name() == "Quaternionf" and field.name() == "w":

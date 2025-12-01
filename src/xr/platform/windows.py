@@ -498,9 +498,9 @@ def get_opengl_graphics_requirements_khr(
 class GraphicsBindingOpenGLESAndroidKHR(BaseXrStructure):
     def __init__(
         self,
-        display: EGLDisplay = 0,
-        config: EGLConfig = 0,
-        context: EGLContext = 0,
+        display: EGLDisplay = EGLDisplay(),
+        config: EGLConfig = EGLConfig(),
+        context: EGLContext = EGLContext(),
         next: FieldNextType = None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR,
     ) -> None:
@@ -1492,10 +1492,10 @@ PFN_xrEglGetProcAddressMNDX = CFUNCTYPE(PFN_xrVoidFunction, c_char_p)
 class GraphicsBindingEGLMNDX(BaseXrStructure):
     def __init__(
         self,
-        get_proc_address: PFN_xrEglGetProcAddressMNDX = 0,
-        display: EGLDisplay = 0,
-        config: EGLConfig = 0,
-        context: EGLContext = 0,
+        get_proc_address: PFN_xrEglGetProcAddressMNDX = PFN_xrEglGetProcAddressMNDX(),
+        display: EGLDisplay = EGLDisplay(),
+        config: EGLConfig = EGLConfig(),
+        context: EGLContext = EGLContext(),
         next: FieldNextType = None,
         type: StructureType = StructureType.GRAPHICS_BINDING_EGL_MNDX,
     ) -> None:
