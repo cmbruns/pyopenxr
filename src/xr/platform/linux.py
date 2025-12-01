@@ -448,9 +448,9 @@ def get_opengl_graphics_requirements_khr(
 class GraphicsBindingOpenGLESAndroidKHR(BaseXrStructure):
     def __init__(
         self,
-        display: EGLDisplay = 0,
-        config: EGLConfig = 0,
-        context: EGLContext = 0,
+        display: EGLDisplay = EGLDisplay(),
+        config: EGLConfig = EGLConfig(),
+        context: EGLContext = EGLContext(),
         next: FieldNextType = None,
         type: StructureType = StructureType.GRAPHICS_BINDING_OPENGL_ES_ANDROID_KHR,
     ) -> None:
