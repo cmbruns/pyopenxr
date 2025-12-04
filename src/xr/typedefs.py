@@ -14329,6 +14329,30 @@ class EnvironmentDepthImageMETA(BaseXrStructure):
     ]
 
 
+class EnvironmentDepthImageTimestampMETA(BaseXrStructure):
+    def __init__(
+        self,
+        capture_time: Time = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ENVIRONMENT_DEPTH_IMAGE_TIMESTAMP_META,
+    ) -> None:
+        super().__init__(
+            capture_time=capture_time,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentDepthImageTimestampMETA(capture_time={repr(self.capture_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentDepthImageTimestampMETA(capture_time={self.capture_time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("capture_time", Time),
+    ]
+
+
 class EnvironmentDepthHandRemovalSetInfoMETA(BaseXrStructure):
     def __init__(
         self,
@@ -21522,6 +21546,7 @@ __all__ = [
     "EnvironmentDepthHandRemovalSetInfoMETA",
     "EnvironmentDepthImageAcquireInfoMETA",
     "EnvironmentDepthImageMETA",
+    "EnvironmentDepthImageTimestampMETA",
     "EnvironmentDepthImageViewMETA",
     "EnvironmentDepthProviderCreateFlagsMETACInt",
     "EnvironmentDepthProviderCreateInfoMETA",
