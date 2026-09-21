@@ -202,7 +202,9 @@ class EnumValueItem(CodeItem):
             return f"_MAX_ENUM"
         # Well-spelled MAX_ENUM values:
         if n == f"{prefix}MAX_ENUM{postfix}":
-            return f"_MAX_ENUM"  # private enum value
+            return f"_MAX_ENUM"
+        if n.endswith(f"_MAX_ENUM{postfix}"):  # XR_VPSAVAILABILITY_MAX_ENUM_ANDROID
+            return f"_MAX_ENUM"
         if prefix in self._PREFIX_TABLE:
             prefix = self._PREFIX_TABLE[prefix]
         if not n.startswith(prefix):
@@ -210,6 +212,8 @@ class EnumValueItem(CodeItem):
         n = n[len(prefix):]
         if len(postfix) > 0:
             n = n[: -len(postfix)]  # It's already in the parent enum name
+        if len(n) == 0:  # 'XR_GOOGLE_CLOUD_AUTH_ERROR_ANDROID'
+            n = "UNKNOWN"
         # If the remaining fragment starts with a digit, prepend something to make it a valid identifier
         if n[0] in "0123456789":
             n = f"N{n}"  # Prepend "N" to make it a valid identifier
@@ -1769,6 +1773,7 @@ def snake_from_camel(camel: str) -> str:
         "OpenGL": "Opengl",
         "QRCode": "QrCode",
         "EGL": "Egl",
+        "VPS": "Vps",
     }
     for up, down in words.items():
         snake = re.sub(up, down, snake)

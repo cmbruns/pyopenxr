@@ -123,12 +123,12 @@ class SpaceBoundsUnavailable(QualifiedSuccessResult):
 
 
 class SessionNotFocused(QualifiedSuccessResult):
-    """The session is not in the focused state."""
+    """The session is not in the focused state, and if spatial containers are enabled no spatial container exists that is interactable."""
 
     def __init__(self, message=None):
         if message is None:
             super().__init__(
-                "The session is not in the focused state."
+                "The session is not in the focused state, and if spatial containers are enabled no spatial container exists that is interactable."
             )
         else:
             super().__init__(message)
@@ -1456,6 +1456,12 @@ class ServiceNotReadyANDROIDError(ErrorResult):
         return Result.ERROR_SERVICE_NOT_READY_ANDROID
 
 
+class MeshDataLimitExceededANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_MESH_DATA_LIMIT_EXCEEDED_ANDROID
+
+
 class FuturePendingEXTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1498,6 +1504,12 @@ class FacialExpressionPermissionDeniedMLError(QualifiedSuccessResult):
         return Result.ERROR_FACIAL_EXPRESSION_PERMISSION_DENIED_ML
 
 
+class BoundaryVisibilitySuppressionNotAllowedMETA(QualifiedSuccessResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.BOUNDARY_VISIBILITY_SUPPRESSION_NOT_ALLOWED_META
+
+
 class ColocationDiscoveryNetworkFailedMETAError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1532,6 +1544,12 @@ class AnchorNotOwnedByCallerANDROIDError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_ANCHOR_NOT_OWNED_BY_CALLER_ANDROID
+
+
+class ImageFormatUnsupportedANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_IMAGE_FORMAT_UNSUPPORTED_ANDROID
 
 
 class SpatialCapabilityUnsupportedEXTError(ErrorResult):
@@ -1570,6 +1588,60 @@ class SpatialComponentNotEnabledEXTError(ErrorResult):
         return Result.ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT
 
 
+class CameraUnavailableBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_UNAVAILABLE_BD
+
+
+class CameraOccupiedBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_OCCUPIED_BD
+
+
+class CameraCaptureSessionCapturingBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_CAPTURE_SESSION_CAPTURING_BD
+
+
+class CameraCaptureSessionNotCapturingBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_CAPTURE_SESSION_NOT_CAPTURING_BD
+
+
+class CameraIdInvalidBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_ID_INVALID_BD
+
+
+class CameraImageIdInvalidBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_IMAGE_ID_INVALID_BD
+
+
+class CameraPropertyTypeInvalidBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_PROPERTY_TYPE_INVALID_BD
+
+
+class CameraCapabilityTypeInvalidBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_CAMERA_CAPABILITY_TYPE_INVALID_BD
+
+
+class ImageBufferExhaustedBDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_IMAGE_BUFFER_EXHAUSTED_BD
+
+
 class SpatialPersistenceScopeUnsupportedEXTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
@@ -1580,6 +1652,126 @@ class SpatialPersistenceScopeIncompatibleEXTError(ErrorResult):
     @staticmethod
     def get_result_enum() -> Result:
         return Result.ERROR_SPATIAL_PERSISTENCE_SCOPE_INCOMPATIBLE_EXT
+
+
+class SpatialImageFormatUnsupportedEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_IMAGE_FORMAT_UNSUPPORTED_EXT
+
+
+class SpatialImageInvalidEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_IMAGE_INVALID_EXT
+
+
+class SpatialImageSizeMissingEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_IMAGE_SIZE_MISSING_EXT
+
+
+class KeylessAuthNotSetupANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_KEYLESS_AUTH_NOT_SETUP_ANDROID
+
+
+class KeylessAuthFailedANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_KEYLESS_AUTH_FAILED_ANDROID
+
+
+class GeospatialTrackerNotRunningANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_GEOSPATIAL_TRACKER_NOT_RUNNING_ANDROID
+
+
+class GeospatialCoordinatesInvalidANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_GEOSPATIAL_COORDINATES_INVALID_ANDROID
+
+
+class GeospatialCloudAuthFailedANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_GEOSPATIAL_CLOUD_AUTH_FAILED_ANDROID
+
+
+class SpatialAnchorAttachableComponentNotFoundANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_ATTACHABLE_COMPONENT_NOT_FOUND_ANDROID
+
+
+class SpatialAnchorEntityIdInvalidANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_ANCHOR_ENTITY_ID_INVALID_ANDROID
+
+
+class SurfaceAnchorLocationUnsupportedANDROIDError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SURFACE_ANCHOR_LOCATION_UNSUPPORTED_ANDROID
+
+
+class SpatialContainerClosedEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINER_CLOSED_EXT
+
+
+class SpatialContainersEnabledEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINERS_ENABLED_EXT
+
+
+class SpatialContainersNotEnabledEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINERS_NOT_ENABLED_EXT
+
+
+class CompatibleSpatialContainerMissingEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_COMPATIBLE_SPATIAL_CONTAINER_MISSING_EXT
+
+
+class SpatialContainerIsRenderingEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINER_IS_RENDERING_EXT
+
+
+class SpatialContainerNotRenderingEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINER_NOT_RENDERING_EXT
+
+
+class SpatialContainerMissingEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINER_MISSING_EXT
+
+
+class SpatialContainerDuplicateEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINER_DUPLICATE_EXT
+
+
+class SpatialContainerGraphicsPresentationMissingEXTError(ErrorResult):
+    @staticmethod
+    def get_result_enum() -> Result:
+        return Result.ERROR_SPATIAL_CONTAINER_GRAPHICS_PRESENTATION_MISSING_EXT
 
 
 class ExtensionDependencyNotEnabledKHRError(ErrorResult):
@@ -1739,6 +1931,7 @@ _exception_map = {
     Result.ERROR_ANCHOR_NOT_TRACKING_ANDROID: AnchorNotTrackingANDROIDError,
     Result.ERROR_PERSISTED_DATA_NOT_READY_ANDROID: PersistedDataNotReadyANDROIDError,
     Result.ERROR_SERVICE_NOT_READY_ANDROID: ServiceNotReadyANDROIDError,
+    Result.ERROR_MESH_DATA_LIMIT_EXCEEDED_ANDROID: MeshDataLimitExceededANDROIDError,
     Result.ERROR_FUTURE_PENDING_EXT: FuturePendingEXTError,
     Result.ERROR_FUTURE_INVALID_EXT: FutureInvalidEXTError,
     Result.ERROR_SYSTEM_NOTIFICATION_PERMISSION_DENIED_ML: SystemNotificationPermissionDeniedMLError,
@@ -1746,20 +1939,51 @@ _exception_map = {
     Result.ERROR_WORLD_MESH_DETECTOR_PERMISSION_DENIED_ML: WorldMeshDetectorPermissionDeniedMLError,
     Result.ERROR_WORLD_MESH_DETECTOR_SPACE_NOT_LOCATABLE_ML: WorldMeshDetectorSpaceNotLocatableMLError,
     Result.ERROR_FACIAL_EXPRESSION_PERMISSION_DENIED_ML: FacialExpressionPermissionDeniedMLError,
+    Result.BOUNDARY_VISIBILITY_SUPPRESSION_NOT_ALLOWED_META: BoundaryVisibilitySuppressionNotAllowedMETA,
     Result.ERROR_COLOCATION_DISCOVERY_NETWORK_FAILED_META: ColocationDiscoveryNetworkFailedMETAError,
     Result.ERROR_COLOCATION_DISCOVERY_NO_DISCOVERY_METHOD_META: ColocationDiscoveryNoDiscoveryMethodMETAError,
     Result.COLOCATION_DISCOVERY_ALREADY_ADVERTISING_META: ColocationDiscoveryAlreadyAdvertisingMETA,
     Result.COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META: ColocationDiscoveryAlreadyDiscoveringMETA,
     Result.ERROR_SPACE_GROUP_NOT_FOUND_META: SpaceGroupNotFoundMETAError,
     Result.ERROR_ANCHOR_NOT_OWNED_BY_CALLER_ANDROID: AnchorNotOwnedByCallerANDROIDError,
+    Result.ERROR_IMAGE_FORMAT_UNSUPPORTED_ANDROID: ImageFormatUnsupportedANDROIDError,
     Result.ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT: SpatialCapabilityUnsupportedEXTError,
     Result.ERROR_SPATIAL_ENTITY_ID_INVALID_EXT: SpatialEntityIdInvalidEXTError,
     Result.ERROR_SPATIAL_BUFFER_ID_INVALID_EXT: SpatialBufferIdInvalidEXTError,
     Result.ERROR_SPATIAL_COMPONENT_UNSUPPORTED_FOR_CAPABILITY_EXT: SpatialComponentUnsupportedForCapabilityEXTError,
     Result.ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT: SpatialCapabilityConfigurationInvalidEXTError,
     Result.ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT: SpatialComponentNotEnabledEXTError,
+    Result.ERROR_CAMERA_UNAVAILABLE_BD: CameraUnavailableBDError,
+    Result.ERROR_CAMERA_OCCUPIED_BD: CameraOccupiedBDError,
+    Result.ERROR_CAMERA_CAPTURE_SESSION_CAPTURING_BD: CameraCaptureSessionCapturingBDError,
+    Result.ERROR_CAMERA_CAPTURE_SESSION_NOT_CAPTURING_BD: CameraCaptureSessionNotCapturingBDError,
+    Result.ERROR_CAMERA_ID_INVALID_BD: CameraIdInvalidBDError,
+    Result.ERROR_CAMERA_IMAGE_ID_INVALID_BD: CameraImageIdInvalidBDError,
+    Result.ERROR_CAMERA_PROPERTY_TYPE_INVALID_BD: CameraPropertyTypeInvalidBDError,
+    Result.ERROR_CAMERA_CAPABILITY_TYPE_INVALID_BD: CameraCapabilityTypeInvalidBDError,
+    Result.ERROR_IMAGE_BUFFER_EXHAUSTED_BD: ImageBufferExhaustedBDError,
     Result.ERROR_SPATIAL_PERSISTENCE_SCOPE_UNSUPPORTED_EXT: SpatialPersistenceScopeUnsupportedEXTError,
     Result.ERROR_SPATIAL_PERSISTENCE_SCOPE_INCOMPATIBLE_EXT: SpatialPersistenceScopeIncompatibleEXTError,
+    Result.ERROR_SPATIAL_IMAGE_FORMAT_UNSUPPORTED_EXT: SpatialImageFormatUnsupportedEXTError,
+    Result.ERROR_SPATIAL_IMAGE_INVALID_EXT: SpatialImageInvalidEXTError,
+    Result.ERROR_SPATIAL_IMAGE_SIZE_MISSING_EXT: SpatialImageSizeMissingEXTError,
+    Result.ERROR_KEYLESS_AUTH_NOT_SETUP_ANDROID: KeylessAuthNotSetupANDROIDError,
+    Result.ERROR_KEYLESS_AUTH_FAILED_ANDROID: KeylessAuthFailedANDROIDError,
+    Result.ERROR_GEOSPATIAL_TRACKER_NOT_RUNNING_ANDROID: GeospatialTrackerNotRunningANDROIDError,
+    Result.ERROR_GEOSPATIAL_COORDINATES_INVALID_ANDROID: GeospatialCoordinatesInvalidANDROIDError,
+    Result.ERROR_GEOSPATIAL_CLOUD_AUTH_FAILED_ANDROID: GeospatialCloudAuthFailedANDROIDError,
+    Result.ERROR_SPATIAL_ANCHOR_ATTACHABLE_COMPONENT_NOT_FOUND_ANDROID: SpatialAnchorAttachableComponentNotFoundANDROIDError,
+    Result.ERROR_SPATIAL_ANCHOR_ENTITY_ID_INVALID_ANDROID: SpatialAnchorEntityIdInvalidANDROIDError,
+    Result.ERROR_SURFACE_ANCHOR_LOCATION_UNSUPPORTED_ANDROID: SurfaceAnchorLocationUnsupportedANDROIDError,
+    Result.ERROR_SPATIAL_CONTAINER_CLOSED_EXT: SpatialContainerClosedEXTError,
+    Result.ERROR_SPATIAL_CONTAINERS_ENABLED_EXT: SpatialContainersEnabledEXTError,
+    Result.ERROR_SPATIAL_CONTAINERS_NOT_ENABLED_EXT: SpatialContainersNotEnabledEXTError,
+    Result.ERROR_COMPATIBLE_SPATIAL_CONTAINER_MISSING_EXT: CompatibleSpatialContainerMissingEXTError,
+    Result.ERROR_SPATIAL_CONTAINER_IS_RENDERING_EXT: SpatialContainerIsRenderingEXTError,
+    Result.ERROR_SPATIAL_CONTAINER_NOT_RENDERING_EXT: SpatialContainerNotRenderingEXTError,
+    Result.ERROR_SPATIAL_CONTAINER_MISSING_EXT: SpatialContainerMissingEXTError,
+    Result.ERROR_SPATIAL_CONTAINER_DUPLICATE_EXT: SpatialContainerDuplicateEXTError,
+    Result.ERROR_SPATIAL_CONTAINER_GRAPHICS_PRESENTATION_MISSING_EXT: SpatialContainerGraphicsPresentationMissingEXTError,
     Result.ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED_KHR: ExtensionDependencyNotEnabledKHRError,
     Result.ERROR_PERMISSION_INSUFFICIENT_KHR: PermissionInsufficientKHRError,
 }
@@ -1797,12 +2021,22 @@ __all__ = [
     "AndroidThreadSettingsIdInvalidKHRError",
     "ApiLayerNotPresentError",
     "ApiVersionUnsupportedError",
+    "BoundaryVisibilitySuppressionNotAllowedMETA",
     "CallOrderInvalidError",
+    "CameraCapabilityTypeInvalidBDError",
+    "CameraCaptureSessionCapturingBDError",
+    "CameraCaptureSessionNotCapturingBDError",
+    "CameraIdInvalidBDError",
+    "CameraImageIdInvalidBDError",
+    "CameraOccupiedBDError",
+    "CameraPropertyTypeInvalidBDError",
+    "CameraUnavailableBDError",
     "ColocationDiscoveryAlreadyAdvertisingMETA",
     "ColocationDiscoveryAlreadyDiscoveringMETA",
     "ColocationDiscoveryNetworkFailedMETAError",
     "ColocationDiscoveryNoDiscoveryMethodMETAError",
     "ColorSpaceUnsupportedFBError",
+    "CompatibleSpatialContainerMissingEXTError",
     "ComputeNewSceneNotCompletedMSFTError",
     "ControllerModelKeyInvalidMSFTError",
     "CreateSpatialAnchorFailedMSFTError",
@@ -1826,14 +2060,21 @@ __all__ = [
     "FunctionUnsupportedError",
     "FutureInvalidEXTError",
     "FuturePendingEXTError",
+    "GeospatialCloudAuthFailedANDROIDError",
+    "GeospatialCoordinatesInvalidANDROIDError",
+    "GeospatialTrackerNotRunningANDROIDError",
     "GraphicsDeviceInvalidError",
     "GraphicsRequirementsCallMissingError",
     "HandleInvalidError",
     "HintAlreadySetQCOMError",
+    "ImageBufferExhaustedBDError",
+    "ImageFormatUnsupportedANDROIDError",
     "IndexOutOfRangeError",
     "InitializationFailedError",
     "InstanceLostError",
     "InsufficientResourcesPassthroughFBError",
+    "KeylessAuthFailedANDROIDError",
+    "KeylessAuthNotSetupANDROIDError",
     "LayerInvalidError",
     "LayerLimitExceededError",
     "LimitReachedError",
@@ -1853,6 +2094,7 @@ __all__ = [
     "MarkerIdInvalidVARJOError",
     "MarkerInvalidMLError",
     "MarkerNotTrackedVARJOError",
+    "MeshDataLimitExceededANDROIDError",
     "MismatchingTrackableTypeANDROIDError",
     "NameDuplicatedError",
     "NameInvalidError",
@@ -1917,6 +2159,8 @@ __all__ = [
     "SpaceStorageAtCapacityMETAError",
     "SpaceTooBrightMETAError",
     "SpaceTooDarkMETAError",
+    "SpatialAnchorAttachableComponentNotFoundANDROIDError",
+    "SpatialAnchorEntityIdInvalidANDROIDError",
     "SpatialAnchorNameInvalidMSFTError",
     "SpatialAnchorNameNotFoundMSFTError",
     "SpatialAnchorNotFoundBDError",
@@ -1935,12 +2179,24 @@ __all__ = [
     "SpatialCapabilityUnsupportedEXTError",
     "SpatialComponentNotEnabledEXTError",
     "SpatialComponentUnsupportedForCapabilityEXTError",
+    "SpatialContainerClosedEXTError",
+    "SpatialContainerDuplicateEXTError",
+    "SpatialContainerGraphicsPresentationMissingEXTError",
+    "SpatialContainerIsRenderingEXTError",
+    "SpatialContainerMissingEXTError",
+    "SpatialContainerNotRenderingEXTError",
+    "SpatialContainersEnabledEXTError",
+    "SpatialContainersNotEnabledEXTError",
     "SpatialEntityIdInvalidBDError",
     "SpatialEntityIdInvalidEXTError",
+    "SpatialImageFormatUnsupportedEXTError",
+    "SpatialImageInvalidEXTError",
+    "SpatialImageSizeMissingEXTError",
     "SpatialPersistenceScopeIncompatibleEXTError",
     "SpatialPersistenceScopeUnsupportedEXTError",
     "SpatialSensingServiceUnavailableBDError",
     "Success",
+    "SurfaceAnchorLocationUnsupportedANDROIDError",
     "SwapchainFormatUnsupportedError",
     "SwapchainRectInvalidError",
     "SystemInvalidError",

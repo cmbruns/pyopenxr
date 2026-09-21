@@ -1136,6 +1136,24 @@ def structure_type_to_string2_khr(
         raise result
 
 
+def result_to_string2_khr(
+    instance: Instance,
+    value: Result,
+    buffer: (c_char * 256),
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrResultToString2KHR"),
+        PFN_xrResultToString2KHR,
+    )
+    result = check_result(fxn(
+        instance,
+        value.value,
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+
+
 def perf_settings_set_performance_level_ext(
     session: Session,
     domain: PerfSettingsDomainEXT,
@@ -4821,6 +4839,22 @@ def reset_body_tracking_calibration_meta(
         raise result
 
 
+def request_body_tracking_fidelity_meta(
+    body_tracker: BodyTrackerFB,
+    fidelity: c_int,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(body_tracker.instance, "xrRequestBodyTrackingFidelityMETA"),
+        PFN_xrRequestBodyTrackingFidelityMETA,
+    )
+    result = check_result(fxn(
+        body_tracker,
+        fidelity,
+    ))
+    if result.is_exception():
+        raise result
+
+
 def create_face_tracker2_fb(
     session: Session,
     create_info: FaceTrackerCreateInfo2FB = None,
@@ -5351,6 +5385,25 @@ def set_tracking_optimization_settings_hint_qcom(
     ))
     if result.is_exception():
         raise result
+
+
+def get_hand_gesture_qcom(
+    hand_tracker: HandTrackerEXT,
+    time: Time,
+) -> HandGestureQCOM:
+    hand_gesture = HandGestureQCOM()
+    fxn = cast(
+        get_instance_proc_addr(hand_tracker.instance, "xrGetHandGestureQCOM"),
+        PFN_xrGetHandGestureQCOM,
+    )
+    result = check_result(fxn(
+        hand_tracker,
+        time,
+        byref(hand_gesture),
+    ))
+    if result.is_exception():
+        raise result
+    return hand_gesture
 
 
 def create_passthrough_htc(
@@ -6266,6 +6319,482 @@ def capture_scene_complete_bd(
     return completion
 
 
+def start_body_tracking_calibration_app_bd(
+    session: Session,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrStartBodyTrackingCalibrationAppBD"),
+        PFN_xrStartBodyTrackingCalibrationAppBD,
+    )
+    result = check_result(fxn(
+        session,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_body_tracking_state_bd(
+    session: Session,
+) -> BodyTrackingStateBD:
+    state = BodyTrackingStateBD()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrGetBodyTrackingStateBD"),
+        PFN_xrGetBodyTrackingStateBD,
+    )
+    result = check_result(fxn(
+        session,
+        byref(state),
+    ))
+    if result.is_exception():
+        raise result
+    return state
+
+
+def enumerate_environment_texture_resolutions_bd(
+    session: Session,
+) -> Sequence[EnvironmentTextureResolutionBD]:
+    resolution_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEnumerateEnvironmentTextureResolutionsBD"),
+        PFN_xrEnumerateEnvironmentTextureResolutionsBD,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        0,
+        byref(resolution_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    resolutions = (EnvironmentTextureResolutionBD.ctype() * resolution_capacity_input.value)(*([EnvironmentTextureResolutionBD.ctype()()] * resolution_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        session,
+        resolution_capacity_input,
+        byref(resolution_capacity_input),
+        resolutions,
+    ))
+    if result.is_exception():
+        raise result
+    return resolutions  # noqa
+
+
+def enumerate_environment_texture_pixel_formats_bd(
+    session: Session,
+) -> Sequence[EnvironmentTexturePixelFormatBD]:
+    pixel_format_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEnumerateEnvironmentTexturePixelFormatsBD"),
+        PFN_xrEnumerateEnvironmentTexturePixelFormatsBD,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        0,
+        byref(pixel_format_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    pixel_formats = (EnvironmentTexturePixelFormatBD.ctype() * pixel_format_capacity_input.value)(*([EnvironmentTexturePixelFormatBD.ctype()()] * pixel_format_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        session,
+        pixel_format_capacity_input,
+        byref(pixel_format_capacity_input),
+        pixel_formats,
+    ))
+    if result.is_exception():
+        raise result
+    return pixel_formats  # noqa
+
+
+def enumerate_environment_texture_transfer_types_bd(
+    session: Session,
+) -> Sequence[EnvironmentTextureTransferTypeBD]:
+    transfer_type_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEnumerateEnvironmentTextureTransferTypesBD"),
+        PFN_xrEnumerateEnvironmentTextureTransferTypesBD,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        0,
+        byref(transfer_type_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    transfer_types = (EnvironmentTextureTransferTypeBD.ctype() * transfer_type_capacity_input.value)(*([EnvironmentTextureTransferTypeBD.ctype()()] * transfer_type_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        session,
+        transfer_type_capacity_input,
+        byref(transfer_type_capacity_input),
+        transfer_types,
+    ))
+    if result.is_exception():
+        raise result
+    return transfer_types  # noqa
+
+
+def enumerate_supported_audio_sample_rate_bd(
+    session: Session,
+) -> Sequence[AudioSampleRateBD]:
+    sample_rate_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEnumerateSupportedAudioSampleRateBD"),
+        PFN_xrEnumerateSupportedAudioSampleRateBD,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        0,
+        byref(sample_rate_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    sample_rates = (AudioSampleRateBD.ctype() * sample_rate_capacity_input.value)(*([AudioSampleRateBD.ctype()()] * sample_rate_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        session,
+        sample_rate_capacity_input,
+        byref(sample_rate_capacity_input),
+        sample_rates,
+    ))
+    if result.is_exception():
+        raise result
+    return sample_rates  # noqa
+
+
+def query_frames_per_buffer_range_bd(
+    session: Session,
+    sample_rate: AudioSampleRateBD,
+) -> (int, int):
+    min = c_uint32()
+    max = c_uint32()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrQueryFramesPerBufferRangeBD"),
+        PFN_xrQueryFramesPerBufferRangeBD,
+    )
+    result = check_result(fxn(
+        session,
+        sample_rate.value,
+        byref(min),
+        byref(max),
+    ))
+    if result.is_exception():
+        raise result
+    return min.value, max.value
+
+
+def create_spatial_audio_renderer_bd(
+    session: Session,
+    create_info: SpatialAudioRendererCreateInfoBD = None,
+) -> SpatialAudioRendererBD:
+    if create_info is None:
+        create_info = SpatialAudioRendererCreateInfoBD()
+    renderer = SpatialAudioRendererBD()
+    renderer.instance = session.instance
+    renderer._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialAudioRendererBD"),
+        PFN_xrCreateSpatialAudioRendererBD,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(renderer),
+    ))
+    if result.is_exception():
+        raise result
+    return renderer
+
+
+def destroy_spatial_audio_renderer_bd(
+    renderer: SpatialAudioRendererBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(renderer.instance, "xrDestroySpatialAudioRendererBD"),
+        PFN_xrDestroySpatialAudioRendererBD,
+    )
+    result = check_result(fxn(
+        renderer,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_sound_obstacle_material_bd(
+    renderer: SpatialAudioRendererBD,
+    config: SoundObstacleMaterialConfigBD,
+) -> SoundObstacleMaterialBD:
+    material = SoundObstacleMaterialBD()
+    material.instance = renderer.instance
+    fxn = cast(
+        get_instance_proc_addr(renderer.instance, "xrCreateSoundObstacleMaterialBD"),
+        PFN_xrCreateSoundObstacleMaterialBD,
+    )
+    result = check_result(fxn(
+        renderer,
+        config,
+        byref(material),
+    ))
+    if result.is_exception():
+        raise result
+    return material
+
+
+def update_sound_obstacle_material_config_bd(
+    material: SoundObstacleMaterialBD,
+    config: SoundObstacleMaterialConfigBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(material.instance, "xrUpdateSoundObstacleMaterialConfigBD"),
+        PFN_xrUpdateSoundObstacleMaterialConfigBD,
+    )
+    result = check_result(fxn(
+        material,
+        config,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def destroy_sound_obstacle_material_bd(
+    material: SoundObstacleMaterialBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(material.instance, "xrDestroySoundObstacleMaterialBD"),
+        PFN_xrDestroySoundObstacleMaterialBD,
+    )
+    result = check_result(fxn(
+        material,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_sound_obstacle_bd(
+    renderer: SpatialAudioRendererBD,
+    config: SoundObstacleConfigBD,
+    mesh: SoundTriangleMeshBD,
+) -> SoundObstacleBD:
+    sound_obstacle = SoundObstacleBD()
+    fxn = cast(
+        get_instance_proc_addr(renderer.instance, "xrCreateSoundObstacleBD"),
+        PFN_xrCreateSoundObstacleBD,
+    )
+    result = check_result(fxn(
+        renderer,
+        config,
+        mesh,
+        byref(sound_obstacle),
+    ))
+    if result.is_exception():
+        raise result
+    return sound_obstacle
+
+
+def update_sound_obstacle_config_bd(
+    sound_obstacle: SoundObstacleBD,
+    config: SoundObstacleConfigBD,
+    mesh: SoundTriangleMeshBD,
+    flags: SoundObstacleFlagsBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_obstacle.instance, "xrUpdateSoundObstacleConfigBD"),
+        PFN_xrUpdateSoundObstacleConfigBD,
+    )
+    result = check_result(fxn(
+        sound_obstacle,
+        config,
+        mesh,
+        flags,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def destroy_sound_obstacle_bd(
+    sound_obstacle: SoundObstacleBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_obstacle.instance, "xrDestroySoundObstacleBD"),
+        PFN_xrDestroySoundObstacleBD,
+    )
+    result = check_result(fxn(
+        sound_obstacle,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_sound_object_bd(
+    renderer: SpatialAudioRendererBD,
+    config: SoundObjectConfigBD,
+) -> SoundObjectBD:
+    sound_object = SoundObjectBD()
+    sound_object.instance = renderer.instance
+    fxn = cast(
+        get_instance_proc_addr(renderer.instance, "xrCreateSoundObjectBD"),
+        PFN_xrCreateSoundObjectBD,
+    )
+    result = check_result(fxn(
+        renderer,
+        config,
+        byref(sound_object),
+    ))
+    if result.is_exception():
+        raise result
+    return sound_object
+
+
+def update_sound_object_config_bd(
+    sound_object: SoundObjectBD,
+    config: SoundObjectConfigBD,
+    flags: SoundObjectFlagsBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_object.instance, "xrUpdateSoundObjectConfigBD"),
+        PFN_xrUpdateSoundObjectConfigBD,
+    )
+    result = check_result(fxn(
+        sound_object,
+        config,
+        flags,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def submit_sound_object_buffer_bd(
+    sound_object: SoundObjectBD,
+    buffer: AudioBufferBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_object.instance, "xrSubmitSoundObjectBufferBD"),
+        PFN_xrSubmitSoundObjectBufferBD,
+    )
+    result = check_result(fxn(
+        sound_object,
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def destroy_sound_object_bd(
+    sound_object: SoundObjectBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_object.instance, "xrDestroySoundObjectBD"),
+        PFN_xrDestroySoundObjectBD,
+    )
+    result = check_result(fxn(
+        sound_object,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_sound_field_bd(
+    renderer: SpatialAudioRendererBD,
+    config: SoundFieldConfigBD,
+) -> SoundFieldBD:
+    sound_field = SoundFieldBD()
+    sound_field.instance = renderer.instance
+    fxn = cast(
+        get_instance_proc_addr(renderer.instance, "xrCreateSoundFieldBD"),
+        PFN_xrCreateSoundFieldBD,
+    )
+    result = check_result(fxn(
+        renderer,
+        config,
+        byref(sound_field),
+    ))
+    if result.is_exception():
+        raise result
+    return sound_field
+
+
+def update_sound_field_config_bd(
+    sound_field: SoundFieldBD,
+    config: SoundFieldConfigBD,
+    flags: SoundFieldFlagsBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_field.instance, "xrUpdateSoundFieldConfigBD"),
+        PFN_xrUpdateSoundFieldConfigBD,
+    )
+    result = check_result(fxn(
+        sound_field,
+        config,
+        flags,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def submit_sound_field_buffer_bd(
+    sound_field: SoundFieldBD,
+    buffer: AudioBufferBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_field.instance, "xrSubmitSoundFieldBufferBD"),
+        PFN_xrSubmitSoundFieldBufferBD,
+    )
+    result = check_result(fxn(
+        sound_field,
+        buffer,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def destroy_sound_field_bd(
+    sound_field: SoundFieldBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(sound_field.instance, "xrDestroySoundFieldBD"),
+        PFN_xrDestroySoundFieldBD,
+    )
+    result = check_result(fxn(
+        sound_field,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def wait_audio_period_bd(
+    renderer: SpatialAudioRendererBD,
+    timeout: Duration,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(renderer.instance, "xrWaitAudioPeriodBD"),
+        PFN_xrWaitAudioPeriodBD,
+    )
+    result = check_result(fxn(
+        renderer,
+        timeout,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def end_audio_period_bd(
+    renderer: SpatialAudioRendererBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(renderer.instance, "xrEndAudioPeriodBD"),
+        PFN_xrEndAudioPeriodBD,
+    )
+    result = check_result(fxn(
+        renderer,
+    ))
+    if result.is_exception():
+        raise result
+
+
 def create_plane_detector_ext(
     session: Session,
     create_info: PlaneDetectorCreateInfoEXT = None,
@@ -6548,6 +7077,81 @@ def create_anchor_space_android(
     return anchor_output
 
 
+def create_eye_tracker_android(
+    session: Session,
+    create_info: EyeTrackerCreateInfoANDROID = None,
+) -> EyeTrackerANDROID:
+    if create_info is None:
+        create_info = EyeTrackerCreateInfoANDROID()
+    eye_tracker = EyeTrackerANDROID()
+    eye_tracker.instance = session.instance
+    eye_tracker._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateEyeTrackerANDROID"),
+        PFN_xrCreateEyeTrackerANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(eye_tracker),
+    ))
+    if result.is_exception():
+        raise result
+    return eye_tracker
+
+
+def destroy_eye_tracker_android(
+    eye_tracker: EyeTrackerANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(eye_tracker.instance, "xrDestroyEyeTrackerANDROID"),
+        PFN_xrDestroyEyeTrackerANDROID,
+    )
+    result = check_result(fxn(
+        eye_tracker,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_fine_tracking_eyes_info_android(
+    eye_tracker: EyeTrackerANDROID,
+    get_info: EyesGetInfoANDROID,
+) -> EyesANDROID:
+    eyes_output = EyesANDROID()
+    fxn = cast(
+        get_instance_proc_addr(eye_tracker.instance, "xrGetFineTrackingEyesInfoANDROID"),
+        PFN_xrGetFineTrackingEyesInfoANDROID,
+    )
+    result = check_result(fxn(
+        eye_tracker,
+        get_info,
+        byref(eyes_output),
+    ))
+    if result.is_exception():
+        raise result
+    return eyes_output
+
+
+def get_coarse_tracking_eyes_info_android(
+    eye_tracker: EyeTrackerANDROID,
+    get_info: EyesGetInfoANDROID,
+) -> EyesANDROID:
+    eyes_output = EyesANDROID()
+    fxn = cast(
+        get_instance_proc_addr(eye_tracker.instance, "xrGetCoarseTrackingEyesInfoANDROID"),
+        PFN_xrGetCoarseTrackingEyesInfoANDROID,
+    )
+    result = check_result(fxn(
+        eye_tracker,
+        get_info,
+        byref(eyes_output),
+    ))
+    if result.is_exception():
+        raise result
+    return eyes_output
+
+
 def enumerate_supported_persistence_anchor_types_android(
     instance: Instance,
     system_id: SystemId,
@@ -6815,6 +7419,59 @@ def get_passthrough_camera_state_android(
     return camera_state_output
 
 
+def create_passthrough_layer_android(
+    session: Session,
+    create_info: PassthroughLayerCreateInfoANDROID = None,
+) -> PassthroughLayerANDROID:
+    if create_info is None:
+        create_info = PassthroughLayerCreateInfoANDROID()
+    layer = PassthroughLayerANDROID()
+    layer.instance = session.instance
+    layer._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreatePassthroughLayerANDROID"),
+        PFN_xrCreatePassthroughLayerANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(layer),
+    ))
+    if result.is_exception():
+        raise result
+    return layer
+
+
+def destroy_passthrough_layer_android(
+    layer: PassthroughLayerANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(layer.instance, "xrDestroyPassthroughLayerANDROID"),
+        PFN_xrDestroyPassthroughLayerANDROID,
+    )
+    result = check_result(fxn(
+        layer,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def set_passthrough_layer_mesh_android(
+    layer: PassthroughLayerANDROID,
+    mesh: PassthroughLayerMeshANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(layer.instance, "xrSetPassthroughLayerMeshANDROID"),
+        PFN_xrSetPassthroughLayerMeshANDROID,
+    )
+    result = check_result(fxn(
+        layer,
+        mesh,
+    ))
+    if result.is_exception():
+        raise result
+
+
 def enumerate_raycast_supported_trackable_types_android(
     instance: Instance,
     system_id: SystemId,
@@ -6864,6 +7521,87 @@ def raycast_android(
     if result.is_exception():
         raise result
     return results
+
+
+def enumerate_performance_metrics_counter_paths_android(
+    instance: Instance,
+) -> Sequence[Path]:
+    counter_path_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumeratePerformanceMetricsCounterPathsANDROID"),
+        PFN_xrEnumeratePerformanceMetricsCounterPathsANDROID,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        0,
+        byref(counter_path_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    counter_paths = (Path * counter_path_capacity_input.value)(*([Path()] * counter_path_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        instance,
+        counter_path_capacity_input,
+        byref(counter_path_capacity_input),
+        counter_paths,
+    ))
+    if result.is_exception():
+        raise result
+    return counter_paths  # noqa
+
+
+def set_performance_metrics_state_android(
+    session: Session,
+    state: PerformanceMetricsStateANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrSetPerformanceMetricsStateANDROID"),
+        PFN_xrSetPerformanceMetricsStateANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        state,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_performance_metrics_state_android(
+    session: Session,
+) -> PerformanceMetricsStateANDROID:
+    state = PerformanceMetricsStateANDROID()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrGetPerformanceMetricsStateANDROID"),
+        PFN_xrGetPerformanceMetricsStateANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        byref(state),
+    ))
+    if result.is_exception():
+        raise result
+    return state
+
+
+def query_performance_metrics_counter_android(
+    session: Session,
+    counter_path: Path,
+) -> PerformanceMetricsCounterANDROID:
+    counter = PerformanceMetricsCounterANDROID()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrQueryPerformanceMetricsCounterANDROID"),
+        PFN_xrQueryPerformanceMetricsCounterANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        counter_path,
+        byref(counter),
+    ))
+    if result.is_exception():
+        raise result
+    return counter
 
 
 def get_trackable_object_android(
@@ -7181,6 +7919,22 @@ def get_facial_expression_blend_shape_properties_ml(
     return blend_shapes
 
 
+def request_boundary_visibility_meta(
+    session: Session,
+    boundary_visibility: BoundaryVisibilityMETA,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrRequestBoundaryVisibilityMETA"),
+        PFN_xrRequestBoundaryVisibilityMETA,
+    )
+    result = check_result(fxn(
+        session,
+        boundary_visibility.value,
+    ))
+    if result.is_exception():
+        raise result
+
+
 def resume_simultaneous_hands_and_controllers_tracking_meta(
     session: Session,
     resume_info: SimultaneousHandsAndControllersTrackingResumeInfoMETA,
@@ -7211,6 +7965,44 @@ def pause_simultaneous_hands_and_controllers_tracking_meta(
     ))
     if result.is_exception():
         raise result
+
+
+def get_space_room_mesh_meta(
+    space: Space,
+    get_info: SpaceRoomMeshGetInfoMETA,
+) -> RoomMeshMETA:
+    room_mesh_output = RoomMeshMETA()
+    fxn = cast(
+        get_instance_proc_addr(space.instance, "xrGetSpaceRoomMeshMETA"),
+        PFN_xrGetSpaceRoomMeshMETA,
+    )
+    result = check_result(fxn(
+        space,
+        get_info,
+        byref(room_mesh_output),
+    ))
+    if result.is_exception():
+        raise result
+    return room_mesh_output
+
+
+def get_space_room_mesh_face_indices_meta(
+    space: Space,
+    face_uuid: Uuid,
+) -> RoomMeshFaceIndicesMETA:
+    room_mesh_face_indices_output = RoomMeshFaceIndicesMETA()
+    fxn = cast(
+        get_instance_proc_addr(space.instance, "xrGetSpaceRoomMeshFaceIndicesMETA"),
+        PFN_xrGetSpaceRoomMeshFaceIndicesMETA,
+    )
+    result = check_result(fxn(
+        space,
+        face_uuid,
+        byref(room_mesh_face_indices_output),
+    ))
+    if result.is_exception():
+        raise result
+    return room_mesh_face_indices_output
 
 
 def start_colocation_discovery_meta(
@@ -7289,6 +8081,166 @@ def stop_colocation_advertisement_meta(
     return request_id
 
 
+def create_environment_raycaster_async_meta(
+    session: Session,
+    info: EnvironmentRaycasterCreateInfoMETA = None,
+) -> FutureEXT:
+    future = FutureEXT()
+    future.instance = session.instance
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateEnvironmentRaycasterAsyncMETA"),
+        PFN_xrCreateEnvironmentRaycasterAsyncMETA,
+    )
+    result = check_result(fxn(
+        session,
+        info,
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def create_environment_raycaster_complete_meta(
+    session: Session,
+    future: FutureEXT,
+) -> EnvironmentRaycasterCreateCompletionMETA:
+    completion = EnvironmentRaycasterCreateCompletionMETA()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateEnvironmentRaycasterCompleteMETA"),
+        PFN_xrCreateEnvironmentRaycasterCompleteMETA,
+    )
+    result = check_result(fxn(
+        session,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def destroy_environment_raycaster_meta(
+    environment_raycaster: EnvironmentRaycasterMETA,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(environment_raycaster.instance, "xrDestroyEnvironmentRaycasterMETA"),
+        PFN_xrDestroyEnvironmentRaycasterMETA,
+    )
+    result = check_result(fxn(
+        environment_raycaster,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def perform_environment_raycast_meta(
+    environment_raycaster: EnvironmentRaycasterMETA,
+    info: EnvironmentRaycastHitGetInfoMETA,
+) -> EnvironmentRaycastHitMETA:
+    hit_point = EnvironmentRaycastHitMETA()
+    fxn = cast(
+        get_instance_proc_addr(environment_raycaster.instance, "xrPerformEnvironmentRaycastMETA"),
+        PFN_xrPerformEnvironmentRaycastMETA,
+    )
+    result = check_result(fxn(
+        environment_raycaster,
+        info,
+        byref(hit_point),
+    ))
+    if result.is_exception():
+        raise result
+    return hit_point
+
+
+def set_tile_properties_hint_meta(
+    session: Session,
+    properties: TilePropertiesHintMETA,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrSetTilePropertiesHintMETA"),
+        PFN_xrSetTilePropertiesHintMETA,
+    )
+    result = check_result(fxn(
+        session,
+        properties,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def set_hand_tracking_frequency_hint_meta(
+    session: Session,
+    frequency_hint: HandTrackingFrequencyHintMETA,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrSetHandTrackingFrequencyHintMETA"),
+        PFN_xrSetHandTrackingFrequencyHintMETA,
+    )
+    result = check_result(fxn(
+        session,
+        frequency_hint.value,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_light_estimator_android(
+    session: Session,
+    create_info: POINTER(LightEstimatorCreateInfoANDROID) = None,
+) -> LightEstimatorANDROID:
+    if create_info is None:
+        create_info = POINTER(LightEstimatorCreateInfoANDROID)()
+    out_handle = LightEstimatorANDROID()
+    out_handle.instance = session.instance
+    out_handle._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateLightEstimatorANDROID"),
+        PFN_xrCreateLightEstimatorANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(out_handle),
+    ))
+    if result.is_exception():
+        raise result
+    return out_handle
+
+
+def destroy_light_estimator_android(
+    estimator: LightEstimatorANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(estimator.instance, "xrDestroyLightEstimatorANDROID"),
+        PFN_xrDestroyLightEstimatorANDROID,
+    )
+    result = check_result(fxn(
+        estimator,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_light_estimate_android(
+    estimator: LightEstimatorANDROID,
+    input: LightEstimateGetInfoANDROID,
+) -> LightEstimateANDROID:
+    output = LightEstimateANDROID()
+    fxn = cast(
+        get_instance_proc_addr(estimator.instance, "xrGetLightEstimateANDROID"),
+        PFN_xrGetLightEstimateANDROID,
+    )
+    result = check_result(fxn(
+        estimator,
+        input,
+        byref(output),
+    ))
+    if result.is_exception():
+        raise result
+    return output
+
+
 def get_trackable_marker_android(
     tracker: TrackableTrackerANDROID,
     get_info: TrackableGetInfoANDROID,
@@ -7306,6 +8258,275 @@ def get_trackable_marker_android(
     if result.is_exception():
         raise result
     return marker_output
+
+
+def get_trackable_qr_code_android(
+    tracker: TrackableTrackerANDROID,
+    get_info: TrackableGetInfoANDROID,
+) -> TrackableQrCodeANDROID:
+    qr_code_output = TrackableQrCodeANDROID()
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrGetTrackableQrCodeANDROID"),
+        PFN_xrGetTrackableQrCodeANDROID,
+    )
+    result = check_result(fxn(
+        tracker,
+        get_info,
+        byref(qr_code_output),
+    ))
+    if result.is_exception():
+        raise result
+    return qr_code_output
+
+
+def create_trackable_image_database_async_android(
+    session: Session,
+    create_info: TrackableImageDatabaseCreateInfoANDROID = None,
+) -> FutureEXT:
+    if create_info is None:
+        create_info = TrackableImageDatabaseCreateInfoANDROID()
+    future = FutureEXT()
+    future.instance = session.instance
+    future._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateTrackableImageDatabaseAsyncANDROID"),
+        PFN_xrCreateTrackableImageDatabaseAsyncANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def create_trackable_image_database_complete_android(
+    session: Session,
+    future: FutureEXT,
+) -> CreateTrackableImageDatabaseCompletionANDROID:
+    completion = CreateTrackableImageDatabaseCompletionANDROID()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateTrackableImageDatabaseCompleteANDROID"),
+        PFN_xrCreateTrackableImageDatabaseCompleteANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def destroy_trackable_image_database_android(
+    database: TrackableImageDatabaseANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(database.instance, "xrDestroyTrackableImageDatabaseANDROID"),
+        PFN_xrDestroyTrackableImageDatabaseANDROID,
+    )
+    result = check_result(fxn(
+        database,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def add_trackable_image_database_android(
+    tracker: TrackableTrackerANDROID,
+    database: TrackableImageDatabaseANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrAddTrackableImageDatabaseANDROID"),
+        PFN_xrAddTrackableImageDatabaseANDROID,
+    )
+    result = check_result(fxn(
+        tracker,
+        database,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def remove_trackable_image_database_android(
+    tracker: TrackableTrackerANDROID,
+    database: TrackableImageDatabaseANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrRemoveTrackableImageDatabaseANDROID"),
+        PFN_xrRemoveTrackableImageDatabaseANDROID,
+    )
+    result = check_result(fxn(
+        tracker,
+        database,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_trackable_image_android(
+    tracker: TrackableTrackerANDROID,
+    get_info: TrackableGetInfoANDROID,
+) -> TrackableImageANDROID:
+    trackable = TrackableImageANDROID()
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrGetTrackableImageANDROID"),
+        PFN_xrGetTrackableImageANDROID,
+    )
+    result = check_result(fxn(
+        tracker,
+        get_info,
+        byref(trackable),
+    ))
+    if result.is_exception():
+        raise result
+    return trackable
+
+
+def enumerate_supported_semantic_label_sets_android(
+    instance: Instance,
+    system_id: SystemId,
+    supported_semantic_label_sets_input_capacity: int = None,
+) -> (int, SceneMeshSemanticLabelSetANDROID):
+    supported_semantic_label_sets_output_count = c_uint32()
+    supported_semantic_label_sets = SceneMeshSemanticLabelSetANDROID.ctype()()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumerateSupportedSemanticLabelSetsANDROID"),
+        PFN_xrEnumerateSupportedSemanticLabelSetsANDROID,
+    )
+    result = check_result(fxn(
+        instance,
+        system_id,
+        supported_semantic_label_sets_input_capacity,
+        byref(supported_semantic_label_sets_output_count),
+        byref(supported_semantic_label_sets),
+    ))
+    if result.is_exception():
+        raise result
+    return supported_semantic_label_sets_output_count.value, supported_semantic_label_sets
+
+
+def create_scene_meshing_tracker_android(
+    session: Session,
+    create_info: SceneMeshingTrackerCreateInfoANDROID = None,
+) -> SceneMeshingTrackerANDROID:
+    if create_info is None:
+        create_info = SceneMeshingTrackerCreateInfoANDROID()
+    tracker = SceneMeshingTrackerANDROID()
+    tracker.instance = session.instance
+    tracker._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSceneMeshingTrackerANDROID"),
+        PFN_xrCreateSceneMeshingTrackerANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(tracker),
+    ))
+    if result.is_exception():
+        raise result
+    return tracker
+
+
+def destroy_scene_meshing_tracker_android(
+    tracker: SceneMeshingTrackerANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrDestroySceneMeshingTrackerANDROID"),
+        PFN_xrDestroySceneMeshingTrackerANDROID,
+    )
+    result = check_result(fxn(
+        tracker,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_scene_mesh_snapshot_android(
+    tracker: SceneMeshingTrackerANDROID,
+    create_info: SceneMeshSnapshotCreateInfoANDROID = None,
+) -> SceneMeshSnapshotCreationResultANDROID:
+    if create_info is None:
+        create_info = SceneMeshSnapshotCreateInfoANDROID()
+    out_snapshot_creation_result = SceneMeshSnapshotCreationResultANDROID()
+    fxn = cast(
+        get_instance_proc_addr(tracker.instance, "xrCreateSceneMeshSnapshotANDROID"),
+        PFN_xrCreateSceneMeshSnapshotANDROID,
+    )
+    result = check_result(fxn(
+        tracker,
+        create_info,
+        byref(out_snapshot_creation_result),
+    ))
+    if result.is_exception():
+        raise result
+    return out_snapshot_creation_result
+
+
+def destroy_scene_mesh_snapshot_android(
+    snapshot: SceneMeshSnapshotANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(snapshot.instance, "xrDestroySceneMeshSnapshotANDROID"),
+        PFN_xrDestroySceneMeshSnapshotANDROID,
+    )
+    result = check_result(fxn(
+        snapshot,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_all_submesh_states_android(
+    snapshot: SceneMeshSnapshotANDROID,
+) -> Sequence[SceneSubmeshStateANDROID]:
+    submesh_state_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(snapshot.instance, "xrGetAllSubmeshStatesANDROID"),
+        PFN_xrGetAllSubmeshStatesANDROID,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        snapshot,
+        0,
+        byref(submesh_state_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    submesh_states = (SceneSubmeshStateANDROID * submesh_state_capacity_input.value)(*([SceneSubmeshStateANDROID()] * submesh_state_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        snapshot,
+        submesh_state_capacity_input,
+        byref(submesh_state_capacity_input),
+        submesh_states,
+    ))
+    if result.is_exception():
+        raise result
+    return submesh_states  # noqa
+
+
+def get_submesh_data_android(
+    snapshot: SceneMeshSnapshotANDROID,
+    submesh_data_count: int,
+) -> SceneSubmeshDataANDROID:
+    inout_submesh_data = SceneSubmeshDataANDROID()
+    fxn = cast(
+        get_instance_proc_addr(snapshot.instance, "xrGetSubmeshDataANDROID"),
+        PFN_xrGetSubmeshDataANDROID,
+    )
+    result = check_result(fxn(
+        snapshot,
+        submesh_data_count,
+        byref(inout_submesh_data),
+    ))
+    if result.is_exception():
+        raise result
+    return inout_submesh_data
 
 
 def enumerate_spatial_capabilities_ext(
@@ -7811,6 +9032,329 @@ def get_spatial_buffer_vector3f_ext(
     return buffer  # noqa
 
 
+def get_stationary_reference_space_generation_id_ext(
+    session: Session,
+    get_info: StationaryReferenceSpaceGenerationIdGetInfoEXT = None,
+) -> StationaryReferenceSpaceGenerationIdResultEXT:
+    generation_id_result = StationaryReferenceSpaceGenerationIdResultEXT()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrGetStationaryReferenceSpaceGenerationIdEXT"),
+        PFN_xrGetStationaryReferenceSpaceGenerationIdEXT,
+    )
+    result = check_result(fxn(
+        session,
+        get_info,
+        byref(generation_id_result),
+    ))
+    if result.is_exception():
+        raise result
+    return generation_id_result
+
+
+def enumerate_available_cameras_bd(
+    instance: Instance,
+    enumerate_info: AvailableCamerasEnumerateInfoBD,
+) -> Sequence[AvailableCameraBD]:
+    camera_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumerateAvailableCamerasBD"),
+        PFN_xrEnumerateAvailableCamerasBD,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        enumerate_info,
+        0,
+        byref(camera_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    cameras = (AvailableCameraBD * camera_capacity_input.value)(*([AvailableCameraBD()] * camera_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        instance,
+        enumerate_info,
+        camera_capacity_input,
+        byref(camera_capacity_input),
+        cameras,
+    ))
+    if result.is_exception():
+        raise result
+    return cameras  # noqa
+
+
+def enumerate_camera_property_types_bd(
+    instance: Instance,
+    enumerate_info: CameraPropertyTypesEnumerateInfoBD,
+) -> CameraPropertyTypesBD:
+    property_types = CameraPropertyTypesBD()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumerateCameraPropertyTypesBD"),
+        PFN_xrEnumerateCameraPropertyTypesBD,
+    )
+    result = check_result(fxn(
+        instance,
+        enumerate_info,
+        byref(property_types),
+    ))
+    if result.is_exception():
+        raise result
+    return property_types
+
+
+def get_camera_properties_bd(
+    instance: Instance,
+    get_info: CameraPropertiesGetInfoBD,
+) -> CameraPropertiesBD:
+    properties = CameraPropertiesBD()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetCameraPropertiesBD"),
+        PFN_xrGetCameraPropertiesBD,
+    )
+    result = check_result(fxn(
+        instance,
+        get_info,
+        byref(properties),
+    ))
+    if result.is_exception():
+        raise result
+    return properties
+
+
+def enumerate_camera_capability_types_bd(
+    instance: Instance,
+    enumerate_info: CameraCapabilityTypesEnumerateInfoBD,
+) -> CameraCapabilityTypesBD:
+    capability_types = CameraCapabilityTypesBD()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumerateCameraCapabilityTypesBD"),
+        PFN_xrEnumerateCameraCapabilityTypesBD,
+    )
+    result = check_result(fxn(
+        instance,
+        enumerate_info,
+        byref(capability_types),
+    ))
+    if result.is_exception():
+        raise result
+    return capability_types
+
+
+def get_camera_supported_capabilities_bd(
+    instance: Instance,
+    get_info: CameraSupportedCapabilitiesGetInfoBD,
+) -> CameraSupportedCapabilitiesBD:
+    capabilities = CameraSupportedCapabilitiesBD()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrGetCameraSupportedCapabilitiesBD"),
+        PFN_xrGetCameraSupportedCapabilitiesBD,
+    )
+    result = check_result(fxn(
+        instance,
+        get_info,
+        byref(capabilities),
+    ))
+    if result.is_exception():
+        raise result
+    return capabilities
+
+
+def create_camera_device_async_bd(
+    instance: Instance,
+    create_info: CameraDeviceCreateInfoBD = None,
+) -> FutureEXT:
+    if create_info is None:
+        create_info = CameraDeviceCreateInfoBD()
+    future = FutureEXT()
+    future.instance = instance
+    future._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrCreateCameraDeviceAsyncBD"),
+        PFN_xrCreateCameraDeviceAsyncBD,
+    )
+    result = check_result(fxn(
+        instance,
+        create_info,
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def create_camera_device_complete_bd(
+    instance: Instance,
+    future: FutureEXT,
+) -> CreateCameraDeviceCompletionBD:
+    completion = CreateCameraDeviceCompletionBD()
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrCreateCameraDeviceCompleteBD"),
+        PFN_xrCreateCameraDeviceCompleteBD,
+    )
+    result = check_result(fxn(
+        instance,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def destroy_camera_device_bd(
+    device: CameraDeviceBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(device.instance, "xrDestroyCameraDeviceBD"),
+        PFN_xrDestroyCameraDeviceBD,
+    )
+    result = check_result(fxn(
+        device,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_camera_capture_session_async_bd(
+    session: Session,
+    create_info: CameraCaptureSessionCreateInfoBD = None,
+) -> FutureEXT:
+    if create_info is None:
+        create_info = CameraCaptureSessionCreateInfoBD()
+    future = FutureEXT()
+    future.instance = session.instance
+    future._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateCameraCaptureSessionAsyncBD"),
+        PFN_xrCreateCameraCaptureSessionAsyncBD,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def create_camera_capture_session_complete_bd(
+    session: Session,
+    future: FutureEXT,
+) -> CreateCameraCaptureSessionCompletionBD:
+    completion = CreateCameraCaptureSessionCompletionBD()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateCameraCaptureSessionCompleteBD"),
+        PFN_xrCreateCameraCaptureSessionCompleteBD,
+    )
+    result = check_result(fxn(
+        session,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def destroy_camera_capture_session_bd(
+    capture_session: CameraCaptureSessionBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(capture_session.instance, "xrDestroyCameraCaptureSessionBD"),
+        PFN_xrDestroyCameraCaptureSessionBD,
+    )
+    result = check_result(fxn(
+        capture_session,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def begin_camera_capture_bd(
+    capture_session: CameraCaptureSessionBD,
+    begin_info: CameraCaptureBeginInfoBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(capture_session.instance, "xrBeginCameraCaptureBD"),
+        PFN_xrBeginCameraCaptureBD,
+    )
+    result = check_result(fxn(
+        capture_session,
+        begin_info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def end_camera_capture_bd(
+    capture_session: CameraCaptureSessionBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(capture_session.instance, "xrEndCameraCaptureBD"),
+        PFN_xrEndCameraCaptureBD,
+    )
+    result = check_result(fxn(
+        capture_session,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def acquire_camera_image_bd(
+    capture_session: CameraCaptureSessionBD,
+    acquire_info: CameraImageAcquireInfoBD,
+) -> CameraImageBD:
+    image = CameraImageBD()
+    fxn = cast(
+        get_instance_proc_addr(capture_session.instance, "xrAcquireCameraImageBD"),
+        PFN_xrAcquireCameraImageBD,
+    )
+    result = check_result(fxn(
+        capture_session,
+        acquire_info,
+        byref(image),
+    ))
+    if result.is_exception():
+        raise result
+    return image
+
+
+def get_camera_image_data_bd(
+    capture_session: CameraCaptureSessionBD,
+    image_id: CameraImageIdBD,
+) -> CameraImageDataBaseHeaderBD:
+    image_data = CameraImageDataBaseHeaderBD()
+    fxn = cast(
+        get_instance_proc_addr(capture_session.instance, "xrGetCameraImageDataBD"),
+        PFN_xrGetCameraImageDataBD,
+    )
+    result = check_result(fxn(
+        capture_session,
+        image_id,
+        cast(byref(image_data), POINTER(CameraImageDataBaseHeaderBD)),
+    ))
+    if result.is_exception():
+        raise result
+    return image_data
+
+
+def release_camera_image_bd(
+    capture_session: CameraCaptureSessionBD,
+    image_id: CameraImageIdBD,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(capture_session.instance, "xrReleaseCameraImageBD"),
+        PFN_xrReleaseCameraImageBD,
+    )
+    result = check_result(fxn(
+        capture_session,
+        image_id,
+    ))
+    if result.is_exception():
+        raise result
+
+
 def create_spatial_anchor_ext(
     spatial_context: SpatialContextEXT,
     create_info: SpatialAnchorCreateInfoEXT = None,
@@ -7922,6 +9466,73 @@ def destroy_spatial_persistence_context_ext(
         raise result
 
 
+def haptic_parametric_get_properties_ext(
+    session: Session,
+    haptic_action_info: HapticActionInfo,
+) -> HapticParametricPropertiesEXT:
+    parametric_properties = HapticParametricPropertiesEXT()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrHapticParametricGetPropertiesEXT"),
+        PFN_xrHapticParametricGetPropertiesEXT,
+    )
+    result = check_result(fxn(
+        session,
+        haptic_action_info,
+        byref(parametric_properties),
+    ))
+    if result.is_exception():
+        raise result
+    return parametric_properties
+
+
+def enumerate_color_spaces_sony(
+    session: Session,
+    enumerate_info: ColorSpacesEnumerateInfoSONY,
+) -> Sequence[ColorSpaceSONY]:
+    color_space_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEnumerateColorSpacesSONY"),
+        PFN_xrEnumerateColorSpacesSONY,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        enumerate_info,
+        0,
+        byref(color_space_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    color_spaces = (ColorSpaceSONY.ctype() * color_space_capacity_input.value)(*([ColorSpaceSONY.ctype()()] * color_space_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        session,
+        enumerate_info,
+        color_space_capacity_input,
+        byref(color_space_capacity_input),
+        color_spaces,
+    ))
+    if result.is_exception():
+        raise result
+    return color_spaces  # noqa
+
+
+def set_hdr_metadata_sony(
+    swapchain: Swapchain,
+    hdr_metadata: HdrMetadataSONY,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(swapchain.instance, "xrSetHdrMetadataSONY"),
+        PFN_xrSetHdrMetadataSONY,
+    )
+    result = check_result(fxn(
+        swapchain,
+        hdr_metadata,
+    ))
+    if result.is_exception():
+        raise result
+
+
 def persist_spatial_entity_async_ext(
     persistence_context: SpatialPersistenceContextEXT,
     persist_info: SpatialEntityPersistInfoEXT,
@@ -7998,21 +9609,656 @@ def unpersist_spatial_entity_complete_ext(
     return completion
 
 
+def enumerate_spatial_reference_image_formats_ext(
+    instance: Instance,
+    system_id: SystemId,
+    capability: SpatialCapabilityEXT,
+) -> Sequence[SpatialReferenceImageFormatEXT]:
+    format_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumerateSpatialReferenceImageFormatsEXT"),
+        PFN_xrEnumerateSpatialReferenceImageFormatsEXT,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        system_id,
+        capability.value,
+        0,
+        byref(format_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    formats = (SpatialReferenceImageFormatEXT.ctype() * format_capacity_input.value)(*([SpatialReferenceImageFormatEXT.ctype()()] * format_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        instance,
+        system_id,
+        capability.value,
+        format_capacity_input,
+        byref(format_capacity_input),
+        formats,
+    ))
+    if result.is_exception():
+        raise result
+    return formats  # noqa
+
+
+def create_spatial_image_tracking_database_async_ext(
+    session: Session,
+    create_info: SpatialImageTrackingDatabaseCreateInfoEXT = None,
+) -> FutureEXT:
+    if create_info is None:
+        create_info = SpatialImageTrackingDatabaseCreateInfoEXT()
+    future = FutureEXT()
+    future.instance = session.instance
+    future._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialImageTrackingDatabaseAsyncEXT"),
+        PFN_xrCreateSpatialImageTrackingDatabaseAsyncEXT,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def create_spatial_image_tracking_database_complete_ext(
+    session: Session,
+    future: FutureEXT,
+) -> CreateSpatialImageTrackingDatabaseCompletionEXT:
+    completion = CreateSpatialImageTrackingDatabaseCompletionEXT()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialImageTrackingDatabaseCompleteEXT"),
+        PFN_xrCreateSpatialImageTrackingDatabaseCompleteEXT,
+    )
+    result = check_result(fxn(
+        session,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def destroy_spatial_image_tracking_database_ext(
+    database: SpatialImageTrackingDatabaseEXT,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(database.instance, "xrDestroySpatialImageTrackingDatabaseEXT"),
+        PFN_xrDestroySpatialImageTrackingDatabaseEXT,
+    )
+    result = check_result(fxn(
+        database,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_spatial_raycast_snapshot_android(
+    spatial_context: SpatialContextEXT,
+    create_info: SpatialRaycastSnapshotCreateInfoANDROID = None,
+) -> SpatialSnapshotEXT:
+    if create_info is None:
+        create_info = SpatialRaycastSnapshotCreateInfoANDROID()
+    snapshot = SpatialSnapshotEXT()
+    snapshot.instance = spatial_context.instance
+    snapshot._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(spatial_context.instance, "xrCreateSpatialRaycastSnapshotANDROID"),
+        PFN_xrCreateSpatialRaycastSnapshotANDROID,
+    )
+    result = check_result(fxn(
+        spatial_context,
+        create_info,
+        byref(snapshot),
+    ))
+    if result.is_exception():
+        raise result
+    return snapshot
+
+
+def set_google_cloud_auth_async_android(
+    session: Session,
+    auth_info: GoogleCloudAuthInfoBaseHeaderANDROID,
+) -> FutureEXT:
+    future = FutureEXT()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrSetGoogleCloudAuthAsyncANDROID"),
+        PFN_xrSetGoogleCloudAuthAsyncANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        cast(byref(auth_info), POINTER(GoogleCloudAuthInfoBaseHeaderANDROID)),
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def set_google_cloud_auth_complete_android(
+    session: Session,
+    future: FutureEXT,
+) -> FutureCompletionEXT:
+    completion = FutureCompletionEXT()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrSetGoogleCloudAuthCompleteANDROID"),
+        PFN_xrSetGoogleCloudAuthCompleteANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def create_geospatial_tracker_android(
+    session: Session,
+    create_info: GeospatialTrackerCreateInfoANDROID = None,
+) -> GeospatialTrackerANDROID:
+    if create_info is None:
+        create_info = GeospatialTrackerCreateInfoANDROID()
+    geospatial_tracker_output = GeospatialTrackerANDROID()
+    geospatial_tracker_output.instance = session.instance
+    geospatial_tracker_output._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateGeospatialTrackerANDROID"),
+        PFN_xrCreateGeospatialTrackerANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(geospatial_tracker_output),
+    ))
+    if result.is_exception():
+        raise result
+    return geospatial_tracker_output
+
+
+def destroy_geospatial_tracker_android(
+    geospatial_tracker: GeospatialTrackerANDROID,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(geospatial_tracker.instance, "xrDestroyGeospatialTrackerANDROID"),
+        PFN_xrDestroyGeospatialTrackerANDROID,
+    )
+    result = check_result(fxn(
+        geospatial_tracker,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def locate_geospatial_pose_from_pose_android(
+    geospatial_tracker: GeospatialTrackerANDROID,
+    locate_info: GeospatialPoseFromPoseLocateInfoANDROID,
+) -> GeospatialPoseResultANDROID:
+    geospatial_pose_result = GeospatialPoseResultANDROID()
+    fxn = cast(
+        get_instance_proc_addr(geospatial_tracker.instance, "xrLocateGeospatialPoseFromPoseANDROID"),
+        PFN_xrLocateGeospatialPoseFromPoseANDROID,
+    )
+    result = check_result(fxn(
+        geospatial_tracker,
+        locate_info,
+        byref(geospatial_pose_result),
+    ))
+    if result.is_exception():
+        raise result
+    return geospatial_pose_result
+
+
+def locate_geospatial_pose_android(
+    geospatial_tracker: GeospatialTrackerANDROID,
+    locate_info: GeospatialPoseLocateInfoANDROID,
+) -> SpaceLocation:
+    location = SpaceLocation()
+    fxn = cast(
+        get_instance_proc_addr(geospatial_tracker.instance, "xrLocateGeospatialPoseANDROID"),
+        PFN_xrLocateGeospatialPoseANDROID,
+    )
+    result = check_result(fxn(
+        geospatial_tracker,
+        locate_info,
+        byref(location),
+    ))
+    if result.is_exception():
+        raise result
+    return location
+
+
+def check_vps_availability_async_android(
+    session: Session,
+    latitude: float,
+    longitude: float,
+) -> FutureEXT:
+    future = FutureEXT()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCheckVpsAvailabilityAsyncANDROID"),
+        PFN_xrCheckVpsAvailabilityAsyncANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        latitude,
+        longitude,
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def check_vps_availability_complete_android(
+    session: Session,
+    future: FutureEXT,
+) -> VPSAvailabilityCheckCompletionANDROID:
+    completion = VPSAvailabilityCheckCompletionANDROID()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCheckVpsAvailabilityCompleteANDROID"),
+        PFN_xrCheckVpsAvailabilityCompleteANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def enumerate_spatial_anchor_attachable_components_android(
+    instance: Instance,
+    system_id: SystemId,
+) -> Sequence[SpatialComponentTypeEXT]:
+    attachable_component_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumerateSpatialAnchorAttachableComponentsANDROID"),
+        PFN_xrEnumerateSpatialAnchorAttachableComponentsANDROID,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        system_id,
+        0,
+        byref(attachable_component_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    attachable_components = (SpatialComponentTypeEXT.ctype() * attachable_component_capacity_input.value)(*([SpatialComponentTypeEXT.ctype()()] * attachable_component_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        instance,
+        system_id,
+        attachable_component_capacity_input,
+        byref(attachable_component_capacity_input),
+        attachable_components,
+    ))
+    if result.is_exception():
+        raise result
+    return attachable_components  # noqa
+
+
+def create_spatial_anchor_space_android(
+    session: Session,
+    spatial_context: SpatialContextEXT,
+    create_info: SpatialAnchorCreateInfoEXT = None,
+) -> (SpatialEntityIdEXT, Space):
+    if create_info is None:
+        create_info = SpatialAnchorCreateInfoEXT()
+    anchor_entity_id = SpatialEntityIdEXT()
+    anchor_space = Space()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorSpaceANDROID"),
+        PFN_xrCreateSpatialAnchorSpaceANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        spatial_context,
+        create_info,
+        byref(anchor_entity_id),
+        byref(anchor_space),
+    ))
+    if result.is_exception():
+        raise result
+    return anchor_entity_id, anchor_space
+
+
+def create_spatial_anchor_space_from_id_android(
+    session: Session,
+    spatial_context: SpatialContextEXT,
+    create_info: SpatialAnchorSpaceFromIdCreateInfoANDROID = None,
+) -> Space:
+    if create_info is None:
+        create_info = SpatialAnchorSpaceFromIdCreateInfoANDROID()
+    anchor_space = Space()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialAnchorSpaceFromIdANDROID"),
+        PFN_xrCreateSpatialAnchorSpaceFromIdANDROID,
+    )
+    result = check_result(fxn(
+        session,
+        spatial_context,
+        create_info,
+        byref(anchor_space),
+    ))
+    if result.is_exception():
+        raise result
+    return anchor_space
+
+
+def create_geospatial_anchor_android(
+    spatial_context: SpatialContextEXT,
+    create_info: GeospatialAnchorCreateInfoANDROID = None,
+) -> SpatialEntityIdEXT:
+    if create_info is None:
+        create_info = GeospatialAnchorCreateInfoANDROID()
+    anchor_entity_id = SpatialEntityIdEXT()
+    fxn = cast(
+        get_instance_proc_addr(spatial_context.instance, "xrCreateGeospatialAnchorANDROID"),
+        PFN_xrCreateGeospatialAnchorANDROID,
+    )
+    result = check_result(fxn(
+        spatial_context,
+        create_info,
+        byref(anchor_entity_id),
+    ))
+    if result.is_exception():
+        raise result
+    return anchor_entity_id
+
+
+def create_surface_anchor_async_android(
+    spatial_context: SpatialContextEXT,
+    create_info: SurfaceAnchorCreateInfoANDROID = None,
+) -> FutureEXT:
+    if create_info is None:
+        create_info = SurfaceAnchorCreateInfoANDROID()
+    future = FutureEXT()
+    future.instance = spatial_context.instance
+    future._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(spatial_context.instance, "xrCreateSurfaceAnchorAsyncANDROID"),
+        PFN_xrCreateSurfaceAnchorAsyncANDROID,
+    )
+    result = check_result(fxn(
+        spatial_context,
+        create_info,
+        byref(future),
+    ))
+    if result.is_exception():
+        raise result
+    return future
+
+
+def create_surface_anchor_complete_android(
+    spatial_context: SpatialContextEXT,
+    future: FutureEXT,
+) -> SurfaceAnchorCreateCompletionANDROID:
+    completion = SurfaceAnchorCreateCompletionANDROID()
+    fxn = cast(
+        get_instance_proc_addr(spatial_context.instance, "xrCreateSurfaceAnchorCompleteANDROID"),
+        PFN_xrCreateSurfaceAnchorCompleteANDROID,
+    )
+    result = check_result(fxn(
+        spatial_context,
+        future,
+        byref(completion),
+    ))
+    if result.is_exception():
+        raise result
+    return completion
+
+
+def create_spatial_container_ext(
+    session: Session,
+    create_info: SpatialContainerCreateInfoEXT = None,
+) -> SpatialContainerEXT:
+    if create_info is None:
+        create_info = SpatialContainerCreateInfoEXT()
+    spatial_container = SpatialContainerEXT()
+    spatial_container.instance = session.instance
+    spatial_container._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialContainerEXT"),
+        PFN_xrCreateSpatialContainerEXT,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(spatial_container),
+    ))
+    if result.is_exception():
+        raise result
+    return spatial_container
+
+
+def destroy_spatial_container_ext(
+    spatial_container: SpatialContainerEXT,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(spatial_container.instance, "xrDestroySpatialContainerEXT"),
+        PFN_xrDestroySpatialContainerEXT,
+    )
+    result = check_result(fxn(
+        spatial_container,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def create_spatial_container_space_ext(
+    session: Session,
+    create_info: SpatialContainerSpaceCreateInfoEXT = None,
+) -> Space:
+    if create_info is None:
+        create_info = SpatialContainerSpaceCreateInfoEXT()
+    space = Space()
+    space.instance = session.instance
+    space._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateSpatialContainerSpaceEXT"),
+        PFN_xrCreateSpatialContainerSpaceEXT,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(space),
+    ))
+    if result.is_exception():
+        raise result
+    return space
+
+
+def request_spatial_container_visible_ext(
+    spatial_container: SpatialContainerEXT,
+    info: SpatialContainerVisibleRequestInfoEXT,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(spatial_container.instance, "xrRequestSpatialContainerVisibleEXT"),
+        PFN_xrRequestSpatialContainerVisibleEXT,
+    )
+    result = check_result(fxn(
+        spatial_container,
+        info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def request_spatial_container_bounds_mode_ext(
+    spatial_container: SpatialContainerEXT,
+    info: SpatialContainerBoundsModeRequestInfoEXT,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(spatial_container.instance, "xrRequestSpatialContainerBoundsModeEXT"),
+        PFN_xrRequestSpatialContainerBoundsModeEXT,
+    )
+    result = check_result(fxn(
+        spatial_container,
+        info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_spatial_container_bounds_ext(
+    spatial_container: SpatialContainerEXT,
+    get_info: SpatialContainerBoundsGetInfoEXT = None,
+) -> SpatialContainerBoundsEXT:
+    bounds = SpatialContainerBoundsEXT()
+    fxn = cast(
+        get_instance_proc_addr(spatial_container.instance, "xrGetSpatialContainerBoundsEXT"),
+        PFN_xrGetSpatialContainerBoundsEXT,
+    )
+    result = check_result(fxn(
+        spatial_container,
+        get_info,
+        byref(bounds),
+    ))
+    if result.is_exception():
+        raise result
+    return bounds
+
+
+def get_spatial_container_state_ext(
+    spatial_container: SpatialContainerEXT,
+    get_info: SpatialContainerStateGetInfoEXT = None,
+) -> SpatialContainerStateEXT:
+    state = SpatialContainerStateEXT()
+    fxn = cast(
+        get_instance_proc_addr(spatial_container.instance, "xrGetSpatialContainerStateEXT"),
+        PFN_xrGetSpatialContainerStateEXT,
+    )
+    result = check_result(fxn(
+        spatial_container,
+        get_info,
+        byref(state),
+    ))
+    if result.is_exception():
+        raise result
+    return state
+
+
+def enumerate_supported_spatial_container_graphics_presentations_ext(
+    instance: Instance,
+    system_id: SystemId,
+) -> Sequence[SpatialContainerGraphicsPresentationEXT]:
+    graphics_presentation_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(instance.instance, "xrEnumerateSupportedSpatialContainerGraphicsPresentationsEXT"),
+        PFN_xrEnumerateSupportedSpatialContainerGraphicsPresentationsEXT,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        instance,
+        system_id,
+        0,
+        byref(graphics_presentation_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    graphics_presentations = (SpatialContainerGraphicsPresentationEXT.ctype() * graphics_presentation_capacity_input.value)(*([SpatialContainerGraphicsPresentationEXT.ctype()()] * graphics_presentation_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        instance,
+        system_id,
+        graphics_presentation_capacity_input,
+        byref(graphics_presentation_capacity_input),
+        graphics_presentations,
+    ))
+    if result.is_exception():
+        raise result
+    return graphics_presentations  # noqa
+
+
+def begin_spatial_container_rendering_ext(
+    session: Session,
+    begin_info: SpatialContainerBeginInfoEXT,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrBeginSpatialContainerRenderingEXT"),
+        PFN_xrBeginSpatialContainerRenderingEXT,
+    )
+    result = check_result(fxn(
+        session,
+        begin_info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def end_spatial_container_rendering_ext(
+    session: Session,
+    end_info: SpatialContainerEndInfoEXT,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEndSpatialContainerRenderingEXT"),
+        PFN_xrEndSpatialContainerRenderingEXT,
+    )
+    result = check_result(fxn(
+        session,
+        end_info,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def locate_spatial_container_views_ext(
+    session: Session,
+    locate_info: SpatialContainerViewsLocateInfoEXT,
+    view_state_count: int,
+    view_count: int,
+) -> (SpatialContainerViewStateEXT, View):
+    view_states = SpatialContainerViewStateEXT()
+    views = View()
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrLocateSpatialContainerViewsEXT"),
+        PFN_xrLocateSpatialContainerViewsEXT,
+    )
+    result = check_result(fxn(
+        session,
+        locate_info,
+        view_state_count,
+        byref(view_states),
+        view_count,
+        byref(views),
+    ))
+    if result.is_exception():
+        raise result
+    return view_states, views
+
+
 __all__ = [
+    "acquire_camera_image_bd",
     "acquire_environment_depth_image_meta",
     "acquire_swapchain_image",
+    "add_trackable_image_database_android",
     "allocate_world_mesh_buffer_ml",
     "apply_force_feedback_curl_mndx",
     "apply_foveation_htc",
     "apply_haptic_feedback",
     "attach_session_action_sets",
+    "begin_camera_capture_bd",
     "begin_frame",
     "begin_plane_detection_ext",
     "begin_session",
+    "begin_spatial_container_rendering_ext",
     "cancel_future_ext",
     "capture_scene_async_bd",
     "capture_scene_complete_bd",
     "change_virtual_keyboard_text_context_meta",
+    "check_vps_availability_async_android",
+    "check_vps_availability_complete_android",
     "clear_spatial_anchor_store_msft",
     "compute_new_scene_msft",
     "create_action",
@@ -8023,11 +10269,18 @@ __all__ = [
     "create_body_tracker_bd",
     "create_body_tracker_fb",
     "create_body_tracker_htc",
+    "create_camera_capture_session_async_bd",
+    "create_camera_capture_session_complete_bd",
+    "create_camera_device_async_bd",
+    "create_camera_device_complete_bd",
     "create_debug_utils_messenger_ext",
     "create_device_anchor_persistence_android",
     "create_environment_depth_provider_meta",
     "create_environment_depth_swapchain_meta",
+    "create_environment_raycaster_async_meta",
+    "create_environment_raycaster_complete_meta",
     "create_exported_localization_map_ml",
+    "create_eye_tracker_android",
     "create_eye_tracker_fb",
     "create_face_tracker2_fb",
     "create_face_tracker_android",
@@ -8037,16 +10290,20 @@ __all__ = [
     "create_facial_tracker_htc",
     "create_foveation_profile_fb",
     "create_geometry_instance_fb",
+    "create_geospatial_anchor_android",
+    "create_geospatial_tracker_android",
     "create_hand_mesh_space_msft",
     "create_hand_tracker_ext",
     "create_instance",
     "create_keyboard_space_fb",
+    "create_light_estimator_android",
     "create_marker_detector_ml",
     "create_marker_space_ml",
     "create_marker_space_varjo",
     "create_passthrough_color_lut_meta",
     "create_passthrough_fb",
     "create_passthrough_htc",
+    "create_passthrough_layer_android",
     "create_passthrough_layer_fb",
     "create_persisted_anchor_space_android",
     "create_plane_detector_ext",
@@ -8054,10 +10311,16 @@ __all__ = [
     "create_render_model_asset_ext",
     "create_render_model_ext",
     "create_render_model_space_ext",
+    "create_scene_mesh_snapshot_android",
+    "create_scene_meshing_tracker_android",
     "create_scene_msft",
     "create_scene_observer_msft",
     "create_sense_data_provider_bd",
     "create_session",
+    "create_sound_field_bd",
+    "create_sound_object_bd",
+    "create_sound_obstacle_bd",
+    "create_sound_obstacle_material_bd",
     "create_space_user_fb",
     "create_spatial_anchor_async_bd",
     "create_spatial_anchor_complete_bd",
@@ -8066,11 +10329,16 @@ __all__ = [
     "create_spatial_anchor_from_persisted_name_msft",
     "create_spatial_anchor_htc",
     "create_spatial_anchor_msft",
+    "create_spatial_anchor_space_android",
+    "create_spatial_anchor_space_from_id_android",
     "create_spatial_anchor_space_msft",
     "create_spatial_anchor_store_connection_msft",
     "create_spatial_anchors_async_ml",
     "create_spatial_anchors_complete_ml",
     "create_spatial_anchors_storage_ml",
+    "create_spatial_audio_renderer_bd",
+    "create_spatial_container_ext",
+    "create_spatial_container_space_ext",
     "create_spatial_context_async_ext",
     "create_spatial_context_complete_ext",
     "create_spatial_discovery_snapshot_async_ext",
@@ -8078,10 +10346,17 @@ __all__ = [
     "create_spatial_entity_anchor_bd",
     "create_spatial_entity_from_id_ext",
     "create_spatial_graph_node_space_msft",
+    "create_spatial_image_tracking_database_async_ext",
+    "create_spatial_image_tracking_database_complete_ext",
     "create_spatial_persistence_context_async_ext",
     "create_spatial_persistence_context_complete_ext",
+    "create_spatial_raycast_snapshot_android",
     "create_spatial_update_snapshot_ext",
+    "create_surface_anchor_async_android",
+    "create_surface_anchor_complete_android",
     "create_swapchain",
+    "create_trackable_image_database_async_android",
+    "create_trackable_image_database_complete_android",
     "create_trackable_tracker_android",
     "create_triangle_mesh_fb",
     "create_virtual_keyboard_meta",
@@ -8096,11 +10371,15 @@ __all__ = [
     "destroy_body_tracker_bd",
     "destroy_body_tracker_fb",
     "destroy_body_tracker_htc",
+    "destroy_camera_capture_session_bd",
+    "destroy_camera_device_bd",
     "destroy_debug_utils_messenger_ext",
     "destroy_device_anchor_persistence_android",
     "destroy_environment_depth_provider_meta",
     "destroy_environment_depth_swapchain_meta",
+    "destroy_environment_raycaster_meta",
     "destroy_exported_localization_map_ml",
+    "destroy_eye_tracker_android",
     "destroy_eye_tracker_fb",
     "destroy_face_tracker2_fb",
     "destroy_face_tracker_android",
@@ -8110,32 +10389,45 @@ __all__ = [
     "destroy_facial_tracker_htc",
     "destroy_foveation_profile_fb",
     "destroy_geometry_instance_fb",
+    "destroy_geospatial_tracker_android",
     "destroy_hand_tracker_ext",
     "destroy_instance",
+    "destroy_light_estimator_android",
     "destroy_marker_detector_ml",
     "destroy_passthrough_color_lut_meta",
     "destroy_passthrough_fb",
     "destroy_passthrough_htc",
+    "destroy_passthrough_layer_android",
     "destroy_passthrough_layer_fb",
     "destroy_plane_detector_ext",
     "destroy_render_model_asset_ext",
     "destroy_render_model_ext",
+    "destroy_scene_mesh_snapshot_android",
+    "destroy_scene_meshing_tracker_android",
     "destroy_scene_msft",
     "destroy_scene_observer_msft",
     "destroy_sense_data_provider_bd",
     "destroy_sense_data_snapshot_bd",
     "destroy_session",
+    "destroy_sound_field_bd",
+    "destroy_sound_object_bd",
+    "destroy_sound_obstacle_bd",
+    "destroy_sound_obstacle_material_bd",
     "destroy_space",
     "destroy_space_user_fb",
     "destroy_spatial_anchor_msft",
     "destroy_spatial_anchor_store_connection_msft",
     "destroy_spatial_anchors_storage_ml",
+    "destroy_spatial_audio_renderer_bd",
+    "destroy_spatial_container_ext",
     "destroy_spatial_context_ext",
     "destroy_spatial_entity_ext",
     "destroy_spatial_graph_node_binding_msft",
+    "destroy_spatial_image_tracking_database_ext",
     "destroy_spatial_persistence_context_ext",
     "destroy_spatial_snapshot_ext",
     "destroy_swapchain",
+    "destroy_trackable_image_database_android",
     "destroy_trackable_tracker_android",
     "destroy_triangle_mesh_fb",
     "destroy_virtual_keyboard_meta",
@@ -8145,18 +10437,29 @@ __all__ = [
     "download_shared_spatial_anchor_complete_bd",
     "enable_localization_events_ml",
     "enable_user_calibration_events_ml",
+    "end_audio_period_bd",
+    "end_camera_capture_bd",
     "end_frame",
     "end_session",
+    "end_spatial_container_rendering_ext",
     "enumerate_api_layer_properties",
+    "enumerate_available_cameras_bd",
     "enumerate_bound_sources_for_action",
+    "enumerate_camera_capability_types_bd",
+    "enumerate_camera_property_types_bd",
     "enumerate_color_spaces_fb",
+    "enumerate_color_spaces_sony",
     "enumerate_display_refresh_rates_fb",
     "enumerate_environment_blend_modes",
     "enumerate_environment_depth_swapchain_images_meta",
+    "enumerate_environment_texture_pixel_formats_bd",
+    "enumerate_environment_texture_resolutions_bd",
+    "enumerate_environment_texture_transfer_types_bd",
     "enumerate_external_cameras_oculus",
     "enumerate_facial_simulation_modes_bd",
     "enumerate_instance_extension_properties",
     "enumerate_interaction_render_model_ids_ext",
+    "enumerate_performance_metrics_counter_paths_android",
     "enumerate_performance_metrics_counter_paths_meta",
     "enumerate_persisted_anchors_android",
     "enumerate_persisted_spatial_anchor_names_msft",
@@ -8167,13 +10470,18 @@ __all__ = [
     "enumerate_reprojection_modes_msft",
     "enumerate_scene_compute_features_msft",
     "enumerate_space_supported_components_fb",
+    "enumerate_spatial_anchor_attachable_components_android",
     "enumerate_spatial_capabilities_ext",
     "enumerate_spatial_capability_component_types_ext",
     "enumerate_spatial_capability_features_ext",
     "enumerate_spatial_entity_component_types_bd",
     "enumerate_spatial_persistence_scopes_ext",
+    "enumerate_spatial_reference_image_formats_ext",
     "enumerate_supported_anchor_trackable_types_android",
+    "enumerate_supported_audio_sample_rate_bd",
     "enumerate_supported_persistence_anchor_types_android",
+    "enumerate_supported_semantic_label_sets_android",
+    "enumerate_supported_spatial_container_graphics_presentations_ext",
     "enumerate_supported_trackable_types_android",
     "enumerate_swapchain_formats",
     "enumerate_swapchain_images",
@@ -8188,11 +10496,17 @@ __all__ = [
     "get_action_state_float",
     "get_action_state_pose",
     "get_action_state_vector2f",
+    "get_all_submesh_states_android",
     "get_all_trackables_android",
     "get_anchor_persist_state_android",
     "get_anchor_uuid_bd",
     "get_body_skeleton_fb",
     "get_body_skeleton_htc",
+    "get_body_tracking_state_bd",
+    "get_camera_image_data_bd",
+    "get_camera_properties_bd",
+    "get_camera_supported_capabilities_bd",
+    "get_coarse_tracking_eyes_info_android",
     "get_controller_model_key_msft",
     "get_controller_model_properties_msft",
     "get_controller_model_state_msft",
@@ -8210,11 +10524,14 @@ __all__ = [
     "get_facial_expressions_htc",
     "get_facial_simulation_data_bd",
     "get_facial_simulation_mode_bd",
+    "get_fine_tracking_eyes_info_android",
     "get_foveation_eye_tracked_state_meta",
+    "get_hand_gesture_qcom",
     "get_hand_mesh_fb",
     "get_input_source_localized_name",
     "get_instance_proc_addr",
     "get_instance_properties",
+    "get_light_estimate_android",
     "get_marker_detector_state_ml",
     "get_marker_length_ml",
     "get_marker_number_ml",
@@ -8224,6 +10541,7 @@ __all__ = [
     "get_markers_ml",
     "get_passthrough_camera_state_android",
     "get_passthrough_preferences_meta",
+    "get_performance_metrics_state_android",
     "get_performance_metrics_state_meta",
     "get_plane_detection_state_ext",
     "get_plane_detections_ext",
@@ -8250,6 +10568,8 @@ __all__ = [
     "get_space_component_status_fb",
     "get_space_container_fb",
     "get_space_room_layout_fb",
+    "get_space_room_mesh_face_indices_meta",
+    "get_space_room_mesh_meta",
     "get_space_semantic_labels_fb",
     "get_space_triangle_mesh_meta",
     "get_space_user_id_fb",
@@ -8263,15 +10583,21 @@ __all__ = [
     "get_spatial_buffer_uint8_ext",
     "get_spatial_buffer_vector2f_ext",
     "get_spatial_buffer_vector3f_ext",
+    "get_spatial_container_bounds_ext",
+    "get_spatial_container_state_ext",
     "get_spatial_entity_component_data_bd",
     "get_spatial_entity_uuid_bd",
     "get_spatial_graph_node_binding_properties_msft",
+    "get_stationary_reference_space_generation_id_ext",
+    "get_submesh_data_android",
     "get_swapchain_state_fb",
     "get_system",
     "get_system_properties",
+    "get_trackable_image_android",
     "get_trackable_marker_android",
     "get_trackable_object_android",
     "get_trackable_plane_android",
+    "get_trackable_qr_code_android",
     "get_view_configuration_properties",
     "get_virtual_keyboard_dirty_textures_meta",
     "get_virtual_keyboard_model_animation_states_meta",
@@ -8279,6 +10605,7 @@ __all__ = [
     "get_virtual_keyboard_texture_data_meta",
     "get_visibility_mask_khr",
     "get_world_mesh_buffer_recommend_size_ml",
+    "haptic_parametric_get_properties_ext",
     "import_localization_map_ml",
     "initialize_loader_khr",
     "load_controller_model_msft",
@@ -8286,10 +10613,13 @@ __all__ = [
     "locate_body_joints_bd",
     "locate_body_joints_fb",
     "locate_body_joints_htc",
+    "locate_geospatial_pose_android",
+    "locate_geospatial_pose_from_pose_android",
     "locate_hand_joints_ext",
     "locate_scene_components_msft",
     "locate_space",
     "locate_spaces",
+    "locate_spatial_container_views_ext",
     "locate_views",
     "passthrough_layer_pause_fb",
     "passthrough_layer_resume_fb",
@@ -8300,6 +10630,7 @@ __all__ = [
     "path_to_string",
     "pause_simultaneous_hands_and_controllers_tracking_meta",
     "perf_settings_set_performance_level_ext",
+    "perform_environment_raycast_meta",
     "persist_anchor_android",
     "persist_spatial_anchor_async_bd",
     "persist_spatial_anchor_complete_bd",
@@ -8310,7 +10641,9 @@ __all__ = [
     "poll_future_ext",
     "publish_spatial_anchors_async_ml",
     "publish_spatial_anchors_complete_ml",
+    "query_frames_per_buffer_range_bd",
     "query_localization_maps_ml",
+    "query_performance_metrics_counter_android",
     "query_performance_metrics_counter_meta",
     "query_sense_data_async_bd",
     "query_sense_data_complete_bd",
@@ -8320,17 +10653,24 @@ __all__ = [
     "query_spatial_component_data_ext",
     "query_system_tracked_keyboard_fb",
     "raycast_android",
+    "release_camera_image_bd",
     "release_swapchain_image",
+    "remove_trackable_image_database_android",
+    "request_body_tracking_fidelity_meta",
+    "request_boundary_visibility_meta",
     "request_display_refresh_rate_fb",
     "request_exit_session",
     "request_map_localization_ml",
     "request_scene_capture_fb",
+    "request_spatial_container_bounds_mode_ext",
+    "request_spatial_container_visible_ext",
     "request_world_mesh_async_ml",
     "request_world_mesh_complete_ml",
     "request_world_mesh_state_async_ml",
     "request_world_mesh_state_complete_ml",
     "reset_body_tracking_calibration_meta",
     "result_to_string",
+    "result_to_string2_khr",
     "resume_simultaneous_hands_and_controllers_tracking_meta",
     "retrieve_space_discovery_results_meta",
     "retrieve_space_query_results_fb",
@@ -8347,6 +10687,10 @@ __all__ = [
     "set_environment_depth_estimation_varjo",
     "set_environment_depth_hand_removal_meta",
     "set_facial_simulation_mode_bd",
+    "set_google_cloud_auth_async_android",
+    "set_google_cloud_auth_complete_android",
+    "set_hand_tracking_frequency_hint_meta",
+    "set_hdr_metadata_sony",
     "set_input_device_active_ext",
     "set_input_device_location_ext",
     "set_input_device_state_bool_ext",
@@ -8355,9 +10699,12 @@ __all__ = [
     "set_marker_tracking_prediction_varjo",
     "set_marker_tracking_timeout_varjo",
     "set_marker_tracking_varjo",
+    "set_passthrough_layer_mesh_android",
+    "set_performance_metrics_state_android",
     "set_performance_metrics_state_meta",
     "set_space_component_status_fb",
     "set_system_notifications_ml",
+    "set_tile_properties_hint_meta",
     "set_tracking_optimization_settings_hint_qcom",
     "set_view_offset_varjo",
     "set_virtual_keyboard_model_visibility_meta",
@@ -8366,6 +10713,7 @@ __all__ = [
     "share_spatial_anchor_async_bd",
     "share_spatial_anchor_complete_bd",
     "snapshot_marker_detector_ml",
+    "start_body_tracking_calibration_app_bd",
     "start_colocation_advertisement_meta",
     "start_colocation_discovery_meta",
     "start_environment_depth_provider_meta",
@@ -8380,6 +10728,8 @@ __all__ = [
     "structure_type_to_string",
     "structure_type_to_string2_khr",
     "submit_debug_utils_message_ext",
+    "submit_sound_field_buffer_bd",
+    "submit_sound_object_buffer_bd",
     "suggest_body_tracking_calibration_override_meta",
     "suggest_interaction_profile_bindings",
     "suggest_virtual_keyboard_location_meta",
@@ -8400,9 +10750,14 @@ __all__ = [
     "unpersist_spatial_entity_complete_ext",
     "update_hand_mesh_msft",
     "update_passthrough_color_lut_meta",
+    "update_sound_field_config_bd",
+    "update_sound_object_config_bd",
+    "update_sound_obstacle_config_bd",
+    "update_sound_obstacle_material_config_bd",
     "update_spatial_anchors_expiration_async_ml",
     "update_spatial_anchors_expiration_complete_ml",
     "update_swapchain_fb",
+    "wait_audio_period_bd",
     "wait_frame",
     "wait_swapchain_image",
 ]

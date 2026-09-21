@@ -1,9 +1,9 @@
 # Warning: this file is auto-generated. Do not edit.
 
 from ctypes import (
-    Array, CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_float,
-    c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64, c_uint8,
-    c_void_p, cast, pointer, py_object,
+    Array, CFUNCTYPE, POINTER, Structure, addressof, c_char, c_char_p, c_double,
+    c_float, c_int, c_int16, c_int32, c_int64, c_uint16, c_uint32, c_uint64,
+    c_uint8, c_void_p, cast, pointer, py_object,
 )
 import ctypes
 
@@ -110,9 +110,9 @@ InstanceCreateFlagsCInt = Flags64
 
 SessionCreateFlagsCInt = Flags64
 
-SpaceVelocityFlagsCInt = Flags64
-
 SpaceLocationFlagsCInt = Flags64
+
+SpaceVelocityFlagsCInt = Flags64
 
 SwapchainCreateFlagsCInt = Flags64
 
@@ -590,97 +590,6 @@ class SessionCreateInfo(BaseXrStructure):
     ]
 
 
-class Vector3f(Structure):
-    def __init__(
-        self,
-        x: float = 0,
-        y: float = 0,
-        z: float = 0,
-    ) -> None:
-        super().__init__(
-            x=x,
-            y=y,
-            z=z,
-        )
-        self._numpy = None
-
-    def __iter__(self) -> Iterator[float]:
-        yield self.x
-        yield self.y
-        yield self.z
-
-    def __getitem__(self, key):
-        return tuple(self)[key]
-
-    def __setitem__(self, key, value):
-        self.as_numpy()[key] = value
-
-    def __len__(self) -> int:
-        return 3
-
-    def as_numpy(self):
-        if not hasattr(self, "_numpy") or self._numpy is None:
-            # Just in time construction
-            buffer = (c_float * len(self)).from_address(addressof(self))
-            self._numpy = numpy.ctypeslib.as_array(buffer)
-        return self._numpy
-
-    def __repr__(self) -> str:
-        return f"xr.Vector3f(x={repr(self.x)}, y={repr(self.y)}, z={repr(self.z)})"
-
-    def __str__(self) -> str:
-        return f"(x={self.x:.3f}, y={self.y:.3f}, z={self.z:.3f})"
-
-    _fields_ = [
-        ("x", c_float),
-        ("y", c_float),
-        ("z", c_float),
-    ]
-
-
-class SpaceVelocity(BaseXrStructure):
-    def __init__(
-        self,
-        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags.NONE,
-        linear_velocity: Vector3f = None,
-        angular_velocity: Vector3f = None,
-        next: FieldNextType = None,
-        type: StructureType = StructureType.SPACE_VELOCITY,
-    ) -> None:
-        if linear_velocity is None:
-            linear_velocity = Vector3f()
-        if angular_velocity is None:
-            angular_velocity = Vector3f()
-        super().__init__(
-            _velocity_flags=enum_field_helper(velocity_flags),
-            linear_velocity=linear_velocity,
-            angular_velocity=angular_velocity,
-            _next=next_field_helper(next),
-            _type=enum_field_helper(type),
-        )
-
-    def __repr__(self) -> str:
-        return f"xr.SpaceVelocity(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)}, next={repr(self.next)}, type={repr(self.type)})"
-
-    def __str__(self) -> str:
-        return f"xr.SpaceVelocity(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity}, next={self.next}, type={self.type})"
-
-    @property
-    def velocity_flags(self) -> SpaceVelocityFlags:
-        return SpaceVelocityFlags(self._velocity_flags)
-    
-    @velocity_flags.setter
-    def velocity_flags(self, value: SpaceVelocityFlags) -> None:
-        # noinspection PyAttributeOutsideInit
-        self._velocity_flags = enum_field_helper(value)
-
-    _fields_ = [
-        ("_velocity_flags", SpaceVelocityFlagsCInt),
-        ("linear_velocity", Vector3f),
-        ("angular_velocity", Vector3f),
-    ]
-
-
 class Quaternionf(Structure):
     def __init__(
         self,
@@ -730,6 +639,54 @@ class Quaternionf(Structure):
         ("y", c_float),
         ("z", c_float),
         ("w", c_float),
+    ]
+
+
+class Vector3f(Structure):
+    def __init__(
+        self,
+        x: float = 0,
+        y: float = 0,
+        z: float = 0,
+    ) -> None:
+        super().__init__(
+            x=x,
+            y=y,
+            z=z,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Iterator[float]:
+        yield self.x
+        yield self.y
+        yield self.z
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 3
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.Vector3f(x={repr(self.x)}, y={repr(self.y)}, z={repr(self.z)})"
+
+    def __str__(self) -> str:
+        return f"(x={self.x:.3f}, y={self.y:.3f}, z={self.z:.3f})"
+
+    _fields_ = [
+        ("x", c_float),
+        ("y", c_float),
+        ("z", c_float),
     ]
 
 
@@ -796,50 +753,6 @@ class ReferenceSpaceCreateInfo(BaseXrStructure):
     ]
 
 
-class Extent2Df(Structure):
-    def __init__(
-        self,
-        width: float = 0,
-        height: float = 0,
-    ) -> None:
-        super().__init__(
-            width=width,
-            height=height,
-        )
-        self._numpy = None
-
-    def __iter__(self) -> Iterator[float]:
-        yield self.width
-        yield self.height
-
-    def __getitem__(self, key):
-        return tuple(self)[key]
-
-    def __setitem__(self, key, value):
-        self.as_numpy()[key] = value
-
-    def __len__(self) -> int:
-        return 2
-
-    def as_numpy(self):
-        if not hasattr(self, "_numpy") or self._numpy is None:
-            # Just in time construction
-            buffer = (c_float * len(self)).from_address(addressof(self))
-            self._numpy = numpy.ctypeslib.as_array(buffer)
-        return self._numpy
-
-    def __repr__(self) -> str:
-        return f"xr.Extent2Df(width={repr(self.width)}, height={repr(self.height)})"
-
-    def __str__(self) -> str:
-        return f"xr.Extent2Df(width={self.width:.3f}, height={self.height:.3f})"
-
-    _fields_ = [
-        ("width", c_float),
-        ("height", c_float),
-    ]
-
-
 class ActionSpaceCreateInfo(BaseXrStructure):
     def __init__(
         self,
@@ -903,6 +816,93 @@ class SpaceLocation(BaseXrStructure):
     _fields_ = [
         ("_location_flags", SpaceLocationFlagsCInt),
         ("pose", Posef),
+    ]
+
+
+class SpaceVelocity(BaseXrStructure):
+    def __init__(
+        self,
+        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags.NONE,
+        linear_velocity: Vector3f = None,
+        angular_velocity: Vector3f = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPACE_VELOCITY,
+    ) -> None:
+        if linear_velocity is None:
+            linear_velocity = Vector3f()
+        if angular_velocity is None:
+            angular_velocity = Vector3f()
+        super().__init__(
+            _velocity_flags=enum_field_helper(velocity_flags),
+            linear_velocity=linear_velocity,
+            angular_velocity=angular_velocity,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceVelocity(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceVelocity(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity}, next={self.next}, type={self.type})"
+
+    @property
+    def velocity_flags(self) -> SpaceVelocityFlags:
+        return SpaceVelocityFlags(self._velocity_flags)
+    
+    @velocity_flags.setter
+    def velocity_flags(self, value: SpaceVelocityFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._velocity_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_velocity_flags", SpaceVelocityFlagsCInt),
+        ("linear_velocity", Vector3f),
+        ("angular_velocity", Vector3f),
+    ]
+
+
+class Extent2Df(Structure):
+    def __init__(
+        self,
+        width: float = 0,
+        height: float = 0,
+    ) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Iterator[float]:
+        yield self.width
+        yield self.height
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 2
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.Extent2Df(width={repr(self.width)}, height={repr(self.height)})"
+
+    def __str__(self) -> str:
+        return f"xr.Extent2Df(width={self.width:.3f}, height={self.height:.3f})"
+
+    _fields_ = [
+        ("width", c_float),
+        ("height", c_float),
     ]
 
 
@@ -1116,10 +1116,6 @@ class SessionBeginInfo(BaseXrStructure):
     ]
 
 
-class FrameWaitInfo(BaseXrStructure):
-    pass
-
-
 class FrameState(BaseXrStructure):
     def __init__(
         self,
@@ -1148,6 +1144,10 @@ class FrameState(BaseXrStructure):
         ("predicted_display_period", Duration),
         ("should_render", Bool32),
     ]
+
+
+class FrameWaitInfo(BaseXrStructure):
+    pass
 
 
 class FrameBeginInfo(BaseXrStructure):
@@ -1230,6 +1230,39 @@ class FrameEndInfo(BaseXrStructure):
     ]
 
 
+class ViewState(BaseXrStructure):
+    def __init__(
+        self,
+        view_state_flags: ViewStateFlags = ViewStateFlags.NONE,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.VIEW_STATE,
+    ) -> None:
+        super().__init__(
+            _view_state_flags=enum_field_helper(view_state_flags),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ViewState(view_state_flags={repr(self.view_state_flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ViewState(view_state_flags={self.view_state_flags}, next={self.next}, type={self.type})"
+
+    @property
+    def view_state_flags(self) -> ViewStateFlags:
+        return ViewStateFlags(self._view_state_flags)
+    
+    @view_state_flags.setter
+    def view_state_flags(self, value: ViewStateFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._view_state_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_view_state_flags", ViewStateFlagsCInt),
+    ]
+
+
 class ViewLocateInfo(BaseXrStructure):
     def __init__(
         self,
@@ -1266,39 +1299,6 @@ class ViewLocateInfo(BaseXrStructure):
         ("_view_configuration_type", ViewConfigurationType.ctype()),
         ("display_time", Time),
         ("space", Space),
-    ]
-
-
-class ViewState(BaseXrStructure):
-    def __init__(
-        self,
-        view_state_flags: ViewStateFlags = ViewStateFlags.NONE,
-        next: FieldNextType = None,
-        type: StructureType = StructureType.VIEW_STATE,
-    ) -> None:
-        super().__init__(
-            _view_state_flags=enum_field_helper(view_state_flags),
-            _next=next_field_helper(next),
-            _type=enum_field_helper(type),
-        )
-
-    def __repr__(self) -> str:
-        return f"xr.ViewState(view_state_flags={repr(self.view_state_flags)}, next={repr(self.next)}, type={repr(self.type)})"
-
-    def __str__(self) -> str:
-        return f"xr.ViewState(view_state_flags={self.view_state_flags}, next={self.next}, type={self.type})"
-
-    @property
-    def view_state_flags(self) -> ViewStateFlags:
-        return ViewStateFlags(self._view_state_flags)
-    
-    @view_state_flags.setter
-    def view_state_flags(self, value: ViewStateFlags) -> None:
-        # noinspection PyAttributeOutsideInit
-        self._view_state_flags = enum_field_helper(value)
-
-    _fields_ = [
-        ("_view_state_flags", ViewStateFlagsCInt),
     ]
 
 
@@ -1916,6 +1916,10 @@ class InputSourceLocalizedNameGetInfo(BaseXrStructure):
     ]
 
 
+class HapticBaseHeader(BaseXrStructure):
+    pass
+
+
 class HapticActionInfo(BaseXrStructure):
     def __init__(
         self,
@@ -1941,10 +1945,6 @@ class HapticActionInfo(BaseXrStructure):
         ("action", Action),
         ("subaction_path", Path),
     ]
-
-
-class HapticBaseHeader(BaseXrStructure):
-    pass
 
 
 class BaseInStructure(BaseXrStructure):
@@ -3520,6 +3520,8 @@ BoxfKHR = Boxf
 
 FrustumfKHR = Frustumf
 
+PFN_xrResultToString2KHR = CFUNCTYPE(Result.ctype(), Instance, Result.ctype(), (c_char * 256))
+
 
 class EventDataPerfSettingsEXT(EventDataBaseHeader):
     def __init__(
@@ -4169,6 +4171,9 @@ class CompositionLayerImageLayoutFB(BaseXrStructure):
     _fields_ = [
         ("_flags", CompositionLayerImageLayoutFlagsFBCInt),
     ]
+
+
+CompositionLayerSecureContentFlagsFBCInt = Flags64
 
 
 class CompositionLayerAlphaBlendFB(BaseXrStructure):
@@ -5423,8 +5428,6 @@ PFN_xrUpdateSwapchainFB = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(Swapchain
 
 PFN_xrGetSwapchainStateFB = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(SwapchainStateBaseHeaderFB))
 
-CompositionLayerSecureContentFlagsFBCInt = Flags64
-
 
 class CompositionLayerSecureContentFB(BaseXrStructure):
     def __init__(
@@ -5828,20 +5831,20 @@ class HandJointsMotionRangeInfoEXT(BaseXrStructure):
     ]
 
 
-class SceneObserverMSFT_T(Structure):
-    pass
-
-
-class SceneObserverMSFT(POINTER(SceneObserverMSFT_T), HandleMixin):
-    _type_ = SceneObserverMSFT_T  # ctypes idiosyncrasy
-
-
 class SceneMSFT_T(Structure):
     pass
 
 
 class SceneMSFT(POINTER(SceneMSFT_T), HandleMixin):
     _type_ = SceneMSFT_T  # ctypes idiosyncrasy
+
+
+class SceneObserverMSFT_T(Structure):
+    pass
+
+
+class SceneObserverMSFT(POINTER(SceneObserverMSFT_T), HandleMixin):
+    _type_ = SceneObserverMSFT_T  # ctypes idiosyncrasy
 
 
 class UuidMSFT(Structure):
@@ -13824,6 +13827,66 @@ PFN_xrSuggestBodyTrackingCalibrationOverrideMETA = CFUNCTYPE(Result.ctype(), Bod
 PFN_xrResetBodyTrackingCalibrationMETA = CFUNCTYPE(Result.ctype(), BodyTrackerFB)
 
 
+class SystemPropertiesBodyTrackingFidelityMETA(BaseXrStructure):
+    def __init__(
+        self,
+        supports_body_tracking_fidelity: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_PROPERTIES_BODY_TRACKING_FIDELITY_META,
+    ) -> None:
+        super().__init__(
+            supports_body_tracking_fidelity=supports_body_tracking_fidelity,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPropertiesBodyTrackingFidelityMETA(supports_body_tracking_fidelity={repr(self.supports_body_tracking_fidelity)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPropertiesBodyTrackingFidelityMETA(supports_body_tracking_fidelity={self.supports_body_tracking_fidelity}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_body_tracking_fidelity", Bool32),
+    ]
+
+
+class BodyTrackingFidelityStatusMETA(BaseXrStructure):
+    def __init__(
+        self,
+        fidelity: BodyTrackingFidelityMETA = BodyTrackingFidelityMETA.LOW,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.BODY_TRACKING_FIDELITY_STATUS_META,
+    ) -> None:
+        super().__init__(
+            _fidelity=enum_field_helper(fidelity),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyTrackingFidelityStatusMETA(fidelity={repr(self.fidelity)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyTrackingFidelityStatusMETA(fidelity={self.fidelity}, next={self.next}, type={self.type})"
+
+    @property
+    def fidelity(self) -> BodyTrackingFidelityMETA:
+        return BodyTrackingFidelityMETA(self._fidelity)
+    
+    @fidelity.setter
+    def fidelity(self, value: BodyTrackingFidelityMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._fidelity = enum_field_helper(value)
+
+    _fields_ = [
+        ("_fidelity", BodyTrackingFidelityMETA.ctype()),
+    ]
+
+
+PFN_xrRequestBodyTrackingFidelityMETA = CFUNCTYPE(Result.ctype(), BodyTrackerFB, c_int)
+
+
 class FaceTracker2FB_T(Structure):
     pass
 
@@ -14812,6 +14875,44 @@ PFN_xrEnumerateRenderModelSubactionPathsEXT = CFUNCTYPE(Result.ctype(), RenderMo
 PFN_xrGetRenderModelPoseTopLevelUserPathEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT, POINTER(InteractionRenderModelTopLevelUserPathGetInfoEXT), POINTER(Path))
 
 PFN_xrSetTrackingOptimizationSettingsHintQCOM = CFUNCTYPE(Result.ctype(), Session, TrackingOptimizationSettingsDomainQCOM.ctype(), TrackingOptimizationSettingsHintQCOM.ctype())
+
+
+class HandGestureQCOM(Structure):
+    def __init__(
+        self,
+        gesture: HandGestureTypeQCOM = HandGestureTypeQCOM.OPEN_HAND,
+        gesture_ratio: float = 0,
+        flip_ratio: float = 0,
+    ) -> None:
+        super().__init__(
+            _gesture=enum_field_helper(gesture),
+            gesture_ratio=gesture_ratio,
+            flip_ratio=flip_ratio,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HandGestureQCOM(gesture={repr(self.gesture)}, gesture_ratio={repr(self.gesture_ratio)}, flip_ratio={repr(self.flip_ratio)})"
+
+    def __str__(self) -> str:
+        return f"xr.HandGestureQCOM(gesture={self.gesture}, gesture_ratio={self.gesture_ratio:.3f}, flip_ratio={self.flip_ratio:.3f})"
+
+    @property
+    def gesture(self) -> HandGestureTypeQCOM:
+        return HandGestureTypeQCOM(self._gesture)
+    
+    @gesture.setter
+    def gesture(self, value: HandGestureTypeQCOM) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._gesture = enum_field_helper(value)
+
+    _fields_ = [
+        ("_gesture", HandGestureTypeQCOM.ctype()),
+        ("gesture_ratio", c_float),
+        ("flip_ratio", c_float),
+    ]
+
+
+PFN_xrGetHandGestureQCOM = CFUNCTYPE(Result.ctype(), HandTrackerEXT, Time, POINTER(HandGestureQCOM))
 
 
 class PassthroughHTC_T(Structure):
@@ -16269,6 +16370,32 @@ class SpatialEntityComponentDataTriangleMeshBD(BaseXrStructure):
     ]
 
 
+class SpatialEntityComponentDataSphereBD(BaseXrStructure):
+    def __init__(
+        self,
+        sphere: Spheref = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_SPHERE_BD,
+    ) -> None:
+        if sphere is None:
+            sphere = Spheref()
+        super().__init__(
+            sphere=sphere,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataSphereBD(sphere={repr(self.sphere)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataSphereBD(sphere={self.sphere}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("sphere", Spheref),
+    ]
+
+
 class SenseDataProviderCreateInfoBD(BaseXrStructure):
     def __init__(
         self,
@@ -17011,6 +17138,230 @@ class FuturePollResultProgressBD(BaseXrStructure):
     ]
 
 
+SpaceAccelerationFlagsBDCInt = Flags64
+
+
+class BodyTrackingPostureDataBD(BaseXrStructure):
+    def __init__(
+        self,
+        posture_count: int = 0,
+        posture_data: POINTER(BodyTrackingPostureBD.ctype()) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.BODY_TRACKING_POSTURE_DATA_BD,
+    ) -> None:
+        super().__init__(
+            posture_count=posture_count,
+            posture_data=posture_data,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyTrackingPostureDataBD(posture_count={repr(self.posture_count)}, posture_data={repr(self.posture_data)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyTrackingPostureDataBD(posture_count={self.posture_count}, posture_data={self.posture_data}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("posture_count", c_uint32),
+        ("posture_data", POINTER(BodyTrackingPostureBD.ctype())),
+    ]
+
+
+class BodyJointVelocityBD(Structure):
+    def __init__(
+        self,
+        velocity_flags: SpaceVelocityFlags = SpaceVelocityFlags.NONE,
+        linear_velocity: Vector3f = None,
+        angular_velocity: Vector3f = None,
+    ) -> None:
+        if linear_velocity is None:
+            linear_velocity = Vector3f()
+        if angular_velocity is None:
+            angular_velocity = Vector3f()
+        super().__init__(
+            _velocity_flags=enum_field_helper(velocity_flags),
+            linear_velocity=linear_velocity,
+            angular_velocity=angular_velocity,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyJointVelocityBD(velocity_flags={repr(self.velocity_flags)}, linear_velocity={repr(self.linear_velocity)}, angular_velocity={repr(self.angular_velocity)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyJointVelocityBD(velocity_flags={self.velocity_flags}, linear_velocity={self.linear_velocity}, angular_velocity={self.angular_velocity})"
+
+    @property
+    def velocity_flags(self) -> SpaceVelocityFlags:
+        return SpaceVelocityFlags(self._velocity_flags)
+    
+    @velocity_flags.setter
+    def velocity_flags(self, value: SpaceVelocityFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._velocity_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_velocity_flags", SpaceVelocityFlagsCInt),
+        ("linear_velocity", Vector3f),
+        ("angular_velocity", Vector3f),
+    ]
+
+
+class BodyJointVelocitiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        velocity_count: int = 0,
+        velocities: POINTER(BodyJointVelocityBD) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.BODY_JOINT_VELOCITIES_BD,
+    ) -> None:
+        super().__init__(
+            velocity_count=velocity_count,
+            velocities=velocities,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyJointVelocitiesBD(velocity_count={repr(self.velocity_count)}, velocities={repr(self.velocities)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyJointVelocitiesBD(velocity_count={self.velocity_count}, velocities={self.velocities}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("velocity_count", c_uint32),
+        ("velocities", POINTER(BodyJointVelocityBD)),
+    ]
+
+
+class BodyJointAccelerationBD(Structure):
+    def __init__(
+        self,
+        acceleration_flags: SpaceAccelerationFlagsBD = SpaceAccelerationFlagsBD.NONE,
+        linear_acceleration: Vector3f = None,
+        angular_acceleration: Vector3f = None,
+    ) -> None:
+        if linear_acceleration is None:
+            linear_acceleration = Vector3f()
+        if angular_acceleration is None:
+            angular_acceleration = Vector3f()
+        super().__init__(
+            _acceleration_flags=enum_field_helper(acceleration_flags),
+            linear_acceleration=linear_acceleration,
+            angular_acceleration=angular_acceleration,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyJointAccelerationBD(acceleration_flags={repr(self.acceleration_flags)}, linear_acceleration={repr(self.linear_acceleration)}, angular_acceleration={repr(self.angular_acceleration)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyJointAccelerationBD(acceleration_flags={self.acceleration_flags}, linear_acceleration={self.linear_acceleration}, angular_acceleration={self.angular_acceleration})"
+
+    @property
+    def acceleration_flags(self) -> SpaceAccelerationFlagsBD:
+        return SpaceAccelerationFlagsBD(self._acceleration_flags)
+    
+    @acceleration_flags.setter
+    def acceleration_flags(self, value: SpaceAccelerationFlagsBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._acceleration_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_acceleration_flags", SpaceAccelerationFlagsBDCInt),
+        ("linear_acceleration", Vector3f),
+        ("angular_acceleration", Vector3f),
+    ]
+
+
+class BodyJointAccelerationsBD(BaseXrStructure):
+    def __init__(
+        self,
+        acceleration_count: Optional[int] = None,
+        accelerations: ArrayFieldParamType[BodyJointAccelerationBD] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.BODY_JOINT_ACCELERATIONS_BD,
+    ) -> None:
+        acceleration_count, accelerations = array_field_helper(
+            BodyJointAccelerationBD, acceleration_count, accelerations)
+        super().__init__(
+            acceleration_count=acceleration_count,
+            _accelerations=accelerations,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyJointAccelerationsBD(acceleration_count={repr(self.acceleration_count)}, accelerations={repr(self.accelerations)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyJointAccelerationsBD(acceleration_count={self.acceleration_count}, accelerations={self.accelerations}, next={self.next}, type={self.type})"
+
+    @property
+    def accelerations(self) -> Array[BodyJointAccelerationBD]:
+        return expose_ctypes_array(BodyJointAccelerationBD, self.acceleration_count, self._accelerations)
+    
+    @accelerations.setter
+    def accelerations(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.acceleration_count, self._accelerations = array_field_helper(
+            BodyJointAccelerationBD, None, value)
+
+    _fields_ = [
+        ("acceleration_count", c_uint32),
+        ("_accelerations", POINTER(BodyJointAccelerationBD)),
+    ]
+
+
+class BodyTrackingStateBD(BaseXrStructure):
+    def __init__(
+        self,
+        status: BodyTrackingStatusBD = BodyTrackingStatusBD.INVALID,
+        message: BodyTrackingMessageBD = BodyTrackingMessageBD.NO_ERROR,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.BODY_TRACKING_STATE_BD,
+    ) -> None:
+        super().__init__(
+            _status=enum_field_helper(status),
+            _message=enum_field_helper(message),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BodyTrackingStateBD(status={repr(self.status)}, message={repr(self.message)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BodyTrackingStateBD(status={self.status}, message={self.message}, next={self.next}, type={self.type})"
+
+    @property
+    def status(self) -> BodyTrackingStatusBD:
+        return BodyTrackingStatusBD(self._status)
+    
+    @status.setter
+    def status(self, value: BodyTrackingStatusBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._status = enum_field_helper(value)
+
+    @property
+    def message(self) -> BodyTrackingMessageBD:
+        return BodyTrackingMessageBD(self._message)
+    
+    @message.setter
+    def message(self, value: BodyTrackingMessageBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._message = enum_field_helper(value)
+
+    _fields_ = [
+        ("_status", BodyTrackingStatusBD.ctype()),
+        ("_message", BodyTrackingMessageBD.ctype()),
+    ]
+
+
+PFN_xrStartBodyTrackingCalibrationAppBD = CFUNCTYPE(Result.ctype(), Session)
+
+PFN_xrGetBodyTrackingStateBD = CFUNCTYPE(Result.ctype(), Session, POINTER(BodyTrackingStateBD))
+
+
 class SystemSpatialPlanePropertiesBD(BaseXrStructure):
     def __init__(
         self,
@@ -17105,6 +17456,927 @@ class SenseDataFilterPlaneOrientationBD(BaseXrStructure):
         ("orientation_count", c_uint32),
         ("_orientations", POINTER(PlaneOrientationBD.ctype())),
     ]
+
+
+LightEstimationCreateFlagsBDCInt = Flags64
+
+
+class SystemLightEstimationPropertiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        supports_light_estimation: Bool32 = 0,
+        supports_environment_texture: Bool32 = 0,
+        supports_spherical_harmonics: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_LIGHT_ESTIMATION_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_light_estimation=supports_light_estimation,
+            supports_environment_texture=supports_environment_texture,
+            supports_spherical_harmonics=supports_spherical_harmonics,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemLightEstimationPropertiesBD(supports_light_estimation={repr(self.supports_light_estimation)}, supports_environment_texture={repr(self.supports_environment_texture)}, supports_spherical_harmonics={repr(self.supports_spherical_harmonics)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemLightEstimationPropertiesBD(supports_light_estimation={self.supports_light_estimation}, supports_environment_texture={self.supports_environment_texture}, supports_spherical_harmonics={self.supports_spherical_harmonics}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_light_estimation", Bool32),
+        ("supports_environment_texture", Bool32),
+        ("supports_spherical_harmonics", Bool32),
+    ]
+
+
+class SenseDataProviderCreateInfoLightEstimationBD(BaseXrStructure):
+    def __init__(
+        self,
+        create_flags: LightEstimationCreateFlagsBD = LightEstimationCreateFlagsBD.NONE,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_LIGHT_ESTIMATION_BD,
+    ) -> None:
+        super().__init__(
+            _create_flags=enum_field_helper(create_flags),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoLightEstimationBD(create_flags={repr(self.create_flags)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoLightEstimationBD(create_flags={self.create_flags}, next={self.next}, type={self.type})"
+
+    @property
+    def create_flags(self) -> LightEstimationCreateFlagsBD:
+        return LightEstimationCreateFlagsBD(self._create_flags)
+    
+    @create_flags.setter
+    def create_flags(self, value: LightEstimationCreateFlagsBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._create_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_create_flags", LightEstimationCreateFlagsBDCInt),
+    ]
+
+
+class EnvironmentTextureCreateConfigInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        pixel_format: EnvironmentTexturePixelFormatBD = EnvironmentTexturePixelFormatBD.RGB_16FLOAT,
+        resolution: EnvironmentTextureResolutionBD = EnvironmentTextureResolutionBD.N8_8,
+        transfer_type: EnvironmentTextureTransferTypeBD = EnvironmentTextureTransferTypeBD.RAW,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ENVIRONMENT_TEXTURE_CREATE_CONFIG_INFO_BD,
+    ) -> None:
+        super().__init__(
+            _pixel_format=enum_field_helper(pixel_format),
+            _resolution=enum_field_helper(resolution),
+            _transfer_type=enum_field_helper(transfer_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentTextureCreateConfigInfoBD(pixel_format={repr(self.pixel_format)}, resolution={repr(self.resolution)}, transfer_type={repr(self.transfer_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentTextureCreateConfigInfoBD(pixel_format={self.pixel_format}, resolution={self.resolution}, transfer_type={self.transfer_type}, next={self.next}, type={self.type})"
+
+    @property
+    def pixel_format(self) -> EnvironmentTexturePixelFormatBD:
+        return EnvironmentTexturePixelFormatBD(self._pixel_format)
+    
+    @pixel_format.setter
+    def pixel_format(self, value: EnvironmentTexturePixelFormatBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._pixel_format = enum_field_helper(value)
+
+    @property
+    def resolution(self) -> EnvironmentTextureResolutionBD:
+        return EnvironmentTextureResolutionBD(self._resolution)
+    
+    @resolution.setter
+    def resolution(self, value: EnvironmentTextureResolutionBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._resolution = enum_field_helper(value)
+
+    @property
+    def transfer_type(self) -> EnvironmentTextureTransferTypeBD:
+        return EnvironmentTextureTransferTypeBD(self._transfer_type)
+    
+    @transfer_type.setter
+    def transfer_type(self, value: EnvironmentTextureTransferTypeBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._transfer_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_pixel_format", EnvironmentTexturePixelFormatBD.ctype()),
+        ("_resolution", EnvironmentTextureResolutionBD.ctype()),
+        ("_transfer_type", EnvironmentTextureTransferTypeBD.ctype()),
+    ]
+
+
+class LightEstimationDataEnvironmentTextureRawBD(BaseXrStructure):
+    def __init__(
+        self,
+        pixel_format: EnvironmentTexturePixelFormatBD = EnvironmentTexturePixelFormatBD.RGB_16FLOAT,
+        cubemap_face_buffer_size: int = 0,
+        right_cubemap_face_buffer: POINTER(c_uint8) = None,
+        left_cubemap_face_buffer: POINTER(c_uint8) = None,
+        top_cubemap_face_buffer: POINTER(c_uint8) = None,
+        bottom_cubemap_face_buffer: POINTER(c_uint8) = None,
+        front_cubemap_face_buffer: POINTER(c_uint8) = None,
+        back_cubemap_face_buffer: POINTER(c_uint8) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.LIGHT_ESTIMATION_DATA_ENVIRONMENT_TEXTURE_RAW_BD,
+    ) -> None:
+        super().__init__(
+            _pixel_format=enum_field_helper(pixel_format),
+            cubemap_face_buffer_size=cubemap_face_buffer_size,
+            right_cubemap_face_buffer=right_cubemap_face_buffer,
+            left_cubemap_face_buffer=left_cubemap_face_buffer,
+            top_cubemap_face_buffer=top_cubemap_face_buffer,
+            bottom_cubemap_face_buffer=bottom_cubemap_face_buffer,
+            front_cubemap_face_buffer=front_cubemap_face_buffer,
+            back_cubemap_face_buffer=back_cubemap_face_buffer,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LightEstimationDataEnvironmentTextureRawBD(pixel_format={repr(self.pixel_format)}, cubemap_face_buffer_size={repr(self.cubemap_face_buffer_size)}, right_cubemap_face_buffer={repr(self.right_cubemap_face_buffer)}, left_cubemap_face_buffer={repr(self.left_cubemap_face_buffer)}, top_cubemap_face_buffer={repr(self.top_cubemap_face_buffer)}, bottom_cubemap_face_buffer={repr(self.bottom_cubemap_face_buffer)}, front_cubemap_face_buffer={repr(self.front_cubemap_face_buffer)}, back_cubemap_face_buffer={repr(self.back_cubemap_face_buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LightEstimationDataEnvironmentTextureRawBD(pixel_format={self.pixel_format}, cubemap_face_buffer_size={self.cubemap_face_buffer_size}, right_cubemap_face_buffer={self.right_cubemap_face_buffer}, left_cubemap_face_buffer={self.left_cubemap_face_buffer}, top_cubemap_face_buffer={self.top_cubemap_face_buffer}, bottom_cubemap_face_buffer={self.bottom_cubemap_face_buffer}, front_cubemap_face_buffer={self.front_cubemap_face_buffer}, back_cubemap_face_buffer={self.back_cubemap_face_buffer}, next={self.next}, type={self.type})"
+
+    @property
+    def pixel_format(self) -> EnvironmentTexturePixelFormatBD:
+        return EnvironmentTexturePixelFormatBD(self._pixel_format)
+    
+    @pixel_format.setter
+    def pixel_format(self, value: EnvironmentTexturePixelFormatBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._pixel_format = enum_field_helper(value)
+
+    _fields_ = [
+        ("_pixel_format", EnvironmentTexturePixelFormatBD.ctype()),
+        ("cubemap_face_buffer_size", c_uint32),
+        ("right_cubemap_face_buffer", POINTER(c_uint8)),
+        ("left_cubemap_face_buffer", POINTER(c_uint8)),
+        ("top_cubemap_face_buffer", POINTER(c_uint8)),
+        ("bottom_cubemap_face_buffer", POINTER(c_uint8)),
+        ("front_cubemap_face_buffer", POINTER(c_uint8)),
+        ("back_cubemap_face_buffer", POINTER(c_uint8)),
+    ]
+
+
+class LightEstimationDataSphericalHarmonicsBD(BaseXrStructure):
+    def __init__(
+        self,
+        kind: SphericalHarmonicsKindBD = SphericalHarmonicsKindBD.TOTAL,
+        coefficient_capacity_input: int = 0,
+        coefficient_count_output: int = 0,
+        coefficients: POINTER(c_float) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.LIGHT_ESTIMATION_DATA_SPHERICAL_HARMONICS_BD,
+    ) -> None:
+        super().__init__(
+            _kind=enum_field_helper(kind),
+            coefficient_capacity_input=coefficient_capacity_input,
+            coefficient_count_output=coefficient_count_output,
+            coefficients=coefficients,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LightEstimationDataSphericalHarmonicsBD(kind={repr(self.kind)}, coefficient_capacity_input={repr(self.coefficient_capacity_input)}, coefficient_count_output={repr(self.coefficient_count_output)}, coefficients={repr(self.coefficients)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LightEstimationDataSphericalHarmonicsBD(kind={self.kind}, coefficient_capacity_input={self.coefficient_capacity_input}, coefficient_count_output={self.coefficient_count_output}, coefficients={self.coefficients}, next={self.next}, type={self.type})"
+
+    @property
+    def kind(self) -> SphericalHarmonicsKindBD:
+        return SphericalHarmonicsKindBD(self._kind)
+    
+    @kind.setter
+    def kind(self, value: SphericalHarmonicsKindBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._kind = enum_field_helper(value)
+
+    _fields_ = [
+        ("_kind", SphericalHarmonicsKindBD.ctype()),
+        ("coefficient_capacity_input", c_uint32),
+        ("coefficient_count_output", c_uint32),
+        ("coefficients", POINTER(c_float)),
+    ]
+
+
+class SpatialEntityComponentDataLightEstimationBD(BaseXrStructure):
+    def __init__(
+        self,
+        is_valid: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_LIGHT_ESTIMATION_BD,
+    ) -> None:
+        super().__init__(
+            is_valid=is_valid,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataLightEstimationBD(is_valid={repr(self.is_valid)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataLightEstimationBD(is_valid={self.is_valid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("is_valid", Bool32),
+    ]
+
+
+PFN_xrEnumerateEnvironmentTextureResolutionsBD = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(EnvironmentTextureResolutionBD.ctype()))
+
+PFN_xrEnumerateEnvironmentTexturePixelFormatsBD = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(EnvironmentTexturePixelFormatBD.ctype()))
+
+PFN_xrEnumerateEnvironmentTextureTransferTypesBD = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(EnvironmentTextureTransferTypeBD.ctype()))
+
+
+class SpatialAudioRendererBD_T(Structure):
+    pass
+
+
+class SpatialAudioRendererBD(POINTER(SpatialAudioRendererBD_T), HandleMixin):
+    _type_ = SpatialAudioRendererBD_T  # ctypes idiosyncrasy
+
+
+class SoundFieldBD_T(Structure):
+    pass
+
+
+class SoundFieldBD(POINTER(SoundFieldBD_T), HandleMixin):
+    _type_ = SoundFieldBD_T  # ctypes idiosyncrasy
+
+
+class SoundObjectBD_T(Structure):
+    pass
+
+
+class SoundObjectBD(POINTER(SoundObjectBD_T), HandleMixin):
+    _type_ = SoundObjectBD_T  # ctypes idiosyncrasy
+
+
+class SoundObstacleBD_T(Structure):
+    pass
+
+
+class SoundObstacleBD(POINTER(SoundObstacleBD_T), HandleMixin):
+    _type_ = SoundObstacleBD_T  # ctypes idiosyncrasy
+
+
+class SoundObstacleMaterialBD_T(Structure):
+    pass
+
+
+class SoundObstacleMaterialBD(POINTER(SoundObstacleMaterialBD_T), HandleMixin):
+    _type_ = SoundObstacleMaterialBD_T  # ctypes idiosyncrasy
+
+
+SoundObstacleFlagsBDCInt = Flags64
+
+SoundObjectFlagsBDCInt = Flags64
+
+SoundFieldFlagsBDCInt = Flags64
+
+
+class SpatialAudioRendererCreateInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        frames_per_buffer: int = 0,
+        sample_rate: AudioSampleRateBD = AudioSampleRateBD.N192000_HZ,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_AUDIO_RENDERER_CREATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            frames_per_buffer=frames_per_buffer,
+            _sample_rate=enum_field_helper(sample_rate),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAudioRendererCreateInfoBD(frames_per_buffer={repr(self.frames_per_buffer)}, sample_rate={repr(self.sample_rate)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAudioRendererCreateInfoBD(frames_per_buffer={self.frames_per_buffer}, sample_rate={self.sample_rate}, next={self.next}, type={self.type})"
+
+    @property
+    def sample_rate(self) -> AudioSampleRateBD:
+        return AudioSampleRateBD(self._sample_rate)
+    
+    @sample_rate.setter
+    def sample_rate(self, value: AudioSampleRateBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._sample_rate = enum_field_helper(value)
+
+    _fields_ = [
+        ("frames_per_buffer", c_uint32),
+        ("_sample_rate", AudioSampleRateBD.ctype()),
+    ]
+
+
+class AudioBufferBD(BaseXrStructure):
+    def __init__(
+        self,
+        channel_layout: AudioBufferChannelLayoutBD = AudioBufferChannelLayoutBD.INTERLEAVED,
+        buffer_channels: int = 0,
+        buffer_length: int = 0,
+        buffer: POINTER(c_float) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.AUDIO_BUFFER_BD,
+    ) -> None:
+        super().__init__(
+            _channel_layout=enum_field_helper(channel_layout),
+            buffer_channels=buffer_channels,
+            buffer_length=buffer_length,
+            buffer=buffer,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AudioBufferBD(channel_layout={repr(self.channel_layout)}, buffer_channels={repr(self.buffer_channels)}, buffer_length={repr(self.buffer_length)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AudioBufferBD(channel_layout={self.channel_layout}, buffer_channels={self.buffer_channels}, buffer_length={self.buffer_length}, buffer={self.buffer}, next={self.next}, type={self.type})"
+
+    @property
+    def channel_layout(self) -> AudioBufferChannelLayoutBD:
+        return AudioBufferChannelLayoutBD(self._channel_layout)
+    
+    @channel_layout.setter
+    def channel_layout(self, value: AudioBufferChannelLayoutBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._channel_layout = enum_field_helper(value)
+
+    _fields_ = [
+        ("_channel_layout", AudioBufferChannelLayoutBD.ctype()),
+        ("buffer_channels", c_uint32),
+        ("buffer_length", c_uint32),
+        ("buffer", POINTER(c_float)),
+    ]
+
+
+class SoundObjectDirectivityCardioidBD(BaseXrStructure):
+    def __init__(
+        self,
+        alpha: float = 0,
+        order: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_OBJECT_DIRECTIVITY_CARDIOID_BD,
+    ) -> None:
+        super().__init__(
+            alpha=alpha,
+            order=order,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundObjectDirectivityCardioidBD(alpha={repr(self.alpha)}, order={repr(self.order)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundObjectDirectivityCardioidBD(alpha={self.alpha:.3f}, order={self.order:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("alpha", c_float),
+        ("order", c_float),
+    ]
+
+
+class SoundObjectShapeSphereBD(BaseXrStructure):
+    def __init__(
+        self,
+        radius: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_OBJECT_SHAPE_SPHERE_BD,
+    ) -> None:
+        super().__init__(
+            radius=radius,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundObjectShapeSphereBD(radius={repr(self.radius)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundObjectShapeSphereBD(radius={self.radius:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("radius", c_float),
+    ]
+
+
+class AttenuationCurvePointBD(Structure):
+    def __init__(
+        self,
+        distance: float = 0,
+        gain: float = 0,
+    ) -> None:
+        super().__init__(
+            distance=distance,
+            gain=gain,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Iterator[float]:
+        yield self.distance
+        yield self.gain
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 2
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.AttenuationCurvePointBD(distance={repr(self.distance)}, gain={repr(self.gain)})"
+
+    def __str__(self) -> str:
+        return f"xr.AttenuationCurvePointBD(distance={self.distance:.3f}, gain={self.gain:.3f})"
+
+    _fields_ = [
+        ("distance", c_float),
+        ("gain", c_float),
+    ]
+
+
+class SoundObjectDistanceAttenuationCurveBD(BaseXrStructure):
+    def __init__(
+        self,
+        curve_point_count: Optional[int] = None,
+        curve_points: ArrayFieldParamType[AttenuationCurvePointBD] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_OBJECT_DISTANCE_ATTENUATION_CURVE_BD,
+    ) -> None:
+        curve_point_count, curve_points = array_field_helper(
+            AttenuationCurvePointBD, curve_point_count, curve_points)
+        super().__init__(
+            curve_point_count=curve_point_count,
+            _curve_points=curve_points,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundObjectDistanceAttenuationCurveBD(curve_point_count={repr(self.curve_point_count)}, curve_points={repr(self.curve_points)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundObjectDistanceAttenuationCurveBD(curve_point_count={self.curve_point_count}, curve_points={self.curve_points}, next={self.next}, type={self.type})"
+
+    @property
+    def curve_points(self) -> Array[AttenuationCurvePointBD]:
+        return expose_ctypes_array(AttenuationCurvePointBD, self.curve_point_count, self._curve_points)
+    
+    @curve_points.setter
+    def curve_points(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.curve_point_count, self._curve_points = array_field_helper(
+            AttenuationCurvePointBD, None, value)
+
+    _fields_ = [
+        ("curve_point_count", c_uint32),
+        ("_curve_points", POINTER(AttenuationCurvePointBD)),
+    ]
+
+
+class SoundObjectDistanceAttenuationBD(BaseXrStructure):
+    def __init__(
+        self,
+        distance_attenuation_type: SoundObjectDistanceAttenuationTypeBD = SoundObjectDistanceAttenuationTypeBD.NONE,
+        min_attenuation_range: float = 0,
+        max_attenuation_range: float = 0,
+        reference_distance: float = 0,
+        rolloff_factor: float = 0,
+        custom_distance_attenuation_curve: POINTER(SoundObjectDistanceAttenuationCurveBD) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_OBJECT_DISTANCE_ATTENUATION_BD,
+    ) -> None:
+        super().__init__(
+            _distance_attenuation_type=enum_field_helper(distance_attenuation_type),
+            min_attenuation_range=min_attenuation_range,
+            max_attenuation_range=max_attenuation_range,
+            reference_distance=reference_distance,
+            rolloff_factor=rolloff_factor,
+            custom_distance_attenuation_curve=custom_distance_attenuation_curve,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundObjectDistanceAttenuationBD(distance_attenuation_type={repr(self.distance_attenuation_type)}, min_attenuation_range={repr(self.min_attenuation_range)}, max_attenuation_range={repr(self.max_attenuation_range)}, reference_distance={repr(self.reference_distance)}, rolloff_factor={repr(self.rolloff_factor)}, custom_distance_attenuation_curve={repr(self.custom_distance_attenuation_curve)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundObjectDistanceAttenuationBD(distance_attenuation_type={self.distance_attenuation_type}, min_attenuation_range={self.min_attenuation_range:.3f}, max_attenuation_range={self.max_attenuation_range:.3f}, reference_distance={self.reference_distance:.3f}, rolloff_factor={self.rolloff_factor:.3f}, custom_distance_attenuation_curve={self.custom_distance_attenuation_curve}, next={self.next}, type={self.type})"
+
+    @property
+    def distance_attenuation_type(self) -> SoundObjectDistanceAttenuationTypeBD:
+        return SoundObjectDistanceAttenuationTypeBD(self._distance_attenuation_type)
+    
+    @distance_attenuation_type.setter
+    def distance_attenuation_type(self, value: SoundObjectDistanceAttenuationTypeBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._distance_attenuation_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_distance_attenuation_type", SoundObjectDistanceAttenuationTypeBD.ctype()),
+        ("min_attenuation_range", c_float),
+        ("max_attenuation_range", c_float),
+        ("reference_distance", c_float),
+        ("rolloff_factor", c_float),
+        ("custom_distance_attenuation_curve", POINTER(SoundObjectDistanceAttenuationCurveBD)),
+    ]
+
+
+class SoundObjectConfigBD(BaseXrStructure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        pose: Posef = Posef(),
+        base_space: Space = None,
+        main_volume: float = 0,
+        reflection_gain: float = 0,
+        enable_doppler: Bool32 = 0,
+        direct_sound_attenuation: POINTER(SoundObjectDistanceAttenuationBD) = None,
+        indirect_sound_attenuation: POINTER(SoundObjectDistanceAttenuationBD) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_OBJECT_CONFIG_BD,
+    ) -> None:
+        super().__init__(
+            enabled=enabled,
+            pose=pose,
+            base_space=base_space,
+            main_volume=main_volume,
+            reflection_gain=reflection_gain,
+            enable_doppler=enable_doppler,
+            direct_sound_attenuation=direct_sound_attenuation,
+            indirect_sound_attenuation=indirect_sound_attenuation,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundObjectConfigBD(enabled={repr(self.enabled)}, pose={repr(self.pose)}, base_space={repr(self.base_space)}, main_volume={repr(self.main_volume)}, reflection_gain={repr(self.reflection_gain)}, enable_doppler={repr(self.enable_doppler)}, direct_sound_attenuation={repr(self.direct_sound_attenuation)}, indirect_sound_attenuation={repr(self.indirect_sound_attenuation)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundObjectConfigBD(enabled={self.enabled}, pose={self.pose}, base_space={self.base_space}, main_volume={self.main_volume:.3f}, reflection_gain={self.reflection_gain:.3f}, enable_doppler={self.enable_doppler}, direct_sound_attenuation={self.direct_sound_attenuation}, indirect_sound_attenuation={self.indirect_sound_attenuation}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("enabled", Bool32),
+        ("pose", Posef),
+        ("base_space", Space),
+        ("main_volume", c_float),
+        ("reflection_gain", c_float),
+        ("enable_doppler", Bool32),
+        ("direct_sound_attenuation", POINTER(SoundObjectDistanceAttenuationBD)),
+        ("indirect_sound_attenuation", POINTER(SoundObjectDistanceAttenuationBD)),
+    ]
+
+
+class SoundFieldConfigBD(BaseXrStructure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        orientation: Quaternionf = None,
+        base_space: Space = None,
+        main_volume: float = 0,
+        lfe_gain: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_FIELD_CONFIG_BD,
+    ) -> None:
+        if orientation is None:
+            orientation = Quaternionf()
+        super().__init__(
+            enabled=enabled,
+            orientation=orientation,
+            base_space=base_space,
+            main_volume=main_volume,
+            lfe_gain=lfe_gain,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundFieldConfigBD(enabled={repr(self.enabled)}, orientation={repr(self.orientation)}, base_space={repr(self.base_space)}, main_volume={repr(self.main_volume)}, lfe_gain={repr(self.lfe_gain)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundFieldConfigBD(enabled={self.enabled}, orientation={self.orientation}, base_space={self.base_space}, main_volume={self.main_volume:.3f}, lfe_gain={self.lfe_gain:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("enabled", Bool32),
+        ("orientation", Quaternionf),
+        ("base_space", Space),
+        ("main_volume", c_float),
+        ("lfe_gain", c_float),
+    ]
+
+
+class SoundFieldChannelDefinitionSurroundBD(BaseXrStructure):
+    def __init__(
+        self,
+        channel_mask: SoundFieldChannelMaskSurroundBD = SoundFieldChannelMaskSurroundBD.FRONT_LEFT,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_FIELD_CHANNEL_DEFINITION_SURROUND_BD,
+    ) -> None:
+        super().__init__(
+            _channel_mask=enum_field_helper(channel_mask),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundFieldChannelDefinitionSurroundBD(channel_mask={repr(self.channel_mask)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundFieldChannelDefinitionSurroundBD(channel_mask={self.channel_mask}, next={self.next}, type={self.type})"
+
+    @property
+    def channel_mask(self) -> SoundFieldChannelMaskSurroundBD:
+        return SoundFieldChannelMaskSurroundBD(self._channel_mask)
+    
+    @channel_mask.setter
+    def channel_mask(self, value: SoundFieldChannelMaskSurroundBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._channel_mask = enum_field_helper(value)
+
+    _fields_ = [
+        ("_channel_mask", SoundFieldChannelMaskSurroundBD.ctype()),
+    ]
+
+
+class SoundFieldChannelDefinitionAmbixBD(BaseXrStructure):
+    def __init__(
+        self,
+        channel_mask: SoundFieldChannelMaskAmbixBD = SoundFieldChannelMaskAmbixBD.N1ST_ORDER,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_FIELD_CHANNEL_DEFINITION_AMBIX_BD,
+    ) -> None:
+        super().__init__(
+            _channel_mask=enum_field_helper(channel_mask),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundFieldChannelDefinitionAmbixBD(channel_mask={repr(self.channel_mask)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundFieldChannelDefinitionAmbixBD(channel_mask={self.channel_mask}, next={self.next}, type={self.type})"
+
+    @property
+    def channel_mask(self) -> SoundFieldChannelMaskAmbixBD:
+        return SoundFieldChannelMaskAmbixBD(self._channel_mask)
+    
+    @channel_mask.setter
+    def channel_mask(self, value: SoundFieldChannelMaskAmbixBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._channel_mask = enum_field_helper(value)
+
+    _fields_ = [
+        ("_channel_mask", SoundFieldChannelMaskAmbixBD.ctype()),
+    ]
+
+
+class SoundFieldChannelDefinitionFumaBD(BaseXrStructure):
+    def __init__(
+        self,
+        channel_mask: SoundFieldChannelMaskFumaBD = SoundFieldChannelMaskFumaBD.N1ST_ORDER,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_FIELD_CHANNEL_DEFINITION_FUMA_BD,
+    ) -> None:
+        super().__init__(
+            _channel_mask=enum_field_helper(channel_mask),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundFieldChannelDefinitionFumaBD(channel_mask={repr(self.channel_mask)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundFieldChannelDefinitionFumaBD(channel_mask={self.channel_mask}, next={self.next}, type={self.type})"
+
+    @property
+    def channel_mask(self) -> SoundFieldChannelMaskFumaBD:
+        return SoundFieldChannelMaskFumaBD(self._channel_mask)
+    
+    @channel_mask.setter
+    def channel_mask(self, value: SoundFieldChannelMaskFumaBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._channel_mask = enum_field_helper(value)
+
+    _fields_ = [
+        ("_channel_mask", SoundFieldChannelMaskFumaBD.ctype()),
+    ]
+
+
+class SoundTriangleMeshBD(BaseXrStructure):
+    def __init__(
+        self,
+        vertex_count: int = 0,
+        vertices: POINTER(Vector3f) = None,
+        index_count: int = 0,
+        indices: POINTER(c_uint32) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_TRIANGLE_MESH_BD,
+    ) -> None:
+        super().__init__(
+            vertex_count=vertex_count,
+            vertices=vertices,
+            index_count=index_count,
+            indices=indices,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundTriangleMeshBD(vertex_count={repr(self.vertex_count)}, vertices={repr(self.vertices)}, index_count={repr(self.index_count)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundTriangleMeshBD(vertex_count={self.vertex_count}, vertices={self.vertices}, index_count={self.index_count}, indices={self.indices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("vertex_count", c_uint32),
+        ("vertices", POINTER(Vector3f)),
+        ("index_count", c_uint32),
+        ("indices", POINTER(c_uint32)),
+    ]
+
+
+class SoundObstacleConfigBD(BaseXrStructure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        pose: Posef = Posef(),
+        base_space: Space = None,
+        material_count: Optional[int] = None,
+        materials: ArrayFieldParamType[SoundObstacleMaterialBD] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_OBSTACLE_CONFIG_BD,
+    ) -> None:
+        material_count, materials = array_field_helper(
+            SoundObstacleMaterialBD, material_count, materials)
+        super().__init__(
+            enabled=enabled,
+            pose=pose,
+            base_space=base_space,
+            material_count=material_count,
+            _materials=materials,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundObstacleConfigBD(enabled={repr(self.enabled)}, pose={repr(self.pose)}, base_space={repr(self.base_space)}, material_count={repr(self.material_count)}, materials={repr(self.materials)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundObstacleConfigBD(enabled={self.enabled}, pose={self.pose}, base_space={self.base_space}, material_count={self.material_count}, materials={self.materials}, next={self.next}, type={self.type})"
+
+    @property
+    def materials(self) -> Array[SoundObstacleMaterialBD]:
+        return expose_ctypes_array(SoundObstacleMaterialBD, self.material_count, self._materials)
+    
+    @materials.setter
+    def materials(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.material_count, self._materials = array_field_helper(
+            SoundObstacleMaterialBD, None, value)
+
+    _fields_ = [
+        ("enabled", Bool32),
+        ("pose", Posef),
+        ("base_space", Space),
+        ("material_count", c_uint32),
+        ("_materials", POINTER(SoundObstacleMaterialBD)),
+    ]
+
+
+class SoundObstacleMaterialConfigBD(BaseXrStructure):
+    def __init__(
+        self,
+        material_type: SoundObstacleMaterialTypeBD = SoundObstacleMaterialTypeBD.ACOUSTIC_TILE,
+        band_count: Optional[int] = None,
+        band_frequencies: ArrayFieldParamType[c_float] = None,
+        band_absorptions: POINTER(c_float) = None,
+        band_scatterings: POINTER(c_float) = None,
+        band_transmissions: POINTER(c_float) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SOUND_OBSTACLE_MATERIAL_CONFIG_BD,
+    ) -> None:
+        band_count, band_frequencies = array_field_helper(
+            c_float, band_count, band_frequencies)
+        super().__init__(
+            _material_type=enum_field_helper(material_type),
+            band_count=band_count,
+            _band_frequencies=band_frequencies,
+            band_absorptions=band_absorptions,
+            band_scatterings=band_scatterings,
+            band_transmissions=band_transmissions,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SoundObstacleMaterialConfigBD(material_type={repr(self.material_type)}, band_count={repr(self.band_count)}, band_frequencies={repr(self.band_frequencies)}, band_absorptions={repr(self.band_absorptions)}, band_scatterings={repr(self.band_scatterings)}, band_transmissions={repr(self.band_transmissions)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SoundObstacleMaterialConfigBD(material_type={self.material_type}, band_count={self.band_count}, band_frequencies={self.band_frequencies}, band_absorptions={self.band_absorptions}, band_scatterings={self.band_scatterings}, band_transmissions={self.band_transmissions}, next={self.next}, type={self.type})"
+
+    @property
+    def material_type(self) -> SoundObstacleMaterialTypeBD:
+        return SoundObstacleMaterialTypeBD(self._material_type)
+    
+    @material_type.setter
+    def material_type(self, value: SoundObstacleMaterialTypeBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._material_type = enum_field_helper(value)
+
+    @property
+    def band_frequencies(self) -> Array[c_float]:
+        return expose_ctypes_array(c_float, self.band_count, self._band_frequencies)
+    
+    @band_frequencies.setter
+    def band_frequencies(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.band_count, self._band_frequencies = array_field_helper(
+            c_float, None, value)
+
+    _fields_ = [
+        ("_material_type", SoundObstacleMaterialTypeBD.ctype()),
+        ("band_count", c_uint32),
+        ("_band_frequencies", POINTER(c_float)),
+        ("band_absorptions", POINTER(c_float)),
+        ("band_scatterings", POINTER(c_float)),
+        ("band_transmissions", POINTER(c_float)),
+    ]
+
+
+PFN_xrEnumerateSupportedAudioSampleRateBD = CFUNCTYPE(Result.ctype(), Session, c_uint32, POINTER(c_uint32), POINTER(AudioSampleRateBD.ctype()))
+
+PFN_xrQueryFramesPerBufferRangeBD = CFUNCTYPE(Result.ctype(), Session, AudioSampleRateBD.ctype(), POINTER(c_uint32), POINTER(c_uint32))
+
+PFN_xrCreateSpatialAudioRendererBD = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialAudioRendererCreateInfoBD), POINTER(SpatialAudioRendererBD))
+
+PFN_xrDestroySpatialAudioRendererBD = CFUNCTYPE(Result.ctype(), SpatialAudioRendererBD)
+
+PFN_xrCreateSoundObstacleMaterialBD = CFUNCTYPE(Result.ctype(), SpatialAudioRendererBD, POINTER(SoundObstacleMaterialConfigBD), POINTER(SoundObstacleMaterialBD))
+
+PFN_xrUpdateSoundObstacleMaterialConfigBD = CFUNCTYPE(Result.ctype(), SoundObstacleMaterialBD, POINTER(SoundObstacleMaterialConfigBD))
+
+PFN_xrDestroySoundObstacleMaterialBD = CFUNCTYPE(Result.ctype(), SoundObstacleMaterialBD)
+
+PFN_xrCreateSoundObstacleBD = CFUNCTYPE(Result.ctype(), SpatialAudioRendererBD, POINTER(SoundObstacleConfigBD), POINTER(SoundTriangleMeshBD), POINTER(SoundObstacleBD))
+
+PFN_xrUpdateSoundObstacleConfigBD = CFUNCTYPE(Result.ctype(), SoundObstacleBD, POINTER(SoundObstacleConfigBD), POINTER(SoundTriangleMeshBD), SoundObstacleFlagsBDCInt)
+
+PFN_xrDestroySoundObstacleBD = CFUNCTYPE(Result.ctype(), SoundObstacleBD)
+
+PFN_xrCreateSoundObjectBD = CFUNCTYPE(Result.ctype(), SpatialAudioRendererBD, POINTER(SoundObjectConfigBD), POINTER(SoundObjectBD))
+
+PFN_xrUpdateSoundObjectConfigBD = CFUNCTYPE(Result.ctype(), SoundObjectBD, POINTER(SoundObjectConfigBD), SoundObjectFlagsBDCInt)
+
+PFN_xrSubmitSoundObjectBufferBD = CFUNCTYPE(Result.ctype(), SoundObjectBD, POINTER(AudioBufferBD))
+
+PFN_xrDestroySoundObjectBD = CFUNCTYPE(Result.ctype(), SoundObjectBD)
+
+PFN_xrCreateSoundFieldBD = CFUNCTYPE(Result.ctype(), SpatialAudioRendererBD, POINTER(SoundFieldConfigBD), POINTER(SoundFieldBD))
+
+PFN_xrUpdateSoundFieldConfigBD = CFUNCTYPE(Result.ctype(), SoundFieldBD, POINTER(SoundFieldConfigBD), SoundFieldFlagsBDCInt)
+
+PFN_xrSubmitSoundFieldBufferBD = CFUNCTYPE(Result.ctype(), SoundFieldBD, POINTER(AudioBufferBD))
+
+PFN_xrDestroySoundFieldBD = CFUNCTYPE(Result.ctype(), SoundFieldBD)
+
+PFN_xrWaitAudioPeriodBD = CFUNCTYPE(Result.ctype(), SpatialAudioRendererBD, Duration)
+
+PFN_xrEndAudioPeriodBD = CFUNCTYPE(Result.ctype(), SpatialAudioRendererBD)
 
 
 class HandTrackingDataSourceInfoEXT(BaseXrStructure):
@@ -17738,6 +19010,144 @@ PFN_xrGetTrackablePlaneANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDRO
 PFN_xrCreateAnchorSpaceANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(AnchorSpaceCreateInfoANDROID), POINTER(Space))
 
 
+class EyeTrackerANDROID_T(Structure):
+    pass
+
+
+class EyeTrackerANDROID(POINTER(EyeTrackerANDROID_T), HandleMixin):
+    _type_ = EyeTrackerANDROID_T  # ctypes idiosyncrasy
+
+
+class SystemEyeTrackingPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        supports_eye_tracking: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_EYE_TRACKING_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_eye_tracking=supports_eye_tracking,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemEyeTrackingPropertiesANDROID(supports_eye_tracking={repr(self.supports_eye_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemEyeTrackingPropertiesANDROID(supports_eye_tracking={self.supports_eye_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_eye_tracking", Bool32),
+    ]
+
+
+class EyeANDROID(Structure):
+    def __init__(
+        self,
+        eye_state: EyeStateANDROID = EyeStateANDROID.INVALID,
+        eye_pose: Posef = Posef(),
+    ) -> None:
+        super().__init__(
+            _eye_state=enum_field_helper(eye_state),
+            eye_pose=eye_pose,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyeANDROID(eye_state={repr(self.eye_state)}, eye_pose={repr(self.eye_pose)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyeANDROID(eye_state={self.eye_state}, eye_pose={self.eye_pose})"
+
+    @property
+    def eye_state(self) -> EyeStateANDROID:
+        return EyeStateANDROID(self._eye_state)
+    
+    @eye_state.setter
+    def eye_state(self, value: EyeStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._eye_state = enum_field_helper(value)
+
+    _fields_ = [
+        ("_eye_state", EyeStateANDROID.ctype()),
+        ("eye_pose", Posef),
+    ]
+
+
+class EyesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        mode: EyeTrackingModeANDROID = EyeTrackingModeANDROID.NOT_TRACKING,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EYES_ANDROID,
+    ) -> None:
+        super().__init__(
+            _mode=enum_field_helper(mode),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyesANDROID(eyes={repr(self.eyes)}, mode={repr(self.mode)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyesANDROID(mode={self.mode}, next={self.next}, type={self.type})"
+
+    @property
+    def mode(self) -> EyeTrackingModeANDROID:
+        return EyeTrackingModeANDROID(self._mode)
+    
+    @mode.setter
+    def mode(self, value: EyeTrackingModeANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._mode = enum_field_helper(value)
+
+    _fields_ = [
+        ("eyes", (EyeANDROID * 2)),
+        ("_mode", EyeTrackingModeANDROID.ctype()),
+    ]
+
+
+class EyesGetInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        time: Time = 0,
+        base_space: Space = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EYES_GET_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            time=time,
+            base_space=base_space,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyesGetInfoANDROID(time={repr(self.time)}, base_space={repr(self.base_space)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyesGetInfoANDROID(time={self.time}, base_space={self.base_space}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("time", Time),
+        ("base_space", Space),
+    ]
+
+
+class EyeTrackerCreateInfoANDROID(BaseXrStructure):
+    pass
+
+
+PFN_xrCreateEyeTrackerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(EyeTrackerCreateInfoANDROID), POINTER(EyeTrackerANDROID))
+
+PFN_xrDestroyEyeTrackerANDROID = CFUNCTYPE(Result.ctype(), EyeTrackerANDROID)
+
+PFN_xrGetFineTrackingEyesInfoANDROID = CFUNCTYPE(Result.ctype(), EyeTrackerANDROID, POINTER(EyesGetInfoANDROID), POINTER(EyesANDROID))
+
+PFN_xrGetCoarseTrackingEyesInfoANDROID = CFUNCTYPE(Result.ctype(), EyeTrackerANDROID, POINTER(EyesGetInfoANDROID), POINTER(EyesANDROID))
+
+
 class DeviceAnchorPersistenceANDROID_T(Structure):
     pass
 
@@ -17996,6 +19406,166 @@ class PassthroughCameraStateGetInfoANDROID(BaseXrStructure):
 PFN_xrGetPassthroughCameraStateANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(PassthroughCameraStateGetInfoANDROID), POINTER(PassthroughCameraStateANDROID.ctype()))
 
 
+class EventDataRecommendedResolutionChangedANDROID(EventDataBaseHeader):
+    pass
+
+
+class PassthroughLayerANDROID_T(Structure):
+    pass
+
+
+class PassthroughLayerANDROID(POINTER(PassthroughLayerANDROID_T), HandleMixin):
+    _type_ = PassthroughLayerANDROID_T  # ctypes idiosyncrasy
+
+
+class PassthroughLayerCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        vertex_capacity: int = 0,
+        index_capacity: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.PASSTHROUGH_LAYER_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            vertex_capacity=vertex_capacity,
+            index_capacity=index_capacity,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughLayerCreateInfoANDROID(vertex_capacity={repr(self.vertex_capacity)}, index_capacity={repr(self.index_capacity)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughLayerCreateInfoANDROID(vertex_capacity={self.vertex_capacity}, index_capacity={self.index_capacity}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("vertex_capacity", c_uint32),
+        ("index_capacity", c_uint32),
+    ]
+
+
+class PassthroughLayerMeshANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        winding_order: WindingOrderANDROID = WindingOrderANDROID.UNKNOWN,
+        vertex_count: int = 0,
+        vertices: POINTER(Vector3f) = None,
+        index_count: int = 0,
+        indices: POINTER(c_uint16) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.PASSTHROUGH_LAYER_MESH_ANDROID,
+    ) -> None:
+        super().__init__(
+            _winding_order=enum_field_helper(winding_order),
+            vertex_count=vertex_count,
+            vertices=vertices,
+            index_count=index_count,
+            indices=indices,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughLayerMeshANDROID(winding_order={repr(self.winding_order)}, vertex_count={repr(self.vertex_count)}, vertices={repr(self.vertices)}, index_count={repr(self.index_count)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughLayerMeshANDROID(winding_order={self.winding_order}, vertex_count={self.vertex_count}, vertices={self.vertices}, index_count={self.index_count}, indices={self.indices}, next={self.next}, type={self.type})"
+
+    @property
+    def winding_order(self) -> WindingOrderANDROID:
+        return WindingOrderANDROID(self._winding_order)
+    
+    @winding_order.setter
+    def winding_order(self, value: WindingOrderANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._winding_order = enum_field_helper(value)
+
+    _fields_ = [
+        ("_winding_order", WindingOrderANDROID.ctype()),
+        ("vertex_count", c_uint32),
+        ("vertices", POINTER(Vector3f)),
+        ("index_count", c_uint32),
+        ("indices", POINTER(c_uint16)),
+    ]
+
+
+class CompositionLayerPassthroughANDROID(CompositionLayerBaseHeader):
+    def __init__(
+        self,
+        layer_flags: CompositionLayerFlags = CompositionLayerFlags.NONE,
+        space: Space = None,
+        pose: Posef = Posef(),
+        scale: Vector3f = None,
+        opacity: float = 0,
+        layer: PassthroughLayerANDROID = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.COMPOSITION_LAYER_PASSTHROUGH_ANDROID,
+    ) -> None:
+        if scale is None:
+            scale = Vector3f()
+        super().__init__(
+            _layer_flags=enum_field_helper(layer_flags),
+            space=space,
+            pose=pose,
+            scale=scale,
+            opacity=opacity,
+            layer=layer,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CompositionLayerPassthroughANDROID(layer_flags={repr(self.layer_flags)}, space={repr(self.space)}, pose={repr(self.pose)}, scale={repr(self.scale)}, opacity={repr(self.opacity)}, layer={repr(self.layer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CompositionLayerPassthroughANDROID(layer_flags={self.layer_flags}, space={self.space}, pose={self.pose}, scale={self.scale}, opacity={self.opacity:.3f}, layer={self.layer}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("pose", Posef),
+        ("scale", Vector3f),
+        ("opacity", c_float),
+        ("layer", PassthroughLayerANDROID),
+    ]
+
+
+class SystemPassthroughLayerPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        supports_passthrough_layer: Bool32 = 0,
+        max_mesh_index_count: int = 0,
+        max_mesh_vertex_count: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_PASSTHROUGH_LAYER_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_passthrough_layer=supports_passthrough_layer,
+            max_mesh_index_count=max_mesh_index_count,
+            max_mesh_vertex_count=max_mesh_vertex_count,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemPassthroughLayerPropertiesANDROID(supports_passthrough_layer={repr(self.supports_passthrough_layer)}, max_mesh_index_count={repr(self.max_mesh_index_count)}, max_mesh_vertex_count={repr(self.max_mesh_vertex_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemPassthroughLayerPropertiesANDROID(supports_passthrough_layer={self.supports_passthrough_layer}, max_mesh_index_count={self.max_mesh_index_count}, max_mesh_vertex_count={self.max_mesh_vertex_count}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_passthrough_layer", Bool32),
+        ("max_mesh_index_count", c_uint32),
+        ("max_mesh_vertex_count", c_uint32),
+    ]
+
+
+PFN_xrCreatePassthroughLayerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(PassthroughLayerCreateInfoANDROID), POINTER(PassthroughLayerANDROID))
+
+PFN_xrDestroyPassthroughLayerANDROID = CFUNCTYPE(Result.ctype(), PassthroughLayerANDROID)
+
+PFN_xrSetPassthroughLayerMeshANDROID = CFUNCTYPE(Result.ctype(), PassthroughLayerANDROID, POINTER(PassthroughLayerMeshANDROID))
+
+
 class RaycastInfoANDROID(BaseXrStructure):
     def __init__(
         self,
@@ -18122,6 +19692,92 @@ class RaycastHitResultsANDROID(BaseXrStructure):
 PFN_xrEnumerateRaycastSupportedTrackableTypesANDROID = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(TrackableTypeANDROID.ctype()))
 
 PFN_xrRaycastANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(RaycastInfoANDROID), POINTER(RaycastHitResultsANDROID))
+
+PerformanceMetricsCounterFlagsANDROIDCInt = Flags64
+
+
+class PerformanceMetricsStateANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        enabled: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.PERFORMANCE_METRICS_STATE_ANDROID,
+    ) -> None:
+        super().__init__(
+            enabled=enabled,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PerformanceMetricsStateANDROID(enabled={repr(self.enabled)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PerformanceMetricsStateANDROID(enabled={self.enabled}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("enabled", Bool32),
+    ]
+
+
+class PerformanceMetricsCounterANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        counter_flags: PerformanceMetricsCounterFlagsANDROID = PerformanceMetricsCounterFlagsANDROID.NONE,
+        counter_unit: PerformanceMetricsCounterUnitANDROID = PerformanceMetricsCounterUnitANDROID.GENERIC,
+        uint_value: int = 0,
+        float_value: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.PERFORMANCE_METRICS_COUNTER_ANDROID,
+    ) -> None:
+        super().__init__(
+            _counter_flags=enum_field_helper(counter_flags),
+            _counter_unit=enum_field_helper(counter_unit),
+            uint_value=uint_value,
+            float_value=float_value,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PerformanceMetricsCounterANDROID(counter_flags={repr(self.counter_flags)}, counter_unit={repr(self.counter_unit)}, uint_value={repr(self.uint_value)}, float_value={repr(self.float_value)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PerformanceMetricsCounterANDROID(counter_flags={self.counter_flags}, counter_unit={self.counter_unit}, uint_value={self.uint_value}, float_value={self.float_value:.3f}, next={self.next}, type={self.type})"
+
+    @property
+    def counter_flags(self) -> PerformanceMetricsCounterFlagsANDROID:
+        return PerformanceMetricsCounterFlagsANDROID(self._counter_flags)
+    
+    @counter_flags.setter
+    def counter_flags(self, value: PerformanceMetricsCounterFlagsANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._counter_flags = enum_field_helper(value)
+
+    @property
+    def counter_unit(self) -> PerformanceMetricsCounterUnitANDROID:
+        return PerformanceMetricsCounterUnitANDROID(self._counter_unit)
+    
+    @counter_unit.setter
+    def counter_unit(self, value: PerformanceMetricsCounterUnitANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._counter_unit = enum_field_helper(value)
+
+    _fields_ = [
+        ("_counter_flags", PerformanceMetricsCounterFlagsANDROIDCInt),
+        ("_counter_unit", PerformanceMetricsCounterUnitANDROID.ctype()),
+        ("uint_value", c_uint32),
+        ("float_value", c_float),
+    ]
+
+
+PFN_xrEnumeratePerformanceMetricsCounterPathsANDROID = CFUNCTYPE(Result.ctype(), Instance, c_uint32, POINTER(c_uint32), POINTER(Path))
+
+PFN_xrSetPerformanceMetricsStateANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(PerformanceMetricsStateANDROID))
+
+PFN_xrGetPerformanceMetricsStateANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(PerformanceMetricsStateANDROID))
+
+PFN_xrQueryPerformanceMetricsCounterANDROID = CFUNCTYPE(Result.ctype(), Session, Path, POINTER(PerformanceMetricsCounterANDROID))
 
 
 class TrackableObjectANDROID(BaseXrStructure):
@@ -19083,6 +20739,66 @@ PFN_xrDestroyFacialExpressionClientML = CFUNCTYPE(Result.ctype(), FacialExpressi
 PFN_xrGetFacialExpressionBlendShapePropertiesML = CFUNCTYPE(Result.ctype(), FacialExpressionClientML, POINTER(FacialExpressionBlendShapeGetInfoML), c_uint32, POINTER(FacialExpressionBlendShapePropertiesML))
 
 
+class SystemBoundaryVisibilityPropertiesMETA(BaseXrStructure):
+    def __init__(
+        self,
+        supports_boundary_visibility: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_BOUNDARY_VISIBILITY_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_boundary_visibility=supports_boundary_visibility,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemBoundaryVisibilityPropertiesMETA(supports_boundary_visibility={repr(self.supports_boundary_visibility)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemBoundaryVisibilityPropertiesMETA(supports_boundary_visibility={self.supports_boundary_visibility}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_boundary_visibility", Bool32),
+    ]
+
+
+class EventDataBoundaryVisibilityChangedMETA(EventDataBaseHeader):
+    def __init__(
+        self,
+        boundary_visibility: BoundaryVisibilityMETA = BoundaryVisibilityMETA.NOT_SUPPRESSED,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_BOUNDARY_VISIBILITY_CHANGED_META,
+    ) -> None:
+        super().__init__(
+            _boundary_visibility=enum_field_helper(boundary_visibility),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataBoundaryVisibilityChangedMETA(boundary_visibility={repr(self.boundary_visibility)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataBoundaryVisibilityChangedMETA(boundary_visibility={self.boundary_visibility}, next={self.next}, type={self.type})"
+
+    @property
+    def boundary_visibility(self) -> BoundaryVisibilityMETA:
+        return BoundaryVisibilityMETA(self._boundary_visibility)
+    
+    @boundary_visibility.setter
+    def boundary_visibility(self, value: BoundaryVisibilityMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._boundary_visibility = enum_field_helper(value)
+
+    _fields_ = [
+        ("_boundary_visibility", BoundaryVisibilityMETA.ctype()),
+    ]
+
+
+PFN_xrRequestBoundaryVisibilityMETA = CFUNCTYPE(Result.ctype(), Session, BoundaryVisibilityMETA.ctype())
+
+
 class SystemSimultaneousHandsAndControllersPropertiesMETA(BaseXrStructure):
     def __init__(
         self,
@@ -19118,6 +20834,207 @@ class SimultaneousHandsAndControllersTrackingPauseInfoMETA(BaseXrStructure):
 PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SimultaneousHandsAndControllersTrackingResumeInfoMETA))
 
 PFN_xrPauseSimultaneousHandsAndControllersTrackingMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SimultaneousHandsAndControllersTrackingPauseInfoMETA))
+
+
+class FaceTrackingVisemesMETA(BaseXrStructure):
+    def __init__(
+        self,
+        is_valid: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.FACE_TRACKING_VISEMES_META,
+    ) -> None:
+        super().__init__(
+            is_valid=is_valid,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceTrackingVisemesMETA(is_valid={repr(self.is_valid)}, visemes={repr(self.visemes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceTrackingVisemesMETA(is_valid={self.is_valid}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("is_valid", Bool32),
+        ("visemes", (c_float * 15)),
+    ]
+
+
+class SystemFaceTrackingVisemesPropertiesMETA(BaseXrStructure):
+    def __init__(
+        self,
+        supports_visemes: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_FACE_TRACKING_VISEMES_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_visemes=supports_visemes,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemFaceTrackingVisemesPropertiesMETA(supports_visemes={repr(self.supports_visemes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemFaceTrackingVisemesPropertiesMETA(supports_visemes={self.supports_visemes}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_visemes", Bool32),
+    ]
+
+
+class RoomMeshFaceMETA(Structure):
+    def __init__(
+        self,
+        uuid: Uuid = None,
+        parent_uuid: Uuid = None,
+        semantic_label: SemanticLabelMETA = SemanticLabelMETA.UNKNOWN,
+    ) -> None:
+        if uuid is None:
+            uuid = Uuid()
+        if parent_uuid is None:
+            parent_uuid = Uuid()
+        super().__init__(
+            uuid=uuid,
+            parent_uuid=parent_uuid,
+            _semantic_label=enum_field_helper(semantic_label),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RoomMeshFaceMETA(uuid={repr(self.uuid)}, parent_uuid={repr(self.parent_uuid)}, semantic_label={repr(self.semantic_label)})"
+
+    def __str__(self) -> str:
+        return f"xr.RoomMeshFaceMETA(uuid={self.uuid}, parent_uuid={self.parent_uuid}, semantic_label={self.semantic_label})"
+
+    @property
+    def semantic_label(self) -> SemanticLabelMETA:
+        return SemanticLabelMETA(self._semantic_label)
+    
+    @semantic_label.setter
+    def semantic_label(self, value: SemanticLabelMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._semantic_label = enum_field_helper(value)
+
+    _fields_ = [
+        ("uuid", Uuid),
+        ("parent_uuid", Uuid),
+        ("_semantic_label", SemanticLabelMETA.ctype()),
+    ]
+
+
+class RoomMeshFaceIndicesMETA(BaseXrStructure):
+    def __init__(
+        self,
+        index_capacity_input: int = 0,
+        index_count_output: int = 0,
+        indices: POINTER(c_uint32) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ROOM_MESH_FACE_INDICES_META,
+    ) -> None:
+        super().__init__(
+            index_capacity_input=index_capacity_input,
+            index_count_output=index_count_output,
+            indices=indices,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RoomMeshFaceIndicesMETA(index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RoomMeshFaceIndicesMETA(index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
+        ("indices", POINTER(c_uint32)),
+    ]
+
+
+class SpaceRoomMeshGetInfoMETA(BaseXrStructure):
+    def __init__(
+        self,
+        recognized_semantic_label_count: Optional[int] = None,
+        recognized_semantic_labels: ArrayFieldParamType[c_int] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPACE_ROOM_MESH_GET_INFO_META,
+    ) -> None:
+        recognized_semantic_label_count, recognized_semantic_labels = array_field_helper(
+            c_int, recognized_semantic_label_count, recognized_semantic_labels)
+        super().__init__(
+            recognized_semantic_label_count=recognized_semantic_label_count,
+            _recognized_semantic_labels=recognized_semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceRoomMeshGetInfoMETA(recognized_semantic_label_count={repr(self.recognized_semantic_label_count)}, recognized_semantic_labels={repr(self.recognized_semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceRoomMeshGetInfoMETA(recognized_semantic_label_count={self.recognized_semantic_label_count}, recognized_semantic_labels={self.recognized_semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def recognized_semantic_labels(self) -> Array[c_int]:
+        return expose_ctypes_array(c_int, self.recognized_semantic_label_count, self._recognized_semantic_labels)
+    
+    @recognized_semantic_labels.setter
+    def recognized_semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.recognized_semantic_label_count, self._recognized_semantic_labels = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("recognized_semantic_label_count", c_uint32),
+        ("_recognized_semantic_labels", POINTER(c_int)),
+    ]
+
+
+class RoomMeshMETA(BaseXrStructure):
+    def __init__(
+        self,
+        vertex_capacity_input: int = 0,
+        vertex_count_output: int = 0,
+        vertices: POINTER(Vector3f) = None,
+        face_capacity_input: int = 0,
+        face_count_output: int = 0,
+        faces: POINTER(RoomMeshFaceMETA) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ROOM_MESH_META,
+    ) -> None:
+        super().__init__(
+            vertex_capacity_input=vertex_capacity_input,
+            vertex_count_output=vertex_count_output,
+            vertices=vertices,
+            face_capacity_input=face_capacity_input,
+            face_count_output=face_count_output,
+            faces=faces,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RoomMeshMETA(vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertices={repr(self.vertices)}, face_capacity_input={repr(self.face_capacity_input)}, face_count_output={repr(self.face_count_output)}, faces={repr(self.faces)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RoomMeshMETA(vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertices={self.vertices}, face_capacity_input={self.face_capacity_input}, face_count_output={self.face_count_output}, faces={self.faces}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertices", POINTER(Vector3f)),
+        ("face_capacity_input", c_uint32),
+        ("face_count_output", c_uint32),
+        ("faces", POINTER(RoomMeshFaceMETA)),
+    ]
+
+
+PFN_xrGetSpaceRoomMeshMETA = CFUNCTYPE(Result.ctype(), Space, POINTER(SpaceRoomMeshGetInfoMETA), POINTER(RoomMeshMETA))
+
+PFN_xrGetSpaceRoomMeshFaceIndicesMETA = CFUNCTYPE(Result.ctype(), Space, POINTER(Uuid), POINTER(RoomMeshFaceIndicesMETA))
 
 
 class ColocationDiscoveryStartInfoMETA(BaseXrStructure):
@@ -19535,6 +21452,593 @@ class SpaceGroupUuidFilterInfoMETA(BaseXrStructure):
     ]
 
 
+class EnvironmentRaycasterMETA_T(Structure):
+    pass
+
+
+class EnvironmentRaycasterMETA(POINTER(EnvironmentRaycasterMETA_T), HandleMixin):
+    _type_ = EnvironmentRaycasterMETA_T  # ctypes idiosyncrasy
+
+
+class SystemEnvironmentRaycastPropertiesMETA(BaseXrStructure):
+    def __init__(
+        self,
+        supports_environment_raycast: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_ENVIRONMENT_RAYCAST_PROPERTIES_META,
+    ) -> None:
+        super().__init__(
+            supports_environment_raycast=supports_environment_raycast,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemEnvironmentRaycastPropertiesMETA(supports_environment_raycast={repr(self.supports_environment_raycast)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemEnvironmentRaycastPropertiesMETA(supports_environment_raycast={self.supports_environment_raycast}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_environment_raycast", Bool32),
+    ]
+
+
+class EnvironmentRaycasterCreateInfoMETA(BaseXrStructure):
+    pass
+
+
+class EnvironmentRaycasterCreateCompletionMETA(FutureCompletionBaseHeaderEXT):
+    def __init__(
+        self,
+        future_result: Result = Result.SUCCESS,
+        environment_raycaster: EnvironmentRaycasterMETA = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ENVIRONMENT_RAYCASTER_CREATE_COMPLETION_META,
+    ) -> None:
+        super().__init__(
+            _future_result=enum_field_helper(future_result),
+            environment_raycaster=environment_raycaster,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentRaycasterCreateCompletionMETA(future_result={repr(self.future_result)}, environment_raycaster={repr(self.environment_raycaster)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentRaycasterCreateCompletionMETA(future_result={self.future_result}, environment_raycaster={self.environment_raycaster}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("environment_raycaster", EnvironmentRaycasterMETA),
+    ]
+
+
+class EnvironmentRaycastFilterBaseHeaderMETA(BaseXrStructure):
+    pass
+
+
+class EnvironmentRaycastHitGetInfoMETA(BaseXrStructure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        origin: Vector3f = None,
+        direction: Vector3f = None,
+        filter_count: Optional[int] = None,
+        filters: BaseArrayFieldParamType = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ENVIRONMENT_RAYCAST_HIT_GET_INFO_META,
+    ) -> None:
+        if origin is None:
+            origin = Vector3f()
+        if direction is None:
+            direction = Vector3f()
+        filter_count, filters = base_array_field_helper(
+            POINTER(EnvironmentRaycastFilterBaseHeaderMETA), filter_count, filters)
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            origin=origin,
+            direction=direction,
+            filter_count=filter_count,
+            _filters=filters,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentRaycastHitGetInfoMETA(base_space={repr(self.base_space)}, time={repr(self.time)}, origin={repr(self.origin)}, direction={repr(self.direction)}, filter_count={repr(self.filter_count)}, filters={repr(self.filters)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentRaycastHitGetInfoMETA(base_space={self.base_space}, time={self.time}, origin={self.origin}, direction={self.direction}, filter_count={self.filter_count}, filters={self.filters}, next={self.next}, type={self.type})"
+
+    @property
+    def filters(self) -> Array[POINTER(EnvironmentRaycastFilterBaseHeaderMETA)]:
+        return expose_ctypes_array(POINTER(EnvironmentRaycastFilterBaseHeaderMETA), self.filter_count, self._filters)
+    
+    @filters.setter
+    def filters(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.filter_count, self._filters = base_array_field_helper(
+            POINTER(EnvironmentRaycastFilterBaseHeaderMETA), None, value)
+
+    _fields_ = [
+        ("base_space", Space),
+        ("time", Time),
+        ("origin", Vector3f),
+        ("direction", Vector3f),
+        ("filter_count", c_uint32),
+        ("_filters", POINTER(POINTER(EnvironmentRaycastFilterBaseHeaderMETA))),
+    ]
+
+
+class EnvironmentRaycastHitMETA(BaseXrStructure):
+    def __init__(
+        self,
+        status: EnvironmentRaycastHitStatusMETA = EnvironmentRaycastHitStatusMETA.HIT,
+        pose: Posef = Posef(),
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ENVIRONMENT_RAYCAST_HIT_META,
+    ) -> None:
+        super().__init__(
+            _status=enum_field_helper(status),
+            pose=pose,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentRaycastHitMETA(status={repr(self.status)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentRaycastHitMETA(status={self.status}, pose={self.pose}, next={self.next}, type={self.type})"
+
+    @property
+    def status(self) -> EnvironmentRaycastHitStatusMETA:
+        return EnvironmentRaycastHitStatusMETA(self._status)
+    
+    @status.setter
+    def status(self, value: EnvironmentRaycastHitStatusMETA) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._status = enum_field_helper(value)
+
+    _fields_ = [
+        ("_status", EnvironmentRaycastHitStatusMETA.ctype()),
+        ("pose", Posef),
+    ]
+
+
+class EnvironmentRaycastFilterDistanceMETA(EnvironmentRaycastFilterBaseHeaderMETA):
+    def __init__(
+        self,
+        max_distance: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ENVIRONMENT_RAYCAST_FILTER_DISTANCE_META,
+    ) -> None:
+        super().__init__(
+            max_distance=max_distance,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentRaycastFilterDistanceMETA(max_distance={repr(self.max_distance)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentRaycastFilterDistanceMETA(max_distance={self.max_distance:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("max_distance", c_float),
+    ]
+
+
+PFN_xrCreateEnvironmentRaycasterAsyncMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(EnvironmentRaycasterCreateInfoMETA), POINTER(FutureEXT))
+
+PFN_xrCreateEnvironmentRaycasterCompleteMETA = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(EnvironmentRaycasterCreateCompletionMETA))
+
+PFN_xrDestroyEnvironmentRaycasterMETA = CFUNCTYPE(Result.ctype(), EnvironmentRaycasterMETA)
+
+PFN_xrPerformEnvironmentRaycastMETA = CFUNCTYPE(Result.ctype(), EnvironmentRaycasterMETA, POINTER(EnvironmentRaycastHitGetInfoMETA), POINTER(EnvironmentRaycastHitMETA))
+
+
+class Extent3DiMETA(Structure):
+    def __init__(
+        self,
+        width: int = 0,
+        height: int = 0,
+        depth: int = 0,
+    ) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            depth=depth,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Iterator[int]:
+        yield self.width
+        yield self.height
+        yield self.depth
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 3
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_int32 * len(self)).from_address(addressof(self))
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.Extent3DiMETA(width={repr(self.width)}, height={repr(self.height)}, depth={repr(self.depth)})"
+
+    def __str__(self) -> str:
+        return f"xr.Extent3DiMETA(width={self.width}, height={self.height}, depth={self.depth})"
+
+    _fields_ = [
+        ("width", c_int32),
+        ("height", c_int32),
+        ("depth", c_int32),
+    ]
+
+
+class TilePropertiesMETA(BaseXrStructure):
+    def __init__(
+        self,
+        tile_dimensions: Extent3DiMETA = None,
+        apron_dimensions: Extent2Di = None,
+        origin: Offset2Di = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TILE_PROPERTIES_META,
+    ) -> None:
+        if tile_dimensions is None:
+            tile_dimensions = Extent3DiMETA()
+        if apron_dimensions is None:
+            apron_dimensions = Extent2Di()
+        if origin is None:
+            origin = Offset2Di()
+        super().__init__(
+            tile_dimensions=tile_dimensions,
+            apron_dimensions=apron_dimensions,
+            origin=origin,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TilePropertiesMETA(tile_dimensions={repr(self.tile_dimensions)}, apron_dimensions={repr(self.apron_dimensions)}, origin={repr(self.origin)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TilePropertiesMETA(tile_dimensions={self.tile_dimensions}, apron_dimensions={self.apron_dimensions}, origin={self.origin}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("tile_dimensions", Extent3DiMETA),
+        ("apron_dimensions", Extent2Di),
+        ("origin", Offset2Di),
+    ]
+
+
+class TilePropertiesHintMETA(BaseXrStructure):
+    def __init__(
+        self,
+        properties_count: Optional[int] = None,
+        properties: ArrayFieldParamType[TilePropertiesMETA] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TILE_PROPERTIES_HINT_META,
+    ) -> None:
+        properties_count, properties = array_field_helper(
+            TilePropertiesMETA, properties_count, properties)
+        super().__init__(
+            properties_count=properties_count,
+            _properties=properties,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TilePropertiesHintMETA(properties_count={repr(self.properties_count)}, properties={repr(self.properties)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TilePropertiesHintMETA(properties_count={self.properties_count}, properties={self.properties}, next={self.next}, type={self.type})"
+
+    @property
+    def properties(self) -> Array[TilePropertiesMETA]:
+        return expose_ctypes_array(TilePropertiesMETA, self.properties_count, self._properties)
+    
+    @properties.setter
+    def properties(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.properties_count, self._properties = array_field_helper(
+            TilePropertiesMETA, None, value)
+
+    _fields_ = [
+        ("properties_count", c_uint32),
+        ("_properties", POINTER(TilePropertiesMETA)),
+    ]
+
+
+PFN_xrSetTilePropertiesHintMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(TilePropertiesHintMETA))
+
+
+class HandTrackingUnextrapolatedPosesRequestMETA(BaseXrStructure):
+    pass
+
+
+class HandTrackingUnextrapolatedPosesMETA(BaseXrStructure):
+    def __init__(
+        self,
+        capture_time: Time = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.HAND_TRACKING_UNEXTRAPOLATED_POSES_META,
+    ) -> None:
+        super().__init__(
+            capture_time=capture_time,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HandTrackingUnextrapolatedPosesMETA(capture_time={repr(self.capture_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HandTrackingUnextrapolatedPosesMETA(capture_time={self.capture_time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("capture_time", Time),
+    ]
+
+
+PFN_xrSetHandTrackingFrequencyHintMETA = CFUNCTYPE(Result.ctype(), Session, HandTrackingFrequencyHintMETA.ctype())
+
+
+class LightEstimatorANDROID_T(Structure):
+    pass
+
+
+class LightEstimatorANDROID(POINTER(LightEstimatorANDROID_T), HandleMixin):
+    _type_ = LightEstimatorANDROID_T  # ctypes idiosyncrasy
+
+
+class SystemLightEstimationPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        supports_light_estimation: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_LIGHT_ESTIMATION_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_light_estimation=supports_light_estimation,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemLightEstimationPropertiesANDROID(supports_light_estimation={repr(self.supports_light_estimation)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemLightEstimationPropertiesANDROID(supports_light_estimation={self.supports_light_estimation}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_light_estimation", Bool32),
+    ]
+
+
+class LightEstimatorCreateInfoANDROID(BaseXrStructure):
+    pass
+
+
+class LightEstimateGetInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.LIGHT_ESTIMATE_GET_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            space=space,
+            time=time,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LightEstimateGetInfoANDROID(space={repr(self.space)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LightEstimateGetInfoANDROID(space={self.space}, time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("space", Space),
+        ("time", Time),
+    ]
+
+
+class LightEstimateANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        state: LightEstimateStateANDROID = LightEstimateStateANDROID.VALID,
+        last_updated_time: Time = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.LIGHT_ESTIMATE_ANDROID,
+    ) -> None:
+        super().__init__(
+            _state=enum_field_helper(state),
+            last_updated_time=last_updated_time,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LightEstimateANDROID(state={repr(self.state)}, last_updated_time={repr(self.last_updated_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LightEstimateANDROID(state={self.state}, last_updated_time={self.last_updated_time}, next={self.next}, type={self.type})"
+
+    @property
+    def state(self) -> LightEstimateStateANDROID:
+        return LightEstimateStateANDROID(self._state)
+    
+    @state.setter
+    def state(self, value: LightEstimateStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._state = enum_field_helper(value)
+
+    _fields_ = [
+        ("_state", LightEstimateStateANDROID.ctype()),
+        ("last_updated_time", Time),
+    ]
+
+
+class DirectionalLightANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        state: LightEstimateStateANDROID = LightEstimateStateANDROID.VALID,
+        intensity: Vector3f = None,
+        direction: Vector3f = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.DIRECTIONAL_LIGHT_ANDROID,
+    ) -> None:
+        if intensity is None:
+            intensity = Vector3f()
+        if direction is None:
+            direction = Vector3f()
+        super().__init__(
+            _state=enum_field_helper(state),
+            intensity=intensity,
+            direction=direction,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.DirectionalLightANDROID(state={repr(self.state)}, intensity={repr(self.intensity)}, direction={repr(self.direction)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.DirectionalLightANDROID(state={self.state}, intensity={self.intensity}, direction={self.direction}, next={self.next}, type={self.type})"
+
+    @property
+    def state(self) -> LightEstimateStateANDROID:
+        return LightEstimateStateANDROID(self._state)
+    
+    @state.setter
+    def state(self, value: LightEstimateStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._state = enum_field_helper(value)
+
+    _fields_ = [
+        ("_state", LightEstimateStateANDROID.ctype()),
+        ("intensity", Vector3f),
+        ("direction", Vector3f),
+    ]
+
+
+class AmbientLightANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        state: LightEstimateStateANDROID = LightEstimateStateANDROID.VALID,
+        intensity: Vector3f = None,
+        color_correction: Vector3f = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.AMBIENT_LIGHT_ANDROID,
+    ) -> None:
+        if intensity is None:
+            intensity = Vector3f()
+        if color_correction is None:
+            color_correction = Vector3f()
+        super().__init__(
+            _state=enum_field_helper(state),
+            intensity=intensity,
+            color_correction=color_correction,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AmbientLightANDROID(state={repr(self.state)}, intensity={repr(self.intensity)}, color_correction={repr(self.color_correction)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AmbientLightANDROID(state={self.state}, intensity={self.intensity}, color_correction={self.color_correction}, next={self.next}, type={self.type})"
+
+    @property
+    def state(self) -> LightEstimateStateANDROID:
+        return LightEstimateStateANDROID(self._state)
+    
+    @state.setter
+    def state(self, value: LightEstimateStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._state = enum_field_helper(value)
+
+    _fields_ = [
+        ("_state", LightEstimateStateANDROID.ctype()),
+        ("intensity", Vector3f),
+        ("color_correction", Vector3f),
+    ]
+
+
+class SphericalHarmonicsANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        state: LightEstimateStateANDROID = LightEstimateStateANDROID.VALID,
+        kind: SphericalHarmonicsKindANDROID = SphericalHarmonicsKindANDROID.TOTAL,
+        coefficients: ((c_float * 3) * 9) = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPHERICAL_HARMONICS_ANDROID,
+    ) -> None:
+        super().__init__(
+            _state=enum_field_helper(state),
+            _kind=enum_field_helper(kind),
+            coefficients=coefficients,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SphericalHarmonicsANDROID(state={repr(self.state)}, kind={repr(self.kind)}, coefficients={repr(self.coefficients)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SphericalHarmonicsANDROID(state={self.state}, kind={self.kind}, coefficients={self.coefficients}, next={self.next}, type={self.type})"
+
+    @property
+    def state(self) -> LightEstimateStateANDROID:
+        return LightEstimateStateANDROID(self._state)
+    
+    @state.setter
+    def state(self, value: LightEstimateStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._state = enum_field_helper(value)
+
+    @property
+    def kind(self) -> SphericalHarmonicsKindANDROID:
+        return SphericalHarmonicsKindANDROID(self._kind)
+    
+    @kind.setter
+    def kind(self, value: SphericalHarmonicsKindANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._kind = enum_field_helper(value)
+
+    _fields_ = [
+        ("_state", LightEstimateStateANDROID.ctype()),
+        ("_kind", SphericalHarmonicsKindANDROID.ctype()),
+        ("coefficients", ((c_float * 3) * 9)),
+    ]
+
+
+PFN_xrCreateLightEstimatorANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(LightEstimatorCreateInfoANDROID), POINTER(LightEstimatorANDROID))
+
+PFN_xrDestroyLightEstimatorANDROID = CFUNCTYPE(Result.ctype(), LightEstimatorANDROID)
+
+PFN_xrGetLightEstimateANDROID = CFUNCTYPE(Result.ctype(), LightEstimatorANDROID, POINTER(LightEstimateGetInfoANDROID), POINTER(LightEstimateANDROID))
+
+
 class SystemMarkerTrackingPropertiesANDROID(BaseXrStructure):
     def __init__(
         self,
@@ -19734,6 +22238,663 @@ class TrackableMarkerANDROID(BaseXrStructure):
 
 
 PFN_xrGetTrackableMarkerANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, POINTER(TrackableGetInfoANDROID), POINTER(TrackableMarkerANDROID))
+
+
+class SystemQrCodeTrackingPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        supports_qr_code_tracking: Bool32 = 0,
+        supports_qr_code_size_estimation: Bool32 = 0,
+        max_qr_code_count: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_QR_CODE_TRACKING_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_qr_code_tracking=supports_qr_code_tracking,
+            supports_qr_code_size_estimation=supports_qr_code_size_estimation,
+            max_qr_code_count=max_qr_code_count,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemQrCodeTrackingPropertiesANDROID(supports_qr_code_tracking={repr(self.supports_qr_code_tracking)}, supports_qr_code_size_estimation={repr(self.supports_qr_code_size_estimation)}, max_qr_code_count={repr(self.max_qr_code_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemQrCodeTrackingPropertiesANDROID(supports_qr_code_tracking={self.supports_qr_code_tracking}, supports_qr_code_size_estimation={self.supports_qr_code_size_estimation}, max_qr_code_count={self.max_qr_code_count}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_qr_code_tracking", Bool32),
+        ("supports_qr_code_size_estimation", Bool32),
+        ("max_qr_code_count", c_uint16),
+    ]
+
+
+class TrackableQrCodeConfigurationANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        tracking_mode: QrCodeTrackingModeANDROID = QrCodeTrackingModeANDROID.DYNAMIC,
+        qr_code_edge_size: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TRACKABLE_QR_CODE_CONFIGURATION_ANDROID,
+    ) -> None:
+        super().__init__(
+            _tracking_mode=enum_field_helper(tracking_mode),
+            qr_code_edge_size=qr_code_edge_size,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableQrCodeConfigurationANDROID(tracking_mode={repr(self.tracking_mode)}, qr_code_edge_size={repr(self.qr_code_edge_size)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableQrCodeConfigurationANDROID(tracking_mode={self.tracking_mode}, qr_code_edge_size={self.qr_code_edge_size:.3f}, next={self.next}, type={self.type})"
+
+    @property
+    def tracking_mode(self) -> QrCodeTrackingModeANDROID:
+        return QrCodeTrackingModeANDROID(self._tracking_mode)
+    
+    @tracking_mode.setter
+    def tracking_mode(self, value: QrCodeTrackingModeANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._tracking_mode = enum_field_helper(value)
+
+    _fields_ = [
+        ("_tracking_mode", QrCodeTrackingModeANDROID.ctype()),
+        ("qr_code_edge_size", c_float),
+    ]
+
+
+class TrackableQrCodeANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID.PAUSED,
+        last_updated_time: Time = 0,
+        center_pose: Posef = Posef(),
+        extents: Extent2Df = None,
+        buffer_capacity_input: int = 0,
+        buffer_count_output: int = 0,
+        buffer: str = "",
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TRACKABLE_QR_CODE_ANDROID,
+    ) -> None:
+        if extents is None:
+            extents = Extent2Df()
+        super().__init__(
+            _tracking_state=enum_field_helper(tracking_state),
+            last_updated_time=last_updated_time,
+            center_pose=center_pose,
+            extents=extents,
+            buffer_capacity_input=buffer_capacity_input,
+            buffer_count_output=buffer_count_output,
+            _buffer=buffer.encode(),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableQrCodeANDROID(tracking_state={repr(self.tracking_state)}, last_updated_time={repr(self.last_updated_time)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, buffer_capacity_input={repr(self.buffer_capacity_input)}, buffer_count_output={repr(self.buffer_count_output)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableQrCodeANDROID(tracking_state={self.tracking_state}, last_updated_time={self.last_updated_time}, center_pose={self.center_pose}, extents={self.extents}, buffer_capacity_input={self.buffer_capacity_input}, buffer_count_output={self.buffer_count_output}, buffer={self.buffer}, next={self.next}, type={self.type})"
+
+    @property
+    def tracking_state(self) -> TrackingStateANDROID:
+        return TrackingStateANDROID(self._tracking_state)
+    
+    @tracking_state.setter
+    def tracking_state(self, value: TrackingStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._tracking_state = enum_field_helper(value)
+
+    @property
+    def buffer(self) -> str:
+        return self._buffer.decode()
+    
+    @buffer.setter
+    def buffer(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._buffer = value.encode()
+
+    _fields_ = [
+        ("_tracking_state", TrackingStateANDROID.ctype()),
+        ("last_updated_time", Time),
+        ("center_pose", Posef),
+        ("extents", Extent2Df),
+        ("buffer_capacity_input", c_uint32),
+        ("buffer_count_output", c_uint32),
+        ("_buffer", c_char_p),
+    ]
+
+
+PFN_xrGetTrackableQrCodeANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, POINTER(TrackableGetInfoANDROID), POINTER(TrackableQrCodeANDROID))
+
+
+class TrackableImageDatabaseANDROID_T(Structure):
+    pass
+
+
+class TrackableImageDatabaseANDROID(POINTER(TrackableImageDatabaseANDROID_T), HandleMixin):
+    _type_ = TrackableImageDatabaseANDROID_T  # ctypes idiosyncrasy
+
+
+class SystemImageTrackingPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        supports_image_tracking: Bool32 = 0,
+        supports_physical_size_estimation: Bool32 = 0,
+        max_tracked_image_count: int = 0,
+        max_loaded_image_count: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_IMAGE_TRACKING_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_image_tracking=supports_image_tracking,
+            supports_physical_size_estimation=supports_physical_size_estimation,
+            max_tracked_image_count=max_tracked_image_count,
+            max_loaded_image_count=max_loaded_image_count,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemImageTrackingPropertiesANDROID(supports_image_tracking={repr(self.supports_image_tracking)}, supports_physical_size_estimation={repr(self.supports_physical_size_estimation)}, max_tracked_image_count={repr(self.max_tracked_image_count)}, max_loaded_image_count={repr(self.max_loaded_image_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemImageTrackingPropertiesANDROID(supports_image_tracking={self.supports_image_tracking}, supports_physical_size_estimation={self.supports_physical_size_estimation}, max_tracked_image_count={self.max_tracked_image_count}, max_loaded_image_count={self.max_loaded_image_count}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_image_tracking", Bool32),
+        ("supports_physical_size_estimation", Bool32),
+        ("max_tracked_image_count", c_uint32),
+        ("max_loaded_image_count", c_uint32),
+    ]
+
+
+class TrackableImageDatabaseEntryANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        tracking_mode: TrackableImageTrackingModeANDROID = TrackableImageTrackingModeANDROID.DYNAMIC,
+        physical_width: float = 0,
+        image_width: int = 0,
+        image_height: int = 0,
+        format: TrackableImageFormatANDROID = TrackableImageFormatANDROID.R8G8B8A8,
+        buffer_size: int = 0,
+        buffer: POINTER(c_uint8) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TRACKABLE_IMAGE_DATABASE_ENTRY_ANDROID,
+    ) -> None:
+        super().__init__(
+            _tracking_mode=enum_field_helper(tracking_mode),
+            physical_width=physical_width,
+            image_width=image_width,
+            image_height=image_height,
+            _format=enum_field_helper(format),
+            buffer_size=buffer_size,
+            buffer=buffer,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableImageDatabaseEntryANDROID(tracking_mode={repr(self.tracking_mode)}, physical_width={repr(self.physical_width)}, image_width={repr(self.image_width)}, image_height={repr(self.image_height)}, format={repr(self.format)}, buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableImageDatabaseEntryANDROID(tracking_mode={self.tracking_mode}, physical_width={self.physical_width:.3f}, image_width={self.image_width}, image_height={self.image_height}, format={self.format}, buffer_size={self.buffer_size}, buffer={self.buffer}, next={self.next}, type={self.type})"
+
+    @property
+    def tracking_mode(self) -> TrackableImageTrackingModeANDROID:
+        return TrackableImageTrackingModeANDROID(self._tracking_mode)
+    
+    @tracking_mode.setter
+    def tracking_mode(self, value: TrackableImageTrackingModeANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._tracking_mode = enum_field_helper(value)
+
+    @property
+    def format(self) -> TrackableImageFormatANDROID:
+        return TrackableImageFormatANDROID(self._format)
+    
+    @format.setter
+    def format(self, value: TrackableImageFormatANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._format = enum_field_helper(value)
+
+    _fields_ = [
+        ("_tracking_mode", TrackableImageTrackingModeANDROID.ctype()),
+        ("physical_width", c_float),
+        ("image_width", c_uint32),
+        ("image_height", c_uint32),
+        ("_format", TrackableImageFormatANDROID.ctype()),
+        ("buffer_size", c_uint32),
+        ("buffer", POINTER(c_uint8)),
+    ]
+
+
+class TrackableImageDatabaseCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        entry_count: int = 0,
+        entries: POINTER(TrackableImageDatabaseEntryANDROID) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TRACKABLE_IMAGE_DATABASE_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            entry_count=entry_count,
+            entries=entries,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableImageDatabaseCreateInfoANDROID(entry_count={repr(self.entry_count)}, entries={repr(self.entries)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableImageDatabaseCreateInfoANDROID(entry_count={self.entry_count}, entries={self.entries}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("entry_count", c_uint32),
+        ("entries", POINTER(TrackableImageDatabaseEntryANDROID)),
+    ]
+
+
+class CreateTrackableImageDatabaseCompletionANDROID(FutureCompletionBaseHeaderEXT):
+    def __init__(
+        self,
+        future_result: Result = Result.SUCCESS,
+        database: TrackableImageDatabaseANDROID = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CREATE_TRACKABLE_IMAGE_DATABASE_COMPLETION_ANDROID,
+    ) -> None:
+        super().__init__(
+            _future_result=enum_field_helper(future_result),
+            database=database,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateTrackableImageDatabaseCompletionANDROID(future_result={repr(self.future_result)}, database={repr(self.database)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateTrackableImageDatabaseCompletionANDROID(future_result={self.future_result}, database={self.database}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("database", TrackableImageDatabaseANDROID),
+    ]
+
+
+class TrackableImageConfigurationANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        database_count: Optional[int] = None,
+        databases: ArrayFieldParamType[TrackableImageDatabaseANDROID] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
+    ) -> None:
+        database_count, databases = array_field_helper(
+            TrackableImageDatabaseANDROID, database_count, databases)
+        super().__init__(
+            database_count=database_count,
+            _databases=databases,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableImageConfigurationANDROID(database_count={repr(self.database_count)}, databases={repr(self.databases)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableImageConfigurationANDROID(database_count={self.database_count}, databases={self.databases}, next={self.next}, type={self.type})"
+
+    @property
+    def databases(self) -> Array[TrackableImageDatabaseANDROID]:
+        return expose_ctypes_array(TrackableImageDatabaseANDROID, self.database_count, self._databases)
+    
+    @databases.setter
+    def databases(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.database_count, self._databases = array_field_helper(
+            TrackableImageDatabaseANDROID, None, value)
+
+    _fields_ = [
+        ("database_count", c_uint32),
+        ("_databases", POINTER(TrackableImageDatabaseANDROID)),
+    ]
+
+
+class TrackableImageANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        tracking_state: TrackingStateANDROID = TrackingStateANDROID.PAUSED,
+        last_updated_time: Time = 0,
+        database: TrackableImageDatabaseANDROID = None,
+        database_entry_index: int = 0,
+        center_pose: Posef = Posef(),
+        extents: Extent2Df = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.TRACKABLE_IMAGE_ANDROID,
+    ) -> None:
+        if extents is None:
+            extents = Extent2Df()
+        super().__init__(
+            _tracking_state=enum_field_helper(tracking_state),
+            last_updated_time=last_updated_time,
+            database=database,
+            database_entry_index=database_entry_index,
+            center_pose=center_pose,
+            extents=extents,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.TrackableImageANDROID(tracking_state={repr(self.tracking_state)}, last_updated_time={repr(self.last_updated_time)}, database={repr(self.database)}, database_entry_index={repr(self.database_entry_index)}, center_pose={repr(self.center_pose)}, extents={repr(self.extents)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.TrackableImageANDROID(tracking_state={self.tracking_state}, last_updated_time={self.last_updated_time}, database={self.database}, database_entry_index={self.database_entry_index}, center_pose={self.center_pose}, extents={self.extents}, next={self.next}, type={self.type})"
+
+    @property
+    def tracking_state(self) -> TrackingStateANDROID:
+        return TrackingStateANDROID(self._tracking_state)
+    
+    @tracking_state.setter
+    def tracking_state(self, value: TrackingStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._tracking_state = enum_field_helper(value)
+
+    _fields_ = [
+        ("_tracking_state", TrackingStateANDROID.ctype()),
+        ("last_updated_time", Time),
+        ("database", TrackableImageDatabaseANDROID),
+        ("database_entry_index", c_uint32),
+        ("center_pose", Posef),
+        ("extents", Extent2Df),
+    ]
+
+
+class EventDataImageTrackingLostANDROID(EventDataBaseHeader):
+    def __init__(
+        self,
+        time: Time = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_IMAGE_TRACKING_LOST_ANDROID,
+    ) -> None:
+        super().__init__(
+            time=time,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataImageTrackingLostANDROID(time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataImageTrackingLostANDROID(time={self.time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("time", Time),
+    ]
+
+
+PFN_xrCreateTrackableImageDatabaseAsyncANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(TrackableImageDatabaseCreateInfoANDROID), POINTER(FutureEXT))
+
+PFN_xrCreateTrackableImageDatabaseCompleteANDROID = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(CreateTrackableImageDatabaseCompletionANDROID))
+
+PFN_xrDestroyTrackableImageDatabaseANDROID = CFUNCTYPE(Result.ctype(), TrackableImageDatabaseANDROID)
+
+PFN_xrAddTrackableImageDatabaseANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, TrackableImageDatabaseANDROID)
+
+PFN_xrRemoveTrackableImageDatabaseANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, TrackableImageDatabaseANDROID)
+
+PFN_xrGetTrackableImageANDROID = CFUNCTYPE(Result.ctype(), TrackableTrackerANDROID, POINTER(TrackableGetInfoANDROID), POINTER(TrackableImageANDROID))
+
+
+class SceneMeshingTrackerANDROID_T(Structure):
+    pass
+
+
+class SceneMeshingTrackerANDROID(POINTER(SceneMeshingTrackerANDROID_T), HandleMixin):
+    _type_ = SceneMeshingTrackerANDROID_T  # ctypes idiosyncrasy
+
+
+class SceneMeshSnapshotANDROID_T(Structure):
+    pass
+
+
+class SceneMeshSnapshotANDROID(POINTER(SceneMeshSnapshotANDROID_T), HandleMixin):
+    _type_ = SceneMeshSnapshotANDROID_T  # ctypes idiosyncrasy
+
+
+class SystemSceneMeshingPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        supports_scene_meshing: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_SCENE_MESHING_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_scene_meshing=supports_scene_meshing,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSceneMeshingPropertiesANDROID(supports_scene_meshing={repr(self.supports_scene_meshing)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSceneMeshingPropertiesANDROID(supports_scene_meshing={self.supports_scene_meshing}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_scene_meshing", Bool32),
+    ]
+
+
+class SceneMeshingTrackerCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_set: SceneMeshSemanticLabelSetANDROID = SceneMeshSemanticLabelSetANDROID.NONE,
+        enable_normals: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_MESHING_TRACKER_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _semantic_label_set=enum_field_helper(semantic_label_set),
+            enable_normals=enable_normals,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMeshingTrackerCreateInfoANDROID(semantic_label_set={repr(self.semantic_label_set)}, enable_normals={repr(self.enable_normals)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMeshingTrackerCreateInfoANDROID(semantic_label_set={self.semantic_label_set}, enable_normals={self.enable_normals}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_label_set(self) -> SceneMeshSemanticLabelSetANDROID:
+        return SceneMeshSemanticLabelSetANDROID(self._semantic_label_set)
+    
+    @semantic_label_set.setter
+    def semantic_label_set(self, value: SceneMeshSemanticLabelSetANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._semantic_label_set = enum_field_helper(value)
+
+    _fields_ = [
+        ("_semantic_label_set", SceneMeshSemanticLabelSetANDROID.ctype()),
+        ("enable_normals", Bool32),
+    ]
+
+
+class SceneMeshSnapshotCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        base_space: Space = None,
+        time: Time = 0,
+        bounding_box: Boxf = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_MESH_SNAPSHOT_CREATE_INFO_ANDROID,
+    ) -> None:
+        if bounding_box is None:
+            bounding_box = Boxf()
+        super().__init__(
+            base_space=base_space,
+            time=time,
+            bounding_box=bounding_box,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMeshSnapshotCreateInfoANDROID(base_space={repr(self.base_space)}, time={repr(self.time)}, bounding_box={repr(self.bounding_box)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMeshSnapshotCreateInfoANDROID(base_space={self.base_space}, time={self.time}, bounding_box={self.bounding_box}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("base_space", Space),
+        ("time", Time),
+        ("bounding_box", Boxf),
+    ]
+
+
+class SceneMeshSnapshotCreationResultANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        snapshot: SceneMeshSnapshotANDROID = None,
+        tracking_state: SceneMeshTrackingStateANDROID = SceneMeshTrackingStateANDROID.INITIALIZING,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_MESH_SNAPSHOT_CREATION_RESULT_ANDROID,
+    ) -> None:
+        super().__init__(
+            snapshot=snapshot,
+            _tracking_state=enum_field_helper(tracking_state),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMeshSnapshotCreationResultANDROID(snapshot={repr(self.snapshot)}, tracking_state={repr(self.tracking_state)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMeshSnapshotCreationResultANDROID(snapshot={self.snapshot}, tracking_state={self.tracking_state}, next={self.next}, type={self.type})"
+
+    @property
+    def tracking_state(self) -> SceneMeshTrackingStateANDROID:
+        return SceneMeshTrackingStateANDROID(self._tracking_state)
+    
+    @tracking_state.setter
+    def tracking_state(self, value: SceneMeshTrackingStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._tracking_state = enum_field_helper(value)
+
+    _fields_ = [
+        ("snapshot", SceneMeshSnapshotANDROID),
+        ("_tracking_state", SceneMeshTrackingStateANDROID.ctype()),
+    ]
+
+
+class SceneSubmeshStateANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        submesh_id: Uuid = None,
+        last_updated_time: Time = 0,
+        submesh_pose_in_base_space: Posef = Posef(),
+        bounds: Extent3Df = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_SUBMESH_STATE_ANDROID,
+    ) -> None:
+        if submesh_id is None:
+            submesh_id = Uuid()
+        if bounds is None:
+            bounds = Extent3Df()
+        super().__init__(
+            submesh_id=submesh_id,
+            last_updated_time=last_updated_time,
+            submesh_pose_in_base_space=submesh_pose_in_base_space,
+            bounds=bounds,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneSubmeshStateANDROID(submesh_id={repr(self.submesh_id)}, last_updated_time={repr(self.last_updated_time)}, submesh_pose_in_base_space={repr(self.submesh_pose_in_base_space)}, bounds={repr(self.bounds)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneSubmeshStateANDROID(submesh_id={self.submesh_id}, last_updated_time={self.last_updated_time}, submesh_pose_in_base_space={self.submesh_pose_in_base_space}, bounds={self.bounds}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("submesh_id", Uuid),
+        ("last_updated_time", Time),
+        ("submesh_pose_in_base_space", Posef),
+        ("bounds", Extent3Df),
+    ]
+
+
+class SceneSubmeshDataANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        submesh_id: Uuid = None,
+        vertex_capacity_input: int = 0,
+        vertex_count_output: int = 0,
+        vertex_positions: POINTER(Vector3f) = None,
+        vertex_normals: POINTER(Vector3f) = None,
+        vertex_semantics: POINTER(c_uint8) = None,
+        index_capacity_input: int = 0,
+        index_count_output: int = 0,
+        indices: POINTER(c_uint32) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_SUBMESH_DATA_ANDROID,
+    ) -> None:
+        if submesh_id is None:
+            submesh_id = Uuid()
+        super().__init__(
+            submesh_id=submesh_id,
+            vertex_capacity_input=vertex_capacity_input,
+            vertex_count_output=vertex_count_output,
+            vertex_positions=vertex_positions,
+            vertex_normals=vertex_normals,
+            vertex_semantics=vertex_semantics,
+            index_capacity_input=index_capacity_input,
+            index_count_output=index_count_output,
+            indices=indices,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneSubmeshDataANDROID(submesh_id={repr(self.submesh_id)}, vertex_capacity_input={repr(self.vertex_capacity_input)}, vertex_count_output={repr(self.vertex_count_output)}, vertex_positions={repr(self.vertex_positions)}, vertex_normals={repr(self.vertex_normals)}, vertex_semantics={repr(self.vertex_semantics)}, index_capacity_input={repr(self.index_capacity_input)}, index_count_output={repr(self.index_count_output)}, indices={repr(self.indices)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneSubmeshDataANDROID(submesh_id={self.submesh_id}, vertex_capacity_input={self.vertex_capacity_input}, vertex_count_output={self.vertex_count_output}, vertex_positions={self.vertex_positions}, vertex_normals={self.vertex_normals}, vertex_semantics={self.vertex_semantics}, index_capacity_input={self.index_capacity_input}, index_count_output={self.index_count_output}, indices={self.indices}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("submesh_id", Uuid),
+        ("vertex_capacity_input", c_uint32),
+        ("vertex_count_output", c_uint32),
+        ("vertex_positions", POINTER(Vector3f)),
+        ("vertex_normals", POINTER(Vector3f)),
+        ("vertex_semantics", POINTER(c_uint8)),
+        ("index_capacity_input", c_uint32),
+        ("index_count_output", c_uint32),
+        ("indices", POINTER(c_uint32)),
+    ]
+
+
+PFN_xrEnumerateSupportedSemanticLabelSetsANDROID = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SceneMeshSemanticLabelSetANDROID.ctype()))
+
+PFN_xrCreateSceneMeshingTrackerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(SceneMeshingTrackerCreateInfoANDROID), POINTER(SceneMeshingTrackerANDROID))
+
+PFN_xrDestroySceneMeshingTrackerANDROID = CFUNCTYPE(Result.ctype(), SceneMeshingTrackerANDROID)
+
+PFN_xrCreateSceneMeshSnapshotANDROID = CFUNCTYPE(Result.ctype(), SceneMeshingTrackerANDROID, POINTER(SceneMeshSnapshotCreateInfoANDROID), POINTER(SceneMeshSnapshotCreationResultANDROID))
+
+PFN_xrDestroySceneMeshSnapshotANDROID = CFUNCTYPE(Result.ctype(), SceneMeshSnapshotANDROID)
+
+PFN_xrGetAllSubmeshStatesANDROID = CFUNCTYPE(Result.ctype(), SceneMeshSnapshotANDROID, c_uint32, POINTER(c_uint32), POINTER(SceneSubmeshStateANDROID))
+
+PFN_xrGetSubmeshDataANDROID = CFUNCTYPE(Result.ctype(), SceneMeshSnapshotANDROID, c_uint32, POINTER(SceneSubmeshDataANDROID))
 
 SpatialEntityIdEXT = c_uint64
 
@@ -20690,6 +23851,39 @@ class SpatialComponentPlaneSemanticLabelListEXT(BaseXrStructure):
     ]
 
 
+class StationaryReferenceSpaceGenerationIdGetInfoEXT(BaseXrStructure):
+    pass
+
+
+class StationaryReferenceSpaceGenerationIdResultEXT(BaseXrStructure):
+    def __init__(
+        self,
+        generation_id: Uuid = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.STATIONARY_REFERENCE_SPACE_GENERATION_ID_RESULT_EXT,
+    ) -> None:
+        if generation_id is None:
+            generation_id = Uuid()
+        super().__init__(
+            generation_id=generation_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.StationaryReferenceSpaceGenerationIdResultEXT(generation_id={repr(self.generation_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.StationaryReferenceSpaceGenerationIdResultEXT(generation_id={self.generation_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("generation_id", Uuid),
+    ]
+
+
+PFN_xrGetStationaryReferenceSpaceGenerationIdEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(StationaryReferenceSpaceGenerationIdGetInfoEXT), POINTER(StationaryReferenceSpaceGenerationIdResultEXT))
+
+
 class SpatialCapabilityConfigurationQrCodeEXT(SpatialCapabilityConfigurationBaseHeaderEXT):
     pass
 
@@ -20901,6 +24095,1319 @@ class SpatialComponentMarkerListEXT(BaseXrStructure):
     _fields_ = [
         ("marker_count", c_uint32),
         ("_markers", POINTER(SpatialMarkerDataEXT)),
+    ]
+
+
+class SystemDynamicObjectTrackingPropertiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        supports_dynamic_object_tracking: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_DYNAMIC_OBJECT_TRACKING_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_dynamic_object_tracking=supports_dynamic_object_tracking,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemDynamicObjectTrackingPropertiesBD(supports_dynamic_object_tracking={repr(self.supports_dynamic_object_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemDynamicObjectTrackingPropertiesBD(supports_dynamic_object_tracking={self.supports_dynamic_object_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_dynamic_object_tracking", Bool32),
+    ]
+
+
+class SenseDataProviderCreateInfoDynamicObjectBD(BaseXrStructure):
+    def __init__(
+        self,
+        tracking_type_count: Optional[int] = None,
+        tracking_types: ArrayFieldParamType[c_int] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SENSE_DATA_PROVIDER_CREATE_INFO_DYNAMIC_OBJECT_BD,
+    ) -> None:
+        tracking_type_count, tracking_types = array_field_helper(
+            c_int, tracking_type_count, tracking_types)
+        super().__init__(
+            tracking_type_count=tracking_type_count,
+            _tracking_types=tracking_types,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoDynamicObjectBD(tracking_type_count={repr(self.tracking_type_count)}, tracking_types={repr(self.tracking_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataProviderCreateInfoDynamicObjectBD(tracking_type_count={self.tracking_type_count}, tracking_types={self.tracking_types}, next={self.next}, type={self.type})"
+
+    @property
+    def tracking_types(self) -> Array[c_int]:
+        return expose_ctypes_array(c_int, self.tracking_type_count, self._tracking_types)
+    
+    @tracking_types.setter
+    def tracking_types(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.tracking_type_count, self._tracking_types = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("tracking_type_count", c_uint32),
+        ("_tracking_types", POINTER(c_int)),
+    ]
+
+
+class DynamicObjectDataBD(BaseXrStructure):
+    def __init__(
+        self,
+        object_type: DynamicObjectTypeBD = DynamicObjectTypeBD.UNKNOWN,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.DYNAMIC_OBJECT_DATA_BD,
+    ) -> None:
+        super().__init__(
+            _object_type=enum_field_helper(object_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.DynamicObjectDataBD(object_type={repr(self.object_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.DynamicObjectDataBD(object_type={self.object_type}, next={self.next}, type={self.type})"
+
+    @property
+    def object_type(self) -> DynamicObjectTypeBD:
+        return DynamicObjectTypeBD(self._object_type)
+    
+    @object_type.setter
+    def object_type(self, value: DynamicObjectTypeBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._object_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_object_type", DynamicObjectTypeBD.ctype()),
+    ]
+
+
+class SpatialEntityComponentDataDynamicObjectBD(BaseXrStructure):
+    def __init__(
+        self,
+        data: DynamicObjectDataBD = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_ENTITY_COMPONENT_DATA_DYNAMIC_OBJECT_BD,
+    ) -> None:
+        if data is None:
+            data = DynamicObjectDataBD()
+        super().__init__(
+            data=data,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialEntityComponentDataDynamicObjectBD(data={repr(self.data)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialEntityComponentDataDynamicObjectBD(data={self.data}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("data", DynamicObjectDataBD),
+    ]
+
+
+class SenseDataFilterDynamicObjectTypeBD(BaseXrStructure):
+    def __init__(
+        self,
+        type_count: Optional[int] = None,
+        types: ArrayFieldParamType[c_int] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SENSE_DATA_FILTER_DYNAMIC_OBJECT_TYPE_BD,
+    ) -> None:
+        type_count, types = array_field_helper(
+            c_int, type_count, types)
+        super().__init__(
+            type_count=type_count,
+            _types=types,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataFilterDynamicObjectTypeBD(type_count={repr(self.type_count)}, types={repr(self.types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataFilterDynamicObjectTypeBD(type_count={self.type_count}, types={self.types}, next={self.next}, type={self.type})"
+
+    @property
+    def types(self) -> Array[c_int]:
+        return expose_ctypes_array(c_int, self.type_count, self._types)
+    
+    @types.setter
+    def types(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.type_count, self._types = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("type_count", c_uint32),
+        ("_types", POINTER(c_int)),
+    ]
+
+
+class SystemDynamicObjectKeyboardPropertiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        supports_dynamic_object_keyboard: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_DYNAMIC_OBJECT_KEYBOARD_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_dynamic_object_keyboard=supports_dynamic_object_keyboard,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemDynamicObjectKeyboardPropertiesBD(supports_dynamic_object_keyboard={repr(self.supports_dynamic_object_keyboard)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemDynamicObjectKeyboardPropertiesBD(supports_dynamic_object_keyboard={self.supports_dynamic_object_keyboard}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_dynamic_object_keyboard", Bool32),
+    ]
+
+
+class SystemDynamicObjectMousePropertiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        supports_dynamic_object_mouse: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_DYNAMIC_OBJECT_MOUSE_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            supports_dynamic_object_mouse=supports_dynamic_object_mouse,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemDynamicObjectMousePropertiesBD(supports_dynamic_object_mouse={repr(self.supports_dynamic_object_mouse)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemDynamicObjectMousePropertiesBD(supports_dynamic_object_mouse={self.supports_dynamic_object_mouse}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_dynamic_object_mouse", Bool32),
+    ]
+
+
+CameraIdBD = c_uint64
+
+CameraImageIdBD = c_uint64
+
+
+class CameraDeviceBD_T(Structure):
+    pass
+
+
+class CameraDeviceBD(POINTER(CameraDeviceBD_T), HandleMixin):
+    _type_ = CameraDeviceBD_T  # ctypes idiosyncrasy
+
+
+class CameraCaptureSessionBD_T(Structure):
+    pass
+
+
+class CameraCaptureSessionBD(POINTER(CameraCaptureSessionBD_T), HandleMixin):
+    _type_ = CameraCaptureSessionBD_T  # ctypes idiosyncrasy
+
+
+class CameraPropertyBaseHeaderBD(BaseXrStructure):
+    pass
+
+
+class CameraPropertiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        property_count: int = 0,
+        properties: POINTER(POINTER(CameraPropertyBaseHeaderBD)) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_PROPERTIES_BD,
+    ) -> None:
+        super().__init__(
+            property_count=property_count,
+            properties=properties,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraPropertiesBD(property_count={repr(self.property_count)}, properties={repr(self.properties)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraPropertiesBD(property_count={self.property_count}, properties={self.properties}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("property_count", c_uint32),
+        ("properties", POINTER(POINTER(CameraPropertyBaseHeaderBD))),
+    ]
+
+
+class CameraCapabilityBaseHeaderBD(BaseXrStructure):
+    pass
+
+
+class CameraCapabilitiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        capability_count: int = 0,
+        capabilities: POINTER(POINTER(CameraCapabilityBaseHeaderBD)) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPABILITIES_BD,
+    ) -> None:
+        super().__init__(
+            capability_count=capability_count,
+            capabilities=capabilities,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCapabilitiesBD(capability_count={repr(self.capability_count)}, capabilities={repr(self.capabilities)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCapabilitiesBD(capability_count={self.capability_count}, capabilities={self.capabilities}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("capability_count", c_uint32),
+        ("capabilities", POINTER(POINTER(CameraCapabilityBaseHeaderBD))),
+    ]
+
+
+class AvailableCamerasEnumerateInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        properties: POINTER(CameraPropertiesBD) = None,
+        capabilities: POINTER(CameraCapabilitiesBD) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.AVAILABLE_CAMERAS_ENUMERATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            properties=properties,
+            capabilities=capabilities,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AvailableCamerasEnumerateInfoBD(properties={repr(self.properties)}, capabilities={repr(self.capabilities)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AvailableCamerasEnumerateInfoBD(properties={self.properties}, capabilities={self.capabilities}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("properties", POINTER(CameraPropertiesBD)),
+        ("capabilities", POINTER(CameraCapabilitiesBD)),
+    ]
+
+
+class AvailableCameraBD(BaseXrStructure):
+    def __init__(
+        self,
+        camera_id: CameraIdBD = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.AVAILABLE_CAMERA_BD,
+    ) -> None:
+        super().__init__(
+            camera_id=camera_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AvailableCameraBD(camera_id={repr(self.camera_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AvailableCameraBD(camera_id={self.camera_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("camera_id", CameraIdBD),
+    ]
+
+
+class CameraPropertyTypesEnumerateInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        camera_id: CameraIdBD = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_PROPERTY_TYPES_ENUMERATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            camera_id=camera_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraPropertyTypesEnumerateInfoBD(camera_id={repr(self.camera_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraPropertyTypesEnumerateInfoBD(camera_id={self.camera_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("camera_id", CameraIdBD),
+    ]
+
+
+class CameraPropertyTypesBD(BaseXrStructure):
+    def __init__(
+        self,
+        property_type_capacity_input: int = 0,
+        property_type_count_output: int = 0,
+        property_types: POINTER(CameraPropertyTypeBD.ctype()) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_PROPERTY_TYPES_BD,
+    ) -> None:
+        super().__init__(
+            property_type_capacity_input=property_type_capacity_input,
+            property_type_count_output=property_type_count_output,
+            property_types=property_types,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraPropertyTypesBD(property_type_capacity_input={repr(self.property_type_capacity_input)}, property_type_count_output={repr(self.property_type_count_output)}, property_types={repr(self.property_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraPropertyTypesBD(property_type_capacity_input={self.property_type_capacity_input}, property_type_count_output={self.property_type_count_output}, property_types={self.property_types}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("property_type_capacity_input", c_uint32),
+        ("property_type_count_output", c_uint32),
+        ("property_types", POINTER(CameraPropertyTypeBD.ctype())),
+    ]
+
+
+class CameraPropertiesGetInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        camera_id: CameraIdBD = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_PROPERTIES_GET_INFO_BD,
+    ) -> None:
+        super().__init__(
+            camera_id=camera_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraPropertiesGetInfoBD(camera_id={repr(self.camera_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraPropertiesGetInfoBD(camera_id={self.camera_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("camera_id", CameraIdBD),
+    ]
+
+
+class CameraPropertyFacingBD(CameraPropertyBaseHeaderBD):
+    def __init__(
+        self,
+        facing: CameraFacingBD = CameraFacingBD.WORLD,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_PROPERTY_FACING_BD,
+    ) -> None:
+        super().__init__(
+            _facing=enum_field_helper(facing),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraPropertyFacingBD(facing={repr(self.facing)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraPropertyFacingBD(facing={self.facing}, next={self.next}, type={self.type})"
+
+    @property
+    def facing(self) -> CameraFacingBD:
+        return CameraFacingBD(self._facing)
+    
+    @facing.setter
+    def facing(self, value: CameraFacingBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._facing = enum_field_helper(value)
+
+    _fields_ = [
+        ("_facing", CameraFacingBD.ctype()),
+    ]
+
+
+class CameraPropertyPositionBD(CameraPropertyBaseHeaderBD):
+    def __init__(
+        self,
+        position: CameraPositionBD = CameraPositionBD.UNSPECIFIED,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_PROPERTY_POSITION_BD,
+    ) -> None:
+        super().__init__(
+            _position=enum_field_helper(position),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraPropertyPositionBD(position={repr(self.position)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraPropertyPositionBD(position={self.position}, next={self.next}, type={self.type})"
+
+    @property
+    def position(self) -> CameraPositionBD:
+        return CameraPositionBD(self._position)
+    
+    @position.setter
+    def position(self, value: CameraPositionBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._position = enum_field_helper(value)
+
+    _fields_ = [
+        ("_position", CameraPositionBD.ctype()),
+    ]
+
+
+class CameraPropertyCameraTypeBD(CameraPropertyBaseHeaderBD):
+    def __init__(
+        self,
+        camera_type: CameraTypeBD = CameraTypeBD.PASSTHROUGH_COLOR,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_PROPERTY_CAMERA_TYPE_BD,
+    ) -> None:
+        super().__init__(
+            _camera_type=enum_field_helper(camera_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraPropertyCameraTypeBD(camera_type={repr(self.camera_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraPropertyCameraTypeBD(camera_type={self.camera_type}, next={self.next}, type={self.type})"
+
+    @property
+    def camera_type(self) -> CameraTypeBD:
+        return CameraTypeBD(self._camera_type)
+    
+    @camera_type.setter
+    def camera_type(self, value: CameraTypeBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._camera_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_camera_type", CameraTypeBD.ctype()),
+    ]
+
+
+class CameraCapabilityTypesEnumerateInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        camera_id: CameraIdBD = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPABILITY_TYPES_ENUMERATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            camera_id=camera_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCapabilityTypesEnumerateInfoBD(camera_id={repr(self.camera_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCapabilityTypesEnumerateInfoBD(camera_id={self.camera_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("camera_id", CameraIdBD),
+    ]
+
+
+class CameraCapabilityTypesBD(BaseXrStructure):
+    def __init__(
+        self,
+        capability_type_capacity_input: int = 0,
+        capability_type_count_output: int = 0,
+        capability_types: POINTER(CameraCapabilityTypeBD.ctype()) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPABILITY_TYPES_BD,
+    ) -> None:
+        super().__init__(
+            capability_type_capacity_input=capability_type_capacity_input,
+            capability_type_count_output=capability_type_count_output,
+            capability_types=capability_types,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCapabilityTypesBD(capability_type_capacity_input={repr(self.capability_type_capacity_input)}, capability_type_count_output={repr(self.capability_type_count_output)}, capability_types={repr(self.capability_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCapabilityTypesBD(capability_type_capacity_input={self.capability_type_capacity_input}, capability_type_count_output={self.capability_type_count_output}, capability_types={self.capability_types}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("capability_type_capacity_input", c_uint32),
+        ("capability_type_count_output", c_uint32),
+        ("capability_types", POINTER(CameraCapabilityTypeBD.ctype())),
+    ]
+
+
+class CameraSupportedCapabilitiesGetInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        id: CameraIdBD = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_SUPPORTED_CAPABILITIES_GET_INFO_BD,
+    ) -> None:
+        super().__init__(
+            id=id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraSupportedCapabilitiesGetInfoBD(id={repr(self.id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraSupportedCapabilitiesGetInfoBD(id={self.id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("id", CameraIdBD),
+    ]
+
+
+class CameraSupportedCapabilityBaseHeaderBD(BaseXrStructure):
+    pass
+
+
+class CameraSupportedCapabilitiesBD(BaseXrStructure):
+    def __init__(
+        self,
+        capability_count: int = 0,
+        capabilities: POINTER(POINTER(CameraSupportedCapabilityBaseHeaderBD)) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_SUPPORTED_CAPABILITIES_BD,
+    ) -> None:
+        super().__init__(
+            capability_count=capability_count,
+            capabilities=capabilities,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraSupportedCapabilitiesBD(capability_count={repr(self.capability_count)}, capabilities={repr(self.capabilities)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraSupportedCapabilitiesBD(capability_count={self.capability_count}, capabilities={self.capabilities}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("capability_count", c_uint32),
+        ("capabilities", POINTER(POINTER(CameraSupportedCapabilityBaseHeaderBD))),
+    ]
+
+
+class CameraImageResolutionAndFrameRateBD(Structure):
+    def __init__(
+        self,
+        resolution: Extent2Di = None,
+        frame_rate: int = 0,
+    ) -> None:
+        if resolution is None:
+            resolution = Extent2Di()
+        super().__init__(
+            resolution=resolution,
+            frame_rate=frame_rate,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraImageResolutionAndFrameRateBD(resolution={repr(self.resolution)}, frame_rate={repr(self.frame_rate)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraImageResolutionAndFrameRateBD(resolution={self.resolution}, frame_rate={self.frame_rate})"
+
+    _fields_ = [
+        ("resolution", Extent2Di),
+        ("frame_rate", c_uint32),
+    ]
+
+
+class CameraSupportedCapabilityImageResolutionAndFrameRateBD(CameraSupportedCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        resolution_and_frame_rate_capacity_input: int = 0,
+        resolution_and_frame_rate_count_output: int = 0,
+        resolution_and_frame_rates: POINTER(CameraImageResolutionAndFrameRateBD) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_SUPPORTED_CAPABILITY_IMAGE_RESOLUTION_AND_FRAME_RATE_BD,
+    ) -> None:
+        super().__init__(
+            resolution_and_frame_rate_capacity_input=resolution_and_frame_rate_capacity_input,
+            resolution_and_frame_rate_count_output=resolution_and_frame_rate_count_output,
+            resolution_and_frame_rates=resolution_and_frame_rates,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraSupportedCapabilityImageResolutionAndFrameRateBD(resolution_and_frame_rate_capacity_input={repr(self.resolution_and_frame_rate_capacity_input)}, resolution_and_frame_rate_count_output={repr(self.resolution_and_frame_rate_count_output)}, resolution_and_frame_rates={repr(self.resolution_and_frame_rates)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraSupportedCapabilityImageResolutionAndFrameRateBD(resolution_and_frame_rate_capacity_input={self.resolution_and_frame_rate_capacity_input}, resolution_and_frame_rate_count_output={self.resolution_and_frame_rate_count_output}, resolution_and_frame_rates={self.resolution_and_frame_rates}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("resolution_and_frame_rate_capacity_input", c_uint32),
+        ("resolution_and_frame_rate_count_output", c_uint32),
+        ("resolution_and_frame_rates", POINTER(CameraImageResolutionAndFrameRateBD)),
+    ]
+
+
+class CameraCapabilityImageResolutionAndFrameRateBD(CameraCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        resolution: Extent2Di = None,
+        frame_rate: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPABILITY_IMAGE_RESOLUTION_AND_FRAME_RATE_BD,
+    ) -> None:
+        if resolution is None:
+            resolution = Extent2Di()
+        super().__init__(
+            resolution=resolution,
+            frame_rate=frame_rate,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCapabilityImageResolutionAndFrameRateBD(resolution={repr(self.resolution)}, frame_rate={repr(self.frame_rate)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCapabilityImageResolutionAndFrameRateBD(resolution={self.resolution}, frame_rate={self.frame_rate}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("resolution", Extent2Di),
+        ("frame_rate", c_uint32),
+    ]
+
+
+class CameraSupportedCapabilityDataTransferTypeBD(CameraSupportedCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        transfer_type_capacity_input: int = 0,
+        transfer_type_count_output: int = 0,
+        transfer_types: POINTER(CameraDataTransferTypeBD.ctype()) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_SUPPORTED_CAPABILITY_DATA_TRANSFER_TYPE_BD,
+    ) -> None:
+        super().__init__(
+            transfer_type_capacity_input=transfer_type_capacity_input,
+            transfer_type_count_output=transfer_type_count_output,
+            transfer_types=transfer_types,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraSupportedCapabilityDataTransferTypeBD(transfer_type_capacity_input={repr(self.transfer_type_capacity_input)}, transfer_type_count_output={repr(self.transfer_type_count_output)}, transfer_types={repr(self.transfer_types)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraSupportedCapabilityDataTransferTypeBD(transfer_type_capacity_input={self.transfer_type_capacity_input}, transfer_type_count_output={self.transfer_type_count_output}, transfer_types={self.transfer_types}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("transfer_type_capacity_input", c_uint32),
+        ("transfer_type_count_output", c_uint32),
+        ("transfer_types", POINTER(CameraDataTransferTypeBD.ctype())),
+    ]
+
+
+class CameraCapabilityDataTransferTypeBD(CameraCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        transfer_type: CameraDataTransferTypeBD = CameraDataTransferTypeBD.RAW_BUFFER,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPABILITY_DATA_TRANSFER_TYPE_BD,
+    ) -> None:
+        super().__init__(
+            _transfer_type=enum_field_helper(transfer_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCapabilityDataTransferTypeBD(transfer_type={repr(self.transfer_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCapabilityDataTransferTypeBD(transfer_type={self.transfer_type}, next={self.next}, type={self.type})"
+
+    @property
+    def transfer_type(self) -> CameraDataTransferTypeBD:
+        return CameraDataTransferTypeBD(self._transfer_type)
+    
+    @transfer_type.setter
+    def transfer_type(self, value: CameraDataTransferTypeBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._transfer_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_transfer_type", CameraDataTransferTypeBD.ctype()),
+    ]
+
+
+class CameraSupportedCapabilityImageFormatBD(CameraSupportedCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        format_capacity_input: int = 0,
+        format_count_output: int = 0,
+        formats: POINTER(CameraImageFormatBD.ctype()) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_SUPPORTED_CAPABILITY_IMAGE_FORMAT_BD,
+    ) -> None:
+        super().__init__(
+            format_capacity_input=format_capacity_input,
+            format_count_output=format_count_output,
+            formats=formats,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraSupportedCapabilityImageFormatBD(format_capacity_input={repr(self.format_capacity_input)}, format_count_output={repr(self.format_count_output)}, formats={repr(self.formats)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraSupportedCapabilityImageFormatBD(format_capacity_input={self.format_capacity_input}, format_count_output={self.format_count_output}, formats={self.formats}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("format_capacity_input", c_uint32),
+        ("format_count_output", c_uint32),
+        ("formats", POINTER(CameraImageFormatBD.ctype())),
+    ]
+
+
+class CameraCapabilityImageFormatBD(CameraCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        format: CameraImageFormatBD = CameraImageFormatBD.RGBA_8888,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPABILITY_IMAGE_FORMAT_BD,
+    ) -> None:
+        super().__init__(
+            _format=enum_field_helper(format),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCapabilityImageFormatBD(format={repr(self.format)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCapabilityImageFormatBD(format={self.format}, next={self.next}, type={self.type})"
+
+    @property
+    def format(self) -> CameraImageFormatBD:
+        return CameraImageFormatBD(self._format)
+    
+    @format.setter
+    def format(self, value: CameraImageFormatBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._format = enum_field_helper(value)
+
+    _fields_ = [
+        ("_format", CameraImageFormatBD.ctype()),
+    ]
+
+
+class CameraSupportedCapabilityCameraModelBD(CameraSupportedCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        model_capacity_input: int = 0,
+        model_count_output: int = 0,
+        models: POINTER(CameraModelBD.ctype()) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_SUPPORTED_CAPABILITY_CAMERA_MODEL_BD,
+    ) -> None:
+        super().__init__(
+            model_capacity_input=model_capacity_input,
+            model_count_output=model_count_output,
+            models=models,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraSupportedCapabilityCameraModelBD(model_capacity_input={repr(self.model_capacity_input)}, model_count_output={repr(self.model_count_output)}, models={repr(self.models)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraSupportedCapabilityCameraModelBD(model_capacity_input={self.model_capacity_input}, model_count_output={self.model_count_output}, models={self.models}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("model_capacity_input", c_uint32),
+        ("model_count_output", c_uint32),
+        ("models", POINTER(CameraModelBD.ctype())),
+    ]
+
+
+class CameraCapabilityCameraModelBD(CameraCapabilityBaseHeaderBD):
+    def __init__(
+        self,
+        model: CameraModelBD = CameraModelBD.PINHOLE,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPABILITY_CAMERA_MODEL_BD,
+    ) -> None:
+        super().__init__(
+            _model=enum_field_helper(model),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCapabilityCameraModelBD(model={repr(self.model)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCapabilityCameraModelBD(model={self.model}, next={self.next}, type={self.type})"
+
+    @property
+    def model(self) -> CameraModelBD:
+        return CameraModelBD(self._model)
+    
+    @model.setter
+    def model(self, value: CameraModelBD) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._model = enum_field_helper(value)
+
+    _fields_ = [
+        ("_model", CameraModelBD.ctype()),
+    ]
+
+
+class CameraDeviceCreateInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        camera_id: CameraIdBD = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_DEVICE_CREATE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            camera_id=camera_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraDeviceCreateInfoBD(camera_id={repr(self.camera_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraDeviceCreateInfoBD(camera_id={self.camera_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("camera_id", CameraIdBD),
+    ]
+
+
+class CreateCameraDeviceCompletionBD(FutureCompletionBaseHeaderEXT):
+    def __init__(
+        self,
+        future_result: Result = Result.SUCCESS,
+        device: CameraDeviceBD = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CREATE_CAMERA_DEVICE_COMPLETION_BD,
+    ) -> None:
+        super().__init__(
+            _future_result=enum_field_helper(future_result),
+            device=device,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateCameraDeviceCompletionBD(future_result={repr(self.future_result)}, device={repr(self.device)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateCameraDeviceCompletionBD(future_result={self.future_result}, device={self.device}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("device", CameraDeviceBD),
+    ]
+
+
+class CameraCaptureSessionCreateInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        camera: CameraDeviceBD = None,
+        config_count: Optional[int] = None,
+        configs: BaseArrayFieldParamType = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPTURE_SESSION_CREATE_INFO_BD,
+    ) -> None:
+        config_count, configs = base_array_field_helper(
+            POINTER(CameraCapabilityBaseHeaderBD), config_count, configs)
+        super().__init__(
+            camera=camera,
+            config_count=config_count,
+            _configs=configs,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCaptureSessionCreateInfoBD(camera={repr(self.camera)}, config_count={repr(self.config_count)}, configs={repr(self.configs)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCaptureSessionCreateInfoBD(camera={self.camera}, config_count={self.config_count}, configs={self.configs}, next={self.next}, type={self.type})"
+
+    @property
+    def configs(self) -> Array[POINTER(CameraCapabilityBaseHeaderBD)]:
+        return expose_ctypes_array(POINTER(CameraCapabilityBaseHeaderBD), self.config_count, self._configs)
+    
+    @configs.setter
+    def configs(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.config_count, self._configs = base_array_field_helper(
+            POINTER(CameraCapabilityBaseHeaderBD), None, value)
+
+    _fields_ = [
+        ("camera", CameraDeviceBD),
+        ("config_count", c_uint32),
+        ("_configs", POINTER(POINTER(CameraCapabilityBaseHeaderBD))),
+    ]
+
+
+class CreateCameraCaptureSessionCompletionBD(FutureCompletionBaseHeaderEXT):
+    def __init__(
+        self,
+        future_result: Result = Result.SUCCESS,
+        capture_session: CameraCaptureSessionBD = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CREATE_CAMERA_CAPTURE_SESSION_COMPLETION_BD,
+    ) -> None:
+        super().__init__(
+            _future_result=enum_field_helper(future_result),
+            capture_session=capture_session,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateCameraCaptureSessionCompletionBD(future_result={repr(self.future_result)}, capture_session={repr(self.capture_session)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateCameraCaptureSessionCompletionBD(future_result={self.future_result}, capture_session={self.capture_session}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("capture_session", CameraCaptureSessionBD),
+    ]
+
+
+class CameraIntrinsicsBD(BaseXrStructure):
+    def __init__(
+        self,
+        focal_length: Vector2f = None,
+        principal_point: Vector2f = None,
+        fov: Vector2f = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_INTRINSICS_BD,
+    ) -> None:
+        if focal_length is None:
+            focal_length = Vector2f()
+        if principal_point is None:
+            principal_point = Vector2f()
+        if fov is None:
+            fov = Vector2f()
+        super().__init__(
+            focal_length=focal_length,
+            principal_point=principal_point,
+            fov=fov,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraIntrinsicsBD(focal_length={repr(self.focal_length)}, principal_point={repr(self.principal_point)}, fov={repr(self.fov)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraIntrinsicsBD(focal_length={self.focal_length}, principal_point={self.principal_point}, fov={self.fov}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("focal_length", Vector2f),
+        ("principal_point", Vector2f),
+        ("fov", Vector2f),
+    ]
+
+
+class CameraExtrinsicsBD(BaseXrStructure):
+    def __init__(
+        self,
+        pose: Posef = Posef(),
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_EXTRINSICS_BD,
+    ) -> None:
+        super().__init__(
+            pose=pose,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraExtrinsicsBD(pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraExtrinsicsBD(pose={self.pose}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("pose", Posef),
+    ]
+
+
+class CameraCaptureBeginInfoBD(BaseXrStructure):
+    pass
+
+
+class CameraImageAcquireInfoBD(BaseXrStructure):
+    def __init__(
+        self,
+        last_capture_time: Time = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_IMAGE_ACQUIRE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            last_capture_time=last_capture_time,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraImageAcquireInfoBD(last_capture_time={repr(self.last_capture_time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraImageAcquireInfoBD(last_capture_time={self.last_capture_time}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("last_capture_time", Time),
+    ]
+
+
+class CameraImageBD(BaseXrStructure):
+    def __init__(
+        self,
+        available: Bool32 = 0,
+        capture_time: Time = 0,
+        image_id: CameraImageIdBD = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_IMAGE_BD,
+    ) -> None:
+        super().__init__(
+            available=available,
+            capture_time=capture_time,
+            image_id=image_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraImageBD(available={repr(self.available)}, capture_time={repr(self.capture_time)}, image_id={repr(self.image_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraImageBD(available={self.available}, capture_time={self.capture_time}, image_id={self.image_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("available", Bool32),
+        ("capture_time", Time),
+        ("image_id", CameraImageIdBD),
+    ]
+
+
+class CameraImageDataBaseHeaderBD(BaseXrStructure):
+    pass
+
+
+class CameraImageDataRawBufferBD(CameraImageDataBaseHeaderBD):
+    def __init__(
+        self,
+        width: int = 0,
+        height: int = 0,
+        stride: int = 0,
+        bytes_per_pixel: int = 0,
+        pixel_stride: int = 0,
+        buffer_size: int = 0,
+        buffer: POINTER(c_uint8) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_IMAGE_DATA_RAW_BUFFER_BD,
+    ) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            stride=stride,
+            bytes_per_pixel=bytes_per_pixel,
+            pixel_stride=pixel_stride,
+            buffer_size=buffer_size,
+            buffer=buffer,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraImageDataRawBufferBD(width={repr(self.width)}, height={repr(self.height)}, stride={repr(self.stride)}, bytes_per_pixel={repr(self.bytes_per_pixel)}, pixel_stride={repr(self.pixel_stride)}, buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraImageDataRawBufferBD(width={self.width}, height={self.height}, stride={self.stride}, bytes_per_pixel={self.bytes_per_pixel}, pixel_stride={self.pixel_stride}, buffer_size={self.buffer_size}, buffer={self.buffer}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("width", c_uint32),
+        ("height", c_uint32),
+        ("stride", c_uint32),
+        ("bytes_per_pixel", c_uint32),
+        ("pixel_stride", c_uint32),
+        ("buffer_size", c_uint32),
+        ("buffer", POINTER(c_uint8)),
+    ]
+
+
+PFN_xrEnumerateAvailableCamerasBD = CFUNCTYPE(Result.ctype(), Instance, POINTER(AvailableCamerasEnumerateInfoBD), c_uint32, POINTER(c_uint32), POINTER(AvailableCameraBD))
+
+PFN_xrEnumerateCameraPropertyTypesBD = CFUNCTYPE(Result.ctype(), Instance, POINTER(CameraPropertyTypesEnumerateInfoBD), POINTER(CameraPropertyTypesBD))
+
+PFN_xrGetCameraPropertiesBD = CFUNCTYPE(Result.ctype(), Instance, POINTER(CameraPropertiesGetInfoBD), POINTER(CameraPropertiesBD))
+
+PFN_xrEnumerateCameraCapabilityTypesBD = CFUNCTYPE(Result.ctype(), Instance, POINTER(CameraCapabilityTypesEnumerateInfoBD), POINTER(CameraCapabilityTypesBD))
+
+PFN_xrGetCameraSupportedCapabilitiesBD = CFUNCTYPE(Result.ctype(), Instance, POINTER(CameraSupportedCapabilitiesGetInfoBD), POINTER(CameraSupportedCapabilitiesBD))
+
+PFN_xrCreateCameraDeviceAsyncBD = CFUNCTYPE(Result.ctype(), Instance, POINTER(CameraDeviceCreateInfoBD), POINTER(FutureEXT))
+
+PFN_xrCreateCameraDeviceCompleteBD = CFUNCTYPE(Result.ctype(), Instance, FutureEXT, POINTER(CreateCameraDeviceCompletionBD))
+
+PFN_xrDestroyCameraDeviceBD = CFUNCTYPE(Result.ctype(), CameraDeviceBD)
+
+PFN_xrCreateCameraCaptureSessionAsyncBD = CFUNCTYPE(Result.ctype(), Session, POINTER(CameraCaptureSessionCreateInfoBD), POINTER(FutureEXT))
+
+PFN_xrCreateCameraCaptureSessionCompleteBD = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(CreateCameraCaptureSessionCompletionBD))
+
+PFN_xrDestroyCameraCaptureSessionBD = CFUNCTYPE(Result.ctype(), CameraCaptureSessionBD)
+
+PFN_xrBeginCameraCaptureBD = CFUNCTYPE(Result.ctype(), CameraCaptureSessionBD, POINTER(CameraCaptureBeginInfoBD))
+
+PFN_xrEndCameraCaptureBD = CFUNCTYPE(Result.ctype(), CameraCaptureSessionBD)
+
+PFN_xrAcquireCameraImageBD = CFUNCTYPE(Result.ctype(), CameraCaptureSessionBD, POINTER(CameraImageAcquireInfoBD), POINTER(CameraImageBD))
+
+PFN_xrGetCameraImageDataBD = CFUNCTYPE(Result.ctype(), CameraCaptureSessionBD, CameraImageIdBD, POINTER(CameraImageDataBaseHeaderBD))
+
+PFN_xrReleaseCameraImageBD = CFUNCTYPE(Result.ctype(), CameraCaptureSessionBD, CameraImageIdBD)
+
+
+class SpatialBoundsSpherefANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        sphere: Spheref = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_BOUNDS_SPHEREF_ANDROID,
+    ) -> None:
+        if sphere is None:
+            sphere = Spheref()
+        super().__init__(
+            space=space,
+            time=time,
+            sphere=sphere,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialBoundsSpherefANDROID(space={repr(self.space)}, time={repr(self.time)}, sphere={repr(self.sphere)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialBoundsSpherefANDROID(space={self.space}, time={self.time}, sphere={self.sphere}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("space", Space),
+        ("time", Time),
+        ("sphere", Spheref),
+    ]
+
+
+class SpatialBoundsBoxfANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        box: Boxf = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_BOUNDS_BOXF_ANDROID,
+    ) -> None:
+        if box is None:
+            box = Boxf()
+        super().__init__(
+            space=space,
+            time=time,
+            box=box,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialBoundsBoxfANDROID(space={repr(self.space)}, time={repr(self.time)}, box={repr(self.box)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialBoundsBoxfANDROID(space={self.space}, time={self.time}, box={self.box}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("space", Space),
+        ("time", Time),
+        ("box", Boxf),
+    ]
+
+
+class SpatialBoundsFrustumfANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        frustum: Frustumf = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_BOUNDS_FRUSTUMF_ANDROID,
+    ) -> None:
+        if frustum is None:
+            frustum = Frustumf()
+        super().__init__(
+            space=space,
+            time=time,
+            frustum=frustum,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialBoundsFrustumfANDROID(space={repr(self.space)}, time={repr(self.time)}, frustum={repr(self.frustum)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialBoundsFrustumfANDROID(space={self.space}, time={self.time}, frustum={self.frustum}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("space", Space),
+        ("time", Time),
+        ("frustum", Frustumf),
     ]
 
 
@@ -21207,6 +25714,368 @@ PFN_xrCreateSpatialPersistenceContextCompleteEXT = CFUNCTYPE(Result.ctype(), Ses
 PFN_xrDestroySpatialPersistenceContextEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT)
 
 
+class HapticParametricPropertiesEXT(BaseXrStructure):
+    def __init__(
+        self,
+        ideal_frame_submission_rate: Duration = 0,
+        minimum_first_frame_duration: Duration = 0,
+        min_frequency_hz: float = 0,
+        max_frequency_hz: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.HAPTIC_PARAMETRIC_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            ideal_frame_submission_rate=ideal_frame_submission_rate,
+            minimum_first_frame_duration=minimum_first_frame_duration,
+            min_frequency_hz=min_frequency_hz,
+            max_frequency_hz=max_frequency_hz,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HapticParametricPropertiesEXT(ideal_frame_submission_rate={repr(self.ideal_frame_submission_rate)}, minimum_first_frame_duration={repr(self.minimum_first_frame_duration)}, min_frequency_hz={repr(self.min_frequency_hz)}, max_frequency_hz={repr(self.max_frequency_hz)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HapticParametricPropertiesEXT(ideal_frame_submission_rate={self.ideal_frame_submission_rate}, minimum_first_frame_duration={self.minimum_first_frame_duration}, min_frequency_hz={self.min_frequency_hz:.3f}, max_frequency_hz={self.max_frequency_hz:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("ideal_frame_submission_rate", Duration),
+        ("minimum_first_frame_duration", Duration),
+        ("min_frequency_hz", c_float),
+        ("max_frequency_hz", c_float),
+    ]
+
+
+class HapticParametricPointEXT(Structure):
+    def __init__(
+        self,
+        time: Duration = 0,
+        value: float = 0,
+    ) -> None:
+        super().__init__(
+            time=time,
+            value=value,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HapticParametricPointEXT(time={repr(self.time)}, value={repr(self.value)})"
+
+    def __str__(self) -> str:
+        return f"xr.HapticParametricPointEXT(time={self.time}, value={self.value:.3f})"
+
+    _fields_ = [
+        ("time", Duration),
+        ("value", c_float),
+    ]
+
+
+class HapticParametricTransientEXT(Structure):
+    def __init__(
+        self,
+        time: Duration = 0,
+        amplitude: float = 0,
+        frequency: float = 0,
+    ) -> None:
+        super().__init__(
+            time=time,
+            amplitude=amplitude,
+            frequency=frequency,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HapticParametricTransientEXT(time={repr(self.time)}, amplitude={repr(self.amplitude)}, frequency={repr(self.frequency)})"
+
+    def __str__(self) -> str:
+        return f"xr.HapticParametricTransientEXT(time={self.time}, amplitude={self.amplitude:.3f}, frequency={self.frequency:.3f})"
+
+    _fields_ = [
+        ("time", Duration),
+        ("amplitude", c_float),
+        ("frequency", c_float),
+    ]
+
+
+class HapticParametricVibrationEXT(HapticBaseHeader):
+    def __init__(
+        self,
+        amplitude_point_count: Optional[int] = None,
+        amplitude_points: ArrayFieldParamType[HapticParametricPointEXT] = None,
+        frequency_point_count: Optional[int] = None,
+        frequency_points: ArrayFieldParamType[HapticParametricPointEXT] = None,
+        transient_count: Optional[int] = None,
+        transients: ArrayFieldParamType[HapticParametricTransientEXT] = None,
+        min_frequency_hz: float = 0,
+        max_frequency_hz: float = 0,
+        stream_frame_type: HapticParametricStreamFrameTypeEXT = HapticParametricStreamFrameTypeEXT.NONE,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.HAPTIC_PARAMETRIC_VIBRATION_EXT,
+    ) -> None:
+        amplitude_point_count, amplitude_points = array_field_helper(
+            HapticParametricPointEXT, amplitude_point_count, amplitude_points)
+        frequency_point_count, frequency_points = array_field_helper(
+            HapticParametricPointEXT, frequency_point_count, frequency_points)
+        transient_count, transients = array_field_helper(
+            HapticParametricTransientEXT, transient_count, transients)
+        super().__init__(
+            amplitude_point_count=amplitude_point_count,
+            _amplitude_points=amplitude_points,
+            frequency_point_count=frequency_point_count,
+            _frequency_points=frequency_points,
+            transient_count=transient_count,
+            _transients=transients,
+            min_frequency_hz=min_frequency_hz,
+            max_frequency_hz=max_frequency_hz,
+            _stream_frame_type=enum_field_helper(stream_frame_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HapticParametricVibrationEXT(amplitude_point_count={repr(self.amplitude_point_count)}, amplitude_points={repr(self.amplitude_points)}, frequency_point_count={repr(self.frequency_point_count)}, frequency_points={repr(self.frequency_points)}, transient_count={repr(self.transient_count)}, transients={repr(self.transients)}, min_frequency_hz={repr(self.min_frequency_hz)}, max_frequency_hz={repr(self.max_frequency_hz)}, stream_frame_type={repr(self.stream_frame_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HapticParametricVibrationEXT(amplitude_point_count={self.amplitude_point_count}, amplitude_points={self.amplitude_points}, frequency_point_count={self.frequency_point_count}, frequency_points={self.frequency_points}, transient_count={self.transient_count}, transients={self.transients}, min_frequency_hz={self.min_frequency_hz:.3f}, max_frequency_hz={self.max_frequency_hz:.3f}, stream_frame_type={self.stream_frame_type}, next={self.next}, type={self.type})"
+
+    @property
+    def amplitude_points(self) -> Array[HapticParametricPointEXT]:
+        return expose_ctypes_array(HapticParametricPointEXT, self.amplitude_point_count, self._amplitude_points)
+    
+    @amplitude_points.setter
+    def amplitude_points(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.amplitude_point_count, self._amplitude_points = array_field_helper(
+            HapticParametricPointEXT, None, value)
+
+    @property
+    def frequency_points(self) -> Array[HapticParametricPointEXT]:
+        return expose_ctypes_array(HapticParametricPointEXT, self.frequency_point_count, self._frequency_points)
+    
+    @frequency_points.setter
+    def frequency_points(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.frequency_point_count, self._frequency_points = array_field_helper(
+            HapticParametricPointEXT, None, value)
+
+    @property
+    def transients(self) -> Array[HapticParametricTransientEXT]:
+        return expose_ctypes_array(HapticParametricTransientEXT, self.transient_count, self._transients)
+    
+    @transients.setter
+    def transients(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.transient_count, self._transients = array_field_helper(
+            HapticParametricTransientEXT, None, value)
+
+    @property
+    def stream_frame_type(self) -> HapticParametricStreamFrameTypeEXT:
+        return HapticParametricStreamFrameTypeEXT(self._stream_frame_type)
+    
+    @stream_frame_type.setter
+    def stream_frame_type(self, value: HapticParametricStreamFrameTypeEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._stream_frame_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("amplitude_point_count", c_uint32),
+        ("_amplitude_points", POINTER(HapticParametricPointEXT)),
+        ("frequency_point_count", c_uint32),
+        ("_frequency_points", POINTER(HapticParametricPointEXT)),
+        ("transient_count", c_uint32),
+        ("_transients", POINTER(HapticParametricTransientEXT)),
+        ("min_frequency_hz", c_float),
+        ("max_frequency_hz", c_float),
+        ("_stream_frame_type", HapticParametricStreamFrameTypeEXT.ctype()),
+    ]
+
+
+class SystemHapticParametricPropertiesEXT(BaseXrStructure):
+    def __init__(
+        self,
+        supports_parametric_haptics: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_HAPTIC_PARAMETRIC_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            supports_parametric_haptics=supports_parametric_haptics,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemHapticParametricPropertiesEXT(supports_parametric_haptics={repr(self.supports_parametric_haptics)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemHapticParametricPropertiesEXT(supports_parametric_haptics={self.supports_parametric_haptics}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_parametric_haptics", Bool32),
+    ]
+
+
+PFN_xrHapticParametricGetPropertiesEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(HapticActionInfo), POINTER(HapticParametricPropertiesEXT))
+
+
+class ColorSpacesEnumerateInfoSONY(BaseXrStructure):
+    def __init__(
+        self,
+        format: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.COLOR_SPACES_ENUMERATE_INFO_SONY,
+    ) -> None:
+        super().__init__(
+            format=format,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ColorSpacesEnumerateInfoSONY(format={repr(self.format)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ColorSpacesEnumerateInfoSONY(format={self.format}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("format", c_int64),
+    ]
+
+
+class SwapchainCreateInfoColorSpaceSONY(BaseXrStructure):
+    def __init__(
+        self,
+        color_space: ColorSpaceSONY = ColorSpaceSONY.SRGB_NONLINEAR,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SWAPCHAIN_CREATE_INFO_COLOR_SPACE_SONY,
+    ) -> None:
+        super().__init__(
+            _color_space=enum_field_helper(color_space),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SwapchainCreateInfoColorSpaceSONY(color_space={repr(self.color_space)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SwapchainCreateInfoColorSpaceSONY(color_space={self.color_space}, next={self.next}, type={self.type})"
+
+    @property
+    def color_space(self) -> ColorSpaceSONY:
+        return ColorSpaceSONY(self._color_space)
+    
+    @color_space.setter
+    def color_space(self, value: ColorSpaceSONY) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._color_space = enum_field_helper(value)
+
+    _fields_ = [
+        ("_color_space", ColorSpaceSONY.ctype()),
+    ]
+
+
+PFN_xrEnumerateColorSpacesSONY = CFUNCTYPE(Result.ctype(), Session, POINTER(ColorSpacesEnumerateInfoSONY), c_uint32, POINTER(c_uint32), POINTER(ColorSpaceSONY.ctype()))
+
+
+class XYColorSONY(Structure):
+    def __init__(
+        self,
+        x: float = 0,
+        y: float = 0,
+    ) -> None:
+        super().__init__(
+            x=x,
+            y=y,
+        )
+        self._numpy = None
+
+    def __iter__(self) -> Iterator[float]:
+        yield self.x
+        yield self.y
+
+    def __getitem__(self, key):
+        return tuple(self)[key]
+
+    def __setitem__(self, key, value):
+        self.as_numpy()[key] = value
+
+    def __len__(self) -> int:
+        return 2
+
+    def as_numpy(self):
+        if not hasattr(self, "_numpy") or self._numpy is None:
+            # Just in time construction
+            buffer = (c_float * len(self)).from_address(addressof(self))
+            self._numpy = numpy.ctypeslib.as_array(buffer)
+        return self._numpy
+
+    def __repr__(self) -> str:
+        return f"xr.XYColorSONY(x={repr(self.x)}, y={repr(self.y)})"
+
+    def __str__(self) -> str:
+        return f"xr.XYColorSONY(x={self.x:.3f}, y={self.y:.3f})"
+
+    _fields_ = [
+        ("x", c_float),
+        ("y", c_float),
+    ]
+
+
+class HdrMetadataSONY(BaseXrStructure):
+    def __init__(
+        self,
+        display_primary_red: XYColorSONY = None,
+        display_primary_green: XYColorSONY = None,
+        display_primary_blue: XYColorSONY = None,
+        white_point: XYColorSONY = None,
+        max_luminance: float = 0,
+        min_luminance: float = 0,
+        max_content_light_level: float = 0,
+        max_frame_average_light_level: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.HDR_METADATA_SONY,
+    ) -> None:
+        if display_primary_red is None:
+            display_primary_red = XYColorSONY()
+        if display_primary_green is None:
+            display_primary_green = XYColorSONY()
+        if display_primary_blue is None:
+            display_primary_blue = XYColorSONY()
+        if white_point is None:
+            white_point = XYColorSONY()
+        super().__init__(
+            display_primary_red=display_primary_red,
+            display_primary_green=display_primary_green,
+            display_primary_blue=display_primary_blue,
+            white_point=white_point,
+            max_luminance=max_luminance,
+            min_luminance=min_luminance,
+            max_content_light_level=max_content_light_level,
+            max_frame_average_light_level=max_frame_average_light_level,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HdrMetadataSONY(display_primary_red={repr(self.display_primary_red)}, display_primary_green={repr(self.display_primary_green)}, display_primary_blue={repr(self.display_primary_blue)}, white_point={repr(self.white_point)}, max_luminance={repr(self.max_luminance)}, min_luminance={repr(self.min_luminance)}, max_content_light_level={repr(self.max_content_light_level)}, max_frame_average_light_level={repr(self.max_frame_average_light_level)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HdrMetadataSONY(display_primary_red={self.display_primary_red}, display_primary_green={self.display_primary_green}, display_primary_blue={self.display_primary_blue}, white_point={self.white_point}, max_luminance={self.max_luminance:.3f}, min_luminance={self.min_luminance:.3f}, max_content_light_level={self.max_content_light_level:.3f}, max_frame_average_light_level={self.max_frame_average_light_level:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("display_primary_red", XYColorSONY),
+        ("display_primary_green", XYColorSONY),
+        ("display_primary_blue", XYColorSONY),
+        ("white_point", XYColorSONY),
+        ("max_luminance", c_float),
+        ("min_luminance", c_float),
+        ("max_content_light_level", c_float),
+        ("max_frame_average_light_level", c_float),
+    ]
+
+
+PFN_xrSetHdrMetadataSONY = CFUNCTYPE(Result.ctype(), Swapchain, POINTER(HdrMetadataSONY))
+
+
 class SpatialEntityPersistInfoEXT(BaseXrStructure):
     def __init__(
         self,
@@ -21344,6 +26213,2030 @@ PFN_xrUnpersistSpatialEntityAsyncEXT = CFUNCTYPE(Result.ctype(), SpatialPersiste
 PFN_xrUnpersistSpatialEntityCompleteEXT = CFUNCTYPE(Result.ctype(), SpatialPersistenceContextEXT, FutureEXT, POINTER(UnpersistSpatialEntityCompletionEXT))
 
 
+class SpatialImageTrackingDatabaseEXT_T(Structure):
+    pass
+
+
+class SpatialImageTrackingDatabaseEXT(POINTER(SpatialImageTrackingDatabaseEXT_T), HandleMixin):
+    _type_ = SpatialImageTrackingDatabaseEXT_T  # ctypes idiosyncrasy
+
+
+class SpatialReferenceImagePlaneEXT(Structure):
+    def __init__(
+        self,
+        buffer_size: int = 0,
+        buffer: POINTER(c_uint8) = None,
+        row_stride: int = 0,
+        pixel_stride: int = 0,
+    ) -> None:
+        super().__init__(
+            buffer_size=buffer_size,
+            buffer=buffer,
+            row_stride=row_stride,
+            pixel_stride=pixel_stride,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialReferenceImagePlaneEXT(buffer_size={repr(self.buffer_size)}, buffer={repr(self.buffer)}, row_stride={repr(self.row_stride)}, pixel_stride={repr(self.pixel_stride)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialReferenceImagePlaneEXT(buffer_size={self.buffer_size}, buffer={self.buffer}, row_stride={self.row_stride}, pixel_stride={self.pixel_stride})"
+
+    _fields_ = [
+        ("buffer_size", c_uint32),
+        ("buffer", POINTER(c_uint8)),
+        ("row_stride", c_uint32),
+        ("pixel_stride", c_uint32),
+    ]
+
+
+class SpatialReferenceImageEXT(BaseXrStructure):
+    def __init__(
+        self,
+        width: int = 0,
+        height: int = 0,
+        format: SpatialReferenceImageFormatEXT = SpatialReferenceImageFormatEXT.RGBA_8888,
+        plane_count: Optional[int] = None,
+        planes: ArrayFieldParamType[SpatialReferenceImagePlaneEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_REFERENCE_IMAGE_EXT,
+    ) -> None:
+        plane_count, planes = array_field_helper(
+            SpatialReferenceImagePlaneEXT, plane_count, planes)
+        super().__init__(
+            width=width,
+            height=height,
+            _format=enum_field_helper(format),
+            plane_count=plane_count,
+            _planes=planes,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialReferenceImageEXT(width={repr(self.width)}, height={repr(self.height)}, format={repr(self.format)}, plane_count={repr(self.plane_count)}, planes={repr(self.planes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialReferenceImageEXT(width={self.width}, height={self.height}, format={self.format}, plane_count={self.plane_count}, planes={self.planes}, next={self.next}, type={self.type})"
+
+    @property
+    def format(self) -> SpatialReferenceImageFormatEXT:
+        return SpatialReferenceImageFormatEXT(self._format)
+    
+    @format.setter
+    def format(self, value: SpatialReferenceImageFormatEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._format = enum_field_helper(value)
+
+    @property
+    def planes(self) -> Array[SpatialReferenceImagePlaneEXT]:
+        return expose_ctypes_array(SpatialReferenceImagePlaneEXT, self.plane_count, self._planes)
+    
+    @planes.setter
+    def planes(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.plane_count, self._planes = array_field_helper(
+            SpatialReferenceImagePlaneEXT, None, value)
+
+    _fields_ = [
+        ("width", c_uint32),
+        ("height", c_uint32),
+        ("_format", SpatialReferenceImageFormatEXT.ctype()),
+        ("plane_count", c_uint32),
+        ("_planes", POINTER(SpatialReferenceImagePlaneEXT)),
+    ]
+
+
+class SpatialImageStaticOptimizationEXT(BaseXrStructure):
+    def __init__(
+        self,
+        optimize_for_static_image: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_IMAGE_STATIC_OPTIMIZATION_EXT,
+    ) -> None:
+        super().__init__(
+            optimize_for_static_image=optimize_for_static_image,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialImageStaticOptimizationEXT(optimize_for_static_image={repr(self.optimize_for_static_image)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialImageStaticOptimizationEXT(optimize_for_static_image={self.optimize_for_static_image}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("optimize_for_static_image", Bool32),
+    ]
+
+
+class SpatialImageSizeEXT(BaseXrStructure):
+    def __init__(
+        self,
+        physical_width: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_IMAGE_SIZE_EXT,
+    ) -> None:
+        super().__init__(
+            physical_width=physical_width,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialImageSizeEXT(physical_width={repr(self.physical_width)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialImageSizeEXT(physical_width={self.physical_width:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("physical_width", c_float),
+    ]
+
+
+class SpatialCapabilityConfigurationImageTrackingEXT(SpatialCapabilityConfigurationBaseHeaderEXT):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        image_tracking_database_count: Optional[int] = None,
+        image_tracking_databases: ArrayFieldParamType[SpatialImageTrackingDatabaseEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_IMAGE_TRACKING_EXT,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        image_tracking_database_count, image_tracking_databases = array_field_helper(
+            SpatialImageTrackingDatabaseEXT, image_tracking_database_count, image_tracking_databases)
+        super().__init__(
+            _capability=enum_field_helper(capability),
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            image_tracking_database_count=image_tracking_database_count,
+            _image_tracking_databases=image_tracking_databases,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationImageTrackingEXT(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, image_tracking_database_count={repr(self.image_tracking_database_count)}, image_tracking_databases={repr(self.image_tracking_databases)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationImageTrackingEXT(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self.enabled_components}, image_tracking_database_count={self.image_tracking_database_count}, image_tracking_databases={self.image_tracking_databases}, next={self.next}, type={self.type})"
+
+    @property
+    def image_tracking_databases(self) -> Array[SpatialImageTrackingDatabaseEXT]:
+        return expose_ctypes_array(SpatialImageTrackingDatabaseEXT, self.image_tracking_database_count, self._image_tracking_databases)
+    
+    @image_tracking_databases.setter
+    def image_tracking_databases(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.image_tracking_database_count, self._image_tracking_databases = array_field_helper(
+            SpatialImageTrackingDatabaseEXT, None, value)
+
+    _fields_ = [
+        ("image_tracking_database_count", c_uint32),
+        ("_image_tracking_databases", POINTER(SpatialImageTrackingDatabaseEXT)),
+    ]
+
+
+class SpatialImageTrackingDatabaseCreateInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        spatial_reference_image_count: Optional[int] = None,
+        spatial_reference_images: ArrayFieldParamType[SpatialReferenceImageEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_IMAGE_TRACKING_DATABASE_CREATE_INFO_EXT,
+    ) -> None:
+        spatial_reference_image_count, spatial_reference_images = array_field_helper(
+            SpatialReferenceImageEXT, spatial_reference_image_count, spatial_reference_images)
+        super().__init__(
+            spatial_reference_image_count=spatial_reference_image_count,
+            _spatial_reference_images=spatial_reference_images,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialImageTrackingDatabaseCreateInfoEXT(spatial_reference_image_count={repr(self.spatial_reference_image_count)}, spatial_reference_images={repr(self.spatial_reference_images)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialImageTrackingDatabaseCreateInfoEXT(spatial_reference_image_count={self.spatial_reference_image_count}, spatial_reference_images={self.spatial_reference_images}, next={self.next}, type={self.type})"
+
+    @property
+    def spatial_reference_images(self) -> Array[SpatialReferenceImageEXT]:
+        return expose_ctypes_array(SpatialReferenceImageEXT, self.spatial_reference_image_count, self._spatial_reference_images)
+    
+    @spatial_reference_images.setter
+    def spatial_reference_images(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.spatial_reference_image_count, self._spatial_reference_images = array_field_helper(
+            SpatialReferenceImageEXT, None, value)
+
+    _fields_ = [
+        ("spatial_reference_image_count", c_uint32),
+        ("_spatial_reference_images", POINTER(SpatialReferenceImageEXT)),
+    ]
+
+
+class SpatialImage2DDataEXT(Structure):
+    def __init__(
+        self,
+        image_tracking_database: SpatialImageTrackingDatabaseEXT = None,
+        reference_image_index: int = 0,
+    ) -> None:
+        super().__init__(
+            image_tracking_database=image_tracking_database,
+            reference_image_index=reference_image_index,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialImage2DDataEXT(image_tracking_database={repr(self.image_tracking_database)}, reference_image_index={repr(self.reference_image_index)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialImage2DDataEXT(image_tracking_database={self.image_tracking_database}, reference_image_index={self.reference_image_index})"
+
+    _fields_ = [
+        ("image_tracking_database", SpatialImageTrackingDatabaseEXT),
+        ("reference_image_index", c_uint32),
+    ]
+
+
+class SpatialComponentImage2DListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        image_count: Optional[int] = None,
+        images: ArrayFieldParamType[SpatialImage2DDataEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_IMAGE_2D_LIST_EXT,
+    ) -> None:
+        image_count, images = array_field_helper(
+            SpatialImage2DDataEXT, image_count, images)
+        super().__init__(
+            image_count=image_count,
+            _images=images,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentImage2DListEXT(image_count={repr(self.image_count)}, images={repr(self.images)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentImage2DListEXT(image_count={self.image_count}, images={self.images}, next={self.next}, type={self.type})"
+
+    @property
+    def images(self) -> Array[SpatialImage2DDataEXT]:
+        return expose_ctypes_array(SpatialImage2DDataEXT, self.image_count, self._images)
+    
+    @images.setter
+    def images(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.image_count, self._images = array_field_helper(
+            SpatialImage2DDataEXT, None, value)
+
+    _fields_ = [
+        ("image_count", c_uint32),
+        ("_images", POINTER(SpatialImage2DDataEXT)),
+    ]
+
+
+class CreateSpatialImageTrackingDatabaseCompletionEXT(FutureCompletionBaseHeaderEXT):
+    def __init__(
+        self,
+        future_result: Result = Result.SUCCESS,
+        database: SpatialImageTrackingDatabaseEXT = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CREATE_SPATIAL_IMAGE_TRACKING_DATABASE_COMPLETION_EXT,
+    ) -> None:
+        super().__init__(
+            _future_result=enum_field_helper(future_result),
+            database=database,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CreateSpatialImageTrackingDatabaseCompletionEXT(future_result={repr(self.future_result)}, database={repr(self.database)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CreateSpatialImageTrackingDatabaseCompletionEXT(future_result={self.future_result}, database={self.database}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("database", SpatialImageTrackingDatabaseEXT),
+    ]
+
+
+PFN_xrEnumerateSpatialReferenceImageFormatsEXT = CFUNCTYPE(Result.ctype(), Instance, SystemId, SpatialCapabilityEXT.ctype(), c_uint32, POINTER(c_uint32), POINTER(SpatialReferenceImageFormatEXT.ctype()))
+
+PFN_xrCreateSpatialImageTrackingDatabaseAsyncEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialImageTrackingDatabaseCreateInfoEXT), POINTER(FutureEXT))
+
+PFN_xrCreateSpatialImageTrackingDatabaseCompleteEXT = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(CreateSpatialImageTrackingDatabaseCompletionEXT))
+
+PFN_xrDestroySpatialImageTrackingDatabaseEXT = CFUNCTYPE(Result.ctype(), SpatialImageTrackingDatabaseEXT)
+
+
+class SpatialCapabilityConfigurationObjectTrackingANDROID(SpatialCapabilityConfigurationBaseHeaderEXT):
+    def __init__(
+        self,
+        capability: SpatialCapabilityEXT = SpatialCapabilityEXT(),  # noqa
+        enabled_component_count: Optional[int] = None,
+        enabled_components: ArrayFieldParamType[c_int] = None,
+        active_semantic_label_count: Optional[int] = None,
+        active_semantic_labels: ArrayFieldParamType[c_int] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CAPABILITY_CONFIGURATION_OBJECT_TRACKING_ANDROID,
+    ) -> None:
+        enabled_component_count, enabled_components = array_field_helper(
+            c_int, enabled_component_count, enabled_components)
+        active_semantic_label_count, active_semantic_labels = array_field_helper(
+            c_int, active_semantic_label_count, active_semantic_labels)
+        super().__init__(
+            _capability=enum_field_helper(capability),
+            enabled_component_count=enabled_component_count,
+            _enabled_components=enabled_components,
+            active_semantic_label_count=active_semantic_label_count,
+            _active_semantic_labels=active_semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationObjectTrackingANDROID(capability={repr(self.capability)}, enabled_component_count={repr(self.enabled_component_count)}, enabled_components={repr(self.enabled_components)}, active_semantic_label_count={repr(self.active_semantic_label_count)}, active_semantic_labels={repr(self.active_semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialCapabilityConfigurationObjectTrackingANDROID(capability={self.capability}, enabled_component_count={self.enabled_component_count}, enabled_components={self.enabled_components}, active_semantic_label_count={self.active_semantic_label_count}, active_semantic_labels={self.active_semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def active_semantic_labels(self) -> Array[c_int]:
+        return expose_ctypes_array(c_int, self.active_semantic_label_count, self._active_semantic_labels)
+    
+    @active_semantic_labels.setter
+    def active_semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.active_semantic_label_count, self._active_semantic_labels = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("active_semantic_label_count", c_uint32),
+        ("_active_semantic_labels", POINTER(c_int)),
+    ]
+
+
+class SpatialComponentObjectSemanticLabelListANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[SpatialObjectSemanticLabelANDROID.ctype()] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_OBJECT_SEMANTIC_LABEL_LIST_ANDROID,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            SpatialObjectSemanticLabelANDROID.ctype(), semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentObjectSemanticLabelListANDROID(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentObjectSemanticLabelListANDROID(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self) -> Array[SpatialObjectSemanticLabelANDROID.ctype()]:
+        return expose_ctypes_array(SpatialObjectSemanticLabelANDROID.ctype(), self.semantic_label_count, self._semantic_labels)
+    
+    @semantic_labels.setter
+    def semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            SpatialObjectSemanticLabelANDROID.ctype(), None, value)
+
+    _fields_ = [
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(SpatialObjectSemanticLabelANDROID.ctype())),
+    ]
+
+
+class SpatialRaycastResultDataANDROID(Structure):
+    def __init__(
+        self,
+        hit_pose: Posef = Posef(),
+        distance_squared: float = 0,
+    ) -> None:
+        super().__init__(
+            hit_pose=hit_pose,
+            distance_squared=distance_squared,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialRaycastResultDataANDROID(hit_pose={repr(self.hit_pose)}, distance_squared={repr(self.distance_squared)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialRaycastResultDataANDROID(hit_pose={self.hit_pose}, distance_squared={self.distance_squared:.3f})"
+
+    _fields_ = [
+        ("hit_pose", Posef),
+        ("distance_squared", c_float),
+    ]
+
+
+class SpatialCapabilityConfigurationDepthRaycastANDROID(SpatialCapabilityConfigurationBaseHeaderEXT):
+    pass
+
+
+class SpatialRaycastInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        origin: Vector3f = None,
+        direction: Vector3f = None,
+        max_distance: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_RAYCAST_INFO_ANDROID,
+    ) -> None:
+        if origin is None:
+            origin = Vector3f()
+        if direction is None:
+            direction = Vector3f()
+        super().__init__(
+            space=space,
+            time=time,
+            origin=origin,
+            direction=direction,
+            max_distance=max_distance,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialRaycastInfoANDROID(space={repr(self.space)}, time={repr(self.time)}, origin={repr(self.origin)}, direction={repr(self.direction)}, max_distance={repr(self.max_distance)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialRaycastInfoANDROID(space={self.space}, time={self.time}, origin={self.origin}, direction={self.direction}, max_distance={self.max_distance:.3f}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("space", Space),
+        ("time", Time),
+        ("origin", Vector3f),
+        ("direction", Vector3f),
+        ("max_distance", c_float),
+    ]
+
+
+class SpatialComponentRaycastResultListANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        raycast_result_count: Optional[int] = None,
+        raycast_results: ArrayFieldParamType[SpatialRaycastResultDataANDROID] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_RAYCAST_RESULT_LIST_ANDROID,
+    ) -> None:
+        raycast_result_count, raycast_results = array_field_helper(
+            SpatialRaycastResultDataANDROID, raycast_result_count, raycast_results)
+        super().__init__(
+            raycast_result_count=raycast_result_count,
+            _raycast_results=raycast_results,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentRaycastResultListANDROID(raycast_result_count={repr(self.raycast_result_count)}, raycast_results={repr(self.raycast_results)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentRaycastResultListANDROID(raycast_result_count={self.raycast_result_count}, raycast_results={self.raycast_results}, next={self.next}, type={self.type})"
+
+    @property
+    def raycast_results(self) -> Array[SpatialRaycastResultDataANDROID]:
+        return expose_ctypes_array(SpatialRaycastResultDataANDROID, self.raycast_result_count, self._raycast_results)
+    
+    @raycast_results.setter
+    def raycast_results(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.raycast_result_count, self._raycast_results = array_field_helper(
+            SpatialRaycastResultDataANDROID, None, value)
+
+    _fields_ = [
+        ("raycast_result_count", c_uint32),
+        ("_raycast_results", POINTER(SpatialRaycastResultDataANDROID)),
+    ]
+
+
+class SpatialRaycastSnapshotCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        component_type_count: Optional[int] = None,
+        component_types: ArrayFieldParamType[c_int] = None,
+        raycast_info: POINTER(SpatialRaycastInfoANDROID) = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_RAYCAST_SNAPSHOT_CREATE_INFO_ANDROID,
+    ) -> None:
+        component_type_count, component_types = array_field_helper(
+            c_int, component_type_count, component_types)
+        super().__init__(
+            component_type_count=component_type_count,
+            _component_types=component_types,
+            raycast_info=raycast_info,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialRaycastSnapshotCreateInfoANDROID(component_type_count={repr(self.component_type_count)}, component_types={repr(self.component_types)}, raycast_info={repr(self.raycast_info)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialRaycastSnapshotCreateInfoANDROID(component_type_count={self.component_type_count}, component_types={self.component_types}, raycast_info={self.raycast_info}, next={self.next}, type={self.type})"
+
+    @property
+    def component_types(self) -> Array[c_int]:
+        return expose_ctypes_array(c_int, self.component_type_count, self._component_types)
+    
+    @component_types.setter
+    def component_types(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.component_type_count, self._component_types = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("component_type_count", c_uint32),
+        ("_component_types", POINTER(c_int)),
+        ("raycast_info", POINTER(SpatialRaycastInfoANDROID)),
+    ]
+
+
+PFN_xrCreateSpatialRaycastSnapshotANDROID = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(SpatialRaycastSnapshotCreateInfoANDROID), POINTER(SpatialSnapshotEXT))
+
+
+class GoogleCloudAuthInfoBaseHeaderANDROID(BaseXrStructure):
+    pass
+
+
+class GoogleCloudAuthInfoApiKeyANDROID(GoogleCloudAuthInfoBaseHeaderANDROID):
+    def __init__(
+        self,
+        api_key: str = "",
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GOOGLE_CLOUD_AUTH_INFO_API_KEY_ANDROID,
+    ) -> None:
+        super().__init__(
+            _api_key=api_key.encode(),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GoogleCloudAuthInfoApiKeyANDROID(api_key={repr(self.api_key)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GoogleCloudAuthInfoApiKeyANDROID(api_key={self.api_key}, next={self.next}, type={self.type})"
+
+    @property
+    def api_key(self) -> str:
+        return self._api_key.decode()
+    
+    @api_key.setter
+    def api_key(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._api_key = value.encode()
+
+    _fields_ = [
+        ("_api_key", c_char_p),
+    ]
+
+
+class GoogleCloudAuthInfoTokenANDROID(GoogleCloudAuthInfoBaseHeaderANDROID):
+    def __init__(
+        self,
+        auth_token: str = "",
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GOOGLE_CLOUD_AUTH_INFO_TOKEN_ANDROID,
+    ) -> None:
+        super().__init__(
+            _auth_token=auth_token.encode(),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GoogleCloudAuthInfoTokenANDROID(auth_token={repr(self.auth_token)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GoogleCloudAuthInfoTokenANDROID(auth_token={self.auth_token}, next={self.next}, type={self.type})"
+
+    @property
+    def auth_token(self) -> str:
+        return self._auth_token.decode()
+    
+    @auth_token.setter
+    def auth_token(self, value: str) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._auth_token = value.encode()
+
+    _fields_ = [
+        ("_auth_token", c_char_p),
+    ]
+
+
+class GoogleCloudAuthInfoKeylessANDROID(GoogleCloudAuthInfoBaseHeaderANDROID):
+    pass
+
+
+class GoogleCloudAuthErrorResultANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        error: GoogleCloudAuthErrorANDROID = GoogleCloudAuthErrorANDROID.NONE,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GOOGLE_CLOUD_AUTH_ERROR_RESULT_ANDROID,
+    ) -> None:
+        super().__init__(
+            _error=enum_field_helper(error),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GoogleCloudAuthErrorResultANDROID(error={repr(self.error)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GoogleCloudAuthErrorResultANDROID(error={self.error}, next={self.next}, type={self.type})"
+
+    @property
+    def error(self) -> GoogleCloudAuthErrorANDROID:
+        return GoogleCloudAuthErrorANDROID(self._error)
+    
+    @error.setter
+    def error(self, value: GoogleCloudAuthErrorANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._error = enum_field_helper(value)
+
+    _fields_ = [
+        ("_error", GoogleCloudAuthErrorANDROID.ctype()),
+    ]
+
+
+PFN_xrSetGoogleCloudAuthAsyncANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(GoogleCloudAuthInfoBaseHeaderANDROID), POINTER(FutureEXT))
+
+PFN_xrSetGoogleCloudAuthCompleteANDROID = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(FutureCompletionEXT))
+
+
+class GeospatialTrackerANDROID_T(Structure):
+    pass
+
+
+class GeospatialTrackerANDROID(POINTER(GeospatialTrackerANDROID_T), HandleMixin):
+    _type_ = GeospatialTrackerANDROID_T  # ctypes idiosyncrasy
+
+
+GeospatialPoseFlagsANDROIDCInt = Flags64
+
+
+class GeospatialPoseANDROID(Structure):
+    def __init__(
+        self,
+        east_up_south_orientation: Quaternionf = None,
+        latitude: float = 0,
+        longitude: float = 0,
+        altitude: float = 0,
+    ) -> None:
+        if east_up_south_orientation is None:
+            east_up_south_orientation = Quaternionf()
+        super().__init__(
+            east_up_south_orientation=east_up_south_orientation,
+            latitude=latitude,
+            longitude=longitude,
+            altitude=altitude,
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeospatialPoseANDROID(east_up_south_orientation={repr(self.east_up_south_orientation)}, latitude={repr(self.latitude)}, longitude={repr(self.longitude)}, altitude={repr(self.altitude)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeospatialPoseANDROID(east_up_south_orientation={self.east_up_south_orientation}, latitude={self.latitude}, longitude={self.longitude}, altitude={self.altitude})"
+
+    _fields_ = [
+        ("east_up_south_orientation", Quaternionf),
+        ("latitude", c_double),
+        ("longitude", c_double),
+        ("altitude", c_double),
+    ]
+
+
+class SystemGeospatialPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        supports_geospatial: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_GEOSPATIAL_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            supports_geospatial=supports_geospatial,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemGeospatialPropertiesANDROID(supports_geospatial={repr(self.supports_geospatial)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemGeospatialPropertiesANDROID(supports_geospatial={self.supports_geospatial}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("supports_geospatial", Bool32),
+    ]
+
+
+class GeospatialTrackerCreateInfoANDROID(BaseXrStructure):
+    pass
+
+
+class EventDataGeospatialTrackerStateChangedANDROID(EventDataBaseHeader):
+    def __init__(
+        self,
+        geospatial_tracker: GeospatialTrackerANDROID = None,
+        state: GeospatialTrackerStateANDROID = GeospatialTrackerStateANDROID.STOPPED,
+        initialization_result: Result = Result.SUCCESS,
+        time: Time = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_GEOSPATIAL_TRACKER_STATE_CHANGED_ANDROID,
+    ) -> None:
+        super().__init__(
+            geospatial_tracker=geospatial_tracker,
+            _state=enum_field_helper(state),
+            _initialization_result=enum_field_helper(initialization_result),
+            time=time,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataGeospatialTrackerStateChangedANDROID(geospatial_tracker={repr(self.geospatial_tracker)}, state={repr(self.state)}, initialization_result={repr(self.initialization_result)}, time={repr(self.time)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataGeospatialTrackerStateChangedANDROID(geospatial_tracker={self.geospatial_tracker}, state={self.state}, initialization_result={self.initialization_result}, time={self.time}, next={self.next}, type={self.type})"
+
+    @property
+    def state(self) -> GeospatialTrackerStateANDROID:
+        return GeospatialTrackerStateANDROID(self._state)
+    
+    @state.setter
+    def state(self, value: GeospatialTrackerStateANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._state = enum_field_helper(value)
+
+    @property
+    def initialization_result(self) -> Result:
+        return Result(self._initialization_result)
+    
+    @initialization_result.setter
+    def initialization_result(self, value: Result) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._initialization_result = enum_field_helper(value)
+
+    _fields_ = [
+        ("geospatial_tracker", GeospatialTrackerANDROID),
+        ("_state", GeospatialTrackerStateANDROID.ctype()),
+        ("_initialization_result", Result.ctype()),
+        ("time", Time),
+    ]
+
+
+class GeospatialPoseFromPoseLocateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        pose: Posef = Posef(),
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GEOSPATIAL_POSE_FROM_POSE_LOCATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            space=space,
+            time=time,
+            pose=pose,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeospatialPoseFromPoseLocateInfoANDROID(space={repr(self.space)}, time={repr(self.time)}, pose={repr(self.pose)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeospatialPoseFromPoseLocateInfoANDROID(space={self.space}, time={self.time}, pose={self.pose}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("space", Space),
+        ("time", Time),
+        ("pose", Posef),
+    ]
+
+
+class GeospatialPoseResultANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        pose_flags: GeospatialPoseFlagsANDROID = GeospatialPoseFlagsANDROID.NONE,
+        geospatial_pose: GeospatialPoseANDROID = None,
+        horizontal_accuracy: float = 0,
+        vertical_accuracy: float = 0,
+        orientation_yaw_accuracy: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GEOSPATIAL_POSE_RESULT_ANDROID,
+    ) -> None:
+        if geospatial_pose is None:
+            geospatial_pose = GeospatialPoseANDROID()
+        super().__init__(
+            _pose_flags=enum_field_helper(pose_flags),
+            geospatial_pose=geospatial_pose,
+            horizontal_accuracy=horizontal_accuracy,
+            vertical_accuracy=vertical_accuracy,
+            orientation_yaw_accuracy=orientation_yaw_accuracy,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeospatialPoseResultANDROID(pose_flags={repr(self.pose_flags)}, geospatial_pose={repr(self.geospatial_pose)}, horizontal_accuracy={repr(self.horizontal_accuracy)}, vertical_accuracy={repr(self.vertical_accuracy)}, orientation_yaw_accuracy={repr(self.orientation_yaw_accuracy)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeospatialPoseResultANDROID(pose_flags={self.pose_flags}, geospatial_pose={self.geospatial_pose}, horizontal_accuracy={self.horizontal_accuracy}, vertical_accuracy={self.vertical_accuracy}, orientation_yaw_accuracy={self.orientation_yaw_accuracy}, next={self.next}, type={self.type})"
+
+    @property
+    def pose_flags(self) -> GeospatialPoseFlagsANDROID:
+        return GeospatialPoseFlagsANDROID(self._pose_flags)
+    
+    @pose_flags.setter
+    def pose_flags(self, value: GeospatialPoseFlagsANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._pose_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_pose_flags", GeospatialPoseFlagsANDROIDCInt),
+        ("geospatial_pose", GeospatialPoseANDROID),
+        ("horizontal_accuracy", c_double),
+        ("vertical_accuracy", c_double),
+        ("orientation_yaw_accuracy", c_double),
+    ]
+
+
+class GeospatialPoseLocateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        space: Space = None,
+        time: Time = 0,
+        geospatial_pose: GeospatialPoseANDROID = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GEOSPATIAL_POSE_LOCATE_INFO_ANDROID,
+    ) -> None:
+        if geospatial_pose is None:
+            geospatial_pose = GeospatialPoseANDROID()
+        super().__init__(
+            space=space,
+            time=time,
+            geospatial_pose=geospatial_pose,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeospatialPoseLocateInfoANDROID(space={repr(self.space)}, time={repr(self.time)}, geospatial_pose={repr(self.geospatial_pose)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeospatialPoseLocateInfoANDROID(space={self.space}, time={self.time}, geospatial_pose={self.geospatial_pose}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("space", Space),
+        ("time", Time),
+        ("geospatial_pose", GeospatialPoseANDROID),
+    ]
+
+
+class VPSAvailabilityCheckCompletionANDROID(FutureCompletionBaseHeaderEXT):
+    def __init__(
+        self,
+        future_result: Result = Result.SUCCESS,
+        availability: VPSAvailabilityANDROID = VPSAvailabilityANDROID.UNAVAILABLE,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.VPS_AVAILABILITY_CHECK_COMPLETION_ANDROID,
+    ) -> None:
+        super().__init__(
+            _future_result=enum_field_helper(future_result),
+            _availability=enum_field_helper(availability),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VPSAvailabilityCheckCompletionANDROID(future_result={repr(self.future_result)}, availability={repr(self.availability)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VPSAvailabilityCheckCompletionANDROID(future_result={self.future_result}, availability={self.availability}, next={self.next}, type={self.type})"
+
+    @property
+    def availability(self) -> VPSAvailabilityANDROID:
+        return VPSAvailabilityANDROID(self._availability)
+    
+    @availability.setter
+    def availability(self, value: VPSAvailabilityANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._availability = enum_field_helper(value)
+
+    _fields_ = [
+        ("_availability", VPSAvailabilityANDROID.ctype()),
+    ]
+
+
+PFN_xrCreateGeospatialTrackerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(GeospatialTrackerCreateInfoANDROID), POINTER(GeospatialTrackerANDROID))
+
+PFN_xrDestroyGeospatialTrackerANDROID = CFUNCTYPE(Result.ctype(), GeospatialTrackerANDROID)
+
+PFN_xrLocateGeospatialPoseFromPoseANDROID = CFUNCTYPE(Result.ctype(), GeospatialTrackerANDROID, POINTER(GeospatialPoseFromPoseLocateInfoANDROID), POINTER(GeospatialPoseResultANDROID))
+
+PFN_xrLocateGeospatialPoseANDROID = CFUNCTYPE(Result.ctype(), GeospatialTrackerANDROID, POINTER(GeospatialPoseLocateInfoANDROID), POINTER(SpaceLocation))
+
+PFN_xrCheckVpsAvailabilityAsyncANDROID = CFUNCTYPE(Result.ctype(), Session, c_double, c_double, POINTER(FutureEXT))
+
+PFN_xrCheckVpsAvailabilityCompleteANDROID = CFUNCTYPE(Result.ctype(), Session, FutureEXT, POINTER(VPSAvailabilityCheckCompletionANDROID))
+
+
+class SpatialAnchorParentANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        parent_id: SpatialEntityIdEXT = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_PARENT_ANDROID,
+    ) -> None:
+        super().__init__(
+            parent_id=parent_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorParentANDROID(parent_id={repr(self.parent_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorParentANDROID(parent_id={self.parent_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("parent_id", SpatialEntityIdEXT),
+    ]
+
+
+PFN_xrEnumerateSpatialAnchorAttachableComponentsANDROID = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SpatialComponentTypeEXT.ctype()))
+
+
+class SpatialDiscoveryUniqueEntitiesFilterANDROID(BaseXrStructure):
+    pass
+
+
+class SpatialComponentSubsumedByListANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        subsumed_unique_id_count: Optional[int] = None,
+        subsumed_unique_ids: ArrayFieldParamType[SpatialEntityIdEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_SUBSUMED_BY_LIST_ANDROID,
+    ) -> None:
+        subsumed_unique_id_count, subsumed_unique_ids = array_field_helper(
+            SpatialEntityIdEXT, subsumed_unique_id_count, subsumed_unique_ids)
+        super().__init__(
+            subsumed_unique_id_count=subsumed_unique_id_count,
+            _subsumed_unique_ids=subsumed_unique_ids,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentSubsumedByListANDROID(subsumed_unique_id_count={repr(self.subsumed_unique_id_count)}, subsumed_unique_ids={repr(self.subsumed_unique_ids)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentSubsumedByListANDROID(subsumed_unique_id_count={self.subsumed_unique_id_count}, subsumed_unique_ids={self.subsumed_unique_ids}, next={self.next}, type={self.type})"
+
+    @property
+    def subsumed_unique_ids(self) -> Array[SpatialEntityIdEXT]:
+        return expose_ctypes_array(SpatialEntityIdEXT, self.subsumed_unique_id_count, self._subsumed_unique_ids)
+    
+    @subsumed_unique_ids.setter
+    def subsumed_unique_ids(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.subsumed_unique_id_count, self._subsumed_unique_ids = array_field_helper(
+            SpatialEntityIdEXT, None, value)
+
+    _fields_ = [
+        ("subsumed_unique_id_count", c_uint32),
+        ("_subsumed_unique_ids", POINTER(SpatialEntityIdEXT)),
+    ]
+
+
+class SpatialAnchorSpaceFromIdCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        anchor_entity_id: SpatialEntityIdEXT = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_ANCHOR_SPACE_FROM_ID_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            anchor_entity_id=anchor_entity_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorSpaceFromIdCreateInfoANDROID(anchor_entity_id={repr(self.anchor_entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorSpaceFromIdCreateInfoANDROID(anchor_entity_id={self.anchor_entity_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("anchor_entity_id", SpatialEntityIdEXT),
+    ]
+
+
+PFN_xrCreateSpatialAnchorSpaceANDROID = CFUNCTYPE(Result.ctype(), Session, SpatialContextEXT, POINTER(SpatialAnchorCreateInfoEXT), POINTER(SpatialEntityIdEXT), POINTER(Space))
+
+PFN_xrCreateSpatialAnchorSpaceFromIdANDROID = CFUNCTYPE(Result.ctype(), Session, SpatialContextEXT, POINTER(SpatialAnchorSpaceFromIdCreateInfoANDROID), POINTER(Space))
+
+
+class SystemGeospatialAnchorPropertiesANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        max_surface_anchor_count: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_GEOSPATIAL_ANCHOR_PROPERTIES_ANDROID,
+    ) -> None:
+        super().__init__(
+            max_surface_anchor_count=max_surface_anchor_count,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemGeospatialAnchorPropertiesANDROID(max_surface_anchor_count={repr(self.max_surface_anchor_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemGeospatialAnchorPropertiesANDROID(max_surface_anchor_count={self.max_surface_anchor_count}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("max_surface_anchor_count", c_uint32),
+    ]
+
+
+class GeospatialTrackerAnchorTrackingInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        should_track_planes: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GEOSPATIAL_TRACKER_ANCHOR_TRACKING_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            should_track_planes=should_track_planes,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeospatialTrackerAnchorTrackingInfoANDROID(should_track_planes={repr(self.should_track_planes)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeospatialTrackerAnchorTrackingInfoANDROID(should_track_planes={self.should_track_planes}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("should_track_planes", Bool32),
+    ]
+
+
+class GeospatialAnchorCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        geospatial_tracker: GeospatialTrackerANDROID = None,
+        geospatial_pose: GeospatialPoseANDROID = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GEOSPATIAL_ANCHOR_CREATE_INFO_ANDROID,
+    ) -> None:
+        if geospatial_pose is None:
+            geospatial_pose = GeospatialPoseANDROID()
+        super().__init__(
+            geospatial_tracker=geospatial_tracker,
+            geospatial_pose=geospatial_pose,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeospatialAnchorCreateInfoANDROID(geospatial_tracker={repr(self.geospatial_tracker)}, geospatial_pose={repr(self.geospatial_pose)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeospatialAnchorCreateInfoANDROID(geospatial_tracker={self.geospatial_tracker}, geospatial_pose={self.geospatial_pose}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("geospatial_tracker", GeospatialTrackerANDROID),
+        ("geospatial_pose", GeospatialPoseANDROID),
+    ]
+
+
+class SurfaceAnchorCreateInfoANDROID(BaseXrStructure):
+    def __init__(
+        self,
+        geospatial_tracker: GeospatialTrackerANDROID = None,
+        surface_anchor_type: SurfaceAnchorTypeANDROID = SurfaceAnchorTypeANDROID.TERRAIN,
+        east_up_south_orientation: Quaternionf = None,
+        latitude: float = 0,
+        longitude: float = 0,
+        altitude_relative_to_surface: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SURFACE_ANCHOR_CREATE_INFO_ANDROID,
+    ) -> None:
+        if east_up_south_orientation is None:
+            east_up_south_orientation = Quaternionf()
+        super().__init__(
+            geospatial_tracker=geospatial_tracker,
+            _surface_anchor_type=enum_field_helper(surface_anchor_type),
+            east_up_south_orientation=east_up_south_orientation,
+            latitude=latitude,
+            longitude=longitude,
+            altitude_relative_to_surface=altitude_relative_to_surface,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SurfaceAnchorCreateInfoANDROID(geospatial_tracker={repr(self.geospatial_tracker)}, surface_anchor_type={repr(self.surface_anchor_type)}, east_up_south_orientation={repr(self.east_up_south_orientation)}, latitude={repr(self.latitude)}, longitude={repr(self.longitude)}, altitude_relative_to_surface={repr(self.altitude_relative_to_surface)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SurfaceAnchorCreateInfoANDROID(geospatial_tracker={self.geospatial_tracker}, surface_anchor_type={self.surface_anchor_type}, east_up_south_orientation={self.east_up_south_orientation}, latitude={self.latitude}, longitude={self.longitude}, altitude_relative_to_surface={self.altitude_relative_to_surface}, next={self.next}, type={self.type})"
+
+    @property
+    def surface_anchor_type(self) -> SurfaceAnchorTypeANDROID:
+        return SurfaceAnchorTypeANDROID(self._surface_anchor_type)
+    
+    @surface_anchor_type.setter
+    def surface_anchor_type(self, value: SurfaceAnchorTypeANDROID) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._surface_anchor_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("geospatial_tracker", GeospatialTrackerANDROID),
+        ("_surface_anchor_type", SurfaceAnchorTypeANDROID.ctype()),
+        ("east_up_south_orientation", Quaternionf),
+        ("latitude", c_double),
+        ("longitude", c_double),
+        ("altitude_relative_to_surface", c_double),
+    ]
+
+
+class SurfaceAnchorCreateCompletionANDROID(FutureCompletionBaseHeaderEXT):
+    def __init__(
+        self,
+        future_result: Result = Result.SUCCESS,
+        anchor_entity_id: SpatialEntityIdEXT = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SURFACE_ANCHOR_CREATE_COMPLETION_ANDROID,
+    ) -> None:
+        super().__init__(
+            _future_result=enum_field_helper(future_result),
+            anchor_entity_id=anchor_entity_id,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SurfaceAnchorCreateCompletionANDROID(future_result={repr(self.future_result)}, anchor_entity_id={repr(self.anchor_entity_id)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SurfaceAnchorCreateCompletionANDROID(future_result={self.future_result}, anchor_entity_id={self.anchor_entity_id}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("anchor_entity_id", SpatialEntityIdEXT),
+    ]
+
+
+PFN_xrCreateGeospatialAnchorANDROID = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(GeospatialAnchorCreateInfoANDROID), POINTER(SpatialEntityIdEXT))
+
+PFN_xrCreateSurfaceAnchorAsyncANDROID = CFUNCTYPE(Result.ctype(), SpatialContextEXT, POINTER(SurfaceAnchorCreateInfoANDROID), POINTER(FutureEXT))
+
+PFN_xrCreateSurfaceAnchorCompleteANDROID = CFUNCTYPE(Result.ctype(), SpatialContextEXT, FutureEXT, POINTER(SurfaceAnchorCreateCompletionANDROID))
+
+
+class SpatialContainerEXT_T(Structure):
+    pass
+
+
+class SpatialContainerEXT(POINTER(SpatialContainerEXT_T), HandleMixin):
+    _type_ = SpatialContainerEXT_T  # ctypes idiosyncrasy
+
+
+class SessionCreateInfoSpatialContainersEXT(BaseXrStructure):
+    pass
+
+
+class SpatialContainerCreateInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        graphics_presentation: SpatialContainerGraphicsPresentationEXT = SpatialContainerGraphicsPresentationEXT(),  # noqa
+        suggested_bounds: Extent3Df = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_CREATE_INFO_EXT,
+    ) -> None:
+        if suggested_bounds is None:
+            suggested_bounds = Extent3Df()
+        super().__init__(
+            _graphics_presentation=enum_field_helper(graphics_presentation),
+            suggested_bounds=suggested_bounds,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerCreateInfoEXT(graphics_presentation={repr(self.graphics_presentation)}, suggested_bounds={repr(self.suggested_bounds)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerCreateInfoEXT(graphics_presentation={self.graphics_presentation}, suggested_bounds={self.suggested_bounds}, next={self.next}, type={self.type})"
+
+    @property
+    def graphics_presentation(self) -> SpatialContainerGraphicsPresentationEXT:
+        return SpatialContainerGraphicsPresentationEXT(self._graphics_presentation)
+    
+    @graphics_presentation.setter
+    def graphics_presentation(self, value: SpatialContainerGraphicsPresentationEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._graphics_presentation = enum_field_helper(value)
+
+    _fields_ = [
+        ("_graphics_presentation", SpatialContainerGraphicsPresentationEXT.ctype()),
+        ("suggested_bounds", Extent3Df),
+    ]
+
+
+class SpatialContainerSpaceCreateInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_SPACE_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerSpaceCreateInfoEXT(spatial_container={repr(self.spatial_container)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerSpaceCreateInfoEXT(spatial_container={self.spatial_container}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+    ]
+
+
+class EventDataSpatialContainerClosedEXT(EventDataBaseHeader):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_SPATIAL_CONTAINER_CLOSED_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialContainerClosedEXT(spatial_container={repr(self.spatial_container)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialContainerClosedEXT(spatial_container={self.spatial_container}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+    ]
+
+
+class SystemSpatialContainerPropertiesEXT(BaseXrStructure):
+    def __init__(
+        self,
+        max_spatial_container_count: int = 0,
+        supports_bounded: Bool32 = 0,
+        supports_immersive: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SYSTEM_SPATIAL_CONTAINER_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            max_spatial_container_count=max_spatial_container_count,
+            supports_bounded=supports_bounded,
+            supports_immersive=supports_immersive,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SystemSpatialContainerPropertiesEXT(max_spatial_container_count={repr(self.max_spatial_container_count)}, supports_bounded={repr(self.supports_bounded)}, supports_immersive={repr(self.supports_immersive)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SystemSpatialContainerPropertiesEXT(max_spatial_container_count={self.max_spatial_container_count}, supports_bounded={self.supports_bounded}, supports_immersive={self.supports_immersive}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("max_spatial_container_count", c_uint32),
+        ("supports_bounded", Bool32),
+        ("supports_immersive", Bool32),
+    ]
+
+
+class SpatialContainerBoundsEXT(BaseXrStructure):
+    def __init__(
+        self,
+        bounds: Extent3Df = None,
+        infinite_bounds: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_BOUNDS_EXT,
+    ) -> None:
+        if bounds is None:
+            bounds = Extent3Df()
+        super().__init__(
+            bounds=bounds,
+            infinite_bounds=infinite_bounds,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerBoundsEXT(bounds={repr(self.bounds)}, infinite_bounds={repr(self.infinite_bounds)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerBoundsEXT(bounds={self.bounds}, infinite_bounds={self.infinite_bounds}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("bounds", Extent3Df),
+        ("infinite_bounds", Bool32),
+    ]
+
+
+class EventDataSpatialContainerBoundsChangedEXT(EventDataBaseHeader):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        bounds: Extent3Df = None,
+        infinite_bounds: Bool32 = 0,
+        bounds_mode: SpatialContainerBoundsModeEXT = SpatialContainerBoundsModeEXT.BOUNDED,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_SPATIAL_CONTAINER_BOUNDS_CHANGED_EXT,
+    ) -> None:
+        if bounds is None:
+            bounds = Extent3Df()
+        super().__init__(
+            spatial_container=spatial_container,
+            bounds=bounds,
+            infinite_bounds=infinite_bounds,
+            _bounds_mode=enum_field_helper(bounds_mode),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialContainerBoundsChangedEXT(spatial_container={repr(self.spatial_container)}, bounds={repr(self.bounds)}, infinite_bounds={repr(self.infinite_bounds)}, bounds_mode={repr(self.bounds_mode)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialContainerBoundsChangedEXT(spatial_container={self.spatial_container}, bounds={self.bounds}, infinite_bounds={self.infinite_bounds}, bounds_mode={self.bounds_mode}, next={self.next}, type={self.type})"
+
+    @property
+    def bounds_mode(self) -> SpatialContainerBoundsModeEXT:
+        return SpatialContainerBoundsModeEXT(self._bounds_mode)
+    
+    @bounds_mode.setter
+    def bounds_mode(self, value: SpatialContainerBoundsModeEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._bounds_mode = enum_field_helper(value)
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+        ("bounds", Extent3Df),
+        ("infinite_bounds", Bool32),
+        ("_bounds_mode", SpatialContainerBoundsModeEXT.ctype()),
+    ]
+
+
+class SpatialContainerBoundsGetInfoEXT(BaseXrStructure):
+    pass
+
+
+class SpatialContainerStateGetInfoEXT(BaseXrStructure):
+    pass
+
+
+class SpatialContainerVisibleRequestInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        visible: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_VISIBLE_REQUEST_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            visible=visible,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerVisibleRequestInfoEXT(visible={repr(self.visible)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerVisibleRequestInfoEXT(visible={self.visible}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("visible", Bool32),
+    ]
+
+
+class EventDataSpatialContainerVisibleChangedEXT(EventDataBaseHeader):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        visible: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_SPATIAL_CONTAINER_VISIBLE_CHANGED_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            visible=visible,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialContainerVisibleChangedEXT(spatial_container={repr(self.spatial_container)}, visible={repr(self.visible)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialContainerVisibleChangedEXT(spatial_container={self.spatial_container}, visible={self.visible}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+        ("visible", Bool32),
+    ]
+
+
+class EventDataSpatialContainerVisibleRequestDeniedEXT(EventDataBaseHeader):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_SPATIAL_CONTAINER_VISIBLE_REQUEST_DENIED_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialContainerVisibleRequestDeniedEXT(spatial_container={repr(self.spatial_container)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialContainerVisibleRequestDeniedEXT(spatial_container={self.spatial_container}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+    ]
+
+
+class EventDataSpatialContainerInteractableChangedEXT(EventDataBaseHeader):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        interactable: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_SPATIAL_CONTAINER_INTERACTABLE_CHANGED_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            interactable=interactable,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialContainerInteractableChangedEXT(spatial_container={repr(self.spatial_container)}, interactable={repr(self.interactable)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialContainerInteractableChangedEXT(spatial_container={self.spatial_container}, interactable={self.interactable}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+        ("interactable", Bool32),
+    ]
+
+
+class SpatialContainerBoundsModeRequestInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        bounds_mode: SpatialContainerBoundsModeEXT = SpatialContainerBoundsModeEXT.BOUNDED,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_BOUNDS_MODE_REQUEST_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _bounds_mode=enum_field_helper(bounds_mode),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerBoundsModeRequestInfoEXT(bounds_mode={repr(self.bounds_mode)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerBoundsModeRequestInfoEXT(bounds_mode={self.bounds_mode}, next={self.next}, type={self.type})"
+
+    @property
+    def bounds_mode(self) -> SpatialContainerBoundsModeEXT:
+        return SpatialContainerBoundsModeEXT(self._bounds_mode)
+    
+    @bounds_mode.setter
+    def bounds_mode(self, value: SpatialContainerBoundsModeEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._bounds_mode = enum_field_helper(value)
+
+    _fields_ = [
+        ("_bounds_mode", SpatialContainerBoundsModeEXT.ctype()),
+    ]
+
+
+class EventDataSpatialContainerBoundsModeRequestDeniedEXT(EventDataBaseHeader):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_SPATIAL_CONTAINER_BOUNDS_MODE_REQUEST_DENIED_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataSpatialContainerBoundsModeRequestDeniedEXT(spatial_container={repr(self.spatial_container)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataSpatialContainerBoundsModeRequestDeniedEXT(spatial_container={self.spatial_container}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+    ]
+
+
+class SpatialContainerStateEXT(BaseXrStructure):
+    def __init__(
+        self,
+        visible: Bool32 = 0,
+        interactable: Bool32 = 0,
+        bounds_mode: SpatialContainerBoundsModeEXT = SpatialContainerBoundsModeEXT.BOUNDED,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_STATE_EXT,
+    ) -> None:
+        super().__init__(
+            visible=visible,
+            interactable=interactable,
+            _bounds_mode=enum_field_helper(bounds_mode),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerStateEXT(visible={repr(self.visible)}, interactable={repr(self.interactable)}, bounds_mode={repr(self.bounds_mode)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerStateEXT(visible={self.visible}, interactable={self.interactable}, bounds_mode={self.bounds_mode}, next={self.next}, type={self.type})"
+
+    @property
+    def bounds_mode(self) -> SpatialContainerBoundsModeEXT:
+        return SpatialContainerBoundsModeEXT(self._bounds_mode)
+    
+    @bounds_mode.setter
+    def bounds_mode(self, value: SpatialContainerBoundsModeEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._bounds_mode = enum_field_helper(value)
+
+    _fields_ = [
+        ("visible", Bool32),
+        ("interactable", Bool32),
+        ("_bounds_mode", SpatialContainerBoundsModeEXT.ctype()),
+    ]
+
+
+PFN_xrCreateSpatialContainerEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialContainerCreateInfoEXT), POINTER(SpatialContainerEXT))
+
+PFN_xrDestroySpatialContainerEXT = CFUNCTYPE(Result.ctype(), SpatialContainerEXT)
+
+PFN_xrCreateSpatialContainerSpaceEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialContainerSpaceCreateInfoEXT), POINTER(Space))
+
+PFN_xrRequestSpatialContainerVisibleEXT = CFUNCTYPE(Result.ctype(), SpatialContainerEXT, POINTER(SpatialContainerVisibleRequestInfoEXT))
+
+PFN_xrRequestSpatialContainerBoundsModeEXT = CFUNCTYPE(Result.ctype(), SpatialContainerEXT, POINTER(SpatialContainerBoundsModeRequestInfoEXT))
+
+PFN_xrGetSpatialContainerBoundsEXT = CFUNCTYPE(Result.ctype(), SpatialContainerEXT, POINTER(SpatialContainerBoundsGetInfoEXT), POINTER(SpatialContainerBoundsEXT))
+
+PFN_xrGetSpatialContainerStateEXT = CFUNCTYPE(Result.ctype(), SpatialContainerEXT, POINTER(SpatialContainerStateGetInfoEXT), POINTER(SpatialContainerStateEXT))
+
+PFN_xrEnumerateSupportedSpatialContainerGraphicsPresentationsEXT = CFUNCTYPE(Result.ctype(), Instance, SystemId, c_uint32, POINTER(c_uint32), POINTER(SpatialContainerGraphicsPresentationEXT.ctype()))
+
+
+class SpatialContainerViewLocateInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
+        space: Space = None,
+        spatial_container: SpatialContainerEXT = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_VIEW_LOCATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _view_configuration_type=enum_field_helper(view_configuration_type),
+            space=space,
+            spatial_container=spatial_container,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerViewLocateInfoEXT(view_configuration_type={repr(self.view_configuration_type)}, space={repr(self.space)}, spatial_container={repr(self.spatial_container)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerViewLocateInfoEXT(view_configuration_type={self.view_configuration_type}, space={self.space}, spatial_container={self.spatial_container}, next={self.next}, type={self.type})"
+
+    @property
+    def view_configuration_type(self) -> ViewConfigurationType:
+        return ViewConfigurationType(self._view_configuration_type)
+    
+    @view_configuration_type.setter
+    def view_configuration_type(self, value: ViewConfigurationType) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._view_configuration_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_view_configuration_type", ViewConfigurationType.ctype()),
+        ("space", Space),
+        ("spatial_container", SpatialContainerEXT),
+    ]
+
+
+class SpatialContainerViewsLocateInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        display_time: Time = 0,
+        view_locate_info_count: Optional[int] = None,
+        view_locate_infos: ArrayFieldParamType[SpatialContainerViewLocateInfoEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_VIEWS_LOCATE_INFO_EXT,
+    ) -> None:
+        view_locate_info_count, view_locate_infos = array_field_helper(
+            SpatialContainerViewLocateInfoEXT, view_locate_info_count, view_locate_infos)
+        super().__init__(
+            display_time=display_time,
+            view_locate_info_count=view_locate_info_count,
+            _view_locate_infos=view_locate_infos,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerViewsLocateInfoEXT(display_time={repr(self.display_time)}, view_locate_info_count={repr(self.view_locate_info_count)}, view_locate_infos={repr(self.view_locate_infos)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerViewsLocateInfoEXT(display_time={self.display_time}, view_locate_info_count={self.view_locate_info_count}, view_locate_infos={self.view_locate_infos}, next={self.next}, type={self.type})"
+
+    @property
+    def view_locate_infos(self) -> Array[SpatialContainerViewLocateInfoEXT]:
+        return expose_ctypes_array(SpatialContainerViewLocateInfoEXT, self.view_locate_info_count, self._view_locate_infos)
+    
+    @view_locate_infos.setter
+    def view_locate_infos(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.view_locate_info_count, self._view_locate_infos = array_field_helper(
+            SpatialContainerViewLocateInfoEXT, None, value)
+
+    _fields_ = [
+        ("display_time", Time),
+        ("view_locate_info_count", c_uint32),
+        ("_view_locate_infos", POINTER(SpatialContainerViewLocateInfoEXT)),
+    ]
+
+
+class SpatialContainerViewStateEXT(BaseXrStructure):
+    def __init__(
+        self,
+        view_state_flags: ViewStateFlags = ViewStateFlags.NONE,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
+        should_submit_layers: Bool32 = 0,
+        recommended_image_extent: Extent2Di = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_VIEW_STATE_EXT,
+    ) -> None:
+        if recommended_image_extent is None:
+            recommended_image_extent = Extent2Di()
+        super().__init__(
+            _view_state_flags=enum_field_helper(view_state_flags),
+            _view_configuration_type=enum_field_helper(view_configuration_type),
+            should_submit_layers=should_submit_layers,
+            recommended_image_extent=recommended_image_extent,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerViewStateEXT(view_state_flags={repr(self.view_state_flags)}, view_configuration_type={repr(self.view_configuration_type)}, should_submit_layers={repr(self.should_submit_layers)}, recommended_image_extent={repr(self.recommended_image_extent)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerViewStateEXT(view_state_flags={self.view_state_flags}, view_configuration_type={self.view_configuration_type}, should_submit_layers={self.should_submit_layers}, recommended_image_extent={self.recommended_image_extent}, next={self.next}, type={self.type})"
+
+    @property
+    def view_state_flags(self) -> ViewStateFlags:
+        return ViewStateFlags(self._view_state_flags)
+    
+    @view_state_flags.setter
+    def view_state_flags(self, value: ViewStateFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._view_state_flags = enum_field_helper(value)
+
+    @property
+    def view_configuration_type(self) -> ViewConfigurationType:
+        return ViewConfigurationType(self._view_configuration_type)
+    
+    @view_configuration_type.setter
+    def view_configuration_type(self, value: ViewConfigurationType) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._view_configuration_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_view_state_flags", ViewStateFlagsCInt),
+        ("_view_configuration_type", ViewConfigurationType.ctype()),
+        ("should_submit_layers", Bool32),
+        ("recommended_image_extent", Extent2Di),
+    ]
+
+
+class SpatialContainerLayerEXT(BaseXrStructure):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        retain_previous_submission: Bool32 = 0,
+        layer_count: Optional[int] = None,
+        layers: BaseArrayFieldParamType = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_LAYER_EXT,
+    ) -> None:
+        layer_count, layers = base_array_field_helper(
+            POINTER(CompositionLayerBaseHeader), layer_count, layers)
+        super().__init__(
+            spatial_container=spatial_container,
+            retain_previous_submission=retain_previous_submission,
+            layer_count=layer_count,
+            _layers=layers,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerLayerEXT(spatial_container={repr(self.spatial_container)}, retain_previous_submission={repr(self.retain_previous_submission)}, layer_count={repr(self.layer_count)}, layers={repr(self.layers)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerLayerEXT(spatial_container={self.spatial_container}, retain_previous_submission={self.retain_previous_submission}, layer_count={self.layer_count}, layers={self.layers}, next={self.next}, type={self.type})"
+
+    @property
+    def layers(self) -> Array[POINTER(CompositionLayerBaseHeader)]:
+        return expose_ctypes_array(POINTER(CompositionLayerBaseHeader), self.layer_count, self._layers)
+    
+    @layers.setter
+    def layers(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.layer_count, self._layers = base_array_field_helper(
+            POINTER(CompositionLayerBaseHeader), None, value)
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+        ("retain_previous_submission", Bool32),
+        ("layer_count", c_uint32),
+        ("_layers", POINTER(POINTER(CompositionLayerBaseHeader))),
+    ]
+
+
+class SpatialContainerLayerFrameEndInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        container_layer_count: Optional[int] = None,
+        container_layers: ArrayFieldParamType[SpatialContainerLayerEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_LAYER_FRAME_END_INFO_EXT,
+    ) -> None:
+        container_layer_count, container_layers = array_field_helper(
+            SpatialContainerLayerEXT, container_layer_count, container_layers)
+        super().__init__(
+            container_layer_count=container_layer_count,
+            _container_layers=container_layers,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerLayerFrameEndInfoEXT(container_layer_count={repr(self.container_layer_count)}, container_layers={repr(self.container_layers)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerLayerFrameEndInfoEXT(container_layer_count={self.container_layer_count}, container_layers={self.container_layers}, next={self.next}, type={self.type})"
+
+    @property
+    def container_layers(self) -> Array[SpatialContainerLayerEXT]:
+        return expose_ctypes_array(SpatialContainerLayerEXT, self.container_layer_count, self._container_layers)
+    
+    @container_layers.setter
+    def container_layers(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.container_layer_count, self._container_layers = array_field_helper(
+            SpatialContainerLayerEXT, None, value)
+
+    _fields_ = [
+        ("container_layer_count", c_uint32),
+        ("_container_layers", POINTER(SpatialContainerLayerEXT)),
+    ]
+
+
+class SpatialContainerBeginInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        primary_view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_BEGIN_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            _primary_view_configuration_type=enum_field_helper(primary_view_configuration_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerBeginInfoEXT(spatial_container={repr(self.spatial_container)}, primary_view_configuration_type={repr(self.primary_view_configuration_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerBeginInfoEXT(spatial_container={self.spatial_container}, primary_view_configuration_type={self.primary_view_configuration_type}, next={self.next}, type={self.type})"
+
+    @property
+    def primary_view_configuration_type(self) -> ViewConfigurationType:
+        return ViewConfigurationType(self._primary_view_configuration_type)
+    
+    @primary_view_configuration_type.setter
+    def primary_view_configuration_type(self, value: ViewConfigurationType) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._primary_view_configuration_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+        ("_primary_view_configuration_type", ViewConfigurationType.ctype()),
+    ]
+
+
+class SpatialContainerEndInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        spatial_container: SpatialContainerEXT = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_END_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            spatial_container=spatial_container,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerEndInfoEXT(spatial_container={repr(self.spatial_container)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerEndInfoEXT(spatial_container={self.spatial_container}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("spatial_container", SpatialContainerEXT),
+    ]
+
+
+class SpatialContainerCompositionLayerViewConfigurationEXT(BaseXrStructure):
+    def __init__(
+        self,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_COMPOSITION_LAYER_VIEW_CONFIGURATION_EXT,
+    ) -> None:
+        super().__init__(
+            _view_configuration_type=enum_field_helper(view_configuration_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerCompositionLayerViewConfigurationEXT(view_configuration_type={repr(self.view_configuration_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerCompositionLayerViewConfigurationEXT(view_configuration_type={self.view_configuration_type}, next={self.next}, type={self.type})"
+
+    @property
+    def view_configuration_type(self) -> ViewConfigurationType:
+        return ViewConfigurationType(self._view_configuration_type)
+    
+    @view_configuration_type.setter
+    def view_configuration_type(self, value: ViewConfigurationType) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._view_configuration_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("_view_configuration_type", ViewConfigurationType.ctype()),
+    ]
+
+
+class SpatialContainerLayerVolumeClippingEXT(BaseXrStructure):
+    def __init__(
+        self,
+        volume_clipping: SpatialContainerVolumeClippingEXT = SpatialContainerVolumeClippingEXT.NONE,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_LAYER_VOLUME_CLIPPING_EXT,
+    ) -> None:
+        super().__init__(
+            _volume_clipping=enum_field_helper(volume_clipping),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerLayerVolumeClippingEXT(volume_clipping={repr(self.volume_clipping)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerLayerVolumeClippingEXT(volume_clipping={self.volume_clipping}, next={self.next}, type={self.type})"
+
+    @property
+    def volume_clipping(self) -> SpatialContainerVolumeClippingEXT:
+        return SpatialContainerVolumeClippingEXT(self._volume_clipping)
+    
+    @volume_clipping.setter
+    def volume_clipping(self, value: SpatialContainerVolumeClippingEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._volume_clipping = enum_field_helper(value)
+
+    _fields_ = [
+        ("_volume_clipping", SpatialContainerVolumeClippingEXT.ctype()),
+    ]
+
+
+PFN_xrBeginSpatialContainerRenderingEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialContainerBeginInfoEXT))
+
+PFN_xrEndSpatialContainerRenderingEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialContainerEndInfoEXT))
+
+PFN_xrLocateSpatialContainerViewsEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SpatialContainerViewsLocateInfoEXT), c_uint32, POINTER(SpatialContainerViewStateEXT), c_uint32, POINTER(View))
+
+BatteryStateDisplayStateFlagsEXTCInt = Flags64
+
+
+class BatteryStateDisplayEXT(BaseXrStructure):
+    def __init__(
+        self,
+        state_flags: BatteryStateDisplayStateFlagsEXT = BatteryStateDisplayStateFlagsEXT.NONE,
+        battery_level: float = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.BATTERY_STATE_DISPLAY_EXT,
+    ) -> None:
+        super().__init__(
+            _state_flags=enum_field_helper(state_flags),
+            battery_level=battery_level,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.BatteryStateDisplayEXT(state_flags={repr(self.state_flags)}, battery_level={repr(self.battery_level)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.BatteryStateDisplayEXT(state_flags={self.state_flags}, battery_level={self.battery_level:.3f}, next={self.next}, type={self.type})"
+
+    @property
+    def state_flags(self) -> BatteryStateDisplayStateFlagsEXT:
+        return BatteryStateDisplayStateFlagsEXT(self._state_flags)
+    
+    @state_flags.setter
+    def state_flags(self, value: BatteryStateDisplayStateFlagsEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._state_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_state_flags", BatteryStateDisplayStateFlagsEXTCInt),
+        ("battery_level", c_float),
+    ]
+
+
 class LoaderInitPropertyValueEXT(Structure):
     def __init__(
         self,
@@ -21424,6 +28317,42 @@ class LoaderInitInfoPropertiesEXT(LoaderInitInfoBaseHeaderKHR):
     ]
 
 
+class EventDataViewConfigurationViewsChangedEXT(EventDataBaseHeader):
+    def __init__(
+        self,
+        system_id: SystemId = 0,
+        view_configuration_type: ViewConfigurationType = ViewConfigurationType.PRIMARY_STEREO,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_VIEW_CONFIGURATION_VIEWS_CHANGED_EXT,
+    ) -> None:
+        super().__init__(
+            system_id=system_id,
+            _view_configuration_type=enum_field_helper(view_configuration_type),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataViewConfigurationViewsChangedEXT(system_id={repr(self.system_id)}, view_configuration_type={repr(self.view_configuration_type)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataViewConfigurationViewsChangedEXT(system_id={self.system_id}, view_configuration_type={self.view_configuration_type}, next={self.next}, type={self.type})"
+
+    @property
+    def view_configuration_type(self) -> ViewConfigurationType:
+        return ViewConfigurationType(self._view_configuration_type)
+    
+    @view_configuration_type.setter
+    def view_configuration_type(self, value: ViewConfigurationType) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._view_configuration_type = enum_field_helper(value)
+
+    _fields_ = [
+        ("system_id", SystemId),
+        ("_view_configuration_type", ViewConfigurationType.ctype()),
+    ]
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -21442,6 +28371,7 @@ __all__ = [
     "ActiveActionSet",
     "ActiveActionSetPrioritiesEXT",
     "ActiveActionSetPriorityEXT",
+    "AmbientLightANDROID",
     "AnchorBD",
     "AnchorBD_T",
     "AnchorSpaceCreateInfoANDROID",
@@ -21449,16 +28379,26 @@ __all__ = [
     "ApiLayerProperties",
     "ApplicationInfo",
     "AsyncRequestIdFB",
+    "AttenuationCurvePointBD",
+    "AudioBufferBD",
+    "AvailableCameraBD",
+    "AvailableCamerasEnumerateInfoBD",
     "BaseInStructure",
     "BaseOutStructure",
+    "BatteryStateDisplayEXT",
+    "BatteryStateDisplayStateFlagsEXTCInt",
     "BindingModificationBaseHeaderKHR",
     "BindingModificationsKHR",
+    "BodyJointAccelerationBD",
+    "BodyJointAccelerationsBD",
     "BodyJointLocationBD",
     "BodyJointLocationFB",
     "BodyJointLocationHTC",
     "BodyJointLocationsBD",
     "BodyJointLocationsFB",
     "BodyJointLocationsHTC",
+    "BodyJointVelocitiesBD",
+    "BodyJointVelocityBD",
     "BodyJointsLocateInfoBD",
     "BodyJointsLocateInfoFB",
     "BodyJointsLocateInfoHTC",
@@ -21477,11 +28417,53 @@ __all__ = [
     "BodyTrackerHTC_T",
     "BodyTrackingCalibrationInfoMETA",
     "BodyTrackingCalibrationStatusMETA",
+    "BodyTrackingFidelityStatusMETA",
+    "BodyTrackingPostureDataBD",
+    "BodyTrackingStateBD",
     "Bool32",
     "BoundSourcesForActionEnumerateInfo",
     "Boundary2DFB",
     "Boxf",
     "BoxfKHR",
+    "CameraCapabilitiesBD",
+    "CameraCapabilityBaseHeaderBD",
+    "CameraCapabilityCameraModelBD",
+    "CameraCapabilityDataTransferTypeBD",
+    "CameraCapabilityImageFormatBD",
+    "CameraCapabilityImageResolutionAndFrameRateBD",
+    "CameraCapabilityTypesBD",
+    "CameraCapabilityTypesEnumerateInfoBD",
+    "CameraCaptureBeginInfoBD",
+    "CameraCaptureSessionBD",
+    "CameraCaptureSessionBD_T",
+    "CameraCaptureSessionCreateInfoBD",
+    "CameraDeviceBD",
+    "CameraDeviceBD_T",
+    "CameraDeviceCreateInfoBD",
+    "CameraExtrinsicsBD",
+    "CameraIdBD",
+    "CameraImageAcquireInfoBD",
+    "CameraImageBD",
+    "CameraImageDataBaseHeaderBD",
+    "CameraImageDataRawBufferBD",
+    "CameraImageIdBD",
+    "CameraImageResolutionAndFrameRateBD",
+    "CameraIntrinsicsBD",
+    "CameraPropertiesBD",
+    "CameraPropertiesGetInfoBD",
+    "CameraPropertyBaseHeaderBD",
+    "CameraPropertyCameraTypeBD",
+    "CameraPropertyFacingBD",
+    "CameraPropertyPositionBD",
+    "CameraPropertyTypesBD",
+    "CameraPropertyTypesEnumerateInfoBD",
+    "CameraSupportedCapabilitiesBD",
+    "CameraSupportedCapabilitiesGetInfoBD",
+    "CameraSupportedCapabilityBaseHeaderBD",
+    "CameraSupportedCapabilityCameraModelBD",
+    "CameraSupportedCapabilityDataTransferTypeBD",
+    "CameraSupportedCapabilityImageFormatBD",
+    "CameraSupportedCapabilityImageResolutionAndFrameRateBD",
     "ColocationAdvertisementStartInfoMETA",
     "ColocationAdvertisementStopInfoMETA",
     "ColocationDiscoveryStartInfoMETA",
@@ -21489,6 +28471,7 @@ __all__ = [
     "Color3f",
     "Color3fKHR",
     "Color4f",
+    "ColorSpacesEnumerateInfoSONY",
     "CompositionLayerAlphaBlendFB",
     "CompositionLayerBaseHeader",
     "CompositionLayerColorScaleBiasKHR",
@@ -21502,6 +28485,7 @@ __all__ = [
     "CompositionLayerFlagsCInt",
     "CompositionLayerImageLayoutFB",
     "CompositionLayerImageLayoutFlagsFBCInt",
+    "CompositionLayerPassthroughANDROID",
     "CompositionLayerPassthroughFB",
     "CompositionLayerPassthroughHTC",
     "CompositionLayerProjection",
@@ -21521,11 +28505,15 @@ __all__ = [
     "ControllerModelNodeStateMSFT",
     "ControllerModelPropertiesMSFT",
     "ControllerModelStateMSFT",
+    "CreateCameraCaptureSessionCompletionBD",
+    "CreateCameraDeviceCompletionBD",
     "CreateSpatialAnchorsCompletionML",
     "CreateSpatialContextCompletionEXT",
     "CreateSpatialDiscoverySnapshotCompletionEXT",
     "CreateSpatialDiscoverySnapshotCompletionInfoEXT",
+    "CreateSpatialImageTrackingDatabaseCompletionEXT",
     "CreateSpatialPersistenceContextCompletionEXT",
+    "CreateTrackableImageDatabaseCompletionANDROID",
     "DebugUtilsLabelEXT",
     "DebugUtilsMessageSeverityFlagsEXTCInt",
     "DebugUtilsMessageTypeFlagsEXTCInt",
@@ -21542,7 +28530,9 @@ __all__ = [
     "DevicePcmSampleRateStateFB",
     "DigitalLensControlALMALENCE",
     "DigitalLensControlFlagsALMALENCECInt",
+    "DirectionalLightANDROID",
     "Duration",
+    "DynamicObjectDataBD",
     "EnvironmentDepthHandRemovalSetInfoMETA",
     "EnvironmentDepthImageAcquireInfoMETA",
     "EnvironmentDepthImageMETA",
@@ -21557,7 +28547,17 @@ __all__ = [
     "EnvironmentDepthSwapchainMETA",
     "EnvironmentDepthSwapchainMETA_T",
     "EnvironmentDepthSwapchainStateMETA",
+    "EnvironmentRaycastFilterBaseHeaderMETA",
+    "EnvironmentRaycastFilterDistanceMETA",
+    "EnvironmentRaycastHitGetInfoMETA",
+    "EnvironmentRaycastHitMETA",
+    "EnvironmentRaycasterCreateCompletionMETA",
+    "EnvironmentRaycasterCreateInfoMETA",
+    "EnvironmentRaycasterMETA",
+    "EnvironmentRaycasterMETA_T",
+    "EnvironmentTextureCreateConfigInfoBD",
     "EventDataBaseHeader",
+    "EventDataBoundaryVisibilityChangedMETA",
     "EventDataBuffer",
     "EventDataColocationAdvertisementCompleteMETA",
     "EventDataColocationDiscoveryCompleteMETA",
@@ -21565,7 +28565,9 @@ __all__ = [
     "EventDataDisplayRefreshRateChangedFB",
     "EventDataEventsLost",
     "EventDataEyeCalibrationChangedML",
+    "EventDataGeospatialTrackerStateChangedANDROID",
     "EventDataHeadsetFitChangedML",
+    "EventDataImageTrackingLostANDROID",
     "EventDataInstanceLossPending",
     "EventDataInteractionProfileChanged",
     "EventDataInteractionRenderModelsChangedEXT",
@@ -21575,6 +28577,7 @@ __all__ = [
     "EventDataPassthroughLayerResumedMETA",
     "EventDataPassthroughStateChangedFB",
     "EventDataPerfSettingsEXT",
+    "EventDataRecommendedResolutionChangedANDROID",
     "EventDataReferenceSpaceChangePending",
     "EventDataSceneCaptureCompleteFB",
     "EventDataSenseDataProviderStateChangedBD",
@@ -21593,12 +28596,19 @@ __all__ = [
     "EventDataSpacesEraseResultMETA",
     "EventDataSpacesSaveResultMETA",
     "EventDataSpatialAnchorCreateCompleteFB",
+    "EventDataSpatialContainerBoundsChangedEXT",
+    "EventDataSpatialContainerBoundsModeRequestDeniedEXT",
+    "EventDataSpatialContainerClosedEXT",
+    "EventDataSpatialContainerInteractableChangedEXT",
+    "EventDataSpatialContainerVisibleChangedEXT",
+    "EventDataSpatialContainerVisibleRequestDeniedEXT",
     "EventDataSpatialDiscoveryRecommendedEXT",
     "EventDataStartColocationAdvertisementCompleteMETA",
     "EventDataStartColocationDiscoveryCompleteMETA",
     "EventDataStopColocationAdvertisementCompleteMETA",
     "EventDataStopColocationDiscoveryCompleteMETA",
     "EventDataUserPresenceChangedEXT",
+    "EventDataViewConfigurationViewsChangedEXT",
     "EventDataVirtualKeyboardBackspaceMETA",
     "EventDataVirtualKeyboardCommitTextMETA",
     "EventDataVirtualKeyboardEnterMETA",
@@ -21615,17 +28625,24 @@ __all__ = [
     "Extent3DfEXT",
     "Extent3DfFB",
     "Extent3DfKHR",
+    "Extent3DiMETA",
     "ExternalCameraExtrinsicsOCULUS",
     "ExternalCameraIntrinsicsOCULUS",
     "ExternalCameraOCULUS",
     "ExternalCameraStatusFlagsOCULUSCInt",
+    "EyeANDROID",
     "EyeGazeFB",
     "EyeGazeSampleTimeEXT",
     "EyeGazesFB",
     "EyeGazesInfoFB",
+    "EyeTrackerANDROID",
+    "EyeTrackerANDROID_T",
+    "EyeTrackerCreateInfoANDROID",
     "EyeTrackerCreateInfoFB",
     "EyeTrackerFB",
     "EyeTrackerFB_T",
+    "EyesANDROID",
+    "EyesGetInfoANDROID",
     "FaceExpressionInfo2FB",
     "FaceExpressionInfoFB",
     "FaceExpressionStatusFB",
@@ -21645,6 +28662,7 @@ __all__ = [
     "FaceTrackerCreateInfoFB",
     "FaceTrackerFB",
     "FaceTrackerFB_T",
+    "FaceTrackingVisemesMETA",
     "FacialExpressionBlendShapeGetInfoML",
     "FacialExpressionBlendShapePropertiesFlagsMLCInt",
     "FacialExpressionBlendShapePropertiesML",
@@ -21698,9 +28716,25 @@ __all__ = [
     "GeometryInstanceFB",
     "GeometryInstanceFB_T",
     "GeometryInstanceTransformFB",
+    "GeospatialAnchorCreateInfoANDROID",
+    "GeospatialPoseANDROID",
+    "GeospatialPoseFlagsANDROIDCInt",
+    "GeospatialPoseFromPoseLocateInfoANDROID",
+    "GeospatialPoseLocateInfoANDROID",
+    "GeospatialPoseResultANDROID",
+    "GeospatialTrackerANDROID",
+    "GeospatialTrackerANDROID_T",
+    "GeospatialTrackerAnchorTrackingInfoANDROID",
+    "GeospatialTrackerCreateInfoANDROID",
     "GlobalDimmerFrameEndInfoFlagsMLCInt",
     "GlobalDimmerFrameEndInfoML",
+    "GoogleCloudAuthErrorResultANDROID",
+    "GoogleCloudAuthInfoApiKeyANDROID",
+    "GoogleCloudAuthInfoBaseHeaderANDROID",
+    "GoogleCloudAuthInfoKeylessANDROID",
+    "GoogleCloudAuthInfoTokenANDROID",
     "HandCapsuleFB",
+    "HandGestureQCOM",
     "HandJointLocationEXT",
     "HandJointLocationsEXT",
     "HandJointVelocitiesEXT",
@@ -21724,11 +28758,18 @@ __all__ = [
     "HandTrackingDataSourceStateEXT",
     "HandTrackingMeshFB",
     "HandTrackingScaleFB",
+    "HandTrackingUnextrapolatedPosesMETA",
+    "HandTrackingUnextrapolatedPosesRequestMETA",
     "HapticActionInfo",
     "HapticAmplitudeEnvelopeVibrationFB",
     "HapticBaseHeader",
+    "HapticParametricPointEXT",
+    "HapticParametricPropertiesEXT",
+    "HapticParametricTransientEXT",
+    "HapticParametricVibrationEXT",
     "HapticPcmVibrationFB",
     "HapticVibration",
+    "HdrMetadataSONY",
     "InputSourceLocalizedNameFlagsCInt",
     "InputSourceLocalizedNameGetInfo",
     "Instance",
@@ -21748,6 +28789,14 @@ __all__ = [
     "KeyboardTrackingFlagsFBCInt",
     "KeyboardTrackingQueryFB",
     "KeyboardTrackingQueryFlagsFBCInt",
+    "LightEstimateANDROID",
+    "LightEstimateGetInfoANDROID",
+    "LightEstimationCreateFlagsBDCInt",
+    "LightEstimationDataEnvironmentTextureRawBD",
+    "LightEstimationDataSphericalHarmonicsBD",
+    "LightEstimatorANDROID",
+    "LightEstimatorANDROID_T",
+    "LightEstimatorCreateInfoANDROID",
     "LipExpressionDataBD",
     "LoaderInitInfoBaseHeaderKHR",
     "LoaderInitInfoPropertiesEXT",
@@ -21777,20 +28826,26 @@ __all__ = [
     "Offset3DfFB",
     "OverlayMainSessionFlagsEXTXCInt",
     "OverlaySessionCreateFlagsEXTXCInt",
+    "PFN_xrAcquireCameraImageBD",
     "PFN_xrAcquireEnvironmentDepthImageMETA",
     "PFN_xrAcquireSwapchainImage",
+    "PFN_xrAddTrackableImageDatabaseANDROID",
     "PFN_xrAllocateWorldMeshBufferML",
     "PFN_xrApplyForceFeedbackCurlMNDX",
     "PFN_xrApplyFoveationHTC",
     "PFN_xrApplyHapticFeedback",
     "PFN_xrAttachSessionActionSets",
+    "PFN_xrBeginCameraCaptureBD",
     "PFN_xrBeginFrame",
     "PFN_xrBeginPlaneDetectionEXT",
     "PFN_xrBeginSession",
+    "PFN_xrBeginSpatialContainerRenderingEXT",
     "PFN_xrCancelFutureEXT",
     "PFN_xrCaptureSceneAsyncBD",
     "PFN_xrCaptureSceneCompleteBD",
     "PFN_xrChangeVirtualKeyboardTextContextMETA",
+    "PFN_xrCheckVpsAvailabilityAsyncANDROID",
+    "PFN_xrCheckVpsAvailabilityCompleteANDROID",
     "PFN_xrClearSpatialAnchorStoreMSFT",
     "PFN_xrComputeNewSceneMSFT",
     "PFN_xrCreateAction",
@@ -21801,11 +28856,18 @@ __all__ = [
     "PFN_xrCreateBodyTrackerBD",
     "PFN_xrCreateBodyTrackerFB",
     "PFN_xrCreateBodyTrackerHTC",
+    "PFN_xrCreateCameraCaptureSessionAsyncBD",
+    "PFN_xrCreateCameraCaptureSessionCompleteBD",
+    "PFN_xrCreateCameraDeviceAsyncBD",
+    "PFN_xrCreateCameraDeviceCompleteBD",
     "PFN_xrCreateDebugUtilsMessengerEXT",
     "PFN_xrCreateDeviceAnchorPersistenceANDROID",
     "PFN_xrCreateEnvironmentDepthProviderMETA",
     "PFN_xrCreateEnvironmentDepthSwapchainMETA",
+    "PFN_xrCreateEnvironmentRaycasterAsyncMETA",
+    "PFN_xrCreateEnvironmentRaycasterCompleteMETA",
     "PFN_xrCreateExportedLocalizationMapML",
+    "PFN_xrCreateEyeTrackerANDROID",
     "PFN_xrCreateEyeTrackerFB",
     "PFN_xrCreateFaceTracker2FB",
     "PFN_xrCreateFaceTrackerANDROID",
@@ -21815,16 +28877,20 @@ __all__ = [
     "PFN_xrCreateFacialTrackerHTC",
     "PFN_xrCreateFoveationProfileFB",
     "PFN_xrCreateGeometryInstanceFB",
+    "PFN_xrCreateGeospatialAnchorANDROID",
+    "PFN_xrCreateGeospatialTrackerANDROID",
     "PFN_xrCreateHandMeshSpaceMSFT",
     "PFN_xrCreateHandTrackerEXT",
     "PFN_xrCreateInstance",
     "PFN_xrCreateKeyboardSpaceFB",
+    "PFN_xrCreateLightEstimatorANDROID",
     "PFN_xrCreateMarkerDetectorML",
     "PFN_xrCreateMarkerSpaceML",
     "PFN_xrCreateMarkerSpaceVARJO",
     "PFN_xrCreatePassthroughColorLutMETA",
     "PFN_xrCreatePassthroughFB",
     "PFN_xrCreatePassthroughHTC",
+    "PFN_xrCreatePassthroughLayerANDROID",
     "PFN_xrCreatePassthroughLayerFB",
     "PFN_xrCreatePersistedAnchorSpaceANDROID",
     "PFN_xrCreatePlaneDetectorEXT",
@@ -21833,9 +28899,15 @@ __all__ = [
     "PFN_xrCreateRenderModelEXT",
     "PFN_xrCreateRenderModelSpaceEXT",
     "PFN_xrCreateSceneMSFT",
+    "PFN_xrCreateSceneMeshSnapshotANDROID",
+    "PFN_xrCreateSceneMeshingTrackerANDROID",
     "PFN_xrCreateSceneObserverMSFT",
     "PFN_xrCreateSenseDataProviderBD",
     "PFN_xrCreateSession",
+    "PFN_xrCreateSoundFieldBD",
+    "PFN_xrCreateSoundObjectBD",
+    "PFN_xrCreateSoundObstacleBD",
+    "PFN_xrCreateSoundObstacleMaterialBD",
     "PFN_xrCreateSpaceUserFB",
     "PFN_xrCreateSpatialAnchorAsyncBD",
     "PFN_xrCreateSpatialAnchorCompleteBD",
@@ -21844,11 +28916,16 @@ __all__ = [
     "PFN_xrCreateSpatialAnchorFromPersistedNameMSFT",
     "PFN_xrCreateSpatialAnchorHTC",
     "PFN_xrCreateSpatialAnchorMSFT",
+    "PFN_xrCreateSpatialAnchorSpaceANDROID",
+    "PFN_xrCreateSpatialAnchorSpaceFromIdANDROID",
     "PFN_xrCreateSpatialAnchorSpaceMSFT",
     "PFN_xrCreateSpatialAnchorStoreConnectionMSFT",
     "PFN_xrCreateSpatialAnchorsAsyncML",
     "PFN_xrCreateSpatialAnchorsCompleteML",
     "PFN_xrCreateSpatialAnchorsStorageML",
+    "PFN_xrCreateSpatialAudioRendererBD",
+    "PFN_xrCreateSpatialContainerEXT",
+    "PFN_xrCreateSpatialContainerSpaceEXT",
     "PFN_xrCreateSpatialContextAsyncEXT",
     "PFN_xrCreateSpatialContextCompleteEXT",
     "PFN_xrCreateSpatialDiscoverySnapshotAsyncEXT",
@@ -21856,10 +28933,17 @@ __all__ = [
     "PFN_xrCreateSpatialEntityAnchorBD",
     "PFN_xrCreateSpatialEntityFromIdEXT",
     "PFN_xrCreateSpatialGraphNodeSpaceMSFT",
+    "PFN_xrCreateSpatialImageTrackingDatabaseAsyncEXT",
+    "PFN_xrCreateSpatialImageTrackingDatabaseCompleteEXT",
     "PFN_xrCreateSpatialPersistenceContextAsyncEXT",
     "PFN_xrCreateSpatialPersistenceContextCompleteEXT",
+    "PFN_xrCreateSpatialRaycastSnapshotANDROID",
     "PFN_xrCreateSpatialUpdateSnapshotEXT",
+    "PFN_xrCreateSurfaceAnchorAsyncANDROID",
+    "PFN_xrCreateSurfaceAnchorCompleteANDROID",
     "PFN_xrCreateSwapchain",
+    "PFN_xrCreateTrackableImageDatabaseAsyncANDROID",
+    "PFN_xrCreateTrackableImageDatabaseCompleteANDROID",
     "PFN_xrCreateTrackableTrackerANDROID",
     "PFN_xrCreateTriangleMeshFB",
     "PFN_xrCreateVirtualKeyboardMETA",
@@ -21875,11 +28959,15 @@ __all__ = [
     "PFN_xrDestroyBodyTrackerBD",
     "PFN_xrDestroyBodyTrackerFB",
     "PFN_xrDestroyBodyTrackerHTC",
+    "PFN_xrDestroyCameraCaptureSessionBD",
+    "PFN_xrDestroyCameraDeviceBD",
     "PFN_xrDestroyDebugUtilsMessengerEXT",
     "PFN_xrDestroyDeviceAnchorPersistenceANDROID",
     "PFN_xrDestroyEnvironmentDepthProviderMETA",
     "PFN_xrDestroyEnvironmentDepthSwapchainMETA",
+    "PFN_xrDestroyEnvironmentRaycasterMETA",
     "PFN_xrDestroyExportedLocalizationMapML",
+    "PFN_xrDestroyEyeTrackerANDROID",
     "PFN_xrDestroyEyeTrackerFB",
     "PFN_xrDestroyFaceTracker2FB",
     "PFN_xrDestroyFaceTrackerANDROID",
@@ -21889,32 +28977,45 @@ __all__ = [
     "PFN_xrDestroyFacialTrackerHTC",
     "PFN_xrDestroyFoveationProfileFB",
     "PFN_xrDestroyGeometryInstanceFB",
+    "PFN_xrDestroyGeospatialTrackerANDROID",
     "PFN_xrDestroyHandTrackerEXT",
     "PFN_xrDestroyInstance",
+    "PFN_xrDestroyLightEstimatorANDROID",
     "PFN_xrDestroyMarkerDetectorML",
     "PFN_xrDestroyPassthroughColorLutMETA",
     "PFN_xrDestroyPassthroughFB",
     "PFN_xrDestroyPassthroughHTC",
+    "PFN_xrDestroyPassthroughLayerANDROID",
     "PFN_xrDestroyPassthroughLayerFB",
     "PFN_xrDestroyPlaneDetectorEXT",
     "PFN_xrDestroyRenderModelAssetEXT",
     "PFN_xrDestroyRenderModelEXT",
     "PFN_xrDestroySceneMSFT",
+    "PFN_xrDestroySceneMeshSnapshotANDROID",
+    "PFN_xrDestroySceneMeshingTrackerANDROID",
     "PFN_xrDestroySceneObserverMSFT",
     "PFN_xrDestroySenseDataProviderBD",
     "PFN_xrDestroySenseDataSnapshotBD",
     "PFN_xrDestroySession",
+    "PFN_xrDestroySoundFieldBD",
+    "PFN_xrDestroySoundObjectBD",
+    "PFN_xrDestroySoundObstacleBD",
+    "PFN_xrDestroySoundObstacleMaterialBD",
     "PFN_xrDestroySpace",
     "PFN_xrDestroySpaceUserFB",
     "PFN_xrDestroySpatialAnchorMSFT",
     "PFN_xrDestroySpatialAnchorStoreConnectionMSFT",
     "PFN_xrDestroySpatialAnchorsStorageML",
+    "PFN_xrDestroySpatialAudioRendererBD",
+    "PFN_xrDestroySpatialContainerEXT",
     "PFN_xrDestroySpatialContextEXT",
     "PFN_xrDestroySpatialEntityEXT",
     "PFN_xrDestroySpatialGraphNodeBindingMSFT",
+    "PFN_xrDestroySpatialImageTrackingDatabaseEXT",
     "PFN_xrDestroySpatialPersistenceContextEXT",
     "PFN_xrDestroySpatialSnapshotEXT",
     "PFN_xrDestroySwapchain",
+    "PFN_xrDestroyTrackableImageDatabaseANDROID",
     "PFN_xrDestroyTrackableTrackerANDROID",
     "PFN_xrDestroyTriangleMeshFB",
     "PFN_xrDestroyVirtualKeyboardMETA",
@@ -21924,18 +29025,29 @@ __all__ = [
     "PFN_xrDownloadSharedSpatialAnchorCompleteBD",
     "PFN_xrEnableLocalizationEventsML",
     "PFN_xrEnableUserCalibrationEventsML",
+    "PFN_xrEndAudioPeriodBD",
+    "PFN_xrEndCameraCaptureBD",
     "PFN_xrEndFrame",
     "PFN_xrEndSession",
+    "PFN_xrEndSpatialContainerRenderingEXT",
     "PFN_xrEnumerateApiLayerProperties",
+    "PFN_xrEnumerateAvailableCamerasBD",
     "PFN_xrEnumerateBoundSourcesForAction",
+    "PFN_xrEnumerateCameraCapabilityTypesBD",
+    "PFN_xrEnumerateCameraPropertyTypesBD",
     "PFN_xrEnumerateColorSpacesFB",
+    "PFN_xrEnumerateColorSpacesSONY",
     "PFN_xrEnumerateDisplayRefreshRatesFB",
     "PFN_xrEnumerateEnvironmentBlendModes",
     "PFN_xrEnumerateEnvironmentDepthSwapchainImagesMETA",
+    "PFN_xrEnumerateEnvironmentTexturePixelFormatsBD",
+    "PFN_xrEnumerateEnvironmentTextureResolutionsBD",
+    "PFN_xrEnumerateEnvironmentTextureTransferTypesBD",
     "PFN_xrEnumerateExternalCamerasOCULUS",
     "PFN_xrEnumerateFacialSimulationModesBD",
     "PFN_xrEnumerateInstanceExtensionProperties",
     "PFN_xrEnumerateInteractionRenderModelIdsEXT",
+    "PFN_xrEnumeratePerformanceMetricsCounterPathsANDROID",
     "PFN_xrEnumeratePerformanceMetricsCounterPathsMETA",
     "PFN_xrEnumeratePersistedAnchorsANDROID",
     "PFN_xrEnumeratePersistedSpatialAnchorNamesMSFT",
@@ -21946,13 +29058,18 @@ __all__ = [
     "PFN_xrEnumerateReprojectionModesMSFT",
     "PFN_xrEnumerateSceneComputeFeaturesMSFT",
     "PFN_xrEnumerateSpaceSupportedComponentsFB",
+    "PFN_xrEnumerateSpatialAnchorAttachableComponentsANDROID",
     "PFN_xrEnumerateSpatialCapabilitiesEXT",
     "PFN_xrEnumerateSpatialCapabilityComponentTypesEXT",
     "PFN_xrEnumerateSpatialCapabilityFeaturesEXT",
     "PFN_xrEnumerateSpatialEntityComponentTypesBD",
     "PFN_xrEnumerateSpatialPersistenceScopesEXT",
+    "PFN_xrEnumerateSpatialReferenceImageFormatsEXT",
     "PFN_xrEnumerateSupportedAnchorTrackableTypesANDROID",
+    "PFN_xrEnumerateSupportedAudioSampleRateBD",
     "PFN_xrEnumerateSupportedPersistenceAnchorTypesANDROID",
+    "PFN_xrEnumerateSupportedSemanticLabelSetsANDROID",
+    "PFN_xrEnumerateSupportedSpatialContainerGraphicsPresentationsEXT",
     "PFN_xrEnumerateSupportedTrackableTypesANDROID",
     "PFN_xrEnumerateSwapchainFormats",
     "PFN_xrEnumerateSwapchainImages",
@@ -21967,11 +29084,17 @@ __all__ = [
     "PFN_xrGetActionStateFloat",
     "PFN_xrGetActionStatePose",
     "PFN_xrGetActionStateVector2f",
+    "PFN_xrGetAllSubmeshStatesANDROID",
     "PFN_xrGetAllTrackablesANDROID",
     "PFN_xrGetAnchorPersistStateANDROID",
     "PFN_xrGetAnchorUuidBD",
     "PFN_xrGetBodySkeletonFB",
     "PFN_xrGetBodySkeletonHTC",
+    "PFN_xrGetBodyTrackingStateBD",
+    "PFN_xrGetCameraImageDataBD",
+    "PFN_xrGetCameraPropertiesBD",
+    "PFN_xrGetCameraSupportedCapabilitiesBD",
+    "PFN_xrGetCoarseTrackingEyesInfoANDROID",
     "PFN_xrGetControllerModelKeyMSFT",
     "PFN_xrGetControllerModelPropertiesMSFT",
     "PFN_xrGetControllerModelStateMSFT",
@@ -21989,11 +29112,14 @@ __all__ = [
     "PFN_xrGetFacialExpressionsHTC",
     "PFN_xrGetFacialSimulationDataBD",
     "PFN_xrGetFacialSimulationModeBD",
+    "PFN_xrGetFineTrackingEyesInfoANDROID",
     "PFN_xrGetFoveationEyeTrackedStateMETA",
+    "PFN_xrGetHandGestureQCOM",
     "PFN_xrGetHandMeshFB",
     "PFN_xrGetInputSourceLocalizedName",
     "PFN_xrGetInstanceProcAddr",
     "PFN_xrGetInstanceProperties",
+    "PFN_xrGetLightEstimateANDROID",
     "PFN_xrGetMarkerDetectorStateML",
     "PFN_xrGetMarkerLengthML",
     "PFN_xrGetMarkerNumberML",
@@ -22003,6 +29129,7 @@ __all__ = [
     "PFN_xrGetMarkersML",
     "PFN_xrGetPassthroughCameraStateANDROID",
     "PFN_xrGetPassthroughPreferencesMETA",
+    "PFN_xrGetPerformanceMetricsStateANDROID",
     "PFN_xrGetPerformanceMetricsStateMETA",
     "PFN_xrGetPlaneDetectionStateEXT",
     "PFN_xrGetPlaneDetectionsEXT",
@@ -22029,6 +29156,8 @@ __all__ = [
     "PFN_xrGetSpaceComponentStatusFB",
     "PFN_xrGetSpaceContainerFB",
     "PFN_xrGetSpaceRoomLayoutFB",
+    "PFN_xrGetSpaceRoomMeshFaceIndicesMETA",
+    "PFN_xrGetSpaceRoomMeshMETA",
     "PFN_xrGetSpaceSemanticLabelsFB",
     "PFN_xrGetSpaceTriangleMeshMETA",
     "PFN_xrGetSpaceUserIdFB",
@@ -22042,15 +29171,21 @@ __all__ = [
     "PFN_xrGetSpatialBufferUint8EXT",
     "PFN_xrGetSpatialBufferVector2fEXT",
     "PFN_xrGetSpatialBufferVector3fEXT",
+    "PFN_xrGetSpatialContainerBoundsEXT",
+    "PFN_xrGetSpatialContainerStateEXT",
     "PFN_xrGetSpatialEntityComponentDataBD",
     "PFN_xrGetSpatialEntityUuidBD",
     "PFN_xrGetSpatialGraphNodeBindingPropertiesMSFT",
+    "PFN_xrGetStationaryReferenceSpaceGenerationIdEXT",
+    "PFN_xrGetSubmeshDataANDROID",
     "PFN_xrGetSwapchainStateFB",
     "PFN_xrGetSystem",
     "PFN_xrGetSystemProperties",
+    "PFN_xrGetTrackableImageANDROID",
     "PFN_xrGetTrackableMarkerANDROID",
     "PFN_xrGetTrackableObjectANDROID",
     "PFN_xrGetTrackablePlaneANDROID",
+    "PFN_xrGetTrackableQrCodeANDROID",
     "PFN_xrGetViewConfigurationProperties",
     "PFN_xrGetVirtualKeyboardDirtyTexturesMETA",
     "PFN_xrGetVirtualKeyboardModelAnimationStatesMETA",
@@ -22058,6 +29193,7 @@ __all__ = [
     "PFN_xrGetVirtualKeyboardTextureDataMETA",
     "PFN_xrGetVisibilityMaskKHR",
     "PFN_xrGetWorldMeshBufferRecommendSizeML",
+    "PFN_xrHapticParametricGetPropertiesEXT",
     "PFN_xrImportLocalizationMapML",
     "PFN_xrInitializeLoaderKHR",
     "PFN_xrLoadControllerModelMSFT",
@@ -22065,11 +29201,14 @@ __all__ = [
     "PFN_xrLocateBodyJointsBD",
     "PFN_xrLocateBodyJointsFB",
     "PFN_xrLocateBodyJointsHTC",
+    "PFN_xrLocateGeospatialPoseANDROID",
+    "PFN_xrLocateGeospatialPoseFromPoseANDROID",
     "PFN_xrLocateHandJointsEXT",
     "PFN_xrLocateSceneComponentsMSFT",
     "PFN_xrLocateSpace",
     "PFN_xrLocateSpaces",
     "PFN_xrLocateSpacesKHR",
+    "PFN_xrLocateSpatialContainerViewsEXT",
     "PFN_xrLocateViews",
     "PFN_xrPassthroughLayerPauseFB",
     "PFN_xrPassthroughLayerResumeFB",
@@ -22080,6 +29219,7 @@ __all__ = [
     "PFN_xrPathToString",
     "PFN_xrPauseSimultaneousHandsAndControllersTrackingMETA",
     "PFN_xrPerfSettingsSetPerformanceLevelEXT",
+    "PFN_xrPerformEnvironmentRaycastMETA",
     "PFN_xrPersistAnchorANDROID",
     "PFN_xrPersistSpatialAnchorAsyncBD",
     "PFN_xrPersistSpatialAnchorCompleteBD",
@@ -22090,7 +29230,9 @@ __all__ = [
     "PFN_xrPollFutureEXT",
     "PFN_xrPublishSpatialAnchorsAsyncML",
     "PFN_xrPublishSpatialAnchorsCompleteML",
+    "PFN_xrQueryFramesPerBufferRangeBD",
     "PFN_xrQueryLocalizationMapsML",
+    "PFN_xrQueryPerformanceMetricsCounterANDROID",
     "PFN_xrQueryPerformanceMetricsCounterMETA",
     "PFN_xrQuerySenseDataAsyncBD",
     "PFN_xrQuerySenseDataCompleteBD",
@@ -22100,17 +29242,24 @@ __all__ = [
     "PFN_xrQuerySpatialComponentDataEXT",
     "PFN_xrQuerySystemTrackedKeyboardFB",
     "PFN_xrRaycastANDROID",
+    "PFN_xrReleaseCameraImageBD",
     "PFN_xrReleaseSwapchainImage",
+    "PFN_xrRemoveTrackableImageDatabaseANDROID",
+    "PFN_xrRequestBodyTrackingFidelityMETA",
+    "PFN_xrRequestBoundaryVisibilityMETA",
     "PFN_xrRequestDisplayRefreshRateFB",
     "PFN_xrRequestExitSession",
     "PFN_xrRequestMapLocalizationML",
     "PFN_xrRequestSceneCaptureFB",
+    "PFN_xrRequestSpatialContainerBoundsModeEXT",
+    "PFN_xrRequestSpatialContainerVisibleEXT",
     "PFN_xrRequestWorldMeshAsyncML",
     "PFN_xrRequestWorldMeshCompleteML",
     "PFN_xrRequestWorldMeshStateAsyncML",
     "PFN_xrRequestWorldMeshStateCompleteML",
     "PFN_xrResetBodyTrackingCalibrationMETA",
     "PFN_xrResultToString",
+    "PFN_xrResultToString2KHR",
     "PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA",
     "PFN_xrRetrieveSpaceDiscoveryResultsMETA",
     "PFN_xrRetrieveSpaceQueryResultsFB",
@@ -22127,6 +29276,10 @@ __all__ = [
     "PFN_xrSetEnvironmentDepthEstimationVARJO",
     "PFN_xrSetEnvironmentDepthHandRemovalMETA",
     "PFN_xrSetFacialSimulationModeBD",
+    "PFN_xrSetGoogleCloudAuthAsyncANDROID",
+    "PFN_xrSetGoogleCloudAuthCompleteANDROID",
+    "PFN_xrSetHandTrackingFrequencyHintMETA",
+    "PFN_xrSetHdrMetadataSONY",
     "PFN_xrSetInputDeviceActiveEXT",
     "PFN_xrSetInputDeviceLocationEXT",
     "PFN_xrSetInputDeviceStateBoolEXT",
@@ -22135,9 +29288,12 @@ __all__ = [
     "PFN_xrSetMarkerTrackingPredictionVARJO",
     "PFN_xrSetMarkerTrackingTimeoutVARJO",
     "PFN_xrSetMarkerTrackingVARJO",
+    "PFN_xrSetPassthroughLayerMeshANDROID",
+    "PFN_xrSetPerformanceMetricsStateANDROID",
     "PFN_xrSetPerformanceMetricsStateMETA",
     "PFN_xrSetSpaceComponentStatusFB",
     "PFN_xrSetSystemNotificationsML",
+    "PFN_xrSetTilePropertiesHintMETA",
     "PFN_xrSetTrackingOptimizationSettingsHintQCOM",
     "PFN_xrSetViewOffsetVARJO",
     "PFN_xrSetVirtualKeyboardModelVisibilityMETA",
@@ -22146,6 +29302,7 @@ __all__ = [
     "PFN_xrShareSpatialAnchorAsyncBD",
     "PFN_xrShareSpatialAnchorCompleteBD",
     "PFN_xrSnapshotMarkerDetectorML",
+    "PFN_xrStartBodyTrackingCalibrationAppBD",
     "PFN_xrStartColocationAdvertisementMETA",
     "PFN_xrStartColocationDiscoveryMETA",
     "PFN_xrStartEnvironmentDepthProviderMETA",
@@ -22160,6 +29317,8 @@ __all__ = [
     "PFN_xrStructureTypeToString",
     "PFN_xrStructureTypeToString2KHR",
     "PFN_xrSubmitDebugUtilsMessageEXT",
+    "PFN_xrSubmitSoundFieldBufferBD",
+    "PFN_xrSubmitSoundObjectBufferBD",
     "PFN_xrSuggestBodyTrackingCalibrationOverrideMETA",
     "PFN_xrSuggestInteractionProfileBindings",
     "PFN_xrSuggestVirtualKeyboardLocationMETA",
@@ -22180,10 +29339,15 @@ __all__ = [
     "PFN_xrUnpersistSpatialEntityCompleteEXT",
     "PFN_xrUpdateHandMeshMSFT",
     "PFN_xrUpdatePassthroughColorLutMETA",
+    "PFN_xrUpdateSoundFieldConfigBD",
+    "PFN_xrUpdateSoundObjectConfigBD",
+    "PFN_xrUpdateSoundObstacleConfigBD",
+    "PFN_xrUpdateSoundObstacleMaterialConfigBD",
     "PFN_xrUpdateSpatialAnchorsExpirationAsyncML",
     "PFN_xrUpdateSpatialAnchorsExpirationCompleteML",
     "PFN_xrUpdateSwapchainFB",
     "PFN_xrVoidFunction",
+    "PFN_xrWaitAudioPeriodBD",
     "PFN_xrWaitFrame",
     "PFN_xrWaitSwapchainImage",
     "PassthroughBrightnessContrastSaturationFB",
@@ -22207,17 +29371,24 @@ __all__ = [
     "PassthroughHTC",
     "PassthroughHTC_T",
     "PassthroughKeyboardHandsIntensityFB",
+    "PassthroughLayerANDROID",
+    "PassthroughLayerANDROID_T",
+    "PassthroughLayerCreateInfoANDROID",
     "PassthroughLayerCreateInfoFB",
     "PassthroughLayerFB",
     "PassthroughLayerFB_T",
+    "PassthroughLayerMeshANDROID",
     "PassthroughMeshTransformInfoHTC",
     "PassthroughPreferenceFlagsMETACInt",
     "PassthroughPreferencesMETA",
     "PassthroughStateChangedFlagsFBCInt",
     "PassthroughStyleFB",
     "Path",
+    "PerformanceMetricsCounterANDROID",
+    "PerformanceMetricsCounterFlagsANDROIDCInt",
     "PerformanceMetricsCounterFlagsMETACInt",
     "PerformanceMetricsCounterMETA",
+    "PerformanceMetricsStateANDROID",
     "PerformanceMetricsStateMETA",
     "PersistSpatialEntityCompletionEXT",
     "PersistedAnchorSpaceCreateInfoANDROID",
@@ -22271,6 +29442,9 @@ __all__ = [
     "RenderModelStateEXT",
     "RenderModelStateGetInfoEXT",
     "RoomLayoutFB",
+    "RoomMeshFaceIndicesMETA",
+    "RoomMeshFaceMETA",
+    "RoomMeshMETA",
     "SceneBoundsMSFT",
     "SceneCaptureInfoBD",
     "SceneCaptureRequestInfoFB",
@@ -22296,8 +29470,15 @@ __all__ = [
     "SceneMeshIndicesUint16MSFT",
     "SceneMeshIndicesUint32MSFT",
     "SceneMeshMSFT",
+    "SceneMeshSnapshotANDROID",
+    "SceneMeshSnapshotANDROID_T",
+    "SceneMeshSnapshotCreateInfoANDROID",
+    "SceneMeshSnapshotCreationResultANDROID",
     "SceneMeshVertexBufferMSFT",
     "SceneMeshesMSFT",
+    "SceneMeshingTrackerANDROID",
+    "SceneMeshingTrackerANDROID_T",
+    "SceneMeshingTrackerCreateInfoANDROID",
     "SceneObjectMSFT",
     "SceneObjectTypesFilterInfoMSFT",
     "SceneObjectsMSFT",
@@ -22309,6 +29490,8 @@ __all__ = [
     "ScenePlaneMSFT",
     "ScenePlanesMSFT",
     "SceneSphereBoundMSFT",
+    "SceneSubmeshDataANDROID",
+    "SceneSubmeshStateANDROID",
     "SecondaryViewConfigurationFrameEndInfoMSFT",
     "SecondaryViewConfigurationFrameStateMSFT",
     "SecondaryViewConfigurationLayerInfoMSFT",
@@ -22318,12 +29501,15 @@ __all__ = [
     "SemanticLabelsFB",
     "SemanticLabelsSupportFlagsFBCInt",
     "SemanticLabelsSupportInfoFB",
+    "SenseDataFilterDynamicObjectTypeBD",
     "SenseDataFilterPlaneOrientationBD",
     "SenseDataFilterSemanticBD",
     "SenseDataFilterUuidBD",
     "SenseDataProviderBD",
     "SenseDataProviderBD_T",
     "SenseDataProviderCreateInfoBD",
+    "SenseDataProviderCreateInfoDynamicObjectBD",
+    "SenseDataProviderCreateInfoLightEstimationBD",
     "SenseDataProviderCreateInfoSpatialMeshBD",
     "SenseDataProviderStartInfoBD",
     "SenseDataQueryCompletionBD",
@@ -22337,6 +29523,7 @@ __all__ = [
     "SessionCreateFlagsCInt",
     "SessionCreateInfo",
     "SessionCreateInfoOverlayEXTX",
+    "SessionCreateInfoSpatialContainersEXT",
     "Session_T",
     "ShareSpacesInfoMETA",
     "ShareSpacesRecipientBaseHeaderMETA",
@@ -22344,7 +29531,31 @@ __all__ = [
     "SharedSpatialAnchorDownloadInfoBD",
     "SimultaneousHandsAndControllersTrackingPauseInfoMETA",
     "SimultaneousHandsAndControllersTrackingResumeInfoMETA",
+    "SoundFieldBD",
+    "SoundFieldBD_T",
+    "SoundFieldChannelDefinitionAmbixBD",
+    "SoundFieldChannelDefinitionFumaBD",
+    "SoundFieldChannelDefinitionSurroundBD",
+    "SoundFieldConfigBD",
+    "SoundFieldFlagsBDCInt",
+    "SoundObjectBD",
+    "SoundObjectBD_T",
+    "SoundObjectConfigBD",
+    "SoundObjectDirectivityCardioidBD",
+    "SoundObjectDistanceAttenuationBD",
+    "SoundObjectDistanceAttenuationCurveBD",
+    "SoundObjectFlagsBDCInt",
+    "SoundObjectShapeSphereBD",
+    "SoundObstacleBD",
+    "SoundObstacleBD_T",
+    "SoundObstacleConfigBD",
+    "SoundObstacleFlagsBDCInt",
+    "SoundObstacleMaterialBD",
+    "SoundObstacleMaterialBD_T",
+    "SoundObstacleMaterialConfigBD",
+    "SoundTriangleMeshBD",
     "Space",
+    "SpaceAccelerationFlagsBDCInt",
     "SpaceComponentFilterInfoFB",
     "SpaceComponentStatusFB",
     "SpaceComponentStatusSetInfoFB",
@@ -22369,6 +29580,7 @@ __all__ = [
     "SpaceQueryInfoFB",
     "SpaceQueryResultFB",
     "SpaceQueryResultsFB",
+    "SpaceRoomMeshGetInfoMETA",
     "SpaceSaveInfoFB",
     "SpaceShareInfoFB",
     "SpaceStorageLocationFilterInfoFB",
@@ -22401,11 +29613,13 @@ __all__ = [
     "SpatialAnchorMSFT",
     "SpatialAnchorMSFT_T",
     "SpatialAnchorNameHTC",
+    "SpatialAnchorParentANDROID",
     "SpatialAnchorPersistInfoBD",
     "SpatialAnchorPersistenceInfoMSFT",
     "SpatialAnchorPersistenceNameMSFT",
     "SpatialAnchorShareInfoBD",
     "SpatialAnchorSpaceCreateInfoMSFT",
+    "SpatialAnchorSpaceFromIdCreateInfoANDROID",
     "SpatialAnchorStateML",
     "SpatialAnchorStoreConnectionMSFT",
     "SpatialAnchorStoreConnectionMSFT_T",
@@ -22428,7 +29642,13 @@ __all__ = [
     "SpatialAnchorsUpdateExpirationCompletionDetailsML",
     "SpatialAnchorsUpdateExpirationCompletionML",
     "SpatialAnchorsUpdateExpirationInfoML",
+    "SpatialAudioRendererBD",
+    "SpatialAudioRendererBD_T",
+    "SpatialAudioRendererCreateInfoBD",
     "SpatialBounded2DDataEXT",
+    "SpatialBoundsBoxfANDROID",
+    "SpatialBoundsFrustumfANDROID",
+    "SpatialBoundsSpherefANDROID",
     "SpatialBufferEXT",
     "SpatialBufferGetInfoEXT",
     "SpatialBufferIdEXT",
@@ -22437,7 +29657,10 @@ __all__ = [
     "SpatialCapabilityConfigurationAprilTagEXT",
     "SpatialCapabilityConfigurationArucoMarkerEXT",
     "SpatialCapabilityConfigurationBaseHeaderEXT",
+    "SpatialCapabilityConfigurationDepthRaycastANDROID",
+    "SpatialCapabilityConfigurationImageTrackingEXT",
     "SpatialCapabilityConfigurationMicroQrCodeEXT",
+    "SpatialCapabilityConfigurationObjectTrackingANDROID",
     "SpatialCapabilityConfigurationPlaneTrackingEXT",
     "SpatialCapabilityConfigurationQrCodeEXT",
     "SpatialComponentAnchorListEXT",
@@ -22445,28 +29668,55 @@ __all__ = [
     "SpatialComponentBounded3DListEXT",
     "SpatialComponentDataQueryConditionEXT",
     "SpatialComponentDataQueryResultEXT",
+    "SpatialComponentImage2DListEXT",
     "SpatialComponentMarkerListEXT",
     "SpatialComponentMesh2DListEXT",
     "SpatialComponentMesh3DListEXT",
+    "SpatialComponentObjectSemanticLabelListANDROID",
     "SpatialComponentParentListEXT",
     "SpatialComponentPersistenceListEXT",
     "SpatialComponentPlaneAlignmentListEXT",
     "SpatialComponentPlaneSemanticLabelListEXT",
     "SpatialComponentPolygon2DListEXT",
+    "SpatialComponentRaycastResultListANDROID",
+    "SpatialComponentSubsumedByListANDROID",
+    "SpatialContainerBeginInfoEXT",
+    "SpatialContainerBoundsEXT",
+    "SpatialContainerBoundsGetInfoEXT",
+    "SpatialContainerBoundsModeRequestInfoEXT",
+    "SpatialContainerCompositionLayerViewConfigurationEXT",
+    "SpatialContainerCreateInfoEXT",
+    "SpatialContainerEXT",
+    "SpatialContainerEXT_T",
+    "SpatialContainerEndInfoEXT",
+    "SpatialContainerLayerEXT",
+    "SpatialContainerLayerFrameEndInfoEXT",
+    "SpatialContainerLayerVolumeClippingEXT",
+    "SpatialContainerSpaceCreateInfoEXT",
+    "SpatialContainerStateEXT",
+    "SpatialContainerStateGetInfoEXT",
+    "SpatialContainerViewLocateInfoEXT",
+    "SpatialContainerViewStateEXT",
+    "SpatialContainerViewsLocateInfoEXT",
+    "SpatialContainerVisibleRequestInfoEXT",
     "SpatialContextCreateInfoEXT",
     "SpatialContextEXT",
     "SpatialContextEXT_T",
     "SpatialContextPersistenceConfigEXT",
     "SpatialDiscoveryPersistenceUuidFilterEXT",
     "SpatialDiscoverySnapshotCreateInfoEXT",
+    "SpatialDiscoveryUniqueEntitiesFilterANDROID",
     "SpatialEntityAnchorCreateInfoBD",
     "SpatialEntityComponentDataBaseHeaderBD",
     "SpatialEntityComponentDataBoundingBox2DBD",
     "SpatialEntityComponentDataBoundingBox3DBD",
+    "SpatialEntityComponentDataDynamicObjectBD",
+    "SpatialEntityComponentDataLightEstimationBD",
     "SpatialEntityComponentDataLocationBD",
     "SpatialEntityComponentDataPlaneOrientationBD",
     "SpatialEntityComponentDataPolygonBD",
     "SpatialEntityComponentDataSemanticBD",
+    "SpatialEntityComponentDataSphereBD",
     "SpatialEntityComponentDataTriangleMeshBD",
     "SpatialEntityComponentGetInfoBD",
     "SpatialEntityEXT",
@@ -22485,6 +29735,12 @@ __all__ = [
     "SpatialGraphNodeBindingPropertiesMSFT",
     "SpatialGraphNodeSpaceCreateInfoMSFT",
     "SpatialGraphStaticNodeBindingCreateInfoMSFT",
+    "SpatialImage2DDataEXT",
+    "SpatialImageSizeEXT",
+    "SpatialImageStaticOptimizationEXT",
+    "SpatialImageTrackingDatabaseCreateInfoEXT",
+    "SpatialImageTrackingDatabaseEXT",
+    "SpatialImageTrackingDatabaseEXT_T",
     "SpatialMarkerDataEXT",
     "SpatialMarkerSizeEXT",
     "SpatialMarkerStaticOptimizationEXT",
@@ -22495,15 +29751,26 @@ __all__ = [
     "SpatialPersistenceContextEXT_T",
     "SpatialPersistenceDataEXT",
     "SpatialPolygon2DDataEXT",
+    "SpatialRaycastInfoANDROID",
+    "SpatialRaycastResultDataANDROID",
+    "SpatialRaycastSnapshotCreateInfoANDROID",
+    "SpatialReferenceImageEXT",
+    "SpatialReferenceImagePlaneEXT",
     "SpatialSnapshotEXT",
     "SpatialSnapshotEXT_T",
     "SpatialUpdateSnapshotCreateInfoEXT",
     "Spheref",
     "SpherefKHR",
+    "SphericalHarmonicsANDROID",
+    "StationaryReferenceSpaceGenerationIdGetInfoEXT",
+    "StationaryReferenceSpaceGenerationIdResultEXT",
+    "SurfaceAnchorCreateCompletionANDROID",
+    "SurfaceAnchorCreateInfoANDROID",
     "Swapchain",
     "SwapchainCreateFlagsCInt",
     "SwapchainCreateFoveationFlagsFBCInt",
     "SwapchainCreateInfo",
+    "SwapchainCreateInfoColorSpaceSONY",
     "SwapchainCreateInfoFoveationFB",
     "SwapchainImageAcquireInfo",
     "SwapchainImageBaseHeader",
@@ -22519,47 +29786,65 @@ __all__ = [
     "SystemBodyTrackingPropertiesBD",
     "SystemBodyTrackingPropertiesFB",
     "SystemBodyTrackingPropertiesHTC",
+    "SystemBoundaryVisibilityPropertiesMETA",
     "SystemColocationDiscoveryPropertiesMETA",
     "SystemColorSpacePropertiesFB",
     "SystemDeviceAnchorPersistencePropertiesANDROID",
+    "SystemDynamicObjectKeyboardPropertiesBD",
+    "SystemDynamicObjectMousePropertiesBD",
+    "SystemDynamicObjectTrackingPropertiesBD",
     "SystemEnvironmentDepthPropertiesMETA",
+    "SystemEnvironmentRaycastPropertiesMETA",
     "SystemEyeGazeInteractionPropertiesEXT",
+    "SystemEyeTrackingPropertiesANDROID",
     "SystemEyeTrackingPropertiesFB",
     "SystemFaceTrackingProperties2FB",
     "SystemFaceTrackingPropertiesANDROID",
     "SystemFaceTrackingPropertiesFB",
+    "SystemFaceTrackingVisemesPropertiesMETA",
     "SystemFacialExpressionPropertiesML",
     "SystemFacialSimulationPropertiesBD",
     "SystemFacialTrackingPropertiesHTC",
     "SystemForceFeedbackCurlPropertiesMNDX",
     "SystemFoveatedRenderingPropertiesVARJO",
     "SystemFoveationEyeTrackedPropertiesMETA",
+    "SystemGeospatialAnchorPropertiesANDROID",
+    "SystemGeospatialPropertiesANDROID",
     "SystemGetInfo",
     "SystemGraphicsProperties",
     "SystemHandTrackingMeshPropertiesMSFT",
     "SystemHandTrackingPropertiesEXT",
+    "SystemHapticParametricPropertiesEXT",
     "SystemHeadsetIdPropertiesMETA",
     "SystemId",
+    "SystemImageTrackingPropertiesANDROID",
     "SystemKeyboardTrackingPropertiesFB",
+    "SystemLightEstimationPropertiesANDROID",
+    "SystemLightEstimationPropertiesBD",
     "SystemMarkerTrackingPropertiesANDROID",
     "SystemMarkerTrackingPropertiesVARJO",
     "SystemMarkerUnderstandingPropertiesML",
     "SystemNotificationsSetInfoML",
     "SystemPassthroughCameraStatePropertiesANDROID",
     "SystemPassthroughColorLutPropertiesMETA",
+    "SystemPassthroughLayerPropertiesANDROID",
     "SystemPassthroughProperties2FB",
     "SystemPassthroughPropertiesFB",
     "SystemPlaneDetectionPropertiesEXT",
     "SystemProperties",
     "SystemPropertiesBodyTrackingCalibrationMETA",
+    "SystemPropertiesBodyTrackingFidelityMETA",
     "SystemPropertiesBodyTrackingFullBodyMETA",
+    "SystemQrCodeTrackingPropertiesANDROID",
     "SystemRenderModelPropertiesFB",
+    "SystemSceneMeshingPropertiesANDROID",
     "SystemSimultaneousHandsAndControllersPropertiesMETA",
     "SystemSpaceDiscoveryPropertiesMETA",
     "SystemSpacePersistencePropertiesMETA",
     "SystemSpaceWarpPropertiesFB",
     "SystemSpatialAnchorPropertiesBD",
     "SystemSpatialAnchorSharingPropertiesBD",
+    "SystemSpatialContainerPropertiesEXT",
     "SystemSpatialEntityGroupSharingPropertiesMETA",
     "SystemSpatialEntityPropertiesFB",
     "SystemSpatialEntitySharingPropertiesMETA",
@@ -22571,9 +29856,17 @@ __all__ = [
     "SystemTrackingProperties",
     "SystemUserPresencePropertiesEXT",
     "SystemVirtualKeyboardPropertiesMETA",
+    "TilePropertiesHintMETA",
+    "TilePropertiesMETA",
     "Time",
     "TrackableANDROID",
     "TrackableGetInfoANDROID",
+    "TrackableImageANDROID",
+    "TrackableImageConfigurationANDROID",
+    "TrackableImageDatabaseANDROID",
+    "TrackableImageDatabaseANDROID_T",
+    "TrackableImageDatabaseCreateInfoANDROID",
+    "TrackableImageDatabaseEntryANDROID",
     "TrackableMarkerANDROID",
     "TrackableMarkerConfigurationANDROID",
     "TrackableMarkerDatabaseANDROID",
@@ -22581,6 +29874,8 @@ __all__ = [
     "TrackableObjectANDROID",
     "TrackableObjectConfigurationANDROID",
     "TrackablePlaneANDROID",
+    "TrackableQrCodeANDROID",
+    "TrackableQrCodeConfigurationANDROID",
     "TrackableTrackerANDROID",
     "TrackableTrackerANDROID_T",
     "TrackableTrackerCreateInfoANDROID",
@@ -22593,6 +29888,7 @@ __all__ = [
     "Uuid",
     "UuidEXT",
     "UuidMSFT",
+    "VPSAvailabilityCheckCompletionANDROID",
     "Vector2f",
     "Vector3f",
     "Vector4f",
@@ -22637,4 +29933,5 @@ __all__ = [
     "WorldMeshRequestCompletionML",
     "WorldMeshStateRequestCompletionML",
     "WorldMeshStateRequestInfoML",
+    "XYColorSONY",
 ]
