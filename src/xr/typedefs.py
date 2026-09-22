@@ -1052,8 +1052,10 @@ class SwapchainImageBaseHeader(BaseXrStructure):
 
 
 class SwapchainImageAcquireInfo(BaseXrStructure):
-    pass
-
+    def __init__(self) -> None:
+        super().__init__(
+            _type=enum_field_helper(StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO),
+        )
 
 class SwapchainImageWaitInfo(BaseXrStructure):
     def __init__(
@@ -1080,8 +1082,15 @@ class SwapchainImageWaitInfo(BaseXrStructure):
 
 
 class SwapchainImageReleaseInfo(BaseXrStructure):
-    pass
-
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SWAPCHAIN_IMAGE_RELEASE_INFO,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
 
 class SessionBeginInfo(BaseXrStructure):
     def __init__(
@@ -1147,12 +1156,17 @@ class FrameState(BaseXrStructure):
 
 
 class FrameWaitInfo(BaseXrStructure):
-    pass
+    def __init__(self) -> None:
+        super().__init__(
+            _type=enum_field_helper(StructureType.FRAME_WAIT_INFO)
+        )
 
 
 class FrameBeginInfo(BaseXrStructure):
-    pass
-
+    def __init__(self) -> None:
+        super().__init__(
+            _type=enum_field_helper(StructureType.FRAME_BEGIN_INFO)
+        )
 
 class CompositionLayerBaseHeader(BaseXrStructure):
     def __repr__(self) -> str:
