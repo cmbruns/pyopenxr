@@ -677,7 +677,7 @@ class StructItem(CodeItem):
             def __bytes__(self):
                 return self.{string_field}
 
-            def __eq__(self, other):
+            def __eq__(self, other: object, /) -> bool:
                 try:
                     if other.type != self.type:
                         return False
@@ -702,7 +702,10 @@ class StructItem(CodeItem):
             docstring = f'\n"""\n{inspect.cleandoc(docstring)}\n"""'
             docstring = textwrap.indent(docstring, " " * 4)
             result += docstring
-        if len(self.fields) <= self.skip_count:  # Skip type/next
+        # Populate structure "type" even for OpenXR structures with no extra fields
+        if self.skip_count == 2 and "Base" not in self.name(api):
+            pass
+        elif len(self.fields) <= self.skip_count:  # Skip type/next
             # Empty structure
             result += "\n    pass"
             return result
@@ -858,8 +861,7 @@ class NothingParameterCoder(object):
         self.parameter = parameter
         self.default = default
 
-    @staticmethod
-    def declaration_code(api=Api.PYTHON) -> Iterator[str]:
+    def declaration_code(self, api=Api.PYTHON) -> Iterator[str]:
         yield from []
 
     def main_call_code(self, api: Api = Api.PYTHON) -> Iterator[str]:

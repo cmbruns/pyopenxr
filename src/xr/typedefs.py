@@ -149,7 +149,7 @@ class ApiLayerProperties(BaseXrStructure):
     def __bytes__(self):
         return self.layer_name
 
-    def __eq__(self, other):
+    def __eq__(self, other: object, /) -> bool:
         try:
             if other.type != self.type:
                 return False
@@ -199,7 +199,7 @@ class ExtensionProperties(BaseXrStructure):
     def __bytes__(self):
         return self.extension_name
 
-    def __eq__(self, other):
+    def __eq__(self, other: object, /) -> bool:
         try:
             if other.type != self.type:
                 return False
@@ -1052,10 +1052,23 @@ class SwapchainImageBaseHeader(BaseXrStructure):
 
 
 class SwapchainImageAcquireInfo(BaseXrStructure):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO,
+    ) -> None:
         super().__init__(
-            _type=enum_field_helper(StructureType.SWAPCHAIN_IMAGE_ACQUIRE_INFO),
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
         )
+
+    def __repr__(self) -> str:
+        return f"xr.SwapchainImageAcquireInfo(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SwapchainImageAcquireInfo(next={self.next}, type={self.type})"
+
+
 
 class SwapchainImageWaitInfo(BaseXrStructure):
     def __init__(
@@ -1091,6 +1104,14 @@ class SwapchainImageReleaseInfo(BaseXrStructure):
             _next=next_field_helper(next),
             _type=enum_field_helper(type),
         )
+
+    def __repr__(self) -> str:
+        return f"xr.SwapchainImageReleaseInfo(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SwapchainImageReleaseInfo(next={self.next}, type={self.type})"
+
+
 
 class SessionBeginInfo(BaseXrStructure):
     def __init__(
@@ -1156,17 +1177,42 @@ class FrameState(BaseXrStructure):
 
 
 class FrameWaitInfo(BaseXrStructure):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.FRAME_WAIT_INFO,
+    ) -> None:
         super().__init__(
-            _type=enum_field_helper(StructureType.FRAME_WAIT_INFO)
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
         )
+
+    def __repr__(self) -> str:
+        return f"xr.FrameWaitInfo(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FrameWaitInfo(next={self.next}, type={self.type})"
+
 
 
 class FrameBeginInfo(BaseXrStructure):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.FRAME_BEGIN_INFO,
+    ) -> None:
         super().__init__(
-            _type=enum_field_helper(StructureType.FRAME_BEGIN_INFO)
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
         )
+
+    def __repr__(self) -> str:
+        return f"xr.FrameBeginInfo(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FrameBeginInfo(next={self.next}, type={self.type})"
+
+
 
 class CompositionLayerBaseHeader(BaseXrStructure):
     def __repr__(self) -> str:
@@ -4379,7 +4425,22 @@ class SpatialGraphStaticNodeBindingCreateInfoMSFT(BaseXrStructure):
 
 
 class SpatialGraphNodeBindingPropertiesGetInfoMSFT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_GRAPH_NODE_BINDING_PROPERTIES_GET_INFO_MSFT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next={self.next}, type={self.type})"
+
 
 
 class SpatialGraphNodeBindingPropertiesMSFT(BaseXrStructure):
@@ -5880,11 +5941,41 @@ class UuidMSFT(Structure):
 
 
 class SceneObserverCreateInfoMSFT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_OBSERVER_CREATE_INFO_MSFT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneObserverCreateInfoMSFT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneObserverCreateInfoMSFT(next={self.next}, type={self.type})"
+
 
 
 class SceneCreateInfoMSFT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_CREATE_INFO_MSFT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneCreateInfoMSFT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneCreateInfoMSFT(next={self.next}, type={self.type})"
+
 
 
 class SceneSphereBoundMSFT(Structure):
@@ -6690,7 +6781,22 @@ class SceneMeshBuffersGetInfoMSFT(BaseXrStructure):
 
 
 class SceneMeshBuffersMSFT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_MESH_BUFFERS_MSFT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneMeshBuffersMSFT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneMeshBuffersMSFT(next={self.next}, type={self.type})"
+
 
 
 class SceneMeshVertexBufferMSFT(BaseXrStructure):
@@ -7629,7 +7735,22 @@ SwapchainStateFoveationFlagsFBCInt = Flags64
 
 
 class FoveationProfileCreateInfoFB(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.FOVEATION_PROFILE_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FoveationProfileCreateInfoFB(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FoveationProfileCreateInfoFB(next={self.next}, type={self.type})"
+
 
 
 class SwapchainCreateInfoFoveationFB(BaseXrStructure):
@@ -9123,7 +9244,22 @@ class MarkerDetectorCustomProfileInfoML(BaseXrStructure):
 
 
 class MarkerDetectorSnapshotInfoML(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.MARKER_DETECTOR_SNAPSHOT_INFO_ML,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.MarkerDetectorSnapshotInfoML(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.MarkerDetectorSnapshotInfoML(next={self.next}, type={self.type})"
+
 
 
 class MarkerDetectorStateML(BaseXrStructure):
@@ -9580,7 +9716,22 @@ class SpatialAnchorsStorageML(POINTER(SpatialAnchorsStorageML_T), HandleMixin):
 
 
 class SpatialAnchorsCreateStorageInfoML(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialAnchorsCreateStorageInfoML(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialAnchorsCreateStorageInfoML(next={self.next}, type={self.type})"
+
 
 
 class SpatialAnchorsQueryInfoBaseHeaderML(BaseXrStructure):
@@ -11719,7 +11870,22 @@ class EyeGazeFB(Structure):
 
 
 class EyeTrackerCreateInfoFB(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EYE_TRACKER_CREATE_INFO_FB,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyeTrackerCreateInfoFB(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyeTrackerCreateInfoFB(next={self.next}, type={self.type})"
+
 
 
 class EyeGazesInfoFB(BaseXrStructure):
@@ -12176,7 +12342,22 @@ class SystemVirtualKeyboardPropertiesMETA(BaseXrStructure):
 
 
 class VirtualKeyboardCreateInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.VIRTUAL_KEYBOARD_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.VirtualKeyboardCreateInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.VirtualKeyboardCreateInfoMETA(next={self.next}, type={self.type})"
+
 
 
 class VirtualKeyboardSpaceCreateInfoMETA(BaseXrStructure):
@@ -13662,7 +13843,22 @@ PFN_xrUpdatePassthroughColorLutMETA = CFUNCTYPE(Result.ctype(), PassthroughColor
 
 
 class SpaceTriangleMeshGetInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPACE_TRIANGLE_MESH_GET_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpaceTriangleMeshGetInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpaceTriangleMeshGetInfoMETA(next={self.next}, type={self.type})"
+
 
 
 class SpaceTriangleMeshMETA(BaseXrStructure):
@@ -14563,7 +14759,22 @@ class RenderModelCreateInfoEXT(BaseXrStructure):
 
 
 class RenderModelPropertiesGetInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.RENDER_MODEL_PROPERTIES_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelPropertiesGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelPropertiesGetInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class RenderModelPropertiesEXT(BaseXrStructure):
@@ -14728,7 +14939,22 @@ class RenderModelAssetCreateInfoEXT(BaseXrStructure):
 
 
 class RenderModelAssetDataGetInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.RENDER_MODEL_ASSET_DATA_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetDataGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetDataGetInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class RenderModelAssetDataEXT(BaseXrStructure):
@@ -14762,7 +14988,22 @@ class RenderModelAssetDataEXT(BaseXrStructure):
 
 
 class RenderModelAssetPropertiesGetInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.RENDER_MODEL_ASSET_PROPERTIES_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class RenderModelAssetNodePropertiesEXT(Structure):
@@ -14832,11 +15073,41 @@ PFN_xrGetRenderModelStateEXT = CFUNCTYPE(Result.ctype(), RenderModelEXT, POINTER
 
 
 class InteractionRenderModelIdsEnumerateInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.INTERACTION_RENDER_MODEL_IDS_ENUMERATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class InteractionRenderModelSubactionPathInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.INTERACTION_RENDER_MODEL_SUBACTION_PATH_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class InteractionRenderModelTopLevelUserPathGetInfoEXT(BaseXrStructure):
@@ -14879,7 +15150,22 @@ class InteractionRenderModelTopLevelUserPathGetInfoEXT(BaseXrStructure):
 
 
 class EventDataInteractionRenderModelsChangedEXT(EventDataBaseHeader):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_INTERACTION_RENDER_MODELS_CHANGED_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataInteractionRenderModelsChangedEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataInteractionRenderModelsChangedEXT(next={self.next}, type={self.type})"
+
 
 
 PFN_xrEnumerateInteractionRenderModelIdsEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(InteractionRenderModelIdsEnumerateInfoEXT), c_uint32, POINTER(c_uint32), POINTER(RenderModelIdEXT))
@@ -16444,7 +16730,22 @@ class SenseDataProviderCreateInfoBD(BaseXrStructure):
 
 
 class SenseDataProviderStartInfoBD(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SENSE_DATA_PROVIDER_START_INFO_BD,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataProviderStartInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataProviderStartInfoBD(next={self.next}, type={self.type})"
+
 
 
 class EventDataSenseDataProviderStateChangedBD(EventDataBaseHeader):
@@ -16508,7 +16809,22 @@ class EventDataSenseDataUpdatedBD(EventDataBaseHeader):
 
 
 class SenseDataQueryInfoBD(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SENSE_DATA_QUERY_INFO_BD,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SenseDataQueryInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SenseDataQueryInfoBD(next={self.next}, type={self.type})"
+
 
 
 class SenseDataQueryCompletionBD(FutureCompletionBaseHeaderEXT):
@@ -16538,7 +16854,22 @@ class SenseDataQueryCompletionBD(FutureCompletionBaseHeaderEXT):
 
 
 class QueriedSenseDataGetInfoBD(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.QUERIED_SENSE_DATA_GET_INFO_BD,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.QueriedSenseDataGetInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.QueriedSenseDataGetInfoBD(next={self.next}, type={self.type})"
+
 
 
 class SpatialEntityStateBD(BaseXrStructure):
@@ -17046,7 +17377,22 @@ class SystemSpatialScenePropertiesBD(BaseXrStructure):
 
 
 class SceneCaptureInfoBD(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SCENE_CAPTURE_INFO_BD,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SceneCaptureInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SceneCaptureInfoBD(next={self.next}, type={self.type})"
+
 
 
 PFN_xrCaptureSceneAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SceneCaptureInfoBD), POINTER(FutureEXT))
@@ -19150,7 +19496,22 @@ class EyesGetInfoANDROID(BaseXrStructure):
 
 
 class EyeTrackerCreateInfoANDROID(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EYE_TRACKER_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EyeTrackerCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EyeTrackerCreateInfoANDROID(next={self.next}, type={self.type})"
+
 
 
 PFN_xrCreateEyeTrackerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(EyeTrackerCreateInfoANDROID), POINTER(EyeTrackerANDROID))
@@ -19171,7 +19532,22 @@ class DeviceAnchorPersistenceANDROID(POINTER(DeviceAnchorPersistenceANDROID_T), 
 
 
 class DeviceAnchorPersistenceCreateInfoANDROID(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.DEVICE_ANCHOR_PERSISTENCE_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={self.next}, type={self.type})"
+
 
 
 class PersistedAnchorSpaceCreateInfoANDROID(BaseXrStructure):
@@ -19272,7 +19648,22 @@ class FaceTrackerANDROID(POINTER(FaceTrackerANDROID_T), HandleMixin):
 
 
 class FaceTrackerCreateInfoANDROID(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.FACE_TRACKER_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FaceTrackerCreateInfoANDROID(next={self.next}, type={self.type})"
+
 
 
 class FaceStateGetInfoANDROID(BaseXrStructure):
@@ -19414,14 +19805,44 @@ class SystemPassthroughCameraStatePropertiesANDROID(BaseXrStructure):
 
 
 class PassthroughCameraStateGetInfoANDROID(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.PASSTHROUGH_CAMERA_STATE_GET_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.PassthroughCameraStateGetInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.PassthroughCameraStateGetInfoANDROID(next={self.next}, type={self.type})"
+
 
 
 PFN_xrGetPassthroughCameraStateANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(PassthroughCameraStateGetInfoANDROID), POINTER(PassthroughCameraStateANDROID.ctype()))
 
 
 class EventDataRecommendedResolutionChangedANDROID(EventDataBaseHeader):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.EVENT_DATA_RECOMMENDED_RESOLUTION_CHANGED_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EventDataRecommendedResolutionChangedANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EventDataRecommendedResolutionChangedANDROID(next={self.next}, type={self.type})"
+
 
 
 class PassthroughLayerANDROID_T(Structure):
@@ -20162,7 +20583,22 @@ WorldMeshDetectorFlagsMLCInt = Flags64
 
 
 class WorldMeshDetectorCreateInfoML(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.WORLD_MESH_DETECTOR_CREATE_INFO_ML,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.WorldMeshDetectorCreateInfoML(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.WorldMeshDetectorCreateInfoML(next={self.next}, type={self.type})"
+
 
 
 class WorldMeshBlockStateML(BaseXrStructure):
@@ -20692,7 +21128,22 @@ class FacialExpressionClientCreateInfoML(BaseXrStructure):
 
 
 class FacialExpressionBlendShapeGetInfoML(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.FACIAL_EXPRESSION_BLEND_SHAPE_GET_INFO_ML,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.FacialExpressionBlendShapeGetInfoML(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.FacialExpressionBlendShapeGetInfoML(next={self.next}, type={self.type})"
+
 
 
 class FacialExpressionBlendShapePropertiesML(BaseXrStructure):
@@ -20838,11 +21289,41 @@ class SystemSimultaneousHandsAndControllersPropertiesMETA(BaseXrStructure):
 
 
 class SimultaneousHandsAndControllersTrackingResumeInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SIMULTANEOUS_HANDS_AND_CONTROLLERS_TRACKING_RESUME_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={self.next}, type={self.type})"
+
 
 
 class SimultaneousHandsAndControllersTrackingPauseInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SIMULTANEOUS_HANDS_AND_CONTROLLERS_TRACKING_PAUSE_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={self.next}, type={self.type})"
+
 
 
 PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SimultaneousHandsAndControllersTrackingResumeInfoMETA))
@@ -21052,11 +21533,41 @@ PFN_xrGetSpaceRoomMeshFaceIndicesMETA = CFUNCTYPE(Result.ctype(), Space, POINTER
 
 
 class ColocationDiscoveryStartInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.COLOCATION_DISCOVERY_START_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ColocationDiscoveryStartInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ColocationDiscoveryStartInfoMETA(next={self.next}, type={self.type})"
+
 
 
 class ColocationDiscoveryStopInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.COLOCATION_DISCOVERY_STOP_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ColocationDiscoveryStopInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ColocationDiscoveryStopInfoMETA(next={self.next}, type={self.type})"
+
 
 
 class ColocationAdvertisementStartInfoMETA(BaseXrStructure):
@@ -21087,7 +21598,22 @@ class ColocationAdvertisementStartInfoMETA(BaseXrStructure):
 
 
 class ColocationAdvertisementStopInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.COLOCATION_ADVERTISEMENT_STOP_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.ColocationAdvertisementStopInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.ColocationAdvertisementStopInfoMETA(next={self.next}, type={self.type})"
+
 
 
 class EventDataStartColocationAdvertisementCompleteMETA(EventDataBaseHeader):
@@ -21499,7 +22025,22 @@ class SystemEnvironmentRaycastPropertiesMETA(BaseXrStructure):
 
 
 class EnvironmentRaycasterCreateInfoMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.ENVIRONMENT_RAYCASTER_CREATE_INFO_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.EnvironmentRaycasterCreateInfoMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.EnvironmentRaycasterCreateInfoMETA(next={self.next}, type={self.type})"
+
 
 
 class EnvironmentRaycasterCreateCompletionMETA(FutureCompletionBaseHeaderEXT):
@@ -21783,7 +22324,22 @@ PFN_xrSetTilePropertiesHintMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(Til
 
 
 class HandTrackingUnextrapolatedPosesRequestMETA(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.HAND_TRACKING_UNEXTRAPOLATED_POSES_REQUEST_META,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.HandTrackingUnextrapolatedPosesRequestMETA(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.HandTrackingUnextrapolatedPosesRequestMETA(next={self.next}, type={self.type})"
+
 
 
 class HandTrackingUnextrapolatedPosesMETA(BaseXrStructure):
@@ -21846,7 +22402,22 @@ class SystemLightEstimationPropertiesANDROID(BaseXrStructure):
 
 
 class LightEstimatorCreateInfoANDROID(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.LIGHT_ESTIMATOR_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.LightEstimatorCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.LightEstimatorCreateInfoANDROID(next={self.next}, type={self.type})"
+
 
 
 class LightEstimateGetInfoANDROID(BaseXrStructure):
@@ -23866,7 +24437,22 @@ class SpatialComponentPlaneSemanticLabelListEXT(BaseXrStructure):
 
 
 class StationaryReferenceSpaceGenerationIdGetInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.STATIONARY_REFERENCE_SPACE_GENERATION_ID_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.StationaryReferenceSpaceGenerationIdGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.StationaryReferenceSpaceGenerationIdGetInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class StationaryReferenceSpaceGenerationIdResultEXT(BaseXrStructure):
@@ -25193,7 +25779,22 @@ class CameraExtrinsicsBD(BaseXrStructure):
 
 
 class CameraCaptureBeginInfoBD(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.CAMERA_CAPTURE_BEGIN_INFO_BD,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.CameraCaptureBeginInfoBD(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.CameraCaptureBeginInfoBD(next={self.next}, type={self.type})"
+
 
 
 class CameraImageAcquireInfoBD(BaseXrStructure):
@@ -26860,7 +27461,22 @@ class GoogleCloudAuthInfoTokenANDROID(GoogleCloudAuthInfoBaseHeaderANDROID):
 
 
 class GoogleCloudAuthInfoKeylessANDROID(GoogleCloudAuthInfoBaseHeaderANDROID):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GOOGLE_CLOUD_AUTH_INFO_KEYLESS_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GoogleCloudAuthInfoKeylessANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GoogleCloudAuthInfoKeylessANDROID(next={self.next}, type={self.type})"
+
 
 
 class GoogleCloudAuthErrorResultANDROID(BaseXrStructure):
@@ -26968,7 +27584,22 @@ class SystemGeospatialPropertiesANDROID(BaseXrStructure):
 
 
 class GeospatialTrackerCreateInfoANDROID(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.GEOSPATIAL_TRACKER_CREATE_INFO_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.GeospatialTrackerCreateInfoANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.GeospatialTrackerCreateInfoANDROID(next={self.next}, type={self.type})"
+
 
 
 class EventDataGeospatialTrackerStateChangedANDROID(EventDataBaseHeader):
@@ -27207,7 +27838,22 @@ PFN_xrEnumerateSpatialAnchorAttachableComponentsANDROID = CFUNCTYPE(Result.ctype
 
 
 class SpatialDiscoveryUniqueEntitiesFilterANDROID(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_DISCOVERY_UNIQUE_ENTITIES_FILTER_ANDROID,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialDiscoveryUniqueEntitiesFilterANDROID(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialDiscoveryUniqueEntitiesFilterANDROID(next={self.next}, type={self.type})"
+
 
 
 class SpatialComponentSubsumedByListANDROID(BaseXrStructure):
@@ -27447,7 +28093,22 @@ class SpatialContainerEXT(POINTER(SpatialContainerEXT_T), HandleMixin):
 
 
 class SessionCreateInfoSpatialContainersEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SESSION_CREATE_INFO_SPATIAL_CONTAINERS_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SessionCreateInfoSpatialContainersEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SessionCreateInfoSpatialContainersEXT(next={self.next}, type={self.type})"
+
 
 
 class SpatialContainerCreateInfoEXT(BaseXrStructure):
@@ -27640,11 +28301,41 @@ class EventDataSpatialContainerBoundsChangedEXT(EventDataBaseHeader):
 
 
 class SpatialContainerBoundsGetInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_BOUNDS_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerBoundsGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerBoundsGetInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class SpatialContainerStateGetInfoEXT(BaseXrStructure):
-    pass
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_CONTAINER_STATE_GET_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialContainerStateGetInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialContainerStateGetInfoEXT(next={self.next}, type={self.type})"
+
 
 
 class SpatialContainerVisibleRequestInfoEXT(BaseXrStructure):
