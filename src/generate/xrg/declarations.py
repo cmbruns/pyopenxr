@@ -25,12 +25,10 @@ class CodeItem(ABC):
     def __init__(self, cursor: Cursor) -> None:
         self.cursor = cursor
 
-    @staticmethod
-    def blank_lines_before() -> int:
+    def blank_lines_before(self) -> int:
         return 1
 
-    @staticmethod
-    def blank_lines_after() -> int:
+    def blank_lines_after(self) -> int:
         return 1
 
     @abstractmethod
@@ -76,12 +74,10 @@ class DefinitionItem(CodeItem):
         if self.value == "0" and self._capi_name in ["XR_NULL_HANDLE"]:
             self.value = "None"
 
-    @staticmethod
-    def blank_lines_before():
+    def blank_lines_before(self) -> int:
         return 0
 
-    @staticmethod
-    def blank_lines_after():
+    def blank_lines_after(self) -> int:
         return 0
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -115,12 +111,10 @@ class EnumItem(CodeItem):
             evi = EnumValueItem(cursor=v, parent=self)
             self.values.append(evi)
 
-    @staticmethod
-    def blank_lines_before():
+    def blank_lines_before(self):
         return 2
 
-    @staticmethod
-    def blank_lines_after():
+    def blank_lines_after(self):
         return 2
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -219,12 +213,10 @@ class EnumValueItem(CodeItem):
             n = f"N{n}"  # Prepend "N" to make it a valid identifier
         return n
 
-    @staticmethod
-    def blank_lines_before():
+    def blank_lines_before(self):
         return 0
 
-    @staticmethod
-    def blank_lines_after():
+    def blank_lines_after(self):
         return 0
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -289,12 +281,10 @@ class FlagsItem(CodeItem):
         else:
             raise NotImplementedError
 
-    @staticmethod
-    def blank_lines_before():
+    def blank_lines_before(self):
         return 2
 
-    @staticmethod
-    def blank_lines_after():
+    def blank_lines_after(self):
         return 2
 
     def code(self, api: Api = Api.PYTHON) -> str:
@@ -362,12 +352,10 @@ class FunctionItem(CodeItem):
             s = s[2:]
         return snake_from_camel(s)
 
-    @staticmethod
-    def blank_lines_before():
+    def blank_lines_before(self):
         return 2
 
-    @staticmethod
-    def blank_lines_after():
+    def blank_lines_after(self):
         return 2
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -605,12 +593,10 @@ class StructItem(CodeItem):
                         if field.name() in fd:
                             field.default_value = fd[field.name()]
 
-    @staticmethod
-    def blank_lines_before():
+    def blank_lines_before(self):
         return 2
 
-    @staticmethod
-    def blank_lines_after():
+    def blank_lines_after(self):
         return 2
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -640,12 +626,12 @@ class StructItem(CodeItem):
             if field.type.name(Api.CTYPES) != field_ctype:
                 return ""  # All fields must be the same type
         # Finish constructor
-        result += "        self._numpy = None\n"
+        result += "\n        self._numpy = None"
         # Iterator
-        result += f"\n    def __iter__(self) -> Iterator[{field_pytype}]:\n"
+        result += f"\n\n    def __iter__(self) -> Iterator[{field_pytype}]:"
         for f in self.fields:
-            result += f"        yield self.{f.name()}\n"
-        result += "\n"
+            result += f"\n        yield self.{f.name()}"
+        result += "\n\n"
         # Other container methods
         result += textwrap.indent(inspect.cleandoc(f"""
             def __getitem__(self, key):
@@ -664,7 +650,6 @@ class StructItem(CodeItem):
                     self._numpy = numpy.ctypeslib.as_array(buffer)
                 return self._numpy
         """), "    ")
-        result += "\n"
         return result
 
     @staticmethod
@@ -673,7 +658,8 @@ class StructItem(CodeItem):
         This structure is sort of equivalent to a string.
         So use one of its fields as a string proxy.
         """
-        result = textwrap.indent(inspect.cleandoc(f"""
+        result = "\n\n"
+        result += textwrap.indent(inspect.cleandoc(f"""
             def __bytes__(self):
                 return self.{string_field}
 
@@ -688,7 +674,6 @@ class StructItem(CodeItem):
             def __str__(self):
                 return self.{string_field}.decode()
         """), "    ")
-        result += "\n"
         return result
 
     def code(self, api: Api = Api.PYTHON) -> str:
@@ -711,20 +696,21 @@ class StructItem(CodeItem):
             return result
         structure_coder = StructureCoder(self)
         # Base classes must not have __init__ methods
-        if "BaseHeader" not in self.name():
+        if "BaseHeader" in self.name():
+            result += structure_coder.generate_repr_str(preceding_blank=False)
+        else:
             result += structure_coder.generate_constructor()
         result += self._sequence_code()
-        result += "\n"
         # Hard code this for now, generalize later if needed
         if self.name() == "ExtensionProperties":
             result += self.field_as_string_code("extension_name")
         elif self.name() == "ApiLayerProperties":
             result += self.field_as_string_code("layer_name")
-        else:
+        elif "BaseHeader" not in self.name():
             result += structure_coder.generate_repr_str()
         result += structure_coder.generate_properties()
-
         result += structure_coder.generate_fields(api)
+
         return result
 
     def used_ctypes(self, api: Api = Api.PYTHON) -> Set[str]:
@@ -763,7 +749,7 @@ class TypeDefItem(CodeItem):
         if self._py_name == "Version":
             self._py_name = self._ctypes_name = "VersionNumber"
 
-    def blank_lines_after(self):
+    def blank_lines_after(self) -> int:
         if self.is_handle:
             return 2
         else:
@@ -827,12 +813,10 @@ class VariableItem(CodeItem):
         if self.value.endswith("LL"):
             self.value = self.value[:-2]
 
-    @staticmethod
-    def blank_lines_before():
+    def blank_lines_before(self):
         return 0
 
-    @staticmethod
-    def blank_lines_after():
+    def blank_lines_after(self):
         return 0
 
     def name(self, api: Api = Api.PYTHON) -> str:
@@ -874,8 +858,7 @@ class NothingParameterCoder(object):
     def mid_body_code(api=Api.PYTHON) -> Iterator[str]:
         yield from []
 
-    @staticmethod
-    def pre_body_code(api=Api.PYTHON) -> Iterator[str]:
+    def pre_body_code(self, api=Api.PYTHON) -> Iterator[str]:
         yield from []
 
     @staticmethod
@@ -1692,7 +1675,7 @@ class StructureCoder(object):
         for fc in self.field_coders:
             for s in fc.call_code():
                 result += f"{i12}{s},\n"
-        result += f"{i8})\n"
+        result += f"{i8})"
         return result
 
     def generate_fields(self, api: Api = Api.PYTHON) -> str:
@@ -1709,7 +1692,7 @@ class StructureCoder(object):
                 result += f.code(api.CTYPES).replace("    ", "", 1)
             result += "\n]"
         else:
-            result += "\n    _fields_ = ["  # Skip type/next
+            result += "\n\n    _fields_ = ["  # Skip type/next
             for f in self.struct.fields[skip:]:
                 result += f.code(api.CTYPES)
             result += "\n    ]"
@@ -1730,10 +1713,10 @@ class StructureCoder(object):
             if len(prop_strings) > 0:
                 result += "\n"
                 for s in prop_strings:
-                    result += f"    {s}\n"
+                    result += f"\n    {s}"
         return result
 
-    def generate_repr_str(self) -> str:
+    def generate_repr_str(self, preceding_blank=True) -> str:
         class_name = self.struct.name()
         repr_strings = []
         str_strings = []
@@ -1748,7 +1731,9 @@ class StructureCoder(object):
         # Short string version of classes that look more like tuples
         if class_name in ["Quaternionf", "Vector3f", "Posef", ]:
             first = ""
-        result = ""
+        result = "\n"
+        if preceding_blank:
+            result += "\n"
         result += textwrap.indent(inspect.cleandoc(f"""
             def __repr__(self) -> str:
                 return f"xr.{class_name}({field_reprs})"
@@ -1756,7 +1741,6 @@ class StructureCoder(object):
             def __str__(self) -> str:
                 return f"{first}({field_strs})"
         """), "    ")
-        result += "\n"
         return result
 
 

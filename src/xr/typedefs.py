@@ -1069,7 +1069,6 @@ class SwapchainImageAcquireInfo(BaseXrStructure):
         return f"xr.SwapchainImageAcquireInfo(next={self.next}, type={self.type})"
 
 
-
 class SwapchainImageWaitInfo(BaseXrStructure):
     def __init__(
         self,
@@ -1110,7 +1109,6 @@ class SwapchainImageReleaseInfo(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SwapchainImageReleaseInfo(next={self.next}, type={self.type})"
-
 
 
 class SessionBeginInfo(BaseXrStructure):
@@ -1194,7 +1192,6 @@ class FrameWaitInfo(BaseXrStructure):
         return f"xr.FrameWaitInfo(next={self.next}, type={self.type})"
 
 
-
 class FrameBeginInfo(BaseXrStructure):
     def __init__(
         self,
@@ -1211,7 +1208,6 @@ class FrameBeginInfo(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.FrameBeginInfo(next={self.next}, type={self.type})"
-
 
 
 class CompositionLayerBaseHeader(BaseXrStructure):
@@ -4442,7 +4438,6 @@ class SpatialGraphNodeBindingPropertiesGetInfoMSFT(BaseXrStructure):
         return f"xr.SpatialGraphNodeBindingPropertiesGetInfoMSFT(next={self.next}, type={self.type})"
 
 
-
 class SpatialGraphNodeBindingPropertiesMSFT(BaseXrStructure):
     def __init__(
         self,
@@ -5958,7 +5953,6 @@ class SceneObserverCreateInfoMSFT(BaseXrStructure):
         return f"xr.SceneObserverCreateInfoMSFT(next={self.next}, type={self.type})"
 
 
-
 class SceneCreateInfoMSFT(BaseXrStructure):
     def __init__(
         self,
@@ -5975,7 +5969,6 @@ class SceneCreateInfoMSFT(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SceneCreateInfoMSFT(next={self.next}, type={self.type})"
-
 
 
 class SceneSphereBoundMSFT(Structure):
@@ -6796,7 +6789,6 @@ class SceneMeshBuffersMSFT(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SceneMeshBuffersMSFT(next={self.next}, type={self.type})"
-
 
 
 class SceneMeshVertexBufferMSFT(BaseXrStructure):
@@ -7750,7 +7742,6 @@ class FoveationProfileCreateInfoFB(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.FoveationProfileCreateInfoFB(next={self.next}, type={self.type})"
-
 
 
 class SwapchainCreateInfoFoveationFB(BaseXrStructure):
@@ -9261,7 +9252,6 @@ class MarkerDetectorSnapshotInfoML(BaseXrStructure):
         return f"xr.MarkerDetectorSnapshotInfoML(next={self.next}, type={self.type})"
 
 
-
 class MarkerDetectorStateML(BaseXrStructure):
     def __init__(
         self,
@@ -9731,7 +9721,6 @@ class SpatialAnchorsCreateStorageInfoML(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SpatialAnchorsCreateStorageInfoML(next={self.next}, type={self.type})"
-
 
 
 class SpatialAnchorsQueryInfoBaseHeaderML(BaseXrStructure):
@@ -11887,7 +11876,6 @@ class EyeTrackerCreateInfoFB(BaseXrStructure):
         return f"xr.EyeTrackerCreateInfoFB(next={self.next}, type={self.type})"
 
 
-
 class EyeGazesInfoFB(BaseXrStructure):
     def __init__(
         self,
@@ -12357,7 +12345,6 @@ class VirtualKeyboardCreateInfoMETA(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.VirtualKeyboardCreateInfoMETA(next={self.next}, type={self.type})"
-
 
 
 class VirtualKeyboardSpaceCreateInfoMETA(BaseXrStructure):
@@ -13860,7 +13847,6 @@ class SpaceTriangleMeshGetInfoMETA(BaseXrStructure):
         return f"xr.SpaceTriangleMeshGetInfoMETA(next={self.next}, type={self.type})"
 
 
-
 class SpaceTriangleMeshMETA(BaseXrStructure):
     def __init__(
         self,
@@ -14776,7 +14762,6 @@ class RenderModelPropertiesGetInfoEXT(BaseXrStructure):
         return f"xr.RenderModelPropertiesGetInfoEXT(next={self.next}, type={self.type})"
 
 
-
 class RenderModelPropertiesEXT(BaseXrStructure):
     def __init__(
         self,
@@ -14956,7 +14941,6 @@ class RenderModelAssetDataGetInfoEXT(BaseXrStructure):
         return f"xr.RenderModelAssetDataGetInfoEXT(next={self.next}, type={self.type})"
 
 
-
 class RenderModelAssetDataEXT(BaseXrStructure):
     def __init__(
         self,
@@ -15003,7 +14987,6 @@ class RenderModelAssetPropertiesGetInfoEXT(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.RenderModelAssetPropertiesGetInfoEXT(next={self.next}, type={self.type})"
-
 
 
 class RenderModelAssetNodePropertiesEXT(Structure):
@@ -15090,7 +15073,6 @@ class InteractionRenderModelIdsEnumerateInfoEXT(BaseXrStructure):
         return f"xr.InteractionRenderModelIdsEnumerateInfoEXT(next={self.next}, type={self.type})"
 
 
-
 class InteractionRenderModelSubactionPathInfoEXT(BaseXrStructure):
     def __init__(
         self,
@@ -15107,7 +15089,6 @@ class InteractionRenderModelSubactionPathInfoEXT(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.InteractionRenderModelSubactionPathInfoEXT(next={self.next}, type={self.type})"
-
 
 
 class InteractionRenderModelTopLevelUserPathGetInfoEXT(BaseXrStructure):
@@ -15165,7 +15146,6 @@ class EventDataInteractionRenderModelsChangedEXT(EventDataBaseHeader):
 
     def __str__(self) -> str:
         return f"xr.EventDataInteractionRenderModelsChangedEXT(next={self.next}, type={self.type})"
-
 
 
 PFN_xrEnumerateInteractionRenderModelIdsEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(InteractionRenderModelIdsEnumerateInfoEXT), c_uint32, POINTER(c_uint32), POINTER(RenderModelIdEXT))
@@ -16747,7 +16727,6 @@ class SenseDataProviderStartInfoBD(BaseXrStructure):
         return f"xr.SenseDataProviderStartInfoBD(next={self.next}, type={self.type})"
 
 
-
 class EventDataSenseDataProviderStateChangedBD(EventDataBaseHeader):
     def __init__(
         self,
@@ -16826,7 +16805,6 @@ class SenseDataQueryInfoBD(BaseXrStructure):
         return f"xr.SenseDataQueryInfoBD(next={self.next}, type={self.type})"
 
 
-
 class SenseDataQueryCompletionBD(FutureCompletionBaseHeaderEXT):
     def __init__(
         self,
@@ -16869,7 +16847,6 @@ class QueriedSenseDataGetInfoBD(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.QueriedSenseDataGetInfoBD(next={self.next}, type={self.type})"
-
 
 
 class SpatialEntityStateBD(BaseXrStructure):
@@ -17392,7 +17369,6 @@ class SceneCaptureInfoBD(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SceneCaptureInfoBD(next={self.next}, type={self.type})"
-
 
 
 PFN_xrCaptureSceneAsyncBD = CFUNCTYPE(Result.ctype(), SenseDataProviderBD, POINTER(SceneCaptureInfoBD), POINTER(FutureEXT))
@@ -19513,7 +19489,6 @@ class EyeTrackerCreateInfoANDROID(BaseXrStructure):
         return f"xr.EyeTrackerCreateInfoANDROID(next={self.next}, type={self.type})"
 
 
-
 PFN_xrCreateEyeTrackerANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(EyeTrackerCreateInfoANDROID), POINTER(EyeTrackerANDROID))
 
 PFN_xrDestroyEyeTrackerANDROID = CFUNCTYPE(Result.ctype(), EyeTrackerANDROID)
@@ -19547,7 +19522,6 @@ class DeviceAnchorPersistenceCreateInfoANDROID(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.DeviceAnchorPersistenceCreateInfoANDROID(next={self.next}, type={self.type})"
-
 
 
 class PersistedAnchorSpaceCreateInfoANDROID(BaseXrStructure):
@@ -19663,7 +19637,6 @@ class FaceTrackerCreateInfoANDROID(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.FaceTrackerCreateInfoANDROID(next={self.next}, type={self.type})"
-
 
 
 class FaceStateGetInfoANDROID(BaseXrStructure):
@@ -19822,7 +19795,6 @@ class PassthroughCameraStateGetInfoANDROID(BaseXrStructure):
         return f"xr.PassthroughCameraStateGetInfoANDROID(next={self.next}, type={self.type})"
 
 
-
 PFN_xrGetPassthroughCameraStateANDROID = CFUNCTYPE(Result.ctype(), Session, POINTER(PassthroughCameraStateGetInfoANDROID), POINTER(PassthroughCameraStateANDROID.ctype()))
 
 
@@ -19842,7 +19814,6 @@ class EventDataRecommendedResolutionChangedANDROID(EventDataBaseHeader):
 
     def __str__(self) -> str:
         return f"xr.EventDataRecommendedResolutionChangedANDROID(next={self.next}, type={self.type})"
-
 
 
 class PassthroughLayerANDROID_T(Structure):
@@ -20600,7 +20571,6 @@ class WorldMeshDetectorCreateInfoML(BaseXrStructure):
         return f"xr.WorldMeshDetectorCreateInfoML(next={self.next}, type={self.type})"
 
 
-
 class WorldMeshBlockStateML(BaseXrStructure):
     def __init__(
         self,
@@ -21145,7 +21115,6 @@ class FacialExpressionBlendShapeGetInfoML(BaseXrStructure):
         return f"xr.FacialExpressionBlendShapeGetInfoML(next={self.next}, type={self.type})"
 
 
-
 class FacialExpressionBlendShapePropertiesML(BaseXrStructure):
     def __init__(
         self,
@@ -21306,7 +21275,6 @@ class SimultaneousHandsAndControllersTrackingResumeInfoMETA(BaseXrStructure):
         return f"xr.SimultaneousHandsAndControllersTrackingResumeInfoMETA(next={self.next}, type={self.type})"
 
 
-
 class SimultaneousHandsAndControllersTrackingPauseInfoMETA(BaseXrStructure):
     def __init__(
         self,
@@ -21323,7 +21291,6 @@ class SimultaneousHandsAndControllersTrackingPauseInfoMETA(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SimultaneousHandsAndControllersTrackingPauseInfoMETA(next={self.next}, type={self.type})"
-
 
 
 PFN_xrResumeSimultaneousHandsAndControllersTrackingMETA = CFUNCTYPE(Result.ctype(), Session, POINTER(SimultaneousHandsAndControllersTrackingResumeInfoMETA))
@@ -21550,7 +21517,6 @@ class ColocationDiscoveryStartInfoMETA(BaseXrStructure):
         return f"xr.ColocationDiscoveryStartInfoMETA(next={self.next}, type={self.type})"
 
 
-
 class ColocationDiscoveryStopInfoMETA(BaseXrStructure):
     def __init__(
         self,
@@ -21567,7 +21533,6 @@ class ColocationDiscoveryStopInfoMETA(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.ColocationDiscoveryStopInfoMETA(next={self.next}, type={self.type})"
-
 
 
 class ColocationAdvertisementStartInfoMETA(BaseXrStructure):
@@ -21613,7 +21578,6 @@ class ColocationAdvertisementStopInfoMETA(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.ColocationAdvertisementStopInfoMETA(next={self.next}, type={self.type})"
-
 
 
 class EventDataStartColocationAdvertisementCompleteMETA(EventDataBaseHeader):
@@ -22042,7 +22006,6 @@ class EnvironmentRaycasterCreateInfoMETA(BaseXrStructure):
         return f"xr.EnvironmentRaycasterCreateInfoMETA(next={self.next}, type={self.type})"
 
 
-
 class EnvironmentRaycasterCreateCompletionMETA(FutureCompletionBaseHeaderEXT):
     def __init__(
         self,
@@ -22341,7 +22304,6 @@ class HandTrackingUnextrapolatedPosesRequestMETA(BaseXrStructure):
         return f"xr.HandTrackingUnextrapolatedPosesRequestMETA(next={self.next}, type={self.type})"
 
 
-
 class HandTrackingUnextrapolatedPosesMETA(BaseXrStructure):
     def __init__(
         self,
@@ -22417,7 +22379,6 @@ class LightEstimatorCreateInfoANDROID(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.LightEstimatorCreateInfoANDROID(next={self.next}, type={self.type})"
-
 
 
 class LightEstimateGetInfoANDROID(BaseXrStructure):
@@ -24454,7 +24415,6 @@ class StationaryReferenceSpaceGenerationIdGetInfoEXT(BaseXrStructure):
         return f"xr.StationaryReferenceSpaceGenerationIdGetInfoEXT(next={self.next}, type={self.type})"
 
 
-
 class StationaryReferenceSpaceGenerationIdResultEXT(BaseXrStructure):
     def __init__(
         self,
@@ -25794,7 +25754,6 @@ class CameraCaptureBeginInfoBD(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.CameraCaptureBeginInfoBD(next={self.next}, type={self.type})"
-
 
 
 class CameraImageAcquireInfoBD(BaseXrStructure):
@@ -27478,7 +27437,6 @@ class GoogleCloudAuthInfoKeylessANDROID(GoogleCloudAuthInfoBaseHeaderANDROID):
         return f"xr.GoogleCloudAuthInfoKeylessANDROID(next={self.next}, type={self.type})"
 
 
-
 class GoogleCloudAuthErrorResultANDROID(BaseXrStructure):
     def __init__(
         self,
@@ -27599,7 +27557,6 @@ class GeospatialTrackerCreateInfoANDROID(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.GeospatialTrackerCreateInfoANDROID(next={self.next}, type={self.type})"
-
 
 
 class EventDataGeospatialTrackerStateChangedANDROID(EventDataBaseHeader):
@@ -27853,7 +27810,6 @@ class SpatialDiscoveryUniqueEntitiesFilterANDROID(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SpatialDiscoveryUniqueEntitiesFilterANDROID(next={self.next}, type={self.type})"
-
 
 
 class SpatialComponentSubsumedByListANDROID(BaseXrStructure):
@@ -28110,7 +28066,6 @@ class SessionCreateInfoSpatialContainersEXT(BaseXrStructure):
         return f"xr.SessionCreateInfoSpatialContainersEXT(next={self.next}, type={self.type})"
 
 
-
 class SpatialContainerCreateInfoEXT(BaseXrStructure):
     def __init__(
         self,
@@ -28318,7 +28273,6 @@ class SpatialContainerBoundsGetInfoEXT(BaseXrStructure):
         return f"xr.SpatialContainerBoundsGetInfoEXT(next={self.next}, type={self.type})"
 
 
-
 class SpatialContainerStateGetInfoEXT(BaseXrStructure):
     def __init__(
         self,
@@ -28335,7 +28289,6 @@ class SpatialContainerStateGetInfoEXT(BaseXrStructure):
 
     def __str__(self) -> str:
         return f"xr.SpatialContainerStateGetInfoEXT(next={self.next}, type={self.type})"
-
 
 
 class SpatialContainerVisibleRequestInfoEXT(BaseXrStructure):
