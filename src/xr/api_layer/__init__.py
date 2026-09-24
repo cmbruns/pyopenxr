@@ -17,17 +17,27 @@ if platform.system() in ["Windows"] or platform.machine() in ["aarch64", "x86_64
     expose_packaged_api_layers()
 
 
+def _insert_layer(layer_name: str) -> bool:
+    layers = os.environ.get("XR_ENABLE_API_LAYERS", default="").split(os.pathsep)
+    if layer_name not in layers:
+        layers.append(layer_name)
+    layers = [x for x in layers if x != ""]
+    os.environ["XR_ENABLE_API_LAYERS"] = os.pathsep.join(layers)
+    return True
+
+
+def activate_api_dump_layer(file_path: str, export_type: str = "text") -> bool:
+    os.environ["XR_API_DUMP_FILE_NAME"] = file_path
+    os.environ["XR_CORE_VALIDATION_EXPORT_TYPE"] = export_type  # Default to stdout reporting
+    return _insert_layer(LUNARG_api_dump_APILAYER_NAME)
+
+
 def activate_best_practices_validation_layer() -> bool:
     """
     Activate the best practices validation layer
     :return:
     """
-    layers = os.environ.get("XR_ENABLE_API_LAYERS", default="").split(os.pathsep)
-    if KHRONOS_best_practices_validation_APILAYER_NAME not in layers:
-        layers.append(KHRONOS_best_practices_validation_APILAYER_NAME)
-    layers = [x for x in layers if x != ""]
-    os.environ["XR_ENABLE_API_LAYERS"] = os.pathsep.join(layers)
-    return True
+    return _insert_layer(KHRONOS_best_practices_validation_APILAYER_NAME)
 
 
 def activate_core_validation_layer() -> bool:
@@ -35,13 +45,8 @@ def activate_core_validation_layer() -> bool:
     Activate the core validation layer
     :return:
     """
-    layers = os.environ.get("XR_ENABLE_API_LAYERS", default="").split(os.pathsep)
-    if LUNARG_core_validation_APILAYER_NAME not in layers:
-        layers.append(LUNARG_core_validation_APILAYER_NAME)
-    layers = [x for x in layers if x != ""]
-    os.environ["XR_ENABLE_API_LAYERS"] = os.pathsep.join(layers)
     os.environ["XR_CORE_VALIDATION_EXPORT_TYPE"] = "text"  # Default to stdout reporting
-    return True
+    return _insert_layer(LUNARG_core_validation_APILAYER_NAME)
 
 
 __all__ = [

@@ -42,6 +42,7 @@ jobs:
           libxext-dev \
           libxfixes-dev \
           openxr-utils \
+          monado-cli \
           monado-service \
           xvfb
     - name: Install dependencies 1
