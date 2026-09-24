@@ -25,9 +25,21 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        
-        # 1. Spin up the virtual framebuffer server globally first
-        sudo apt-get install -y xvfb
+        sudo apt-get install -y \
+          mesa-utils \
+          libegl1 \
+          libegl-dev \
+          libgles2 \
+          libgles2-mesa-dev \
+          libgl1-mesa-dev \
+          libgl1-mesa-dri \
+          libgbm-dev \
+          libdrm-dev \
+          libosmesa6-dev \
+          libx11-dev \
+          libxext-dev \
+          libxfixes-dev \
+          xvfb
         
         Xvfb :99 -screen 0 1024x768x24 &
         export DISPLAY=:99
@@ -39,23 +51,10 @@ jobs:
         export DUMMY_DRIVER=1
         
         sudo -E apt-get install -y \
-          mesa-utils \
-          libegl1 \
-          libegl-dev \
-          libgles2 \
-          libgles2-mesa-dev \
-          libgl1-mesa-dev \
-          libgl1-mesa-dri \
-          libgbm-dev \
-          libdrm-dev \
           libopenxr1-monado \
-          libosmesa6-dev \
-          libx11-dev \
-          libxext-dev \
-          libxfixes-dev \
-          # openxr-utils \
-          # monado-cli \
-          monado-service
+          monado-service \
+          openxr-utils
+
     - name: Install dependencies 1
       run: |
         python -m pip install --upgrade pip
