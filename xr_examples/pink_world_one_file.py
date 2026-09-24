@@ -13,6 +13,8 @@ from contextlib import ExitStack
 from ctypes import byref, cast, POINTER
 import sys
 
+import xr
+
 if sys.platform in ["win32", "linux"]:
     from OpenGL import GL
     import glfw
@@ -20,12 +22,13 @@ if sys.platform in ["win32", "linux"]:
         from OpenGL import WGL
     else:
         from OpenGL import GLX
+    swapchain_image_type = xr.SwapchainImageOpenGLKHR
 else:
     import android
     from OpenGL import GLES3 as GL
     from OpenGL import EGL
+    swapchain_image_type = xr.SwapchainImageOpenGLESKHR
 
-import xr
 
 
 def main():
@@ -197,7 +200,7 @@ def main():
                 usage_flags=xr.SwapchainUsageFlags.SAMPLED_BIT | xr.SwapchainUsageFlags.COLOR_ATTACHMENT_BIT,
             )))
             swapchain_images.append(xr.enumerate_swapchain_images(
-                swapchain=swapchains[-1], element_type=xr.SwapchainImageOpenGLESKHR))
+                swapchain=swapchains[-1], element_type=swapchain_image_type))
             swapchain_sizes.append((v.recommended_image_rect_width, v.recommended_image_rect_height))
             num_images = len(swapchain_images[-1])
             swapchain_image_ptr_buffer = (POINTER(xr.SwapchainImageBaseHeader) * num_images)()
@@ -269,7 +272,7 @@ def main():
                             layer_view.sub_image.image_rect.offset[:] = [0, 0]
                             layer_view.sub_image.image_rect.extent[:] = [*swapchain_sizes[view_index]]
                             swapchain_image_ptr = swapchain_image_ptr_buffers[view_index][swapchain_image_index]
-                            swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLESKHR)).contents
+                            swapchain_image = cast(swapchain_image_ptr, POINTER(swapchain_image_type)).contents
                             assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
                             color_texture = swapchain_image.image
                             # graphics begin frame

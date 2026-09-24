@@ -8,6 +8,9 @@ import platform
 import time
 import xr
 
+xr.api_layer.activate_core_validation_layer()
+xr.api_layer.activate_best_practices_validation_layer()
+
 # Enumerate the required instance extensions
 extensions = [xr.MND_HEADLESS_EXTENSION_NAME]  # Permits use without a graphics display
 # Tracking controllers in headless mode requires a way to get the current XrTime
@@ -202,7 +205,9 @@ for frame_index in range(30):  # Limit number of frames for demo purposes
             break  # There is no event in the queue at this moment
     if session_state == xr.SessionState.FOCUSED:
         # wait_frame()/begin_frame()/end_frame() are not required in headless mode
-        xr.wait_frame(session=session)  # Helps SteamVR show application name better
+        # xr.wait_frame() Helps SteamVR show application name better
+        # But it hangs the loop in SteamVR 2.17.10 and OpenXR 1.1.63
+        # xr.wait_frame(session=session)
         # Perform per-frame activities here
 
         if platform.system() == "Windows":

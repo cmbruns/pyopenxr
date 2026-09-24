@@ -46,6 +46,7 @@ def create_platform_plugin(_options: [argparse.Namespace, Options]) -> IPlatform
     else:
         raise NotImplementedError
 
+
 def poll_keyboard():
     logger.info("Press any key to shutdown...")
     try:

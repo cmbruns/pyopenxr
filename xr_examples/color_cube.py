@@ -11,6 +11,8 @@ from xr.utils import GraphicsAPI, Matrix4x4f
 from xr.utils.gl import ContextObject
 from xr.utils.gl.glfw_util import GLFWOffscreenContextProvider
 
+xr.api_layer.activate_core_validation_layer()
+
 context_provider = GLFWOffscreenContextProvider()
 # ContextObject is a high level pythonic class meant to keep simple cases simple.
 with ContextObject(

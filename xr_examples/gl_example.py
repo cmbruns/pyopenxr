@@ -373,7 +373,7 @@ class OpenXrExample(object):
             xr.SessionState.SYNCHRONIZED,
             xr.SessionState.VISIBLE,
         ]:
-            frame_wait_info = xr.FrameWaitInfo(None)
+            frame_wait_info = xr.FrameWaitInfo()
             try:
                 self.frame_state = xr.wait_frame(self.session, frame_wait_info)
                 xr.begin_frame(self.session, None)
@@ -406,7 +406,7 @@ class OpenXrExample(object):
         vs, self.eye_view_states = xr.locate_views(self.session, vi)
 
     def render(self):
-        ai = xr.SwapchainImageAcquireInfo(None)
+        ai = xr.SwapchainImageAcquireInfo()
         swapchain_index = xr.acquire_swapchain_image(self.swapchain, ai)
         wi = xr.SwapchainImageWaitInfo(xr.INFINITE_DURATION)
         xr.wait_swapchain_image(self.swapchain, wi)
