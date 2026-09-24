@@ -25,7 +25,20 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y \
+        
+        # 1. Spin up the virtual framebuffer server globally first
+        sudo apt-get install -y xvfb
+        
+        Xvfb :99 -screen 0 1024x768x24 &
+        export DISPLAY=:99
+        sleep 1
+        
+        # 2. Expose Software Rendering (Lavapipe) flags to the installer
+        export VK_LOADER_DRIVERS_DISABLE=all
+        export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+        export DUMMY_DRIVER=1
+        
+        sudo -E apt-get install -y \
           mesa-utils \
           libegl1 \
           libegl-dev \
@@ -42,8 +55,7 @@ jobs:
           libxfixes-dev \
           # openxr-utils \
           # monado-cli \
-          monado-service \
-          xvfb
+          monado-service
     - name: Install dependencies 1
       run: |
         python -m pip install --upgrade pip
