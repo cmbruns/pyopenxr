@@ -41,6 +41,7 @@ jobs:
           libxfixes-dev \
           xvfb
         
+        # 1. Spin up the virtual framebuffer server first
         Xvfb :99 -screen 0 1024x768x24 &
         export DISPLAY=:99
         sleep 1
@@ -53,7 +54,7 @@ jobs:
         sudo -E apt-get install -y \
           libopenxr1-monado \
           monado-service \
-          openxr-utils
+          libopenxr-utils
 
     - name: Install dependencies 1
       run: |
