@@ -35,12 +35,12 @@ jobs:
           libgl1-mesa-dri \
           libgbm-dev \
           libdrm-dev \
-          libopenxr-monado1 \
+          libopenxr1-monado \
           libosmesa6-dev \
           libx11-dev \
           libxext-dev \
           libxfixes-dev \
-          openxr-utils \
+          # openxr-utils \
           monado-cli \
           monado-service \
           xvfb
