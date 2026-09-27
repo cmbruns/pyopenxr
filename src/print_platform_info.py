@@ -3,14 +3,10 @@ import sys
 import os
 import struct
 
-def print_header(title):
-    print("\n" + "=" * 60)
-    print(title)
-    print("=" * 60)
-
 # Basic platform info
 print(f"platform.system(): {platform.system()}")
 print(f"platform.machine(): {platform.machine()}")
+print(f"platform.architecture(): {platform.architecture()}")
 # print(f"platform.platform(): {platform.platform()}")
 print(f"platform.version(): {platform.version()}")
 print(f"platform.release(): {platform.release()}")
@@ -28,10 +24,12 @@ print(f"sys.executable: {sys.executable}")
 
 # OS environment
 for key in sorted(os.environ.keys()):
-    if key not in [
+    if False and key not in [
         "ANDROID_ROOT",  # Android
         "ANDROID_DATA",  # Android
         "BOOTCLASSPATH",  # Android
+        "OS",  # Windows
+        "PROCESSOR_ARCHITECTURE",
         "SNAP_ARCH",  # Ubuntu
         "STEAMOS_VERSION",  # Steam Frame?
         "STEAM_RUNTIME",  # Steam Frame?
@@ -40,7 +38,6 @@ for key in sorted(os.environ.keys()):
     print(f"os.environ['{key}']={os.environ[key]}")
 
 # Check ELF vs non‑ELF (Android uses Bionic libc)
-print_header("ELF CHECK")
 try:
     with open("/lib/libc.so", "rb") as f:
         magic = f.read(4)
