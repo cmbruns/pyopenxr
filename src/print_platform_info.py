@@ -21,6 +21,11 @@ print(f"sys.platform: {sys.platform}")
 print(f"sys.byteorder: {sys.byteorder}")
 print(f"sys.maxsize: 0x{sys.maxsize:0X}")
 print(f"sys.executable: {sys.executable}")
+try:
+    print(f"sys.get_androidapilevel(): {sys.getandroidapilevel()}")
+except AttributeError:
+    print(f"sys.get_androidapilevel(): <unknown attribute>")
+
 
 # OS environment
 for key in sorted(os.environ.keys()):
