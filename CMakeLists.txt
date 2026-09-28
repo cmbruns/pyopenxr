@@ -37,8 +37,9 @@ if (CMAKE_SYSTEM_PROCESSOR MATCHES "^armv")
     )
 endif()
 
+# NOTE: keep these XR_ARCH folder names in sync with xr.platform_folder.py
 if (WIN32)
-    set(XR_ARCH "win32")
+    set(XR_ARCH "windows_x86_64")
 elseif(ANDROID_ABI MATCHES "arm64")
     set(XR_ARCH "aarch64")
 else()
