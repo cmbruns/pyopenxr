@@ -1,0 +1,11 @@
+{
+    "file_format_version": "1.0.0",
+    "api_layer": {
+        "name": "XR_APILAYER_KHRONOS_best_practices_validation",
+        "library_path": "libXrApiLayer_best_practices_validation.so",
+        "api_version": "1.1",
+        "implementation_version": "1",
+        "description": "API Layer to modify runtime behavior in conformant but perhaps unexpected ways",
+        "disable_environment": "KHRONOS_best_practices_validation_disabled"
+    }
+}
