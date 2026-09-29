@@ -20,3 +20,4 @@ src/generate/xrg/libclang*.so
 /docs/.buildinfo
 /docs/.buildinfo.bak
 /docs/_sources/
+/build_linux_aarch64/
