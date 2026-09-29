@@ -5,7 +5,11 @@ from ..platform_folder import platform_folder
 
 
 folder, suffix = platform_folder()
-library_path = resource_filename(f"xr.library.{folder}", f"openxr_loader.{suffix}")
+if suffix == "dll":
+    prefix = ""
+else:
+    prefix = "lib"
+library_path = resource_filename(f"xr.library.{folder}", f"{prefix}openxr_loader.{suffix}")
 openxr_loader_library = ctypes.cdll.LoadLibrary(library_path)
 
 __all__ = [
