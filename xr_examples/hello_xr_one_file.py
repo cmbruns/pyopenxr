@@ -1,7 +1,9 @@
 """
 File hello_xr_one_file.py
 
-This example uses only core functions.
+This example uses core functions plus the KHR/EXT functions the platform
+requires (loader initialization and instance creation on Android,
+OpenGL/OpenGL-ES graphics requirements, and the debug utils messenger).
 It is mostly only one long procedure.
 The only abstraction is the SessionStateEventHandler class,
 which avoids some code duplication between the core loop
@@ -10,7 +12,7 @@ and the cleanup code.
 
 from contextlib import ExitStack
 import ctypes
-from ctypes import byref, c_void_p, cast, POINTER, pointer, sizeof, string_at
+from ctypes import byref, c_void_p, cast, POINTER, sizeof, string_at
 import enum
 import inspect
 import logging
@@ -70,7 +72,6 @@ def main():
     for layer in layers:
         logger.debug(
             f"  Name={layer.layer_name.decode()} "
-            f"SpecVersion={xr.XR_CURRENT_API_VERSION} "
             f"LayerVersion={layer.layer_version} "
             f"Description={layer.description.decode()}")
         # TODO: properties for layer_name and other c_char arrays
@@ -156,7 +157,7 @@ def main():
             configuration_views = xr.enumerate_view_configuration_views(
                 instance,
                 system_id,
-                view_configuration_type,
+                vc_type,
             )
             if configuration_views is None or len(configuration_views) < 1:
                 logger.error(f"Empty view configuration type")
@@ -743,6 +744,11 @@ def main():
         swapchain_images = []
         swapchain_sizes = []
         swapchain_image_ptr_buffers = []
+        # The swapchain image structure type depends on the graphics API in use.
+        swapchain_image_type = (
+            xr.SwapchainImageOpenGLESKHR if sys.platform == "android"
+            else xr.SwapchainImageOpenGLKHR
+        )
         # views (usually two: one for the left eye; one for the right)
         config_views = xr.enumerate_view_configuration_views(
             instance=instance,
@@ -761,7 +767,7 @@ def main():
                 usage_flags=xr.SwapchainUsageFlags.SAMPLED_BIT | xr.SwapchainUsageFlags.COLOR_ATTACHMENT_BIT,
             )))
             swapchain_images.append(xr.enumerate_swapchain_images(
-                swapchain=swapchains[-1], element_type=xr.SwapchainImageOpenGLESKHR))
+                swapchain=swapchains[-1], element_type=swapchain_image_type))
             swapchain_sizes.append((v.recommended_image_rect_width, v.recommended_image_rect_height))
             num_images = len(swapchain_images[-1])
             swapchain_image_ptr_buffer = (POINTER(xr.SwapchainImageBaseHeader) * num_images)()
@@ -905,7 +911,7 @@ def main():
                             layer_view.sub_image.image_rect.offset[:] = [0, 0]
                             layer_view.sub_image.image_rect.extent[:] = [*swapchain_sizes[view_index]]
                             swapchain_image_ptr = swapchain_image_ptr_buffers[view_index][swapchain_image_index]
-                            swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLESKHR)).contents
+                            swapchain_image = cast(swapchain_image_ptr, POINTER(swapchain_image_type)).contents
                             assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
                             color_texture = swapchain_image.image
                             # graphics begin frame
@@ -972,7 +978,7 @@ def main():
                                 mvp = vp @ model
                                 GL.glUniformMatrix4fv(model_view_projection_uniform_location, 1, True,
                                                       mvp.as_numpy())
-                                GL.glUniform1i(is_rgb_location, True)
+                                GL.glUniform1i(is_rgb_location, is_srgb)
                                 # Draw the cube.
                                 GL.glDrawElements(GL.GL_TRIANGLES, len(c_cubeIndices), GL.GL_UNSIGNED_SHORT, None)
 
@@ -1029,7 +1035,11 @@ def main():
                         layers=[],
                     )
                 )
-        # TODO: destroy objects not destroyed by exit_stack...
+        # Destroy fallback depth textures that are not owned by the exit_stack.
+        if color_to_depth_map:
+            depth_textures = list(color_to_depth_map.values())
+            GL.glDeleteTextures(len(depth_textures), depth_textures)
+            color_to_depth_map.clear()
 
 
 class SessionStateEventHandler:
