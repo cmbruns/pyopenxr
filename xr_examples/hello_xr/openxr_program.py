@@ -376,6 +376,24 @@ class OpenXRProgram(object):
             request_restart = True
         return exit_render_loop, request_restart
 
+    def suggest_bindings(self, interaction_profile: str, bindings) -> None:
+        # A runtime may not recognize every interaction profile (debugged on
+        # Quest 3: an unsupported profile path raises PathUnsupportedError,
+        # which must not abort the whole action setup).
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=self.instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        self.instance,
+                        interaction_profile,
+                    ),
+                    suggested_bindings=bindings,
+                ),
+            )
+        except xr.PathUnsupportedError:
+            logger.warning(f"Runtime does not support interaction profile {interaction_profile}; skipping")
+
     def initialize_actions(self):
         # Create an action set.
         action_set_info = xr.ActionSetCreateInfo(
@@ -473,16 +491,7 @@ class OpenXRProgram(object):
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=self.instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    self.instance,
-                    "/interaction_profiles/khr/simple_controller",
-                ),
-                suggested_bindings=khr_bindings,
-            ),
-        )
+        self.suggest_bindings("/interaction_profiles/khr/simple_controller", khr_bindings)
         # Suggest bindings for the Oculus Touch.
         oculus_bindings = [
             xr.ActionSuggestedBinding(self.input.grab_action, squeeze_value_path[Side.LEFT]),
@@ -494,16 +503,7 @@ class OpenXRProgram(object):
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=self.instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    self.instance,
-                    "/interaction_profiles/oculus/touch_controller",
-                ),
-                suggested_bindings=oculus_bindings,
-            ),
-        )
+        self.suggest_bindings("/interaction_profiles/oculus/touch_controller", oculus_bindings)
         # Suggest bindings for the Vive Controller.
         vive_bindings = [
             xr.ActionSuggestedBinding(self.input.grab_action, trigger_value_path[Side.LEFT]),
@@ -515,16 +515,7 @@ class OpenXRProgram(object):
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=self.instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    self.instance,
-                    "/interaction_profiles/htc/vive_controller",
-                ),
-                suggested_bindings=vive_bindings,
-            ),
-        )
+        self.suggest_bindings("/interaction_profiles/htc/vive_controller", vive_bindings)
         # Suggest bindings for the Valve Index Controller.
         index_bindings = [
             xr.ActionSuggestedBinding(self.input.grab_action, squeeze_force_path[Side.LEFT]),
@@ -536,16 +527,7 @@ class OpenXRProgram(object):
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=self.instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    self.instance,
-                    "/interaction_profiles/valve/index_controller",
-                ),
-                suggested_bindings=index_bindings,
-            ),
-        )
+        self.suggest_bindings("/interaction_profiles/valve/index_controller", index_bindings)
         # Suggest bindings for the Microsoft Mixed Reality Motion Controller.
         microsoft_bindings = [
             xr.ActionSuggestedBinding(self.input.grab_action, squeeze_click_path[Side.LEFT]),
@@ -557,16 +539,7 @@ class OpenXRProgram(object):
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=self.instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    self.instance,
-                    "/interaction_profiles/microsoft/motion_controller",
-                ),
-                suggested_bindings=microsoft_bindings,
-            ),
-        )
+        self.suggest_bindings("/interaction_profiles/microsoft/motion_controller", microsoft_bindings)
 
         action_space_info = xr.ActionSpaceCreateInfo(
             action=self.input.pose_action,
