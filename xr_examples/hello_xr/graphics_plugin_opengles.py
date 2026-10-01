@@ -8,6 +8,8 @@ from typing import Dict, List, Optional, Sequence
 import numpy
 from OpenGL import GL
 from OpenGL import EGL
+if sys.platform == "android":
+    from OpenGL import GLES3
 
 from .graphics_plugin import Cube, IGraphicsPlugin, SwapchainImageData
 
@@ -283,7 +285,11 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
         # Clear swapchain and depth buffer.
         GL.glClearColor(*self.background_clear_color)
-        GL.glClearDepth(1.0)
+        if sys.platform == "android":
+            # glClearDepth does not exist in OpenGL ES (debugged on Quest 3).
+            GLES3.glClearDepthf(1.0)
+        else:
+            GL.glClearDepth(1.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
         # Set shaders and uniform variables.
         GL.glUseProgram(self.program)
