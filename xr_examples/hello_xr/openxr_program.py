@@ -359,7 +359,6 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.FLOAT_INPUT,
                 action_name="grab_object",
                 localized_action_name="Grab Object",
-                count_subaction_paths=len(self.input.hand_subaction_path),
                 subaction_paths=self.input.hand_subaction_path,
             ),
         )
@@ -370,7 +369,6 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.POSE_INPUT,
                 action_name="hand_pose",
                 localized_action_name="Hand Pose",
-                count_subaction_paths=len(self.input.hand_subaction_path),
                 subaction_paths=self.input.hand_subaction_path,
             ),
         )
@@ -381,7 +379,6 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.VIBRATION_OUTPUT,
                 action_name="vibrate_hand",
                 localized_action_name="Vibrate Hand",
-                count_subaction_paths=len(self.input.hand_subaction_path),
                 subaction_paths=self.input.hand_subaction_path,
             ),
         )
@@ -394,7 +391,6 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.BOOLEAN_INPUT,
                 action_name="quit_session",
                 localized_action_name="Quit Session",
-                count_subaction_paths=0,
                 subaction_paths=None,
             ),
         )
@@ -444,8 +440,7 @@ class OpenXRProgram(object):
                     self.instance,
                     "/interaction_profiles/khr/simple_controller",
                 ),
-                count_suggested_bindings=len(khr_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(khr_bindings))(*khr_bindings),
+                suggested_bindings=khr_bindings,
             ),
         )
         # Suggest bindings for the Vive Controller.
@@ -466,8 +461,7 @@ class OpenXRProgram(object):
                     self.instance,
                     "/interaction_profiles/htc/vive_controller",
                 ),
-                count_suggested_bindings=len(vive_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(vive_bindings))(*vive_bindings),
+                suggested_bindings=vive_bindings,
             ),
         )
         # TODO the other controller types in openxr_programs.cpp
@@ -490,8 +484,7 @@ class OpenXRProgram(object):
         xr.attach_session_action_sets(
             session=self.session,
             attach_info=xr.SessionActionSetsAttachInfo(
-                count_action_sets=1,
-                action_sets=pointer(self.input.action_set),
+                action_sets=[self.input.action_set],
             ),
         )
 
@@ -656,12 +649,10 @@ class OpenXRProgram(object):
         """Sample input actions and generate haptic feedback."""
         self.input.hand_active[:] = [xr.FALSE, xr.FALSE]
         # Sync actions
-        active_action_set = xr.ActiveActionSet(self.input.action_set, xr.NULL_PATH)
         xr.sync_actions(
             self.session,
             xr.ActionsSyncInfo(
-                count_active_action_sets=1,
-                active_action_sets=pointer(active_action_set)
+                active_action_sets=[xr.ActiveActionSet(self.input.action_set, xr.NULL_PATH)],
             ),
         )
         # Get pose and grab action state and start haptic vibrate when hand is 90% squeezed.
