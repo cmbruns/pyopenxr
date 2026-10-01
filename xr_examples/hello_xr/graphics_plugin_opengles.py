@@ -8,6 +8,8 @@ from typing import Dict, List, Optional, Sequence
 import numpy
 from OpenGL import GL
 from OpenGL import EGL
+if sys.platform == "android":
+    from OpenGL import GLES3
 
 from .graphics_plugin import Cube, IGraphicsPlugin, SwapchainImageData
 
@@ -178,6 +180,7 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         context_attributes = [
             EGL.EGL_CONTEXT_MAJOR_VERSION, 3,
             EGL.EGL_CONTEXT_MINOR_VERSION, 2,
+            EGL.EGL_CONTEXT_OPENGL_DEBUG, EGL.EGL_TRUE,
             EGL.EGL_NONE
         ]
 
@@ -212,6 +215,11 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
                 config=self.config,
             )
 
+        GL.glEnable(GL.GL_DEBUG_OUTPUT)
+        # Store the debug callback function pointer, so it won't get garbage collected;
+        # otherwise mysterious GL crashes will ensue.
+        self.debug_message_proc = GL.GLDEBUGPROC(self.opengl_debug_message_callback)
+        GL.glDebugMessageCallback(self.debug_message_proc, None)
         self.initialize_resources()
 
     def initialize_resources(self):
@@ -283,7 +291,11 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
         # Clear swapchain and depth buffer.
         GL.glClearColor(*self.background_clear_color)
-        GL.glClearDepth(1.0)
+        if sys.platform == "android":
+            # glClearDepth does not exist in OpenGL ES (debugged on Quest 3).
+            GLES3.glClearDepthf(1.0)
+        else:
+            GL.glClearDepth(1.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT)
         # Set shaders and uniform variables.
         GL.glUseProgram(self.program)
