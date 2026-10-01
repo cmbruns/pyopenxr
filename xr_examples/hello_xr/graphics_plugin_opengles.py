@@ -1,4 +1,4 @@
-from ctypes import c_void_p, cast, sizeof, string_at, POINTER, Structure
+from ctypes import c_void_p, cast, sizeof, string_at, Structure
 import inspect
 import logging
 import platform
@@ -9,7 +9,7 @@ import numpy
 from OpenGL import GL
 from OpenGL import EGL
 
-from .graphics_plugin import Cube, IGraphicsPlugin
+from .graphics_plugin import Cube, IGraphicsPlugin, SwapchainImageData
 
 import xr
 
@@ -62,7 +62,6 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
             self._graphics_binding = xr.GraphicsBindingOpenGLESXlibKHR()
         elif sys.platform == "android":
             self._graphics_binding = None  # Fill in later
-        self.swapchain_image_buffers: List[xr.SwapchainImageOpenGLKHR] = []  # To keep the swapchain images alive
         self.swapchain_framebuffer: Optional[int] = None
         self.program = None
         self.model_view_projection_uniform_location = 0
@@ -72,8 +71,8 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         self.cube_vertex_buffer = None
         self.cube_index_buffer = None
         self.context_api_major_version = 0
-        # Map color buffer to associated depth buffer. This map is populated on demand.
-        self.color_to_depth_map: Dict[int, int] = {}
+        # Plugin-owned swapchain image records (mirrors Khronos m_swapchainImageDataMap).
+        self._swapchain_image_records: List[SwapchainImageData] = []
         self.debug_message_proc = None  # To keep the callback alive
         # EGL things
         self.config = None
@@ -100,10 +99,10 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         self.vao = None
         self.cube_vertex_buffer = None
         self.cube_index_buffer = None
-        for color, depth in self.color_to_depth_map.items():
-            if depth is not None:
-                GL.glDeleteTextures(1, [depth])
-        self.color_to_depth_map = {}
+        # Delete plugin-owned fallback depth textures (mirrors Khronos ~OpenGLESPlugin).
+        for record in self._swapchain_image_records:
+            record.destroy()
+        self._swapchain_image_records.clear()
 
     @staticmethod
     def check_shader(shader):
@@ -130,25 +129,6 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
 
     def focus_window(self):
         self.make_current()
-
-    def get_depth_texture(self, color_texture) -> int:
-        # If a depth-stencil view has already been created for this back-buffer, use it.
-        if color_texture in self.color_to_depth_map:
-            return self.color_to_depth_map[color_texture]
-        # This back-buffer has no corresponding depth-stencil texture, so create one with matching dimensions.
-        GL.glBindTexture(GL.GL_TEXTURE_2D, color_texture)
-        width = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_WIDTH)
-        height = GL.glGetTexLevelParameteriv(GL.GL_TEXTURE_2D, 0, GL.GL_TEXTURE_HEIGHT)
-
-        depth_texture = GL.glGenTextures(1)
-        GL.glBindTexture(GL.GL_TEXTURE_2D, depth_texture)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
-        GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
-        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT24, width, height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_FLOAT, None)
-        self.color_to_depth_map[color_texture] = depth_texture
-        return depth_texture
 
     def get_supported_swapchain_sample_count(self, _xr_view_configuration_view: xr.ViewConfigurationView):
         return 1
@@ -278,7 +258,8 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
     def render_view(
             self,
             layer_view: xr.CompositionLayerProjectionView,
-            swapchain_image_base_ptr: POINTER(xr.SwapchainImageBaseHeader),
+            color_image: xr.SwapchainImageOpenGLESKHR,
+            depth_image: xr.SwapchainImageOpenGLESKHR,
             _swapchain_format: int,
             cubes: List[Cube],
             mirror=False,
@@ -288,8 +269,8 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         self.make_current()
         GL.glGetError()  # workaround SteamVR Linux problem
         GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, self.swapchain_framebuffer)
-        swapchain_image = cast(swapchain_image_base_ptr, POINTER(xr.SwapchainImageOpenGLESKHR)).contents
-        color_texture = swapchain_image.image
+        color_texture = color_image.image
+        depth_texture = depth_image.image
         GL.glViewport(layer_view.sub_image.image_rect.offset.x,
                       layer_view.sub_image.image_rect.offset.y,
                       layer_view.sub_image.image_rect.extent.width,
@@ -298,7 +279,6 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         GL.glCullFace(GL.GL_BACK)
         GL.glEnable(GL.GL_CULL_FACE)
         GL.glEnable(GL.GL_DEPTH_TEST)
-        depth_texture = self.get_depth_texture(color_texture)
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, color_texture, 0)
         GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D, depth_texture, 0)
         # Clear swapchain and depth buffer.
@@ -353,8 +333,90 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
                     return sf
         raise RuntimeError("No runtime swapchain format supported for color swapchain")
 
+    def select_depth_swapchain_format(self, runtime_formats: Sequence[int]) -> int:
+        # List of supported depth swapchain formats (Khronos graphicsplugin_opengles.cpp preference order).
+        supported_depth_swapchain_formats = [
+            GL.GL_DEPTH24_STENCIL8,
+            GL.GL_DEPTH_COMPONENT24,
+            GL.GL_DEPTH_COMPONENT16,
+            GL.GL_DEPTH_COMPONENT32F,
+        ]
+        for rf in runtime_formats:
+            for sf in supported_depth_swapchain_formats:
+                if rf == sf:
+                    return sf
+        # Return -1 rather than throwing (mirrors Khronos SelectDepthSwapchainFormat(false, ...)).
+        return -1
+
+    def allocate_swapchain_image_data(
+            self, color_images, color_create_info: xr.SwapchainCreateInfo) -> SwapchainImageData:
+        record = OpenGLESSwapchainImageData(
+            color_images,
+            width=color_create_info.width,
+            height=color_create_info.height,
+            array_size=color_create_info.array_size,
+            sample_count=color_create_info.sample_count,
+        )
+        # The plugin owns the record (mirrors Khronos Adopt).
+        self._swapchain_image_records.append(record)
+        return record
+
+    def allocate_swapchain_image_data_with_depth_swapchain(
+            self, color_images, color_create_info: xr.SwapchainCreateInfo,
+            depth_swapchain: xr.Swapchain, depth_images) -> SwapchainImageData:
+        record = OpenGLESSwapchainImageData(
+            color_images,
+            width=color_create_info.width,
+            height=color_create_info.height,
+            array_size=color_create_info.array_size,
+            sample_count=color_create_info.sample_count,
+            depth_swapchain=depth_swapchain,
+            depth_images=depth_images,
+        )
+        # The plugin owns the record (mirrors Khronos Adopt).
+        self._swapchain_image_records.append(record)
+        return record
+
     def update_options(self, options) -> None:
         self.background_clear_color = options.background_clear_color
 
     def window_should_close(self):
         return False
+
+
+class OpenGLESSwapchainImageData(SwapchainImageData):
+    """Per-swapchain image record for the OpenGL ES plugin (mirrors Khronos OpenGLESSwapchainImageData)."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Lazily allocated fallback depth textures, keyed by color image index
+        # (mirrors Khronos OpenGLESFallbackDepthTexture allocation on demand).
+        self._fallback_depth_textures: Dict[int, int] = {}
+
+    def get_fallback_depth_image(self, color_image_index: int) -> xr.SwapchainImageOpenGLESKHR:
+        if color_image_index not in self._fallback_depth_textures:
+            self._fallback_depth_textures[color_image_index] = self._allocate_fallback_depth_texture()
+        return xr.SwapchainImageOpenGLESKHR(image=self._fallback_depth_textures[color_image_index])
+
+    def _allocate_fallback_depth_texture(self) -> int:
+        # Mirrors Khronos OpenGLESFallbackDepthTexture::Allocate (GL_DEPTH_COMPONENT24, array aware).
+        is_array = self.array_size > 1
+        target = GL.GL_TEXTURE_2D_ARRAY if is_array else GL.GL_TEXTURE_2D
+        texture = GL.glGenTextures(1)
+        GL.glBindTexture(target, texture)
+        GL.glTexParameteri(target, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(target, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+        GL.glTexParameteri(target, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE)
+        GL.glTexParameteri(target, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE)
+        if is_array:
+            GL.glTexImage3D(target, 0, GL.GL_DEPTH_COMPONENT24, self.width, self.height, self.array_size,
+                            0, GL.GL_DEPTH_COMPONENT, GL.GL_UNSIGNED_INT, None)
+        else:
+            GL.glTexImage2D(target, 0, GL.GL_DEPTH_COMPONENT24, self.width, self.height,
+                            0, GL.GL_DEPTH_COMPONENT, GL.GL_UNSIGNED_INT, None)
+        return texture
+
+    def destroy(self) -> None:
+        for texture in self._fallback_depth_textures.values():
+            GL.glDeleteTextures(1, [texture])
+        self._fallback_depth_textures.clear()
