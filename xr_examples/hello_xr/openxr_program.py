@@ -9,7 +9,6 @@ from ctypes import (
     c_int32,
     c_void_p,
     cast,
-    pointer,
     POINTER,
     Structure,
 )
@@ -80,10 +79,14 @@ class OpenXRProgram(object):
 
         self.config_views = []
         self.swapchains = []
-        self.swapchain_image_buffers = []  # to keep objects alive
-        self.swapchain_image_ptr_buffers = {}  # m_swapchainImages
+        self.depth_swapchains = []  # m_depthSwapchains
+        # Per-swapchain image records, keyed by swapchain handle (m_swapchainImages);
+        # owned by the graphics plugin, observed here.
+        self.swapchain_images = {}
         self.views = (xr.View * 2)(xr.View(), xr.View())
         self.color_swapchain_format = -1
+        self.supports_depth_layer = False  # m_supportsDepthLayer
+        self.depth_swapchain_format = -1  # m_depthSwapchainFormat
 
         self.visualized_spaces = []
 
@@ -120,6 +123,11 @@ class OpenXRProgram(object):
         for swapchain in self.swapchains:
             xr.destroy_swapchain(swapchain.handle)
         self.swapchains[:] = []
+        # Note: Khronos hello_xr does not destroy its depth swapchains here;
+        # doing so anyway since the runtime owns nothing else that would.
+        for depth_swapchain in self.depth_swapchains:
+            xr.destroy_swapchain(depth_swapchain)
+        self.depth_swapchains[:] = []
         for visualized_space in self.visualized_spaces:
             xr.destroy_space(visualized_space)
         self.visualized_spaces[:] = []
@@ -173,9 +181,17 @@ class OpenXRProgram(object):
             dum_create_info.user_data = None
             dum_create_info.user_callback = xr_debug_callback
             if next_structure is None:
-                next_structure = cast(pointer(dum_create_info), c_void_p)
+                next_structure = dum_create_info
             else:
-                next_structure.next = cast(pointer(dum_create_info), c_void_p)
+                next_structure.next = dum_create_info
+        # Enable the depth extension if the runtime supports it
+        # (mirrors Khronos openxr_program.cpp: "enable depth extension if supported").
+        if xr.KHR_COMPOSITION_LAYER_DEPTH_EXTENSION_NAME in discovered_extensions:
+            logger.info(f"Depth submission supported ({xr.KHR_COMPOSITION_LAYER_DEPTH_EXTENSION_NAME})")
+            extensions.append(xr.KHR_COMPOSITION_LAYER_DEPTH_EXTENSION_NAME)
+            self.supports_depth_layer = True
+        else:
+            logger.info(f"Depth submission NOT supported ({xr.KHR_COMPOSITION_LAYER_DEPTH_EXTENSION_NAME})")
         #
         extensions.extend(self.platform_plugin.instance_extensions)
         extensions.extend(self.graphics_plugin.instance_extensions)
@@ -230,26 +246,28 @@ class OpenXRProgram(object):
             # Select a swapchain format.
             swapchain_formats = xr.enumerate_swapchain_formats(self.session)
             self.color_swapchain_format = self.graphics_plugin.select_color_swapchain_format(swapchain_formats)
+            self.depth_swapchain_format = self.graphics_plugin.select_depth_swapchain_format(swapchain_formats)
             # Print swapchain formats and the selected one.
             formats_string = ""
             for sc_format in swapchain_formats:
-                selected = sc_format == self.color_swapchain_format
+                selected = (sc_format == self.color_swapchain_format
+                            or sc_format == self.depth_swapchain_format)
                 formats_string += " "
                 if selected:
                     formats_string += "["
-                    formats_string += f"{str(self.color_swapchain_format)}({sc_format})"
+                formats_string += str(sc_format)
+                if selected:
                     formats_string += "]"
-                else:
-                    formats_string += str(sc_format)
             logger.debug(f"Swapchain Formats: {formats_string}")
             # Create a swapchain for each view.
             for i, vp in enumerate(self.config_views):
-                logger.info("Creating swapchain for "
-                            f"view {i} with dimensions "
+                logger.info("Creating color "
+                            f"{'and depth ' if self.depth_swapchain_format != -1 else ''}"
+                            f"swapchain for view {i} with dimensions "
                             f"Width={vp.recommended_image_rect_width} "
                             f"Height={vp.recommended_image_rect_height} "
                             f"SampleCount={vp.recommended_swapchain_sample_count}")
-                # Create the swapchain.
+                # Create the color swapchain.
                 swapchain_create_info = xr.SwapchainCreateInfo(
                     array_size=1,
                     format=self.color_swapchain_format,
@@ -269,19 +287,41 @@ class OpenXRProgram(object):
                     swapchain_create_info.height,
                 )
                 self.swapchains.append(swapchain)
-                swapchain_image_buffer = xr.enumerate_swapchain_images(
+                color_images = xr.enumerate_swapchain_images(
                     swapchain=swapchain.handle,
                     element_type=self.graphics_plugin.swapchain_image_type,
                 )
-                # Keep the buffer alive by moving it into the list of buffers.
-                self.swapchain_image_buffers.append(swapchain_image_buffer)
-                capacity = len(swapchain_image_buffer)
-                swapchain_image_ptr_buffer = (POINTER(xr.SwapchainImageBaseHeader) * capacity)()
-                for ix in range(capacity):
-                    swapchain_image_ptr_buffer[ix] = cast(
-                        byref(swapchain_image_buffer[ix]),
-                        POINTER(xr.SwapchainImageBaseHeader))
-                self.swapchain_image_ptr_buffers[handle_key(swapchain.handle)] = swapchain_image_ptr_buffer
+                if self.depth_swapchain_format != -1:
+                    # Create the depth swapchain.
+                    depth_swapchain_create_info = xr.SwapchainCreateInfo(
+                        array_size=1,
+                        format=self.depth_swapchain_format,
+                        width=vp.recommended_image_rect_width,
+                        height=vp.recommended_image_rect_height,
+                        mip_count=1,
+                        face_count=1,
+                        sample_count=self.graphics_plugin.get_supported_swapchain_sample_count(vp),
+                        usage_flags=xr.SwapchainUsageFlags.SAMPLED_BIT
+                        | xr.SwapchainUsageFlags.DEPTH_STENCIL_ATTACHMENT_BIT,
+                    )
+                    depth_swapchain = xr.create_swapchain(
+                        session=self.session,
+                        create_info=depth_swapchain_create_info,
+                    )
+                    self.depth_swapchains.append(depth_swapchain)
+                    depth_images = xr.enumerate_swapchain_images(
+                        swapchain=depth_swapchain,
+                        element_type=self.graphics_plugin.swapchain_image_type,
+                    )
+                    if len(depth_images) != len(color_images):
+                        raise RuntimeError("Color and depth swapchain image counts differ")
+                    image_data = self.graphics_plugin.allocate_swapchain_image_data_with_depth_swapchain(
+                        color_images, swapchain_create_info, depth_swapchain, depth_images)
+                else:
+                    image_data = self.graphics_plugin.allocate_swapchain_image_data(
+                        color_images, swapchain_create_info)
+                # The plugin owns the record; keep an observing reference here (m_swapchainImages).
+                self.swapchain_images[handle_key(swapchain.handle)] = image_data
 
     def create_visualized_spaces(self):
         assert self.session is not None
@@ -359,7 +399,6 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.FLOAT_INPUT,
                 action_name="grab_object",
                 localized_action_name="Grab Object",
-                count_subaction_paths=len(self.input.hand_subaction_path),
                 subaction_paths=self.input.hand_subaction_path,
             ),
         )
@@ -370,7 +409,6 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.POSE_INPUT,
                 action_name="hand_pose",
                 localized_action_name="Hand Pose",
-                count_subaction_paths=len(self.input.hand_subaction_path),
                 subaction_paths=self.input.hand_subaction_path,
             ),
         )
@@ -381,7 +419,6 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.VIBRATION_OUTPUT,
                 action_name="vibrate_hand",
                 localized_action_name="Vibrate Hand",
-                count_subaction_paths=len(self.input.hand_subaction_path),
                 subaction_paths=self.input.hand_subaction_path,
             ),
         )
@@ -394,20 +431,19 @@ class OpenXRProgram(object):
                 action_type=xr.ActionType.BOOLEAN_INPUT,
                 action_name="quit_session",
                 localized_action_name="Quit Session",
-                count_subaction_paths=0,
                 subaction_paths=None,
             ),
         )
         select_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/select/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/select/click")]
-        _squeeze_value_path = [
+        squeeze_value_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/value"),
             xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/value")]
-        _squeeze_force_path = [
+        squeeze_force_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/force"),
             xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/force")]
-        _squeeze_click_path = [
+        squeeze_click_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/click")]
         pose_path = [
@@ -419,7 +455,7 @@ class OpenXRProgram(object):
         menu_click_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/menu/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/menu/click")]
-        _b_click_path = [
+        b_click_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/b/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/b/click")]
         trigger_value_path = [
@@ -444,8 +480,28 @@ class OpenXRProgram(object):
                     self.instance,
                     "/interaction_profiles/khr/simple_controller",
                 ),
-                count_suggested_bindings=len(khr_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(khr_bindings))(*khr_bindings),
+                suggested_bindings=khr_bindings,
+            ),
+        )
+        # Suggest bindings for the Oculus Touch.
+        oculus_bindings = [
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_value_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_value_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.RIGHT]),
+            # Note: quit is only bound to the left menu button, matching Khronos hello_xr.
+            xr.ActionSuggestedBinding(self.input.quit_action, menu_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        xr.suggest_interaction_profile_bindings(
+            instance=self.instance,
+            suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                interaction_profile=xr.string_to_path(
+                    self.instance,
+                    "/interaction_profiles/oculus/touch_controller",
+                ),
+                suggested_bindings=oculus_bindings,
             ),
         )
         # Suggest bindings for the Vive Controller.
@@ -466,11 +522,51 @@ class OpenXRProgram(object):
                     self.instance,
                     "/interaction_profiles/htc/vive_controller",
                 ),
-                count_suggested_bindings=len(vive_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(vive_bindings))(*vive_bindings),
+                suggested_bindings=vive_bindings,
             ),
         )
-        # TODO the other controller types in openxr_programs.cpp
+        # Suggest bindings for the Valve Index Controller.
+        index_bindings = [
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_force_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_force_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, b_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, b_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        xr.suggest_interaction_profile_bindings(
+            instance=self.instance,
+            suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                interaction_profile=xr.string_to_path(
+                    self.instance,
+                    "/interaction_profiles/valve/index_controller",
+                ),
+                suggested_bindings=index_bindings,
+            ),
+        )
+        # Suggest bindings for the Microsoft Mixed Reality Motion Controller.
+        microsoft_bindings = [
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, menu_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, menu_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        xr.suggest_interaction_profile_bindings(
+            instance=self.instance,
+            suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                interaction_profile=xr.string_to_path(
+                    self.instance,
+                    "/interaction_profiles/microsoft/motion_controller",
+                ),
+                suggested_bindings=microsoft_bindings,
+            ),
+        )
 
         action_space_info = xr.ActionSpaceCreateInfo(
             action=self.input.pose_action,
@@ -490,8 +586,7 @@ class OpenXRProgram(object):
         xr.attach_session_action_sets(
             session=self.session,
             attach_info=xr.SessionActionSetsAttachInfo(
-                count_action_sets=1,
-                action_sets=pointer(self.input.action_set),
+                action_sets=[self.input.action_set],
             ),
         )
 
@@ -501,11 +596,8 @@ class OpenXRProgram(object):
         assert self.instance != xr.NULL_HANDLE
         assert self.session is None
         logger.debug(f"Creating session...")
-        graphics_binding_pointer = cast(
-            pointer(self.graphics_plugin.graphics_binding),
-            c_void_p)
         create_info = xr.SessionCreateInfo(
-            next=graphics_binding_pointer,
+            next=self.graphics_plugin.graphics_binding,
             system_id=self.system_id,
         )
         self.session = xr.create_session(
@@ -656,12 +748,10 @@ class OpenXRProgram(object):
         """Sample input actions and generate haptic feedback."""
         self.input.hand_active[:] = [xr.FALSE, xr.FALSE]
         # Sync actions
-        active_action_set = xr.ActiveActionSet(self.input.action_set, xr.NULL_PATH)
         xr.sync_actions(
             self.session,
             xr.ActionsSyncInfo(
-                count_active_action_sets=1,
-                active_action_sets=pointer(active_action_set)
+                active_action_sets=[xr.ActiveActionSet(self.input.action_set, xr.NULL_PATH)],
             ),
         )
         # Get pose and grab action state and start haptic vibrate when hand is 90% squeezed.
@@ -688,7 +778,7 @@ class OpenXRProgram(object):
                             action=self.input.vibrate_action,
                             subaction_path=self.input.hand_subaction_path[hand],
                         ),
-                        haptic_feedback=cast(byref(vibration), POINTER(xr.HapticBaseHeader)).contents,
+                        haptic_feedback=vibration,
                     )
             pose_state = xr.get_action_state_pose(
                 session=self.session,
@@ -765,8 +855,10 @@ class OpenXRProgram(object):
         projection_layer_views = (xr.CompositionLayerProjectionView * 2)(
             xr.CompositionLayerProjectionView(),
             xr.CompositionLayerProjectionView())
+        # Owned here and kept alive through xr.end_frame below (mirrors the Khronos depthInfos vector).
+        depth_infos = []
         if frame_state.should_render:
-            if self.render_layer(frame_state.predicted_display_time, projection_layer_views, layer):
+            if self.render_layer(frame_state.predicted_display_time, projection_layer_views, depth_infos, layer):
                 layers.append(byref(layer))
 
         xr.end_frame(
@@ -782,6 +874,7 @@ class OpenXRProgram(object):
             self,
             predicted_display_time: xr.Time,
             projection_layer_views: ctypes.Array,
+            depth_infos: list,
             layer: xr.CompositionLayerProjection,
     ) -> bool:
         view_capacity_input = len(self.views)
@@ -802,6 +895,11 @@ class OpenXRProgram(object):
         assert view_count_output == len(self.config_views)
         assert view_count_output == len(self.swapchains)
         assert view_count_output == len(projection_layer_views)
+        if self.supports_depth_layer:
+            assert view_count_output == len(self.depth_swapchains)
+            # depth_infos is filled here and kept alive by the caller through
+            # xr.end_frame (mirrors the Khronos depthInfos vector).
+            depth_infos.extend(xr.CompositionLayerDepthInfoKHR() for _ in range(view_count_output))
 
         # For each locatable space that we want to visualize, render a 25cm cube.
         cubes = []
@@ -833,6 +931,7 @@ class OpenXRProgram(object):
         # Render view to the appropriate part of the swapchain image.
         for i in range(view_count_output):
             view_swapchain = self.swapchains[i]
+            image_data = self.swapchain_images[handle_key(view_swapchain.handle)]
             swapchain_image_index = xr.acquire_swapchain_image(
                 swapchain=view_swapchain.handle,
                 acquire_info=xr.SwapchainImageAcquireInfo(),
@@ -841,6 +940,7 @@ class OpenXRProgram(object):
                 swapchain=view_swapchain.handle,
                 wait_info=xr.SwapchainImageWaitInfo(timeout=xr.INFINITE_DURATION),
             )
+            image_data.acquire_and_wait_depth_image(swapchain_image_index)
             view = projection_layer_views[i]
             assert view.type == xr.StructureType.COMPOSITION_LAYER_PROJECTION_VIEW
             view.pose = self.views[i].pose
@@ -849,10 +949,25 @@ class OpenXRProgram(object):
             view.sub_image.image_rect.offset[:] = [0, 0]
             view.sub_image.image_rect.extent[:] = [
                 view_swapchain.width, view_swapchain.height, ]
-            swapchain_image_ptr = self.swapchain_image_ptr_buffers[handle_key(view_swapchain.handle)][swapchain_image_index]
+            if self.supports_depth_layer:
+                depth_swapchain = self.depth_swapchains[i]
+                depth_info = depth_infos[i]
+                depth_info.sub_image.swapchain = depth_swapchain
+                depth_info.sub_image.image_rect.offset[:] = [0, 0]
+                # Same dimensions as the color swapchain by construction.
+                depth_info.sub_image.image_rect.extent[:] = [
+                    view_swapchain.width, view_swapchain.height, ]
+                depth_info.min_depth = 0
+                depth_info.max_depth = 1
+                # near_z/far_z must match the projection matrix built in the
+                # graphics plugin's render_view (0.05 near, 100.0 far).
+                depth_info.near_z = 0.05
+                depth_info.far_z = 100.0
+                view.next = depth_info
             self.graphics_plugin.render_view(
                 view,
-                swapchain_image_ptr,
+                image_data.color_images[swapchain_image_index],
+                image_data.get_depth_image_for_color_index(swapchain_image_index),
                 self.color_swapchain_format,
                 cubes,
                 mirror=i == Side.LEFT,  # mirror left eye only
@@ -862,6 +977,7 @@ class OpenXRProgram(object):
                 swapchain=view_swapchain.handle,
                 release_info=xr.SwapchainImageReleaseInfo()
             )
+            image_data.release_depth_image()
         layer.views = projection_layer_views
         return True
 
