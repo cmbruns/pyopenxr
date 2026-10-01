@@ -94,7 +94,6 @@ class OpenXRProgram(object):
         self.session_state = xr.SessionState.UNKNOWN
         self.session_running = False
 
-        self.event_data_buffer = xr.EventDataBuffer()
         self.input = OpenXRProgram.InputState()
 
         self.acceptable_blend_modes = [
@@ -955,20 +954,15 @@ class OpenXRProgram(object):
         return True
 
     def try_read_next_event(self) -> Optional[Structure]:
-        #  It is sufficient to clear just the XrEventDataBuffer header to
-        #  XR_TYPE_EVENT_DATA_BUFFER
-        base_header = self.event_data_buffer
-        base_header.type = xr.StructureType.EVENT_DATA_BUFFER
-        result = xr.raw_functions.xrPollEvent(self.instance, byref(self.event_data_buffer))
-        if result == xr.Result.SUCCESS:
-            if base_header.type == xr.StructureType.EVENT_DATA_EVENTS_LOST:
-                events_lost = cast(base_header, POINTER(xr.EventDataEventsLost))
-                logger.warning(f"{events_lost} events lost")
-            return base_header
-        if result == xr.Result.EVENT_UNAVAILABLE:
+        # xr.poll_event raises EventUnavailable when the queue is empty
+        # (see pyopenxr#141); hello_xr_one_file.py uses this same pattern.
+        try:
+            event = xr.poll_event(self.instance)
+        except xr.EventUnavailable:
             return None
-        result2 = xr.check_result(result)
-        raise result2
+        if event.type == xr.StructureType.EVENT_DATA_EVENTS_LOST:
+            logger.warning("XrEventDataEventsLost: some events were lost")
+        return event
 
     @staticmethod
     def xr_version_string():
