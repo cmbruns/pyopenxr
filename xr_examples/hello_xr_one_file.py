@@ -1,7 +1,9 @@
 """
 File hello_xr_one_file.py
 
-This example uses only core functions.
+This example uses core functions plus the KHR/EXT functions the platform
+requires (loader initialization and instance creation on Android,
+OpenGL/OpenGL-ES graphics requirements, and the debug utils messenger).
 It is mostly only one long procedure.
 The only abstraction is the SessionStateEventHandler class,
 which avoids some code duplication between the core loop
@@ -10,7 +12,7 @@ and the cleanup code.
 
 from contextlib import ExitStack
 import ctypes
-from ctypes import byref, c_void_p, cast, POINTER, pointer, sizeof, string_at
+from ctypes import byref, c_void_p, cast, POINTER, sizeof, string_at
 import enum
 import inspect
 import logging
@@ -70,7 +72,6 @@ def main():
     for layer in layers:
         logger.debug(
             f"  Name={layer.layer_name.decode()} "
-            f"SpecVersion={xr.XR_CURRENT_API_VERSION} "
             f"LayerVersion={layer.layer_version} "
             f"Description={layer.description.decode()}")
         # TODO: properties for layer_name and other c_char arrays
@@ -156,7 +157,7 @@ def main():
             configuration_views = xr.enumerate_view_configuration_views(
                 instance,
                 system_id,
-                view_configuration_type,
+                vc_type,
             )
             if configuration_views is None or len(configuration_views) < 1:
                 logger.error(f"Empty view configuration type")
@@ -445,7 +446,6 @@ def main():
                 action_type=xr.ActionType.FLOAT_INPUT,
                 action_name="grab_object",
                 localized_action_name="Grab Object",
-                count_subaction_paths=len(hand_subaction_path),
                 subaction_paths=hand_subaction_path,
             ),
         )
@@ -456,7 +456,6 @@ def main():
                 action_type=xr.ActionType.POSE_INPUT,
                 action_name="hand_pose",
                 localized_action_name="Hand Pose",
-                count_subaction_paths=len(hand_subaction_path),
                 subaction_paths=hand_subaction_path,
             ),
         )
@@ -467,7 +466,6 @@ def main():
                 action_type=xr.ActionType.VIBRATION_OUTPUT,
                 action_name="vibrate_hand",
                 localized_action_name="Vibrate Hand",
-                count_subaction_paths=len(hand_subaction_path),
                 subaction_paths=hand_subaction_path,
             ),
         )
@@ -480,7 +478,6 @@ def main():
                 action_type=xr.ActionType.BOOLEAN_INPUT,
                 action_name="quit_session",
                 localized_action_name="Quit Session",
-                count_subaction_paths=0,
                 subaction_paths=None,
             ),
         )
@@ -490,10 +487,10 @@ def main():
         _squeeze_value_path = [
             xr.string_to_path(instance, "/user/hand/left/input/squeeze/value"),
             xr.string_to_path(instance, "/user/hand/right/input/squeeze/value")]
-        _squeeze_force_path = [
+        squeeze_force_path = [
             xr.string_to_path(instance, "/user/hand/left/input/squeeze/force"),
             xr.string_to_path(instance, "/user/hand/right/input/squeeze/force")]
-        _squeeze_click_path = [
+        squeeze_click_path = [
             xr.string_to_path(instance, "/user/hand/left/input/squeeze/click"),
             xr.string_to_path(instance, "/user/hand/right/input/squeeze/click")]
         pose_path = [
@@ -505,7 +502,7 @@ def main():
         menu_click_path = [
             xr.string_to_path(instance, "/user/hand/left/input/menu/click"),
             xr.string_to_path(instance, "/user/hand/right/input/menu/click")]
-        _b_click_path = [
+        b_click_path = [
             xr.string_to_path(instance, "/user/hand/left/input/b/click"),
             xr.string_to_path(instance, "/user/hand/right/input/b/click")]
         squeeze_value_path = [
@@ -531,43 +528,23 @@ def main():
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    instance,
-                    "/interaction_profiles/khr/simple_controller",
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/khr/simple_controller",
+                    ),
+                    suggested_bindings=khr_bindings,
                 ),
-                count_suggested_bindings=len(khr_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(khr_bindings))(*khr_bindings),
-            ),
-        )
+            )
+        except xr.PathUnsupportedError:
+            pass
         # Suggest bindings for the Vive Controller.
         vive_bindings = [
             xr.ActionSuggestedBinding(grab_action, trigger_value_path[Side.LEFT]),
             xr.ActionSuggestedBinding(grab_action, trigger_value_path[Side.RIGHT]),
-            xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
-            xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
-            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.LEFT]),
-            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.RIGHT]),
-            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
-            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
-        ]
-        xr.suggest_interaction_profile_bindings(
-            instance=instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    instance,
-                    "/interaction_profiles/htc/vive_controller",
-                ),
-                count_suggested_bindings=len(vive_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(vive_bindings))(*vive_bindings),
-            ),
-        )
-        # Suggest bindings for the Oculus Touch.
-        touch_bindings = [
-            xr.ActionSuggestedBinding(grab_action, squeeze_value_path[Side.LEFT]),
-            xr.ActionSuggestedBinding(grab_action, squeeze_value_path[Side.RIGHT]),
             xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
             xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
             xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.LEFT]),
@@ -581,15 +558,85 @@ def main():
                 suggested_bindings=xr.InteractionProfileSuggestedBinding(
                     interaction_profile=xr.string_to_path(
                         instance,
-                        "/interaction_profiles/oculus/touch_controller",
+                        "/interaction_profiles/htc/vive_controller",
                     ),
-                    count_suggested_bindings=len(touch_bindings),
-                    suggested_bindings=(xr.ActionSuggestedBinding * len(touch_bindings))(*touch_bindings),
+                    suggested_bindings=vive_bindings,
                 ),
             )
         except xr.PathUnsupportedError:
             pass
-        # TODO: the other controller types in openxr_programs.cpp
+        # Suggest bindings for the Oculus Touch.
+        touch_bindings = [
+            xr.ActionSuggestedBinding(grab_action, squeeze_value_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(grab_action, squeeze_value_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
+            # Note: quit is only bound to the left menu button, matching Khronos hello_xr.
+            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/oculus/touch_controller",
+                    ),
+                    suggested_bindings=touch_bindings,
+                ),
+            )
+        except xr.PathUnsupportedError:
+            pass
+        # Suggest bindings for the Valve Index Controller.
+        index_bindings = [
+            xr.ActionSuggestedBinding(grab_action, squeeze_force_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(grab_action, squeeze_force_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(quit_action, b_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(quit_action, b_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/valve/index_controller",
+                    ),
+                    suggested_bindings=index_bindings,
+                ),
+            )
+        except xr.PathUnsupportedError:
+            pass
+        # Suggest bindings for the Microsoft Mixed Reality Motion Controller.
+        microsoft_bindings = [
+            xr.ActionSuggestedBinding(grab_action, squeeze_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(grab_action, squeeze_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/microsoft/motion_controller",
+                    ),
+                    suggested_bindings=microsoft_bindings,
+                ),
+            )
+        except xr.PathUnsupportedError:
+            pass
 
         hand_space = [
             xr.create_action_space(session, xr.ActionSpaceCreateInfo(
@@ -604,8 +651,7 @@ def main():
         xr.attach_session_action_sets(
             session=session,
             attach_info=xr.SessionActionSetsAttachInfo(
-                count_action_sets=1,
-                action_sets=pointer(action_set),
+                action_sets=[action_set],
             ),
         )
         # spaces
@@ -698,6 +744,11 @@ def main():
         swapchain_images = []
         swapchain_sizes = []
         swapchain_image_ptr_buffers = []
+        # The swapchain image structure type depends on the graphics API in use.
+        swapchain_image_type = (
+            xr.SwapchainImageOpenGLESKHR if sys.platform == "android"
+            else xr.SwapchainImageOpenGLKHR
+        )
         # views (usually two: one for the left eye; one for the right)
         config_views = xr.enumerate_view_configuration_views(
             instance=instance,
@@ -716,7 +767,7 @@ def main():
                 usage_flags=xr.SwapchainUsageFlags.SAMPLED_BIT | xr.SwapchainUsageFlags.COLOR_ATTACHMENT_BIT,
             )))
             swapchain_images.append(xr.enumerate_swapchain_images(
-                swapchain=swapchains[-1], element_type=xr.SwapchainImageOpenGLESKHR))
+                swapchain=swapchains[-1], element_type=swapchain_image_type))
             swapchain_sizes.append((v.recommended_image_rect_width, v.recommended_image_rect_height))
             num_images = len(swapchain_images[-1])
             swapchain_image_ptr_buffer = (POINTER(xr.SwapchainImageBaseHeader) * num_images)()
@@ -752,8 +803,7 @@ def main():
                     xr.sync_actions(
                         session,
                         xr.ActionsSyncInfo(
-                            count_active_action_sets=1,
-                            active_action_sets=pointer(active_action_set)
+                            active_action_sets=[active_action_set]
                         ),
                     )
                     # Get pose and grab action state and start haptic vibrate when hand is 90% squeezed.
@@ -780,7 +830,7 @@ def main():
                                         action=vibrate_action,
                                         subaction_path=hand_subaction_path[hand],
                                     ),
-                                    haptic_feedback=cast(byref(vibration), POINTER(xr.HapticBaseHeader)).contents,
+                                    haptic_feedback=vibration,
                                 )
                         pose_state = xr.get_action_state_pose(
                             session=session,
@@ -861,7 +911,7 @@ def main():
                             layer_view.sub_image.image_rect.offset[:] = [0, 0]
                             layer_view.sub_image.image_rect.extent[:] = [*swapchain_sizes[view_index]]
                             swapchain_image_ptr = swapchain_image_ptr_buffers[view_index][swapchain_image_index]
-                            swapchain_image = cast(swapchain_image_ptr, POINTER(xr.SwapchainImageOpenGLESKHR)).contents
+                            swapchain_image = cast(swapchain_image_ptr, POINTER(swapchain_image_type)).contents
                             assert layer_view.sub_image.image_array_index == 0  # texture arrays not supported.
                             color_texture = swapchain_image.image
                             # graphics begin frame
@@ -928,7 +978,7 @@ def main():
                                 mvp = vp @ model
                                 GL.glUniformMatrix4fv(model_view_projection_uniform_location, 1, True,
                                                       mvp.as_numpy())
-                                GL.glUniform1i(is_rgb_location, True)
+                                GL.glUniform1i(is_rgb_location, is_srgb)
                                 # Draw the cube.
                                 GL.glDrawElements(GL.GL_TRIANGLES, len(c_cubeIndices), GL.GL_UNSIGNED_SHORT, None)
 
@@ -985,7 +1035,11 @@ def main():
                         layers=[],
                     )
                 )
-        # TODO: destroy objects not destroyed by exit_stack...
+        # Destroy fallback depth textures that are not owned by the exit_stack.
+        if color_to_depth_map:
+            depth_textures = list(color_to_depth_map.values())
+            GL.glDeleteTextures(len(depth_textures), depth_textures)
+            color_to_depth_map.clear()
 
 
 class SessionStateEventHandler:
