@@ -396,13 +396,13 @@ class OpenXRProgram(object):
         select_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/select/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/select/click")]
-        _squeeze_value_path = [
+        squeeze_value_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/value"),
             xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/value")]
-        _squeeze_force_path = [
+        squeeze_force_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/force"),
             xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/force")]
-        _squeeze_click_path = [
+        squeeze_click_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/squeeze/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/squeeze/click")]
         pose_path = [
@@ -414,7 +414,7 @@ class OpenXRProgram(object):
         menu_click_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/menu/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/menu/click")]
-        _b_click_path = [
+        b_click_path = [
             xr.string_to_path(self.instance, "/user/hand/left/input/b/click"),
             xr.string_to_path(self.instance, "/user/hand/right/input/b/click")]
         trigger_value_path = [
@@ -440,6 +440,27 @@ class OpenXRProgram(object):
                     "/interaction_profiles/khr/simple_controller",
                 ),
                 suggested_bindings=khr_bindings,
+            ),
+        )
+        # Suggest bindings for the Oculus Touch.
+        oculus_bindings = [
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_value_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_value_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.RIGHT]),
+            # Note: quit is only bound to the left menu button, matching Khronos hello_xr.
+            xr.ActionSuggestedBinding(self.input.quit_action, menu_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        xr.suggest_interaction_profile_bindings(
+            instance=self.instance,
+            suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                interaction_profile=xr.string_to_path(
+                    self.instance,
+                    "/interaction_profiles/oculus/touch_controller",
+                ),
+                suggested_bindings=oculus_bindings,
             ),
         )
         # Suggest bindings for the Vive Controller.
