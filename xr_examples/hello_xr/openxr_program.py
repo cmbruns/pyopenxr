@@ -484,7 +484,48 @@ class OpenXRProgram(object):
                 suggested_bindings=vive_bindings,
             ),
         )
-        # TODO the other controller types in openxr_programs.cpp
+        # Suggest bindings for the Valve Index Controller.
+        index_bindings = [
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_force_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_force_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, b_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, b_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        xr.suggest_interaction_profile_bindings(
+            instance=self.instance,
+            suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                interaction_profile=xr.string_to_path(
+                    self.instance,
+                    "/interaction_profiles/valve/index_controller",
+                ),
+                suggested_bindings=index_bindings,
+            ),
+        )
+        # Suggest bindings for the Microsoft Mixed Reality Motion Controller.
+        microsoft_bindings = [
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.grab_action, squeeze_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, menu_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.quit_action, menu_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(self.input.vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        xr.suggest_interaction_profile_bindings(
+            instance=self.instance,
+            suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                interaction_profile=xr.string_to_path(
+                    self.instance,
+                    "/interaction_profiles/microsoft/motion_controller",
+                ),
+                suggested_bindings=microsoft_bindings,
+            ),
+        )
 
         action_space_info = xr.ActionSpaceCreateInfo(
             action=self.input.pose_action,
