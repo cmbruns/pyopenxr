@@ -32,7 +32,6 @@ def create_graphics_plugin(options: [argparse.Namespace, Options]) -> IGraphicsP
         return OpenGLESGraphicsPlugin(options)
     else:
         raise NotImplementedError
-    return graphics_plugin_map[options.graphics_plugin](options)
 
 
 def create_platform_plugin(_options: [argparse.Namespace, Options]) -> IPlatformPlugin:

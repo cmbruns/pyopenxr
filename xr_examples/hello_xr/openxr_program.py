@@ -9,7 +9,6 @@ from ctypes import (
     c_int32,
     c_void_p,
     cast,
-    pointer,
     POINTER,
     Structure,
 )
@@ -173,9 +172,9 @@ class OpenXRProgram(object):
             dum_create_info.user_data = None
             dum_create_info.user_callback = xr_debug_callback
             if next_structure is None:
-                next_structure = cast(pointer(dum_create_info), c_void_p)
+                next_structure = dum_create_info
             else:
-                next_structure.next = cast(pointer(dum_create_info), c_void_p)
+                next_structure.next = dum_create_info
         #
         extensions.extend(self.platform_plugin.instance_extensions)
         extensions.extend(self.graphics_plugin.instance_extensions)
@@ -494,11 +493,8 @@ class OpenXRProgram(object):
         assert self.instance != xr.NULL_HANDLE
         assert self.session is None
         logger.debug(f"Creating session...")
-        graphics_binding_pointer = cast(
-            pointer(self.graphics_plugin.graphics_binding),
-            c_void_p)
         create_info = xr.SessionCreateInfo(
-            next=graphics_binding_pointer,
+            next=self.graphics_plugin.graphics_binding,
             system_id=self.system_id,
         )
         self.session = xr.create_session(
@@ -679,7 +675,7 @@ class OpenXRProgram(object):
                             action=self.input.vibrate_action,
                             subaction_path=self.input.hand_subaction_path[hand],
                         ),
-                        haptic_feedback=cast(byref(vibration), POINTER(xr.HapticBaseHeader)).contents,
+                        haptic_feedback=vibration,
                     )
             pose_state = xr.get_action_state_pose(
                 session=self.session,
