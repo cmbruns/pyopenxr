@@ -445,7 +445,6 @@ def main():
                 action_type=xr.ActionType.FLOAT_INPUT,
                 action_name="grab_object",
                 localized_action_name="Grab Object",
-                count_subaction_paths=len(hand_subaction_path),
                 subaction_paths=hand_subaction_path,
             ),
         )
@@ -456,7 +455,6 @@ def main():
                 action_type=xr.ActionType.POSE_INPUT,
                 action_name="hand_pose",
                 localized_action_name="Hand Pose",
-                count_subaction_paths=len(hand_subaction_path),
                 subaction_paths=hand_subaction_path,
             ),
         )
@@ -467,7 +465,6 @@ def main():
                 action_type=xr.ActionType.VIBRATION_OUTPUT,
                 action_name="vibrate_hand",
                 localized_action_name="Vibrate Hand",
-                count_subaction_paths=len(hand_subaction_path),
                 subaction_paths=hand_subaction_path,
             ),
         )
@@ -480,7 +477,6 @@ def main():
                 action_type=xr.ActionType.BOOLEAN_INPUT,
                 action_name="quit_session",
                 localized_action_name="Quit Session",
-                count_subaction_paths=0,
                 subaction_paths=None,
             ),
         )
@@ -539,8 +535,7 @@ def main():
                         instance,
                         "/interaction_profiles/khr/simple_controller",
                     ),
-                    count_suggested_bindings=len(khr_bindings),
-                    suggested_bindings=(xr.ActionSuggestedBinding * len(khr_bindings))(*khr_bindings),
+                    suggested_bindings=khr_bindings,
                 ),
             )
         except xr.PathUnsupportedError:
@@ -564,8 +559,7 @@ def main():
                         instance,
                         "/interaction_profiles/htc/vive_controller",
                     ),
-                    count_suggested_bindings=len(vive_bindings),
-                    suggested_bindings=(xr.ActionSuggestedBinding * len(vive_bindings))(*vive_bindings),
+                    suggested_bindings=vive_bindings,
                 ),
             )
         except xr.PathUnsupportedError:
@@ -589,8 +583,7 @@ def main():
                         instance,
                         "/interaction_profiles/oculus/touch_controller",
                     ),
-                    count_suggested_bindings=len(touch_bindings),
-                    suggested_bindings=(xr.ActionSuggestedBinding * len(touch_bindings))(*touch_bindings),
+                    suggested_bindings=touch_bindings,
                 ),
             )
         except xr.PathUnsupportedError:
@@ -657,8 +650,7 @@ def main():
         xr.attach_session_action_sets(
             session=session,
             attach_info=xr.SessionActionSetsAttachInfo(
-                count_action_sets=1,
-                action_sets=pointer(action_set),
+                action_sets=[action_set],
             ),
         )
         # spaces
@@ -805,8 +797,7 @@ def main():
                     xr.sync_actions(
                         session,
                         xr.ActionsSyncInfo(
-                            count_active_action_sets=1,
-                            active_action_sets=pointer(active_action_set)
+                            active_action_sets=[active_action_set]
                         ),
                     )
                     # Get pose and grab action state and start haptic vibrate when hand is 90% squeezed.
@@ -833,7 +824,7 @@ def main():
                                         action=vibrate_action,
                                         subaction_path=hand_subaction_path[hand],
                                     ),
-                                    haptic_feedback=cast(byref(vibration), POINTER(xr.HapticBaseHeader)).contents,
+                                    haptic_feedback=vibration,
                                 )
                         pose_state = xr.get_action_state_pose(
                             session=session,
