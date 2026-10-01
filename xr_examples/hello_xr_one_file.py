@@ -490,10 +490,10 @@ def main():
         _squeeze_value_path = [
             xr.string_to_path(instance, "/user/hand/left/input/squeeze/value"),
             xr.string_to_path(instance, "/user/hand/right/input/squeeze/value")]
-        _squeeze_force_path = [
+        squeeze_force_path = [
             xr.string_to_path(instance, "/user/hand/left/input/squeeze/force"),
             xr.string_to_path(instance, "/user/hand/right/input/squeeze/force")]
-        _squeeze_click_path = [
+        squeeze_click_path = [
             xr.string_to_path(instance, "/user/hand/left/input/squeeze/click"),
             xr.string_to_path(instance, "/user/hand/right/input/squeeze/click")]
         pose_path = [
@@ -505,7 +505,7 @@ def main():
         menu_click_path = [
             xr.string_to_path(instance, "/user/hand/left/input/menu/click"),
             xr.string_to_path(instance, "/user/hand/right/input/menu/click")]
-        _b_click_path = [
+        b_click_path = [
             xr.string_to_path(instance, "/user/hand/left/input/b/click"),
             xr.string_to_path(instance, "/user/hand/right/input/b/click")]
         squeeze_value_path = [
@@ -531,17 +531,20 @@ def main():
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    instance,
-                    "/interaction_profiles/khr/simple_controller",
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/khr/simple_controller",
+                    ),
+                    count_suggested_bindings=len(khr_bindings),
+                    suggested_bindings=(xr.ActionSuggestedBinding * len(khr_bindings))(*khr_bindings),
                 ),
-                count_suggested_bindings=len(khr_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(khr_bindings))(*khr_bindings),
-            ),
-        )
+            )
+        except xr.PathUnsupportedError:
+            pass
         # Suggest bindings for the Vive Controller.
         vive_bindings = [
             xr.ActionSuggestedBinding(grab_action, trigger_value_path[Side.LEFT]),
@@ -553,25 +556,28 @@ def main():
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
         ]
-        xr.suggest_interaction_profile_bindings(
-            instance=instance,
-            suggested_bindings=xr.InteractionProfileSuggestedBinding(
-                interaction_profile=xr.string_to_path(
-                    instance,
-                    "/interaction_profiles/htc/vive_controller",
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/htc/vive_controller",
+                    ),
+                    count_suggested_bindings=len(vive_bindings),
+                    suggested_bindings=(xr.ActionSuggestedBinding * len(vive_bindings))(*vive_bindings),
                 ),
-                count_suggested_bindings=len(vive_bindings),
-                suggested_bindings=(xr.ActionSuggestedBinding * len(vive_bindings))(*vive_bindings),
-            ),
-        )
+            )
+        except xr.PathUnsupportedError:
+            pass
         # Suggest bindings for the Oculus Touch.
         touch_bindings = [
             xr.ActionSuggestedBinding(grab_action, squeeze_value_path[Side.LEFT]),
             xr.ActionSuggestedBinding(grab_action, squeeze_value_path[Side.RIGHT]),
             xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
             xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
+            # Note: quit is only bound to the left menu button, matching Khronos hello_xr.
             xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.LEFT]),
-            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.RIGHT]),
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
             xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
         ]
@@ -589,7 +595,54 @@ def main():
             )
         except xr.PathUnsupportedError:
             pass
-        # TODO: the other controller types in openxr_programs.cpp
+        # Suggest bindings for the Valve Index Controller.
+        index_bindings = [
+            xr.ActionSuggestedBinding(grab_action, squeeze_force_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(grab_action, squeeze_force_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(quit_action, b_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(quit_action, b_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/valve/index_controller",
+                    ),
+                    suggested_bindings=index_bindings,
+                ),
+            )
+        except xr.PathUnsupportedError:
+            pass
+        # Suggest bindings for the Microsoft Mixed Reality Motion Controller.
+        microsoft_bindings = [
+            xr.ActionSuggestedBinding(grab_action, squeeze_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(grab_action, squeeze_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(pose_action, pose_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(quit_action, menu_click_path[Side.RIGHT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.LEFT]),
+            xr.ActionSuggestedBinding(vibrate_action, haptic_path[Side.RIGHT]),
+        ]
+        try:
+            xr.suggest_interaction_profile_bindings(
+                instance=instance,
+                suggested_bindings=xr.InteractionProfileSuggestedBinding(
+                    interaction_profile=xr.string_to_path(
+                        instance,
+                        "/interaction_profiles/microsoft/motion_controller",
+                    ),
+                    suggested_bindings=microsoft_bindings,
+                ),
+            )
+        except xr.PathUnsupportedError:
+            pass
 
         hand_space = [
             xr.create_action_space(session, xr.ActionSpaceCreateInfo(
