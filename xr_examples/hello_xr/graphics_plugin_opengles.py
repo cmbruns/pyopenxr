@@ -180,6 +180,7 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
         context_attributes = [
             EGL.EGL_CONTEXT_MAJOR_VERSION, 3,
             EGL.EGL_CONTEXT_MINOR_VERSION, 2,
+            EGL.EGL_CONTEXT_OPENGL_DEBUG, EGL.EGL_TRUE,
             EGL.EGL_NONE
         ]
 
@@ -214,6 +215,11 @@ class OpenGLESGraphicsPlugin(IGraphicsPlugin):
                 config=self.config,
             )
 
+        GL.glEnable(GL.GL_DEBUG_OUTPUT)
+        # Store the debug callback function pointer, so it won't get garbage collected;
+        # otherwise mysterious GL crashes will ensue.
+        self.debug_message_proc = GL.GLDEBUGPROC(self.opengl_debug_message_callback)
+        GL.glDebugMessageCallback(self.debug_message_proc, None)
         self.initialize_resources()
 
     def initialize_resources(self):
