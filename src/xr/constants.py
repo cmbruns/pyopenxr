@@ -675,6 +675,9 @@ EXT_STATIONARY_REFERENCE_SPACE_EXTENSION_NAME = "XR_EXT_stationary_reference_spa
 EXT_spatial_marker_tracking = 1
 EXT_spatial_marker_tracking_SPEC_VERSION = 1
 EXT_SPATIAL_MARKER_TRACKING_EXTENSION_NAME = "XR_EXT_spatial_marker_tracking"
+EXT_spatial_object_tracking = 1
+EXT_spatial_object_tracking_SPEC_VERSION = 1
+EXT_SPATIAL_OBJECT_TRACKING_EXTENSION_NAME = "XR_EXT_spatial_object_tracking"
 LOGITECH_mx_ink_stylus_interaction = 1
 LOGITECH_mx_ink_stylus_interaction_SPEC_VERSION = 1
 LOGITECH_MX_INK_STYLUS_INTERACTION_EXTENSION_NAME = "XR_LOGITECH_mx_ink_stylus_interaction"
@@ -687,6 +690,9 @@ BD_DYNAMIC_OBJECT_KEYBOARD_EXTENSION_NAME = "XR_BD_dynamic_object_keyboard"
 BD_dynamic_object_mouse = 1
 BD_dynamic_object_mouse_SPEC_VERSION = 1
 BD_DYNAMIC_OBJECT_MOUSE_EXTENSION_NAME = "XR_BD_dynamic_object_mouse"
+BD_motion_tracker = 1
+BD_motion_tracker_SPEC_VERSION = 1
+BD_MOTION_TRACKER_EXTENSION_NAME = "XR_BD_motion_tracker"
 BD_camera_image = 1
 BD_camera_image_SPEC_VERSION = 1
 BD_CAMERA_IMAGE_EXTENSION_NAME = "XR_BD_camera_image"
@@ -718,6 +724,9 @@ EXT_SPATIAL_PERSISTENCE_OPERATIONS_EXTENSION_NAME = "XR_EXT_spatial_persistence_
 EXT_spatial_image_tracking = 1
 EXT_spatial_image_tracking_SPEC_VERSION = 1
 EXT_SPATIAL_IMAGE_TRACKING_EXTENSION_NAME = "XR_EXT_spatial_image_tracking"
+EXT_spatial_mesh_tracking = 1
+EXT_spatial_mesh_tracking_SPEC_VERSION = 1
+EXT_SPATIAL_MESH_TRACKING_EXTENSION_NAME = "XR_EXT_spatial_mesh_tracking"
 ANDROID_spatial_object_tracking = 1
 ANDROID_spatial_object_tracking_SPEC_VERSION = 2
 ANDROID_SPATIAL_OBJECT_TRACKING_EXTENSION_NAME = "XR_ANDROID_spatial_object_tracking"
@@ -757,6 +766,22 @@ EXT_LOADER_INIT_PROPERTIES_EXTENSION_NAME = "XR_EXT_loader_init_properties"
 EXT_view_configuration_views_change = 1
 EXT_view_configuration_views_change_SPEC_VERSION = 1
 EXT_VIEW_CONFIGURATION_VIEWS_CHANGE_EXTENSION_NAME = "XR_EXT_view_configuration_views_change"
+EXT_aosp_hand_tracking_permission = 1
+EXT_aosp_hand_tracking_permission_SPEC_VERSION = 1
+EXT_AOSP_HAND_TRACKING_PERMISSION_EXTENSION_NAME = "XR_EXT_aosp_hand_tracking_permission"
+EXT_spatial_entity_archetypes = 1
+NULL_SPATIAL_ARCHETYPE_ID_EXT = 0
+EXT_spatial_entity_archetypes_SPEC_VERSION = 1
+EXT_SPATIAL_ENTITY_ARCHETYPES_EXTENSION_NAME = "XR_EXT_spatial_entity_archetypes"
+EXT_spatial_plane_semantic_label2 = 1
+EXT_spatial_plane_semantic_label2_SPEC_VERSION = 1
+EXT_SPATIAL_PLANE_SEMANTIC_LABEL2_EXTENSION_NAME = "XR_EXT_spatial_plane_semantic_label2"
+EXT_enumerate_swapchain_formats2 = 1
+EXT_enumerate_swapchain_formats2_SPEC_VERSION = 1
+EXT_ENUMERATE_SWAPCHAIN_FORMATS2_EXTENSION_NAME = "XR_EXT_enumerate_swapchain_formats2"
+EXT_app_consumed_swapchain = 1
+EXT_app_consumed_swapchain_SPEC_VERSION = 1
+EXT_APP_CONSUMED_SWAPCHAIN_EXTENSION_NAME = "XR_EXT_app_consumed_swapchain"
 SPACE_LOCATION_ORIENTATION_VALID_BIT = 0x00000001
 SPACE_LOCATION_POSITION_VALID_BIT = 0x00000002
 SPACE_LOCATION_ORIENTATION_TRACKED_BIT = 0x00000004
@@ -1006,6 +1031,7 @@ __all__ = [
     "BD_DYNAMIC_OBJECT_TRACKING_EXTENSION_NAME",
     "BD_FACIAL_SIMULATION_EXTENSION_NAME",
     "BD_FUTURE_PROGRESS_EXTENSION_NAME",
+    "BD_MOTION_TRACKER_EXTENSION_NAME",
     "BD_SPATIAL_ANCHOR_EXTENSION_NAME",
     "BD_SPATIAL_ANCHOR_SHARING_EXTENSION_NAME",
     "BD_SPATIAL_AUDIO_RENDERING_EXTENSION_NAME",
@@ -1033,6 +1059,8 @@ __all__ = [
     "BD_facial_simulation_SPEC_VERSION",
     "BD_future_progress",
     "BD_future_progress_SPEC_VERSION",
+    "BD_motion_tracker",
+    "BD_motion_tracker_SPEC_VERSION",
     "BD_spatial_anchor",
     "BD_spatial_anchor_SPEC_VERSION",
     "BD_spatial_anchor_sharing",
@@ -1090,10 +1118,13 @@ __all__ = [
     "EXTX_overlay",
     "EXTX_overlay_SPEC_VERSION",
     "EXT_ACTIVE_ACTION_SET_PRIORITY_EXTENSION_NAME",
+    "EXT_AOSP_HAND_TRACKING_PERMISSION_EXTENSION_NAME",
+    "EXT_APP_CONSUMED_SWAPCHAIN_EXTENSION_NAME",
     "EXT_COMPOSITION_LAYER_INVERTED_ALPHA_EXTENSION_NAME",
     "EXT_CONFORMANCE_AUTOMATION_EXTENSION_NAME",
     "EXT_DEBUG_UTILS_EXTENSION_NAME",
     "EXT_DPAD_BINDING_EXTENSION_NAME",
+    "EXT_ENUMERATE_SWAPCHAIN_FORMATS2_EXTENSION_NAME",
     "EXT_EYE_GAZE_INTERACTION_EXTENSION_NAME",
     "EXT_FRAME_SYNTHESIS_EXTENSION_NAME",
     "EXT_FUTURE_EXTENSION_NAME",
@@ -1115,11 +1146,15 @@ __all__ = [
     "EXT_SPATIAL_ANCHOR_EXTENSION_NAME",
     "EXT_SPATIAL_CONTAINER_EXTENSION_NAME",
     "EXT_SPATIAL_CONTAINER_SELF_RENDERING_EXTENSION_NAME",
+    "EXT_SPATIAL_ENTITY_ARCHETYPES_EXTENSION_NAME",
     "EXT_SPATIAL_ENTITY_EXTENSION_NAME",
     "EXT_SPATIAL_IMAGE_TRACKING_EXTENSION_NAME",
     "EXT_SPATIAL_MARKER_TRACKING_EXTENSION_NAME",
+    "EXT_SPATIAL_MESH_TRACKING_EXTENSION_NAME",
+    "EXT_SPATIAL_OBJECT_TRACKING_EXTENSION_NAME",
     "EXT_SPATIAL_PERSISTENCE_EXTENSION_NAME",
     "EXT_SPATIAL_PERSISTENCE_OPERATIONS_EXTENSION_NAME",
+    "EXT_SPATIAL_PLANE_SEMANTIC_LABEL2_EXTENSION_NAME",
     "EXT_SPATIAL_PLANE_TRACKING_EXTENSION_NAME",
     "EXT_STATIONARY_REFERENCE_SPACE_EXTENSION_NAME",
     "EXT_THERMAL_QUERY_EXTENSION_NAME",
@@ -1130,6 +1165,10 @@ __all__ = [
     "EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME",
     "EXT_active_action_set_priority",
     "EXT_active_action_set_priority_SPEC_VERSION",
+    "EXT_aosp_hand_tracking_permission",
+    "EXT_aosp_hand_tracking_permission_SPEC_VERSION",
+    "EXT_app_consumed_swapchain",
+    "EXT_app_consumed_swapchain_SPEC_VERSION",
     "EXT_composition_layer_inverted_alpha",
     "EXT_composition_layer_inverted_alpha_SPEC_VERSION",
     "EXT_conformance_automation",
@@ -1138,6 +1177,8 @@ __all__ = [
     "EXT_debug_utils_SPEC_VERSION",
     "EXT_dpad_binding",
     "EXT_dpad_binding_SPEC_VERSION",
+    "EXT_enumerate_swapchain_formats2",
+    "EXT_enumerate_swapchain_formats2_SPEC_VERSION",
     "EXT_eye_gaze_interaction",
     "EXT_eye_gaze_interaction_SPEC_VERSION",
     "EXT_frame_synthesis",
@@ -1182,14 +1223,22 @@ __all__ = [
     "EXT_spatial_container_self_rendering_SPEC_VERSION",
     "EXT_spatial_entity",
     "EXT_spatial_entity_SPEC_VERSION",
+    "EXT_spatial_entity_archetypes",
+    "EXT_spatial_entity_archetypes_SPEC_VERSION",
     "EXT_spatial_image_tracking",
     "EXT_spatial_image_tracking_SPEC_VERSION",
     "EXT_spatial_marker_tracking",
     "EXT_spatial_marker_tracking_SPEC_VERSION",
+    "EXT_spatial_mesh_tracking",
+    "EXT_spatial_mesh_tracking_SPEC_VERSION",
+    "EXT_spatial_object_tracking",
+    "EXT_spatial_object_tracking_SPEC_VERSION",
     "EXT_spatial_persistence",
     "EXT_spatial_persistence_SPEC_VERSION",
     "EXT_spatial_persistence_operations",
     "EXT_spatial_persistence_operations_SPEC_VERSION",
+    "EXT_spatial_plane_semantic_label2",
+    "EXT_spatial_plane_semantic_label2_SPEC_VERSION",
     "EXT_spatial_plane_tracking",
     "EXT_spatial_plane_tracking_SPEC_VERSION",
     "EXT_stationary_reference_space",
@@ -1678,6 +1727,7 @@ __all__ = [
     "NULL_PATH",
     "NULL_RENDER_MODEL_ID_EXT",
     "NULL_RENDER_MODEL_KEY_FB",
+    "NULL_SPATIAL_ARCHETYPE_ID_EXT",
     "NULL_SPATIAL_BUFFER_ID_EXT",
     "NULL_SPATIAL_ENTITY_ID_EXT",
     "NULL_SYSTEM_ID",

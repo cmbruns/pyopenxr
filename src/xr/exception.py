@@ -891,12 +891,12 @@ class LocalizedNameInvalidError(ErrorResult):
 
 
 class GraphicsRequirementsCallMissingError(ErrorResult):
-    """The ftext:xrGet*GraphicsRequirements call was not made before calling fname:xrCreateSession."""
+    """The ftext:xrGet*GraphicsRequirements call was not made before calling flink:xrCreateSession."""
 
     def __init__(self, message=None):
         if message is None:
             super().__init__(
-                "The ftext:xrGet*GraphicsRequirements call was not made before calling fname:xrCreateSession."
+                "The ftext:xrGet*GraphicsRequirements call was not made before calling flink:xrCreateSession."
             )
         else:
             super().__init__(message)

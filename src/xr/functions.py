@@ -10238,7 +10238,219 @@ def locate_spatial_container_views_ext(
     return view_states, views
 
 
+def enumerate_spatial_archetypes_ext(
+    snapshot: SpatialSnapshotEXT,
+) -> Sequence[SpatialArchetypeIdEXT]:
+    archetype_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(snapshot.instance, "xrEnumerateSpatialArchetypesEXT"),
+        PFN_xrEnumerateSpatialArchetypesEXT,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        snapshot,
+        0,
+        byref(archetype_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    archetypes = (SpatialArchetypeIdEXT * archetype_capacity_input.value)(*([SpatialArchetypeIdEXT()] * archetype_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        snapshot,
+        archetype_capacity_input,
+        byref(archetype_capacity_input),
+        archetypes,
+    ))
+    if result.is_exception():
+        raise result
+    return archetypes  # noqa
+
+
+def enumerate_spatial_archetype_component_types_ext(
+    snapshot: SpatialSnapshotEXT,
+    archetype: SpatialArchetypeIdEXT,
+) -> Sequence[SpatialComponentTypeEXT]:
+    component_type_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(snapshot.instance, "xrEnumerateSpatialArchetypeComponentTypesEXT"),
+        PFN_xrEnumerateSpatialArchetypeComponentTypesEXT,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        snapshot,
+        archetype,
+        0,
+        byref(component_type_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    component_types = (SpatialComponentTypeEXT.ctype() * component_type_capacity_input.value)(*([SpatialComponentTypeEXT.ctype()()] * component_type_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        snapshot,
+        archetype,
+        component_type_capacity_input,
+        byref(component_type_capacity_input),
+        component_types,
+    ))
+    if result.is_exception():
+        raise result
+    return component_types  # noqa
+
+
+def enumerate_swapchain_formats2_ext(
+    session: Session,
+) -> (SwapchainFormatsEnumerateInfoEXT, Sequence[int]):
+    enumerate_info = SwapchainFormatsEnumerateInfoEXT()
+    format_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrEnumerateSwapchainFormats2EXT"),
+        PFN_xrEnumerateSwapchainFormats2EXT,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        session,
+        byref(enumerate_info),
+        0,
+        byref(format_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    formats = (c_int64 * format_capacity_input.value)(*([c_int64()] * format_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        session,
+        byref(enumerate_info),
+        format_capacity_input,
+        byref(format_capacity_input),
+        formats,
+    ))
+    if result.is_exception():
+        raise result
+    return enumerate_info, formats  # noqa
+
+
+def create_app_consumed_swapchain_ext(
+    session: Session,
+    create_info: AppConsumedSwapchainCreateInfoEXT = None,
+) -> AppConsumedSwapchainEXT:
+    if create_info is None:
+        create_info = AppConsumedSwapchainCreateInfoEXT()
+    app_consumed_swapchain = AppConsumedSwapchainEXT()
+    app_consumed_swapchain.instance = session.instance
+    app_consumed_swapchain._create_info = create_info
+    fxn = cast(
+        get_instance_proc_addr(session.instance, "xrCreateAppConsumedSwapchainEXT"),
+        PFN_xrCreateAppConsumedSwapchainEXT,
+    )
+    result = check_result(fxn(
+        session,
+        create_info,
+        byref(app_consumed_swapchain),
+    ))
+    if result.is_exception():
+        raise result
+    return app_consumed_swapchain
+
+
+def destroy_app_consumed_swapchain_ext(
+    app_consumed_swapchain: AppConsumedSwapchainEXT,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(app_consumed_swapchain.instance, "xrDestroyAppConsumedSwapchainEXT"),
+        PFN_xrDestroyAppConsumedSwapchainEXT,
+    )
+    result = check_result(fxn(
+        app_consumed_swapchain,
+    ))
+    if result.is_exception():
+        raise result
+
+
+def get_app_consumed_swapchain_properties_ext(
+    app_consumed_swapchain: AppConsumedSwapchainEXT,
+) -> AppConsumedSwapchainPropertiesEXT:
+    properties = AppConsumedSwapchainPropertiesEXT()
+    fxn = cast(
+        get_instance_proc_addr(app_consumed_swapchain.instance, "xrGetAppConsumedSwapchainPropertiesEXT"),
+        PFN_xrGetAppConsumedSwapchainPropertiesEXT,
+    )
+    result = check_result(fxn(
+        app_consumed_swapchain,
+        byref(properties),
+    ))
+    if result.is_exception():
+        raise result
+    return properties
+
+
+def enumerate_app_consumed_swapchain_images_ext(
+    app_consumed_swapchain: AppConsumedSwapchainEXT,
+) -> Sequence[SwapchainImageBaseHeader]:
+    image_capacity_input = c_uint32(0)
+    fxn = cast(
+        get_instance_proc_addr(app_consumed_swapchain.instance, "xrEnumerateAppConsumedSwapchainImagesEXT"),
+        PFN_xrEnumerateAppConsumedSwapchainImagesEXT,
+    )
+    # First call of two, to retrieve buffer sizes
+    result = check_result(fxn(
+        app_consumed_swapchain,
+        0,
+        byref(image_capacity_input),
+        None,
+    ))
+    if result.is_exception():
+        raise result
+    images = (SwapchainImageBaseHeader * image_capacity_input.value)(*([SwapchainImageBaseHeader()] * image_capacity_input.value))  # noqa
+    result = check_result(fxn(
+        app_consumed_swapchain,
+        image_capacity_input,
+        byref(image_capacity_input),
+        images,
+    ))
+    if result.is_exception():
+        raise result
+    return images  # noqa
+
+
+def acquire_app_consumed_swapchain_image_ext(
+    app_consumed_swapchain: AppConsumedSwapchainEXT,
+    acquire_info: AppConsumedSwapchainImageAcquireInfoEXT,
+) -> AppConsumedSwapchainImageStateEXT:
+    image = AppConsumedSwapchainImageStateEXT()
+    fxn = cast(
+        get_instance_proc_addr(app_consumed_swapchain.instance, "xrAcquireAppConsumedSwapchainImageEXT"),
+        PFN_xrAcquireAppConsumedSwapchainImageEXT,
+    )
+    result = check_result(fxn(
+        app_consumed_swapchain,
+        acquire_info,
+        byref(image),
+    ))
+    if result.is_exception():
+        raise result
+    return image
+
+
+def release_app_consumed_swapchain_image_ext(
+    app_consumed_swapchain: AppConsumedSwapchainEXT,
+    release_info: AppConsumedSwapchainImageReleaseInfoEXT = None,
+) -> None:
+    fxn = cast(
+        get_instance_proc_addr(app_consumed_swapchain.instance, "xrReleaseAppConsumedSwapchainImageEXT"),
+        PFN_xrReleaseAppConsumedSwapchainImageEXT,
+    )
+    result = check_result(fxn(
+        app_consumed_swapchain,
+        release_info,
+    ))
+    if result.is_exception():
+        raise result
+
+
 __all__ = [
+    "acquire_app_consumed_swapchain_image_ext",
     "acquire_camera_image_bd",
     "acquire_environment_depth_image_meta",
     "acquire_swapchain_image",
@@ -10266,6 +10478,7 @@ __all__ = [
     "create_action_space",
     "create_anchor_space_android",
     "create_anchor_space_bd",
+    "create_app_consumed_swapchain_ext",
     "create_body_tracker_bd",
     "create_body_tracker_fb",
     "create_body_tracker_htc",
@@ -10368,6 +10581,7 @@ __all__ = [
     "destroy_action",
     "destroy_action_set",
     "destroy_anchor_bd",
+    "destroy_app_consumed_swapchain_ext",
     "destroy_body_tracker_bd",
     "destroy_body_tracker_fb",
     "destroy_body_tracker_htc",
@@ -10443,6 +10657,7 @@ __all__ = [
     "end_session",
     "end_spatial_container_rendering_ext",
     "enumerate_api_layer_properties",
+    "enumerate_app_consumed_swapchain_images_ext",
     "enumerate_available_cameras_bd",
     "enumerate_bound_sources_for_action",
     "enumerate_camera_capability_types_bd",
@@ -10471,6 +10686,8 @@ __all__ = [
     "enumerate_scene_compute_features_msft",
     "enumerate_space_supported_components_fb",
     "enumerate_spatial_anchor_attachable_components_android",
+    "enumerate_spatial_archetype_component_types_ext",
+    "enumerate_spatial_archetypes_ext",
     "enumerate_spatial_capabilities_ext",
     "enumerate_spatial_capability_component_types_ext",
     "enumerate_spatial_capability_features_ext",
@@ -10484,6 +10701,7 @@ __all__ = [
     "enumerate_supported_spatial_container_graphics_presentations_ext",
     "enumerate_supported_trackable_types_android",
     "enumerate_swapchain_formats",
+    "enumerate_swapchain_formats2_ext",
     "enumerate_swapchain_images",
     "enumerate_view_configuration_views",
     "enumerate_view_configurations",
@@ -10500,6 +10718,7 @@ __all__ = [
     "get_all_trackables_android",
     "get_anchor_persist_state_android",
     "get_anchor_uuid_bd",
+    "get_app_consumed_swapchain_properties_ext",
     "get_body_skeleton_fb",
     "get_body_skeleton_htc",
     "get_body_tracking_state_bd",
@@ -10653,6 +10872,7 @@ __all__ = [
     "query_spatial_component_data_ext",
     "query_system_tracked_keyboard_fb",
     "raycast_android",
+    "release_app_consumed_swapchain_image_ext",
     "release_camera_image_bd",
     "release_swapchain_image",
     "remove_trackable_image_database_android",

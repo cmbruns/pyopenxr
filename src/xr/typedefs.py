@@ -24658,6 +24658,166 @@ class SpatialComponentMarkerListEXT(BaseXrStructure):
     ]
 
 
+class SpatialCapabilityConfigurationObjectTrackingEXT(SpatialCapabilityConfigurationBaseHeaderEXT):
+    pass
+
+
+class SpatialComponentObjectSemanticLabelListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[SpatialObjectSemanticLabelEXT.ctype()] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_OBJECT_SEMANTIC_LABEL_LIST_EXT,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            SpatialObjectSemanticLabelEXT.ctype(), semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentObjectSemanticLabelListEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentObjectSemanticLabelListEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self) -> Array[SpatialObjectSemanticLabelEXT.ctype()]:
+        return expose_ctypes_array(SpatialObjectSemanticLabelEXT.ctype(), self.semantic_label_count, self._semantic_labels)
+    
+    @semantic_labels.setter
+    def semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            SpatialObjectSemanticLabelEXT.ctype(), None, value)
+
+    _fields_ = [
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(SpatialObjectSemanticLabelEXT.ctype())),
+    ]
+
+
+class SpatialFeatureObjectSemanticLabelSubsetEXT(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[c_int] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_FEATURE_OBJECT_SEMANTIC_LABEL_SUBSET_EXT,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            c_int, semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialFeatureObjectSemanticLabelSubsetEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialFeatureObjectSemanticLabelSubsetEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self) -> Array[c_int]:
+        return expose_ctypes_array(c_int, self.semantic_label_count, self._semantic_labels)
+    
+    @semantic_labels.setter
+    def semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(c_int)),
+    ]
+
+
+class SpatialComponentKeyboardSemanticLabelListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[SpatialKeyboardSemanticLabelEXT.ctype()] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_KEYBOARD_SEMANTIC_LABEL_LIST_EXT,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            SpatialKeyboardSemanticLabelEXT.ctype(), semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentKeyboardSemanticLabelListEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentKeyboardSemanticLabelListEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self) -> Array[SpatialKeyboardSemanticLabelEXT.ctype()]:
+        return expose_ctypes_array(SpatialKeyboardSemanticLabelEXT.ctype(), self.semantic_label_count, self._semantic_labels)
+    
+    @semantic_labels.setter
+    def semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            SpatialKeyboardSemanticLabelEXT.ctype(), None, value)
+
+    _fields_ = [
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(SpatialKeyboardSemanticLabelEXT.ctype())),
+    ]
+
+
+class SpatialComponentMouseSemanticLabelListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[SpatialMouseSemanticLabelEXT.ctype()] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_MOUSE_SEMANTIC_LABEL_LIST_EXT,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            SpatialMouseSemanticLabelEXT.ctype(), semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentMouseSemanticLabelListEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentMouseSemanticLabelListEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self) -> Array[SpatialMouseSemanticLabelEXT.ctype()]:
+        return expose_ctypes_array(SpatialMouseSemanticLabelEXT.ctype(), self.semantic_label_count, self._semantic_labels)
+    
+    @semantic_labels.setter
+    def semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            SpatialMouseSemanticLabelEXT.ctype(), None, value)
+
+    _fields_ = [
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(SpatialMouseSemanticLabelEXT.ctype())),
+    ]
+
+
 class SystemDynamicObjectTrackingPropertiesBD(BaseXrStructure):
     def __init__(
         self,
@@ -27112,6 +27272,151 @@ PFN_xrCreateSpatialImageTrackingDatabaseCompleteEXT = CFUNCTYPE(Result.ctype(), 
 PFN_xrDestroySpatialImageTrackingDatabaseEXT = CFUNCTYPE(Result.ctype(), SpatialImageTrackingDatabaseEXT)
 
 
+class SpatialCapabilityConfigurationMeshTrackingEXT(SpatialCapabilityConfigurationBaseHeaderEXT):
+    pass
+
+
+class SpatialFeatureTrackWatertightMeshEXT(BaseXrStructure):
+    def __init__(
+        self,
+        enable_watertight_mesh_tracking: Bool32 = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_FEATURE_TRACK_WATERTIGHT_MESH_EXT,
+    ) -> None:
+        super().__init__(
+            enable_watertight_mesh_tracking=enable_watertight_mesh_tracking,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialFeatureTrackWatertightMeshEXT(enable_watertight_mesh_tracking={repr(self.enable_watertight_mesh_tracking)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialFeatureTrackWatertightMeshEXT(enable_watertight_mesh_tracking={self.enable_watertight_mesh_tracking}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("enable_watertight_mesh_tracking", Bool32),
+    ]
+
+
+class SpatialComponentMesh3DNormalsListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        mesh_normals_count: Optional[int] = None,
+        mesh_normals: ArrayFieldParamType[SpatialBufferEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_MESH_3D_NORMALS_LIST_EXT,
+    ) -> None:
+        mesh_normals_count, mesh_normals = array_field_helper(
+            SpatialBufferEXT, mesh_normals_count, mesh_normals)
+        super().__init__(
+            mesh_normals_count=mesh_normals_count,
+            _mesh_normals=mesh_normals,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentMesh3DNormalsListEXT(mesh_normals_count={repr(self.mesh_normals_count)}, mesh_normals={repr(self.mesh_normals)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentMesh3DNormalsListEXT(mesh_normals_count={self.mesh_normals_count}, mesh_normals={self.mesh_normals}, next={self.next}, type={self.type})"
+
+    @property
+    def mesh_normals(self) -> Array[SpatialBufferEXT]:
+        return expose_ctypes_array(SpatialBufferEXT, self.mesh_normals_count, self._mesh_normals)
+    
+    @mesh_normals.setter
+    def mesh_normals(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.mesh_normals_count, self._mesh_normals = array_field_helper(
+            SpatialBufferEXT, None, value)
+
+    _fields_ = [
+        ("mesh_normals_count", c_uint32),
+        ("_mesh_normals", POINTER(SpatialBufferEXT)),
+    ]
+
+
+class SpatialComponentMesh3DVertexSemanticLabelsListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        mesh_semantic_labels_count: Optional[int] = None,
+        mesh_semantic_labels: ArrayFieldParamType[SpatialBufferEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_MESH_3D_VERTEX_SEMANTIC_LABELS_LIST_EXT,
+    ) -> None:
+        mesh_semantic_labels_count, mesh_semantic_labels = array_field_helper(
+            SpatialBufferEXT, mesh_semantic_labels_count, mesh_semantic_labels)
+        super().__init__(
+            mesh_semantic_labels_count=mesh_semantic_labels_count,
+            _mesh_semantic_labels=mesh_semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentMesh3DVertexSemanticLabelsListEXT(mesh_semantic_labels_count={repr(self.mesh_semantic_labels_count)}, mesh_semantic_labels={repr(self.mesh_semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentMesh3DVertexSemanticLabelsListEXT(mesh_semantic_labels_count={self.mesh_semantic_labels_count}, mesh_semantic_labels={self.mesh_semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def mesh_semantic_labels(self) -> Array[SpatialBufferEXT]:
+        return expose_ctypes_array(SpatialBufferEXT, self.mesh_semantic_labels_count, self._mesh_semantic_labels)
+    
+    @mesh_semantic_labels.setter
+    def mesh_semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.mesh_semantic_labels_count, self._mesh_semantic_labels = array_field_helper(
+            SpatialBufferEXT, None, value)
+
+    _fields_ = [
+        ("mesh_semantic_labels_count", c_uint32),
+        ("_mesh_semantic_labels", POINTER(SpatialBufferEXT)),
+    ]
+
+
+class SpatialComponentMesh3DTriangleSemanticLabelsListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        mesh_semantic_labels_count: Optional[int] = None,
+        mesh_semantic_labels: ArrayFieldParamType[SpatialBufferEXT] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_MESH_3D_TRIANGLE_SEMANTIC_LABELS_LIST_EXT,
+    ) -> None:
+        mesh_semantic_labels_count, mesh_semantic_labels = array_field_helper(
+            SpatialBufferEXT, mesh_semantic_labels_count, mesh_semantic_labels)
+        super().__init__(
+            mesh_semantic_labels_count=mesh_semantic_labels_count,
+            _mesh_semantic_labels=mesh_semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentMesh3DTriangleSemanticLabelsListEXT(mesh_semantic_labels_count={repr(self.mesh_semantic_labels_count)}, mesh_semantic_labels={repr(self.mesh_semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentMesh3DTriangleSemanticLabelsListEXT(mesh_semantic_labels_count={self.mesh_semantic_labels_count}, mesh_semantic_labels={self.mesh_semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def mesh_semantic_labels(self) -> Array[SpatialBufferEXT]:
+        return expose_ctypes_array(SpatialBufferEXT, self.mesh_semantic_labels_count, self._mesh_semantic_labels)
+    
+    @mesh_semantic_labels.setter
+    def mesh_semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.mesh_semantic_labels_count, self._mesh_semantic_labels = array_field_helper(
+            SpatialBufferEXT, None, value)
+
+    _fields_ = [
+        ("mesh_semantic_labels_count", c_uint32),
+        ("_mesh_semantic_labels", POINTER(SpatialBufferEXT)),
+    ]
+
+
 class SpatialCapabilityConfigurationObjectTrackingANDROID(SpatialCapabilityConfigurationBaseHeaderEXT):
     def __init__(
         self,
@@ -29011,6 +29316,326 @@ class EventDataViewConfigurationViewsChangedEXT(EventDataBaseHeader):
     ]
 
 
+SpatialArchetypeIdEXT = c_uint64
+
+
+class SpatialFilterArchetypeEXT(BaseXrStructure):
+    def __init__(
+        self,
+        archetype: SpatialArchetypeIdEXT = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_FILTER_ARCHETYPE_EXT,
+    ) -> None:
+        super().__init__(
+            archetype=archetype,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialFilterArchetypeEXT(archetype={repr(self.archetype)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialFilterArchetypeEXT(archetype={self.archetype}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("archetype", SpatialArchetypeIdEXT),
+    ]
+
+
+PFN_xrEnumerateSpatialArchetypesEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, c_uint32, POINTER(c_uint32), POINTER(SpatialArchetypeIdEXT))
+
+PFN_xrEnumerateSpatialArchetypeComponentTypesEXT = CFUNCTYPE(Result.ctype(), SpatialSnapshotEXT, SpatialArchetypeIdEXT, c_uint32, POINTER(c_uint32), POINTER(SpatialComponentTypeEXT.ctype()))
+
+
+class SpatialComponentPlaneSemanticLabel2ListEXT(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[SpatialPlaneSemanticLabel2EXT.ctype()] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_COMPONENT_PLANE_SEMANTIC_LABEL2_LIST_EXT,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            SpatialPlaneSemanticLabel2EXT.ctype(), semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialComponentPlaneSemanticLabel2ListEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialComponentPlaneSemanticLabel2ListEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self) -> Array[SpatialPlaneSemanticLabel2EXT.ctype()]:
+        return expose_ctypes_array(SpatialPlaneSemanticLabel2EXT.ctype(), self.semantic_label_count, self._semantic_labels)
+    
+    @semantic_labels.setter
+    def semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            SpatialPlaneSemanticLabel2EXT.ctype(), None, value)
+
+    _fields_ = [
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(SpatialPlaneSemanticLabel2EXT.ctype())),
+    ]
+
+
+class SpatialFeaturePlaneSemanticLabel2SubsetEXT(BaseXrStructure):
+    def __init__(
+        self,
+        semantic_label_count: Optional[int] = None,
+        semantic_labels: ArrayFieldParamType[c_int] = None,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SPATIAL_FEATURE_PLANE_SEMANTIC_LABEL2_SUBSET_EXT,
+    ) -> None:
+        semantic_label_count, semantic_labels = array_field_helper(
+            c_int, semantic_label_count, semantic_labels)
+        super().__init__(
+            semantic_label_count=semantic_label_count,
+            _semantic_labels=semantic_labels,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SpatialFeaturePlaneSemanticLabel2SubsetEXT(semantic_label_count={repr(self.semantic_label_count)}, semantic_labels={repr(self.semantic_labels)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SpatialFeaturePlaneSemanticLabel2SubsetEXT(semantic_label_count={self.semantic_label_count}, semantic_labels={self.semantic_labels}, next={self.next}, type={self.type})"
+
+    @property
+    def semantic_labels(self) -> Array[c_int]:
+        return expose_ctypes_array(c_int, self.semantic_label_count, self._semantic_labels)
+    
+    @semantic_labels.setter
+    def semantic_labels(self, value) -> None:
+        # noinspection PyAttributeOutsideInit
+        self.semantic_label_count, self._semantic_labels = array_field_helper(
+            c_int, None, value)
+
+    _fields_ = [
+        ("semantic_label_count", c_uint32),
+        ("_semantic_labels", POINTER(c_int)),
+    ]
+
+
+class SwapchainFormatsEnumerateInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.SWAPCHAIN_FORMATS_ENUMERATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.SwapchainFormatsEnumerateInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.SwapchainFormatsEnumerateInfoEXT(next={self.next}, type={self.type})"
+
+
+PFN_xrEnumerateSwapchainFormats2EXT = CFUNCTYPE(Result.ctype(), Session, POINTER(SwapchainFormatsEnumerateInfoEXT), c_uint32, POINTER(c_uint32), POINTER(c_int64))
+
+
+class AppConsumedSwapchainEXT_T(Structure):
+    pass
+
+
+class AppConsumedSwapchainEXT(POINTER(AppConsumedSwapchainEXT_T), HandleMixin):
+    _type_ = AppConsumedSwapchainEXT_T  # ctypes idiosyncrasy
+
+
+class AppConsumedSwapchainCreateInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        kind: AppConsumedSwapchainKindEXT = AppConsumedSwapchainKindEXT(),  # noqa
+        usage_flags: SwapchainUsageFlags = SwapchainUsageFlags.NONE,
+        format: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.APP_CONSUMED_SWAPCHAIN_CREATE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _kind=enum_field_helper(kind),
+            _usage_flags=enum_field_helper(usage_flags),
+            format=format,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AppConsumedSwapchainCreateInfoEXT(kind={repr(self.kind)}, usage_flags={repr(self.usage_flags)}, format={repr(self.format)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AppConsumedSwapchainCreateInfoEXT(kind={self.kind}, usage_flags={self.usage_flags}, format={self.format}, next={self.next}, type={self.type})"
+
+    @property
+    def kind(self) -> AppConsumedSwapchainKindEXT:
+        return AppConsumedSwapchainKindEXT(self._kind)
+    
+    @kind.setter
+    def kind(self, value: AppConsumedSwapchainKindEXT) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._kind = enum_field_helper(value)
+
+    @property
+    def usage_flags(self) -> SwapchainUsageFlags:
+        return SwapchainUsageFlags(self._usage_flags)
+    
+    @usage_flags.setter
+    def usage_flags(self, value: SwapchainUsageFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._usage_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_kind", AppConsumedSwapchainKindEXT.ctype()),
+        ("_usage_flags", SwapchainUsageFlagsCInt),
+        ("format", c_int64),
+    ]
+
+
+class AppConsumedSwapchainPropertiesEXT(BaseXrStructure):
+    def __init__(
+        self,
+        usage_flags: SwapchainUsageFlags = SwapchainUsageFlags.NONE,
+        format: int = 0,
+        sample_count: int = 0,
+        width: int = 0,
+        height: int = 0,
+        face_count: int = 0,
+        array_size: int = 0,
+        mip_count: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.APP_CONSUMED_SWAPCHAIN_PROPERTIES_EXT,
+    ) -> None:
+        super().__init__(
+            _usage_flags=enum_field_helper(usage_flags),
+            format=format,
+            sample_count=sample_count,
+            width=width,
+            height=height,
+            face_count=face_count,
+            array_size=array_size,
+            mip_count=mip_count,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AppConsumedSwapchainPropertiesEXT(usage_flags={repr(self.usage_flags)}, format={repr(self.format)}, sample_count={repr(self.sample_count)}, width={repr(self.width)}, height={repr(self.height)}, face_count={repr(self.face_count)}, array_size={repr(self.array_size)}, mip_count={repr(self.mip_count)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AppConsumedSwapchainPropertiesEXT(usage_flags={self.usage_flags}, format={self.format}, sample_count={self.sample_count}, width={self.width}, height={self.height}, face_count={self.face_count}, array_size={self.array_size}, mip_count={self.mip_count}, next={self.next}, type={self.type})"
+
+    @property
+    def usage_flags(self) -> SwapchainUsageFlags:
+        return SwapchainUsageFlags(self._usage_flags)
+    
+    @usage_flags.setter
+    def usage_flags(self, value: SwapchainUsageFlags) -> None:
+        # noinspection PyAttributeOutsideInit
+        self._usage_flags = enum_field_helper(value)
+
+    _fields_ = [
+        ("_usage_flags", SwapchainUsageFlagsCInt),
+        ("format", c_int64),
+        ("sample_count", c_uint32),
+        ("width", c_uint32),
+        ("height", c_uint32),
+        ("face_count", c_uint32),
+        ("array_size", c_uint32),
+        ("mip_count", c_uint32),
+    ]
+
+
+class AppConsumedSwapchainImageAcquireInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.APP_CONSUMED_SWAPCHAIN_IMAGE_ACQUIRE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AppConsumedSwapchainImageAcquireInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AppConsumedSwapchainImageAcquireInfoEXT(next={self.next}, type={self.type})"
+
+
+class AppConsumedSwapchainImageStateEXT(BaseXrStructure):
+    def __init__(
+        self,
+        ready: Bool32 = 0,
+        unchanged: Bool32 = 0,
+        image_index: int = 0,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.APP_CONSUMED_SWAPCHAIN_IMAGE_STATE_EXT,
+    ) -> None:
+        super().__init__(
+            ready=ready,
+            unchanged=unchanged,
+            image_index=image_index,
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AppConsumedSwapchainImageStateEXT(ready={repr(self.ready)}, unchanged={repr(self.unchanged)}, image_index={repr(self.image_index)}, next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AppConsumedSwapchainImageStateEXT(ready={self.ready}, unchanged={self.unchanged}, image_index={self.image_index}, next={self.next}, type={self.type})"
+
+    _fields_ = [
+        ("ready", Bool32),
+        ("unchanged", Bool32),
+        ("image_index", c_uint32),
+    ]
+
+
+class AppConsumedSwapchainImageReleaseInfoEXT(BaseXrStructure):
+    def __init__(
+        self,
+        next: FieldNextType = None,
+        type: StructureType = StructureType.APP_CONSUMED_SWAPCHAIN_IMAGE_RELEASE_INFO_EXT,
+    ) -> None:
+        super().__init__(
+            _next=next_field_helper(next),
+            _type=enum_field_helper(type),
+        )
+
+    def __repr__(self) -> str:
+        return f"xr.AppConsumedSwapchainImageReleaseInfoEXT(next={repr(self.next)}, type={repr(self.type)})"
+
+    def __str__(self) -> str:
+        return f"xr.AppConsumedSwapchainImageReleaseInfoEXT(next={self.next}, type={self.type})"
+
+
+PFN_xrCreateAppConsumedSwapchainEXT = CFUNCTYPE(Result.ctype(), Session, POINTER(AppConsumedSwapchainCreateInfoEXT), POINTER(AppConsumedSwapchainEXT))
+
+PFN_xrDestroyAppConsumedSwapchainEXT = CFUNCTYPE(Result.ctype(), AppConsumedSwapchainEXT)
+
+PFN_xrGetAppConsumedSwapchainPropertiesEXT = CFUNCTYPE(Result.ctype(), AppConsumedSwapchainEXT, POINTER(AppConsumedSwapchainPropertiesEXT))
+
+PFN_xrEnumerateAppConsumedSwapchainImagesEXT = CFUNCTYPE(Result.ctype(), AppConsumedSwapchainEXT, c_uint32, POINTER(c_uint32), POINTER(SwapchainImageBaseHeader))
+
+PFN_xrAcquireAppConsumedSwapchainImageEXT = CFUNCTYPE(Result.ctype(), AppConsumedSwapchainEXT, POINTER(AppConsumedSwapchainImageAcquireInfoEXT), POINTER(AppConsumedSwapchainImageStateEXT))
+
+PFN_xrReleaseAppConsumedSwapchainImageEXT = CFUNCTYPE(Result.ctype(), AppConsumedSwapchainEXT, POINTER(AppConsumedSwapchainImageReleaseInfoEXT))
+
+
 __all__ = [
     "Action",
     "ActionCreateInfo",
@@ -29035,6 +29660,13 @@ __all__ = [
     "AnchorSpaceCreateInfoANDROID",
     "AnchorSpaceCreateInfoBD",
     "ApiLayerProperties",
+    "AppConsumedSwapchainCreateInfoEXT",
+    "AppConsumedSwapchainEXT",
+    "AppConsumedSwapchainEXT_T",
+    "AppConsumedSwapchainImageAcquireInfoEXT",
+    "AppConsumedSwapchainImageReleaseInfoEXT",
+    "AppConsumedSwapchainImageStateEXT",
+    "AppConsumedSwapchainPropertiesEXT",
     "ApplicationInfo",
     "AsyncRequestIdFB",
     "AttenuationCurvePointBD",
@@ -29484,6 +30116,7 @@ __all__ = [
     "Offset3DfFB",
     "OverlayMainSessionFlagsEXTXCInt",
     "OverlaySessionCreateFlagsEXTXCInt",
+    "PFN_xrAcquireAppConsumedSwapchainImageEXT",
     "PFN_xrAcquireCameraImageBD",
     "PFN_xrAcquireEnvironmentDepthImageMETA",
     "PFN_xrAcquireSwapchainImage",
@@ -29511,6 +30144,7 @@ __all__ = [
     "PFN_xrCreateActionSpace",
     "PFN_xrCreateAnchorSpaceANDROID",
     "PFN_xrCreateAnchorSpaceBD",
+    "PFN_xrCreateAppConsumedSwapchainEXT",
     "PFN_xrCreateBodyTrackerBD",
     "PFN_xrCreateBodyTrackerFB",
     "PFN_xrCreateBodyTrackerHTC",
@@ -29614,6 +30248,7 @@ __all__ = [
     "PFN_xrDestroyAction",
     "PFN_xrDestroyActionSet",
     "PFN_xrDestroyAnchorBD",
+    "PFN_xrDestroyAppConsumedSwapchainEXT",
     "PFN_xrDestroyBodyTrackerBD",
     "PFN_xrDestroyBodyTrackerFB",
     "PFN_xrDestroyBodyTrackerHTC",
@@ -29689,6 +30324,7 @@ __all__ = [
     "PFN_xrEndSession",
     "PFN_xrEndSpatialContainerRenderingEXT",
     "PFN_xrEnumerateApiLayerProperties",
+    "PFN_xrEnumerateAppConsumedSwapchainImagesEXT",
     "PFN_xrEnumerateAvailableCamerasBD",
     "PFN_xrEnumerateBoundSourcesForAction",
     "PFN_xrEnumerateCameraCapabilityTypesBD",
@@ -29717,6 +30353,8 @@ __all__ = [
     "PFN_xrEnumerateSceneComputeFeaturesMSFT",
     "PFN_xrEnumerateSpaceSupportedComponentsFB",
     "PFN_xrEnumerateSpatialAnchorAttachableComponentsANDROID",
+    "PFN_xrEnumerateSpatialArchetypeComponentTypesEXT",
+    "PFN_xrEnumerateSpatialArchetypesEXT",
     "PFN_xrEnumerateSpatialCapabilitiesEXT",
     "PFN_xrEnumerateSpatialCapabilityComponentTypesEXT",
     "PFN_xrEnumerateSpatialCapabilityFeaturesEXT",
@@ -29730,6 +30368,7 @@ __all__ = [
     "PFN_xrEnumerateSupportedSpatialContainerGraphicsPresentationsEXT",
     "PFN_xrEnumerateSupportedTrackableTypesANDROID",
     "PFN_xrEnumerateSwapchainFormats",
+    "PFN_xrEnumerateSwapchainFormats2EXT",
     "PFN_xrEnumerateSwapchainImages",
     "PFN_xrEnumerateViewConfigurationViews",
     "PFN_xrEnumerateViewConfigurations",
@@ -29746,6 +30385,7 @@ __all__ = [
     "PFN_xrGetAllTrackablesANDROID",
     "PFN_xrGetAnchorPersistStateANDROID",
     "PFN_xrGetAnchorUuidBD",
+    "PFN_xrGetAppConsumedSwapchainPropertiesEXT",
     "PFN_xrGetBodySkeletonFB",
     "PFN_xrGetBodySkeletonHTC",
     "PFN_xrGetBodyTrackingStateBD",
@@ -29900,6 +30540,7 @@ __all__ = [
     "PFN_xrQuerySpatialComponentDataEXT",
     "PFN_xrQuerySystemTrackedKeyboardFB",
     "PFN_xrRaycastANDROID",
+    "PFN_xrReleaseAppConsumedSwapchainImageEXT",
     "PFN_xrReleaseCameraImageBD",
     "PFN_xrReleaseSwapchainImage",
     "PFN_xrRemoveTrackableImageDatabaseANDROID",
@@ -30300,6 +30941,7 @@ __all__ = [
     "SpatialAnchorsUpdateExpirationCompletionDetailsML",
     "SpatialAnchorsUpdateExpirationCompletionML",
     "SpatialAnchorsUpdateExpirationInfoML",
+    "SpatialArchetypeIdEXT",
     "SpatialAudioRendererBD",
     "SpatialAudioRendererBD_T",
     "SpatialAudioRendererCreateInfoBD",
@@ -30317,8 +30959,10 @@ __all__ = [
     "SpatialCapabilityConfigurationBaseHeaderEXT",
     "SpatialCapabilityConfigurationDepthRaycastANDROID",
     "SpatialCapabilityConfigurationImageTrackingEXT",
+    "SpatialCapabilityConfigurationMeshTrackingEXT",
     "SpatialCapabilityConfigurationMicroQrCodeEXT",
     "SpatialCapabilityConfigurationObjectTrackingANDROID",
+    "SpatialCapabilityConfigurationObjectTrackingEXT",
     "SpatialCapabilityConfigurationPlaneTrackingEXT",
     "SpatialCapabilityConfigurationQrCodeEXT",
     "SpatialComponentAnchorListEXT",
@@ -30327,13 +30971,20 @@ __all__ = [
     "SpatialComponentDataQueryConditionEXT",
     "SpatialComponentDataQueryResultEXT",
     "SpatialComponentImage2DListEXT",
+    "SpatialComponentKeyboardSemanticLabelListEXT",
     "SpatialComponentMarkerListEXT",
     "SpatialComponentMesh2DListEXT",
     "SpatialComponentMesh3DListEXT",
+    "SpatialComponentMesh3DNormalsListEXT",
+    "SpatialComponentMesh3DTriangleSemanticLabelsListEXT",
+    "SpatialComponentMesh3DVertexSemanticLabelsListEXT",
+    "SpatialComponentMouseSemanticLabelListEXT",
     "SpatialComponentObjectSemanticLabelListANDROID",
+    "SpatialComponentObjectSemanticLabelListEXT",
     "SpatialComponentParentListEXT",
     "SpatialComponentPersistenceListEXT",
     "SpatialComponentPlaneAlignmentListEXT",
+    "SpatialComponentPlaneSemanticLabel2ListEXT",
     "SpatialComponentPlaneSemanticLabelListEXT",
     "SpatialComponentPolygon2DListEXT",
     "SpatialComponentRaycastResultListANDROID",
@@ -30386,6 +31037,10 @@ __all__ = [
     "SpatialEntityPersistInfoEXT",
     "SpatialEntityStateBD",
     "SpatialEntityUnpersistInfoEXT",
+    "SpatialFeatureObjectSemanticLabelSubsetEXT",
+    "SpatialFeaturePlaneSemanticLabel2SubsetEXT",
+    "SpatialFeatureTrackWatertightMeshEXT",
+    "SpatialFilterArchetypeEXT",
     "SpatialFilterTrackingStateEXT",
     "SpatialGraphNodeBindingMSFT",
     "SpatialGraphNodeBindingMSFT_T",
@@ -30430,6 +31085,7 @@ __all__ = [
     "SwapchainCreateInfo",
     "SwapchainCreateInfoColorSpaceSONY",
     "SwapchainCreateInfoFoveationFB",
+    "SwapchainFormatsEnumerateInfoEXT",
     "SwapchainImageAcquireInfo",
     "SwapchainImageBaseHeader",
     "SwapchainImageReleaseInfo",
