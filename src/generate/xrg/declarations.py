@@ -142,7 +142,7 @@ class EnumItem(CodeItem):
                 result += v.code(api)
                 value_count += 1
             if value_count < 1:
-                result += "\n    pass"
+                result += "\n    UNKNOWN = 0"
             return result
         elif api == api.C:
             # TODO: this is probably not tested...

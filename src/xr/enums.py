@@ -3122,7 +3122,7 @@ class SpatialPlaneSemanticLabel2EXT(EnumBase):
 
 
 class AppConsumedSwapchainKindEXT(EnumBase):
-    pass
+    UNKNOWN = 0
 
 
 class InstanceCreateFlags(FlagBase):
