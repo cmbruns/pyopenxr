@@ -15,7 +15,6 @@ from ctypes import (
 import enum
 import logging
 import math
-import platform
 import sys
 from typing import List, Optional
 
@@ -76,6 +75,7 @@ class OpenXRProgram(object):
         self.app_space = None
         self.form_factor = xr.FormFactor.HEAD_MOUNTED_DISPLAY
         self.system_id = None  # Higher level System class, not just ID
+        self.dum_create_info = None
 
         self.config_views = []
         self.swapchains = []
@@ -139,6 +139,7 @@ class OpenXRProgram(object):
         if self.instance is not None:
             xr.destroy_instance(self.instance)
             self.instance = None
+            self.dum_create_info = None
 
     def create_instance(self) -> None:
         """Create an Instance and other basic instance-level initialization."""
@@ -158,7 +159,7 @@ class OpenXRProgram(object):
         extensions = []
         # Enable debug messaging
         discovered_extensions = xr.enumerate_instance_extension_properties()
-        dum_create_info = xr.DebugUtilsMessengerCreateInfoEXT()
+        self.dum_create_info = xr.DebugUtilsMessengerCreateInfoEXT()
         next_structure = self.platform_plugin.instance_create_extension
         all_severities = (
                 xr.DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
@@ -175,14 +176,14 @@ class OpenXRProgram(object):
         )
         if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in discovered_extensions:
             extensions.append(xr.EXT_DEBUG_UTILS_EXTENSION_NAME)
-            dum_create_info.message_severities = all_severities
-            dum_create_info.message_types = all_types
-            dum_create_info.user_data = None
-            dum_create_info.user_callback = xr_debug_callback
+            self.dum_create_info.message_severities = all_severities
+            self.dum_create_info.message_types = all_types
+            self.dum_create_info.user_data = None
+            self.dum_create_info.user_callback = xr_debug_callback
             if next_structure is None:
-                next_structure = dum_create_info
+                next_structure = self.dum_create_info
             else:
-                next_structure.next = dum_create_info
+                next_structure.next = self.dum_create_info
         # Enable the depth extension if the runtime supports it
         # (mirrors Khronos openxr_program.cpp: "enable depth extension if supported").
         if xr.KHR_COMPOSITION_LAYER_DEPTH_EXTENSION_NAME in discovered_extensions:

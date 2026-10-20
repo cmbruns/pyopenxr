@@ -105,9 +105,7 @@ with ContextObject(
     # Loop over the render frames
     session_was_focused = False  # Check for a common problem
     for frame_index, frame_state in enumerate(context.frame_loop()):
-
-        if context.session_state == xr.SessionState.FOCUSED:
-            session_was_focused = True
+        try:
             active_action_set = xr.ActiveActionSet(
                 action_set=context.default_action_set,
                 subaction_path=xr.NULL_PATH,
@@ -119,7 +117,7 @@ with ContextObject(
                     active_action_sets=ctypes.pointer(active_action_set),
                 ),
             )
-
+            session_was_focused = True
             vive_tracker_paths = xr.enumerate_vive_tracker_paths_htcx(instance)
             # print(xr.Result(result), n_paths.value)
             # print(*vive_tracker_paths)
@@ -137,6 +135,8 @@ with ContextObject(
             if found_tracker_count == 0:
                 log.info("no trackers found")
             log.info(f"{found_tracker_count} vive trackers found")
+        except xr.SessionNotFocused:
+            pass  # Not focused yet, or not anymore. Nothing to sync.
 
         # Slow things down, especially since we are not rendering anything
         time.sleep(0.5)

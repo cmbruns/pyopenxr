@@ -203,7 +203,8 @@ for frame_index in range(30):  # Limit number of frames for demo purposes
                     session = None
         except xr.EventUnavailable:
             break  # There is no event in the queue at this moment
-    if session_state == xr.SessionState.FOCUSED:
+
+    try:
         # wait_frame()/begin_frame()/end_frame() are not required in headless mode
         # xr.wait_frame() Helps SteamVR show application name better
         # But it hangs the loop in SteamVR 2.17.10 and OpenXR 1.1.63
@@ -252,6 +253,8 @@ for frame_index in range(30):  # Limit number of frames for demo purposes
 
         # Sleep periodically to avoid consuming all available system resources
         time.sleep(0.500)
+    except xr.SessionNotFocused:
+        pass  # Not focused yet, or not anymore. Nothing to sync.
 
 # Clean up
 system = xr.NULL_SYSTEM_ID

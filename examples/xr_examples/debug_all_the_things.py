@@ -13,7 +13,6 @@ import glfw
 from OpenGL import GL  # OpenGL can report debug messages too
 
 import xr
-from xr.ext.EXT import debug_utils
 
 # 2) Hook into the pyopenxr logger hierarchy.
 logging.basicConfig()  # You might want also to study the parameters to basicConfig()...
@@ -42,8 +41,8 @@ if xr.LUNARG_api_dump_APILAYER_NAME in xr.enumerate_api_layer_properties():
 enabled_extensions = []
 # 6) XR_EXT_debug_utils can be used to redirect pyopenxr debugging messages to our logger,
 #    among other things.
-if debug_utils.EXTENSION_NAME in xr.enumerate_instance_extension_properties():
-    enabled_extensions.append(debug_utils.EXTENSION_NAME)
+if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in xr.enumerate_instance_extension_properties():
+    enabled_extensions.append(xr.EXT_DEBUG_UTILS_EXTENSION_NAME)
 
 
 # Define helper function for our logging callback
@@ -75,14 +74,14 @@ def xr_debug_callback(
 # Prepare to create a debug utils messenger
 debug_utils_messenger_create_info = xr.DebugUtilsMessengerCreateInfoEXT(
     message_severities=(
-            xr.DebugUtilsMessageSeverityFlagsEXT(0)  # to keep the pycharm linter happy
+            xr.DebugUtilsMessageSeverityFlagsEXT(0)  # to keep the PyCharm linter happy
             | xr.DebugUtilsMessageSeverityFlagsEXT.VERBOSE_BIT
             | xr.DebugUtilsMessageSeverityFlagsEXT.INFO_BIT
             | xr.DebugUtilsMessageSeverityFlagsEXT.WARNING_BIT
             | xr.DebugUtilsMessageSeverityFlagsEXT.ERROR_BIT
     ),
     message_types=(
-                xr.DebugUtilsMessageTypeFlagsEXT(0)  # to keep the pycharm linter happy
+                xr.DebugUtilsMessageTypeFlagsEXT(0)  # to keep the PyCharm linter happy
                 | xr.DebugUtilsMessageTypeFlagsEXT.GENERAL_BIT
                 | xr.DebugUtilsMessageTypeFlagsEXT.VALIDATION_BIT
                 | xr.DebugUtilsMessageTypeFlagsEXT.PERFORMANCE_BIT
@@ -105,7 +104,7 @@ instance = xr.create_instance(
 )
 
 if xr.EXT_DEBUG_UTILS_EXTENSION_NAME in xr.enumerate_instance_extension_properties():
-    messenger = debug_utils.create_messenger(instance, debug_utils_messenger_create_info)
+    messenger = xr.create_debug_utils_messenger_ext(instance, debug_utils_messenger_create_info)
 
 # OpenGL can report debug messages too.
 # Create a sub-logger for messages from OpenGL.

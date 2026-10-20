@@ -94,11 +94,7 @@ with ContextObject(
     # Loop over the render frames
     session_was_focused = False  # Check for a common problem
     for frame_index, frame_state in enumerate(context.frame_loop()):
-
-        if context.session_state == xr.SessionState.FOCUSED:
-            # TODO: race condition possible if session state changes during
-            # execution of this block. Maybe catch not focused error.
-            session_was_focused = True
+        try:
             active_action_set = xr.ActiveActionSet(
                 action_set=context.default_action_set,
                 subaction_path=xr.NULL_PATH,
@@ -110,6 +106,7 @@ with ContextObject(
                     active_action_sets=ctypes.pointer(active_action_set),
                 ),
             )
+            session_was_focused = True
             found_count = 0
             for index, space in enumerate(action_spaces):
                 space_location = xr.locate_space(
@@ -122,6 +119,8 @@ with ContextObject(
                     found_count += 1
             if found_count == 0:
                 print("no controllers active")
+        except xr.SessionNotFocused:
+            pass  # Not focused yet, or not anymore. Nothing to sync.
 
         # Slow things down, especially since we are not rendering anything
         time.sleep(0.5)

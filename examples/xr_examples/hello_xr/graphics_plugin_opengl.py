@@ -102,6 +102,9 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
         for record in self._swapchain_image_records:
             record.destroy()
         self._swapchain_image_records.clear()
+        GL.glDebugMessageCallback(GL.GLDEBUGPROC(0), None)
+        GL.glDisable(GL.GL_DEBUG_OUTPUT)
+        self.debug_message_proc = None
         if self.window is not None:
             glfw.destroy_window(self.window)
             self.window = None
@@ -128,7 +131,10 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             GL.GL_DEBUG_SEVERITY_LOW: logging.INFO,
             GL.GL_DEBUG_SEVERITY_NOTIFICATION: logging.DEBUG,
         }.get(severity, logging.INFO)
-        logger.log(log_level, f"OpenGL Message: {string_at(raw, length).decode()}")
+        try:
+            logger.log(log_level, f"OpenGL Message: {string_at(raw, length).decode()}")
+        except OSError as e:
+            logger.log(log_level, f"!!!OpenGL Debug Message Failure!!!: {severity} {e}")
 
     def focus_window(self):
         glfw.focus_window(self.window)
@@ -193,6 +199,7 @@ class OpenGLGraphicsPlugin(IGraphicsPlugin):
             self._graphics_binding.glx_drawable = GLX.glXGetCurrentDrawable()
             self._graphics_binding.glx_context = GLX.glXGetCurrentContext()
         GL.glEnable(GL.GL_DEBUG_OUTPUT)
+        GL.glEnable(GL.GL_DEBUG_OUTPUT_SYNCHRONOUS)
         # Store the debug callback function pointer, so it won't get garbage collected;
         # ...otherwise mysterious GL crashes will ensue.
         self.debug_message_proc = GL.GLDEBUGPROC(self.opengl_debug_message_callback)

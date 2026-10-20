@@ -332,6 +332,7 @@ def main():
               f"max: {graphics_requirements.max_api_version_supported}")
         # OpenGL debug logging
         GL.glEnable(GL.GL_DEBUG_OUTPUT)
+        GL.glEnable(GL.GL_DEBUG_OUTPUT_SYNCHRONOUS)
         # Store the debug callback function pointer, so it won't get garbage collected;
         # ...otherwise mysterious GL crashes will ensue.
         debug_message_proc = GL.GLDEBUGPROC(opengl_debug_message_callback)
