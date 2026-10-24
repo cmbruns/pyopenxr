@@ -285,13 +285,15 @@ foreach (LAYER_FILE ${OPENXR_VALIDATION_LAYER_JSON} ${OPENXR_VALIDATION_LAYER_LI
         file(MAKE_DIRECTORY "${API_LAYER_OUTPUT_FOLDER}")
         message(STATUS "API_LAYER_JSONS ${API_LAYER_JSONS}")
         foreach(F ${API_LAYER_JSONS})
-            file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
+            # Copy file but insert explicit local path because the shared lib.so
+            # sits next to the json manifest
+            file(READ "${LAYERS_INPUT}/${F}" JSON_CONTENTS)
+            string(REPLACE "\"library_path\": \"lib" "\"library_path\": \"./lib" JSON_CONTENTS "${JSON_CONTENTS}")
+            file(WRITE "${API_LAYER_OUTPUT_FOLDER}/${F}" "${JSON_CONTENTS}")
         endforeach()
         foreach(F ${API_LAYER_LIBS})
             file(COPY "${LAYERS_INPUT}/${F}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
         endforeach()
-        # file(COPY "${API_LAYER_JSONS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
-        # file(COPY "${API_LAYER_LIBS}" DESTINATION "${API_LAYER_OUTPUT_FOLDER}")
         message(STATUS "Copied api layer files to ${API_LAYER_OUTPUT_FOLDER}")
     endif()
 endforeach()
